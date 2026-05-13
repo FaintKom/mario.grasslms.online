@@ -1,0 +1,36 @@
+# mario.grasslms.online — static portfolio container
+#
+# Sits on the same VPS (204.168.165.41) as the GrassLMS stack but
+# does NOT share its network. The lms-nginx-1 container reverse-proxies
+# mario.grasslms.online to host port 8081, which this container binds.
+#
+# Deploy on VPS:
+#   cd /opt/mario-portfolio
+#   git pull
+#   docker compose up -d --build
+#
+# Health: curl http://localhost:8081/healthz  → ok
+
+services:
+  portfolio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mario-portfolio:latest
+    container_name: mario-portfolio
+    restart: unless-stopped
+    ports:
+      # Bind to localhost only — lms-nginx-1 proxies via host.docker.internal:8081.
+      # Direct external access is blocked; SSL is terminated upstream.
+      - "127.0.0.1:8081:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Block A — Lesson Generation Pipeline · Mario Becerra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ============================================================
+   Lively tokens — light only
+   ============================================================ */
+:root {
+  --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
+  --green-300:#8fd770; --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754;
+  --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
+  --sun-50:#fffbe5; --sun-100:#fff2b3; --sun-300:#ffe066; --sun-400:#ffd84d;
+  --sun-500:#f5b800; --sun-700:#7a5500;
+  --coral-50:#fff0eb; --coral-300:#ffae9a; --coral-500:#ff7a5c; --coral-700:#c33d22;
+  --ink-50:#f4f5f1; --ink-100:#e6e8e4; --ink-200:#c9cec9; --ink-300:#9aa39d;
+  --ink-400:#6b7a70; --ink-500:#4d5a51; --ink-700:#1a2a1f; --ink-900:#0a1a10;
+  --paper:#fafbf6; --paper-2:#ffffff;
+  --shadow-xs:0 1px 2px rgba(10,26,16,.05);
+  --shadow-sm:0 2px 6px -1px rgba(10,26,16,.07);
+  --shadow-md:0 8px 24px -8px rgba(10,26,16,.12);
+  --shadow-lg:0 18px 50px -20px rgba(10,26,16,.18);
+  --shadow-pop:0 4px 0 0 var(--green-700);
+  --shadow-pop-sm:0 2px 0 0 var(--green-700);
+  --shadow-pop-ink:0 4px 0 0 var(--ink-100);
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:24px; --r-pill:999px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px; --s-8:32px;
+  --s-10:40px; --s-12:48px; --s-16:64px; --s-20:80px;
+  --font-sans:'Manrope',system-ui,-apple-system,sans-serif;
+  --font-mono:'Geist Mono',ui-monospace,SFMono-Regular,monospace;
+  --maxw:1400px; --gutter:clamp(16px,3vw,32px);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink-900);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+.font-mono { font-family: var(--font-mono); }
+
+/* ============================================================
+   Topbar
+   ============================================================ */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(250, 251, 246, .92);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--ink-100);
+}
+.topbar-inner {
+  display: flex; align-items: center; gap: 18px;
+  padding: 14px var(--gutter);
+  max-width: var(--maxw); margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  width: 32px; height: 32px;
+  background: var(--green-500); color: white;
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-weight: 700; font-size: 14px;
+  position: relative;
+}
+.brand-mark::after {
+  content: ""; position: absolute;
+  width: 7px; height: 7px;
+  background: var(--sun-400);
+  border-radius: 50%;
+  bottom: -1px; right: -1px;
+}
+.brand-name { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-name b { font-weight: 800; font-size: 14px; letter-spacing: -.01em; }
+.brand-name span {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .06em;
+  color: var(--ink-400);
+}
+.topbar nav { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+.navlink {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 8px 12px; border-radius: var(--r-pill);
+  color: var(--ink-500); transition: all 150ms;
+}
+.navlink:hover { color: var(--green-700); background: var(--green-50); }
+.navlink.back { color: var(--ink-700); }
+.navlink.back:hover { color: var(--ink-900); background: var(--ink-50); }
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero { padding: var(--s-12) 0 var(--s-8); }
+.eyebrow {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400); font-weight: 600;
+  margin: 0 0 var(--s-3);
+}
+.eyebrow b { color: var(--green-700); font-weight: 600; }
+.hero h1 {
+  font-family: var(--font-sans); font-weight: 800;
+  font-size: clamp(34px, 5.6vw, 60px);
+  line-height: 1.05; letter-spacing: -.02em;
+  margin: 0 0 var(--s-5); max-width: 22ch;
+}
+.hero h1 em {
+  font-style: normal;
+  background: var(--sun-300);
+  padding: 0 10px; border-radius: 8px;
+  display: inline-block;
+  transform: rotate(-1deg);
+}
+.hero .lede {
+  font-size: 18px; line-height: 1.55;
+  color: var(--ink-500); font-weight: 500;
+  max-width: 56ch; margin: 0;
+}
+.hero .lede b { font-weight: 700; color: var(--ink-900); background: var(--green-50); padding: 0 4px; border-radius: var(--r-xs); }
+
+.hero-meta {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-4);
+  margin-top: var(--s-8); padding-top: var(--s-6);
+  border-top: 1px solid var(--ink-100);
+}
+.hero-meta .cell { display: flex; flex-direction: column; gap: 2px; }
+.hero-meta .k {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400);
+}
+.hero-meta .v { font-size: 14px; font-weight: 700; color: var(--ink-900); }
+.hero-meta .v.ok { color: var(--green-700); }
+
+/* ============================================================
+   Layout: main + sidebar
+   ============================================================ */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--s-8);
+  padding: var(--s-8) 0 var(--s-16);
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static !important; }
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+  padding: 12px 20px; border-radius: var(--r-md);
+  border: none; cursor: pointer;
+  transition: transform 120ms, box-shadow 120ms;
+  white-space: nowrap;
+}
+.btn.primary {
+  background: var(--green-600); color: white;
+  box-shadow: var(--shadow-pop);
+}
+.btn.primary:hover { transform: translateY(2px); box-shadow: var(--shadow-pop-sm); }
+.btn.primary:active { transform: translateY(4px); box-shadow: 0 0 0 0 var(--green-700); }
+.btn.primary:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+.btn.secondary {
+  background: var(--paper-2); color: var(--ink-900);
+  box-shadow: var(--shadow-pop-ink);
+}
+.btn.secondary:hover { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--ink-100); }
+.btn.ghost { background: transparent; color: var(--ink-700); padding: 10px 14px; }
+.btn.ghost:hover { background: var(--ink-50); }
+.btn.sm { font-size: 12px; padding: 8px 14px; border-radius: var(--r-sm); }
+
+/* ============================================================
+   Stepper
+   ============================================================ */
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--s-2);
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--s-6);
+}
+.step {
+  position: relative;
+  background: var(--paper-2);
+  border: 1.5px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: var(--s-3);
+  cursor: pointer;
+  transition: all 180ms;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.step:hover { border-color: var(--green-300); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.step.active {
+  border-color: var(--green-600);
+  background: var(--green-50);
+  box-shadow: 0 0 0 3px var(--green-100);
+}
+.step.done { border-color: var(--green-500); background: var(--green-25); }
+.step.current {
+  border-color: var(--green-600);
+  background: var(--green-50);
+  box-shadow: 0 0 0 3px var(--green-100);
+}
+.step .row { display: flex; align-items: center; gap: var(--s-2); }
+.step .num {
+  width: 22px; height: 22px;
+  background: var(--ink-100); color: var(--ink-700);
+  border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+  flex-shrink: 0;
+}
+.step.current .num,
+.step.active .num { background: var(--green-600); color: white; }
+.step.done .num { background: var(--green-500); color: white; }
+.step .title { font-size: 13px; font-weight: 700; color: var(--ink-900); }
+.step .sub {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .04em;
+  color: var(--ink-400);
+  margin-left: 30px;
+}
+.step.done .sub { color: var(--green-700); }
+.step .tip {
+  position: absolute; bottom: calc(100% + 8px);
+  left: 50%; transform: translateX(-50%);
+  background: var(--ink-900); color: var(--paper);
+  padding: 8px 12px; border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity 140ms;
+  z-index: 20;
+  box-shadow: var(--shadow-md);
+}
+.step .tip::after {
+  content: ""; position: absolute;
+  top: 100%; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--ink-900);
+}
+.step:hover .tip { opacity: 1; }
+
+/* ============================================================
+   Stage area + cards
+   ============================================================ */
+.stage-area {
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  min-height: 480px;
+  position: relative;
+  overflow: hidden;
+}
+.stage-card { display: none; animation: fadeIn 240ms ease; }
+.stage-card.show { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stage-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: var(--s-5);
+}
+.stage-head h3 { font-size: 20px; font-weight: 800; margin: 0; letter-spacing: -.01em; }
+.stage-head .meta {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em;
+}
+
+/* Stage 1: Brief */
+.brief-grid { display: grid; grid-template-columns: 280px 1fr; gap: var(--s-5); align-items: start; }
+.file-card {
+  background: var(--ink-50);
+  border: 1.5px dashed var(--ink-200);
+  border-radius: var(--r-md);
+  padding: var(--s-5);
+  display: flex; flex-direction: column; gap: var(--s-2);
+  cursor: grab;
+  transition: all 200ms;
+}
+.file-card:hover { border-color: var(--green-500); background: var(--green-25); }
+.file-card.gone { opacity: .35; pointer-events: none; }
+.file-card .name { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--ink-900); }
+.file-card .desc { font-size: 12px; color: var(--ink-500); }
+.file-card .size {
+  font-family: var(--font-mono); font-size: 10px; color: var(--ink-400);
+  text-transform: uppercase; letter-spacing: .06em;
+  margin-top: auto;
+}
+.dropzone {
+  background: var(--paper);
+  border: 1.5px dashed var(--ink-200);
+  border-radius: var(--r-md);
+  padding: var(--s-6);
+  min-height: 200px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  transition: all 200ms;
+}
+.dropzone.over { border-color: var(--green-600); background: var(--green-25); }
+.dropzone.parsed {
+  align-items: stretch; text-align: left;
+  background: var(--green-25);
+  border-color: var(--green-500);
+  border-style: solid;
+}
+.dropzone .hint {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em;
+}
+.parsed-summary { width: 100%; }
+.parsed-summary .top { display: flex; gap: var(--s-3); align-items: center; margin-bottom: var(--s-3); }
+.parsed-summary .top .badge {
+  font-family: var(--font-mono); font-size: 10px;
+  background: var(--green-600); color: white;
+  padding: 3px 8px; border-radius: var(--r-pill);
+  text-transform: uppercase; letter-spacing: .06em; font-weight: 700;
+}
+.parsed-summary .topic { font-size: 18px; font-weight: 800; margin: 0 0 var(--s-2); }
+.parsed-summary .meta-row {
+  display: flex; gap: var(--s-4); flex-wrap: wrap;
+  font-family: var(--font-mono); font-size: 11px; color: var(--ink-500);
+  margin-bottom: var(--s-3);
+}
+.parsed-summary .meta-row b { color: var(--ink-900); }
+.parsed-summary .objs { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+.parsed-summary .objs .pill {
+  background: var(--paper-2); border: 1px solid var(--green-300);
+  padding: 5px 10px; border-radius: var(--r-pill);
+  font-size: 12px; font-weight: 600; color: var(--green-800);
+}
+
+/* Stage 2: Prereqs */
+.prereq-strip { display: flex; gap: var(--s-2); flex-wrap: wrap; margin-bottom: var(--s-5); }
+.prereq-chip {
+  background: var(--paper); border: 1.5px solid var(--ink-100);
+  padding: 8px 14px; border-radius: var(--r-pill);
+  font-size: 13px; font-weight: 600; color: var(--ink-700);
+  display: inline-flex; align-items: center; gap: 8px;
+  opacity: 0; transform: translateY(6px);
+  transition: all 240ms;
+}
+.prereq-chip.in { opacity: 1; transform: translateY(0); }
+.prereq-chip.ok { background: var(--green-50); border-color: var(--green-400); color: var(--green-800); }
+.prereq-chip.gap { background: var(--coral-50); border-color: var(--coral-300); color: var(--coral-700); }
+.prereq-chip .ico {
+  width: 16px; height: 16px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 10px; font-weight: 800;
+  background: var(--ink-100); color: var(--ink-500);
+}
+.prereq-chip.ok .ico { background: var(--green-500); color: white; }
+.prereq-chip.gap .ico { background: var(--coral-500); color: white; }
+.prereq-summary {
+  background: var(--paper); border: 1px solid var(--ink-100);
+  border-radius: var(--r-md); padding: var(--s-4);
+  font-size: 13px;
+}
+.prereq-summary .ok-text { color: var(--green-700); font-weight: 700; }
+.prereq-summary .gap-text { color: var(--coral-700); font-weight: 700; }
+
+/* Stage 3: Outline */
+.outline-list { display: flex; flex-direction: column; gap: var(--s-2); }
+.outline-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 60px;
+  align-items: center; gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  opacity: 0; transform: translateX(-8px);
+  transition: all 220ms;
+}
+.outline-row.in { opacity: 1; transform: translateX(0); }
+.outline-row .num {
+  width: 24px; height: 24px;
+  background: var(--green-100); color: var(--green-800);
+  border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+}
+.outline-row .title { font-size: 14px; font-weight: 700; color: var(--ink-900); }
+.outline-row .time {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--green-700); font-weight: 700;
+  text-align: right;
+  background: var(--green-25);
+  padding: 4px 8px; border-radius: var(--r-sm);
+}
+.outline-total {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: var(--s-4); padding-top: var(--s-4);
+  border-top: 1px dashed var(--ink-200);
+  font-family: var(--font-mono); font-size: 12px; color: var(--ink-500);
+  text-transform: uppercase; letter-spacing: .06em;
+}
+.outline-total b { color: var(--green-700); font-size: 14px; }
+
+/* Stage 4: Content */
+.content-doc {
+  background: var(--paper); border: 1px solid var(--ink-100);
+  border-radius: var(--r-md); padding: var(--s-5);
+  max-height: 360px; overflow-y: auto;
+  font-size: 14px; line-height: 1.6;
+}
+.content-doc h4 { font-size: 16px; font-weight: 800; margin: 0 0 var(--s-2); color: var(--ink-900); }
+.content-doc .sec-meta {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em;
+  margin-bottom: var(--s-3);
+}
+.content-doc p { margin: 0 0 var(--s-3); color: var(--ink-700); }
+.content-doc pre {
+  background: var(--ink-900); color: var(--paper);
+  padding: var(--s-3) var(--s-4); border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: 12px;
+  line-height: 1.5; overflow-x: auto;
+  margin: 0 0 var(--s-3);
+}
+.content-doc pre .kw { color: var(--green-300); }
+.content-doc pre .str { color: var(--sun-300); }
+.content-doc pre .com { color: var(--ink-300); }
+.content-doc .vocab { display: flex; gap: var(--s-2); flex-wrap: wrap; margin: var(--s-3) 0; }
+.content-doc .vocab .term {
+  background: var(--green-50); color: var(--green-800);
+  border: 1px solid var(--green-200);
+  padding: 3px 8px; border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+}
+.content-doc .sec-divider { border-top: 1px dashed var(--ink-200); margin: var(--s-5) 0 var(--s-4); }
+.cursor::after {
+  content: "▊"; color: var(--green-600);
+  animation: blink 1s steps(2) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Stage 5: Validate */
+.gates { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-3); }
+.gate {
+  background: var(--paper);
+  border: 1.5px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: var(--s-3) var(--s-4);
+  display: flex; align-items: center; gap: var(--s-3);
+  transition: all 220ms;
+}
+.gate .ico {
+  width: 28px; height: 28px; border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  background: var(--ink-100); color: var(--ink-500);
+  font-family: var(--font-mono); font-weight: 700; font-size: 12px;
+  flex-shrink: 0;
+  transition: all 220ms;
+}
+.gate.checking .ico { background: var(--sun-100); color: var(--sun-700); }
+.gate.pass { border-color: var(--green-400); background: var(--green-25); }
+.gate.pass .ico { background: var(--green-600); color: white; }
+.gate.warn { border-color: var(--sun-500); background: var(--sun-50); }
+.gate.warn .ico { background: var(--sun-500); color: white; }
+.gate .body { flex: 1; min-width: 0; }
+.gate .name { font-size: 13px; font-weight: 700; color: var(--ink-900); }
+.gate .det {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-400); margin-top: 2px;
+}
+.gate.pass .det { color: var(--green-700); }
+.gate.warn .det { color: var(--sun-700); }
+.spinner {
+  width: 12px; height: 12px;
+  border: 2px solid var(--ink-200);
+  border-top-color: var(--green-600);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Stage 6: Lesson */
+.lesson-preview {
+  background: linear-gradient(135deg, var(--green-25), var(--paper-2));
+  border: 1px solid var(--green-300);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+}
+.lesson-preview .top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: var(--s-5);
+}
+.lesson-preview .top .left .lbl {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--green-700); font-weight: 700;
+}
+.lesson-preview .top .left h4 { font-size: 22px; font-weight: 800; margin: 4px 0 0; }
+.lesson-preview .top .right .stat {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-500); text-align: right;
+}
+.lesson-preview .top .right .stat b { color: var(--green-700); font-size: 14px; display: block; }
+.lesson-preview .struct {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-2);
+  margin-bottom: var(--s-5);
+}
+.lesson-preview .struct .pill {
+  background: var(--paper-2); border: 1px solid var(--green-200);
+  padding: var(--s-3); border-radius: var(--r-sm);
+  text-align: center;
+}
+.lesson-preview .struct .pill .lbl {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em;
+}
+.lesson-preview .struct .pill .v { font-size: 14px; font-weight: 800; color: var(--ink-900); margin-top: 2px; }
+.lesson-preview .actions { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+
+/* ============================================================
+   Sidebar
+   ============================================================ */
+.sidebar {
+  position: sticky; top: 88px;
+  align-self: start;
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-sm);
+}
+.sidebar .label {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400); font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 var(--s-2);
+}
+.sidebar .label .num-badge {
+  background: var(--green-600); color: white;
+  width: 18px; height: 18px;
+  border-radius: var(--r-xs);
+  display: grid; place-items: center;
+  font-size: 10px; font-weight: 800;
+}
+.sidebar h4 {
+  font-size: 22px; font-weight: 800; letter-spacing: -.01em;
+  margin: 0 0 var(--s-5);
+  line-height: 1.2;
+}
+.sidebar .ww {
+  margin-bottom: var(--s-4);
+  padding-bottom: var(--s-4);
+  border-bottom: 1px dashed var(--ink-200);
+}
+.sidebar .ww:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.sidebar .ww .lbl {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em;
+  font-weight: 700;
+  margin: 0 0 6px;
+  display: inline-block;
+  padding: 3px 8px; border-radius: var(--r-sm);
+}
+.sidebar .ww.what .lbl { background: var(--green-100); color: var(--green-800); }
+.sidebar .ww.why .lbl { background: var(--sun-100); color: var(--sun-700); }
+.sidebar .ww p { font-size: 14px; line-height: 1.5; color: var(--ink-700); margin: 0; }
+.sidebar .ww p b { color: var(--ink-900); font-weight: 700; }
+.sidebar .stack-row {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-top: var(--s-5);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--ink-100);
+}
+.sidebar .stack-row .tag {
+  font-family: var(--font-mono); font-size: 10px;
+  background: var(--ink-50); color: var(--ink-700);
+  padding: 3px 7px; border-radius: var(--r-xs);
+  font-weight: 600;
+}
+
+/* ============================================================
+   Run bar
+   ============================================================ */
+.runbar {
+  display: flex; gap: var(--s-3); align-items: center;
+  margin-bottom: var(--s-5);
+  padding: var(--s-4);
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg);
+}
+.runbar .info {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em;
+  margin-left: auto;
+}
+.runbar .info b { color: var(--green-700); }
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.foot {
+  border-top: 1px solid var(--ink-100);
+  padding: var(--s-8) 0;
+  margin-top: var(--s-8);
+}
+.foot-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em;
+}
+.foot a { color: var(--green-700); }
+.foot a:hover { color: var(--green-900); }
+
+@media (max-width: 720px) {
+  .stepper { grid-template-columns: repeat(3, 1fr); }
+  .step .sub { display: none; }
+  .brief-grid { grid-template-columns: 1fr; }
+  .gates { grid-template-columns: 1fr; }
+  .lesson-preview .struct { grid-template-columns: repeat(2, 1fr); }
+  .hero-meta { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">m</div>
+      <div class="brand-name">
+        <b>Mario Becerra</b>
+        <span>Block A · Lesson Generation</span>
+      </div>
+    </a>
+    <nav>
+      <a class="navlink back" href="index.html">← All capabilities</a>
+      <a class="navlink" href="block-b-lesson-review.html">B</a>
+      <a class="navlink" href="block-c-interactive-exercises.html">C</a>
+      <a class="navlink" href="block-d-content-tools.html">D</a>
+      <a class="navlink" href="block-e-knowledge-rag.html">E</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <p class="eyebrow"><b>BLOCK A</b> · LESSON GENERATION PIPELINE</p>
+    <h1>A teach-ready lesson, <em>assembled</em> from a brief.</h1>
+    <p class="lede">
+      Client pipelines I built take a fifty-line brief and ship a fully
+      <b>scaffolded lesson</b> — outline, content, code samples, vocabulary, exercises —
+      through six validators in under five minutes.
+    </p>
+    <div class="hero-meta">
+      <div class="cell"><span class="k">Course</span><span class="v">Python · while loops</span></div>
+      <div class="cell"><span class="k">Grade</span><span class="v">Grade 9 · 14–15 yrs</span></div>
+      <div class="cell"><span class="k">Target time</span><span class="v">45 min</span></div>
+      <div class="cell"><span class="k">Status</span><span class="v ok">Production · 6 stages</span></div>
+    </div>
+  </section>
+
+  <div class="layout">
+
+    <div class="main-col">
+
+      <div class="runbar">
+        <button class="btn primary" id="runBtn">▶ Run pipeline</button>
+        <button class="btn ghost sm" id="resetBtn">Reset</button>
+        <span class="info">Approx <b>18 sec</b> end-to-end · click any step to inspect</span>
+      </div>
+
+      <ol class="stepper" id="stepper"></ol>
+
+      <div class="stage-area">
+
+        <div class="stage-card show" data-stage="brief">
+          <div class="stage-head">
+            <h3>1 · Brief intake</h3>
+            <span class="meta">JSON · 2.1 KB</span>
+          </div>
+          <div class="brief-grid">
+            <div class="file-card" id="briefFile">
+              <div class="name">brief_python_loops.json</div>
+              <div class="desc">Course: Python · Grade 9 · 45 min target. 3 learning objectives.</div>
+              <div class="size">2.1 KB</div>
+            </div>
+            <div class="dropzone" id="briefDrop">
+              <div class="hint" id="briefHint">Click "Run pipeline" → file parses here</div>
+              <div class="parsed-summary" id="briefParsed" style="display:none;">
+                <div class="top">
+                  <span class="badge">Parsed</span>
+                  <span style="font-family:var(--font-mono);font-size:11px;color:var(--ink-500);">schema v2 · valid</span>
+                </div>
+                <h4 class="topic">Python · While loops · Grade 9</h4>
+                <div class="meta-row">
+                  <span><b>45</b> min target</span>
+                  <span><b>3</b> objectives</span>
+                  <span><b>EN</b> language · <b>B1</b> CEFR</span>
+                </div>
+                <div class="objs">
+                  <span class="pill">Trace a while loop step by step</span>
+                  <span class="pill">Identify off-by-one errors</span>
+                  <span class="pill">Refactor a for-loop into a while-loop</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-card" data-stage="prereq">
+          <div class="stage-head">
+            <h3>2 · Prerequisite check</h3>
+            <span class="meta">Curriculum · 5 prereqs</span>
+          </div>
+          <div class="prereq-strip" id="prereqStrip"></div>
+          <div class="prereq-summary" id="prereqSum">
+            Curriculum check pending. Click <b>Run pipeline</b> to walk prerequisites.
+          </div>
+        </div>
+
+        <div class="stage-card" data-stage="outline">
+          <div class="stage-head">
+            <h3>3 · Outline</h3>
+            <span class="meta">LLM-1 · 6 sections · 45 min budget</span>
+          </div>
+          <div class="outline-list" id="outlineList"></div>
+          <div class="outline-total" id="outlineTotal">total <b>00 / 45 min</b> · 0 sections</div>
+        </div>
+
+        <div class="stage-card" data-stage="content">
+          <div class="stage-head">
+            <h3>4 · Content draft</h3>
+            <span class="meta">LLM-2 · streaming</span>
+          </div>
+          <div class="content-doc" id="contentDoc">
+            <p style="color:var(--ink-400);font-style:italic;">Waiting for outline…</p>
+          </div>
+        </div>
+
+        <div class="stage-card" data-stage="validation">
+          <div class="stage-head">
+            <h3>5 · Validation</h3>
+            <span class="meta">6 quality gates</span>
+          </div>
+          <div class="gates" id="gates"></div>
+        </div>
+
+        <div class="stage-card" data-stage="lesson">
+          <div class="stage-head">
+            <h3>6 · Lesson ready</h3>
+            <span class="meta">Assembled · exportable</span>
+          </div>
+          <div class="lesson-preview">
+            <div class="top">
+              <div class="left">
+                <div class="lbl">DELIVERABLE</div>
+                <h4>Python · While loops · Grade 9</h4>
+              </div>
+              <div class="right">
+                <div class="stat"><b>4 min 32 s</b>generated end-to-end</div>
+              </div>
+            </div>
+            <div class="struct">
+              <div class="pill"><div class="lbl">Sections</div><div class="v">6</div></div>
+              <div class="pill"><div class="lbl">Code blocks</div><div class="v">4</div></div>
+              <div class="pill"><div class="lbl">Exercises</div><div class="v">5</div></div>
+              <div class="pill"><div class="lbl">Vocabulary</div><div class="v">8 terms</div></div>
+            </div>
+            <div class="actions">
+              <button class="btn primary sm">Export SCORM 1.2</button>
+              <button class="btn secondary sm">Export PDF</button>
+              <button class="btn secondary sm">Export HTML</button>
+              <button class="btn ghost sm">Push to LMS API</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="label">
+        <span class="num-badge" id="sbNum">1</span>
+        <span>Currently viewing</span>
+      </div>
+      <h4 id="sbTitle">Brief intake</h4>
+      <div class="ww what">
+        <p class="lbl">What happens</p>
+        <p id="sbWhat">A JSON brief drops in. The pipeline validates the schema, checks required fields (topic, grade, objectives, time budget), and rejects anything malformed before a single LLM token is spent.</p>
+      </div>
+      <div class="ww why">
+        <p class="lbl">Why it matters</p>
+        <p id="sbWhy">Every malformed brief saved here prevents <b>five-plus minutes of downstream debugging</b>. The schema is the single source of truth for the rest of the pipeline — outline, content, validators all read from this contract.</p>
+      </div>
+      <div class="stack-row" id="sbStack">
+        <span class="tag">Pydantic v2</span>
+        <span class="tag">JSON Schema</span>
+        <span class="tag">FastAPI</span>
+      </div>
+    </aside>
+
+  </div>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span>© 2026 Mario Becerra · <a href="index.html">All capabilities</a></span>
+    <span>Block A v2 · Lively</span>
+  </div>
+</footer>
+
+<script>
+const STAGES = [
+  {
+    key: "brief", num: 1, title: "Brief", sub: "ingest + validate",
+    sbTitle: "Brief intake",
+    what: "A JSON brief drops in. The pipeline validates the schema, checks required fields (topic, grade, objectives, time budget), and rejects anything malformed before a single LLM token is spent.",
+    why: "Every malformed brief saved here prevents <b>five-plus minutes of downstream debugging</b>. The schema is the single source of truth for the rest of the pipeline — outline, content, validators all read from this contract.",
+    tip: "Validate first, generate later",
+    stack: ["Pydantic v2", "JSON Schema", "FastAPI"]
+  },
+  {
+    key: "prereq", num: 2, title: "Prereqs", sub: "curriculum check",
+    sbTitle: "Prerequisite check",
+    what: "The pipeline walks the curriculum backward from each objective and lists the skills the student should already own. Skills the student hasn't covered are flagged as <b>gaps</b>.",
+    why: "A lesson taught to an unprepared student bombs: completion drops, frustration spikes, the instructional designer gets blamed. The curriculum check turns that risk into an explicit, fixable list <b>before</b> the lesson ships.",
+    tip: "Find gaps before you teach",
+    stack: ["Pydantic", "Postgres", "REST"]
+  },
+  {
+    key: "outline", num: 3, title: "Outline", sub: "structure · LLM-1",
+    sbTitle: "Outline generation",
+    what: "First LLM call produces a section-by-section structure with a <b>time budget per section</b> (e.g. 3 min hook · 12 min theory · 15 min practice · 10 min review · 5 min wrap-up).",
+    why: "Single-pass generation drifts — the model writes a 60 min lesson when you asked for 45. Outline-first locks pacing as a contract. The instructional designer edits the outline cheaply before the expensive content pass burns tokens.",
+    tip: "Pacing as a contract, not a hope",
+    stack: ["Claude Opus", "Gemini 2", "JSON-mode"]
+  },
+  {
+    key: "content", num: 4, title: "Content", sub: "draft · LLM-2",
+    sbTitle: "Content draft",
+    what: "Second LLM call fills each outlined section: explainer text, code samples, worked examples, vocabulary callouts, exercise prompts. Output streams so the designer sees pacing in real time.",
+    why: "Splitting outline and content gives the instructional designer a <b>cheap intervention point</b>. They reshape pacing in 15 seconds via the outline before the model spends 90 seconds drafting full content. Cost and quality both improve.",
+    tip: "Stream early, edit cheaply",
+    stack: ["Claude Sonnet", "SSE", "Markdown"]
+  },
+  {
+    key: "validation", num: 5, title: "Validate", sub: "6 quality gates",
+    sbTitle: "Quality validation",
+    what: "Six automated gates run in parallel: pedagogical (Bloom level match), technical (code samples compile), language (CEFR target), accessibility (alt text + reading level), curriculum (prereqs honoured), length (within time budget).",
+    why: "Reviewing thirty lessons by hand each week burns out the team. Gates catch <b>about eighty percent of issues automatically</b>. The instructional designer now reviews only what the gates flagged — turning the QA backlog from days into minutes.",
+    tip: "Reviewer handles exceptions, not everything",
+    stack: ["Pytest", "AST", "Lighthouse"]
+  },
+  {
+    key: "lesson", num: 6, title: "Lesson", sub: "ready · export",
+    sbTitle: "Final assembly + export",
+    what: "Validated content gets stitched into the deliverable: SCORM 1.2 package, standalone HTML, printable PDF, and JSON for direct REST push to any LMS API. One button, four targets.",
+    why: "Every client has a different LMS. SCORM for legacy Moodle, HTML for embedding, PDF for printable handouts, JSON for custom integrations. <b>One pipeline run covers them all</b> — no per-client export scripts, no manual repackaging.",
+    tip: "One run, every export",
+    stack: ["scorm-pkg", "WeasyPrint", "REST"]
+  }
+];
+
+const PREREQS = [
+  { name: "Variables · int / float", state: "ok" },
+  { name: "If / else conditionals", state: "ok" },
+  { name: "Comparison operators", state: "ok" },
+  { name: "For-loop syntax", state: "ok" },
+  { name: "Boolean negation", state: "gap" }
+];
+
+const OUTLINE = [
+  { title: "Hook — the infinite loop bug", time: "3 min" },
+  { title: "Concept — condition + body + update", time: "8 min" },
+  { title: "Worked example — countdown timer", time: "10 min" },
+  { title: "Practice — guess-the-output (×4)", time: "12 min" },
+  { title: "Off-by-one debugging walkthrough", time: "8 min" },
+  { title: "Wrap-up + exit ticket", time: "4 min" }
+];
+
+const CONTENT_SECTIONS = [
+  {
+    h: "Hook — the infinite loop bug", meta: "3 min · attention",
+    body: `<p>Show the class a screen recording where a Roblox character keeps spinning forever. Ask: "What's wrong?" Hold the silence. Watch fingers hover over keyboards.</p>`
+  },
+  {
+    h: "Concept — condition + body + update", meta: "8 min · explainer",
+    body: `<p>A while loop has three pieces. If any one is missing, the loop misbehaves.</p>
+<pre><span class="com"># Three pieces of every while loop</span>
+<span class="kw">while</span> condition:    <span class="com"># piece 1: the test</span>
+    do_thing()       <span class="com"># piece 2: the body</span>
+    update_state()   <span class="com"># piece 3: the update</span></pre>
+<div class="vocab">
+  <span class="term">condition</span>
+  <span class="term">body</span>
+  <span class="term">update</span>
+  <span class="term">infinite loop</span>
+  <span class="term">off-by-one</span>
+</div>`
+  },
+  {
+    h: "Worked example — countdown timer", meta: "10 min · live coding",
+    body: `<p>Build a 10-second countdown that prints each second. Run it once with a bug (no update). Watch it hang. Fix it together.</p>
+<pre><span class="kw">seconds</span> = <span class="str">10</span>
+<span class="kw">while</span> seconds > <span class="str">0</span>:
+    print(<span class="str">f"{seconds}..."</span>)
+    seconds -= <span class="str">1</span>
+print(<span class="str">"Liftoff!"</span>)</pre>`
+  }
+];
+
+const GATES = [
+  { name: "Bloom level alignment", det: "objectives ↔ exercises match" },
+  { name: "Code samples compile", det: "4 of 4 snippets run" },
+  { name: "Language target B1 CEFR", det: "avg sentence 14 words" },
+  { name: "Accessibility · alt + reading", det: "WCAG AA · grade 8 reading level" },
+  { name: "Curriculum prereqs honoured", det: "1 gap re-introduced inline" },
+  { name: "Length within budget", det: "44 of 45 min · 1 min spare" }
+];
+
+const stepper = document.getElementById("stepper");
+stepper.innerHTML = STAGES.map(s => `
+  <li class="step" data-stage="${s.key}" tabindex="0" role="button" aria-label="View stage ${s.num}: ${s.title}">
+    <div class="row">
+      <span class="num">${s.num}</span>
+    </div>
+    <div class="title">${s.title}</div>
+    <div class="sub">${s.sub}</div>
+    <div class="tip">${s.tip}</div>
+  </li>
+`).join("");
+
+function showStage(key, opts = {}) {
+  document.querySelectorAll(".step").forEach(el => el.classList.remove("active", "current"));
+  document.querySelectorAll(".stage-card").forEach(el => el.classList.remove("show"));
+  const step = document.querySelector(`.step[data-stage="${key}"]`);
+  const card = document.querySelector(`.stage-card[data-stage="${key}"]`);
+  if (step) step.classList.add(opts.running ? "current" : "active");
+  if (card) card.classList.add("show");
+  updateSidebar(key);
+}
+function markDone(key) {
+  const step = document.querySelector(`.step[data-stage="${key}"]`);
+  if (step) { step.classList.add("done"); step.classList.remove("active", "current"); }
+}
+function updateSidebar(key) {
+  const s = STAGES.find(x => x.key === key);
+  if (!s) return;
+  document.getElementById("sbNum").textContent = s.num;
+  document.getElementById("sbTitle").textContent = s.sbTitle;
+  document.getElementById("sbWhat").innerHTML = s.what;
+  document.getElementById("sbWhy").innerHTML = s.why;
+  document.getElementById("sbStack").innerHTML = s.stack.map(t => `<span class="tag">${t}</span>`).join("");
+}
+document.querySelectorAll(".step").forEach(el => {
+  el.addEventListener("click", () => showStage(el.dataset.stage));
+  el.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showStage(el.dataset.stage); }
+  });
+});
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function runPipeline() {
+  resetPipeline();
+  const runBtn = document.getElementById("runBtn");
+  runBtn.disabled = true;
+
+  showStage("brief", { running: true });
+  await sleep(400);
+  document.getElementById("briefFile").classList.add("gone");
+  const drop = document.getElementById("briefDrop");
+  drop.classList.add("over");
+  await sleep(500);
+  drop.classList.remove("over");
+  drop.classList.add("parsed");
+  document.getElementById("briefHint").style.display = "none";
+  document.getElementById("briefParsed").style.display = "block";
+  await sleep(2000);
+  markDone("brief");
+
+  showStage("prereq", { running: true });
+  const strip = document.getElementById("prereqStrip");
+  strip.innerHTML = PREREQS.map(p => `
+    <span class="prereq-chip ${p.state}">
+      <span class="ico">${p.state === "ok" ? "✓" : "!"}</span>
+      ${p.name}
+    </span>
+  `).join("");
+  await sleep(200);
+  document.querySelectorAll(".prereq-chip").forEach((el, i) => {
+    setTimeout(() => el.classList.add("in"), i * 220);
+  });
+  await sleep(PREREQS.length * 220 + 400);
+  document.getElementById("prereqSum").innerHTML =
+    `<span class="ok-text">4 prereqs covered.</span> <span class="gap-text">1 gap detected:</span> "Boolean negation" — pipeline will <b>re-introduce inline</b> in section 2.`;
+  await sleep(1400);
+  markDone("prereq");
+
+  showStage("outline", { running: true });
+  const list = document.getElementById("outlineList");
+  list.innerHTML = OUTLINE.map((o, i) => `
+    <div class="outline-row" data-i="${i}">
+      <span class="num">${i + 1}</span>
+      <span class="title">${o.title}</span>
+      <span class="time">${o.time}</span>
+    </div>
+  `).join("");
+  await sleep(150);
+  let total = 0;
+  for (let i = 0; i < OUTLINE.length; i++) {
+    const row = list.querySelector(`[data-i="${i}"]`);
+    row.classList.add("in");
+    total += parseInt(OUTLINE[i].time);
+    document.getElementById("outlineTotal").innerHTML = `total <b>${String(total).padStart(2, "0")} / 45 min</b> · ${i + 1} section${i ? "s" : ""}`;
+    await sleep(380);
+  }
+  await sleep(800);
+  markDone("outline");
+
+  showStage("content", { running: true });
+  const doc = document.getElementById("contentDoc");
+  doc.innerHTML = "";
+  for (let i = 0; i < CONTENT_SECTIONS.length; i++) {
+    const sec = CONTENT_SECTIONS[i];
+    if (i > 0) {
+      const div = document.createElement("div");
+      div.className = "sec-divider";
+      doc.appendChild(div);
+    }
+    const wrap = document.createElement("div");
+    wrap.innerHTML = `<h4>${sec.h}</h4><div class="sec-meta">${sec.meta}</div><div class="sec-body cursor"></div>`;
+    doc.appendChild(wrap);
+    doc.scrollTop = doc.scrollHeight;
+    const target = wrap.querySelector(".sec-body");
+    const chunks = sec.body.match(/.{1,40}/gs) || [];
+    let acc = "";
+    for (const c of chunks) {
+      acc += c;
+      target.innerHTML = acc;
+      target.classList.add("cursor");
+      doc.scrollTop = doc.scrollHeight;
+      await sleep(40);
+    }
+    target.classList.remove("cursor");
+    target.innerHTML = sec.body;
+    doc.scrollTop = doc.scrollHeight;
+    await sleep(180);
+  }
+  await sleep(700);
+  markDone("content");
+
+  showStage("validation", { running: true });
+  const gates = document.getElementById("gates");
+  gates.innerHTML = GATES.map((g, i) => `
+    <div class="gate" data-i="${i}">
+      <div class="ico"><div class="spinner"></div></div>
+      <div class="body">
+        <div class="name">${g.name}</div>
+        <div class="det">checking…</div>
+      </div>
+    </div>
+  `).join("");
+  await sleep(200);
+  for (let i = 0; i < GATES.length; i++) {
+    const el = gates.querySelector(`[data-i="${i}"]`);
+    el.classList.add("checking");
+    await sleep(420);
+    const isWarn = i === 4;
+    el.classList.remove("checking");
+    el.classList.add(isWarn ? "warn" : "pass");
+    el.querySelector(".ico").innerHTML = isWarn ? "!" : "✓";
+    el.querySelector(".det").textContent = GATES[i].det;
+  }
+  await sleep(900);
+  markDone("validation");
+
+  showStage("lesson", { running: true });
+  await sleep(1200);
+  markDone("lesson");
+
+  runBtn.disabled = false;
+  runBtn.innerHTML = "↻ Run again";
+}
+
+function resetPipeline() {
+  document.querySelectorAll(".step").forEach(el => el.classList.remove("active", "current", "done"));
+  document.querySelectorAll(".stage-card").forEach(el => el.classList.remove("show"));
+  document.querySelector(".stage-card[data-stage='brief']").classList.add("show");
+  document.querySelector(".step[data-stage='brief']").classList.add("active");
+  document.getElementById("briefFile").classList.remove("gone");
+  document.getElementById("briefDrop").classList.remove("over", "parsed");
+  document.getElementById("briefHint").style.display = "";
+  document.getElementById("briefParsed").style.display = "none";
+  document.getElementById("prereqStrip").innerHTML = "";
+  document.getElementById("prereqSum").innerHTML = `Skills check pending. Click <b>Run pipeline</b> to walk the skills system.`;
+  document.getElementById("outlineList").innerHTML = "";
+  document.getElementById("outlineTotal").innerHTML = `total <b>00 / 45 min</b> · 0 sections`;
+  document.getElementById("contentDoc").innerHTML = `<p style="color:var(--ink-400);font-style:italic;">Waiting for outline…</p>`;
+  document.getElementById("gates").innerHTML = "";
+  updateSidebar("brief");
+}
+
+document.getElementById("runBtn").addEventListener("click", runPipeline);
+document.getElementById("resetBtn").addEventListener("click", resetPipeline);
+
+resetPipeline();
+</script>
+
+</body>
+</html>

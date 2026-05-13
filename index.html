@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mario Becerra — Learning Experience Designer × AI Engineer</title>
+<meta name="description" content="Learning Experience Designer × AI Engineer for EdTech teams. Built GrassLMS solo. AI lesson generation pipelines, LLM-as-Judge eval systems for lesson quality scoring."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://mario.grasslms.online/"/>
+
+<meta property="og:title" content="Mario Becerra — Learning Experience Designer × AI Engineer"/>
+<meta property="og:description" content="Built GrassLMS solo. AI lesson generation pipelines, LLM-as-Judge eval systems for EdTech."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://mario.grasslms.online/"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+<style>
+/* =================================================================
+   MARIO BECERRA — Portfolio landing
+   Light theme · Manrope + Geist Mono · sun-300 marker on hero <em>
+   ================================================================= */
+
+:root {
+  /* BRAND GREEN */
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #6bc44d;
+  --green-500: #3fb04b;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  /* SECONDARY accents */
+  --sun-50:    #fffbe5;
+  --sun-100:   #fff2b3;
+  --sun-300:   #ffe066;
+  --sun-400:   #ffd84d;
+  --sun-500:   #f5b800;
+  --sun-700:   #7a5500;
+
+  --coral-50:  #fff0eb;
+  --coral-300: #ffae9a;
+  --coral-500: #ff7a5c;
+  --coral-700: #c33d22;
+
+  /* NEUTRALS */
+  --ink-50:  #f4f5f1;
+  --ink-100: #e6e8e4;
+  --ink-200: #c9cec9;
+  --ink-300: #9aa39d;
+  --ink-400: #6b7a70;
+  --ink-500: #4d5a51;
+  --ink-700: #1a2a1f;
+  --ink-900: #0a1a10;
+
+  --paper:   #fafbf6;
+  --paper-2: #ffffff;
+
+  /* SEMANTIC */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  /* ELEVATION */
+  --shadow-xs: 0 1px 2px rgba(10, 26, 16, 0.05);
+  --shadow-sm: 0 2px 6px -1px rgba(10, 26, 16, 0.07);
+  --shadow-md: 0 8px 24px -8px rgba(10, 26, 16, 0.12);
+  --shadow-lg: 0 18px 50px -20px rgba(10, 26, 16, 0.18);
+  --shadow-pop: 0 4px 0 0 var(--green-700);
+
+  /* RADII */
+  --radius-xs:   6px;
+  --radius-sm:   10px;
+  --radius-md:   14px;
+  --radius-lg:   18px;
+  --radius-xl:   24px;
+  --radius-pill: 999px;
+
+  /* TYPOGRAPHY */
+  --font-sans: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --t-xs:   12px;
+  --t-sm:   13px;
+  --t-base: 15px;
+  --t-md:   17px;
+  --t-lg:   20px;
+  --t-xl:   24px;
+  --t-2xl:  32px;
+  --t-3xl:  44px;
+
+  /* MOTION */
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* BASE */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'ss01';
+  font-size: var(--t-base);
+  line-height: 1.55;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+::selection { background: var(--sun-300); color: var(--ink-900); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--ink-200);
+  border-radius: 999px;
+  border: 2px solid var(--color-bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--ink-300); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto;
+  }
+}
+
+/* LAYOUT */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* TOPBAR */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--color-border);
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+.topbar-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--ink-900);
+}
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  background: var(--green-500);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.04em;
+  position: relative;
+  flex-shrink: 0;
+}
+.brand-mark::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  right: 5px;
+  width: 6px;
+  height: 6px;
+  background: var(--sun-400);
+  border-radius: 50%;
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.05; }
+.brand-name {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.brand-cap {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink-400);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.topnav a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  transition: color var(--motion-fast) var(--motion-ease),
+              background var(--motion-fast) var(--motion-ease);
+}
+.topnav a:hover {
+  color: var(--green-700);
+  background: var(--green-25);
+}
+
+/* SUN-300 marker on hero & H2 headings */
+.mark-em {
+  font-style: normal;
+  background: var(--sun-300);
+  padding: 0 8px;
+  border-radius: 8px;
+  transform: rotate(-1deg);
+  display: inline-block;
+}
+
+/* HERO */
+.hero {
+  padding: 72px 0 56px;
+  border-bottom: 1px solid var(--color-border);
+}
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green-700);
+  margin: 0 0 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--green-500);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 4px var(--green-100);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 4px var(--green-100); }
+  50% { box-shadow: 0 0 0 6px var(--green-100); }
+}
+.hero h1 {
+  font-size: clamp(36px, 5.2vw, 60px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin: 0 0 24px;
+  max-width: 24ch;
+}
+.hero-divider {
+  width: 56px;
+  height: 3px;
+  background: var(--green-500);
+  border-radius: 2px;
+  margin: 0 0 24px;
+}
+.hero-sub {
+  font-size: var(--t-lg);
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  max-width: 56ch;
+  margin: 0;
+}
+.hero-sub b {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* SECTION pattern */
+.section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.section-head {
+  margin-bottom: 44px;
+  max-width: 720px;
+}
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green-700);
+  margin: 0 0 14px;
+}
+.section-head h2 {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin: 0 0 14px;
+}
+.section-head .lede {
+  font-size: var(--t-md);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  margin: 0;
+  max-width: 580px;
+}
+
+/* CAPABILITIES — 6-col grid, 3+2 layout */
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+}
+.cap-card { grid-column: span 2; }
+.cap-card:nth-child(4) { grid-column: 2 / span 2; }
+.cap-card:nth-child(5) { grid-column: 4 / span 2; }
+@media (max-width: 900px) {
+  .cap-grid { grid-template-columns: repeat(2, 1fr); }
+  .cap-card,
+  .cap-card:nth-child(4),
+  .cap-card:nth-child(5) { grid-column: span 1; }
+}
+.cap-card {
+  background: var(--paper-2);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--motion-fast) var(--motion-ease),
+              border-color var(--motion-fast) var(--motion-ease),
+              box-shadow var(--motion-fast) var(--motion-ease);
+  position: relative;
+}
+.cap-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--green-300);
+  box-shadow: var(--shadow-lg);
+}
+.cap-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.cap-letter {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--ink-400);
+  background: var(--ink-50);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+.cap-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+}
+.cap-status .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.cap-status.production .dot { background: var(--green-600); box-shadow: 0 0 0 3px var(--green-100); }
+.cap-status.working    .dot { background: var(--sun-500);   box-shadow: 0 0 0 3px var(--sun-100); }
+.cap-status.prototype  .dot { background: var(--coral-500); box-shadow: 0 0 0 3px var(--coral-50); }
+
+.cap-card h3 {
+  font-size: var(--t-xl);
+  font-weight: 800;
+  letter-spacing: -0.012em;
+  line-height: 1.25;
+  margin: 0 0 8px;
+  color: var(--ink-900);
+}
+.cap-tagline {
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--green-700);
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+}
+.cap-body {
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  margin: 0 0 20px;
+  flex: 1;
+}
+.cap-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+.chip {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  background: var(--ink-100);
+  color: var(--ink-700);
+}
+.cap-link {
+  font-size: var(--t-sm);
+  font-weight: 700;
+  color: var(--green-700);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+}
+.cap-link .arrow {
+  display: inline-block;
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+.cap-card:hover .cap-link .arrow { transform: translateX(3px); }
+
+.more-line {
+  margin: 40px 0 0;
+  font-size: var(--t-sm);
+  font-style: italic;
+  color: var(--ink-400);
+  text-align: center;
+}
+
+/* CONTACT */
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.contact-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--t-md);
+  font-weight: 600;
+  color: var(--ink-900);
+  padding: 14px 18px;
+  background: var(--paper-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--motion-fast) var(--motion-ease),
+              transform var(--motion-fast) var(--motion-ease);
+  max-width: max-content;
+}
+.contact-list a:hover {
+  border-color: var(--green-500);
+  transform: translateY(-1px);
+}
+.contact-list .label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+  margin-right: 4px;
+}
+
+/* FOOTER */
+.site-foot {
+  padding: 40px 0 56px;
+  background: var(--ink-50);
+  border-top: 1px solid var(--color-border);
+}
+.site-foot .wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nda {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink-400);
+  margin: 0;
+}
+.copyright {
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+  margin: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .wrap { padding: 0 20px; }
+  .topbar-inner { padding: 0 20px; gap: 16px; }
+  .topnav { gap: 4px; }
+  .topnav a { padding: 8px 8px; font-size: 10px; }
+  .brand-cap { display: none; }
+  .hero { padding: 56px 0 40px; }
+  .hero h1 { font-size: clamp(28px, 8vw, 40px); max-width: none; }
+  .hero-sub { font-size: var(--t-md); }
+  .section { padding: 56px 0; }
+  .cap-grid { grid-template-columns: 1fr; gap: 18px; }
+  .cap-card { padding: 22px; }
+  .contact-list a { font-size: var(--t-base); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================================================================
+     TOPBAR
+     ================================================================ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top" aria-label="Mario Becerra — home">
+      <span class="brand-mark" aria-hidden="true">m</span>
+      <span class="brand-text">
+        <span class="brand-name">Mario Becerra</span>
+        <span class="brand-cap">Capabilities portfolio</span>
+      </span>
+    </a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="#capabilities">Work</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================================================================
+       HERO
+       ================================================================ -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-eyebrow">Portfolio · 2026</p>
+      <h1>Learning Experience<br/>Designer&nbsp;×&nbsp;AI&nbsp;Engineer.<br/>For EdTech teams that <em class="mark-em">ship</em>.</h1>
+      <div class="hero-divider"></div>
+      <p class="hero-sub">
+        Built GrassLMS solo — a production LMS. Recent work: agent pipelines
+        for AI lesson generation with metric-driven validation gates, and
+        LLM-as-Judge eval systems for lesson quality scoring.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       CAPABILITIES
+       ================================================================ -->
+  <section class="section" id="capabilities">
+    <div class="wrap">
+
+      <div class="section-head">
+        <p class="section-eyebrow">Capability demos</p>
+        <h2>Five pipelines, all <em class="mark-em">interactive</em>.</h2>
+        <p class="lede">
+          Each block is a walkthrough of a real pipeline I've built.
+          Sanitized recreations; the actual deployments are under NDA.
+        </p>
+      </div>
+
+      <div class="cap-grid">
+
+        <!-- Block A -->
+        <a class="cap-card" href="block-a-lesson-generation.html">
+          <div class="cap-meta">
+            <span class="cap-status production"><span class="dot"></span>Production</span>
+            <span class="cap-letter">A</span>
+          </div>
+          <h3>Lesson Generation Pipeline</h3>
+          <p class="cap-tagline">Brief → fully-formed lesson in 18 seconds.</p>
+          <p class="cap-body">
+            A JSON brief enters; a curriculum-aware lesson exits with theory,
+            exercises, and validation gates. 4C/ID-formatted output, ready
+            for instructional review.
+          </p>
+          <div class="cap-stack">
+            <span class="chip">agent orchestration</span>
+            <span class="chip">validation gates</span>
+            <span class="chip">structured output</span>
+            <span class="chip">streaming JSON</span>
+          </div>
+          <span class="cap-link">Open demo <span class="arrow">→</span></span>
+        </a>
+
+        <!-- Block B -->
+        <a class="cap-card" href="block-b-lesson-review.html">
+          <div class="cap-meta">
+            <span class="cap-status production"><span class="dot"></span>Production</span>
+            <span class="cap-letter">B</span>
+          </div>
+          <h3>Lesson QA Pipeline</h3>
+          <p class="cap-tagline">Video → rubric-scored report with timestamped evidence.</p>
+          <p class="cap-body">
+            A teacher uploads a recorded class. Two minutes later, the
+            instructional design lead receives a rubric-scored report —
+            strengths, gaps, and specific timestamps to discuss in the
+            next coaching session.
+          </p>
+          <div class="cap-stack">
+            <span class="chip">LLM-as-Judge</span>
+            <span class="chip">rubric-based scoring</span>
+            <span class="chip">Vision per-frame</span>
+            <span class="chip">eval pipeline</span>
+          </div>
+          <span class="cap-link">Open demo <span class="arrow">→</span></span>
+        </a>
+
+        <!-- Block C -->
+        <a class="cap-card" href="block-c-interactive-exercises.html">
+          <div class="cap-meta">
+            <span class="cap-status working"><span class="dot"></span>Working</span>
+            <span class="cap-letter">C</span>
+          </div>
+          <h3>Interactive Exercises</h3>
+          <p class="cap-tagline">Web editor, robot puzzles, exploration worlds.</p>
+          <p class="cap-body">
+            Live-preview HTML/CSS/JS, 2D programmable robots on a grid,
+            and 3D exploration scenes — exercise formats that keep kids
+            in the loop instead of skipping ahead.
+          </p>
+          <div class="cap-stack">
+            <span class="chip">live preview</span>
+            <span class="chip">Blockly</span>
+            <span class="chip">Three.js / R3F</span>
+            <span class="chip">auto-grading</span>
+          </div>
+          <span class="cap-link">Open demo <span class="arrow">→</span></span>
+        </a>
+
+        <!-- Block D -->
+        <a class="cap-card" href="block-d-content-tools.html">
+          <div class="cap-meta">
+            <span class="cap-status working"><span class="dot"></span>Working</span>
+            <span class="cap-letter">D</span>
+          </div>
+          <h3>Instructional Design Tooling</h3>
+          <p class="cap-tagline">Slide generation, OCR pipelines, branded board builders.</p>
+          <p class="cap-body">
+            Internal tools the content team reaches for daily — JSON-to-deck
+            slide generation, textbook-page OCR with task classification,
+            and branded Miro/FigJam board generators from structured input.
+          </p>
+          <div class="cap-stack">
+            <span class="chip">Vision OCR</span>
+            <span class="chip">task classification</span>
+            <span class="chip">branded export</span>
+            <span class="chip">JSON → slides</span>
+          </div>
+          <span class="cap-link">Open demo <span class="arrow">→</span></span>
+        </a>
+
+        <!-- Block E -->
+        <a class="cap-card" href="block-e-knowledge-rag.html">
+          <div class="cap-meta">
+            <span class="cap-status prototype"><span class="dot"></span>Prototype</span>
+            <span class="cap-letter">E</span>
+          </div>
+          <h3>Knowledge RAG Module</h3>
+          <p class="cap-tagline">Thousands of documents, searchable by meaning.</p>
+          <p class="cap-body">
+            Three-phase pipeline in development: extraction → LLM-as-Judge
+            verification → embedding ingestion. Hybrid retrieval (vector +
+            full-text + trigram) to ground AI agents in curated material.
+          </p>
+          <div class="cap-stack">
+            <span class="chip">pgvector</span>
+            <span class="chip">hybrid retrieval</span>
+            <span class="chip">3-phase pipeline</span>
+            <span class="chip">embeddings</span>
+          </div>
+          <span class="cap-link">Open demo <span class="arrow">→</span></span>
+        </a>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       CONTACT
+       ================================================================ -->
+  <section class="section" id="contact">
+    <div class="wrap">
+
+      <div class="section-head">
+        <p class="section-eyebrow">Contact</p>
+        <h2>Reach me here.</h2>
+      </div>
+
+      <ul class="contact-list">
+        <li>
+          <a href="mailto:mrbecerraduenias@gmail.com">
+            <span class="label">Email</span>mrbecerraduenias@gmail.com
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener noreferrer">
+            <span class="label">LinkedIn</span>linkedin.com/in/mario-rafael-id-lxd
+          </a>
+        </li>
+        <li>
+          <a href="https://t.me/faintkom" target="_blank" rel="noopener noreferrer">
+            <span class="label">Telegram</span>@faintkom
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ================================================================
+     FOOTER
+     ================================================================ -->
+<footer class="site-foot">
+  <div class="wrap">
+    <p class="nda">All demos are sanitized recreations. Production work under NDA.</p>
+    <p class="copyright">© 2026 Mario Becerra</p>
+  </div>
+</footer>
+
+</body>
+</html>

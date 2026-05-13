@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Block D — Instructional Design Tooling · Mario Becerra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
+  --green-300:#8fd770; --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754;
+  --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
+  --sun-50:#fffbe5; --sun-100:#fff2b3; --sun-300:#ffe066; --sun-400:#ffd84d;
+  --sun-500:#f5b800; --sun-700:#7a5500;
+  --coral-50:#fff0eb; --coral-300:#ffae9a; --coral-500:#ff7a5c; --coral-700:#c33d22;
+  --ink-50:#f4f5f1; --ink-100:#e6e8e4; --ink-200:#c9cec9; --ink-300:#9aa39d;
+  --ink-400:#6b7a70; --ink-500:#4d5a51; --ink-700:#1a2a1f; --ink-900:#0a1a10;
+  --paper:#fafbf6; --paper-2:#ffffff;
+  --shadow-xs:0 1px 2px rgba(10,26,16,.05);
+  --shadow-sm:0 2px 6px -1px rgba(10,26,16,.07);
+  --shadow-md:0 8px 24px -8px rgba(10,26,16,.12);
+  --shadow-lg:0 18px 50px -20px rgba(10,26,16,.18);
+  --shadow-pop:0 4px 0 0 var(--green-700);
+  --shadow-pop-sm:0 2px 0 0 var(--green-700);
+  --shadow-pop-ink:0 4px 0 0 var(--ink-100);
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:24px; --r-pill:999px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px; --s-8:32px;
+  --s-10:40px; --s-12:48px; --s-16:64px; --s-20:80px;
+  --font-sans:'Manrope',system-ui,-apple-system,sans-serif;
+  --font-mono:'Geist Mono',ui-monospace,SFMono-Regular,monospace;
+  --maxw:1400px; --gutter:clamp(16px,3vw,32px);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink-900); font-family: var(--font-sans); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+.topbar { position: sticky; top: 0; z-index: 50; background: rgba(250,251,246,.92); backdrop-filter: blur(14px) saturate(1.2); border-bottom: 1px solid var(--ink-100); }
+.topbar-inner { display: flex; align-items: center; gap: 18px; padding: 14px var(--gutter); max-width: var(--maxw); margin: 0 auto; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark { width: 32px; height: 32px; background: var(--green-500); color: white; border-radius: var(--r-md); display: grid; place-items: center; font-family: var(--font-mono); font-weight: 700; font-size: 14px; position: relative; }
+.brand-mark::after { content: ""; position: absolute; width: 7px; height: 7px; background: var(--sun-400); border-radius: 50%; bottom: -1px; right: -1px; }
+.brand-name { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-name b { font-weight: 800; font-size: 14px; letter-spacing: -.01em; }
+.brand-name span { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-400); }
+.topbar nav { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+.navlink { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding: 8px 12px; border-radius: var(--r-pill); color: var(--ink-500); transition: all 150ms; }
+.navlink:hover { color: var(--green-700); background: var(--green-50); }
+.navlink.back { color: var(--ink-700); }
+.navlink.back:hover { color: var(--ink-900); background: var(--ink-50); }
+
+.hero { padding: var(--s-12) 0 var(--s-8); }
+.eyebrow { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-400); font-weight: 600; margin: 0 0 var(--s-3); }
+.eyebrow b { color: var(--green-700); font-weight: 600; }
+.hero h1 { font-weight: 800; font-size: clamp(34px, 5.6vw, 60px); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 var(--s-5); max-width: 22ch; }
+.hero h1 em { font-style: normal; background: var(--sun-300); padding: 0 10px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); }
+.hero .lede { font-size: 18px; line-height: 1.55; color: var(--ink-500); font-weight: 500; max-width: 56ch; margin: 0; }
+.hero .lede b { font-weight: 700; color: var(--ink-900); background: var(--green-50); padding: 0 4px; border-radius: var(--r-xs); }
+.hero-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-4); margin-top: var(--s-8); padding-top: var(--s-6); border-top: 1px solid var(--ink-100); }
+.hero-meta .cell { display: flex; flex-direction: column; gap: 2px; }
+.hero-meta .k { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-400); }
+.hero-meta .v { font-size: 14px; font-weight: 700; color: var(--ink-900); }
+.hero-meta .v.ok { color: var(--green-700); }
+
+.layout { display: grid; grid-template-columns: 1fr 340px; gap: var(--s-8); padding: var(--s-6) 0 var(--s-16); align-items: start; }
+@media (max-width: 1024px) { .layout { grid-template-columns: 1fr; } .sidebar { position: static !important; } }
+@media (max-width: 720px) { .hero-meta { grid-template-columns: repeat(2, 1fr); } }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-sans); font-size: 13px; font-weight: 700; padding: 12px 20px; border-radius: var(--r-md); border: none; cursor: pointer; transition: transform 120ms, box-shadow 120ms; white-space: nowrap; }
+.btn.primary { background: var(--green-600); color: white; box-shadow: var(--shadow-pop); }
+.btn.primary:hover { transform: translateY(2px); box-shadow: var(--shadow-pop-sm); }
+.btn.primary:active { transform: translateY(4px); box-shadow: 0 0 0 0 var(--green-700); }
+.btn.primary:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+.btn.secondary { background: var(--paper-2); color: var(--ink-900); box-shadow: var(--shadow-pop-ink); border: 1px solid var(--ink-100); }
+.btn.secondary:hover { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--ink-100); }
+.btn.ghost { background: transparent; color: var(--ink-700); padding: 10px 14px; }
+.btn.ghost:hover { background: var(--ink-50); }
+.btn.sm { font-size: 12px; padding: 8px 14px; border-radius: var(--r-sm); }
+
+.tools-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-3); margin-bottom: var(--s-5); }
+@media (max-width: 720px) { .tools-row { grid-template-columns: 1fr; } }
+.tool-tab { background: var(--paper-2); border: 1.5px solid var(--ink-100); border-radius: var(--r-lg); padding: var(--s-4) var(--s-5); cursor: pointer; transition: all 180ms; text-align: left; display: flex; flex-direction: column; gap: 4px; position: relative; }
+.tool-tab:hover { transform: translateY(-2px); border-color: var(--green-300); box-shadow: var(--shadow-md); }
+.tool-tab.on { border-color: var(--green-600); background: var(--green-50); box-shadow: 0 0 0 3px var(--green-100); }
+.tool-tab .num { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-400); font-weight: 700; }
+.tool-tab.on .num { color: var(--green-700); }
+.tool-tab .name { font-size: 16px; font-weight: 800; color: var(--ink-900); letter-spacing: -.01em; }
+.tool-tab .stat { font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); margin-top: 4px; }
+.tool-tab .stat b { color: var(--green-700); }
+.tool-tab .tip-tab { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--ink-900); color: var(--paper); padding: 8px 12px; border-radius: var(--r-sm); font-family: var(--font-mono); font-size: 11px; font-weight: 500; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 140ms; z-index: 20; box-shadow: var(--shadow-md); }
+.tool-tab .tip-tab::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--ink-900); }
+.tool-tab:hover .tip-tab { opacity: 1; }
+
+.tool-panel { background: var(--paper-2); border: 1px solid var(--ink-100); border-radius: var(--r-lg); padding: var(--s-6); display: none; animation: fadeIn 240ms ease; }
+.tool-panel.show { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.tool-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--s-5); padding-bottom: var(--s-4); border-bottom: 1px dashed var(--ink-200); }
+.tool-head .left h3 { font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -.01em; }
+.tool-head .left h3 em { font-style: normal; color: var(--green-700); font-weight: 800; }
+.tool-head .left p { margin: 4px 0 0; font-size: 13px; color: var(--ink-500); }
+.tool-head .right .savings { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-400); text-align: right; }
+.tool-head .right .savings b { color: var(--green-700); font-size: 16px; display: block; }
+
+.runbar { display: flex; gap: var(--s-3); align-items: center; margin-bottom: var(--s-5); padding: var(--s-4); background: var(--green-25); border: 1px solid var(--green-200); border-radius: var(--r-md); }
+.runbar .info { font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); text-transform: uppercase; letter-spacing: .06em; margin-left: auto; }
+.runbar .info b { color: var(--green-700); }
+
+.mini-stepper { display: grid; gap: var(--s-2); margin-bottom: var(--s-5); }
+.mini-stepper.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.mini-stepper.cols-5 { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 720px) { .mini-stepper.cols-4, .mini-stepper.cols-5 { grid-template-columns: repeat(2, 1fr); } }
+.mstep { position: relative; background: var(--paper); border: 1.5px solid var(--ink-100); border-radius: var(--r-md); padding: var(--s-3); cursor: pointer; transition: all 180ms; display: flex; flex-direction: column; gap: 4px; }
+.mstep:hover { border-color: var(--green-300); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.mstep.active, .mstep.current { border-color: var(--green-600); background: var(--green-50); box-shadow: 0 0 0 3px var(--green-100); }
+.mstep.done { border-color: var(--green-500); background: var(--green-25); }
+.mstep .num { width: 22px; height: 22px; background: var(--ink-100); color: var(--ink-700); border-radius: var(--r-sm); display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; font-weight: 800; }
+.mstep.current .num, .mstep.active .num { background: var(--green-600); color: white; }
+.mstep.done .num { background: var(--green-500); color: white; }
+.mstep .title { font-size: 12px; font-weight: 700; color: var(--ink-900); }
+.mstep .sub { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-400); margin-left: 30px; }
+.mstep.done .sub { color: var(--green-700); }
+.mstep .tip-step { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--ink-900); color: var(--paper); padding: 6px 10px; border-radius: var(--r-sm); font-family: var(--font-mono); font-size: 10px; font-weight: 500; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 140ms; z-index: 20; box-shadow: var(--shadow-md); }
+.mstep .tip-step::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--ink-900); }
+.mstep:hover .tip-step { opacity: 1; }
+
+/* D1 */
+.d1-grid { display: grid; grid-template-columns: 280px 1fr; gap: var(--s-4); align-items: start; }
+@media (max-width: 720px) { .d1-grid { grid-template-columns: 1fr; } }
+.json-card { background: var(--ink-50); border: 1.5px dashed var(--ink-200); border-radius: var(--r-md); padding: var(--s-4); font-family: var(--font-mono); font-size: 11px; line-height: 1.5; }
+.json-card .hd { display: flex; justify-content: space-between; margin-bottom: var(--s-3); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-400); font-weight: 700; }
+.json-card pre { margin: 0; color: var(--ink-700); white-space: pre-wrap; }
+.json-card pre .k { color: var(--coral-700); }
+.json-card pre .s { color: var(--green-700); }
+.json-card pre .n { color: var(--sun-700); }
+.slides-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-3); background: var(--paper); border: 1px solid var(--ink-100); border-radius: var(--r-md); padding: var(--s-4); min-height: 280px; }
+@media (max-width: 720px) { .slides-grid { grid-template-columns: 1fr 1fr; } }
+.slide { aspect-ratio: 16/10; background: var(--paper-2); border: 1px solid var(--ink-100); border-radius: var(--r-sm); padding: 8px; font-size: 8px; color: var(--ink-700); display: flex; flex-direction: column; gap: 4px; opacity: 0; transform: translateY(8px); transition: all 320ms; box-shadow: var(--shadow-xs); }
+.slide.in { opacity: 1; transform: translateY(0); }
+.slide .slide-num { font-family: var(--font-mono); font-size: 7px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+.slide .slide-title { font-weight: 800; font-size: 9px; color: var(--ink-900); border-bottom: 1.5px solid var(--green-500); padding-bottom: 3px; margin-bottom: 2px; }
+.slide .slide-body { flex: 1; font-size: 7px; line-height: 1.3; }
+.slide .slide-body .bullet { display: flex; gap: 3px; align-items: flex-start; margin-bottom: 1px; }
+.slide .slide-body .bullet::before { content: "▪"; color: var(--green-600); }
+.slide.title-slide { background: linear-gradient(135deg, var(--green-600), var(--green-800)); color: white; display: grid; place-items: center; }
+.slide.title-slide .slide-title { color: white; border: none; padding: 0; font-size: 11px; text-align: center; }
+.slide.title-slide .slide-num { color: rgba(255,255,255,.7); }
+
+/* D2 */
+.d2-flow { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+@media (max-width: 720px) { .d2-flow { grid-template-columns: 1fr; } }
+.pdf-card { background: var(--ink-50); border: 1.5px dashed var(--ink-200); border-radius: var(--r-md); padding: var(--s-4); position: relative; min-height: 280px; }
+.pdf-card .hd { display: flex; gap: 8px; align-items: center; margin-bottom: var(--s-3); }
+.pdf-card .pdf-ico { background: var(--coral-500); color: white; width: 28px; height: 28px; border-radius: var(--r-sm); display: grid; place-items: center; font-family: var(--font-mono); font-size: 10px; font-weight: 800; }
+.pdf-card .name { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--ink-900); }
+.pdf-card .meta { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); margin-left: auto; text-transform: uppercase; letter-spacing: .06em; }
+.pdf-mock { background: white; border: 1px solid var(--ink-100); border-radius: var(--r-sm); padding: var(--s-3); font-size: 10px; line-height: 1.5; min-height: 200px; position: relative; }
+.pdf-mock .task { padding: 4px 6px; border-radius: 3px; margin-bottom: 4px; transition: all 220ms; font-family: var(--font-mono); }
+.pdf-mock .task.scanned { background: var(--green-50); outline: 1px solid var(--green-300); }
+.pdf-mock .task .tag { font-family: var(--font-mono); font-size: 8px; background: var(--green-600); color: white; padding: 1px 5px; border-radius: 2px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; margin-left: 6px; opacity: 0; transition: opacity 220ms; }
+.pdf-mock .task.scanned .tag { opacity: 1; }
+.task-stats { background: var(--paper); border: 1px solid var(--ink-100); border-radius: var(--r-md); padding: var(--s-4); min-height: 280px; }
+.task-stats .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; margin-bottom: var(--s-3); }
+.classify-bar { display: flex; flex-direction: column; gap: 6px; }
+.cb-row { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+.cb-row .name { font-weight: 700; min-width: 110px; color: var(--ink-700); font-size: 11px; }
+.cb-row .bar { flex: 1; height: 8px; background: var(--ink-100); border-radius: var(--r-pill); overflow: hidden; }
+.cb-row .bar .fill { height: 100%; background: var(--green-500); width: 0; transition: width 600ms; border-radius: var(--r-pill); }
+.cb-row .ct { font-family: var(--font-mono); font-size: 11px; font-weight: 800; color: var(--green-700); min-width: 28px; text-align: right; }
+.gap-banner { margin-top: var(--s-4); background: var(--coral-50); border: 1px solid var(--coral-300); border-radius: var(--r-md); padding: var(--s-3); font-size: 12px; color: var(--coral-700); }
+.gap-banner b { color: var(--ink-900); }
+.variations { margin-top: var(--s-4); display: flex; flex-direction: column; gap: 6px; }
+.var-row { background: var(--green-25); border: 1px solid var(--green-200); border-radius: var(--r-sm); padding: 6px 10px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-700); opacity: 0; transform: translateX(-8px); transition: all 240ms; }
+.var-row.in { opacity: 1; transform: translateX(0); }
+.var-row b { color: var(--green-700); margin-right: 6px; }
+
+/* D3 */
+.d3-toggle { display: inline-flex; gap: 0; border: 1.5px solid var(--ink-200); border-radius: var(--r-pill); overflow: hidden; margin-bottom: var(--s-4); }
+.d3-toggle button { font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 6px 16px; background: transparent; color: var(--ink-500); cursor: pointer; }
+.d3-toggle button.on { background: var(--green-600); color: white; }
+.d3-grid { display: grid; grid-template-columns: 280px 1fr; gap: var(--s-4); align-items: start; }
+@media (max-width: 720px) { .d3-grid { grid-template-columns: 1fr; } }
+.board-mock { background: var(--paper-2); border: 1px solid var(--ink-100); border-radius: var(--r-md); padding: 0; min-height: 320px; position: relative; background-image: linear-gradient(var(--ink-50) 1px, transparent 1px), linear-gradient(90deg, var(--ink-50) 1px, transparent 1px); background-size: 20px 20px; overflow: hidden; }
+.board-mock .toolbar { position: absolute; top: 0; left: 0; right: 0; background: white; border-bottom: 1px solid var(--ink-100); padding: 6px 10px; display: flex; gap: 4px; font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; align-items: center; }
+.board-mock .toolbar .dot { width: 8px; height: 8px; border-radius: 50%; }
+.board-mock .toolbar .dot.r { background: var(--coral-500); }
+.board-mock .toolbar .dot.y { background: var(--sun-400); }
+.board-mock .toolbar .dot.g { background: var(--green-500); }
+.board-canvas-area { position: absolute; top: 30px; left: 12px; right: 12px; bottom: 12px; }
+.section-frame { position: absolute; border: 1.5px dashed var(--ink-300); border-radius: var(--r-sm); background: rgba(250,251,246,.6); padding: 24px 8px 8px; opacity: 0; transition: opacity 320ms; }
+.section-frame.in { opacity: 1; }
+.section-frame .lbl { position: absolute; top: 4px; left: 8px; font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-500); font-weight: 700; }
+.sticky-note { position: absolute; background: var(--sun-300); padding: 4px 6px; font-family: var(--font-sans); font-size: 9px; font-weight: 600; color: var(--ink-900); border-radius: 2px; box-shadow: 1px 2px 0 rgba(10,26,16,.15); width: 50px; height: 36px; opacity: 0; transform: scale(.7); transition: all 240ms; }
+.sticky-note.in { opacity: 1; transform: scale(1); }
+.sticky-note.coral { background: var(--coral-300); }
+.sticky-note.green { background: var(--green-200); }
+
+.brand-card { background: var(--ink-50); border: 1.5px dashed var(--ink-200); border-radius: var(--r-md); padding: var(--s-4); font-family: var(--font-mono); font-size: 11px; }
+.brand-card .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-400); font-weight: 700; margin-bottom: var(--s-2); }
+.brand-card .field { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed var(--ink-200); }
+.brand-card .field:last-child { border: none; }
+.brand-card .field .k { color: var(--ink-500); }
+.brand-card .field .v { color: var(--ink-900); font-weight: 700; }
+.brand-card .swatches { display: flex; gap: 4px; }
+.brand-card .swatches .sw { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--ink-200); }
+
+.sidebar { position: sticky; top: 88px; align-self: start; background: var(--paper-2); border: 1px solid var(--ink-100); border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--shadow-sm); }
+.sidebar .label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-400); font-weight: 700; display: flex; align-items: center; gap: 8px; margin: 0 0 var(--s-2); }
+.sidebar .label .num-badge { background: var(--green-600); color: white; padding: 2px 8px; border-radius: var(--r-sm); font-size: 10px; font-weight: 800; }
+.sidebar h4 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; margin: 0 0 var(--s-4); line-height: 1.2; }
+.sidebar .ww { margin-bottom: var(--s-4); padding-bottom: var(--s-4); border-bottom: 1px dashed var(--ink-200); }
+.sidebar .ww:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.sidebar .ww .lbl { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin: 0 0 6px; display: inline-block; padding: 3px 8px; border-radius: var(--r-sm); }
+.sidebar .ww.what .lbl { background: var(--green-100); color: var(--green-800); }
+.sidebar .ww.why .lbl { background: var(--sun-100); color: var(--sun-700); }
+.sidebar .ww p { font-size: 14px; line-height: 1.5; color: var(--ink-700); margin: 0; }
+.sidebar .ww p b { color: var(--ink-900); font-weight: 700; }
+.sidebar .stack-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: var(--s-5); padding-top: var(--s-4); border-top: 1px solid var(--ink-100); }
+.sidebar .stack-row .tag { font-family: var(--font-mono); font-size: 10px; background: var(--ink-50); color: var(--ink-700); padding: 3px 7px; border-radius: var(--r-xs); font-weight: 600; }
+
+.foot { border-top: 1px solid var(--ink-100); padding: var(--s-8) 0; margin-top: var(--s-8); }
+.foot-inner { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+.foot a { color: var(--green-700); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">m</div>
+      <div class="brand-name">
+        <b>Mario Becerra</b>
+        <span>Block D · Instructional Design Tooling</span>
+      </div>
+    </a>
+    <nav>
+      <a class="navlink back" href="index.html">← All capabilities</a>
+      <a class="navlink" href="block-a-lesson-generation.html">A</a>
+      <a class="navlink" href="block-b-lesson-review.html">B</a>
+      <a class="navlink" href="block-c-interactive-exercises.html">C</a>
+      <a class="navlink" href="block-e-knowledge-rag.html">E</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <p class="eyebrow"><b>BLOCK D</b> · INSTRUCTIONAL DESIGN TOOLING</p>
+    <h1>Three tools the content team <em>reaches for</em> daily.</h1>
+    <p class="lede">
+      Three internal tools built for instructional designers — a
+      <b>JSON-to-slide deck generator</b>, a <b>textbook OCR pipeline</b> that turns
+      a scanned page into structured task variations, and a <b>workshop-board generator</b>
+      that builds branded Miro and FigJam boards from a single JSON file.
+    </p>
+    <div class="hero-meta">
+      <div class="cell"><span class="k">Tools shipped</span><span class="v">3 in production</span></div>
+      <div class="cell"><span class="k">Inputs</span><span class="v">JSON · PDF · image</span></div>
+      <div class="cell"><span class="k">Targets</span><span class="v">Miro · FigJam · pptx</span></div>
+      <div class="cell"><span class="k">Status</span><span class="v ok">Production · in use</span></div>
+    </div>
+  </section>
+
+  <div class="layout">
+
+    <div class="main-col">
+
+      <div class="tools-row" id="toolsRow">
+        <button class="tool-tab on" data-tool="d1">
+          <span class="num">D1</span>
+          <span class="name">Presentation generator</span>
+          <span class="stat">2 h → <b>15 min</b> per deck</span>
+          <span class="tip-tab">JSON brief → branded slide deck</span>
+        </button>
+        <button class="tool-tab" data-tool="d2">
+          <span class="num">D2</span>
+          <span class="name">Textbook OCR</span>
+          <span class="stat">1 page → <b>~12 task variations</b></span>
+          <span class="tip-tab">PDF page → tagged tasks → variations</span>
+        </button>
+        <button class="tool-tab" data-tool="d3">
+          <span class="num">D3</span>
+          <span class="name">Board generator</span>
+          <span class="stat">4 h → <b>8 min</b> per workshop</span>
+          <span class="tip-tab">JSON spec → Miro & FigJam board</span>
+        </button>
+      </div>
+
+      <div class="tool-panel show" id="panel-d1">
+        <div class="tool-head">
+          <div class="left">
+            <h3>D1 · <em>Presentation</em> generator</h3>
+            <p>JSON brief in. Branded slide deck out. The instructional designer never opens PowerPoint.</p>
+          </div>
+          <div class="right">
+            <div class="savings">PER DECK<b>2 h → 15 min</b></div>
+          </div>
+        </div>
+        <div class="runbar">
+          <button class="btn primary sm" id="d1Run">▶ Run pipeline</button>
+          <button class="btn ghost sm" id="d1Reset">Reset</button>
+          <span class="info">Pipeline runs in <b>~10 sec</b> · click any step to inspect</span>
+        </div>
+        <ol class="mini-stepper cols-4" id="d1Stepper"></ol>
+        <div class="d1-grid">
+          <div class="json-card">
+            <div class="hd"><span>brief.json</span><span>1.4 KB</span></div>
+            <pre id="d1Json"><span class="k">"topic"</span>:    <span class="s">"Fractions"</span>,
+<span class="k">"grade"</span>:    <span class="n">4</span>,
+<span class="k">"slides"</span>:   <span class="n">5</span>,
+<span class="k">"brand"</span>:    <span class="s">"client_2026"</span>,
+<span class="k">"language"</span>: <span class="s">"en"</span></pre>
+          </div>
+          <div class="slides-grid" id="d1Slides">
+            <div class="slide title-slide" data-i="0"><div class="slide-num">01</div><div class="slide-title">Fractions<br>Grade 4</div></div>
+            <div class="slide" data-i="1"><div class="slide-num">02</div><div class="slide-title">Half a pizza</div><div class="slide-body"><div class="bullet">cut a circle in two</div><div class="bullet">name each part</div><div class="bullet">write 1 / 2</div></div></div>
+            <div class="slide" data-i="2"><div class="slide-num">03</div><div class="slide-title">Same pieces, different cake</div><div class="slide-body"><div class="bullet">3 of 8 vs 1 of 4</div><div class="bullet">draw both</div><div class="bullet">compare</div></div></div>
+            <div class="slide" data-i="3"><div class="slide-num">04</div><div class="slide-title">Practice — colour the slices</div><div class="slide-body"><div class="bullet">find 3 / 6</div><div class="bullet">find 2 / 5</div><div class="bullet">find 4 / 8</div></div></div>
+            <div class="slide" data-i="4"><div class="slide-num">05</div><div class="slide-title">Exit ticket</div><div class="slide-body"><div class="bullet">draw 1 / 3 of a chocolate bar</div><div class="bullet">explain to your seatmate</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-panel" id="panel-d2">
+        <div class="tool-head">
+          <div class="left">
+            <h3>D2 · <em>Textbook</em> OCR</h3>
+            <p>A scanned textbook page becomes tagged tasks plus auto-generated variations the next day.</p>
+          </div>
+          <div class="right">
+            <div class="savings">PER PAGE<b>1 page → 12 variations</b></div>
+          </div>
+        </div>
+        <div class="runbar">
+          <button class="btn primary sm" id="d2Run">▶ Run pipeline</button>
+          <button class="btn ghost sm" id="d2Reset">Reset</button>
+          <span class="info">Pipeline runs in <b>~14 sec</b></span>
+        </div>
+        <ol class="mini-stepper cols-5" id="d2Stepper"></ol>
+        <div class="d2-flow">
+          <div class="pdf-card">
+            <div class="hd">
+              <div class="pdf-ico">PDF</div>
+              <div>
+                <div class="name">textbook_grade3_p47.pdf</div>
+              </div>
+              <div class="meta">2.3 MB · 1 page</div>
+            </div>
+            <div class="pdf-mock" id="d2Pdf">
+              <div class="task" data-i="0">1. Anna had 12 apples. She gave 4 away. How many left?<span class="tag">word problem</span></div>
+              <div class="task" data-i="1">2. 7 + 8 = ?<span class="tag">arithmetic</span></div>
+              <div class="task" data-i="2">3. Draw a square with side 3 cm.<span class="tag">geometric</span></div>
+              <div class="task" data-i="3">4. The thermometer reads 14°C. By morning it dropped 6°C. Now what?<span class="tag">measurement</span></div>
+              <div class="task" data-i="4">5. Fill the table. Apples: 3, 6, 9, ___, 15<span class="tag">table</span></div>
+              <div class="task" data-i="5">6. Shade ¾ of the rectangle.<span class="tag">fraction</span></div>
+              <div class="task" data-i="6">7. Tom buys 3 books at 5€ each, then sells 1 for 7€. Profit?<span class="tag">multi-step</span></div>
+              <div class="task" data-i="7">8. 25 − 8 = ?<span class="tag">arithmetic</span></div>
+            </div>
+          </div>
+          <div class="task-stats">
+            <div class="lbl">Classification</div>
+            <div class="classify-bar" id="d2Classify"></div>
+            <div class="gap-banner" id="d2Gap" style="display:none;">
+              <b>Curriculum gap detected.</b> Zero geometry-shape tasks beyond drawing. Pipeline auto-generated 3 fillers.
+            </div>
+            <div class="lbl" style="margin-top: 18px;">Auto-generated variations</div>
+            <div class="variations" id="d2Vars"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-panel" id="panel-d3">
+        <div class="tool-head">
+          <div class="left">
+            <h3>D3 · <em>Workshop board</em> generator</h3>
+            <p>The same JSON deploys to either Miro or FigJam. Brand styling baked in.</p>
+          </div>
+          <div class="right">
+            <div class="savings">PER WORKSHOP<b>4 h → 8 min</b></div>
+          </div>
+        </div>
+        <div class="d3-toggle" id="d3Toggle">
+          <button class="on" data-target="miro">Miro board</button>
+          <button data-target="figjam">FigJam board</button>
+        </div>
+        <div class="runbar">
+          <button class="btn primary sm" id="d3Run">▶ Run pipeline</button>
+          <button class="btn ghost sm" id="d3Reset">Reset</button>
+          <span class="info">Pipeline runs in <b>~9 sec</b></span>
+        </div>
+        <ol class="mini-stepper cols-4" id="d3Stepper"></ol>
+        <div class="d3-grid">
+          <div class="brand-card">
+            <div class="lbl">brand_config.json</div>
+            <div class="field"><span class="k">name</span><span class="v">Client 2026</span></div>
+            <div class="field"><span class="k">font</span><span class="v">Manrope</span></div>
+            <div class="field"><span class="k">layout</span><span class="v">3 sections</span></div>
+            <div class="field"><span class="k">stickies</span><span class="v">12</span></div>
+            <div class="field"><span class="k">connectors</span><span class="v">6</span></div>
+            <div class="field"><span class="k">palette</span><span class="swatches">
+              <span class="sw" style="background:var(--green-500)"></span>
+              <span class="sw" style="background:var(--sun-400)"></span>
+              <span class="sw" style="background:var(--coral-300)"></span>
+              <span class="sw" style="background:var(--ink-900)"></span>
+            </span></div>
+          </div>
+          <div class="board-mock" id="d3Board">
+            <div class="toolbar">
+              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+              <span style="margin-left:8px;" id="d3BoardName">Workshop · Brainstorm — Miro</span>
+            </div>
+            <div class="board-canvas-area" id="d3Canvas"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="label">
+        <span class="num-badge" id="sbBadge">D1</span>
+        <span>Currently viewing</span>
+      </div>
+      <h4 id="sbTitle">Presentation generator</h4>
+      <div class="ww what">
+        <p class="lbl">What it does</p>
+        <p id="sbWhat">A short JSON brief (topic, grade, slide count, brand) feeds a four-step pipeline that produces a fully branded slide deck. The instructional designer reviews the deck — <b>they do not open PowerPoint</b>.</p>
+      </div>
+      <div class="ww why">
+        <p class="lbl">Why it matters</p>
+        <p id="sbWhy">A typical deck takes the team <b>two hours of slide work</b> for content the designer already wrote in their head. Compressing that to fifteen minutes means the team ships <b>eight times more decks</b> with the same headcount.</p>
+      </div>
+      <div class="stack-row" id="sbStack">
+        <span class="tag">Python</span>
+        <span class="tag">FastAPI</span>
+        <span class="tag">python-pptx</span>
+        <span class="tag">Jinja2</span>
+      </div>
+    </aside>
+
+  </div>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span>© 2026 Mario Becerra · <a href="index.html">All capabilities</a></span>
+    <span>Block D v1 · Lively</span>
+  </div>
+</footer>
+
+<script>
+const TOOLS = {
+  d1: { badge: "D1", sbTitle: "Presentation generator",
+    what: "A short JSON brief (topic, grade, slide count, brand) feeds a four-step pipeline that produces a fully branded slide deck. The instructional designer reviews the deck — <b>they do not open PowerPoint</b>.",
+    why: "A typical deck takes the team <b>two hours of slide work</b> for content the designer already wrote in their head. Compressing that to fifteen minutes means the team ships <b>eight times more decks</b> with the same headcount.",
+    stack: ["Python", "FastAPI", "python-pptx", "Jinja2"] },
+  d2: { badge: "D2", sbTitle: "Textbook OCR pipeline",
+    what: "A scanned textbook page is OCR-ed by a vision model. Each task is classified into one of seven categories (arithmetic, word problem, geometric, measurement, table, fraction, multi-step). The pipeline reports curriculum gaps and auto-generates <b>variations</b> of each original task.",
+    why: "A teacher needs the same arithmetic exercise in <b>fifteen variants</b> for a class of twenty kids — original textbook gives one. Manual rewriting is the daily 6 PM grind. Auto-generated variations turn one page into a week of differentiated practice.",
+    stack: ["Python", "Vision API", "Pydantic", "scikit-learn"] },
+  d3: { badge: "D3", sbTitle: "Workshop board generator",
+    what: "A single JSON spec (sections, stickies, connectors, brand colours) deploys a fully branded board to <b>either Miro or FigJam</b>. Same input, two destinations, identical visual identity.",
+    why: "Workshop facilitators rebuild the same Brainstorm / Affinity / Retro layouts every Monday. Putting the layout into JSON means the team owns a <b>library of 30 templates</b> any facilitator can deploy in eight minutes — branded, on-message, no Friday-night frustration.",
+    stack: ["Python Flask", "Miro REST API", "TypeScript", "Figma Plugin API"] }
+};
+
+const D1_STAGES = [
+  { key: "parse", num: 1, title: "Parse brief", sub: "JSON in", tip: "Validate schema first" },
+  { key: "outline", num: 2, title: "Outline", sub: "5 slide titles", tip: "Title sequence locked" },
+  { key: "fill", num: 3, title: "Fill content", sub: "bullets + visuals", tip: "Streaming bullets" },
+  { key: "brand", num: 4, title: "Apply brand", sub: "client palette", tip: "Brand baked in last" }
+];
+const D2_STAGES = [
+  { key: "ocr", num: 1, title: "OCR", sub: "Vision API", tip: "Read every task" },
+  { key: "classify", num: 2, title: "Classify", sub: "7 task types", tip: "Tag each task" },
+  { key: "gap", num: 3, title: "Gap analysis", sub: "vs curriculum", tip: "Find missing types" },
+  { key: "vary", num: 4, title: "Variations", sub: "12 per task", tip: "Same shape, new numbers" },
+  { key: "export", num: 5, title: "Export", sub: "SCORM / PDF", tip: "Drop into LMS" }
+];
+const D3_STAGES = [
+  { key: "spec", num: 1, title: "Read spec", sub: "JSON in", tip: "Schema validated" },
+  { key: "layout", num: 2, title: "Layout", sub: "auto-place", tip: "Grid solver" },
+  { key: "brand", num: 3, title: "Brand styling", sub: "palette + font", tip: "Client identity" },
+  { key: "deploy", num: 4, title: "Deploy", sub: "Miro / FigJam", tip: "Live in 2 sec" }
+];
+
+function renderStepper(id, stages) {
+  document.getElementById(id).innerHTML = stages.map(s => `
+    <li class="mstep" data-stage="${s.key}" tabindex="0" role="button">
+      <span class="num">${s.num}</span>
+      <div class="title">${s.title}</div>
+      <div class="sub">${s.sub}</div>
+      <div class="tip-step">${s.tip}</div>
+    </li>`).join("");
+}
+renderStepper("d1Stepper", D1_STAGES);
+renderStepper("d2Stepper", D2_STAGES);
+renderStepper("d3Stepper", D3_STAGES);
+
+function clearStepperState(id) { document.querySelectorAll(`#${id} .mstep`).forEach(el => el.classList.remove("active", "current", "done")); }
+function activateStep(id, key, opts = {}) {
+  document.querySelectorAll(`#${id} .mstep`).forEach(el => el.classList.remove("current", "active"));
+  const step = document.querySelector(`#${id} .mstep[data-stage="${key}"]`);
+  if (step) step.classList.add(opts.running ? "current" : "active");
+}
+function markStep(id, key) {
+  const step = document.querySelector(`#${id} .mstep[data-stage="${key}"]`);
+  if (step) { step.classList.add("done"); step.classList.remove("active", "current"); }
+}
+
+function activateTool(id) {
+  document.querySelectorAll(".tool-tab").forEach(t => t.classList.remove("on"));
+  document.querySelector(`.tool-tab[data-tool="${id}"]`).classList.add("on");
+  document.querySelectorAll(".tool-panel").forEach(p => p.classList.remove("show"));
+  document.getElementById(`panel-${id}`).classList.add("show");
+  const t = TOOLS[id];
+  document.getElementById("sbBadge").textContent = t.badge;
+  document.getElementById("sbTitle").textContent = t.sbTitle;
+  document.getElementById("sbWhat").innerHTML = t.what;
+  document.getElementById("sbWhy").innerHTML = t.why;
+  document.getElementById("sbStack").innerHTML = t.stack.map(x => `<span class="tag">${x}</span>`).join("");
+}
+document.querySelectorAll(".tool-tab").forEach(t => t.addEventListener("click", () => activateTool(t.dataset.tool)));
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function runD1() {
+  resetD1();
+  document.getElementById("d1Run").disabled = true;
+  activateStep("d1Stepper", "parse", { running: true });
+  await sleep(900); markStep("d1Stepper", "parse");
+  activateStep("d1Stepper", "outline", { running: true });
+  await sleep(500);
+  const slides = document.querySelectorAll("#d1Slides .slide");
+  slides[0].classList.add("in");
+  await sleep(800); markStep("d1Stepper", "outline");
+  activateStep("d1Stepper", "fill", { running: true });
+  for (let i = 1; i < slides.length; i++) { await sleep(450); slides[i].classList.add("in"); }
+  await sleep(700); markStep("d1Stepper", "fill");
+  activateStep("d1Stepper", "brand", { running: true });
+  await sleep(1100); markStep("d1Stepper", "brand");
+  document.getElementById("d1Run").disabled = false;
+  document.getElementById("d1Run").innerHTML = "↻ Run again";
+}
+function resetD1() {
+  clearStepperState("d1Stepper");
+  document.querySelector("#d1Stepper .mstep[data-stage='parse']").classList.add("active");
+  document.querySelectorAll("#d1Slides .slide").forEach(s => s.classList.remove("in"));
+}
+document.getElementById("d1Run").addEventListener("click", runD1);
+document.getElementById("d1Reset").addEventListener("click", resetD1);
+document.querySelectorAll("#d1Stepper .mstep").forEach(el => el.addEventListener("click", () => activateStep("d1Stepper", el.dataset.stage)));
+
+const TASK_TYPES = [
+  { name: "Arithmetic", count: 2, color: "#3fb04b" },
+  { name: "Word problem", count: 1, color: "#0a8754" },
+  { name: "Geometric", count: 1, color: "#ff7a5c" },
+  { name: "Measurement", count: 1, color: "#ffd84d" },
+  { name: "Table", count: 1, color: "#6bc44d" },
+  { name: "Fraction", count: 1, color: "#8fd770" },
+  { name: "Multi-step", count: 1, color: "#0a8754" }
+];
+const D2_VARS = [
+  "Anna had 18 apples. She gave 6 away. How many left?",
+  "Lucas had 25 marbles. He lost 9. How many left?",
+  "Maria had 14 cookies. She ate 5. How many left?"
+];
+async function runD2() {
+  resetD2();
+  document.getElementById("d2Run").disabled = true;
+  activateStep("d2Stepper", "ocr", { running: true });
+  const tasks = document.querySelectorAll("#d2Pdf .task");
+  for (const t of tasks) { await sleep(220); t.classList.add("scanned"); }
+  await sleep(500); markStep("d2Stepper", "ocr");
+  activateStep("d2Stepper", "classify", { running: true });
+  const cl = document.getElementById("d2Classify");
+  cl.innerHTML = TASK_TYPES.map(t => `
+    <div class="cb-row" data-name="${t.name}">
+      <div class="name">${t.name}</div>
+      <div class="bar"><div class="fill" style="background:${t.color}"></div></div>
+      <div class="ct">0</div>
+    </div>`).join("");
+  await sleep(400);
+  for (const t of TASK_TYPES) {
+    const row = cl.querySelector(`[data-name="${t.name}"]`);
+    row.querySelector(".fill").style.width = (t.count * 28) + "%";
+    row.querySelector(".ct").textContent = t.count;
+    await sleep(220);
+  }
+  markStep("d2Stepper", "classify");
+  activateStep("d2Stepper", "gap", { running: true });
+  await sleep(700);
+  document.getElementById("d2Gap").style.display = "block";
+  await sleep(900); markStep("d2Stepper", "gap");
+  activateStep("d2Stepper", "vary", { running: true });
+  const vs = document.getElementById("d2Vars");
+  vs.innerHTML = D2_VARS.map((v, i) => `<div class="var-row" data-i="${i}"><b>v${i+1}</b>${v}</div>`).join("");
+  for (let i = 0; i < D2_VARS.length; i++) { await sleep(300); vs.querySelector(`[data-i="${i}"]`).classList.add("in"); }
+  await sleep(600); markStep("d2Stepper", "vary");
+  activateStep("d2Stepper", "export", { running: true });
+  await sleep(1000); markStep("d2Stepper", "export");
+  document.getElementById("d2Run").disabled = false;
+  document.getElementById("d2Run").innerHTML = "↻ Run again";
+}
+function resetD2() {
+  clearStepperState("d2Stepper");
+  document.querySelector("#d2Stepper .mstep[data-stage='ocr']").classList.add("active");
+  document.querySelectorAll("#d2Pdf .task").forEach(t => t.classList.remove("scanned"));
+  document.getElementById("d2Classify").innerHTML = "";
+  document.getElementById("d2Gap").style.display = "none";
+  document.getElementById("d2Vars").innerHTML = "";
+}
+document.getElementById("d2Run").addEventListener("click", runD2);
+document.getElementById("d2Reset").addEventListener("click", resetD2);
+document.querySelectorAll("#d2Stepper .mstep").forEach(el => el.addEventListener("click", () => activateStep("d2Stepper", el.dataset.stage)));
+
+let d3Target = "miro";
+document.querySelectorAll("#d3Toggle button").forEach(b => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll("#d3Toggle button").forEach(x => x.classList.remove("on"));
+    b.classList.add("on");
+    d3Target = b.dataset.target;
+    document.getElementById("d3BoardName").textContent =
+      d3Target === "miro" ? "Workshop · Brainstorm — Miro" : "Workshop · Brainstorm — FigJam";
+  });
+});
+
+const D3_SECTIONS = [
+  { x: 1, y: 0, w: 32, h: 95, label: "PROBLEMS" },
+  { x: 34, y: 0, w: 32, h: 95, label: "ROOT CAUSES" },
+  { x: 67, y: 0, w: 32, h: 95, label: "ACTIONS" }
+];
+const D3_STICKIES = [
+  { x: 4, y: 18, kind: "" }, { x: 16, y: 30, kind: "" }, { x: 6, y: 50, kind: "" }, { x: 18, y: 70, kind: "" },
+  { x: 37, y: 18, kind: "coral" }, { x: 49, y: 30, kind: "coral" }, { x: 39, y: 50, kind: "coral" }, { x: 51, y: 70, kind: "coral" },
+  { x: 70, y: 18, kind: "green" }, { x: 82, y: 30, kind: "green" }, { x: 72, y: 50, kind: "green" }, { x: 84, y: 70, kind: "green" }
+];
+
+async function runD3() {
+  resetD3();
+  document.getElementById("d3Run").disabled = true;
+  activateStep("d3Stepper", "spec", { running: true });
+  await sleep(800); markStep("d3Stepper", "spec");
+  activateStep("d3Stepper", "layout", { running: true });
+  const canvas = document.getElementById("d3Canvas");
+  for (const s of D3_SECTIONS) {
+    const div = document.createElement("div");
+    div.className = "section-frame";
+    div.style.left = s.x + "%"; div.style.top = s.y + "%";
+    div.style.width = s.w + "%"; div.style.height = s.h + "%";
+    div.innerHTML = `<span class="lbl">${s.label}</span>`;
+    canvas.appendChild(div);
+    await sleep(160); div.classList.add("in");
+  }
+  await sleep(500); markStep("d3Stepper", "layout");
+  activateStep("d3Stepper", "brand", { running: true });
+  await sleep(800); markStep("d3Stepper", "brand");
+  activateStep("d3Stepper", "deploy", { running: true });
+  for (const s of D3_STICKIES) {
+    const div = document.createElement("div");
+    div.className = "sticky-note " + s.kind;
+    div.style.left = s.x + "%"; div.style.top = s.y + "%";
+    div.textContent = " ";
+    canvas.appendChild(div);
+    await sleep(120); div.classList.add("in");
+  }
+  await sleep(700); markStep("d3Stepper", "deploy");
+  document.getElementById("d3Run").disabled = false;
+  document.getElementById("d3Run").innerHTML = "↻ Run again";
+}
+function resetD3() {
+  clearStepperState("d3Stepper");
+  document.querySelector("#d3Stepper .mstep[data-stage='spec']").classList.add("active");
+  document.getElementById("d3Canvas").innerHTML = "";
+}
+document.getElementById("d3Run").addEventListener("click", runD3);
+document.getElementById("d3Reset").addEventListener("click", resetD3);
+document.querySelectorAll("#d3Stepper .mstep").forEach(el => el.addEventListener("click", () => activateStep("d3Stepper", el.dataset.stage)));
+
+resetD1(); resetD2(); resetD3();
+</script>
+
+</body>
+</html>

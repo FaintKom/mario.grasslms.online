@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Block B — Lesson Review Pipeline · Mario Becerra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
+  --green-300:#8fd770; --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754;
+  --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
+  --sun-50:#fffbe5; --sun-100:#fff2b3; --sun-300:#ffe066; --sun-400:#ffd84d;
+  --sun-500:#f5b800; --sun-700:#7a5500;
+  --coral-50:#fff0eb; --coral-300:#ffae9a; --coral-500:#ff7a5c; --coral-700:#c33d22;
+  --ink-50:#f4f5f1; --ink-100:#e6e8e4; --ink-200:#c9cec9; --ink-300:#9aa39d;
+  --ink-400:#6b7a70; --ink-500:#4d5a51; --ink-700:#1a2a1f; --ink-900:#0a1a10;
+  --paper:#fafbf6; --paper-2:#ffffff;
+  --shadow-xs:0 1px 2px rgba(10,26,16,.05);
+  --shadow-sm:0 2px 6px -1px rgba(10,26,16,.07);
+  --shadow-md:0 8px 24px -8px rgba(10,26,16,.12);
+  --shadow-lg:0 18px 50px -20px rgba(10,26,16,.18);
+  --shadow-pop:0 4px 0 0 var(--green-700);
+  --shadow-pop-sm:0 2px 0 0 var(--green-700);
+  --shadow-pop-ink:0 4px 0 0 var(--ink-100);
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:24px; --r-pill:999px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px; --s-8:32px;
+  --s-10:40px; --s-12:48px; --s-16:64px; --s-20:80px;
+  --font-sans:'Manrope',system-ui,-apple-system,sans-serif;
+  --font-mono:'Geist Mono',ui-monospace,SFMono-Regular,monospace;
+  --maxw:1400px; --gutter:clamp(16px,3vw,32px);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper); color: var(--ink-900);
+  font-family: var(--font-sans); font-size: 15px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+.font-mono { font-family: var(--font-mono); }
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(250,251,246,.92);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--ink-100);
+}
+.topbar-inner { display: flex; align-items: center; gap: 18px; padding: 14px var(--gutter); max-width: var(--maxw); margin: 0 auto; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  width: 32px; height: 32px;
+  background: var(--green-500); color: white;
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-weight: 700; font-size: 14px;
+  position: relative;
+}
+.brand-mark::after {
+  content: ""; position: absolute;
+  width: 7px; height: 7px;
+  background: var(--sun-400);
+  border-radius: 50%;
+  bottom: -1px; right: -1px;
+}
+.brand-name { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-name b { font-weight: 800; font-size: 14px; letter-spacing: -.01em; }
+.brand-name span {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .06em;
+  color: var(--ink-400);
+}
+.topbar nav { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+.navlink {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 8px 12px; border-radius: var(--r-pill);
+  color: var(--ink-500); transition: all 150ms;
+}
+.navlink:hover { color: var(--green-700); background: var(--green-50); }
+.navlink.back { color: var(--ink-700); }
+.navlink.back:hover { color: var(--ink-900); background: var(--ink-50); }
+
+.hero { padding: var(--s-12) 0 var(--s-8); }
+.eyebrow {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400); font-weight: 600;
+  margin: 0 0 var(--s-3);
+}
+.eyebrow b { color: var(--green-700); font-weight: 600; }
+.hero h1 {
+  font-weight: 800; font-size: clamp(34px, 5.6vw, 60px);
+  line-height: 1.05; letter-spacing: -.02em;
+  margin: 0 0 var(--s-5); max-width: 22ch;
+}
+.hero h1 em {
+  font-style: normal; background: var(--sun-300);
+  padding: 0 10px; border-radius: 8px;
+  display: inline-block; transform: rotate(-1deg);
+}
+.hero .lede {
+  font-size: 18px; line-height: 1.55;
+  color: var(--ink-500); font-weight: 500;
+  max-width: 56ch; margin: 0;
+}
+.hero .lede b { font-weight: 700; color: var(--ink-900); background: var(--green-50); padding: 0 4px; border-radius: var(--r-xs); }
+.hero-meta {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-4);
+  margin-top: var(--s-8); padding-top: var(--s-6);
+  border-top: 1px solid var(--ink-100);
+}
+.hero-meta .cell { display: flex; flex-direction: column; gap: 2px; }
+.hero-meta .k { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-400); }
+.hero-meta .v { font-size: 14px; font-weight: 700; color: var(--ink-900); }
+.hero-meta .v.ok { color: var(--green-700); }
+.hero-meta .v.warn { color: var(--sun-700); }
+
+.layout {
+  display: grid; grid-template-columns: 1fr 340px;
+  gap: var(--s-8); padding: var(--s-8) 0 var(--s-16);
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static !important; }
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+  padding: 12px 20px; border-radius: var(--r-md);
+  border: none; cursor: pointer;
+  transition: transform 120ms, box-shadow 120ms;
+  white-space: nowrap;
+}
+.btn.primary { background: var(--green-600); color: white; box-shadow: var(--shadow-pop); }
+.btn.primary:hover { transform: translateY(2px); box-shadow: var(--shadow-pop-sm); }
+.btn.primary:active { transform: translateY(4px); box-shadow: 0 0 0 0 var(--green-700); }
+.btn.primary:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+.btn.secondary { background: var(--paper-2); color: var(--ink-900); box-shadow: var(--shadow-pop-ink); }
+.btn.secondary:hover { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--ink-100); }
+.btn.ghost { background: transparent; color: var(--ink-700); padding: 10px 14px; }
+.btn.ghost:hover { background: var(--ink-50); }
+.btn.sm { font-size: 12px; padding: 8px 14px; border-radius: var(--r-sm); }
+
+.stepper { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--s-2); list-style: none; padding: 0; margin: 0 0 var(--s-6); }
+.step {
+  position: relative;
+  background: var(--paper-2); border: 1.5px solid var(--ink-100);
+  border-radius: var(--r-md); padding: var(--s-3);
+  cursor: pointer; transition: all 180ms;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.step:hover { border-color: var(--green-300); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.step.active, .step.current { border-color: var(--green-600); background: var(--green-50); box-shadow: 0 0 0 3px var(--green-100); }
+.step.done { border-color: var(--green-500); background: var(--green-25); }
+.step .num {
+  width: 22px; height: 22px;
+  background: var(--ink-100); color: var(--ink-700);
+  border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+}
+.step.current .num, .step.active .num { background: var(--green-600); color: white; }
+.step.done .num { background: var(--green-500); color: white; }
+.step .title { font-size: 13px; font-weight: 700; color: var(--ink-900); }
+.step .sub { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-400); margin-left: 30px; }
+.step.done .sub { color: var(--green-700); }
+.step .tip {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: var(--ink-900); color: var(--paper);
+  padding: 8px 12px; border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity 140ms; z-index: 20;
+  box-shadow: var(--shadow-md);
+}
+.step .tip::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--ink-900); }
+.step:hover .tip { opacity: 1; }
+
+.stage-area {
+  background: var(--paper-2); border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg); padding: var(--s-6);
+  min-height: 480px; position: relative; overflow: hidden;
+}
+.stage-card { display: none; animation: fadeIn 240ms ease; }
+.stage-card.show { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.stage-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--s-5); }
+.stage-head h3 { font-size: 20px; font-weight: 800; margin: 0; letter-spacing: -.01em; }
+.stage-head .meta { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+
+.upload-grid { display: grid; grid-template-columns: 280px 1fr; gap: var(--s-5); align-items: start; }
+.video-card {
+  background: var(--ink-50); border: 1.5px dashed var(--ink-200);
+  border-radius: var(--r-md); padding: var(--s-5);
+  display: flex; flex-direction: column; gap: var(--s-2);
+  cursor: grab; transition: all 200ms;
+}
+.video-card.gone { opacity: .35; pointer-events: none; }
+.video-card .play-ico {
+  width: 40px; height: 40px;
+  background: var(--coral-500); color: white;
+  border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  font-size: 18px;
+}
+.video-card .name { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--ink-900); }
+.video-card .desc { font-size: 12px; color: var(--ink-500); }
+.video-card .size { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; margin-top: auto; }
+.dropzone {
+  background: var(--paper); border: 1.5px dashed var(--ink-200);
+  border-radius: var(--r-md); padding: var(--s-6);
+  min-height: 200px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; transition: all 200ms;
+}
+.dropzone.over { border-color: var(--green-600); background: var(--green-25); }
+.dropzone.parsed {
+  align-items: stretch; text-align: left;
+  background: var(--green-25); border-color: var(--green-500); border-style: solid;
+}
+.dropzone .hint { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+.upload-receipt { width: 100%; }
+.upload-receipt .top { display: flex; gap: var(--s-3); align-items: center; margin-bottom: var(--s-3); }
+.upload-receipt .badge {
+  font-family: var(--font-mono); font-size: 10px;
+  background: var(--green-600); color: white;
+  padding: 3px 8px; border-radius: var(--r-pill);
+  text-transform: uppercase; letter-spacing: .06em; font-weight: 700;
+}
+.upload-receipt h4 { font-size: 16px; font-weight: 800; margin: 0 0 var(--s-3); }
+.upload-receipt .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); font-family: var(--font-mono); font-size: 12px; }
+.upload-receipt .meta-grid .k { color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; font-size: 10px; }
+.upload-receipt .meta-grid .v { color: var(--ink-900); font-weight: 700; }
+.upload-receipt .meta-grid .v.checksum { font-size: 11px; color: var(--green-700); word-break: break-all; }
+
+.frames-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: var(--s-2); margin-bottom: var(--s-4); }
+.frame-cell {
+  aspect-ratio: 16/9;
+  background: var(--ink-100);
+  border-radius: var(--r-xs);
+  position: relative; overflow: hidden;
+  opacity: 0; transform: scale(.85);
+  transition: all 200ms;
+}
+.frame-cell.in { opacity: 1; transform: scale(1); }
+.frame-cell .timestamp {
+  position: absolute; bottom: 2px; right: 3px;
+  font-family: var(--font-mono); font-size: 8px;
+  background: rgba(10,26,16,.7); color: white;
+  padding: 1px 4px; border-radius: 2px;
+}
+.frame-cell.f-board { background: linear-gradient(135deg, var(--ink-700), var(--ink-900)); }
+.frame-cell.f-slide { background: linear-gradient(135deg, var(--green-200), var(--green-400)); }
+.frame-cell.f-teacher { background: linear-gradient(135deg, var(--coral-300), var(--coral-500)); }
+.frame-cell.f-student { background: linear-gradient(135deg, var(--sun-300), var(--sun-500)); }
+.frames-progress { font-family: var(--font-mono); font-size: 12px; color: var(--ink-500); display: flex; justify-content: space-between; align-items: center; }
+.frames-progress b { color: var(--green-700); }
+
+.vision-tags { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-3); margin-bottom: var(--s-4); }
+.tag-bucket { background: var(--paper); border: 1px solid var(--ink-100); border-radius: var(--r-md); padding: var(--s-3); }
+.tag-bucket .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+.tag-bucket .count { font-size: 24px; font-weight: 800; margin: 4px 0; }
+.tag-bucket .desc { font-size: 11px; color: var(--ink-500); }
+.tag-bucket.board .count { color: var(--ink-900); }
+.tag-bucket.slide .count { color: var(--green-700); }
+.tag-bucket.teacher .count { color: var(--coral-700); }
+.tag-bucket.student .count { color: var(--sun-700); }
+.vision-summary { background: var(--paper); border: 1px solid var(--ink-100); border-radius: var(--r-md); padding: var(--s-4); font-size: 13px; }
+
+.transcript-doc {
+  background: var(--paper); border: 1px solid var(--ink-100);
+  border-radius: var(--r-md); padding: var(--s-5);
+  max-height: 360px; overflow-y: auto;
+  font-size: 14px; line-height: 1.7;
+}
+.transcript-line { display: flex; gap: var(--s-3); margin-bottom: var(--s-2); align-items: baseline; }
+.transcript-line .ts { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); flex-shrink: 0; min-width: 50px; }
+.transcript-line .who {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; padding: 2px 6px; border-radius: var(--r-xs);
+  flex-shrink: 0; min-width: 60px; text-align: center;
+}
+.transcript-line .who.teacher { background: var(--coral-50); color: var(--coral-700); }
+.transcript-line .who.student { background: var(--sun-50); color: var(--sun-700); }
+.transcript-line .text { color: var(--ink-700); }
+.cursor::after { content: "▊"; color: var(--green-600); animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.rubric-list { display: flex; flex-direction: column; gap: var(--s-2); }
+.rubric-row {
+  display: grid; grid-template-columns: 1fr auto 60px;
+  align-items: center; gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper); border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  opacity: 0; transform: translateX(-8px);
+  transition: all 220ms;
+}
+.rubric-row.in { opacity: 1; transform: translateX(0); }
+.rubric-row .name { font-size: 14px; font-weight: 700; color: var(--ink-900); }
+.rubric-row .name .sub { display: block; font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .04em; margin-top: 2px; font-weight: 500; }
+.rubric-row .bar { width: 100px; height: 8px; background: var(--ink-100); border-radius: var(--r-pill); overflow: hidden; }
+.rubric-row .bar .fill { height: 100%; background: linear-gradient(90deg, var(--green-400), var(--green-600)); width: 0; transition: width 600ms; border-radius: var(--r-pill); }
+.rubric-row.warn .bar .fill { background: linear-gradient(90deg, var(--sun-400), var(--sun-500)); }
+.rubric-row.bad .bar .fill { background: linear-gradient(90deg, var(--coral-300), var(--coral-500)); }
+.rubric-row .score {
+  font-family: var(--font-mono); font-size: 13px; font-weight: 800;
+  text-align: right; color: var(--green-700);
+  background: var(--green-25); padding: 4px 8px; border-radius: var(--r-sm);
+}
+.rubric-row.warn .score { color: var(--sun-700); background: var(--sun-50); }
+.rubric-row.bad .score { color: var(--coral-700); background: var(--coral-50); }
+
+.report {
+  background: linear-gradient(135deg, var(--green-25), var(--paper-2));
+  border: 1px solid var(--green-300);
+  border-radius: var(--r-lg); padding: var(--s-6);
+}
+.report .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-5); padding-bottom: var(--s-4); border-bottom: 1px dashed var(--green-300); }
+.report .top .left .lbl { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--green-700); font-weight: 700; }
+.report .top .left h4 { font-size: 22px; font-weight: 800; margin: 4px 0 0; }
+.report .top .right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.report .top .right .score-num { font-size: 44px; font-weight: 800; color: var(--sun-700); line-height: 1; }
+.report .top .right .score-lbl { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .08em; }
+.report .verdict {
+  background: var(--sun-50); border: 1px solid var(--sun-300);
+  border-radius: var(--r-md); padding: var(--s-4);
+  margin-bottom: var(--s-4);
+  font-size: 14px; color: var(--ink-900); line-height: 1.5;
+}
+.report .verdict b { color: var(--sun-700); }
+.report .findings { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); margin-bottom: var(--s-4); }
+.findings-col h5 { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 var(--s-3); display: inline-block; padding: 3px 8px; border-radius: var(--r-sm); }
+.findings-col.strengths h5 { background: var(--green-100); color: var(--green-800); }
+.findings-col.gaps h5 { background: var(--coral-50); color: var(--coral-700); }
+.findings-col ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--ink-700); line-height: 1.55; }
+.findings-col ul li { margin-bottom: 6px; }
+.findings-col ul li b { color: var(--ink-900); }
+.report .timeline {
+  background: var(--paper-2); border: 1px solid var(--ink-100);
+  border-radius: var(--r-md); padding: var(--s-3);
+  margin-bottom: var(--s-4);
+}
+.timeline-bar { position: relative; height: 28px; background: var(--ink-50); border-radius: var(--r-sm); }
+.timeline-mark { position: absolute; top: 2px; bottom: 2px; width: 3px; border-radius: 2px; cursor: pointer; }
+.timeline-mark.ok { background: var(--green-500); }
+.timeline-mark.warn { background: var(--sun-500); }
+.timeline-mark.bad { background: var(--coral-500); }
+.timeline-mark:hover { width: 5px; }
+.timeline-legend { display: flex; gap: var(--s-3); margin-top: 6px; font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+.timeline-legend .ldot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+.report .actions { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+
+.sidebar {
+  position: sticky; top: 88px; align-self: start;
+  background: var(--paper-2); border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg); padding: var(--s-6);
+  box-shadow: var(--shadow-sm);
+}
+.sidebar .label {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400); font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 var(--s-2);
+}
+.sidebar .label .num-badge {
+  background: var(--green-600); color: white;
+  width: 18px; height: 18px;
+  border-radius: var(--r-xs);
+  display: grid; place-items: center;
+  font-size: 10px; font-weight: 800;
+}
+.sidebar h4 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; margin: 0 0 var(--s-5); line-height: 1.2; }
+.sidebar .ww { margin-bottom: var(--s-4); padding-bottom: var(--s-4); border-bottom: 1px dashed var(--ink-200); }
+.sidebar .ww:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.sidebar .ww .lbl {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em; font-weight: 700;
+  margin: 0 0 6px;
+  display: inline-block; padding: 3px 8px; border-radius: var(--r-sm);
+}
+.sidebar .ww.what .lbl { background: var(--green-100); color: var(--green-800); }
+.sidebar .ww.why .lbl { background: var(--sun-100); color: var(--sun-700); }
+.sidebar .ww p { font-size: 14px; line-height: 1.5; color: var(--ink-700); margin: 0; }
+.sidebar .ww p b { color: var(--ink-900); font-weight: 700; }
+.sidebar .stack-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: var(--s-5); padding-top: var(--s-4); border-top: 1px solid var(--ink-100); }
+.sidebar .stack-row .tag {
+  font-family: var(--font-mono); font-size: 10px;
+  background: var(--ink-50); color: var(--ink-700);
+  padding: 3px 7px; border-radius: var(--r-xs); font-weight: 600;
+}
+
+.runbar {
+  display: flex; gap: var(--s-3); align-items: center;
+  margin-bottom: var(--s-5); padding: var(--s-4);
+  background: var(--paper-2); border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg);
+}
+.runbar .info { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; margin-left: auto; }
+.runbar .info b { color: var(--green-700); }
+
+.foot { border-top: 1px solid var(--ink-100); padding: var(--s-8) 0; margin-top: var(--s-8); }
+.foot-inner { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+.foot a { color: var(--green-700); }
+
+@media (max-width: 720px) {
+  .stepper { grid-template-columns: repeat(3, 1fr); }
+  .step .sub { display: none; }
+  .upload-grid { grid-template-columns: 1fr; }
+  .frames-grid { grid-template-columns: repeat(4, 1fr); }
+  .vision-tags { grid-template-columns: repeat(2, 1fr); }
+  .report .findings { grid-template-columns: 1fr; }
+  .hero-meta { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">m</div>
+      <div class="brand-name">
+        <b>Mario Becerra</b>
+        <span>Block B · Lesson Review</span>
+      </div>
+    </a>
+    <nav>
+      <a class="navlink back" href="index.html">← All capabilities</a>
+      <a class="navlink" href="block-a-lesson-generation.html">A</a>
+      <a class="navlink" href="block-c-interactive-exercises.html">C</a>
+      <a class="navlink" href="block-d-content-tools.html">D</a>
+      <a class="navlink" href="block-e-knowledge-rag.html">E</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <p class="eyebrow"><b>BLOCK B</b> · LESSON REVIEW PIPELINE</p>
+    <h1>Methodical feedback on every lesson, <em>scored</em> against a rubric.</h1>
+    <p class="lede">
+      A teacher uploads a recorded lesson. Two minutes later the instructional
+      design lead receives a <b>rubric-scored report</b> with timestamped evidence —
+      strengths, gaps, and specific moments to discuss in the next coaching session.
+    </p>
+    <div class="hero-meta">
+      <div class="cell"><span class="k">Lesson</span><span class="v">Python loops · Grade 9</span></div>
+      <div class="cell"><span class="k">Duration</span><span class="v">47 min · 1080p</span></div>
+      <div class="cell"><span class="k">Score</span><span class="v warn">72 / 100</span></div>
+      <div class="cell"><span class="k">Status</span><span class="v ok">Production · 6 stages</span></div>
+    </div>
+  </section>
+
+  <div class="layout">
+
+    <div class="main-col">
+
+      <div class="runbar">
+        <button class="btn primary" id="runBtn">▶ Run pipeline</button>
+        <button class="btn ghost sm" id="resetBtn">Reset</button>
+        <span class="info">Approx <b>15 sec</b> end-to-end · click any step to inspect</span>
+      </div>
+
+      <ol class="stepper" id="stepper"></ol>
+
+      <div class="stage-area">
+
+        <div class="stage-card show" data-stage="upload">
+          <div class="stage-head">
+            <h3>1 · Upload</h3>
+            <span class="meta">MP4 · 428 MB</span>
+          </div>
+          <div class="upload-grid">
+            <div class="video-card" id="videoFile">
+              <div class="play-ico">▶</div>
+              <div class="name">lesson_python_loops.mp4</div>
+              <div class="desc">Recorded class · 47:12 · 1080p · OBS capture</div>
+              <div class="size">428 MB</div>
+            </div>
+            <div class="dropzone" id="uploadDrop">
+              <div class="hint" id="uploadHint">Click "Run pipeline" → file uploads here</div>
+              <div class="upload-receipt" id="uploadReceipt" style="display:none;">
+                <div class="top">
+                  <span class="badge">Queued</span>
+                  <span style="font-family:var(--font-mono);font-size:11px;color:var(--ink-500);">job #4729</span>
+                </div>
+                <h4>lesson_python_loops.mp4</h4>
+                <div class="meta-grid">
+                  <div><div class="k">Duration</div><div class="v">47 min 12 s</div></div>
+                  <div><div class="k">Codec</div><div class="v">H.264 · AAC</div></div>
+                  <div><div class="k">Resolution</div><div class="v">1920 × 1080</div></div>
+                  <div><div class="k">Size</div><div class="v">428.4 MB</div></div>
+                  <div style="grid-column: 1 / -1;"><div class="k">SHA-256 checksum</div><div class="v checksum">3b7c2f4e9a8d6b1f5c0a... ✓ verified</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-card" data-stage="frames">
+          <div class="stage-head">
+            <h3>2 · Frame extraction</h3>
+            <span class="meta">ffmpeg · 1 frame / 30 sec</span>
+          </div>
+          <div class="frames-grid" id="framesGrid"></div>
+          <div class="frames-progress" id="framesProgress">
+            <span>frames captured</span>
+            <span><b>0</b> / 94</span>
+          </div>
+        </div>
+
+        <div class="stage-card" data-stage="vision">
+          <div class="stage-head">
+            <h3>3 · Vision tagging</h3>
+            <span class="meta">Per-frame classification</span>
+          </div>
+          <div class="vision-tags" id="visionTags"></div>
+          <div class="vision-summary" id="visionSum">Vision pass pending. Each frame will be tagged with the dominant teaching mode visible.</div>
+        </div>
+
+        <div class="stage-card" data-stage="transcript">
+          <div class="stage-head">
+            <h3>4 · Transcribe</h3>
+            <span class="meta">faster-whisper · diarised</span>
+          </div>
+          <div class="transcript-doc" id="transcriptDoc">
+            <p style="color:var(--ink-400);font-style:italic;">Audio waiting…</p>
+          </div>
+        </div>
+
+        <div class="stage-card" data-stage="rubric">
+          <div class="stage-head">
+            <h3>5 · Rubric scoring</h3>
+            <span class="meta">9 of 17 categories applicable</span>
+          </div>
+          <div class="rubric-list" id="rubricList"></div>
+        </div>
+
+        <div class="stage-card" data-stage="report">
+          <div class="stage-head">
+            <h3>6 · Report</h3>
+            <span class="meta">Sent to lead + teacher</span>
+          </div>
+          <div class="report">
+            <div class="top">
+              <div class="left">
+                <div class="lbl">METHODICAL REVIEW</div>
+                <h4>Python loops · Grade 9 · 2026-04-18</h4>
+              </div>
+              <div class="right">
+                <div class="score-num">72</div>
+                <div class="score-lbl">/ 100 · solid with gaps</div>
+              </div>
+            </div>
+            <div class="verdict">
+              <b>Verdict.</b> Strong concept introduction and live coding. Pacing slips in the middle third.
+              Two formative checks were skipped, which surfaces as a comprehension gap during the practice block.
+              Coaching focus for next session: <b>formative checks every 8–10 min</b>.
+            </div>
+            <div class="findings">
+              <div class="findings-col strengths">
+                <h5>Strengths</h5>
+                <ul>
+                  <li><b>Hook.</b> Roblox infinite-loop demo grabbed full-class attention by 0:48.</li>
+                  <li><b>Live coding.</b> Off-by-one bug fixed live with class input — strong scaffolding.</li>
+                  <li><b>Vocabulary.</b> Each new term introduced visually before being used in code.</li>
+                </ul>
+              </div>
+              <div class="findings-col gaps">
+                <h5>Gaps</h5>
+                <ul>
+                  <li><b>Missed checks at 14:23 and 28:50.</b> Comprehension drift went unmeasured.</li>
+                  <li><b>Practice block (32–42 min).</b> Three students disengaged · no re-engagement move.</li>
+                  <li><b>Wrap-up cut short.</b> No exit ticket · no preview of next lesson.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="timeline">
+              <div class="timeline-bar" id="timelineBar"></div>
+              <div class="timeline-legend">
+                <span><span class="ldot" style="background:var(--green-500)"></span> Strong moment</span>
+                <span><span class="ldot" style="background:var(--sun-500)"></span> Pacing slip</span>
+                <span><span class="ldot" style="background:var(--coral-500)"></span> Missed check</span>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn primary sm">Send to design lead</button>
+              <button class="btn secondary sm">Export PDF</button>
+              <button class="btn secondary sm">Open in dashboard</button>
+              <button class="btn ghost sm">Schedule coaching</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="label">
+        <span class="num-badge" id="sbNum">1</span>
+        <span>Currently viewing</span>
+      </div>
+      <h4 id="sbTitle">Upload</h4>
+      <div class="ww what">
+        <p class="lbl">What happens</p>
+        <p id="sbWhat">A recorded lesson uploads. The pipeline computes a SHA-256 checksum, files it under a job ID, and queues the job. The team sees a tracking link immediately.</p>
+      </div>
+      <div class="ww why">
+        <p class="lbl">Why it matters</p>
+        <p id="sbWhy">Without a checksum, the same lesson gets re-processed every time someone re-uploads. Without a queue, the reviewer sits not knowing whether the job started. Both costs add up across <b>thirty lessons a week</b>.</p>
+      </div>
+      <div class="stack-row" id="sbStack">
+        <span class="tag">FastAPI</span>
+        <span class="tag">S3</span>
+        <span class="tag">Celery</span>
+      </div>
+    </aside>
+
+  </div>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span>© 2026 Mario Becerra · <a href="index.html">All capabilities</a></span>
+    <span>Block B v2 · Lively</span>
+  </div>
+</footer>
+
+<script>
+const STAGES = [
+  {
+    key: "upload", num: 1, title: "Upload", sub: "queue + checksum",
+    sbTitle: "Upload",
+    what: "A recorded lesson uploads. The pipeline computes a SHA-256 checksum, files it under a job ID, and queues the job. The team sees a tracking link immediately.",
+    why: "Without a checksum, the same lesson gets re-processed every time someone re-uploads. Without a queue, the reviewer sits not knowing whether the job started. Both costs add up across <b>thirty lessons a week</b>.",
+    tip: "Hash, queue, acknowledge",
+    stack: ["FastAPI", "S3", "Celery"]
+  },
+  {
+    key: "frames", num: 2, title: "Frames", sub: "ffmpeg · 1 / 30 s",
+    sbTitle: "Frame extraction",
+    what: "ffmpeg extracts one frame every thirty seconds from the video. A 47-minute lesson produces 94 frames stored as JPEGs on disk.",
+    why: "Vision API calls cost real money. Sampling at 1 / 30 s catches every meaningful teaching move (board change, slide flip, gesture) without exploding the bill. <b>The sampling rate is tunable</b> per client — denser sampling for high-stakes assessments.",
+    tip: "Sample for signal, not noise",
+    stack: ["ffmpeg", "Python", "Pillow"]
+  },
+  {
+    key: "vision", num: 3, title: "Vision", sub: "per-frame tags",
+    sbTitle: "Vision tagging",
+    what: "Each frame goes through a vision model that tags the dominant teaching mode visible: board content, slide present, teacher in frame, students engaged.",
+    why: "Manually scrubbing 94 thumbnails takes a reviewer <b>thirty minutes per lesson</b>. Vision tagging finishes in 90 seconds and surfaces only the moments worth watching — a 20× speed-up on the slowest part of review.",
+    tip: "Skip to the moments that matter",
+    stack: ["Gemini Vision", "OpenAI", "async"]
+  },
+  {
+    key: "transcript", num: 4, title: "Transcribe", sub: "whisper-medium",
+    sbTitle: "Transcribe + diarise",
+    what: "faster-whisper runs locally and produces a word-level timestamped transcript. Diarisation labels each line as teacher or student.",
+    why: "Cloud Whisper is €0.006 / min — across thirty lessons a week that's a <b>budget hole</b>. The local model has the same accuracy, runs unlimited, and the diarisation gives instant insights like \"teacher dominated 78 % of speaking time\".",
+    tip: "Local model, unlimited runs",
+    stack: ["faster-whisper", "CTranslate2", "pyannote"]
+  },
+  {
+    key: "rubric", num: 5, title: "Rubric", sub: "17 categories",
+    sbTitle: "Rubric scoring",
+    what: "A real methodical rubric — 17 categories like pacing, formative checks, scaffolding, vocabulary, engagement, wrap-up. Nine apply to this lesson type. Each gets a score and an evidence quote with a timestamp.",
+    why: "Generic AI feedback (\"the lesson was good\") is useless. Grounding scores in a rubric framework with cited evidence makes the report <b>actionable and trusted</b>. The teacher sees the exact moment, not a vague vibe.",
+    tip: "Cited timestamps beat vibes",
+    stack: ["Pydantic", "LLM", "YAML"]
+  },
+  {
+    key: "report", num: 6, title: "Report", sub: "teacher summary",
+    sbTitle: "Final report",
+    what: "Final report assembles: overall score, three strengths, three gaps, an evidence-cited timeline, and one specific coaching focus for the next session.",
+    why: "The reviewer forwards the report straight to the teacher. The single coaching focus is the difference between <b>generic notes that get ignored</b> and a concrete next-session goal that actually moves practice.",
+    tip: "One coaching focus, not ten",
+    stack: ["Jinja2", "WeasyPrint", "React"]
+  }
+];
+
+const FRAMES = [
+  "f-board","f-board","f-slide","f-slide","f-board","f-teacher","f-board","f-slide",
+  "f-slide","f-board","f-board","f-teacher","f-student","f-slide","f-board","f-board",
+  "f-slide","f-slide","f-teacher","f-student","f-board","f-board","f-slide","f-board"
+];
+
+const VISION_BUCKETS = [
+  { key: "board",   lbl: "Whiteboard / code", count: 38, desc: "Most teaching happens here" },
+  { key: "slide",   lbl: "Slide on screen",   count: 27, desc: "Reference material" },
+  { key: "teacher", lbl: "Teacher in frame",  count: 18, desc: "Direct instruction · gesture" },
+  { key: "student", lbl: "Student response",  count: 11, desc: "Engagement signal" }
+];
+
+const TRANSCRIPT = [
+  { ts: "0:48",  who: "teacher", text: "Look at this Roblox character. Why does it keep spinning forever?" },
+  { ts: "0:53",  who: "student", text: "Maybe… the loop never stops?" },
+  { ts: "1:02",  who: "teacher", text: "Exactly. There's a missing piece. Today we figure out what." },
+  { ts: "8:14",  who: "teacher", text: "Three pieces: the test, the body, and the update. Miss any one and the loop misbehaves." },
+  { ts: "14:23", who: "teacher", text: "Let's keep moving — countdown timer next." },
+  { ts: "18:50", who: "teacher", text: "I'll run this once with a bug. Watch what happens." },
+  { ts: "19:12", who: "student", text: "It's frozen!" },
+  { ts: "19:20", who: "teacher", text: "Right. We forgot the update. Let me fix it…" }
+];
+
+const RUBRIC = [
+  { name: "Hook · attention",        sub: "first 60 s",         score: 92, cls: "" },
+  { name: "Concept introduction",    sub: "explainer + visual", score: 88, cls: "" },
+  { name: "Vocabulary scaffolding",  sub: "5 terms surfaced",   score: 85, cls: "" },
+  { name: "Worked example",          sub: "live coding",        score: 90, cls: "" },
+  { name: "Formative checks",        sub: "0 of 3 expected",    score: 28, cls: "bad" },
+  { name: "Pacing · middle third",   sub: "32–42 min",          score: 62, cls: "warn" },
+  { name: "Engagement re-entry",     sub: "3 disengaged",       score: 55, cls: "warn" },
+  { name: "Wrap-up · exit ticket",   sub: "skipped",            score: 35, cls: "bad" },
+  { name: "Time budget",             sub: "47 / 45 min",        score: 78, cls: "" }
+];
+
+const stepper = document.getElementById("stepper");
+stepper.innerHTML = STAGES.map(s => `
+  <li class="step" data-stage="${s.key}" tabindex="0" role="button" aria-label="View stage ${s.num}: ${s.title}">
+    <div style="display:flex;align-items:center;gap:8px;"><span class="num">${s.num}</span></div>
+    <div class="title">${s.title}</div>
+    <div class="sub">${s.sub}</div>
+    <div class="tip">${s.tip}</div>
+  </li>
+`).join("");
+
+function showStage(key, opts = {}) {
+  document.querySelectorAll(".step").forEach(el => el.classList.remove("active", "current"));
+  document.querySelectorAll(".stage-card").forEach(el => el.classList.remove("show"));
+  const step = document.querySelector(`.step[data-stage="${key}"]`);
+  const card = document.querySelector(`.stage-card[data-stage="${key}"]`);
+  if (step) step.classList.add(opts.running ? "current" : "active");
+  if (card) card.classList.add("show");
+  updateSidebar(key);
+}
+function markDone(key) {
+  const step = document.querySelector(`.step[data-stage="${key}"]`);
+  if (step) { step.classList.add("done"); step.classList.remove("active", "current"); }
+}
+function updateSidebar(key) {
+  const s = STAGES.find(x => x.key === key);
+  if (!s) return;
+  document.getElementById("sbNum").textContent = s.num;
+  document.getElementById("sbTitle").textContent = s.sbTitle;
+  document.getElementById("sbWhat").innerHTML = s.what;
+  document.getElementById("sbWhy").innerHTML = s.why;
+  document.getElementById("sbStack").innerHTML = s.stack.map(t => `<span class="tag">${t}</span>`).join("");
+}
+document.querySelectorAll(".step").forEach(el => {
+  el.addEventListener("click", () => showStage(el.dataset.stage));
+  el.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showStage(el.dataset.stage); }
+  });
+});
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function runPipeline() {
+  resetPipeline();
+  const runBtn = document.getElementById("runBtn");
+  runBtn.disabled = true;
+
+  showStage("upload", { running: true });
+  await sleep(400);
+  document.getElementById("videoFile").classList.add("gone");
+  const drop = document.getElementById("uploadDrop");
+  drop.classList.add("over");
+  await sleep(700);
+  drop.classList.remove("over");
+  drop.classList.add("parsed");
+  document.getElementById("uploadHint").style.display = "none";
+  document.getElementById("uploadReceipt").style.display = "block";
+  await sleep(2000);
+  markDone("upload");
+
+  showStage("frames", { running: true });
+  const grid = document.getElementById("framesGrid");
+  grid.innerHTML = FRAMES.map((cls, i) => `
+    <div class="frame-cell ${cls}" data-i="${i}">
+      <span class="timestamp">${String(Math.floor(i*0.5)).padStart(2,'0')}:${String((i%2)*30).padStart(2,'0')}</span>
+    </div>
+  `).join("");
+  for (let i = 0; i < FRAMES.length; i++) {
+    const cell = grid.querySelector(`[data-i="${i}"]`);
+    cell.classList.add("in");
+    document.getElementById("framesProgress").innerHTML = `<span>frames captured</span><span><b>${i+1}</b> / 94</span>`;
+    await sleep(40);
+  }
+  await sleep(800);
+  document.getElementById("framesProgress").innerHTML = `<span>frames captured</span><span><b>94</b> / 94 · stored</span>`;
+  markDone("frames");
+
+  showStage("vision", { running: true });
+  const tags = document.getElementById("visionTags");
+  tags.innerHTML = VISION_BUCKETS.map(b => `
+    <div class="tag-bucket ${b.key}" data-key="${b.key}">
+      <div class="lbl">${b.lbl}</div>
+      <div class="count" data-target="${b.count}">0</div>
+      <div class="desc">${b.desc}</div>
+    </div>
+  `).join("");
+  await sleep(300);
+  for (const b of VISION_BUCKETS) {
+    const el = tags.querySelector(`[data-key="${b.key}"] .count`);
+    const target = b.count;
+    let cur = 0;
+    const step = Math.max(1, Math.ceil(target / 16));
+    while (cur < target) {
+      cur = Math.min(target, cur + step);
+      el.textContent = cur;
+      await sleep(30);
+    }
+  }
+  document.getElementById("visionSum").innerHTML = `<b>94 frames classified.</b> Whiteboard dominates · vision pass found <b>3 long stretches</b> with no student response (32–42 min).`;
+  await sleep(800);
+  markDone("vision");
+
+  showStage("transcript", { running: true });
+  const doc = document.getElementById("transcriptDoc");
+  doc.innerHTML = "";
+  for (const line of TRANSCRIPT) {
+    const div = document.createElement("div");
+    div.className = "transcript-line";
+    div.innerHTML = `
+      <span class="ts">${line.ts}</span>
+      <span class="who ${line.who}">${line.who}</span>
+      <span class="text cursor"></span>
+    `;
+    doc.appendChild(div);
+    doc.scrollTop = doc.scrollHeight;
+    const target = div.querySelector(".text");
+    const chunks = line.text.match(/.{1,18}/gs) || [];
+    let acc = "";
+    for (const c of chunks) {
+      acc += c;
+      target.innerHTML = acc;
+      await sleep(40);
+    }
+    target.classList.remove("cursor");
+    target.innerHTML = line.text;
+    doc.scrollTop = doc.scrollHeight;
+    await sleep(140);
+  }
+  await sleep(700);
+  markDone("transcript");
+
+  showStage("rubric", { running: true });
+  const list = document.getElementById("rubricList");
+  list.innerHTML = RUBRIC.map((r, i) => `
+    <div class="rubric-row ${r.cls}" data-i="${i}">
+      <div class="name">${r.name}<span class="sub">${r.sub}</span></div>
+      <div class="bar"><div class="fill"></div></div>
+      <div class="score">${r.score}</div>
+    </div>
+  `).join("");
+  await sleep(200);
+  for (let i = 0; i < RUBRIC.length; i++) {
+    const row = list.querySelector(`[data-i="${i}"]`);
+    row.classList.add("in");
+    await sleep(80);
+    const fill = row.querySelector(".fill");
+    fill.style.width = RUBRIC[i].score + "%";
+    await sleep(220);
+  }
+  await sleep(600);
+  markDone("rubric");
+
+  showStage("report", { running: true });
+  const tl = document.getElementById("timelineBar");
+  tl.innerHTML = "";
+  const marks = [
+    { pct: 1.5, cls: "ok" }, { pct: 4, cls: "ok" }, { pct: 18, cls: "ok" },
+    { pct: 30, cls: "bad" }, { pct: 40, cls: "ok" }, { pct: 56, cls: "warn" },
+    { pct: 61, cls: "bad" }, { pct: 68, cls: "warn" }, { pct: 75, cls: "warn" },
+    { pct: 88, cls: "ok" }, { pct: 96, cls: "bad" }
+  ];
+  for (const m of marks) {
+    const el = document.createElement("div");
+    el.className = "timeline-mark " + m.cls;
+    el.style.left = m.pct + "%";
+    tl.appendChild(el);
+  }
+  await sleep(1200);
+  markDone("report");
+
+  runBtn.disabled = false;
+  runBtn.innerHTML = "↻ Run again";
+}
+
+function resetPipeline() {
+  document.querySelectorAll(".step").forEach(el => el.classList.remove("active", "current", "done"));
+  document.querySelectorAll(".stage-card").forEach(el => el.classList.remove("show"));
+  document.querySelector(".stage-card[data-stage='upload']").classList.add("show");
+  document.querySelector(".step[data-stage='upload']").classList.add("active");
+  document.getElementById("videoFile").classList.remove("gone");
+  document.getElementById("uploadDrop").classList.remove("over", "parsed");
+  document.getElementById("uploadHint").style.display = "";
+  document.getElementById("uploadReceipt").style.display = "none";
+  document.getElementById("framesGrid").innerHTML = "";
+  document.getElementById("framesProgress").innerHTML = `<span>frames captured</span><span><b>0</b> / 94</span>`;
+  document.getElementById("visionTags").innerHTML = "";
+  document.getElementById("visionSum").innerHTML = `Vision pass pending. Each frame will be tagged with the dominant teaching mode visible.`;
+  document.getElementById("transcriptDoc").innerHTML = `<p style="color:var(--ink-400);font-style:italic;">Audio waiting…</p>`;
+  document.getElementById("rubricList").innerHTML = "";
+  document.getElementById("timelineBar").innerHTML = "";
+  updateSidebar("upload");
+}
+
+document.getElementById("runBtn").addEventListener("click", runPipeline);
+document.getElementById("resetBtn").addEventListener("click", resetPipeline);
+
+resetPipeline();
+</script>
+
+</body>
+</html>

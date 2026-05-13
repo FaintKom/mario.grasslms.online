@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Block E — Knowledge RAG · Mario Becerra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
+  --green-300:#8fd770; --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754;
+  --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
+  --sun-50:#fffbe5; --sun-100:#fff2b3; --sun-300:#ffe066; --sun-400:#ffd84d;
+  --sun-500:#f5b800; --sun-700:#7a5500;
+  --coral-50:#fff0eb; --coral-300:#ffae9a; --coral-500:#ff7a5c; --coral-700:#c33d22;
+  --ink-50:#f4f5f1; --ink-100:#e6e8e4; --ink-200:#c9cec9; --ink-300:#9aa39d;
+  --ink-400:#6b7a70; --ink-500:#4d5a51; --ink-700:#1a2a1f; --ink-900:#0a1a10;
+  --paper:#fafbf6; --paper-2:#ffffff;
+  --shadow-xs:0 1px 2px rgba(10,26,16,.05); --shadow-sm:0 2px 6px -1px rgba(10,26,16,.07); --shadow-md:0 8px 24px -8px rgba(10,26,16,.12); --shadow-lg:0 18px 50px -20px rgba(10,26,16,.18);
+  --shadow-pop:0 4px 0 0 var(--green-700); --shadow-pop-sm:0 2px 0 0 var(--green-700); --shadow-pop-ink:0 4px 0 0 var(--ink-100);
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:24px; --r-pill:999px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px; --s-8:32px; --s-10:40px; --s-12:48px; --s-16:64px; --s-20:80px;
+  --font-sans:'Manrope',system-ui,-apple-system,sans-serif;
+  --font-mono:'Geist Mono',ui-monospace,SFMono-Regular,monospace;
+  --maxw:1400px; --gutter:clamp(16px,3vw,32px);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink-900); font-family: var(--font-sans); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+input { font: inherit; }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+.topbar { position: sticky; top: 0; z-index: 50; background: rgba(250,251,246,.92); backdrop-filter: blur(14px) saturate(1.2); border-bottom: 1px solid var(--ink-100); }
+.topbar-inner { display: flex; align-items: center; gap: 18px; padding: 14px var(--gutter); max-width: var(--maxw); margin: 0 auto; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark { width: 32px; height: 32px; background: var(--green-500); color: white; border-radius: var(--r-md); display: grid; place-items: center; font-family: var(--font-mono); font-weight: 700; font-size: 14px; position: relative; }
+.brand-mark::after { content: ""; position: absolute; width: 7px; height: 7px; background: var(--sun-400); border-radius: 50%; bottom: -1px; right: -1px; }
+.brand-name { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-name b { font-weight: 800; font-size: 14px; letter-spacing: -.01em; }
+.brand-name span { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-400); }
+.topbar nav { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+.navlink { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding: 8px 12px; border-radius: var(--r-pill); color: var(--ink-500); transition: all 150ms; }
+.navlink:hover { color: var(--green-700); background: var(--green-50); }
+.navlink.back { color: var(--ink-700); }
+.navlink.back:hover { color: var(--ink-900); background: var(--ink-50); }
+
+.hero { padding: var(--s-12) 0 var(--s-8); }
+.eyebrow { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-400); font-weight: 600; margin: 0 0 var(--s-3); }
+.eyebrow b { color: var(--green-700); font-weight: 600; }
+.hero h1 { font-weight: 800; font-size: clamp(34px, 5.6vw, 60px); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 var(--s-5); max-width: 22ch; }
+.hero h1 em { font-style: normal; background: var(--sun-300); padding: 0 10px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); }
+.hero .lede { font-size: 18px; line-height: 1.55; color: var(--ink-500); font-weight: 500; max-width: 56ch; margin: 0; }
+.hero .lede b { font-weight: 700; color: var(--ink-900); background: var(--green-50); padding: 0 4px; border-radius: var(--r-xs); }
+.hero-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-4); margin-top: var(--s-8); padding-top: var(--s-6); border-top: 1px solid var(--ink-100); }
+.hero-meta .cell { display: flex; flex-direction: column; gap: 2px; }
+.hero-meta .k { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-400); }
+.hero-meta .v { font-size: 14px; font-weight: 700; color: var(--ink-900); }
+.hero-meta .v.ok { color: var(--green-700); }
+
+.layout { display: grid; grid-template-columns: 1fr 340px; gap: var(--s-8); padding: var(--s-6) 0 var(--s-16); align-items: start; }
+@media (max-width: 1024px) { .layout { grid-template-columns: 1fr; } .sidebar { position: static !important; } }
+@media (max-width: 720px) { .hero-meta { grid-template-columns: repeat(2, 1fr); } }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-sans); font-size: 13px; font-weight: 700; padding: 12px 20px; border-radius: var(--r-md); border: none; cursor: pointer; transition: transform 120ms, box-shadow 120ms; white-space: nowrap; }
+.btn.primary { background: var(--green-600); color: white; box-shadow: var(--shadow-pop); }
+.btn.primary:hover { transform: translateY(2px); box-shadow: var(--shadow-pop-sm); }
+.btn.primary:active { transform: translateY(4px); box-shadow: 0 0 0 0 var(--green-700); }
+.btn.primary:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+.btn.secondary { background: var(--paper-2); color: var(--ink-900); box-shadow: var(--shadow-pop-ink); border: 1px solid var(--ink-100); }
+.btn.ghost { background: transparent; color: var(--ink-700); padding: 10px 14px; }
+.btn.ghost:hover { background: var(--ink-50); }
+.btn.sm { font-size: 12px; padding: 8px 14px; border-radius: var(--r-sm); }
+
+.section-card { background: var(--paper-2); border: 1px solid var(--ink-100); border-radius: var(--r-lg); padding: var(--s-6); margin-bottom: var(--s-5); }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--s-5); padding-bottom: var(--s-4); border-bottom: 1px dashed var(--ink-200); }
+.section-head h2 { font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -.01em; }
+.section-head h2 em { font-style: normal; color: var(--green-700); font-weight: 800; }
+.section-head .meta { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+
+.runbar { display: flex; gap: var(--s-3); align-items: center; margin-bottom: var(--s-5); padding: var(--s-4); background: var(--green-25); border: 1px solid var(--green-200); border-radius: var(--r-md); }
+.runbar .info { font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); text-transform: uppercase; letter-spacing: .06em; margin-left: auto; }
+.runbar .info b { color: var(--green-700); }
+
+.stepper { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--s-2); list-style: none; padding: 0; margin: 0 0 var(--s-5); }
+@media (max-width: 720px) { .stepper { grid-template-columns: repeat(3, 1fr); } .step .sub { display: none; } }
+.step { position: relative; background: var(--paper); border: 1.5px solid var(--ink-100); border-radius: var(--r-md); padding: var(--s-3); cursor: pointer; transition: all 180ms; display: flex; flex-direction: column; gap: 6px; }
+.step:hover { border-color: var(--green-300); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.step.active, .step.current { border-color: var(--green-600); background: var(--green-50); box-shadow: 0 0 0 3px var(--green-100); }
+.step.done { border-color: var(--green-500); background: var(--green-25); }
+.step .num { width: 22px; height: 22px; background: var(--ink-100); color: var(--ink-700); border-radius: var(--r-sm); display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; font-weight: 800; }
+.step.current .num, .step.active .num { background: var(--green-600); color: white; }
+.step.done .num { background: var(--green-500); color: white; }
+.step .title { font-size: 13px; font-weight: 700; color: var(--ink-900); }
+.step .sub { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-400); margin-left: 30px; }
+.step.done .sub { color: var(--green-700); }
+.step .tip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--ink-900); color: var(--paper); padding: 8px 12px; border-radius: var(--r-sm); font-family: var(--font-mono); font-size: 11px; font-weight: 500; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 140ms; z-index: 20; box-shadow: var(--shadow-md); }
+.step .tip::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--ink-900); }
+.step:hover .tip { opacity: 1; }
+
+.ingest-grid { display: grid; grid-template-columns: 280px 1fr; gap: var(--s-4); align-items: start; }
+@media (max-width: 720px) { .ingest-grid { grid-template-columns: 1fr; } }
+.sources-card { background: var(--ink-50); border: 1.5px dashed var(--ink-200); border-radius: var(--r-md); padding: var(--s-4); }
+.sources-card .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; margin-bottom: var(--s-3); font-weight: 700; }
+.sources-list { display: flex; flex-direction: column; gap: 4px; font-family: var(--font-mono); font-size: 11px; }
+.sources-list .src { display: flex; justify-content: space-between; padding: 4px 8px; border-radius: var(--r-xs); background: white; border: 1px solid var(--ink-100); }
+.sources-list .src .ext { color: var(--green-700); font-weight: 700; }
+.process-area { background: var(--paper); border: 1px solid var(--ink-100); border-radius: var(--r-md); padding: var(--s-4); min-height: 240px; }
+.process-area .stage-output { display: none; }
+.process-area .stage-output.show { display: block; animation: fadeIn 240ms ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.process-area .stage-output .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; margin-bottom: var(--s-3); font-weight: 700; }
+.entry-json { background: var(--ink-900); color: var(--paper); border-radius: var(--r-sm); padding: var(--s-3); font-family: var(--font-mono); font-size: 11px; line-height: 1.5; overflow-x: auto; }
+.entry-json .k { color: var(--coral-300); }
+.entry-json .s { color: var(--sun-300); }
+.entry-json .n { color: var(--green-300); }
+.gate-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.gate-row { display: flex; align-items: center; gap: 8px; background: var(--paper-2); border: 1px solid var(--ink-100); border-radius: var(--r-sm); padding: 6px 10px; font-size: 12px; }
+.gate-row .ico { width: 18px; height: 18px; border-radius: 50%; background: var(--ink-100); color: var(--ink-500); display: grid; place-items: center; font-size: 9px; font-weight: 800; flex-shrink: 0; }
+.gate-row.pass { background: var(--green-25); border-color: var(--green-300); }
+.gate-row.pass .ico { background: var(--green-500); color: white; }
+
+.embed-bars { display: grid; grid-template-columns: repeat(20, 1fr); gap: 2px; height: 80px; align-items: end; margin-bottom: var(--s-3); }
+.embed-bars .ebar { background: linear-gradient(180deg, var(--green-300), var(--green-600)); border-radius: 1px; transform-origin: bottom; transform: scaleY(0); transition: transform 400ms; }
+.embed-bars .ebar.in { transform: scaleY(1); }
+.embed-meta { font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); display: flex; justify-content: space-between; }
+.embed-meta b { color: var(--green-700); }
+
+.store-progress { font-family: var(--font-mono); font-size: 12px; color: var(--ink-500); margin-bottom: var(--s-3); }
+.store-progress b { color: var(--green-700); font-size: 16px; }
+.store-bar { height: 12px; background: var(--ink-100); border-radius: var(--r-pill); overflow: hidden; }
+.store-bar .fill { height: 100%; background: linear-gradient(90deg, var(--green-400), var(--green-600)); width: 0; transition: width 400ms; border-radius: var(--r-pill); }
+.indices { display: flex; gap: var(--s-2); margin-top: var(--s-3); flex-wrap: wrap; }
+.indices .ix { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; padding: 4px 8px; border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid var(--ink-100); color: var(--ink-500); display: flex; align-items: center; gap: 4px; }
+.indices .ix.on { background: var(--green-50); color: var(--green-800); border-color: var(--green-300); }
+.indices .ix.on::before { content: "✓"; font-weight: 700; }
+
+.search-card { background: var(--paper-2); border: 1px solid var(--ink-100); border-radius: var(--r-lg); padding: var(--s-6); }
+.search-input-wrap { display: flex; align-items: center; gap: var(--s-3); background: white; border: 2px solid var(--ink-200); border-radius: var(--r-md); padding: 4px 8px 4px 16px; transition: border-color 150ms; margin-bottom: var(--s-3); }
+.search-input-wrap:focus-within { border-color: var(--green-600); }
+.search-input-wrap .magnifier { font-size: 18px; color: var(--ink-400); }
+.search-input-wrap input { flex: 1; border: none; outline: none; background: none; font-size: 16px; color: var(--ink-900); padding: 12px 0; }
+.search-input-wrap input::placeholder { color: var(--ink-400); }
+.search-input-wrap .btn { padding: 10px 16px; }
+.search-chips { display: flex; gap: var(--s-2); flex-wrap: wrap; margin-bottom: var(--s-4); align-items: center; }
+.search-chips .chip-lbl { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; margin-right: 4px; }
+.search-chip { font-family: var(--font-mono); font-size: 11px; padding: 5px 10px; border-radius: var(--r-pill); background: var(--ink-50); border: 1px solid var(--ink-100); color: var(--ink-700); cursor: pointer; transition: all 150ms; }
+.search-chip:hover { background: var(--green-50); border-color: var(--green-300); color: var(--green-800); }
+
+.search-stages { display: flex; gap: var(--s-3); margin-bottom: var(--s-4); flex-wrap: wrap; min-height: 24px; }
+.search-stage { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 220ms; }
+.search-stage.in { opacity: 1; }
+.search-stage::before { content: "→"; color: var(--ink-300); }
+.search-stage.first::before { content: "○"; color: var(--green-600); }
+.search-stage.in.done::after { content: "✓"; color: var(--green-600); margin-left: 2px; }
+
+.search-results { display: flex; flex-direction: column; gap: var(--s-3); }
+.result-card { background: var(--paper); border: 1px solid var(--ink-100); border-radius: var(--r-md); padding: var(--s-4); opacity: 0; transform: translateY(8px); transition: all 240ms; }
+.result-card.in { opacity: 1; transform: translateY(0); }
+.result-card .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--s-2); gap: 12px; }
+.result-card .source-title { font-size: 15px; font-weight: 800; color: var(--ink-900); margin: 0; }
+.result-card .score-badge { font-family: var(--font-mono); font-size: 12px; font-weight: 800; background: var(--green-25); color: var(--green-700); padding: 4px 10px; border-radius: var(--r-pill); flex-shrink: 0; }
+.result-card .snippet { font-size: 13px; color: var(--ink-700); line-height: 1.55; margin: 0 0 var(--s-3); }
+.result-card .snippet mark { background: var(--sun-300); color: var(--ink-900); padding: 0 3px; border-radius: 2px; }
+.result-card .meta-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.result-card .meta-chips .mc { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: var(--r-xs); background: var(--ink-50); color: var(--ink-700); font-weight: 600; }
+.result-card .meta-chips .mc b { color: var(--green-700); margin-right: 4px; }
+
+.sidebar { position: sticky; top: 88px; align-self: start; background: var(--paper-2); border: 1px solid var(--ink-100); border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--shadow-sm); }
+.sidebar .label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-400); font-weight: 700; display: flex; align-items: center; gap: 8px; margin: 0 0 var(--s-2); }
+.sidebar .label .num-badge { background: var(--green-600); color: white; width: 18px; height: 18px; border-radius: var(--r-xs); display: grid; place-items: center; font-size: 10px; font-weight: 800; }
+.sidebar h4 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; margin: 0 0 var(--s-5); line-height: 1.2; }
+.sidebar .ww { margin-bottom: var(--s-4); padding-bottom: var(--s-4); border-bottom: 1px dashed var(--ink-200); }
+.sidebar .ww:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.sidebar .ww .lbl { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin: 0 0 6px; display: inline-block; padding: 3px 8px; border-radius: var(--r-sm); }
+.sidebar .ww.what .lbl { background: var(--green-100); color: var(--green-800); }
+.sidebar .ww.why .lbl { background: var(--sun-100); color: var(--sun-700); }
+.sidebar .ww p { font-size: 14px; line-height: 1.5; color: var(--ink-700); margin: 0; }
+.sidebar .ww p b { color: var(--ink-900); font-weight: 700; }
+.sidebar .stack-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: var(--s-5); padding-top: var(--s-4); border-top: 1px solid var(--ink-100); }
+.sidebar .stack-row .tag { font-family: var(--font-mono); font-size: 10px; background: var(--ink-50); color: var(--ink-700); padding: 3px 7px; border-radius: var(--r-xs); font-weight: 600; }
+
+.foot { border-top: 1px solid var(--ink-100); padding: var(--s-8) 0; margin-top: var(--s-8); }
+.foot-inner { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+.foot a { color: var(--green-700); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">m</div>
+      <div class="brand-name">
+        <b>Mario Becerra</b>
+        <span>Block E · Knowledge RAG</span>
+      </div>
+    </a>
+    <nav>
+      <a class="navlink back" href="index.html">← All capabilities</a>
+      <a class="navlink" href="block-a-lesson-generation.html">A</a>
+      <a class="navlink" href="block-b-lesson-review.html">B</a>
+      <a class="navlink" href="block-c-interactive-exercises.html">C</a>
+      <a class="navlink" href="block-d-content-tools.html">D</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <p class="eyebrow"><b>BLOCK E</b> · KNOWLEDGE RAG</p>
+    <h1>Thousands of documents, <em>searchable</em> by meaning.</h1>
+    <p class="lede">
+      A three-phase pipeline I'm building for educational knowledge bases —
+      extraction with LLM-as-Judge verification, embedding via Voyage AI,
+      hybrid retrieval over <b>pgvector + full-text + trigram</b> indexes.
+      Built to ground AI agents in curated source material instead of model priors.
+    </p>
+    <div class="hero-meta">
+      <div class="cell"><span class="k">Pipeline</span><span class="v">3-phase · LLM-as-Judge</span></div>
+      <div class="cell"><span class="k">Embedding</span><span class="v">1024-dim · Voyage 3</span></div>
+      <div class="cell"><span class="k">Retrieval</span><span class="v">vector + FTS + trigram</span></div>
+      <div class="cell"><span class="k">Status</span><span class="v">Prototype · in development</span></div>
+    </div>
+  </section>
+
+  <div class="layout">
+
+    <div class="main-col">
+
+      <div class="section-card">
+        <div class="section-head">
+          <h2>1 · <em>Ingestion</em> pipeline</h2>
+          <span class="meta">6 stages · ~18 sec</span>
+        </div>
+        <div class="runbar">
+          <button class="btn primary sm" id="runBtn">▶ Run ingestion</button>
+          <button class="btn ghost sm" id="resetBtn">Reset</button>
+          <span class="info">Watch a single document flow through the pipeline</span>
+        </div>
+        <ol class="stepper" id="stepper"></ol>
+        <div class="ingest-grid">
+          <div class="sources-card">
+            <div class="lbl">Source folder</div>
+            <div class="sources-list">
+              <div class="src"><span>4c-id_handbook.pdf</span><span class="ext">PDF</span></div>
+              <div class="src"><span>kids_onboarding.md</span><span class="ext">MD</span></div>
+              <div class="src"><span>spaced_practice.txt</span><span class="ext">TXT</span></div>
+              <div class="src"><span>methodist_chat_2026.json</span><span class="ext">JSON</span></div>
+              <div class="src"><span>+ 6,283 more files</span><span class="ext">…</span></div>
+            </div>
+          </div>
+          <div class="process-area">
+
+            <div class="stage-output show" data-stage="ingest">
+              <div class="lbl">QUEUED</div>
+              <div style="font-size: 14px; color: var(--ink-700);">
+                <b style="color:var(--ink-900);font-size:18px;">6,287</b> files queued for processing.
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); margin-top: 8px; text-transform: uppercase; letter-spacing: .06em;">
+                  PDF: 1,841 · MD: 2,403 · TXT: 1,127 · JSON: 916
+                </div>
+              </div>
+            </div>
+
+            <div class="stage-output" data-stage="extract">
+              <div class="lbl">EXTRACT — sample entry</div>
+              <div class="entry-json"><span class="k">"title"</span>:    <span class="s">"4C/ID for kids — practical guide"</span>,
+<span class="k">"summary"</span>:  <span class="s">"How to apply 4C/ID to a 9–11 year old course."</span>,
+<span class="k">"topics"</span>:   [<span class="s">"4C/ID"</span>, <span class="s">"kids"</span>, <span class="s">"practice"</span>],
+<span class="k">"audience"</span>: <span class="s">"instructional designer"</span>,
+<span class="k">"stage"</span>:    <span class="s">"design"</span>,
+<span class="k">"mode"</span>:     <span class="s">"practice"</span></div>
+            </div>
+
+            <div class="stage-output" data-stage="verify">
+              <div class="lbl">VERIFY — quality gates</div>
+              <div class="gate-list" id="verifyGates"></div>
+            </div>
+
+            <div class="stage-output" data-stage="embed">
+              <div class="lbl">EMBED — Voyage 3 · 1024-dim vector</div>
+              <div class="embed-bars" id="embedBars"></div>
+              <div class="embed-meta">
+                <span>vector dimensions</span>
+                <span><b>1024</b> floats · 4 KB</span>
+              </div>
+            </div>
+
+            <div class="stage-output" data-stage="store">
+              <div class="lbl">STORE — Postgres pgvector</div>
+              <div class="store-progress" id="storeProgress">writing entry <b>1 / 6,287</b></div>
+              <div class="store-bar"><div class="fill" id="storeFill"></div></div>
+              <div class="indices">
+                <span class="ix" id="ixHnsw">HNSW index</span>
+                <span class="ix" id="ixGin">GIN index</span>
+                <span class="ix" id="ixFts">FTS index</span>
+              </div>
+            </div>
+
+            <div class="stage-output" data-stage="indexed">
+              <div class="lbl">INDEXED</div>
+              <div style="font-size: 16px; color: var(--ink-900); font-weight: 700;">
+                <b style="color:var(--green-700); font-size: 28px;">6,287 / 6,287</b> documents searchable.
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); font-weight: 500; margin-top: 8px; text-transform: uppercase; letter-spacing: .06em;">
+                  HNSW · GIN · FTS — all green
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="search-card">
+        <div class="section-head">
+          <h2>2 · <em>Live</em> semantic search</h2>
+          <span class="meta">interactive demo</span>
+        </div>
+        <div class="search-input-wrap">
+          <span class="magnifier">⌕</span>
+          <input id="searchInput" type="text" placeholder="Try: how to design a 4C/ID lesson for kids"/>
+          <button class="btn primary" id="searchBtn">Search</button>
+        </div>
+        <div class="search-chips">
+          <span class="chip-lbl">Try</span>
+          <button class="search-chip" data-q="AI prompts for math teachers">AI prompts for math teachers</button>
+          <button class="search-chip" data-q="course onboarding templates">course onboarding templates</button>
+          <button class="search-chip" data-q="spaced repetition for kids">spaced repetition for kids</button>
+        </div>
+        <div class="search-stages" id="searchStages"></div>
+        <div class="search-results" id="searchResults">
+          <div style="color: var(--ink-400); font-style: italic; font-size: 14px; padding: 24px; text-align: center;">
+            Type a query or click a chip — results from 6,287 indexed documents appear here.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="label">
+        <span class="num-badge" id="sbNum">1</span>
+        <span>Currently viewing</span>
+      </div>
+      <h4 id="sbTitle">Source ingestion</h4>
+      <div class="ww what">
+        <p class="lbl">What happens</p>
+        <p id="sbWhat">Source files (PDFs, markdown, plain text, scraped JSON) get queued for processing. Each file gets a stable hash so re-runs skip work that's already done.</p>
+      </div>
+      <div class="ww why">
+        <p class="lbl">Why it matters</p>
+        <p id="sbWhy">Distillation costs LLM tokens — re-processing the same file is <b>throwing money away</b>. The hash check makes the pipeline idempotent: rerun a thousand times, the bill stays at the first run.</p>
+      </div>
+      <div class="stack-row" id="sbStack">
+        <span class="tag">Python</span>
+        <span class="tag">FastAPI</span>
+        <span class="tag">pathlib</span>
+      </div>
+    </aside>
+
+  </div>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span>© 2026 Mario Becerra · <a href="index.html">All capabilities</a></span>
+    <span>Block E v1 · Lively</span>
+  </div>
+</footer>
+
+<script>
+const STAGES = [
+  { key: "ingest", num: 1, title: "Ingest", sub: "queue + hash",
+    sbTitle: "Source ingestion",
+    what: "Source files (PDFs, markdown, plain text, scraped JSON) get queued for processing. Each file gets a stable hash so re-runs skip work that's already done.",
+    why: "Distillation costs LLM tokens — re-processing the same file is <b>throwing money away</b>. The hash check makes the pipeline idempotent: rerun a thousand times, the bill stays at the first run.",
+    tip: "Hash first, work later",
+    stack: ["Python", "FastAPI", "pathlib"] },
+  { key: "extract", num: 2, title: "Extract", sub: "digest prompt",
+    sbTitle: "Phase 1 · Extract",
+    what: "An LLM digests each file into a <b>structured entry</b>: title, summary, topics, audience, stage in the workflow, mode (theory / practice / reference). Output is JSON with strict typing.",
+    why: "Raw documents are unsearchable rubble. Structured fields give the search engine <b>filters</b> later — the methodist can ask \"only practice tasks for kids\" and the system filters before semantic ranking.",
+    tip: "Structure beats raw text",
+    stack: ["Claude Sonnet", "Pydantic", "JSON-mode"] },
+  { key: "verify", num: 3, title: "Verify", sub: "5 gates",
+    sbTitle: "Phase 2 · Verify",
+    what: "A <b>blind reviewer prompt</b> rechecks the extracted entry against five gates: completeness, accuracy, valid facets, no PII leakage, no duplicate of an existing entry.",
+    why: "First-pass extraction hallucinates roughly five percent of the time. The verify pass catches it before the bad entry pollutes search results. <b>One bad entry per thousand</b> is the difference between a trustworthy index and a useless one.",
+    tip: "Two passes, fewer regrets",
+    stack: ["Claude Opus", "JSON-schema", "dedupe"] },
+  { key: "embed", num: 4, title: "Embed", sub: "Voyage 3-large",
+    sbTitle: "Phase 3 · Embed",
+    what: "The verified entry's text gets converted to a 1024-dimensional vector by Voyage AI's embedding model. Each vector represents the entry's <b>semantic position</b> in 1024-dimensional space.",
+    why: "Two documents that say the same thing in different words land near each other in vector space. That's how the search later finds <b>\"adaptive practice for kids\"</b> when the user typed \"spaced repetition for children\" — different words, same idea.",
+    tip: "Meaning, not keywords",
+    stack: ["Voyage AI", "OpenAI fallback", "async"] },
+  { key: "store", num: 5, title: "Store", sub: "pgvector + HNSW",
+    sbTitle: "Phase 4 · Store + index",
+    what: "Each entry gets written to Postgres with three indices built in parallel: <b>HNSW</b> for fast nearest-neighbour vector search, <b>GIN</b> for facet filters (audience, stage, mode), <b>FTS</b> for full-text fallback.",
+    why: "One vector index isn't enough. Real queries combine \"semantically near my question\" plus \"only kids audience\" plus \"contains the literal word LOMLOE\". <b>Three indices working together</b> is the difference between 47 ms and 3 sec.",
+    tip: "Hybrid beats pure vector",
+    stack: ["Postgres 16", "pgvector", "HNSW", "Alembic"] },
+  { key: "indexed", num: 6, title: "Indexed", sub: "queryable",
+    sbTitle: "Indexed",
+    what: "The corpus is queryable. The pipeline reports total documents, index sizes, and an embedding cost summary. Re-runs skip already-hashed files.",
+    why: "The instructional design team sees a single number — <b>\"6,287 docs ready\"</b> — and trusts the system. Operational visibility is what turns a one-off pipeline into infrastructure the team relies on every day.",
+    tip: "Visible, trusted, used",
+    stack: ["FastAPI", "Postgres", "Sentry"] }
+];
+
+const VERIFY_GATES = [
+  "Completeness · all fields present",
+  "Accuracy · summary matches body",
+  "Facets valid · audience / stage / mode",
+  "No PII · names / emails redacted",
+  "Not duplicate · cosine < 0.92"
+];
+
+const SAMPLE_RESULTS = {
+  default: [
+    { title: "4C/ID handbook · adapted for K-6", snippet: "Whole tasks first, sub-tasks after. For <mark>kids</mark> the 'whole task' should fit one classroom session.", score: "0.91", meta: { audience: "designer", stage: "design", mode: "reference" } },
+    { title: "Designing a 4C/ID kids course in 6 weeks", snippet: "We compressed the full <mark>4C/ID</mark> ladder into six modules. Module 1 is one whole task — kids ship before they understand.", score: "0.88", meta: { audience: "designer", stage: "design", mode: "case-study" } },
+    { title: "Sub-task ladder for ages 9–11", snippet: "When the whole task is too big, the sub-task ladder gives the <mark>kid</mark> two scaffolds before fading away.", score: "0.83", meta: { audience: "designer", stage: "delivery", mode: "practice" } }
+  ],
+  math: [
+    { title: "Math worksheet generator prompt — v3", snippet: "Generates 12 variations from one example. <mark>Math teachers</mark> use it to build differentiated practice in two minutes.", score: "0.94", meta: { audience: "teacher", stage: "delivery", mode: "tool" } },
+    { title: "Diagnostic question prompt for fractions", snippet: "<mark>Prompt</mark> for diagnosing exact misconceptions in fraction comparison. Tested on 200 students.", score: "0.89", meta: { audience: "teacher", stage: "assessment", mode: "tool" } },
+    { title: "Hint-ladder prompt for word problems", snippet: "Three-level hints for <mark>math</mark> word problems. Level 1 = re-read, Level 2 = identify question, Level 3 = identify operation.", score: "0.85", meta: { audience: "teacher", stage: "delivery", mode: "tool" } }
+  ],
+  onboard: [
+    { title: "Three-day kids onboarding playbook", snippet: "<mark>Onboarding</mark> a child to a new course in three sessions: explore, practice, ship something.", score: "0.92", meta: { audience: "designer", stage: "delivery", mode: "playbook" } },
+    { title: "Adult learner onboarding checklist", snippet: "Forty-six items from \"send welcome email\" to \"first interactive exercise\". Used across six client <mark>courses</mark>.", score: "0.86", meta: { audience: "designer", stage: "delivery", mode: "checklist" } },
+    { title: "Onboarding analytics — what to track", snippet: "Five events worth tracking in the first week: signup, first lesson, first exercise, first quiz, day-7 return.", score: "0.81", meta: { audience: "ops", stage: "analytics", mode: "reference" } }
+  ],
+  spaced: [
+    { title: "Spaced practice schedule for ages 7–10", snippet: "<mark>Spaced repetition</mark> works for <mark>kids</mark> — but the gaps need to be shorter. Day 1, 3, 7 instead of 1, 7, 30.", score: "0.93", meta: { audience: "teacher", stage: "delivery", mode: "playbook" } },
+    { title: "When spaced practice fails for young learners", snippet: "Below age 7, working memory limits make <mark>spaced</mark> review feel random. Pair each session with a token of progress.", score: "0.87", meta: { audience: "teacher", stage: "delivery", mode: "reference" } },
+    { title: "Building a kids-friendly review queue", snippet: "Game-style cards instead of flashcards. <mark>Kids</mark> show up because the next card is a surprise, not a chore.", score: "0.82", meta: { audience: "designer", stage: "design", mode: "tool" } }
+  ]
+};
+
+const stepper = document.getElementById("stepper");
+stepper.innerHTML = STAGES.map(s => `
+  <li class="step" data-stage="${s.key}" tabindex="0" role="button" aria-label="View stage ${s.num}: ${s.title}">
+    <div style="display:flex;align-items:center;gap:8px;"><span class="num">${s.num}</span></div>
+    <div class="title">${s.title}</div>
+    <div class="sub">${s.sub}</div>
+    <div class="tip">${s.tip}</div>
+  </li>`).join("");
+
+function showStage(key, opts = {}) {
+  document.querySelectorAll(".step").forEach(el => el.classList.remove("active", "current"));
+  document.querySelectorAll(".stage-output").forEach(el => el.classList.remove("show"));
+  const step = document.querySelector(`.step[data-stage="${key}"]`);
+  const out = document.querySelector(`.stage-output[data-stage="${key}"]`);
+  if (step) step.classList.add(opts.running ? "current" : "active");
+  if (out) out.classList.add("show");
+  updateSidebar(key);
+}
+function markDone(key) {
+  const step = document.querySelector(`.step[data-stage="${key}"]`);
+  if (step) { step.classList.add("done"); step.classList.remove("active", "current"); }
+}
+function updateSidebar(key) {
+  const s = STAGES.find(x => x.key === key);
+  if (!s) return;
+  document.getElementById("sbNum").textContent = s.num;
+  document.getElementById("sbTitle").textContent = s.sbTitle;
+  document.getElementById("sbWhat").innerHTML = s.what;
+  document.getElementById("sbWhy").innerHTML = s.why;
+  document.getElementById("sbStack").innerHTML = s.stack.map(t => `<span class="tag">${t}</span>`).join("");
+}
+document.querySelectorAll(".step").forEach(el => el.addEventListener("click", () => showStage(el.dataset.stage)));
+
+function buildVerifyGates() {
+  document.getElementById("verifyGates").innerHTML = VERIFY_GATES.map(g => `
+    <div class="gate-row" data-name="${g}">
+      <span class="ico">·</span>
+      <span style="font-size:11px; color:var(--ink-700);">${g}</span>
+    </div>`).join("");
+}
+function buildEmbedBars() {
+  document.getElementById("embedBars").innerHTML = Array.from({length: 20}).map((_, i) => {
+    const h = 10 + Math.abs(Math.sin(i * 1.7)) * 80;
+    return `<div class="ebar" data-i="${i}" style="height:${h}%"></div>`;
+  }).join("");
+}
+buildVerifyGates();
+buildEmbedBars();
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function runIngest() {
+  resetIngest();
+  const runBtn = document.getElementById("runBtn");
+  runBtn.disabled = true;
+
+  showStage("ingest", { running: true });
+  await sleep(1500); markDone("ingest");
+
+  showStage("extract", { running: true });
+  await sleep(2500); markDone("extract");
+
+  showStage("verify", { running: true });
+  await sleep(400);
+  for (const g of document.querySelectorAll("#verifyGates .gate-row")) {
+    await sleep(300);
+    g.classList.add("pass");
+    g.querySelector(".ico").textContent = "✓";
+  }
+  await sleep(700); markDone("verify");
+
+  showStage("embed", { running: true });
+  await sleep(300);
+  for (const b of document.querySelectorAll("#embedBars .ebar")) {
+    await sleep(50);
+    b.classList.add("in");
+  }
+  await sleep(700); markDone("embed");
+
+  showStage("store", { running: true });
+  const fill = document.getElementById("storeFill");
+  const prog = document.getElementById("storeProgress");
+  for (let p = 0; p <= 100; p += 5) {
+    fill.style.width = p + "%";
+    const cnt = Math.floor(p * 62.87);
+    prog.innerHTML = `writing entry <b>${cnt} / 6,287</b>`;
+    await sleep(70);
+  }
+  document.getElementById("ixHnsw").classList.add("on");
+  await sleep(200);
+  document.getElementById("ixGin").classList.add("on");
+  await sleep(200);
+  document.getElementById("ixFts").classList.add("on");
+  await sleep(700); markDone("store");
+
+  showStage("indexed", { running: true });
+  await sleep(1200); markDone("indexed");
+
+  runBtn.disabled = false;
+  runBtn.innerHTML = "↻ Run again";
+}
+
+function resetIngest() {
+  document.querySelectorAll(".step").forEach(el => el.classList.remove("active", "current", "done"));
+  document.querySelector(".step[data-stage='ingest']").classList.add("active");
+  document.querySelectorAll(".stage-output").forEach(el => el.classList.remove("show"));
+  document.querySelector(".stage-output[data-stage='ingest']").classList.add("show");
+  buildVerifyGates();
+  document.querySelectorAll("#embedBars .ebar").forEach(b => b.classList.remove("in"));
+  document.getElementById("storeFill").style.width = "0%";
+  document.getElementById("storeProgress").innerHTML = `writing entry <b>1 / 6,287</b>`;
+  ["ixHnsw", "ixGin", "ixFts"].forEach(id => document.getElementById(id).classList.remove("on"));
+  updateSidebar("ingest");
+}
+
+document.getElementById("runBtn").addEventListener("click", runIngest);
+document.getElementById("resetBtn").addEventListener("click", resetIngest);
+resetIngest();
+
+function pickResults(query) {
+  const q = query.toLowerCase();
+  if (q.includes("ai") && q.includes("math") || q.includes("prompt")) return SAMPLE_RESULTS.math;
+  if (q.includes("onboard")) return SAMPLE_RESULTS.onboard;
+  if (q.includes("spaced") || q.includes("repetition") || q.includes("review")) return SAMPLE_RESULTS.spaced;
+  return SAMPLE_RESULTS.default;
+}
+
+async function runSearch(query) {
+  const results = document.getElementById("searchResults");
+  const stages = document.getElementById("searchStages");
+  results.innerHTML = "";
+  stages.innerHTML = `
+    <span class="search-stage first" data-i="0">embed query · 1024-dim</span>
+    <span class="search-stage" data-i="1">HNSW · find 50 nearest</span>
+    <span class="search-stage" data-i="2">hybrid rerank · FTS + semantic</span>
+    <span class="search-stage" data-i="3">return top 3</span>
+  `;
+  const stageEls = document.querySelectorAll(".search-stage");
+  for (let i = 0; i < stageEls.length; i++) {
+    await sleep(200);
+    stageEls[i].classList.add("in");
+    await sleep(280);
+    stageEls[i].classList.add("done");
+  }
+  await sleep(120);
+  const set = pickResults(query);
+  results.innerHTML = set.map(r => `
+    <div class="result-card">
+      <div class="top">
+        <h5 class="source-title">${r.title}</h5>
+        <span class="score-badge">${r.score}</span>
+      </div>
+      <p class="snippet">${r.snippet}</p>
+      <div class="meta-chips">
+        <span class="mc"><b>audience</b>${r.meta.audience}</span>
+        <span class="mc"><b>stage</b>${r.meta.stage}</span>
+        <span class="mc"><b>mode</b>${r.meta.mode}</span>
+      </div>
+    </div>
+  `).join("");
+  await sleep(80);
+  document.querySelectorAll(".result-card").forEach((el, i) => setTimeout(() => el.classList.add("in"), i * 140));
+}
+
+document.getElementById("searchBtn").addEventListener("click", () => {
+  const q = document.getElementById("searchInput").value || document.getElementById("searchInput").placeholder.replace(/^Try: /, "");
+  runSearch(q);
+});
+document.getElementById("searchInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const q = e.currentTarget.value || e.currentTarget.placeholder.replace(/^Try: /, "");
+    runSearch(q);
+  }
+});
+document.querySelectorAll(".search-chip").forEach(c => {
+  c.addEventListener("click", () => {
+    document.getElementById("searchInput").value = c.dataset.q;
+    runSearch(c.dataset.q);
+  });
+});
+</script>
+
+</body>
+</html>

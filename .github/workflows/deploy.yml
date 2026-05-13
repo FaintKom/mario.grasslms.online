@@ -1,0 +1,108 @@
+name: Deploy to Hetzner
+
+# SSH-based deploy to the prod VPS at 204.168.165.41 (/opt/mario-portfolio).
+# Runs on push to main. Does:
+#   1. SSH to prod, git pull origin main
+#   2. docker compose up -d --build (rebuild + restart container)
+#   3. Smoke-check via lms-nginx upstream (https://mario.grasslms.online/healthz)
+#
+# Required repository secrets (set in GitHub repo settings):
+#   PROD_SSH_PRIVATE_KEY  — ed25519 private key authorized in /root/.ssh/authorized_keys
+#   PROD_SSH_HOST         — 204.168.165.41
+#   PROD_SSH_USER         — root
+#   PROD_SSH_KNOWN_HOSTS  — output of: ssh-keyscan -t ed25519 204.168.165.41
+#
+# Reuse the same secrets as the lms repo. Same VPS, same SSH key.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: "Commit SHA to deploy (default: HEAD of main)"
+        required: false
+        default: ""
+
+concurrency:
+  group: deploy-mario-portfolio
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to prod
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PROD_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.PROD_SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Determine target SHA
+        id: sha
+        run: |
+          if [ -n "${{ github.event.inputs.sha }}" ]; then
+            echo "target=${{ github.event.inputs.sha }}" >> $GITHUB_OUTPUT
+          else
+            echo "target=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Pull latest on prod
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              ${{ secrets.PROD_SSH_USER }}@${{ secrets.PROD_SSH_HOST }} \
+              "cd /opt/mario-portfolio && \
+               git fetch origin main && \
+               git reset --hard ${{ steps.sha.outputs.target }} && \
+               git log --oneline -1"
+
+      - name: Rebuild container
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              ${{ secrets.PROD_SSH_USER }}@${{ secrets.PROD_SSH_HOST }} \
+              "cd /opt/mario-portfolio && \
+               docker compose up -d --build"
+
+      - name: Wait for container health
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              ${{ secrets.PROD_SSH_USER }}@${{ secrets.PROD_SSH_HOST }} \
+              "for i in 1 2 3 4 5; do \
+                 if docker inspect --format='{{.State.Health.Status}}' mario-portfolio 2>/dev/null | grep -q healthy; then \
+                   echo '✓ container healthy'; \
+                   exit 0; \
+                 fi; \
+                 echo \"attempt \$i: waiting for healthy state...\"; \
+                 sleep 4; \
+               done; \
+               echo 'container did not reach healthy state'; \
+               docker logs --tail 50 mario-portfolio; \
+               exit 1"
+
+      - name: Smoke check (direct container)
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              ${{ secrets.PROD_SSH_USER }}@${{ secrets.PROD_SSH_HOST }} \
+              "curl -fsS http://127.0.0.1:8081/healthz | grep -q ok && echo '✓ /healthz responded ok'"
+
+      - name: Smoke check (public URL via lms-nginx)
+        run: |
+          set -e
+          for i in 1 2 3 4 5; do
+            CODE=$(curl -s -o /dev/null -w '%{http_code}' https://mario.grasslms.online/ || echo 000)
+            if [ "$CODE" = "200" ]; then
+              echo "✓ https://mario.grasslms.online/ returned 200"
+              exit 0
+            fi
+            echo "attempt $i: / returned $CODE; retrying..."
+            sleep 5
+          done
+          echo "::error::Public smoke check failed: / returned $CODE"
+          exit 1
