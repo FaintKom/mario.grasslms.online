@@ -1,15 +1,18 @@
 # mario.grasslms.online — static portfolio container
 #
-# Sits on the same VPS (204.168.165.41) as the GrassLMS stack but
-# does NOT share its network. The lms-nginx-1 container reverse-proxies
-# mario.grasslms.online to host port 8081, which this container binds.
+# Sits on the same VPS (204.168.165.41) as the GrassLMS stack and
+# joins its internal docker network so lms-nginx-1 can reverse-proxy
+# by container name (no host port binding, no extra_hosts needed).
+#
+# Prereq: the lms stack is up, which creates the `lms_internal` network.
 #
 # Deploy on VPS:
 #   cd /opt/mario-portfolio
 #   git pull
 #   docker compose up -d --build
 #
-# Health: curl http://localhost:8081/healthz  → ok
+# Health (from any container on lms_internal):
+#   docker exec lms-nginx-1 wget -q -O - http://mario-portfolio/healthz
 
 services:
   portfolio:
@@ -19,10 +22,10 @@ services:
     image: mario-portfolio:latest
     container_name: mario-portfolio
     restart: unless-stopped
-    ports:
-      # Bind to localhost only — lms-nginx-1 proxies via host.docker.internal:8081.
-      # Direct external access is blocked; SSL is terminated upstream.
-      - "127.0.0.1:8081:80"
+    networks:
+      - internal
+    security_opt:
+      - "no-new-privileges:true"
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "-", "http://localhost/healthz"]
       interval: 30s
@@ -34,3 +37,10 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+networks:
+  internal:
+    # Reuse the lms-managed internal network so lms-nginx-1 can resolve
+    # `mario-portfolio` by container name.
+    external: true
+    name: lms_internal

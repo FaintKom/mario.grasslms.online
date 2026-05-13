@@ -86,11 +86,11 @@ jobs:
                docker logs --tail 50 mario-portfolio; \
                exit 1"
 
-      - name: Smoke check (direct container)
+      - name: Smoke check (internal network)
         run: |
           ssh -i ~/.ssh/id_ed25519 \
               ${{ secrets.PROD_SSH_USER }}@${{ secrets.PROD_SSH_HOST }} \
-              "curl -fsS http://127.0.0.1:8081/healthz | grep -q ok && echo '✓ /healthz responded ok'"
+              "docker exec lms-nginx-1 wget -q -O - http://mario-portfolio/healthz | grep -q ok && echo '✓ /healthz responded ok'"
 
       - name: Smoke check (public URL via lms-nginx)
         run: |

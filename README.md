@@ -19,7 +19,7 @@ build step.
 
 - Static HTML / CSS / vanilla JS
 - nginx:1.27-alpine container
-- Reverse-proxied behind `lms-nginx-1` on the shared VPS (host port 8081)
+- Reverse-proxied behind `lms-nginx-1` on the shared VPS (joined to `lms_internal` docker network)
 
 ## Local dev
 
@@ -54,12 +54,12 @@ docker compose up -d --build
 ├── block-*.html             ← capability demos
 ├── Dockerfile               ← nginx:alpine + HTML files
 ├── nginx.conf               ← container-internal nginx config
-├── docker-compose.yml       ← container definition (port 8081)
+├── docker-compose.yml       ← container definition (lms_internal network)
 └── .github/workflows/deploy.yml
 ```
 
 ## Notes
 
 - SSL terminated upstream by `lms-nginx-1` (Let's Encrypt). Container speaks plain HTTP.
-- Container exposes only `127.0.0.1:8081:80` — direct external access blocked.
+- Container only on `lms_internal` docker network — no host port binding, direct external access blocked.
 - All demos are sanitized recreations. Production work under NDA.
