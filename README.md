@@ -17,9 +17,10 @@ build step.
 
 ## Stack
 
-- Static HTML / CSS / vanilla JS
-- nginx:1.27-alpine container
-- Reverse-proxied behind `lms-nginx-1` on the shared VPS (joined to `lms_internal` docker network)
+- Static HTML / CSS / vanilla JS — no build step
+- Hosted on GitHub Pages
+- Custom domain: `mario.grasslms.online` (per `CNAME`)
+- HTTPS via Let's Encrypt (provisioned by GitHub Pages)
 
 ## Local dev
 
@@ -34,32 +35,21 @@ python -m http.server 8094
 
 Production: <https://mario.grasslms.online>
 
-Auto-deploys on push to `main` via `.github/workflows/deploy.yml`:
-SSH → `/opt/mario-portfolio` → `git pull` → `docker compose up -d --build`.
-
-Manual rebuild:
-
-```bash
-ssh root@204.168.165.41
-cd /opt/mario-portfolio
-git pull
-docker compose up -d --build
-```
+Pushes to `main` auto-publish via GitHub Pages (no Actions workflow,
+no servers). Typical propagation: 30–90 seconds after push.
 
 ## Structure
 
 ```
 .
 ├── index.html               ← landing
-├── block-*.html             ← capability demos
-├── Dockerfile               ← nginx:alpine + HTML files
-├── nginx.conf               ← container-internal nginx config
-├── docker-compose.yml       ← container definition (lms_internal network)
-└── .github/workflows/deploy.yml
+├── block-*.html             ← 5 capability demo pages
+├── CNAME                    ← custom domain config for Pages
+├── README.md
+└── .gitignore
 ```
 
 ## Notes
 
-- SSL terminated upstream by `lms-nginx-1` (Let's Encrypt). Container speaks plain HTTP.
-- Container only on `lms_internal` docker network — no host port binding, direct external access blocked.
 - All demos are sanitized recreations. Production work under NDA.
+- DNS: `mario.grasslms.online` CNAME → `faintkom.github.io`.
