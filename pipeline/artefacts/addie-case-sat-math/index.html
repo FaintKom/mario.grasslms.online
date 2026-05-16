@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ADDIE case study · SAT Math Pro — Mario Becerra</title>
+<meta name="description" content="ADDIE retrospective applied to SAT Math Pro — a real portfolio project. Authored by Mario Becerra."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>ADDIE case study · SAT Math Pro · v1.0</span>
+  </div>
+  <div class="actions">
+    <a class="btn secondary" href="../../">← Back to pipeline</a>
+    <a class="btn secondary" href="design-log.md">Design log</a>
+    <button class="btn" onclick="window.print()">Print / save as PDF</button>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <p class="eyebrow">Case study · 1 of 1 · ADDIE retrospective</p>
+  <h1 class="title">Designing SAT Math Pro through <em>ADDIE</em></h1>
+  <p class="subtitle">A real solo build walked through the five ADDIE phases — with the 4C/ID architecture and the Kirkpatrick measurement plan named at the point I used them. Facts are pulled from the live portfolio entry; nothing reconstructed.</p>
+
+  <div class="meta-row">
+    <div><div class="k">Project</div><div class="v">SAT Math Pro</div></div>
+    <div><div class="k">Role</div><div class="v">Solo author + dev</div></div>
+    <div><div class="k">Stack</div><div class="v">Python · 4C/ID · JSON · Desmos</div></div>
+    <div><div class="k">Status</div><div class="v">Working</div></div>
+    <div><div class="k">Content vol.</div><div class="v">86 + 185 + 675 KB JSON</div></div>
+    <div><div class="k">Generator</div><div class="v">sat_math_widgets.py · 63 KB</div></div>
+  </div>
+
+  <div class="phase A">
+    <div class="ph-head">
+      <p class="ph-eyebrow">Phase 1 of 5</p>
+      <h2>A · Analyse</h2>
+    </div>
+    <div class="badge-row">
+      <span class="badge">Audience persona</span>
+      <span class="badge">Performance context</span>
+      <span class="badge">Constraints</span>
+      <span class="badge">Prior-art scan</span>
+    </div>
+    <p><strong>Audience.</strong> US high-school students preparing for the SAT Math section. Mixed prior-math confidence. Self-paced, mobile-first study habits.</p>
+    <p><strong>Performance context.</strong> The digital SAT (April 2024 redesign onwards): roughly 38 questions in 70 minutes, adaptive section, calculator permitted throughout. Whole-task skill = decision under time pressure across multi-step problems.</p>
+    <p><strong>Constraints.</strong> Solo build. No Articulate / Storyline seat. Widgets must render in any modern web LMS via iframe. Content must regenerate on demand when the SAT format shifts (because it does).</p>
+    <p><strong>Prior-art scan.</strong> Khan Academy + College Board official prep + Magoosh — strong content libraries, weak on whole-task transfer practice under time pressure. Gap targeted.</p>
+  </div>
+
+  <div class="phase D">
+    <div class="ph-head">
+      <p class="ph-eyebrow">Phase 2 of 5</p>
+      <h2>D · Design</h2>
+    </div>
+    <div class="badge-row">
+      <span class="badge">4C/ID</span>
+      <span class="badge">Backward design</span>
+      <span class="badge">Worked-example fading</span>
+    </div>
+    <p><strong>Why 4C/ID over linear ADDIE.Design.</strong> SAT Math is a complex cognitive whole-task skill — multi-step problem solving under time. 4C/ID exists for exactly this transfer profile; ADDIE's structural strength (compliance sign-off per phase) was irrelevant for solo work.</p>
+    <p><strong>Module sequence.</strong> Heart of Algebra as starter (lowest threshold to confidence; build a streak first) → Problem Solving + Data Analysis → Advanced Math → Additional Topics.</p>
+    <p><strong>4C/ID component map.</strong></p>
+    <ul>
+      <li><strong>Learning tasks</strong> — full SAT-shaped problem sets ordered easy → hard.</li>
+      <li><strong>Supportive info</strong> — concept primers per skill block.</li>
+      <li><strong>Procedural info</strong> — formula reference + Desmos technique cards delivered at the moment of need, not front-loaded.</li>
+      <li><strong>Part-task practice</strong> — drill widgets per sub-skill (e.g. linear-equation manipulation) until automatic.</li>
+    </ul>
+    <p><strong>Authoring layer decision.</strong> JSON-first content separated from rendered HTML so any widget can regenerate when the format changes. This decision paid back in Develop.</p>
+  </div>
+
+</div>
+
+<div class="sheet">
+
+  <div class="phase Dev">
+    <div class="ph-head">
+      <p class="ph-eyebrow">Phase 3 of 5</p>
+      <h2>D · Develop</h2>
+    </div>
+    <div class="badge-row">
+      <span class="badge">Python generator</span>
+      <span class="badge">Three-layer JSON</span>
+      <span class="badge">Post-processing pipeline</span>
+    </div>
+    <p><strong>The widget generator.</strong> <code>sat_math_widgets.py</code> — 63 KB Python — converts a task spec to an interactive Desmos / graph / formula widget HTML block. One generator handles all task variants.</p>
+    <p><strong>Three-layer JSON content library.</strong></p>
+    <ul>
+      <li><code>sat_math_pro_course.json</code> — <strong>86 KB</strong> raw curriculum.</li>
+      <li><code>sat_math_pro_course_4cid.json</code> — <strong>185 KB</strong> 4C/ID-coded variant (which task is which component).</li>
+      <li><code>sat_math_pro_course_html.json</code> — <strong>675 KB</strong> fully rendered HTML widgets per task.</li>
+    </ul>
+    <p><strong>Normalisation pipeline.</strong> Three post-processing scripts before LMS upload: <code>fix_interactive.py</code> + <code>fix_theory_final.py</code> + <code>fix_desmos.py</code>. They catch JSON drift, repair broken Desmos expressions, and lock down rendering edge cases.</p>
+    <p><strong>The big payoff.</strong> When the SAT switched to digital format (April 2024), I regenerated the affected widgets in days instead of rebuilding a Storyline course. The JSON-first decision in Design was the deciding bet.</p>
+  </div>
+
+  <div class="phase I">
+    <div class="ph-head">
+      <p class="ph-eyebrow">Phase 4 of 5</p>
+      <h2>I · Implement</h2>
+    </div>
+    <div class="badge-row">
+      <span class="badge">HTML5 + Desmos JS</span>
+      <span class="badge">LMS-agnostic</span>
+      <span class="badge">Standalone preview</span>
+    </div>
+    <p>Output is the 675 KB HTML widget set, deployable as iframe content in any modern web LMS. Widgets are vanilla HTML5 + Desmos JS API — no SCORM dependency, though SCORM packaging can be layered on (same approach as the FinTech B2B SCORM module in this portfolio).</p>
+    <p>Standalone web preview also available so a reviewer can run a task without setting up an LMS — a deliberate pattern across this portfolio's artefacts.</p>
+  </div>
+
+  <div class="phase E">
+    <div class="ph-head">
+      <p class="ph-eyebrow">Phase 5 of 5</p>
+      <h2>E · Evaluate — designed-in measurement (Kirkpatrick)</h2>
+    </div>
+    <div class="badge-row">
+      <span class="badge">Kirkpatrick L1–L4</span>
+      <span class="badge">Reverse from L4</span>
+    </div>
+    <table class="kirk-table">
+      <thead>
+        <tr><th>Level</th><th>Target</th><th>Instrument</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="l">L1</td><td>≥4.0/5 post-module satisfaction</td><td>3-Q micro-pulse after each module</td></tr>
+        <tr><td class="l">L2</td><td>Per-skill mastery ≥80 %; per-task correctness curve flattens after mastery point</td><td>Widget telemetry + LMS gradebook</td></tr>
+        <tr><td class="l">L3</td><td>Practice-test score delta ≥80 pts pre → post course</td><td>College Board official digital-SAT practice tests</td></tr>
+        <tr><td class="l">L4</td><td>Actual SAT score change ≥80 pts cohort-level</td><td>Self-reported / score-report opt-in</td></tr>
+      </tbody>
+    </table>
+    <p>Targets stated as if the course were rolled out at cohort scale. Stating them is part of the design — it shows the measurement plan was decided before Develop, not bolted on after.</p>
+  </div>
+
+  <div class="lessons">
+    <h2>Lessons — what I'd build again, what I'd change</h2>
+    <ul>
+      <li><strong>JSON-first authoring paid back.</strong> When the SAT redesigned to digital format, regeneration took days vs a Storyline rebuild.</li>
+      <li><strong>Heart-of-Algebra as starter</strong> reduced perceived difficulty in the first hour. Students built a streak before the harder modules.</li>
+      <li><strong>Widget-generator pattern is transferable.</strong> The same generator framework powers Math Slides Add-on (Google Apps Script · JSX) and informs the LMS curriculum seeder used in GrassLMS.</li>
+      <li><strong>Next iteration:</strong> emit xAPI statements per widget interaction to give L3 telemetry richer than mastery-point counts.</li>
+    </ul>
+  </div>
+
+  <div class="meta-note">
+    <strong>Meta-note.</strong> This case study is itself the design log for this artefact, per <a href="../../PROCESS.md">PROCESS.md</a>. The ADDIE structure of the case study mirrors the cycle every artefact in this portfolio passes through. Case-study = design-log avoids duplication, and the format proves the methodology.
+  </div>
+
+  <div class="foot">
+    <span>Mario Becerra · <a href="../../">Course-design pipeline</a> · facts from portfolio entry <code>sat-math-pro</code></span>
+    <span class="v">v1.0 · 16 May 2026</span>
+  </div>
+
+</div>
+
+</body>
+</html>
