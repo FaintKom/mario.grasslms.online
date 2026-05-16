@@ -66,12 +66,14 @@
 
 ### 2c · Kolb experiential cycle mapping
 
-| Kolb stage | In this module |
+> **Honest framing.** Kolb is a cycle across a learning *episode*, not a screen-by-screen taxonomy. The mapping below is illustrative emphasis — showing which screen *leans into* which Kolb stage. A learner does not complete a full Kolb stage in 90 seconds; the full CE → RO → AC → AE arc closes when the rep completes the SCORM module **+** the workshop role-play **+** their first real call.
+
+| Kolb stage (illustrative anchor) | In this module |
 |---|---|
 | **Concrete Experience** | Screen 5 drag-match interaction. Learner *does* the matching, gets immediate green / over-flash feedback. |
 | **Reflective Observation** | Screen 5 post-match feedback paragraph reframes the move ("re-state the objection back first — that micro-pause buys trust"). |
 | **Abstract Conceptualisation** | Screen 4 names the model — *trigger phrase → prop → opener* — and explicitly cites Mayer's "don't double up" principle. |
-| **Active Experimentation** | Screen 6 Q5 — applies the model to a new context (the *end* of a call, not the middle). Learner tries the rule in unfamiliar shape. |
+| **Active Experimentation** | Screen 6 Q5 — applies the model to a new context (the *end* of a call, not the middle). Learner tries the rule in unfamiliar shape. Real AE happens in the workshop role-play (C2) and the first 5 live calls. |
 
 ### 2d · Kirkpatrick reverse from L4
 

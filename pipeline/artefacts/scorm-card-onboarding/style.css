@@ -54,6 +54,7 @@ a { color: var(--green-700); }
   display: flex;
   align-items: center;
   gap: 10px;
+  margin: 0;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.08em;
@@ -160,14 +161,14 @@ a { color: var(--green-700); }
   margin: 0 0 10px;
   font-weight: 600;
 }
-h1.screen-title {
+h2.screen-title {
   font-size: clamp(28px, 4vw, 38px);
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
   margin: 0 0 20px;
 }
-h1.screen-title em {
+h2.screen-title em {
   font-style: normal;
   background: var(--sun-300);
   padding: 0 8px;

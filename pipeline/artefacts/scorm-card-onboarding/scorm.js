@@ -13,6 +13,7 @@
     initialized: false,
     debug: false,
     storageKey: 'scorm_fallback_v1',
+    interactionIndex: 0,    // monotonic counter for cmi.interactions.{N}
 
     findAPI: function (win) {
       var depth = 0;
@@ -40,6 +41,7 @@
         if (ok) {
           this.mode = 'scorm12';
           this.initialized = true;
+          this.interactionIndex = 0;
           this.log('Initialized in SCORM 1.2 mode');
           this.api.LMSSetValue('cmi.core.lesson_status', 'incomplete');
           this.commit();
@@ -48,6 +50,7 @@
       }
       this.mode = 'standalone';
       this.initialized = true;
+      this.interactionIndex = 0;
       this.log('No LMS API — standalone fallback mode');
       return true;
     },
@@ -127,14 +130,18 @@
       try { return JSON.parse(s); } catch (e) { return s; }
     },
 
-    recordInteraction: function (idx, id, type, response, result, weighting) {
-      var p = 'cmi.interactions.' + idx + '.';
+    recordInteraction: function (id, type, response, result, weighting) {
+      // Monotonic indexing — caller no longer passes index.
+      // Ensures cmi.interactions.{N} writes are always contiguous from 0,
+      // regardless of which screen the learner reaches first.
+      var p = 'cmi.interactions.' + this.interactionIndex + '.';
       this.set(p + 'id', id);
       this.set(p + 'type', type);
       this.set(p + 'student_response', response);
       this.set(p + 'result', result);
       if (weighting != null) this.set(p + 'weighting', weighting);
       this.set(p + 'time', this.scormTime());
+      this.interactionIndex++;
     },
 
     scormTime: function () {

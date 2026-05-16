@@ -16,10 +16,10 @@
 <div class="shell">
 
   <header class="shell-head">
-    <div class="shell-brand">
-      <div class="mark">m</div>
+    <h1 class="shell-brand">
+      <span class="mark" aria-hidden="true">m</span>
       <span>FinTech B2B Card Onboarding · sample</span>
-    </div>
+    </h1>
     <div class="progress-wrap">
       <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:16.6%"></div></div>
       <div class="progress-step" id="progressStep">1 / 6</div>
@@ -46,7 +46,7 @@
 <template id="screen-1">
   <section class="screen">
     <p class="eyebrow">Module 1 of 1 · 10 minutes</p>
-    <h1 class="screen-title">A 10-min cheat code for SMB card <em>conversations</em></h1>
+    <h2 class="screen-title">A 10-min cheat code for SMB card <em>conversations</em></h2>
     <p class="lede">Sales reps lose deals not because the product is wrong but because the conversation is. This module gives you the three things that actually move SMB owners from interest to commitment.</p>
 
     <h2>By the end of this module, you can</h2>
@@ -66,7 +66,7 @@
 <template id="screen-2">
   <section class="screen">
     <p class="eyebrow">Screen 2 · The buyer</p>
-    <h1 class="screen-title">Meet María — your <em>real</em> buyer</h1>
+    <h2 class="screen-title">Meet María — your <em>real</em> buyer</h2>
     <p class="lede">35-employee retail SMB, $4M annual revenue, two physical stores, growing online. María signs every expense report personally because she's been burned twice.</p>
 
     <h2>What María wakes up worrying about</h2>
@@ -86,7 +86,7 @@
 <template id="screen-3">
   <section class="screen">
     <p class="eyebrow">Screen 3 · The product</p>
-    <h1 class="screen-title">Four value props, mapped to <em>real</em> pain</h1>
+    <h2 class="screen-title">Four value props, mapped to <em>real</em> pain</h2>
     <p class="lede">The product does a lot. In a 12-minute call you can land four things. Pick the one that maps to the pain María named — lead with it, then layer.</p>
 
     <div class="kv-grid">
@@ -122,7 +122,7 @@
 <template id="screen-4">
   <section class="screen">
     <p class="eyebrow">Screen 4 · Positioning talk track</p>
-    <h1 class="screen-title">Match the <em>trigger phrase</em> to the prop</h1>
+    <h2 class="screen-title">Match the <em>trigger phrase</em> to the prop</h2>
     <p class="lede">If you hear the phrase on the left, lead with the prop on the right. Tap each row to see the exact opener I use.</p>
 
     <div class="tt-list">
@@ -171,7 +171,7 @@
 <template id="screen-5">
   <section class="screen">
     <p class="eyebrow">Screen 5 · Interaction · Objection matching</p>
-    <h1 class="screen-title">Match each <em>objection</em> to its best response</h1>
+    <h2 class="screen-title">Match each <em>objection</em> to its best response</h2>
     <p class="lede">Click an objection on the left, then click the response on the right that best fits it. Correct match locks in green.</p>
 
     <div class="match" id="matchBoard"
@@ -189,7 +189,7 @@
       </div>
     </div>
 
-    <div class="match-feedback" id="matchFeedback">
+    <div class="match-feedback" id="matchFeedback" aria-live="polite" role="status">
       <strong>Done.</strong> All four matched. In a live call you don't recite the response word-for-word — you re-state the objection back in their language first, then deliver the substance. That micro-pause buys trust.
     </div>
   </section>
@@ -198,7 +198,7 @@
 <template id="screen-6">
   <section class="screen">
     <p class="eyebrow">Screen 6 · Check · 5 questions</p>
-    <h1 class="screen-title">Quick <em>check</em> · pass &gt; 80 %</h1>
+    <h2 class="screen-title">Quick <em>check</em> · pass &gt; 80 %</h2>
     <p class="lede">Five single-choice questions. You can change answers before submitting. Result is reported to the LMS via SCORM 1.2.</p>
 
     <div class="quiz" id="quiz"
@@ -261,7 +261,7 @@
          ]'>
     </div>
 
-    <div class="quiz-summary" id="quizSummary">
+    <div class="quiz-summary" id="quizSummary" aria-live="polite" role="status">
       <p class="eyebrow" style="margin:0">Your score</p>
       <div class="big" id="quizBig">—</div>
       <p id="quizMsg">—</p>
@@ -384,7 +384,6 @@
           state.matchPicked.classList.remove('dragging');
           state.matchMatched[pickedId] = true;
           SCORM.recordInteraction(
-            Object.keys(state.matchMatched).length + 4,
             'match_' + pickedId,
             'matching',
             resText,
@@ -450,13 +449,17 @@
         opts.forEach(function (n) { n.classList.remove('selected'); });
         if (picked === q.correct) {
           opts[picked].classList.add('correct');
+          opts[picked].setAttribute('aria-label', 'correct answer · your pick');
           correct++;
         } else {
-          if (picked != null) opts[picked].classList.add('wrong');
+          if (picked != null) {
+            opts[picked].classList.add('wrong');
+            opts[picked].setAttribute('aria-label', 'incorrect · your pick');
+          }
           opts[q.correct].classList.add('correct');
+          opts[q.correct].setAttribute('aria-label', 'correct answer');
         }
         SCORM.recordInteraction(
-          qi,
           q.id,
           'choice',
           picked == null ? '' : String(picked),
