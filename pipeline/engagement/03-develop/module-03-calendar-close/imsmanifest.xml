@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Module 3 · M3 Calendar Close · SCORM 1.2 manifest
+  ---------------------------------------------------------------------------
+  Identifier: FTC.SDR.M3.calendar-close.v1
+  Schema:     ADL SCORM 1.2 (CAM 1.3 compatible)
+  Launch:     index.html  (boots ../scorm-shell/js/shell.js via ES module)
+  Decisions:  D-005 custom SCORM · D-006 no audio · D-007 mini-OS
+  See:        02-design/module-storyboards/M3-calendar-close.md
+              03-develop/scorm-shell/README.md
+-->
+<manifest identifier="FTC.SDR.M3.calendar-close.v1"
+          version="1.0"
+          xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+                              http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd
+                              http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+
+  <organizations default="FTC-SDR-M3-ORG">
+    <organization identifier="FTC-SDR-M3-ORG">
+      <title>FinTechCard SDR Onboarding · Module 3 · M3 Calendar Close</title>
+      <item identifier="FTC-SDR-M3-ITEM"
+            identifierref="FTC-SDR-M3-RES"
+            isvisible="true">
+        <title>Module 3 · Calendar Close</title>
+        <adlcp:masteryscore>80</adlcp:masteryscore>
+        <adlcp:maxtimeallowed>00:10:00</adlcp:maxtimeallowed>
+        <adlcp:timelimitaction>continue,no message</adlcp:timelimitaction>
+      </item>
+    </organization>
+  </organizations>
+
+  <resources>
+    <resource identifier="FTC-SDR-M3-RES"
+              type="webcontent"
+              adlcp:scormtype="sco"
+              href="index.html">
+      <file href="index.html"/>
+      <file href="module.js"/>
+      <file href="styles.css"/>
+      <file href="data/transcripts.json"/>
+      <file href="data/prospects.json"/>
+      <file href="data/quiz.json"/>
+      <dependency identifierref="FTC-SDR-SHELL-DEP"/>
+    </resource>
+    <!--
+      Shell is delivered as a shared sibling folder ../scorm-shell/. When
+      packaged for SCORM Cloud upload, scripts/package.sh inlines the shell
+      files alongside this module per scorm-shell/README.md §8.
+    -->
+    <resource identifier="FTC-SDR-SHELL-DEP"
+              type="webcontent"
+              adlcp:scormtype="asset">
+      <file href="../scorm-shell/js/shell.js"/>
+      <file href="../scorm-shell/js/scorm-bridge.js"/>
+      <file href="../scorm-shell/js/event-log.js"/>
+      <file href="../scorm-shell/js/coach-marks.js"/>
+      <file href="../scorm-shell/js/apps/registry.js"/>
+      <file href="../scorm-shell/js/apps/outreach.js"/>
+      <file href="../scorm-shell/js/apps/gong.js"/>
+      <file href="../scorm-shell/js/apps/salesforce.js"/>
+      <file href="../scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="../scorm-shell/js/apps/calendar.js"/>
+      <file href="../scorm-shell/js/apps/phone-dialler.js"/>
+      <file href="../scorm-shell/js/apps/slack.js"/>
+      <file href="../scorm-shell/styles/shell.css"/>
+      <file href="../scorm-shell/styles/apps.css"/>
+    </resource>
+  </resources>
+</manifest>

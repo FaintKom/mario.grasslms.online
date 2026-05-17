@@ -1,0 +1,315 @@
+/*
+ * Module-2 overlay styles · Objection Acknowledge.
+ *
+ * Builds on top of scorm-shell/styles/shell.css tokens (--ftc-green-primary etc).
+ * Scope: the .m2-stage right-hand panel + objection-bank UI + restate input.
+ *
+ * Mayer principles applied: signalling (green chip on the M2 move), spatial
+ * contiguity (debrief inline with the line being scored), coherence (no
+ * decorative motion). WCAG 2.1 AA: contrast verified against tokens declared
+ * in shell.css. Respects prefers-reduced-motion.
+ */
+
+/* ---------- Stage panel (right rail on desktop) ---------- */
+.m2-stage {
+  position: fixed;
+  top: 56px;
+  right: 0;
+  bottom: 48px;
+  width: clamp(360px, 38vw, 520px);
+  background: var(--ftc-paper, #ffffff);
+  border-left: 1px solid var(--ftc-border, #d0d5dd);
+  padding: 20px 24px 28px;
+  overflow-y: auto;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-family: var(--ftc-font-sans, system-ui, sans-serif);
+  color: var(--ftc-ink, #0f1419);
+  box-shadow: -8px 0 24px -16px rgba(15, 20, 25, 0.18);
+}
+
+@media (max-width: 1023px) {
+  .m2-stage {
+    position: static;
+    width: 100%;
+    border-left: 0;
+    border-top: 1px solid var(--ftc-border, #d0d5dd);
+    box-shadow: none;
+  }
+}
+
+.m2-stage h2 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
+.m2-stage h3 { font-size: 15px; font-weight: 600; margin: 12px 0 6px; }
+.m2-stage p  { margin: 6px 0; line-height: 1.5; }
+
+.m2-stage .meta {
+  font: 500 12px/1.4 var(--ftc-font-mono, ui-monospace, monospace);
+  color: var(--ftc-ink-2, #475467);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ---------- Trigger / failure-mode card ---------- */
+.m2-trigger {
+  background: #fff5f4;
+  border-left: 3px solid var(--ftc-danger-muted, #b42318);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.m2-trigger .fail-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font: 500 11px/1.6 var(--ftc-font-mono, monospace);
+  color: var(--ftc-danger-muted, #b42318);
+  background: #fde7e4;
+  margin-bottom: 6px;
+}
+
+/* ---------- Worked-example transcript ---------- */
+.m2-transcript {
+  background: var(--ftc-surface, #f6f8fa);
+  border: 1px solid var(--ftc-border, #d0d5dd);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.m2-transcript .line {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.m2-transcript .ts {
+  font: 500 12px/1.7 var(--ftc-font-mono, monospace);
+  color: var(--ftc-ink-2, #475467);
+}
+
+.m2-transcript .speaker { font-weight: 600; margin-right: 6px; }
+
+.m2-transcript .line--m2 {
+  background: var(--ftc-green-tint, #e6f7f0);
+  border-left: 3px solid var(--ftc-green-primary, #00b67a);
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.m2-transcript .chip {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  font: 500 11px/1.6 var(--ftc-font-mono, monospace);
+  color: #006548;
+  background: var(--ftc-green-tint, #e6f7f0);
+  border: 1px solid var(--ftc-green-primary, #00b67a);
+  border-radius: 999px;
+}
+
+.m2-transcript .silence {
+  font-style: italic;
+  color: var(--ftc-ink-2, #475467);
+  font-family: var(--ftc-font-mono, monospace);
+  font-size: 12px;
+  margin-left: 66px;
+}
+
+/* ---------- Completion-problem options ---------- */
+.m2-options { display: flex; flex-direction: column; gap: 8px; }
+
+.m2-option {
+  text-align: left;
+  background: var(--ftc-paper, #ffffff);
+  border: 1px solid var(--ftc-border, #d0d5dd);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: 400 14px/1.5 var(--ftc-font-sans, system-ui);
+  color: var(--ftc-ink, #0f1419);
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.m2-option:hover,
+.m2-option:focus-visible {
+  border-color: var(--ftc-green-primary, #00b67a);
+  outline: 2px solid var(--ftc-green-primary, #00b67a);
+  outline-offset: 1px;
+}
+
+.m2-option[data-state="correct"] {
+  background: var(--ftc-green-tint, #e6f7f0);
+  border-color: var(--ftc-green-primary, #00b67a);
+}
+
+.m2-option[data-state="incorrect"] {
+  background: #fff5f4;
+  border-color: var(--ftc-danger-muted, #b42318);
+}
+
+.m2-feedback {
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--ftc-surface, #f6f8fa);
+  border-left: 3px solid var(--ftc-ink-2, #475467);
+  margin-top: 6px;
+}
+
+/* ---------- Objection bank (solo problem) ---------- */
+.m2-objection-bank {
+  background: var(--ftc-surface, #f6f8fa);
+  border: 1px solid var(--ftc-border, #d0d5dd);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.m2-buyer-quote {
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 10px 12px;
+  background: #fff;
+  border-left: 3px solid var(--ftc-ink-2, #475467);
+  border-radius: 4px;
+}
+
+.m2-buyer-quote .speaker {
+  display: block;
+  font-style: normal;
+  font: 500 12px/1.6 var(--ftc-font-mono, monospace);
+  color: var(--ftc-ink-2, #475467);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.m2-family-chooser {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.m2-family-chooser button {
+  border: 1px solid var(--ftc-border, #d0d5dd);
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font: 500 13px/1.4 var(--ftc-font-sans, system-ui);
+  cursor: pointer;
+}
+
+.m2-family-chooser button[aria-pressed="true"] {
+  background: var(--ftc-green-primary, #00b67a);
+  color: #fff;
+  border-color: var(--ftc-green-dark, #00875f);
+}
+
+.m2-restate-input {
+  width: 100%;
+  min-height: 72px;
+  padding: 10px 12px;
+  border: 1px solid var(--ftc-border, #d0d5dd);
+  border-radius: 6px;
+  font: 400 14px/1.5 var(--ftc-font-sans, system-ui);
+  resize: vertical;
+}
+
+.m2-restate-input:focus-visible {
+  outline: 2px solid var(--ftc-green-primary, #00b67a);
+  outline-offset: 1px;
+  border-color: var(--ftc-green-primary, #00b67a);
+}
+
+.m2-overlap {
+  font: 500 12px/1.6 var(--ftc-font-mono, monospace);
+  color: var(--ftc-ink-2, #475467);
+  margin-top: 4px;
+}
+
+.m2-overlap[data-band="strong"] { color: #006548; }
+.m2-overlap[data-band="weak"]   { color: var(--ftc-danger-muted, #b42318); }
+
+/* ---------- Buttons ---------- */
+.m2-stage .btn {
+  appearance: none;
+  border: 0;
+  background: var(--ftc-green-primary, #00b67a);
+  color: #fff;
+  font: 600 14px/1.4 var(--ftc-font-sans, system-ui);
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.m2-stage .btn:hover,
+.m2-stage .btn:focus-visible {
+  background: var(--ftc-green-dark, #00875f);
+  outline: 2px solid var(--ftc-green-dark, #00875f);
+  outline-offset: 1px;
+}
+.m2-stage .btn[disabled] {
+  background: var(--ftc-border, #d0d5dd);
+  color: var(--ftc-ink-2, #475467);
+  cursor: not-allowed;
+}
+
+.m2-stage .btn--ghost {
+  background: transparent;
+  color: var(--ftc-ink, #0f1419);
+  border: 1px solid var(--ftc-border, #d0d5dd);
+}
+.m2-stage .btn--ghost:hover { background: var(--ftc-surface, #f6f8fa); }
+
+.m2-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+
+/* ---------- Anti-pattern toggle (GC-19 P.B. clip) ---------- */
+.m2-antipattern {
+  background: #fff;
+  border: 1px dashed var(--ftc-danger-muted, #b42318);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.m2-antipattern[hidden] { display: none; }
+.m2-antipattern .line { font-size: 13px; line-height: 1.5; }
+
+/* ---------- Quiz items ---------- */
+.m2-quiz-item {
+  background: var(--ftc-paper, #fff);
+  border: 1px solid var(--ftc-border, #d0d5dd);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.m2-quiz-item legend {
+  font-weight: 600;
+  font-size: 14px;
+  padding: 0 6px;
+}
+
+/* ---------- Progress strip ---------- */
+.m2-progress { display: flex; gap: 4px; margin-bottom: 4px; }
+
+.m2-progress span {
+  flex: 1;
+  height: 4px;
+  background: var(--ftc-border, #d0d5dd);
+  border-radius: 2px;
+}
+
+.m2-progress span[data-state="done"]   { background: var(--ftc-green-primary, #00b67a); }
+.m2-progress span[data-state="active"] { background: var(--ftc-green-dark, #00875f); }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .m2-stage, .m2-option, .m2-stage .btn { transition: none !important; }
+}

@@ -1,0 +1,385 @@
+/* =========================================================================
+   apps.css · per-app skins layered on shell.css
+   Each app uses a small unique accent so learners recognise it by glance,
+   while staying inside the FTC brand palette per ux-design-system §1.
+   ========================================================================= */
+
+/* --- App accent tokens (per build brief §3 list) --- */
+.app--outreach     { --app-accent: #d97706; --app-accent-tint: #fff4e6; }
+.app--gong         { --app-accent: #1e3a8a; --app-accent-tint: #e8eefc; }
+.app--salesforce   { --app-accent: #1B5297; --app-accent-tint: #e3edf8; --app-accent-line: #1B5297; }
+.app--linkedin-ch  { --app-accent: #2a52be; --app-accent-tint: #eaf0fb; --app-accent-alt: #475569; }
+.app--calendar     { --app-accent: #00875f; --app-accent-tint: #e6f7f0; }
+.app--phone-dialler { --app-accent: #0f1419; --app-accent-tint: #1a1f24; --app-accent-text: #e6f7f0; }
+.app--slack        { --app-accent: #4a154b; --app-accent-tint: #efe7f0; }
+
+/* --- App-titlebar tint: a thin accent stripe on the left edge of the body --- */
+.os-window.app--outreach    .os-window-body,
+.os-window.app--gong        .os-window-body,
+.os-window.app--salesforce  .os-window-body,
+.os-window.app--linkedin-ch .os-window-body,
+.os-window.app--calendar    .os-window-body,
+.os-window.app--slack       .os-window-body {
+  border-left: 3px solid var(--app-accent);
+}
+
+/* App glyph (the coloured square in the titlebar) */
+.os-window-title .app-glyph {
+  background: var(--app-accent, var(--brand-green));
+  color: var(--ftc-paper);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* =========================================================================
+   1 · Outreach
+   ========================================================================= */
+.app--outreach .dial-queue { display: grid; gap: var(--sp-2); }
+.app--outreach .dial-queue__filters {
+  display: flex; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-3);
+}
+.app--outreach .dial-queue__filters select {
+  padding: var(--sp-1) var(--sp-2);
+  border: 1px solid var(--ftc-border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  background: var(--bg-elevated);
+}
+.app--outreach .lead-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border: 1px solid var(--ftc-border);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  align-items: center;
+}
+.app--outreach .lead-row:hover { border-color: var(--app-accent); background: var(--app-accent-tint); }
+.app--outreach .lead-row .meta {
+  font-family: var(--ftc-font-mono); font-size: 11px; color: var(--ftc-ink-2);
+}
+.app--outreach .lead-row .name { font-weight: 600; font-size: 14px; }
+.app--outreach .lead-row .sequence-step {
+  display: inline-block; padding: 2px 6px;
+  background: var(--app-accent-tint); color: var(--app-accent);
+  border-radius: var(--radius-sm);
+  font-family: var(--ftc-font-mono); font-size: 11px;
+  margin-left: var(--sp-2);
+}
+.app--outreach .dial-btn {
+  background: var(--app-accent); color: var(--ftc-paper);
+  border: 0; border-radius: var(--radius-md);
+  padding: var(--sp-2) var(--sp-4);
+  font-weight: 600; font-size: 13px;
+}
+.app--outreach .dial-btn:hover { filter: brightness(0.95); }
+.app--outreach .dial-btn:disabled {
+  background: var(--ftc-border); color: var(--ftc-ink-2); cursor: not-allowed;
+}
+.app--outreach .dial-btn-hint { font-size: 11px; color: var(--accent-warn); margin-top: var(--sp-1); }
+
+/* =========================================================================
+   2 · Gong
+   ========================================================================= */
+.app--gong .gong-layout {
+  display: grid; grid-template-columns: 200px 1fr;
+  gap: var(--sp-3); height: 100%; min-height: 320px;
+}
+.app--gong .call-list {
+  border-right: 1px solid var(--ftc-border);
+  padding-right: var(--sp-2); overflow: auto;
+  margin: 0; padding-left: 0; list-style: none;
+}
+.app--gong .call-list li {
+  padding: var(--sp-2); border-radius: var(--radius-sm);
+  font-family: var(--ftc-font-mono); font-size: 12px;
+  color: var(--ftc-ink-2); cursor: pointer;
+}
+.app--gong .call-list li[aria-current="true"] {
+  background: var(--app-accent-tint); color: var(--app-accent); font-weight: 600;
+}
+.app--gong .transcript {
+  overflow: auto;
+  font-family: var(--ftc-font-mono);
+  font-size: 13px; line-height: 1.6;
+}
+.app--gong .transcript .turn {
+  display: grid; grid-template-columns: 56px 80px 1fr;
+  gap: var(--sp-2); padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-sm);
+}
+.app--gong .transcript .turn .ts { color: var(--ftc-ink-2); font-size: 11px; }
+.app--gong .transcript .turn .speaker { font-weight: 600; color: var(--ftc-ink); }
+.app--gong .transcript .turn[data-m] {
+  background: var(--ftc-green-tint);
+  border-left: 3px solid var(--brand-green);
+}
+.app--gong .transcript .turn[data-m="M1"] { border-left-color: var(--m1-cue); }
+.app--gong .transcript .turn[data-m="M2"] { border-left-color: var(--m2-cue); }
+.app--gong .transcript .turn[data-m="M3"] { border-left-color: var(--m3-cue); }
+.app--gong .transcript .turn[data-fail="true"] {
+  background: #fde7e3; border-left: 3px solid var(--ftc-danger-muted);
+}
+.app--gong .rubric-panel {
+  margin-top: var(--sp-3); padding: var(--sp-3);
+  background: var(--ftc-surface); border-radius: var(--radius-md);
+  font-size: 12px;
+}
+.app--gong .rubric-panel h3 { margin: 0 0 var(--sp-2) 0; font-size: 13px; }
+
+/* =========================================================================
+   3 · Salesforce
+   ========================================================================= */
+.app--salesforce .sf-tabs {
+  display: flex; gap: 0;
+  border-bottom: 2px solid var(--app-accent);
+  margin-bottom: var(--sp-3);
+}
+.app--salesforce .sf-tabs button {
+  background: transparent; border: 0;
+  padding: var(--sp-2) var(--sp-3); font-size: 13px;
+  color: var(--ftc-ink-2);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+.app--salesforce .sf-tabs button[aria-selected="true"] {
+  color: var(--app-accent);
+  border-bottom-color: var(--app-accent);
+  font-weight: 600;
+}
+.app--salesforce .sf-record {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3);
+}
+.app--salesforce .sf-field {
+  display: grid; gap: 2px;
+  padding: var(--sp-2);
+  background: var(--bg-elevated);
+  border: 1px solid var(--ftc-border);
+  border-radius: var(--radius-sm);
+}
+.app--salesforce .sf-field dt {
+  font-family: var(--ftc-font-mono); font-size: 11px; color: var(--ftc-ink-2);
+}
+.app--salesforce .sf-field dd {
+  font-family: var(--ftc-font-mono); font-size: 13px; color: var(--ftc-ink); margin: 0;
+}
+.app--salesforce .sf-field[data-readonly="true"] dd { color: var(--ftc-ink-2); }
+.app--salesforce .next-step-btn {
+  background: var(--app-accent); color: var(--ftc-paper);
+  border: 0; border-radius: var(--radius-md);
+  padding: var(--sp-2) var(--sp-4);
+  font-weight: 600; font-size: 13px;
+  margin-top: var(--sp-3);
+}
+.app--salesforce .sf-modal {
+  position: absolute; inset: 0;
+  background: rgba(15,20,25,0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: var(--z-modal);
+}
+.app--salesforce .sf-modal .panel {
+  background: var(--bg-elevated); border-radius: var(--radius-lg);
+  padding: var(--sp-5); max-width: 420px; width: 90%;
+}
+
+/* =========================================================================
+   4 · LinkedIn / Companies House
+   ========================================================================= */
+.app--linkedin-ch .lch-search {
+  display: flex; gap: var(--sp-2); margin-bottom: var(--sp-3);
+}
+.app--linkedin-ch .lch-search input {
+  flex: 1; padding: var(--sp-2);
+  border: 1px solid var(--ftc-border);
+  border-radius: var(--radius-sm); font-size: 13px;
+}
+.app--linkedin-ch .lch-search button {
+  background: var(--app-accent); color: var(--ftc-paper);
+  border: 0; border-radius: var(--radius-sm);
+  padding: var(--sp-2) var(--sp-3); font-size: 13px;
+}
+.app--linkedin-ch .lch-result {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3);
+}
+.app--linkedin-ch .lch-panel {
+  padding: var(--sp-3);
+  background: var(--bg-elevated);
+  border: 1px solid var(--ftc-border);
+  border-radius: var(--radius-md);
+}
+.app--linkedin-ch .lch-panel.linkedin { border-top: 3px solid var(--app-accent); }
+.app--linkedin-ch .lch-panel.ch       { border-top: 3px solid var(--app-accent-alt); }
+.app--linkedin-ch .lch-panel h3 { margin: 0 0 var(--sp-2) 0; font-size: 13px; font-weight: 600; }
+.app--linkedin-ch .signal {
+  display: block; padding: var(--sp-2);
+  border: 1px solid var(--ftc-border);
+  border-left: 3px solid var(--brand-green);
+  border-radius: var(--radius-sm);
+  background: var(--ftc-green-tint);
+  font-size: 12px; margin-bottom: var(--sp-2);
+}
+.app--linkedin-ch .signal .src {
+  font-family: var(--ftc-font-mono); font-size: 10px;
+  color: var(--ftc-ink-2); text-transform: uppercase;
+}
+
+/* =========================================================================
+   5 · Calendar
+   ========================================================================= */
+.app--calendar .cal-grid {
+  display: grid; grid-template-columns: 56px repeat(5, 1fr);
+  gap: 1px; background: var(--ftc-border);
+  border: 1px solid var(--ftc-border);
+  border-radius: var(--radius-sm);
+}
+.app--calendar .cal-grid > div {
+  background: var(--bg-elevated);
+  padding: var(--sp-1);
+  font-size: 11px;
+  min-height: 28px;
+}
+.app--calendar .cal-head {
+  font-family: var(--ftc-font-mono);
+  text-align: center;
+  color: var(--ftc-ink-2);
+  background: var(--ftc-surface) !important;
+}
+.app--calendar .cal-slot { cursor: pointer; }
+.app--calendar .cal-slot[data-status="free"]:hover { background: var(--app-accent-tint); }
+.app--calendar .cal-slot[data-status="busy"] {
+  background: #f3f4f6 !important; color: var(--ftc-ink-2);
+  font-family: var(--ftc-font-mono);
+}
+.app--calendar .cal-slot[data-status="suggested"] {
+  background: var(--app-accent-tint);
+  border-left: 3px solid var(--app-accent);
+  font-weight: 600; color: var(--app-accent);
+}
+.app--calendar .cal-slot[data-status="selected"] {
+  background: var(--app-accent); color: var(--ftc-paper); font-weight: 600;
+}
+.app--calendar .invite-btn {
+  margin-top: var(--sp-3);
+  background: var(--app-accent); color: var(--ftc-paper);
+  border: 0; border-radius: var(--radius-md);
+  padding: var(--sp-2) var(--sp-4); font-weight: 600;
+}
+.app--calendar .invite-btn:disabled {
+  background: var(--ftc-border); color: var(--ftc-ink-2); cursor: not-allowed;
+}
+
+/* =========================================================================
+   6 · Phone-dialler (dark)
+   ========================================================================= */
+.app--phone-dialler { background: var(--app-accent); color: var(--app-accent-text); }
+.app--phone-dialler .os-window-body {
+  background: var(--app-accent); color: var(--app-accent-text);
+}
+.app--phone-dialler .os-window-titlebar { background: #0f1419; color: var(--ftc-paper); }
+.app--phone-dialler .os-window-title { color: var(--ftc-paper); }
+.app--phone-dialler .dialler-state { text-align: center; padding: var(--sp-4); }
+.app--phone-dialler .dialler-state .buyer-name {
+  font-size: 24px; font-weight: 600; color: var(--ftc-paper);
+}
+.app--phone-dialler .dialler-state .call-meta {
+  font-family: var(--ftc-font-mono); font-size: 12px;
+  color: var(--app-accent-text); opacity: 0.7;
+}
+.app--phone-dialler .dialler-state .call-timer {
+  font-family: var(--ftc-font-mono); font-size: 36px;
+  font-variant-numeric: tabular-nums; margin: var(--sp-3) 0;
+  color: var(--ftc-paper);
+}
+.app--phone-dialler .move-chips {
+  display: flex; justify-content: center; gap: var(--sp-2);
+  margin: var(--sp-3) 0;
+}
+.app--phone-dialler .move-chips .m-chip {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.5);
+  border-left-color: rgba(255,255,255,0.2);
+}
+.app--phone-dialler .move-chips .m-chip[data-active="true"] {
+  background: var(--ftc-green-tint);
+  color: var(--ftc-ink);
+  border-left-color: var(--brand-green);
+}
+.app--phone-dialler .silence-banner {
+  background: var(--accent-warn); color: var(--ftc-paper);
+  padding: var(--sp-2); border-radius: var(--radius-sm);
+  font-family: var(--ftc-font-mono); font-size: 13px;
+  text-align: center; margin: var(--sp-3) 0;
+}
+.app--phone-dialler .silence-banner[hidden] { display: none; }
+.app--phone-dialler .call-controls {
+  display: flex; justify-content: center; gap: var(--sp-3);
+}
+.app--phone-dialler .call-controls .dial-pad-btn,
+.app--phone-dialler .call-controls .hangup-btn {
+  border: 0; border-radius: 999px;
+  width: 56px; height: 56px;
+  font-size: 13px; font-weight: 600; color: var(--ftc-paper);
+}
+.app--phone-dialler .call-controls .dial-pad-btn { background: var(--brand-green); }
+.app--phone-dialler .call-controls .hangup-btn   { background: var(--ftc-danger-muted); }
+.app--phone-dialler .disposition {
+  margin-top: var(--sp-3); padding: var(--sp-3);
+  background: rgba(255,255,255,0.04);
+  border-radius: var(--radius-sm);
+}
+.app--phone-dialler .disposition select {
+  width: 100%; padding: var(--sp-2);
+  background: #ffffff; color: var(--ftc-ink);
+  border: 0; border-radius: var(--radius-sm);
+}
+
+/* =========================================================================
+   7 · Slack
+   ========================================================================= */
+.app--slack .slack-layout {
+  display: grid; grid-template-columns: 180px 1fr; gap: 0;
+  height: 100%; min-height: 320px;
+  border-radius: var(--radius-sm); overflow: hidden;
+}
+.app--slack .slack-sidebar {
+  background: var(--app-accent); color: #fff;
+  padding: var(--sp-3); font-size: 13px;
+}
+.app--slack .slack-sidebar h3 {
+  font-size: 11px; color: rgba(255,255,255,0.6);
+  margin: 0 0 var(--sp-2) 0;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.app--slack .slack-sidebar ul { margin: 0; padding: 0; list-style: none; }
+.app--slack .slack-sidebar li { padding: var(--sp-1) 0; color: rgba(255,255,255,0.85); }
+.app--slack .slack-sidebar li[aria-current="true"] { color: #fff; font-weight: 600; }
+.app--slack .slack-feed { background: var(--bg-elevated); padding: var(--sp-3); overflow: auto; }
+.app--slack .slack-msg {
+  display: grid; grid-template-columns: 36px 1fr; gap: var(--sp-2);
+  padding: var(--sp-2); border-bottom: 1px solid var(--ftc-surface);
+}
+.app--slack .slack-msg .avatar {
+  width: 32px; height: 32px;
+  background: var(--app-accent-tint); color: var(--app-accent);
+  border-radius: var(--radius-sm);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 12px;
+}
+.app--slack .slack-msg .meta {
+  display: flex; gap: var(--sp-2); align-items: baseline; font-size: 12px;
+}
+.app--slack .slack-msg .meta .author { font-weight: 600; color: var(--ftc-ink); }
+.app--slack .slack-msg .meta .ts { color: var(--ftc-ink-2); font-family: var(--ftc-font-mono); font-size: 11px; }
+.app--slack .slack-msg .body { font-size: 13px; }
+.app--slack .pinned-card {
+  margin-bottom: var(--sp-3); padding: var(--sp-2);
+  background: var(--app-accent-tint);
+  border-left: 3px solid var(--app-accent);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+.app--slack .pinned-card .pin-label {
+  font-family: var(--ftc-font-mono); font-size: 10px;
+  text-transform: uppercase; color: var(--app-accent);
+}

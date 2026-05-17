@@ -1,0 +1,46 @@
+{
+  "$schema_note": "M5 worked + contrast transcripts. Multi-stakeholder (founder + finance) synthesized from §10.2 L.D. Brex/FX pattern (GC-06) extended per storyboard. Anonymised initials. No PII.",
+  "worked": {
+    "id": "M5-WE-TM-SK",
+    "title": "Brex displacement with FX hook, founder + finance lead",
+    "sme_pattern": "L.D. §10.2 (Berlin) — 'never argue against Brex, ask about FX exposure'",
+    "buyers": { "a": "Tom (Series-B founder)", "b": "S.K. (finance lead)" },
+    "turns": [
+      { "ts": "0:00", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "Tom — I saw you closed Series-B last quarter. Who handles per-employee card issuance now that you're hiring fast?", "tags": ["M1"] },
+      { "ts": "0:14", "who": "buyer", "voice": "a",  "speaker": "Tom",  "line": "Honestly it's a mess. I'm Slack-pinging finance every time someone joins. We already use Brex though.", "tags": [] },
+      { "ts": "0:32", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "So issuance is the bottleneck — Brex sits on top but you're still the human approval each time.", "tags": ["M2"] },
+      { "ts": "0:46", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "Quick question — what does your FX exposure on EUR-USD SaaS subscriptions look like?", "tags": ["Prop3"] },
+      { "ts": "1:02", "who": "buyer", "voice": "a",  "speaker": "Tom",  "line": "Honestly? No idea. S.K. would know — she's the finance lead. Let me grab her.", "tags": [] },
+      { "ts": "1:38", "who": "join",  "kind": "join", "label": "S.K. (finance lead) joined the call" },
+      { "ts": "1:42", "who": "buyer", "voice": "b",  "speaker": "S.K.", "line": "Hi — Tom briefed me. We use Brex, and our FX spread on Anthropic + AWS in USD is brutal — about 2.4% on our card statements.", "tags": [] },
+      { "ts": "1:58", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "S.K., before I go anywhere — what's the monthly EUR-USD volume you're moving on supplier payments?", "tags": ["M1 (2nd stakeholder)"] },
+      { "ts": "2:10", "who": "buyer", "voice": "b",  "speaker": "S.K.", "line": "About €60K a month on SaaS + €20K on contractors. So 2.4% is ~€1,900 a month I'm leaking.", "tags": [] },
+      { "ts": "2:24", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "Got it — so the actual leak is the spread, not the issuance speed Tom flagged.", "tags": ["M2 (2nd stakeholder)"] },
+      { "ts": "2:36", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "We run at interbank on EUR-USD, no markup. On €80K/month you'd recover roughly €1,800 — and Tom gets per-employee cards issued in 2 minutes via our API.", "tags": ["Prop3", "Prop2"] },
+      { "ts": "2:58", "who": "buyer", "voice": "a",  "speaker": "Tom",  "line": "That's the actual number I wanted.", "tags": [] },
+      { "ts": "3:04", "who": "buyer", "voice": "b",  "speaker": "S.K.", "line": "And we can keep Brex for US-only spend?", "tags": [] },
+      { "ts": "3:10", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "Yes — additive, not replacement. Tom, S.K. — Tuesday 11 or Thursday 14 for a 20-min FX deep-dive with both of you?", "tags": ["M3 (multi-invitee)"] },
+      { "ts": "3:24", "who": "buyer", "voice": "a",  "speaker": "Tom",  "line": "Thursday works.", "tags": [] },
+      { "ts": "3:26", "who": "buyer", "voice": "b",  "speaker": "S.K.", "line": "Send it to both of us.", "tags": [] },
+      { "ts": "3:30", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "[Sends calendar invite · tom@startup.example + sarah@startup.example · Salesforce Next_Step_Booked__c = TRUE]", "tags": ["M3"] }
+    ]
+  },
+  "contrast": {
+    "id": "M5-CONTRAST-no-second-M1",
+    "title": "Contrast — founder only / SDR didn't redo M1 → call lost",
+    "sme_pattern": "Inverts §10.4 P.B. pattern + storyboard failure-mode for multi-stakeholder.",
+    "buyers": { "a": "Tom (founder)", "b": "S.K. (finance, joins mid-call)" },
+    "turns": [
+      { "ts": "0:00", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "Hi Tom — wanted to walk you through how we're cheaper than Brex on FX.", "tags": [] },
+      { "ts": "0:08", "who": "buyer", "voice": "a",  "speaker": "Tom",  "line": "We're locked into Brex this year.", "tags": [] },
+      { "ts": "0:14", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "Our fees are still lower though — and our API for issuance is faster.", "tags": [] },
+      { "ts": "0:24", "who": "join",  "kind": "join", "label": "S.K. (finance) joined the call" },
+      { "ts": "0:28", "who": "buyer", "voice": "b",  "speaker": "S.K.", "line": "Sorry, what's the call about?", "tags": [] },
+      { "ts": "0:34", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "As I was telling Tom, our card is cheaper than Brex with a faster API — let me show you the spend-control platform.", "tags": [] },
+      { "ts": "0:46", "who": "buyer", "voice": "b",  "speaker": "S.K.", "line": "We don't have a spend-control problem.", "tags": [] },
+      { "ts": "0:54", "who": "buyer", "voice": "a",  "speaker": "Tom",  "line": "Yeah — we need to drop. Send pricing if you've got it.", "tags": [] },
+      { "ts": "1:02", "who": "rep",   "voice": null, "speaker": "Rep",  "line": "[Hangs up · no invite sent · Salesforce Next_Step_Booked__c = FALSE]", "tags": [] }
+    ],
+    "failure_pattern": "Rep pitched Tom's frame at S.K. without firing a fresh M1 for the new stakeholder. S.K.'s actual pain (FX spread on supplier payments) never surfaced. Jargon token 'spend-control platform' flagged on line 0:34 (brief §18.1 violation)."
+  }
+}

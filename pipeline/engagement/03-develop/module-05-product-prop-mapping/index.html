@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Module 5 · Product Prop Mapping · FinTechCard SDR Onboarding</title>
+  <meta name="description" content="Map any stated buyer pain to one of the four product props in the buyer's own language — and hold two diagnostics when a second voice joins mid-call.">
+
+  <!-- Shell tokens, window-manager primitives, per-app skins -->
+  <link rel="stylesheet" href="../scorm-shell/styles/shell.css">
+  <link rel="stylesheet" href="../scorm-shell/styles/apps.css">
+  <!-- M5-specific overlay: multi-voice transcript annotation, D5 prop-pain
+       drag-mapping drill, 2nd-participant chip in phone-dialler, jargon flag. -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#desktop">Skip to main content</a>
+  <a class="skip-link" href="#m5-stage">Skip to module stage</a>
+
+  <!-- Shell-mounted DOM (mini-OS window manager attaches here) -->
+  <div id="mini-os-root">
+    <header id="topbar">
+      <span class="ftc-logo" aria-label="FinTechCard">FTC</span>
+      <span id="module-title">Module 5 · Product Prop Mapping</span>
+      <span id="module-progress" aria-live="polite" aria-atomic="true">0:00 / 10:00</span>
+      <button id="help-button" type="button" aria-label="Open help and pinned job aids">Help</button>
+    </header>
+    <main id="desktop"></main>
+    <nav id="taskbar" aria-label="Open applications"><ul id="taskbar-list"></ul></nav>
+  </div>
+
+  <!-- Live region for shell announcements (window focus, app open/close) -->
+  <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <!-- Assertive live region for the 2nd-stakeholder mid-call join event. -->
+  <div id="m5-stakeholder-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- Module-stage overlay layer: trigger, outcome, recall, worked example,
+       D5 prop-pain drill, solo, feedback, quiz, takeaway, L1 pulse. -->
+  <div id="m5-stage" aria-live="polite"></div>
+
+  <script type="module" src="./module.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+[
+  {
+    "id": "EMMA",
+    "name": "Emma",
+    "company": "Brightline Components Ltd",
+    "archetype": "factory",
+    "industry": "Industrial manufacturing · 3 sites",
+    "fte": 78,
+    "monthly_spend": 42000,
+    "stage": "Family-owned · operations head decision-maker · 4 yrs in role",
+    "registered_office": "Brightline House, Sheffield S9 1XU",
+    "source_note": "Synthetic profile based on brief §12.3 (Emma · manufacturing ops head). Used as the solo-problem buyer to drive variability (different archetype from worked-example Maria). Anonymised; no PII.",
+    "top_pain": "Bookkeeping drudgery — finance manually re-keys ~400 supplier receipts per month; Sage can't read job-numbers off the card transactions.",
+    "top_objection": "Our accountant won't deal with another tool.",
+    "ideal_opener": "I saw Brightline's headcount up 18% this year — who's approving supplier card spend across the 3 shifts now?",
+    "best_pitch_prop": "Receipt capture + Sage line-level export (Prop 4)",
+    "closing_move": "Could I get 20 minutes with you and your Sage admin together — Tuesday 14:00 or Thursday 11:30?",
+    "signals": [
+      {
+        "type": "filing",
+        "source": "companieshouse",
+        "content": "Filed annual accounts last month — turnover up 22% year-on-year; full-time headcount up 18%."
+      },
+      {
+        "type": "hiring",
+        "source": "linkedin",
+        "content": "Posting: 'Hiring shift supervisor + procurement manager — Sheffield site.'"
+      },
+      {
+        "type": "post",
+        "source": "linkedin",
+        "content": "Operations head shared a carousel: 'Lean manufacturing tools we use across our 3 sites.'"
+      }
+    ]
+  }
+]

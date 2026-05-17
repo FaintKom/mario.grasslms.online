@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FinTechCard SDR Onboarding · Module 6 · Regulatory Deflection — class 6 (KYC / AML / SCA / PSD2 / GDPR) with always-visible job aid per Rossett & Schafer (2007).">
+  <meta name="color-scheme" content="light">
+  <title>Module 6 · Regulatory Deflection · FinTechCard SDR Onboarding</title>
+
+  <!-- Shared mini-OS shell stylesheets (D-005 + D-007 + ux-design-system.md §1-9) -->
+  <link rel="stylesheet" href="../scorm-shell/styles/shell.css">
+  <link rel="stylesheet" href="../scorm-shell/styles/apps.css">
+  <!-- Module-local overlays: Gagné timeline panel + always-visible job-aid side panel + escalate scaffold -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-module="M6">
+  <a class="skip-link" href="#desktop">Skip to main content</a>
+  <a class="skip-link" href="#job-aid-panel">Skip to regulatory job aid</a>
+
+  <div id="mini-os-root" role="application" aria-label="FinTechCard mini-OS workspace · Module 6">
+    <header id="topbar" role="banner">
+      <div class="topbar-left">
+        <span class="ftc-logo" aria-hidden="true">FTC</span>
+        <span id="module-title" class="module-title">Module 6 · Regulatory Deflection</span>
+      </div>
+      <div class="topbar-right">
+        <span id="module-progress" class="module-progress" aria-live="polite">0:00 / 10:00</span>
+        <button type="button" id="help-button" class="help-button" aria-label="Open help and job aids">Help</button>
+      </div>
+    </header>
+
+    <!--
+      Layout: desktop on the left, ALWAYS-VISIBLE job-aid panel pinned on the right.
+      Per Rossett & Schafer (2007) the job aid is the rep's working memory; the rep
+      does not memorise §19. The panel is collapsible for low-vision users but
+      defaults open and persists across every Gagné segment INCLUDING the quiz.
+    -->
+    <div class="m6-layout">
+      <main id="desktop" role="main" aria-label="Mini-OS desktop">
+        <section id="stage" class="stage" aria-live="polite">
+          <div class="stage-loading">Loading Module 6…</div>
+        </section>
+      </main>
+
+      <aside id="job-aid-panel"
+             class="job-aid-panel"
+             aria-label="§19 regulatory deflection job aid — always visible"
+             data-collapsed="false">
+        <header class="job-aid-header">
+          <h2>§19 · Reg deflection job aid</h2>
+          <button type="button"
+                  id="job-aid-collapse"
+                  class="job-aid-collapse"
+                  aria-expanded="true"
+                  aria-controls="job-aid-body">
+            Collapse panel
+          </button>
+        </header>
+        <div id="job-aid-body" class="job-aid-body">
+          <p class="job-aid-hint">
+            <strong>Read the row out loud.</strong> Don't memorise.
+            If the question goes deeper than these 5 rows — <em>escalate</em>.
+          </p>
+          <table class="job-aid-table" role="table">
+            <caption class="sr-only">Five-row deflection table: KYC, AML, SCA, PSD2, GDPR.</caption>
+            <thead>
+              <tr><th scope="col">Row</th><th scope="col">What it means</th><th scope="col">Say verbatim</th></tr>
+            </thead>
+            <tbody id="job-aid-rows">
+              <!-- Populated from data/reg-job-aid.json by module.js -->
+            </tbody>
+          </table>
+          <button type="button"
+                  id="escalate-button"
+                  class="escalate-button"
+                  aria-label="Escalate to Compliance — open Slack DM scaffold">
+            Escalate to Compliance
+          </button>
+        </div>
+      </aside>
+    </div>
+
+    <nav id="taskbar" role="toolbar" aria-label="Mini-OS taskbar — open apps">
+      <ul id="taskbar-list" class="taskbar-list" aria-label="Open windows"></ul>
+    </nav>
+  </div>
+
+  <!-- Slack DM-to-compliance scaffold modal · revealed by escalate button -->
+  <div id="escalate-modal"
+       class="escalate-modal"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="escalate-modal-title"
+       hidden>
+    <div class="escalate-modal-card">
+      <header class="escalate-modal-header">
+        <h2 id="escalate-modal-title">Slack DM to #compliance · scaffold</h2>
+        <button type="button" id="escalate-modal-close" aria-label="Close escalate scaffold">Close</button>
+      </header>
+      <p class="escalate-modal-hint">
+        Copy this. Paste in your real <code>#compliance</code> DM. Send during the call.
+      </p>
+      <pre id="escalate-modal-text" class="escalate-modal-text" tabindex="0"></pre>
+      <button type="button" id="escalate-copy" class="escalate-copy">Copy to clipboard</button>
+    </div>
+  </div>
+
+  <!-- ARIA live region + coach-marks root inherited from shell -->
+  <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="coachmark-root" aria-hidden="true"></div>
+
+  <!-- Boot the module. shell.js exports bootModule which we drive from module.js. -->
+  <script type="module" src="./module.js"></script>
+</body>
+</html>

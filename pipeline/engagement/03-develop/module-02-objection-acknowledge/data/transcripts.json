@@ -1,0 +1,69 @@
+[
+  {
+    "id": "GC-06",
+    "gc_id": "GC-06",
+    "rep": "L.D.",
+    "prospect_name": "Tom",
+    "prospect_archetype": "rocket",
+    "outcome": "booked",
+    "ended_at": "10:42",
+    "coach_phrase": "Brex is great if you're a US-based startup with USD-only spend",
+    "lines": [
+      { "ts": "00:33", "speaker": "L.D.", "text": "I saw you closed your Series-B last quarter — how are you handling per-employee card issuance for the new hires?", "m_move_tag": "M1" },
+      { "ts": "00:42", "speaker": "Tom",  "text": "We already use Brex." },
+      { "ts": "00:48", "speaker": "L.D.", "text": "Brex is great if you're a US-based startup with USD-only spend. We're built for EU multi-currency and we sit on top of your existing accounts — additive, not a replacement.", "m_move_tag": "M2", "move_label": "additive restate" },
+      { "silence": 3 },
+      { "ts": "00:58", "speaker": "L.D.", "text": "What does your FX exposure look like on this quarter's spend?", "m_move_tag": "M2", "move_label": "follow-up question" },
+      { "ts": "01:18", "speaker": "Tom",  "text": "Honestly — I don't know off the top of my head." },
+      { "ts": "01:22", "speaker": "L.D.", "text": "90% of founders don't. That's the wedge — want a 10-minute look at last month's FX cost vs Brex?" }
+    ]
+  },
+  {
+    "id": "GC-06b",
+    "gc_id": "GC-01-style",
+    "rep": "M.G.",
+    "prospect_name": "Maria",
+    "prospect_archetype": "storefront",
+    "outcome": "booked",
+    "ended_at": "08:14",
+    "coach_phrase": "so you've got the card-issuing side sorted",
+    "lines": [
+      { "ts": "01:14", "speaker": "Maria", "text": "We already have a Visa from our bank." },
+      { "ts": "01:18", "speaker": "M.G.",  "text": "So you've got the card-issuing side sorted.", "m_move_tag": "M2", "move_label": "buyer-words restate" },
+      { "silence": 3 },
+      { "ts": "01:24", "speaker": "Maria", "text": "Yeah — but the controls are a mess. We had a $1,200 charge nobody could explain for 2 weeks last quarter." },
+      { "ts": "01:42", "speaker": "M.G.",  "text": "Got it — visibility is the broken thing, not the card. What does your bookkeeper do when a charge shows up that nobody recognises?", "m_move_tag": "M2", "move_label": "follow-up question" },
+      { "ts": "02:00", "speaker": "Maria", "text": "She emails everyone and waits. Sometimes it takes two weeks." }
+    ]
+  },
+  {
+    "id": "GC-09",
+    "gc_id": "GC-09",
+    "rep": "H.K.",
+    "prospect_name": "buyer",
+    "prospect_archetype": "factory",
+    "outcome": "lost_mid_call",
+    "ended_at": "01:42",
+    "coach_phrase": "(anti-pattern · argued instead of restated)",
+    "lines": [
+      { "ts": "01:08", "speaker": "buyer", "text": "We already have a corporate Visa from our bank." },
+      { "ts": "01:14", "speaker": "H.K.",  "text": "But our fees are lower — and the FX is better." },
+      { "ts": "01:32", "speaker": "buyer", "text": "I don't think you understand. We're fine." }
+    ]
+  },
+  {
+    "id": "GC-19",
+    "gc_id": "GC-19",
+    "rep": "P.B.",
+    "prospect_name": "buyer",
+    "prospect_archetype": "storefront",
+    "outcome": "hung_up",
+    "ended_at": "00:18",
+    "coach_phrase": "(anti-pattern · argued on fees, §10.4)",
+    "lines": [
+      { "ts": "00:04", "speaker": "buyer", "text": "I'm busy — what is this?" },
+      { "ts": "00:06", "speaker": "P.B.",  "text": "I know you're busy, but our card is cheaper than your bank's." },
+      { "ts": "00:14", "speaker": "buyer", "text": "Cheaper than what? I didn't say I had a problem." }
+    ]
+  }
+]

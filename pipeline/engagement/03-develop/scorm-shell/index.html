@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FinTechCard SDR onboarding mini-OS shell — simulated workspace runtime for SCORM 1.2 modules M1–M6.">
+  <meta name="color-scheme" content="light">
+  <title>FinTechCard SDR Onboarding · Mini-OS Shell</title>
+  <link rel="stylesheet" href="styles/shell.css">
+  <link rel="stylesheet" href="styles/apps.css">
+  <script type="module" src="js/shell.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#desktop">Skip to main content</a>
+
+  <div id="mini-os-root" role="application" aria-label="FinTechCard mini-OS workspace">
+    <header id="topbar" role="banner">
+      <div class="topbar-left">
+        <span class="ftc-logo" aria-hidden="true">FTC</span>
+        <span id="module-title" class="module-title">SDR Onboarding · Shell Preview</span>
+      </div>
+      <div class="topbar-right">
+        <span id="module-progress" class="module-progress" aria-live="polite">0%</span>
+        <button type="button" id="help-button" class="help-button" aria-label="Open help and job aids">Help</button>
+      </div>
+    </header>
+
+    <main id="desktop" role="main" aria-label="Mini-OS desktop">
+      <div id="desktop-empty-state" class="desktop-empty-state">
+        <h1>Mini-OS shell · preview</h1>
+        <p>This is the bare desktop. In a live SCORM module, <code>bootModule()</code> opens the apps the module needs.</p>
+        <p>Try the demo launchers below, or append <code>?debug=1</code> to see the SCORM bridge + event-log in the console.</p>
+        <div class="demo-launchers" role="toolbar" aria-label="Demo app launchers">
+          <button type="button" data-launch="outreach">Open Outreach</button>
+          <button type="button" data-launch="gong">Open Gong</button>
+          <button type="button" data-launch="salesforce">Open Salesforce</button>
+          <button type="button" data-launch="linkedin-ch">Open LinkedIn / Companies House</button>
+          <button type="button" data-launch="calendar">Open Calendar</button>
+          <button type="button" data-launch="phone-dialler">Open Phone Dialler</button>
+          <button type="button" data-launch="slack">Open Slack</button>
+        </div>
+      </div>
+    </main>
+
+    <nav id="taskbar" role="toolbar" aria-label="Mini-OS taskbar — open apps">
+      <ul id="taskbar-list" class="taskbar-list" aria-label="Open windows"></ul>
+    </nav>
+  </div>
+
+  <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="coachmark-root" aria-hidden="true"></div>
+</body>
+</html>

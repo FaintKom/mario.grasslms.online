@@ -1,0 +1,169 @@
+[
+  {
+    "lead_id": "M4-L-001",
+    "name": "Maria",
+    "company": "Two Pines Apparel",
+    "archetype": "storefront",
+    "industry": "Multi-location retail SMB (apparel)",
+    "fte": 35,
+    "monthly_spend": 25000,
+    "stage": "Owner-operator · 2 stores · 7-yr tenure",
+    "registered_office": "Unit 4, Northern Way, Manchester M1 3AA",
+    "top_pain": "Last quarter a £1,200 charge nobody could explain for 2 weeks.",
+    "top_objection": "We already have a corporate Visa from our bank.",
+    "ideal_opener": "Who's currently approving every expense report, and how long does it take?",
+    "best_pitch_prop": 4,
+    "closing_move": "Two 20-minute slots: Tue 10:00 or Wed 10:30 — which works with your bookkeeper?",
+    "signals": [
+      { "type": "new_location", "source": "companieshouse", "content": "Filed change-of-registered-office for second Deansgate site (Jan 2026)." },
+      { "type": "hiring",       "source": "linkedin",       "content": "Hiring assistant bookkeeper, Manchester — 3 days/week." }
+    ]
+  },
+  {
+    "lead_id": "M4-L-002",
+    "name": "Tom",
+    "company": "Northwind Telemetry",
+    "archetype": "rocket",
+    "industry": "Series-B SaaS · pre-revenue scale-up",
+    "fte": 22,
+    "monthly_spend": 18000,
+    "stage": "Series-B · founder-CEO · just raised €15M",
+    "registered_office": "20 St Andrew's Square, Edinburgh EH2 1AF",
+    "top_pain": "FX on EU SaaS subscriptions + per-employee card issuance speed.",
+    "top_objection": "We already use Brex.",
+    "ideal_opener": "I see you closed your Series-B last quarter — how are you handling per-employee card issuance for your new hires?",
+    "best_pitch_prop": 3,
+    "closing_move": "Want me to show you the difference in FX cost vs Brex on your last month's spend? 10 minutes.",
+    "signals": [
+      { "type": "funding", "source": "linkedin",       "content": "Announced $18M Series B led by Northzone (Apr 2026)." },
+      { "type": "hiring",  "source": "linkedin",       "content": "Hiring 6 engineers + Head of Finance." },
+      { "type": "filing",  "source": "companieshouse", "content": "Filed allotment of shares — Series B confirmation (Apr 2026)." }
+    ]
+  },
+  {
+    "lead_id": "M4-L-003",
+    "name": "Emma",
+    "company": "Brightline Components Ltd",
+    "archetype": "factory",
+    "industry": "Industrial manufacturing · precision components",
+    "fte": 78,
+    "monthly_spend": 42000,
+    "stage": "Family-owned · ops head reports to MD · 4-yr tenure",
+    "registered_office": "Brightline House, Sheffield S9 1XU",
+    "top_pain": "Supplier receipts arrive late; accountant re-keys 400+ transactions per month across 3 sites.",
+    "top_objection": "Our accountant won't deal with another tool.",
+    "ideal_opener": "How much time does your bookkeeping team spend re-keying supplier receipts every month?",
+    "best_pitch_prop": 4,
+    "closing_move": "Let me set up a 10-minute call with your accountant — we'll walk them through the Sage sync.",
+    "signals": [
+      { "type": "filing", "source": "companieshouse", "content": "Annual accounts — turnover up 22% YoY (Mar 2026)." },
+      { "type": "hiring", "source": "linkedin",       "content": "Hiring shift supervisor + procurement manager." }
+    ]
+  },
+  {
+    "lead_id": "M4-L-004",
+    "name": "Lukas",
+    "company": "Tafelrunde Gruppe",
+    "archetype": "forkKnife",
+    "industry": "Hospitality · 4-location restaurant group (DE)",
+    "fte": 52,
+    "monthly_spend": 31000,
+    "stage": "Founder-operator · 12-yr tenure · 4 locations",
+    "registered_office": "Karlstrasse 12, München 80333",
+    "top_pain": "Expense fraud last year + multi-currency on Italian supplier deliveries.",
+    "top_objection": "I don't trust new fintechs with my money.",
+    "ideal_opener": "I noticed you opened a fourth location in Hamburg last month — how are you handling spend visibility across the 4 sites?",
+    "best_pitch_prop": 1,
+    "closing_move": "Funds are held at a regulated tier-1 partner bank — here's the regulator page. Want a 15-min call where you can ask all the trust questions and then decide?",
+    "signals": [
+      { "type": "new_location", "source": "linkedin",       "content": "Announced Schwabing opening on Instagram + LinkedIn (Mar 2026)." },
+      { "type": "press",        "source": "linkedin",       "content": "Süddeutsche Zeitung — 'four locations, one menu'." },
+      { "type": "filing",       "source": "companieshouse", "content": "Handelsregister-Eintrag for 4th location (Feb 2026)." }
+    ]
+  },
+
+  {
+    "lead_id": "M4-D-001",
+    "name": "P.K.",
+    "company": "Pine Mills Ltd",
+    "archetype": "distractor",
+    "mimics": "factory",
+    "industry": "Wholesale food distribution (NOT manufacturing) · 1 site",
+    "fte": 38,
+    "monthly_spend": 22000,
+    "stage": "Owner-operator · single warehouse",
+    "registered_office": "Pine Mills Yard, Bristol BS3 4QF",
+    "top_pain": "Card spend visible but no bookkeeping pain — owner runs Sage himself.",
+    "top_objection": "Don't need anything new — current setup works.",
+    "ideal_opener": "(Disambiguation: 'factory' signal-words present but only 1 site, low FTE, owner-run — closer to Maria's archetype than Emma's.)",
+    "best_pitch_prop": 4,
+    "closing_move": "n/a · distractor — reclassify to storefront before pitching.",
+    "signals": [
+      { "type": "filing", "source": "companieshouse", "content": "Annual accounts — flat YoY, 1 site only." },
+      { "type": "post",   "source": "linkedin",       "content": "Owner shared: 'Sage gets me through.' (No accountant pain.)" }
+    ]
+  },
+  {
+    "lead_id": "M4-D-002",
+    "name": "R.B.",
+    "company": "Helio Rivers BV",
+    "archetype": "distractor",
+    "mimics": "rocket",
+    "industry": "Series-C SaaS · 180 FTE (NOT SMB)",
+    "fte": 180,
+    "monthly_spend": 240000,
+    "stage": "Series-C · enterprise CFO buyer",
+    "registered_office": "Herengracht 110, Amsterdam 1015 BS",
+    "top_pain": "Out of SMB ICP — needs SSO + custom approval workflows · enterprise tier territory.",
+    "top_objection": "Already on Brex Enterprise + Ramp duo.",
+    "ideal_opener": "(Disambiguation: 'rocket' funding signal but FTE 180 + Series-C → out of SMB ICP. Route to mid-market team.)",
+    "best_pitch_prop": 2,
+    "closing_move": "n/a · distractor — pass to mid-market AE.",
+    "signals": [
+      { "type": "funding", "source": "linkedin",       "content": "Announced $60M Series C (Mar 2026)." },
+      { "type": "hiring",  "source": "linkedin",       "content": "Hiring 30 across product + GTM." }
+    ]
+  },
+  {
+    "lead_id": "M4-D-003",
+    "name": "S.O.",
+    "company": "OakRow Bakery",
+    "archetype": "distractor",
+    "mimics": "forkKnife",
+    "industry": "Hospitality · 1 location · UK (NOT DE multi-site)",
+    "fte": 14,
+    "monthly_spend": 6000,
+    "stage": "Founder · single location · 3-yr tenure",
+    "registered_office": "OakRow Lane, Bath BA1 5PH",
+    "top_pain": "Below the ≥€10K/mo card-spend floor — out of ICP this quarter.",
+    "top_objection": "We're too small for a corporate card.",
+    "ideal_opener": "(Disambiguation: 'forkKnife' food-service signal but spend below ICP floor + single location + UK not DE. Nurture, do not dial.)",
+    "best_pitch_prop": 4,
+    "closing_move": "n/a · distractor — add to nurture sequence, not dial queue.",
+    "signals": [
+      { "type": "post",   "source": "linkedin",       "content": "Owner shared 'Year 3 in business' update." },
+      { "type": "filing", "source": "companieshouse", "content": "Micro-entity accounts filed (Mar 2026)." }
+    ]
+  },
+  {
+    "lead_id": "M4-D-004",
+    "name": "T.E.",
+    "company": "TwoPins Studios",
+    "archetype": "distractor",
+    "mimics": "storefront",
+    "industry": "Creative agency · 2 client sites (NOT retail stores)",
+    "fte": 28,
+    "monthly_spend": 19000,
+    "stage": "Co-founder-led · 2 client-facing studios",
+    "registered_office": "5 Curtain Road, London EC2A 3PT",
+    "top_pain": "Project-based card spend per client → closer to Tom's per-project than Maria's per-store.",
+    "top_objection": "We bill clients directly — why issue cards?",
+    "ideal_opener": "(Disambiguation: '2 locations' signal-word matches Maria but 'studios' are client sites not retail. Reclassify to rocket / per-team-budget framing.)",
+    "best_pitch_prop": 2,
+    "closing_move": "n/a · distractor — reclassify before pitching.",
+    "signals": [
+      { "type": "new_location", "source": "linkedin",       "content": "Announced 'second studio' opening." },
+      { "type": "filing",       "source": "companieshouse", "content": "Filed for 2nd registered address." }
+    ]
+  }
+]

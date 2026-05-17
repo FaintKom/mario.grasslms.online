@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Module 4 · ICP Buyer Fit · FinTechCard SDR Onboarding</title>
+  <link rel="stylesheet" href="../scorm-shell/styles/shell.css">
+  <link rel="stylesheet" href="../scorm-shell/styles/apps.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#desktop">Skip to main content</a>
+  <div id="mini-os-root">
+    <header id="topbar">
+      <div class="topbar-left">
+        <span class="ftc-logo" aria-hidden="true">FTC</span>
+        <span class="module-title" id="module-title">Module 4 · ICP Buyer Fit</span>
+      </div>
+      <div class="topbar-right">
+        <span class="module-progress" id="module-progress" aria-live="polite">0:00 / 10:00</span>
+        <button type="button" class="help-button" id="help-button">Help</button>
+      </div>
+    </header>
+
+    <main id="desktop">
+      <section id="m4-stage" class="m4-stage" aria-live="polite" aria-atomic="false"></section>
+    </main>
+
+    <nav id="taskbar" aria-label="Open apps">
+      <ul id="taskbar-list" class="taskbar-list" role="toolbar" aria-label="Mini-OS taskbar"></ul>
+    </nav>
+  </div>
+
+  <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="coachmark-root" aria-hidden="true"></div>
+
+  <script type="module">
+    import { bootModule } from "../scorm-shell/js/shell.js";
+    import { runModule4 } from "./module.js";
+
+    const api = bootModule({
+      moduleId: "M4",
+      title: "Module 4 · ICP Buyer Fit",
+      appsToLaunch: [],
+      onReady(ctx) { runModule4(ctx); },
+      onComplete() {
+        const stage = document.getElementById("m4-stage");
+        if (stage) {
+          stage.innerHTML = `
+            <div class="m4-complete">
+              <h1>Module 4 complete</h1>
+              <p>Take-away saved to your Slack pinned channel · spaced retrieval queued for +7 days.</p>
+            </div>`;
+        }
+      },
+    });
+
+    document.getElementById("help-button")?.addEventListener("click", () => {
+      api.coachMarks.show({
+        id: "m4-help-recap",
+        anchor: "#help-button",
+        text: "M1 diagnostic · M2 acknowledge · M3 close. Pick the buyer in ≤ 5 s, then run the moves.",
+      });
+    });
+  </script>
+</body>
+</html>

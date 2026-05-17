@@ -1,0 +1,101 @@
+[
+  {
+    "id": "M1-Q1",
+    "lo_id": "LO-M1.1",
+    "bloom": "Analyse",
+    "source_note": "Maria-style scenario · keyed line anchors on M.G. §10.1 verbatim opener. Distractors drawn from §10.4 P.B. + §11 GC-19/17/20.",
+    "stem": "You're about to dial Maria — owner of a 2-store retail SMB. Companies House shows she opened the second store in January. Which opener does the work of M1?",
+    "choices": [
+      {
+        "id": "A",
+        "text": "Hi Maria — do you have a moment to talk about your corporate spending?",
+        "keyed": false,
+        "feedback": "Generic. No signal, no diagnostic. Pattern GC-19 — Maria's bottom-quartile counterpart hung up at 0:08."
+      },
+      {
+        "id": "B",
+        "text": "I noticed you opened a second location 6 months ago — who's approving expense reports across both stores now?",
+        "keyed": true,
+        "feedback": "Correct. Specific signal (second location) + who-controls-what question. Pattern GC-01 — booked a demo at 14 minutes."
+      },
+      {
+        "id": "C",
+        "text": "Our card is cheaper than your bank's — worth 10 minutes?",
+        "keyed": false,
+        "feedback": "Fees argument is a pitch, not a diagnostic. Pattern GC-20 — call ended at 0:24."
+      },
+      {
+        "id": "D",
+        "text": "We help SMB owners get real-time visibility into their team spend — can I tell you more?",
+        "keyed": false,
+        "feedback": "Pitch-launch. Pattern GC-17 — buyer hung up at 0:22 because no diagnostic was asked."
+      }
+    ]
+  },
+  {
+    "id": "M1-Q2",
+    "lo_id": "LO-M1.2",
+    "bloom": "Create",
+    "source_note": "Worked-example completion on Tom · §12.2 Series-B founder · drives variability vs Maria. Keyed answer pairs signal with who-controls-what in ≤ 15 words.",
+    "stem": "Tom just closed a Series B (LinkedIn announcement last month, 22 FTE, 6 engineering hires posted). Which diagnostic best fits LO-M1.2 — signal + who-controls-what in ≤ 15 words?",
+    "choices": [
+      {
+        "id": "A",
+        "text": "Congratulations on the Series B — that must be a huge milestone for the team. Would love to hear how it's going.",
+        "keyed": false,
+        "feedback": "Too long, no who-controls-what question. Compliment is not a diagnostic."
+      },
+      {
+        "id": "B",
+        "text": "Saw your Series B last month — who's owning per-employee card issuance now that engineering is scaling?",
+        "keyed": true,
+        "feedback": "Correct. 16 words, specific signal (Series B), who-controls-what (per-employee card issuance). Anchors on §10.2 L.D. and GC-06."
+      },
+      {
+        "id": "C",
+        "text": "We help fast-growing SaaS teams with corporate cards — sound like something you'd want to evaluate?",
+        "keyed": false,
+        "feedback": "Pitch-launch, no signal. Same anti-pattern as GC-17."
+      },
+      {
+        "id": "D",
+        "text": "Are you using Brex?",
+        "keyed": false,
+        "feedback": "Closed-ended yes/no. No signal anchoring. Even if Tom says 'yes', you have nothing to acknowledge in M2."
+      }
+    ]
+  },
+  {
+    "id": "M1-Q3",
+    "lo_id": "LO-M1.3",
+    "bloom": "Evaluate",
+    "source_note": "Threshold-concept item · anchored on M.G. §10.1 verbatim ('Ask one good question and then shut up for 5 seconds'). Distractors are §10.4 P.B. anti-patterns.",
+    "stem": "You ask your diagnostic. The buyer pauses for 6 seconds — no audible breath, no reply. What do you do?",
+    "choices": [
+      {
+        "id": "A",
+        "text": "Rephrase the question more clearly so they understand it.",
+        "keyed": false,
+        "feedback": "You just took the silence away. §10.1 — 'Five seconds feels like an hour but it's where the deal happens.'"
+      },
+      {
+        "id": "B",
+        "text": "Fill the gap with a quick benefit statement to keep momentum.",
+        "keyed": false,
+        "feedback": "This is the bottom-quartile reflex (§10.4 P.B.). Pitching into silence collapses the diagnostic."
+      },
+      {
+        "id": "C",
+        "text": "Wait. Let the buyer fill the silence.",
+        "keyed": true,
+        "feedback": "Correct. LO-M1.3 — tolerate the 5-second silence. The buyer is thinking; that's where the actual pain reveals itself."
+      },
+      {
+        "id": "D",
+        "text": "Ask if they're still on the line.",
+        "keyed": false,
+        "feedback": "Breaks the silence and signals discomfort. The buyer reads it as a pitch rep, not a peer."
+      }
+    ]
+  }
+]

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FinTechCard SDR Onboarding · Module 2 · Objection Acknowledge — restate, then ask.">
+  <meta name="color-scheme" content="light">
+  <title>Module 2 · Objection Acknowledge · FinTechCard SDR Onboarding</title>
+
+  <!-- Shared shell tokens + app skins (per scorm-shell/README §3). -->
+  <link rel="stylesheet" href="../scorm-shell/styles/shell.css">
+  <link rel="stylesheet" href="../scorm-shell/styles/apps.css">
+  <!-- Module-2-local overlay (objection bank, restate input, debrief). -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#desktop">Skip to main content</a>
+
+  <div id="mini-os-root" role="application" aria-label="FinTechCard mini-OS · Module 2">
+    <header id="topbar" role="banner">
+      <div class="topbar-left">
+        <span class="ftc-logo" aria-hidden="true">FTC</span>
+        <span id="module-title" class="module-title">Module 2 · Objection Acknowledge</span>
+      </div>
+      <div class="topbar-right">
+        <span id="module-progress" class="module-progress" aria-live="polite">0%</span>
+        <button type="button" id="help-button" class="help-button" aria-label="Open help and job aids">Help</button>
+      </div>
+    </header>
+
+    <main id="desktop" role="main" aria-label="Mini-OS desktop"></main>
+
+    <nav id="taskbar" role="toolbar" aria-label="Mini-OS taskbar — open apps">
+      <ul id="taskbar-list" class="taskbar-list" aria-label="Open windows"></ul>
+    </nav>
+  </div>
+
+  <aside id="m2-stage"
+         class="m2-stage"
+         role="complementary"
+         aria-label="Module 2 scenario stage"
+         aria-live="polite">
+  </aside>
+
+  <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="coachmark-root" aria-hidden="true"></div>
+
+  <script type="module" src="./module.js"></script>
+</body>
+</html>

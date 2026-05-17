@@ -739,19 +739,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 /* ---------- case studies ---------- */
 .cases {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1px;
   background: var(--rule);
   border: 1px solid var(--rule);
   margin-bottom: 48px;
 }
-@media (max-width: 980px) {
-  .cases { grid-template-columns: repeat(2, 1fr); }
-  .cases .case:nth-child(3) { grid-column: 1 / -1; }
-}
 @media (max-width: 640px) {
   .cases { grid-template-columns: 1fr; }
-  .cases .case:nth-child(3) { grid-column: auto; }
 }
 .case {
   background: var(--bg);
@@ -1946,7 +1941,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <section class="wrap" id="cases">
   <div class="section-head">
     <span class="num">§ 01 / CASES</span>
-    <h2>Three programs<br>I shipped<em>.</em></h2>
+    <h2>Four programs<br>I shipped<em>.</em></h2>
     <span class="count">end-to-end ID · 2023 — 2026</span>
   </div>
 
@@ -1995,6 +1990,21 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         <span>regulated content</span><span>SME-driven</span><span>full ID cycle</span><span>industry practitioners</span>
       </div>
       <a class="case-cta" href="pipeline/artefacts/kirkpatrick-plan-fintech/" target="_blank">Regulated-domain L1–L4 plan <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 04</span>
+        <span class="case-tag">Sales Enablement · case study</span>
+      </div>
+      <div class="case-employer">FinTechCard Ltd. (anonymised)</div>
+      <h3>SDR ramp <em>compressed</em><br>95 → 71 days · three keystone moves</h3>
+      <p class="case-period">2026 · Lead LXD · 16-week engagement · 6-month measurement window</p>
+      <p class="case-desc">End-to-end ADDIE engagement (Analyse → Iterate). 6 SCORM 1.2 modules running in a custom mini-OS that simulates the SDR's actual workspace — Outreach, Gong, Salesforce, LinkedIn, Calendar, phone-dialler, Slack. 3-row manager call-review rubric; Kirkpatrick L1–L4 wired to existing dashboards. 20 LXD frameworks named + cited; critic-loop QA gate per phase.</p>
+      <div class="case-tags">
+        <span>4C/ID</span><span>mini-OS sim</span><span>M1/M2/M3</span><span>Kirkpatrick L4</span><span>SCORM 1.2</span>
+      </div>
+      <a class="case-cta" href="pipeline/engagement/" target="_blank">See the engagement <span class="arrow">→</span></a>
     </article>
 
   </div>

@@ -1,0 +1,52 @@
+{
+  "_doc": "Module 6 quiz · 3 scenario items mapped to LO-REG.1, LO-REG.1, LO-REG.2. Every item is OPEN-JOB-AID — learner sees the §19 panel while answering. Per Rossett & Schafer (2007), the assessment validates the rep's ability to USE the aid under live conditions, not their memory of it. Per l2-quiz-blueprint.md §4.6.",
+  "items": [
+    {
+      "id": "q1",
+      "lo": "LO-REG.1",
+      "open_job_aid": true,
+      "stem": "Lukas (DE hospitality, 4 locations) opens the call with: 'I don't trust new fintechs. What happens to my money if you go under?' Which §19 row is the right starting point?",
+      "options": [
+        { "label": "KYC row · identity-verification at signup",                                    "correct": true,  "rationale": "KYC row anchors the trust answer (regulated KYC + smoother than bank) and chains naturally to the §13.4 bank-tier-1 segregation framing." },
+        { "label": "AML row · transaction monitoring",                                            "correct": false, "rationale": "AML is about flagging suspicious transactions, not about what happens to deposited funds." },
+        { "label": "PSD2 row · open-banking framework",                                            "correct": false, "rationale": "PSD2 is reference-only and doesn't speak to fund segregation." },
+        { "label": "No row · this is a product question, not regulatory",                          "correct": false, "rationale": "This is exactly the trust-anchored regulatory question §19 was written for." }
+      ],
+      "feedback_correct": "KYC opens the door. Read the §19 KYC row, then bridge to §13.4 bank-tier-1 segregation in the buyer's own words.",
+      "feedback_incorrect": "Re-read the KYC row on the right. It's the verbatim line for the trust question — open with that, then bridge to fund segregation."
+    },
+    {
+      "id": "q2",
+      "lo": "LO-REG.1",
+      "open_job_aid": true,
+      "stem": "Tom (Series-B SaaS founder) asks: 'How do you handle expense categories — does it auto-tag SaaS subscriptions vs travel?' Which §19 row do you use?",
+      "options": [
+        { "label": "GDPR row · because it touches data",                                            "correct": false, "rationale": "GDPR concerns data protection, not expense categorisation." },
+        { "label": "AML row · because monitoring sounds similar",                                  "correct": false, "rationale": "AML monitors transactions for laundering risk, not for accounting categories." },
+        { "label": "No row · this is a product question, not regulatory",                          "correct": true,  "rationale": "Distractor item. Do not over-apply the deflection move — answer this with Module 5 prop framing (Prop 4 · receipt capture + accounting sync)." },
+        { "label": "PSD2 row · because it's EU payments",                                          "correct": false, "rationale": "PSD2 doesn't touch expense categorisation; this is a workflow question." }
+      ],
+      "feedback_correct": "Right — this is a product question. Don't deflect. Frame with Prop 4 from Module 5 (receipt capture + accounting sync).",
+      "feedback_incorrect": "This isn't a regulatory question. Over-deflecting damages your credibility. Answer with the Module 5 prop frame, not §19."
+    },
+    {
+      "id": "q3",
+      "lo": "LO-REG.2",
+      "open_job_aid": true,
+      "stem": "Buyer follows up on GDPR: 'OK and what's your DSR turnaround when a Swiss ex-employee asks for their full card-transaction history under a cross-border transfer mechanism?' What do you do?",
+      "options": [
+        { "label": "Read the GDPR row verbatim — it covers cross-border",                          "correct": false, "rationale": "The §19 GDPR row says 'data lives in the EU' and offers the DPA. It does not answer Swiss cross-border DSR timelines." },
+        { "label": "Improvise — Switzerland has an adequacy decision so it's fine",                "correct": false, "rationale": "Don't invent. Improvising regulatory specifics on a call is exactly the failure mode §19 is designed to prevent." },
+        { "label": "Escalate to Compliance · open the Slack scaffold + book a follow-up",          "correct": true,  "rationale": "This exceeds the §19 GDPR row (specific DSR turnaround on a specific cross-border mechanism). Escalating IS the trust move per the §19 honest carve-out." },
+        { "label": "Defer the question generally — 'I'll send something later'",                   "correct": false, "rationale": "The follow-up promise without a calendar booking is the M3 anti-pattern — you'll lose the deal to follow-up drift." }
+      ],
+      "feedback_correct": "Right. Beyond §19 → escalate with a calendar invite (don't just promise email). The carve-out is the trust move.",
+      "feedback_incorrect": "Re-read the §19 honest carve-out: when the question goes deeper than the table, escalating with a booked follow-up IS the trust move. Improvising loses the deal."
+    }
+  ],
+  "_notes": {
+    "scoring": "1 point per correct item; raw score percent passes through to cmi.core.score.raw via api.complete(score).",
+    "open_job_aid_design": "Per Rossett & Schafer (2007), the job-aid panel remains visible during every quiz item. The assessment tests USE of the aid under live conditions, not recall.",
+    "evidence_source": "l2-quiz-blueprint.md §4.6 + brief §19 honest carve-out"
+  }
+}

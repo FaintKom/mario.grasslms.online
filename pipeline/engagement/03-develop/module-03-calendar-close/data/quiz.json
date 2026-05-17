@@ -1,0 +1,95 @@
+[
+  {
+    "id": "M3-Q1",
+    "lo": "LO-M3.2",
+    "stem": "Maria R. (retail SMB owner) just said: \"Yeah, that does sound interesting. Send me something?\" You have Calendar open in your second tab. Which close fires the L4 proxy <code>Next_Step_Booked__c = TRUE</code> during this call?",
+    "options": [
+      {
+        "label": "A",
+        "text": "\"I'll send a calendar invite by email later today.\"",
+        "correct": false,
+        "rationale": "Partial · GC-05 pattern. The flag will not flip until you actually send it, and \"later today\" is where the deal slips. Top reps send during the call."
+      },
+      {
+        "label": "B",
+        "text": "\"What's the best 20 minutes next week to walk you through the SMB version — Tuesday 11 or Thursday 2?\"",
+        "correct": true,
+        "rationale": "Yes. Two specific slots, one sentence, sent during the call. M.G.'s GC-01 pattern · Salesforce flag flips before you hang up."
+      },
+      {
+        "label": "C",
+        "text": "\"Let me know which day works best for you.\"",
+        "correct": false,
+        "rationale": "Open-ended close. Puts the work on the buyer · no two-slot anchor · GC-21 pattern."
+      },
+      {
+        "label": "D",
+        "text": "\"I'll follow up next week with some options.\"",
+        "correct": false,
+        "rationale": "GC-10 / GC-22 anti-pattern. \"Follow up\" is where deals go to die. No re-engage in the sample data."
+      }
+    ]
+  },
+  {
+    "id": "M3-Q2",
+    "lo": "LO-M3.3",
+    "stem": "A peer rep tells you: \"I always pick the slots after the call ends — I want to double-check my own calendar first.\" What is the cost of that habit in the Gong + Salesforce data?",
+    "options": [
+      {
+        "label": "A",
+        "text": "None — the buyer accepted, so the booking is the same.",
+        "correct": false,
+        "rationale": "No. The booking may eventually happen, but the same-call <code>Next_Step_Booked__c</code> flag stays FALSE, and re-engage drops to the GC-10 / GC-11 base rate (low)."
+      },
+      {
+        "label": "B",
+        "text": "The Salesforce flag stays FALSE that day, and re-engage drops to the GC-10 / GC-11 base rate.",
+        "correct": true,
+        "rationale": "Yes. \"After the call\" is the failure mode by another name. The L4 proxy is binary — set during call, or not at all."
+      },
+      {
+        "label": "C",
+        "text": "It is fine if the rep sends the invite within 24 hours.",
+        "correct": false,
+        "rationale": "Not according to the Gong sample. GC-11 sent the invite the next morning and still never re-engaged."
+      },
+      {
+        "label": "D",
+        "text": "It is better — checking the calendar twice prevents double-booking.",
+        "correct": false,
+        "rationale": "Calendar conflicts can be resolved by re-sending. Cold re-engage cannot. The cost is asymmetric."
+      }
+    ]
+  },
+  {
+    "id": "M3-Q3",
+    "lo": "LO-M3.2",
+    "stem": "You read out two slots, the buyer says \"Tuesday 11 works.\" What is the very next thing you do, still on the call?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Thank them and end the call — confirmation by email tomorrow.",
+        "correct": false,
+        "rationale": "Anti-pattern. Confirmation must happen now · the buyer's acceptance is the cue to send, not delay."
+      },
+      {
+        "label": "B",
+        "text": "Click \"Send invite\" in Calendar and watch <code>Next_Step_Booked__c</code> flip to TRUE in Salesforce.",
+        "correct": true,
+        "rationale": "Yes. Send → flag flips → confirm with the buyer that the invite is in their inbox. All three steps before you hang up."
+      },
+      {
+        "label": "C",
+        "text": "Ask whether they want a reminder 1 day before.",
+        "correct": false,
+        "rationale": "Reminder cadence is nice-to-have. The send-during-call is non-negotiable · order matters."
+      },
+      {
+        "label": "D",
+        "text": "Pivot to a second pitch prop while you have their attention.",
+        "correct": false,
+        "rationale": "Tempting, but you risk losing the booking. Lock the next step first, then pitch on the booked call."
+      }
+    ]
+  }
+]

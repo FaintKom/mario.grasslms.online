@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Module 3 · M3 Calendar Close · FinTechCard SDR Onboarding</title>
+  <meta name="description" content="Calendar in second tab. Two slots. One invite. Sent before you hang up.">
+  <link rel="stylesheet" href="../scorm-shell/styles/shell.css">
+  <link rel="stylesheet" href="../scorm-shell/styles/apps.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="module module--m3">
+  <a class="skip-link" href="#desktop">Skip to main content</a>
+
+  <div id="mini-os-root">
+    <header id="topbar" role="banner">
+      <span class="ftc-logo" aria-hidden="true">FTC</span>
+      <span id="module-title" aria-live="polite">Module 3 · Calendar Close</span>
+      <span id="module-progress" class="module-progress" aria-live="polite">0:00 / 10:00</span>
+      <button id="help-button" type="button" aria-label="Open job aids in Slack">Help</button>
+    </header>
+
+    <main id="desktop" tabindex="-1">
+      <!-- Mini-OS windows mount here. The narrative overlay sits above. -->
+    </main>
+
+    <aside id="narrative-overlay"
+           class="narrative-overlay"
+           role="region"
+           aria-label="Module narrative · Gagné event"
+           aria-live="polite">
+      <header class="narrative-overlay__head">
+        <span class="narrative-overlay__step" id="gagne-step">1 of 9</span>
+        <h2 class="narrative-overlay__title" id="narrative-title">Loading module&hellip;</h2>
+      </header>
+      <div class="narrative-overlay__body" id="narrative-body">
+        <p>Preparing the mini-OS desktop.</p>
+      </div>
+      <footer class="narrative-overlay__foot">
+        <button type="button"
+                class="btn btn--ghost"
+                id="narrative-back"
+                hidden>Back</button>
+        <button type="button"
+                class="btn btn--primary"
+                id="narrative-next">Continue</button>
+      </footer>
+    </aside>
+
+    <nav id="taskbar" role="navigation" aria-label="Open apps">
+      <ul id="taskbar-list"></ul>
+    </nav>
+  </div>
+
+  <!--
+    Hint surface for the habit-gate coach-mark. The disabled-dial button in
+    the Outreach app references this element via aria-describedby so screen
+    readers announce the reason whenever the button gains focus.
+  -->
+  <div id="dial-gate-hint" class="sr-only">
+    Open the Calendar app before dialling. Calendar must be in a second
+    window — that is the habit. The Dial button enables the moment Calendar
+    opens.
+  </div>
+
+  <!-- ARIA live region for window transitions + status announcements -->
+  <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Module entry — imports the shell, then runs the M3 Gagné timeline. -->
+  <script type="module" src="./module.js"></script>
+</body>
+</html>
