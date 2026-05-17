@@ -1,5 +1,8 @@
 # Course Design Pipeline — Content Mapping
 
+> *This is the canonical content-mapping document for the pipeline page. Published publicly for transparency — shows how I plan a multi-artefact intervention before I build it. Not the polished output (that lives on `/pipeline/`); this is the planning doc.*
+
+
 **Goal:** interactive scrollytelling page demonstrating Mario's full course-design pipeline, grounded in real portfolio artefacts and named frameworks.
 
 **Target use:** primary portfolio link for senior Instructional Designer / Learning Experience Designer / Sales Enablement ID applications.

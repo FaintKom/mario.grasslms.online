@@ -67,7 +67,7 @@
   <section class="screen">
     <p class="eyebrow">Screen 2 · The buyer</p>
     <h2 class="screen-title">Meet María — your <em>real</em> buyer</h2>
-    <p class="lede">35-employee retail SMB, $4M annual revenue, two physical stores, growing online. María signs every expense report personally because she's been burned twice.</p>
+    <p class="lede">35-employee retail SMB, $4M annual revenue, two physical stores, growing online. Current card spend ~$25K / mo across her team (typical for this segment). María signs every expense report personally because she's been burned twice.</p>
 
     <h2>What María wakes up worrying about</h2>
     <ul>
@@ -331,11 +331,35 @@
         SCORM.finish();
         nextBtn.disabled = true;
         nextBtn.textContent = 'Done ✓';
+        // SEP3: replace screen body with next-steps panel
+        showNextSteps();
       } else {
         alert('Please submit the quiz first to complete the module.');
       }
     }
   });
+
+  function showNextSteps() {
+    host.innerHTML = '' +
+      '<section class="screen">' +
+      '  <p class="eyebrow">Module complete · ' + (state.quizScore || 0) + ' % · ' + (state.quizScore >= 80 ? 'passed' : 'completed') + '</p>' +
+      '  <h2 class="screen-title">What happens <em>next</em></h2>' +
+      '  <p class="lede">Your result is logged to the LMS. Three things land on your desk this week — open the one that matches where you are.</p>' +
+      '  <ul class="objectives" aria-label="Next-step actions">' +
+      '    <li><strong>Cohort kickoff workshop</strong> — 90-min session, you will role-play the moves you just drilled. Calendar invite arrives within 24 h.</li>' +
+      '    <li><strong>Top-7 objection cheat sheet</strong> — single-sheet job aid for your desk + first 5 calls. <a href="../job-aid-objections/" target="_blank" style="color:var(--green-700); text-decoration:underline;">Open the job aid →</a></li>' +
+      '    <li><strong>Day-7 spaced retrieval quiz</strong> — 3-question check delivered by the LMS in seven days. Takes 3 min.</li>' +
+      '  </ul>' +
+      '  <div class="callout sun">' +
+      '    <h5>Your commitment</h5>' +
+      '    <p>Pick one trigger phrase from Screen 4 you will listen for in your next call. Write it on a sticky and put it on your monitor.</p>' +
+      '  </div>' +
+      '</section>';
+    screenLabel.textContent = 'Module complete';
+    progressFill.style.width = '100%';
+    progressStep.textContent = 'done';
+    prevBtn.disabled = true;
+  }
 
   function setupMatch() {
     var board = document.getElementById('matchBoard');

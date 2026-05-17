@@ -48,6 +48,9 @@
 - Regulatory / compliance content (KYC, AML, SCA, PSD2, GDPR). A real fintech-card sales-rep onboarding would include regulatory modules running alongside or before product training. My BEAM Institute Data Governance work (with Billigence SMEs) demonstrates the regulated-content cycle I would apply to those modules — out of scope here to keep the portfolio focused on the sales-motion artefact shape.
 - Qualification depth (MEDDIC / BANT / CHAMP) — covered in a separate week-2 module.
 - Close-call scripts (trial close, mutual action plan) — covered in a separate week-3 module.
+- "Pull an example" / story-anchored close — Screen 4 openers jump acknowledge → prop → next-step ask, omitting the "we saw an SMB exactly like you cut X by Y" example-pull beat. Covered in the week-2 deal-stage module.
+
+**Sales-enablement platform exposure.** The portfolio SCORM module is platform-agnostic. Enterprise SE stacks in the wild (Highspot · MindTickle · Lessonly / Seismic · Showpad · Brainshark) were evaluated for fit but none ship the live demo here. In a production hire I would adopt the team's existing stack within the first sprint; the portfolio choice is *standalone HTML5 + SCORM 1.2 wrapper* to show framework depth, not platform lock-in.
 
 **Prior-art scan.** Typical sales onboarding programs dump product features over 90-min decks; learners forget within a week. Best-in-class enablement (Highspot, Lessonly, MindTickle public materials) lean on persona + objection rehearsal + spaced retrieval. The signal: the highest-leverage 10 minutes of any sales-rep ramp is *talk-track practice with feedback*, not product trivia.
 
