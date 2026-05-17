@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Task inventory · 4C/ID decomposition — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: 4C/ID (Van Merriënboer 1997/2018) decomposition of the whole task — &quot;conduct a 60-second-opener-to-calendar-close cold call against an ICP buyer&quot; — into its four component"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>01-analyze/task-inventory.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: 4C/ID (Van Merriënboer 1997/2018) decomposition of the whole task — "conduct a 60-second-opener-to-calendar-close cold call against an ICP buyer" — into its four components (learning tasks · supportive information · procedural information · part-task practice). Provides the curriculum-architecture spine that <code>02-design/4cid-blueprint.md</code> consumes. Replaces the brief's current §14 product-then-tools sequence, which the §14 audit verdict already discredits.</p>
+</blockquote>
+<h1 id="task-inventory-4cid-decomposition">Task inventory · 4C/ID decomposition</h1>
+<h2 id="1-whole-task-definition">1 · Whole task definition</h2>
+<blockquote>
+<p><strong>Conduct a 60-second-opener-to-calendar-close cold call against an ICP buyer.</strong></p>
+</blockquote>
+<p>Operationally: from the moment the rep clicks "dial" in Outreach to the moment a calendar invite for a next-step meeting is sent and accepted, against a buyer matching one of the four ICP archetypes in brief §12.</p>
+<p>The whole task is <strong>configural</strong> (per brief §9 A.S.: <em>"Top reps sound nothing alike. They don't follow a script. But those three moves are always there."</em>). This is the canonical 4C/ID trigger condition: a complex skill made of interdependent sub-skills that lose meaning when isolated. Decision lens: <code>D-002</code>.</p>
+<h3 id="why-this-is-the-whole-task-not-some-subset">Why this is the whole task, not some subset</h3>
+<ul>
+<li><strong>Not "cold call opening"</strong> — the M1 opener creates the pitch, and the pitch matters only if M3 calendar-close lands. Truncating before the close re-creates the §14 audit failure mode (tools and parts taught in isolation).</li>
+<li><strong>Not "the full sales cycle"</strong> — the brief is explicit (§6 in-scope): 0–60 day ramp arc, call-motion craft. The discovery-to-demo-booked window is the contractual unit.</li>
+<li><strong>Not "any buyer"</strong> — the ICP archetypes (§12) bound the variability of practice.</li>
+</ul>
+<h2 id="2-task-classes-six-classes-of-increasing-complexity">2 · Task classes — six classes of increasing complexity</h2>
+<p>4C/ID asks for task classes ordered from simplest-meaningful-whole-task to most complex, with variability inside each class. Each class is its own module in Phase 3.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Task class</th>
+<th>Defining variability</th>
+<th>What makes it harder than the previous</th>
+<th>Buyer archetype (§12)</th>
+<th>Calls in §11 that map</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>Warm inbound — buyer has expressed interest</td>
+<td>Buyer is <em>already aware</em>; M1 diagnostic confirms fit rather than creates it</td>
+<td>Lowest cognitive load; rep can practise the structure of M1/M2/M3 without the rejection-rate pressure</td>
+<td>Mixed</td>
+<td>(Synthetic — brief samples are mostly cold)</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>Cold outbound to receptive buyer (no pre-loaded objection)</td>
+<td>Buyer is <em>cold but curious</em>; objection is absent or mild</td>
+<td>Adds the diagnostic <em>creation</em> step; rep must pick the right diagnostic from LinkedIn / Companies House</td>
+<td>Maria (retail SMB) — §12.1</td>
+<td>GC-01, GC-02, GC-15, GC-16, GC-18</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>Cold outbound to hostile buyer (pre-loaded objection)</td>
+<td>Buyer pushes back in first 30 s ("we already have a Visa", "we already use Brex", "fees are lower elsewhere")</td>
+<td>M2 acknowledge becomes the hinge; argumentation reflex must be overridden under live rejection load</td>
+<td>Maria + Tom — §12.1 + §12.2</td>
+<td>GC-09 (failed M2), GC-17, GC-19, GC-20</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>Competitive displacement (Brex specifically)</td>
+<td>Buyer has <em>named</em> a competitor; rep cannot argue against it (per L.D. §10.2)</td>
+<td>Adds the additive-not-replacement frame; FX-exposure wedge; requires the 4-prop model under live pressure</td>
+<td>Tom (Series-B founder) — §12.2</td>
+<td>GC-06 (L.D. successful)</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>Multi-stakeholder call (founder + finance / owner + accountant)</td>
+<td>Two voices on the call with different objection profiles</td>
+<td>Rep must hold two simultaneous diagnostics; calendar-close requires both stakeholders' availability</td>
+<td>Emma (manufacturing, accountant-co-decision) — §12.3</td>
+<td>(Synthetic — not in brief's 22 calls)</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td>Regulatory-question deflection mid-call</td>
+<td>Buyer asks a KYC/AML/SCA/PSD2/GDPR question; rep must defer-to-proof, not invent</td>
+<td>Adds the deflection table (§19); requires <em>not</em> selling against regulation, <em>for</em> it</td>
+<td>Lukas (German hospitality, low-trust on fintechs) — §12.4</td>
+<td>(Synthetic — derived from §19)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-six-classes-and-in-this-order">Why six classes and in this order</h3>
+<ul>
+<li>The brief's §11 Gong distribution clusters around classes 2–4 (cold outbound · objection · displacement). Class 1 (warm inbound) is a <em>scaffolding class</em> — easier than the real work but uses the same M1/M2/M3 structure. Class 5 (multi-stakeholder) and Class 6 (regulatory deflection) appear in the brief as buyer-archetype features (Emma needs the accountant; Lukas needs the regulator page) but are not directly evidenced in §11. They are inferred from §12 + §19 and flagged for SME validation.</li>
+<li>Per 4C/ID variability principle: each class contains 2–3 <em>variants</em> (e.g. UK-style vs DE-style diagnostic within Class 2 — per L.D. §10.2).</li>
+</ul>
+<h2 id="3-component-skills">3 · Component skills</h2>
+<p>For each task class, the component skills the rep must coordinate. Classified as <strong>cognitive</strong> (selection / decision / framing) vs <strong>psychomotor + procedural</strong> (tool execution).</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Component skill</th>
+<th>Cognitive vs Procedural</th>
+<th>Appears in classes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td>Read a LinkedIn / Companies House profile and extract one <em>diagnostic-worthy</em> signal in &lt; 90 s</td>
+<td>Cognitive</td>
+<td>2, 3, 4, 5, 6</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>Match the buyer to an ICP archetype (Maria · Tom · Emma · Lukas)</td>
+<td>Cognitive</td>
+<td>All</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>Pick a diagnostic question that is <em>quant-anchored</em> (DE pattern, L.D.) vs <em>behavioural-anchored</em> (UK pattern, M.G.)</td>
+<td>Cognitive</td>
+<td>2, 3, 4</td>
+</tr>
+<tr>
+<td>C4</td>
+<td>Ask the diagnostic and <em>wait ≥ 3 s</em> (threshold concept: tolerate the 5-second silence)</td>
+<td>Cognitive + Affective</td>
+<td>All</td>
+</tr>
+<tr>
+<td>C5</td>
+<td>Restate an objection in the buyer's <em>own words</em> before responding</td>
+<td>Cognitive</td>
+<td>3, 4, 5</td>
+</tr>
+<tr>
+<td>C6</td>
+<td>Map a stated pain to one of the 4 product props (§13.1)</td>
+<td>Cognitive</td>
+<td>All</td>
+</tr>
+<tr>
+<td>C7</td>
+<td>Frame a competitor (Brex) as additive-not-replacement</td>
+<td>Cognitive</td>
+<td>4</td>
+</tr>
+<tr>
+<td>C8</td>
+<td>Deflect a regulatory question without inventing — use the §19 table</td>
+<td>Cognitive</td>
+<td>6</td>
+</tr>
+<tr>
+<td>C9</td>
+<td>Hold two simultaneous diagnostics for multi-stakeholder calls</td>
+<td>Cognitive (high element-interactivity)</td>
+<td>5</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Operate Outreach dial sequence (queue · dial · log)</td>
+<td>Procedural</td>
+<td>All</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Operate Salesforce next-step logging (<code>Next_Step_Booked__c</code> to TRUE)</td>
+<td>Procedural</td>
+<td>All</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>Operate calendar in <em>second tab</em>: identify two free 20-min slots, voice them, send invite during call</td>
+<td>Procedural</td>
+<td>All</td>
+</tr>
+<tr>
+<td>P4</td>
+<td>Apply Gong post-call tag review on own calls (self-coaching loop)</td>
+<td>Procedural</td>
+<td>All (post-call)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-supportive-information-mental-models-strategies">4 · Supportive information — mental models / strategies</h2>
+<p>Supportive info = the <em>frameworks</em> the rep applies to novel buyers. Delivered before / alongside learning tasks; not memorised — referenced.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Purpose</th>
+<th>Source in brief</th>
+<th>Delivered in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>The 3-move model (M1/M2/M3)</strong></td>
+<td>The configural pattern that distinguishes top decile from bottom quartile across every Gong call. Per A.S. §9 + §11 aggregate.</td>
+<td>§9 + §11</td>
+<td>Module 1 (M1) · Module 2 (M2) · Module 3 (M3) introductions; integrated in Module 4+</td>
+</tr>
+<tr>
+<td><strong>The ICP archetype model</strong></td>
+<td>Four buyers (Maria · Tom · Emma · Lukas) with named pains, objections, and opener templates.</td>
+<td>§12.1–§12.4</td>
+<td>Pre-training reference card in Module 1; full coverage in Module 4</td>
+</tr>
+<tr>
+<td><strong>The 4-prop model</strong></td>
+<td>Real-time spend control · multi-user cards · auto-FX · receipt-capture-and-sync. Mapped to which buyer fits which prop.</td>
+<td>§13.1</td>
+<td>Module 5; referenced in every prior module's pitch decisions</td>
+</tr>
+<tr>
+<td><strong>The regulatory deflection table</strong></td>
+<td>KYC · AML · SCA · PSD2 · GDPR — what each means + the rep's response. Per §19.</td>
+<td>§19</td>
+<td>Module 6; job-aid version (Rossett &amp; Schafer 2007) lives on the rep's desktop post-launch</td>
+</tr>
+<tr>
+<td><strong>Brand voice rules</strong></td>
+<td>Transparent · anti-jargon · specific-over-generic · concedes weakness</td>
+<td>§18.1</td>
+<td>Embedded in worked-example transcripts across all modules</td>
+</tr>
+</tbody>
+</table>
+<h3 id="strategy-which-prop-against-which-objection">Strategy: which prop against which objection</h3>
+<p>Per M.G. §10.1: <em>"What I needed was the framing of when to use which prop against which objection."</em> This pairing is currently absent from §14 training. It becomes an explicit decision-table in Module 5 (Product Prop Mapping) — see <code>02-design/module-storyboards/module-5.md</code> <em>(to be authored)</em>.</p>
+<h2 id="5-procedural-information-just-in-time-how-tos">5 · Procedural information — just-in-time how-tos</h2>
+<p>Procedural info = the <em>how</em> of the tooling, delivered in the workflow, not in a separate module (§14 audit verdict: "Tools learned in isolation, not in workflow"). All procedural info lives inside the mini-OS (<code>D-007</code>) as pop-up coach-marks or context-sensitive sidebars.</p>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>When delivered</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Outreach dial sequence (queue · dial · log call outcome)</td>
+<td>First time rep enters mini-OS Outreach app, Module 1</td>
+<td>Mini-OS coach-mark</td>
+</tr>
+<tr>
+<td>Salesforce next-step logging (<code>Next_Step_Booked__c</code>)</td>
+<td>After first calendar-close attempt, Module 3</td>
+<td>Mini-OS coach-mark + Module 3 worked example</td>
+</tr>
+<tr>
+<td>Gong post-call self-tag review (own M1/M2/M3 tags)</td>
+<td>Module 1 closing screen onwards</td>
+<td>Mini-OS Gong app</td>
+</tr>
+<tr>
+<td>LinkedIn / Companies House signal-extraction (90-sec scan)</td>
+<td>Pre-call workflow, Module 1 + 2</td>
+<td>Mini-OS LinkedIn app + downloadable 1-pager</td>
+</tr>
+<tr>
+<td>Calendar-in-second-tab habit setup</td>
+<td>Module 3 pre-task</td>
+<td>Mini-OS Calendar app</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-part-task-practice-candidates">6 · Part-task practice candidates</h2>
+<p>Part-task practice = drill on automatable sub-skills until they're <em>fast enough to free working memory</em> for the configural call. Sweller's automation prerequisite (CLT — <code>cognitive-load-analysis.md</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Drill</th>
+<th>What the rep does</th>
+<th>Time per rep</th>
+<th>Module / placement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>D1 · Diagnostic-question reframing</strong></td>
+<td>Given a LinkedIn snippet, write the diagnostic question in ≤ 15 words. 10 iterations per session.</td>
+<td>5 min</td>
+<td>Module 1 part-task block</td>
+</tr>
+<tr>
+<td><strong>D2 · Objection-acknowledgement one-question reframe</strong></td>
+<td>Given 10 objection phrasings, restate each in the buyer's own words in one sentence.</td>
+<td>5 min</td>
+<td>Module 2 part-task block</td>
+</tr>
+<tr>
+<td><strong>D3 · Calendar-time stating without read-out</strong></td>
+<td>Speak two calendar slots aloud in a <em>single</em> sentence ("Tuesday at 10 a.m. or Wednesday at 2 p.m.?"). Drill against transcript practice.</td>
+<td>3 min</td>
+<td>Module 3 part-task block</td>
+</tr>
+<tr>
+<td><strong>D4 · ICP archetype identification</strong></td>
+<td>Given a buyer signal (industry · FTE · spend), pick Maria / Tom / Emma / Lukas in &lt; 5 s. 20 cards.</td>
+<td>4 min</td>
+<td>Module 4 part-task block</td>
+</tr>
+<tr>
+<td><strong>D5 · Prop-to-objection mapping</strong></td>
+<td>Given an objection card (e.g. "we already use Brex"), pick the prop and the framing. 15 cards.</td>
+<td>5 min</td>
+<td>Module 5 part-task block</td>
+</tr>
+<tr>
+<td><strong>D6 · Regulatory deflection one-liner</strong></td>
+<td>Given a buyer's regulatory question (KYC · AML · SCA · PSD2 · GDPR), state the rep's response from §19 verbatim in one sentence.</td>
+<td>4 min</td>
+<td>Module 6 part-task block</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total drill budget per module: ≤ 5 min</strong>, within the ≤ 10-min cohort tolerance (brief §7). The remaining ≤ 5 min goes to the whole-task application (worked example → completion → solo problem in mini-OS).</p>
+<h2 id="7-sequencing-rule-variability-of-practice">7 · Sequencing rule — variability of practice</h2>
+<p>Per Van Merriënboer (2018) ch. 5: within a task class, practice items are sequenced <em>high-variability</em> (different ICPs, different objections, different industries) to drive schema generalisation. We will not sequence "all Maria calls, then all Tom calls" — we'll interleave so the rep cannot pattern-match on superficial cues.</p>
+<h2 id="8-out-of-scope-tasks-explicitly">8 · Out-of-scope tasks (explicitly)</h2>
+<p>Per brief §6 and <code>D-001</code>:</p>
+<ul>
+<li><strong>Discovery-call structure beyond 20 min.</strong> Out of scope; that's AE work, not SDR.</li>
+<li><strong>Demo execution.</strong> Handled by AE org separately.</li>
+<li><strong>Compliance-side regulatory training.</strong> Cornerstone team owns. We cover only the rep-side deflection (Module 6).</li>
+<li><strong>CRM hygiene beyond <code>Next_Step_Booked__c</code>.</strong> Salesforce admin owns the broader CRM data quality conversation.</li>
+</ul>
+<h2 id="9-what-this-inventory-sends-to-phase-2">9 · What this inventory sends to Phase 2</h2>
+<table>
+<thead>
+<tr>
+<th>Sends</th>
+<th>To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Six task classes → six modules</td>
+<td><code>02-design/curriculum-blueprint.md</code></td>
+</tr>
+<tr>
+<td>Component skills C1–C9 + P1–P4 → enabling outcomes (ABCD)</td>
+<td><code>02-design/learning-outcomes-abcd-bloom.md</code></td>
+</tr>
+<tr>
+<td>Supportive info models → reference cards in mini-OS + Module 4/5/6 content</td>
+<td><code>02-design/module-storyboards/</code></td>
+</tr>
+<tr>
+<td>Procedural info → mini-OS coach-marks (<code>D-007</code>)</td>
+<td><code>03-develop/scorm-shell/</code></td>
+</tr>
+<tr>
+<td>Six part-task drills (D1–D6) → drill scripts in each module</td>
+<td><code>02-design/module-storyboards/module-*.md</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§6, 9, 10.1, 10.2, 11, 12, 13.1, 14, 18.1, 19.</li>
+<li>Van Merriënboer, J. J. G. (1997). <em>Training complex cognitive skills.</em> Educational Technology.</li>
+<li>Van Merriënboer, J. J. G., &amp; Kirschner, P. A. (2018). <em>Ten steps to complex learning</em> (3rd ed.). Routledge.</li>
+<li>Rossett, A., &amp; Schafer, L. (2007). <em>Job aids and performance support.</em> Pfeiffer.</li>
+<li>Decisions <code>D-002</code>, <code>D-006</code>, <code>D-007</code>.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 01-analyze/task-inventory.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

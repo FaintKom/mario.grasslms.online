@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Mini-OS SCORM shell · developer docs — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Vanilla HTML/CSS/JS runtime that the six FinTechCard SDR onboarding modules
+(M1–M6) iframe-inline. Implements custom SCORM 1.2 (per D-005), simulates
+the rep's workspace (per D-007) and keeps audio of"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>03-develop\scorm-shell/README.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../../">← Portfolio</a>
+    <a class="btn" href="../../../">← Pipeline</a>
+    <a class="btn" href="../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="mini-os-scorm-shell-developer-docs">Mini-OS SCORM shell · developer docs</h1>
+<blockquote>
+<p>Vanilla HTML/CSS/JS runtime that the six FinTechCard SDR onboarding modules
+(M1–M6) iframe-inline. Implements custom SCORM 1.2 (per <code>D-005</code>), simulates
+the rep's workspace (per <code>D-007</code>) and keeps audio off the table (<code>D-006</code>).</p>
+</blockquote>
+<h2 id="1-what-this-is-why">1 · What this is + why</h2>
+<p>The brief asks for SCORM-compliant modules that feel like the rep's actual desk —
+Outreach, Gong, Salesforce, LinkedIn / Companies House, Calendar, a Phone-dialler
+and Slack. Rather than seven slideware lessons we built one mini-OS shell that
+every module mounts. The shell handles window-management, the SCORM 1.2 API,
+telemetry to <code>cmi.suspend_data</code>, coach-marks, and a shared event bus.</p>
+<p>This means each module's index.html is ~ 100 lines of "open these apps, run this
+scenario, mark complete" — no shell concerns leak in.</p>
+<h2 id="2-file-map">2 · File map</h2>
+<pre><code>scorm-shell/
+├── index.html                        # demo / preview page (blank desktop)
+├── styles/
+│   ├── shell.css                     # tokens, layout, window-manager primitives
+│   └── apps.css                      # per-app accent skins
+├── js/
+│   ├── shell.js                      # MiniOS class + bootModule() + exports
+│   ├── scorm-bridge.js               # SCORM 1.2 API wrapper + in-memory mock
+│   ├── event-log.js                  # keystone-move telemetry → cmi.suspend_data
+│   ├── coach-marks.js                # in-context overlay (Rossett &amp; Schafer 2007)
+│   └── apps/
+│       ├── registry.js               # app registry + inline Phosphor SVGs
+│       ├── outreach.js               # dial-queue + sequence step
+│       ├── gong.js                   # transcript viewer with M1/M2/M3 overlay
+│       ├── salesforce.js             # account/lead/contact/timeline + custom fields
+│       ├── linkedin-ch.js            # LinkedIn + Companies House combined lookup
+│       ├── calendar.js               # week-view, two suggested slots, send-invite
+│       ├── phone-dialler.js          # dark-theme dialler with silence counter
+│       └── slack.js                  # #sdr-pod-uk-manchester with pinned job-aids
+├── data/
+│   ├── sample-profiles.json          # 4 anonymised ICP archetypes (Maria/Tom/Emma/Lukas)
+│   └── sample-gong-transcripts.json  # 3 sample transcripts (GC-01/02/03)
+├── event-log-spec.md                 # event-name catalogue + KPI → LO mapping
+├── a11y-audit.md                     # WCAG 2.1 AA conformance audit
+└── README.md                         # ← you are here
+</code></pre>
+<h2 id="3-how-a-module-consumes-the-shell">3 · How a module consumes the shell</h2>
+<p>A module is one folder with one <code>index.html</code>. Inside:</p>
+<pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;title&gt;Module 1 · The diagnostic opener&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;../../scorm-shell/styles/shell.css&quot;&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;../../scorm-shell/styles/apps.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;a class=&quot;skip-link&quot; href=&quot;#desktop&quot;&gt;Skip to main content&lt;/a&gt;
+  &lt;div id=&quot;mini-os-root&quot;&gt;
+    &lt;header id=&quot;topbar&quot;&gt;&lt;span class=&quot;ftc-logo&quot;&gt;FTC&lt;/span&gt;
+      &lt;span id=&quot;module-title&quot;&gt;&lt;/span&gt;
+      &lt;button id=&quot;help-button&quot;&gt;Help&lt;/button&gt;
+    &lt;/header&gt;
+    &lt;main id=&quot;desktop&quot;&gt;&lt;/main&gt;
+    &lt;nav id=&quot;taskbar&quot;&gt;&lt;ul id=&quot;taskbar-list&quot;&gt;&lt;/ul&gt;&lt;/nav&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;focus-announcer&quot; class=&quot;sr-only&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    import { bootModule } from &quot;../../scorm-shell/js/shell.js&quot;;
+
+    bootModule({
+      moduleId: &quot;M1&quot;,
+      title: &quot;Module 1 · The diagnostic opener&quot;,
+      appsToLaunch: [
+        { id: &quot;linkedin-ch&quot;, options: { activeProfileId: &quot;L-001&quot; } },
+        { id: &quot;outreach&quot;   },
+        { id: &quot;phone-dialler&quot; },
+      ],
+      onReady({ os, eventLog, coachMarks }) {
+        coachMarks.show({
+          id: &quot;m1-dial-hint&quot;,
+          anchor: &quot;[data-action='dial']&quot;,
+          text: &quot;Before you dial — open Calendar in another tab.&quot;,
+        });
+        eventLog.record(&quot;worked_example_completed&quot;);
+        // …rest of scenario…
+      },
+      onComplete() {
+        document.getElementById(&quot;desktop&quot;).innerHTML =
+          `&lt;div class=&quot;desktop-empty-state&quot;&gt;&lt;h1&gt;Module complete&lt;/h1&gt;&lt;/div&gt;`;
+      },
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>That's the whole consumer surface.</p>
+<h2 id="4-public-api-what-bootmodule-returns">4 · Public API (what <code>bootModule</code> returns)</h2>
+<pre><code class="language-ts">interface BootApi {
+  os:         MiniOS;        // openApp(), closeApp(), listWindows(), cycleFocus()
+  scorm:      ScormBridge;   // getValue, setValue, setScore, setStatus, setSuspendData
+  eventLog:   EventLog;      // .record(event_name, payload); .snapshot()
+  eventBus:   EventTarget;   // CustomEvent transport for inter-app + telemetry
+  coachMarks: CoachMarks;    // .show({id, anchor, text}); .dismiss(id); .resetDismiss()
+  complete(score?: number): void;
+  fail(score: number, max?: number): void;
+}
+</code></pre>
+<h2 id="5-event-log-fields-outcome-ids">5 · Event-log fields → outcome IDs</h2>
+<p>See <code>event-log-spec.md</code>. Quick reference:</p>
+<table>
+<thead>
+<tr>
+<th>LO</th>
+<th>Event name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LO-M1.1/2</td>
+<td><code>diagnostic_delivered</code></td>
+</tr>
+<tr>
+<td>LO-M1.3</td>
+<td><code>silence_observed</code></td>
+</tr>
+<tr>
+<td>LO-M2.1</td>
+<td><code>objection_restated</code> / <code>objection_argued</code></td>
+</tr>
+<tr>
+<td>LO-M2.2</td>
+<td><code>followup_question_asked</code></td>
+</tr>
+<tr>
+<td>LO-M3.1</td>
+<td><code>phone_dial_attempt</code> + <code>calendar_opened</code></td>
+</tr>
+<tr>
+<td>LO-M3.2</td>
+<td><code>slots_stated</code>, <code>invite_sent</code>, <code>next_step_booked_set</code></td>
+</tr>
+<tr>
+<td>LO-M4.1</td>
+<td><code>archetype_picked</code></td>
+</tr>
+<tr>
+<td>LO-M5.1</td>
+<td><code>prop_mapped</code></td>
+</tr>
+<tr>
+<td>LO-M6.1</td>
+<td><code>reg_question_classified</code> / <code>reg_row_picked</code></td>
+</tr>
+<tr>
+<td>LO-M6.2</td>
+<td><code>reg_question_escalated</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-how-to-add-a-new-app-3-step-guide">6 · How to add a new app (3-step guide)</h2>
+<blockquote>
+<p>Referenced by <code>06-iterate/handoff-pack.md</code>.</p>
+</blockquote>
+<ol>
+<li><strong>Create <code>js/apps/&lt;id&gt;.js</code>.</strong> Import <code>{ registerApp, icon }</code> from <code>./registry.js</code>.
+   Call <code>registerApp({ id, name, iconName, defaultSize, mount(ctx) { ... } })</code>.
+   <code>mount(ctx)</code> receives <code>{ container, eventBus, openApp, options }</code> and returns
+   a handle (with optional <code>update</code> / <code>destroy</code>).</li>
+<li><strong>Add a per-app skin</strong> to <code>styles/apps.css</code>. Scope every rule under
+   <code>.app--&lt;id&gt;</code> so it never bleeds into another window.</li>
+<li><strong>Eager-import</strong> the new app at the top of <code>js/shell.js</code> so <code>registerApp</code>'s
+   side-effect runs at page load:</li>
+</ol>
+<p><code>js
+   import "./apps/&lt;id&gt;.js";</code></p>
+<p>That's it. The window manager, taskbar, focus model, and event bus pick the
+app up for free.</p>
+<h2 id="7-local-preview">7 · Local preview</h2>
+<ol>
+<li>Open <code>index.html</code> in a modern browser. The demo launchers in the empty-state
+   panel open each app so you can poke them.</li>
+<li>Append <code>?debug=1</code> to the URL to see SCORM API calls + event-log emissions in
+   the console (<code>console.debug</code> only fires with the flag).</li>
+</ol>
+<p>The shell will use an in-memory SCORM mock — no LMS required for local work.
+(If your browser blocks <code>fetch()</code> on <code>file://</code> URLs, serve the folder via a
+quick <code>python -m http.server</code> from <code>03-develop/scorm-shell/</code> and open
+<code>http://localhost:8000/</code> instead.)</p>
+<h2 id="8-scorm-cloud-preview-procedure">8 · SCORM Cloud preview procedure</h2>
+<p>Each module packages with the shell as sibling folder. Before cohort-1 launch
+(per <code>04-implement/cohort-1-launch-checklist.md</code> Day -7), the LMS admin runs the
+following dry-upload sequence on SCORM Cloud sandbox.</p>
+<h3 id="per-module-checklist">Per-module checklist</h3>
+<p>For each of the 6 modules:</p>
+<ol>
+<li>Run <code>scripts/package.sh &lt;module-folder&gt;</code> → produces <code>&lt;module-id&gt;-v1.zip</code>
+   containing the module folder + a copy of <code>scorm-shell/</code> as sibling, with a
+   generated/consumed <code>imsmanifest.xml</code>.</li>
+<li>Upload to SCORM Cloud → New course → SCORM 1.2 package.</li>
+<li>Launch in SCORM Cloud preview player. SCORM Cloud auto-injects <code>window.API</code>
+   (the LMS-provided SCORM 1.2 object). The shell finds it via <code>findApi()</code> and
+   writes <code>cmi.core.lesson_status</code> + <code>cmi.suspend_data</code> per
+   <code>event-log-spec.md</code>.</li>
+<li>Verify smoke checks:
+   - Module boots without console error (open DevTools first; expected log lines:
+     <code>[scorm] initialize() ok</code>, <code>[shell] mini-OS mounted</code>).
+   - Gagné timeline progresses (worked example → completion → solo → quiz visible).
+   - <code>cmi.core.lesson_status</code> is set to <code>completed</code> upon finish.
+   - <code>cmi.core.score.raw</code> reports a numeric score (≥0 ≤100).
+   - <code>cmi.suspend_data</code> contains the event-log KPI block.</li>
+<li>Capture: SCORM Cloud run ID + lesson_status + score + a screenshot of the
+   launch.</li>
+<li>Log results to <code>04-implement/lms-deployment-runbook.md</code> §smoke-test (or
+   <code>scorm-shell/preview-runs.md</code> if a per-package log file is preferred).</li>
+</ol>
+<h3 id="per-run-log-to-be-populated-by-lms-admin-day-7">Per-run log (to be populated by LMS admin Day -7)</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Package zip</th>
+<th>SCORM Cloud run ID</th>
+<th>lesson_status</th>
+<th>score</th>
+<th>screenshot</th>
+<th>Date</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1</td>
+<td><em>pending</em></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>M2</td>
+<td><em>pending</em></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>M3</td>
+<td><em>pending</em></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>M4</td>
+<td><em>pending</em></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>M5</td>
+<td><em>pending</em></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>M6</td>
+<td><em>pending</em></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fallback-if-scorm-cloud-unavailable">Fallback if SCORM Cloud unavailable</h3>
+<p>Local preview proxy: serve module folder via <code>python -m http.server</code> then
+launch through a local SCORM RTE shim (the <code>js/scorm-bridge.js</code> mock
+auto-activates when no parent <code>API</code> is found). Capture console KPI dump as
+<code>cmi.suspend_data</code> proxy.</p>
+<h3 id="sign-off">Sign-off</h3>
+<p>Gate criterion #1 (master-plan §3) marks PASS once all 6 rows above show
+<code>lesson_status=completed</code> + non-null score. Until then: Phase 3 gate is
+CONDITIONAL PASS pending live preview-run evidence.</p>
+<h2 id="9-decisions-backing-this-build">9 · Decisions backing this build</h2>
+<ul>
+<li><code>D-005</code> — custom SCORM (vs. Articulate/Rise) → enabled the workspace simulation.</li>
+<li><code>D-006</code> — no audio → silence shown via text + visual + aria-live (three cues).</li>
+<li><code>D-007</code> — mini-OS → modules feel like the desk, not slides.</li>
+<li><code>D-008</code> — attribution → academic sources cited in source-comments only;
+  the runtime ships zero footer copy.</li>
+</ul>
+<h2 id="10-engineering-rules-in-force">10 · Engineering rules in force</h2>
+<ul>
+<li>Vanilla HTML/CSS/JS only · ES modules · ES2022 · no build step.</li>
+<li>No external network at runtime (no fetched fonts, no CDN JS).</li>
+<li>All synthetic data — no PII per brief §7.</li>
+<li>WCAG 2.1 AA — see <code>a11y-audit.md</code>.</li>
+<li>JSDoc on every public method.</li>
+<li><code>console.debug</code> gated by <code>?debug=1</code>.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 03-develop\scorm-shell/README.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

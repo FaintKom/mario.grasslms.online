@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Assessment design — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Master assessment design across all four Kirkpatrick levels. Documents the design rationale for each instrument — Phase 5 (05-evaluate/) holds the ready-to-use instruments; this fil"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>02-design/assessment-design.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Master assessment design across all four Kirkpatrick levels. Documents the <em>design rationale</em> for each instrument — Phase 5 (<code>05-evaluate/</code>) holds the ready-to-use instruments; this file holds the why-this-shape-and-not-another argument. Reconciles every outcome ID minted in <code>02-design/learning-outcomes-abcd-bloom.md</code> against every item type in <code>05-evaluate/l1-pulse-survey.md</code> + <code>l2-quiz-blueprint.md</code> + <code>l3-call-rubric.md</code> + <code>l4-ramp-retention-tracking.md</code>. Item-writing rules follow Haladyna &amp; Downing (2013) assessment-validity guidance — scenario items, not factual recall. Frameworks: Backwards Design Stage 2 (Wiggins &amp; McTighe 2005); Bloom revised (Anderson &amp; Krathwohl 2001); ABCD (Mager 1962/1997); LTEM tier-3 (Thalheimer 2018).</p>
+</blockquote>
+<h1 id="assessment-design">Assessment design</h1>
+<h2 id="1-l1-instrument-design">1 · L1 instrument design</h2>
+<h3 id="11-live-artefact">1.1 · Live artefact</h3>
+<p><code>05-evaluate/l1-pulse-survey.md</code> is the production instrument. Three items, ≤ 30 s, fires on every module's <code>cmi.core.lesson_status = completed</code> event.</p>
+<h3 id="12-design-rationale-per-d-003">1.2 · Design rationale (per <code>D-003</code>)</h3>
+<p>L1 is <strong>not</strong> a smile-sheet. It is a Thalheimer LTEM tier-3 <em>decision-relevance</em> instrument. The reasoning chain:</p>
+<ul>
+<li>Brief §5 already worded the L1 target as application-intent (<em>"I could use this on a call today ≥ 4.0/5"</em>), not satisfaction.</li>
+<li>Brief §8 (K.M.): <em>"Another Articulate slide-deck no one finishes"</em> — sponsor primed against engagement-as-success-metric.</li>
+<li>Brief §18.2 (internal brand voice): <em>"Honest about hard parts"</em> — the instrument must invite honest negative feedback, not validation.</li>
+</ul>
+<h3 id="13-the-three-items-why-each-item">1.3 · The three items + why each item</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>LTEM tier</th>
+<th>What it measures</th>
+<th>Why it stays</th>
+<th>Why other items were rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1 <em>"I could use this on a call today"</em> (Likert 1–5)</td>
+<td>Tier 3 (decision-relevant feedback)</td>
+<td>Application-intent</td>
+<td>Brief §5 target is worded exactly this way</td>
+<td>Standard satisfaction Likert was rejected — invites the K.M.-flagged failure mode</td>
+</tr>
+<tr>
+<td>Q2 <em>"Name the move you are most likely to forget when the call is live"</em> (open)</td>
+<td>Tier 3</td>
+<td>Schema-fragility per cohort</td>
+<td>Surfaces which specific outcome the +7-d spaced retrieval needs to target</td>
+<td>"How engaging was this module?" rejected — not actionable</td>
+</tr>
+<tr>
+<td>Q3 <em>"What one thing would you remove from this module?"</em> (open)</td>
+<td>Tier 3</td>
+<td>Extraneous-load violations</td>
+<td>Drives Phase 6 sprint 6.1.D (UX-trim pass)</td>
+<td>Net Promoter Score rejected — not decision-relevant for content iteration</td>
+</tr>
+</tbody>
+</table>
+<h3 id="14-anti-failure-guards-per-l1-pulse-surveymd-6">1.4 · Anti-failure guards (per <code>l1-pulse-survey.md</code> §6)</h3>
+<ul>
+<li>No item is reworded to fish for higher scores — if Q1 trends down, content needs work, not the question.</li>
+<li>Open responses reported to sponsor verbatim in the monthly dashboard review.</li>
+<li>Manager pressure to "improve scores" explicitly out of bounds (signed off by A.S. + K.M. at kickoff per §8).</li>
+</ul>
+<hr />
+<h2 id="2-l2-quiz-design">2 · L2 quiz design</h2>
+<h3 id="21-live-artefact">2.1 · Live artefact</h3>
+<p><code>05-evaluate/l2-quiz-blueprint.md</code> is the production blueprint. Two instruments per module: end-of-module quiz (5–7 items, ≥ 80 % first-attempt mastery per <code>cmi.core.score.raw</code>) and +7-day spaced-retrieval mini-quiz (3 items, ≥ 70 %).</p>
+<h3 id="22-placeholder-reconciliation">2.2 · Placeholder reconciliation</h3>
+<p><code>l2-quiz-blueprint.md</code> §3 line-by-line uses placeholder outcome IDs. <strong>This section is the canonical reconciliation.</strong> Every placeholder ID resolves to a real outcome in <code>02-design/learning-outcomes-abcd-bloom.md</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th><code>l2-quiz-blueprint.md</code> §3 placeholder</th>
+<th>Now resolves to (this design file as proof)</th>
+<th>Item type used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 (M1)</td>
+<td>LO-M1.1</td>
+<td><strong>LO-M1.1</strong> — Extract diagnostic-worthy signal</td>
+<td>Scenario-classification (§4.1 item 1)</td>
+</tr>
+<tr>
+<td>1 (M1)</td>
+<td>LO-M1.2</td>
+<td><strong>LO-M1.2</strong> — Phrase diagnostic ≤ 15 words</td>
+<td>Worked-example completion (§4.1 item 2 / +7-d item)</td>
+</tr>
+<tr>
+<td>1 (M1)</td>
+<td>LO-M1.3</td>
+<td><strong>LO-M1.3</strong> — Tolerate 5-s silence</td>
+<td>Scenario-classification</td>
+</tr>
+<tr>
+<td>2 (M2)</td>
+<td>LO-M2.1</td>
+<td><strong>LO-M2.1</strong> — Classify objection family ≤ 3 s</td>
+<td>Scenario-classification (§4.2 item 1)</td>
+</tr>
+<tr>
+<td>2 (M2)</td>
+<td>LO-M2.2</td>
+<td><strong>LO-M2.2</strong> — Restate in buyer's own words</td>
+<td>Worked-example completion (§4.2 +7-d item)</td>
+</tr>
+<tr>
+<td>2 (M2)</td>
+<td>LO-M2.3</td>
+<td><strong>LO-M2.3</strong> — Follow-up question that surfaces broken thing</td>
+<td>Scenario-classification</td>
+</tr>
+<tr>
+<td>3 (M3)</td>
+<td>LO-M3.1</td>
+<td><strong>LO-M3.1</strong> — Open calendar pre-dial (habit)</td>
+<td>Scenario-classification</td>
+</tr>
+<tr>
+<td>3 (M3)</td>
+<td>LO-M3.2</td>
+<td><strong>LO-M3.2</strong> — Two slots + send invite during call</td>
+<td>Worked-example completion (§4.3 item 1)</td>
+</tr>
+<tr>
+<td>4 (ICP)</td>
+<td>LO-ICP.1</td>
+<td><strong>LO-ICP.1</strong> — Discriminate 4 archetypes ≤ 5 s</td>
+<td>Decision-card lookup (§4.4 item 1)</td>
+</tr>
+<tr>
+<td>4 (ICP)</td>
+<td>LO-ICP.2</td>
+<td><strong>LO-ICP.2</strong> — Select archetype's ideal opener</td>
+<td>Decision-card lookup</td>
+</tr>
+<tr>
+<td>4 (ICP)</td>
+<td>LO-ICP.3</td>
+<td><strong>LO-ICP.3</strong> — Run M1+M2+M3 × 3+ archetypes interleaved</td>
+<td>Scenario-classification</td>
+</tr>
+<tr>
+<td>4 (ICP)</td>
+<td>LO-ICP.4</td>
+<td><strong>LO-ICP.4</strong> — Pick best-fit prop per archetype</td>
+<td>Decision-card lookup</td>
+</tr>
+<tr>
+<td>5 (PP)</td>
+<td>LO-PP.1</td>
+<td><strong>LO-PP.1</strong> — Map pain → prop</td>
+<td>Scenario-classification (§4.5 item)</td>
+</tr>
+<tr>
+<td>5 (PP)</td>
+<td>LO-PP.2</td>
+<td><strong>LO-PP.2</strong> — Frame in buyer's language</td>
+<td>Scenario-classification (anti-jargon detector)</td>
+</tr>
+<tr>
+<td>5 (PP)</td>
+<td>LO-PP.3</td>
+<td><strong>LO-PP.3</strong> — Dual diagnostic on multi-stakeholder call</td>
+<td>Scenario-classification (cohort-1 Gong hook)</td>
+</tr>
+<tr>
+<td>5 (PP)</td>
+<td>LO-PP.4</td>
+<td><strong>LO-PP.4</strong> — Multi-stakeholder calendar invite</td>
+<td>Worked-example completion</td>
+</tr>
+<tr>
+<td>6 (REG)</td>
+<td>LO-REG.1</td>
+<td><strong>LO-REG.1</strong> — Match buyer Q to §19 row ≤ 3 s</td>
+<td>Decision-card lookup (§4.6 item)</td>
+</tr>
+<tr>
+<td>6 (REG)</td>
+<td>LO-REG.2</td>
+<td><strong>LO-REG.2</strong> — Deliver §19 verbatim + escalate decision</td>
+<td>Decision-card lookup</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reconciliation rule.</strong> Any L2 item that cannot be tied to a live outcome ID in this design file is rewritten or rejected before Phase 3 build. Phase 5 is responsible for keeping the <code>l2-quiz-blueprint.md</code> text fresh; this file is the canonical ID source.</p>
+<h3 id="23-why-three-item-types-only-no-fact-recall-mcq">2.3 · Why three item types only (no fact-recall MCQ)</h3>
+<p>Per Haladyna &amp; Downing (2013) and brief §10.4 (P.B.) <em>"It loaded knowledge. Not moves."</em> — recall-only items are explicitly rejected. The three types used are:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>What it tests</th>
+<th>Bloom level reached</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scenario-classification</td>
+<td>"Which M-move applies?" given a buyer line</td>
+<td>Apply / Analyse</td>
+</tr>
+<tr>
+<td>Worked-example completion</td>
+<td>Fill blank in real rep transcript</td>
+<td>Apply (Procedural)</td>
+</tr>
+<tr>
+<td>Decision-card lookup</td>
+<td>"Which card does the rep reach for?"</td>
+<td>Analyse (Conceptual)</td>
+</tr>
+</tbody>
+</table>
+<p>All three are <strong>performance-of-knowledge</strong> items, not knowledge-recall.</p>
+<h3 id="24-spaced-retrieval-design-per-roediger-karpicke-2006">2.4 · Spaced retrieval design (per Roediger &amp; Karpicke 2006)</h3>
+<p>The +7-day mini-quiz uses <strong>same outcome, different stem</strong>. This is the difference between recognition and retrieval. Re-attempts on identical items within the +7-day window are blocked by Sana (per <code>l2-quiz-blueprint.md</code> §6).</p>
+<h3 id="25-mastery-thresholds-per-brief-5">2.5 · Mastery thresholds (per brief §5)</h3>
+<ul>
+<li>End-of-module: ≥ 80 % first attempt (brief §5 target).</li>
+<li>+7-day: ≥ 70 % first attempt (brief §5 target).</li>
+<li>Drill D1–D6: ≥ 95 % first attempt (per <code>01-analyze/task-inventory.md</code> §6).</li>
+</ul>
+<hr />
+<h2 id="3-l3-rubric-design">3 · L3 rubric design</h2>
+<h3 id="31-live-artefact">3.1 · Live artefact</h3>
+<p><code>05-evaluate/l3-call-rubric.md</code> is the production rubric. 3 rows × 5 anchored levels, single A4 page, manager uses 4 calls/rep/month.</p>
+<h3 id="32-design-rationale-per-d-004">3.2 · Design rationale (per <code>D-004</code>)</h3>
+<h4 id="why-3-rows">Why 3 rows</h4>
+<ul>
+<li>Brief §8 K.M. verbatim: <em>"a single sheet with 3 rows (one per move) and 1–5 scoring with anchored descriptors."</em></li>
+<li>Brief §10.6 J.T. (highest-cadence pod manager) verbatim: <em>"Three rows — opener / objection / close — each scored 1–5 with 3 example anchors per row."</em></li>
+<li>Sponsor + reference manager already converged on the design. Designing differently overrides documented user-research evidence.</li>
+</ul>
+<h4 id="why-5-columns-granularity-vs-grader-cognitive-load-sweller-2011">Why 5 columns (granularity vs grader cognitive load · Sweller 2011)</h4>
+<ul>
+<li>3-anchor rubric (J.T.'s prototype): too compressed; 1-2-3 collapses to binary in practice.</li>
+<li>7-anchor: high granularity, low inter-rater reliability without long calibration cycles.</li>
+<li><strong>5-anchor: tradeoff sweet spot per Sweller's cognitive-load-on-the-grader logic.</strong> Inter-rater reliability achievable in a single week-6 calibration session (per brief §8 + master plan §2 calibration cadence).</li>
+</ul>
+<h4 id="anchor-writing-rules">Anchor-writing rules</h4>
+<p>Per <code>l3-call-rubric.md</code> §6:</p>
+<ul>
+<li>Every anchor at score 4 and 5 must be a <strong>specific, observable behaviour</strong> traceable to a §10 SME quote or §11 Gong call.</li>
+<li>M1 anchor 5 traces to: M.G. §10.1 (5-second silence verbatim) + L.D. §10.2 (quant-anchored opener) + GC-03, GC-06, GC-08.</li>
+<li>M2 anchor 5 traces to: L.D. §10.2 Brex displacement + M.G. §10.1 (<em>"so you've got the card-issuing side sorted"</em>) + GC-03, GC-06.</li>
+<li>M3 anchor 5 traces to: M.G. §10.1 (<em>"I do not say 'I'll send you something'"</em>) + GC-01, GC-02, GC-07, GC-08.</li>
+</ul>
+<h4 id="why-5-anchor-scale-per-row-not-passfail">Why 5-anchor scale per row (not pass/fail)</h4>
+<ul>
+<li>Pass/fail loses the coaching signal (J.T. §10.6: <em>"reps know what I'm grading them on so they self-correct between calls"</em>).</li>
+<li>5-anchor surfaces the <em>lowest row</em> as the coaching focus (per <code>l3-call-rubric.md</code> §1 totals box).</li>
+</ul>
+<h3 id="33-traceback-to-106-jt-108">3.3 · Traceback to §10.6 J.T. + §10.8</h3>
+<p>§10.6 J.T.'s self-built rubric is the prototype this design supersedes. Three differences:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>J.T.'s v0</th>
+<th>This rubric v1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rows</td>
+<td>3 (opener / objection / close)</td>
+<td>3 (M1 / M2 / M3 — same)</td>
+</tr>
+<tr>
+<td>Anchors per row</td>
+<td>3 example anchors</td>
+<td>5 levelled anchors (1–5) with explicit anchor descriptors</td>
+</tr>
+<tr>
+<td>Cross-pod calibration</td>
+<td>None</td>
+<td>Week-2 + week-6 calibration sessions (<code>04-implement/manager-calibration-session-plan.md</code>)</td>
+</tr>
+<tr>
+<td>Schema versioning</td>
+<td>Informal</td>
+<td><code>06-iterate/rubric-version-log.md</code> per <code>06-iterate/iteration-playbook.md</code></td>
+</tr>
+</tbody>
+</table>
+<p>§10.8 both-managers ask (<em>"both managers asked unprompted for a shared, calibrated 3-row rubric"</em>) is satisfied by the calibration session structure.</p>
+<h3 id="34-calibration-design">3.4 · Calibration design</h3>
+<p>Per <code>l3-call-rubric.md</code> §7 + <code>04-implement/manager-calibration-session-plan.md</code>:</p>
+<ul>
+<li><strong>Week 2 (post-launch).</strong> All 9 pod managers attend; introduces rubric, scores 1 sample call together.</li>
+<li><strong>Week 6.</strong> All 9 managers score 3 sample calls cold (one each at score 5 / 3 / 1), then debate. Disagreements close by clarifying anchor wording, not by vote.</li>
+<li><strong>Quarterly.</strong> Repeat week-6 cadence. Anchor changes trigger rubric version-bump (v1.1, v1.2, etc.).</li>
+</ul>
+<h3 id="35-v2-evolution-path-per-06-iterateiteration-playbookmd">3.5 · v2 evolution path (per <code>06-iterate/iteration-playbook.md</code>)</h3>
+<p>The current 3-row constraint is a <code>D-004</code> boundary. Two v2 candidates are tracked:</p>
+<ul>
+<li><strong>4th row · "Regulatory deflection."</strong> Pending cohort-1 Gong validation per Module 6 Evidence note. If buyer reg questions appear in ≥ 30 % of cohort-1 calls and manager scoring of deflection quality diverges by &gt; 1 point between pods, the 4th row is added.</li>
+<li><strong>Per-stakeholder columns on M1/M2.</strong> Pending cohort-1 multi-stakeholder Gong validation per Module 5 Evidence note. If LO-PP.3 multi-stakeholder dual-diagnostic execution warrants separate scoring, the rubric expands to two columns per row.</li>
+</ul>
+<p>Neither change happens in v1 — <code>D-004</code> constraint holds.</p>
+<hr />
+<h2 id="4-l4-measurement-design">4 · L4 measurement design</h2>
+<h3 id="41-live-artefact">4.1 · Live artefact</h3>
+<p><code>05-evaluate/l4-ramp-retention-tracking.md</code> is the production dashboard spec.</p>
+<h3 id="42-design-rationale-per-d-008">4.2 · Design rationale (per <code>D-008</code>)</h3>
+<p>L4 is <strong>associative, not causal</strong>. Three confounds (<code>gap-analysis.md</code> §3 environment-only items) are pre-acknowledged by sponsor:</p>
+<ul>
+<li>Marketing lead-quality decline (§8, §20).</li>
+<li>Comp-plan SPIF distortion (§17).</li>
+<li>Manager-cadence variance (§8 — partly addressed by rubric layer).</li>
+</ul>
+<h3 id="43-three-line-dashboard-rationale">4.3 · Three-line dashboard rationale</h3>
+<p>Per <code>l4-ramp-retention-tracking.md</code> §4. The chart carries:</p>
+<ul>
+<li>Line A · program-cohort ramp.</li>
+<li>Line B · pre-program baseline ramp.</li>
+<li>Line C · marketing lead-quality index (RevOps existing job).</li>
+</ul>
+<p><strong>Interpretation matrix</strong> in <code>l4-ramp-retention-tracking.md</code> §4 makes the joint-read explicit. Confound lines are not subtracted from program effect; they are surfaced so the CRO conversation is honest (per K.M. §8 <em>"the conversation with the CRO is honest either way"</em>).</p>
+<h3 id="44-attribution-boundaries">4.4 · Attribution boundaries</h3>
+<p>Quasi-experimental design (rejecting RCT per <code>D-008</code>):</p>
+<ul>
+<li>Cohort comparison (pre-program baseline vs cohort 1-4).</li>
+<li>Pod-level slice (controlled against pod-cadence variable).</li>
+<li>Time-series rolling-4-cohort average (per brief §21).</li>
+</ul>
+<p>This gives an <strong>honest direction-of-effect</strong>, not a clean causal claim.</p>
+<h3 id="45-spif-confound-flag-per-brief-17">4.5 · SPIF confound flag (per brief §17)</h3>
+<p><code>SPIF_Activity_Flag</code> per rep-month, TRUE when:
+- <code>Sequence_Completion_Rate &gt; 90 %</code> (Outreach grind), AND
+- Net-new pipeline below pod median for that month, AND
+- A SPIF is active in the comp calendar.</p>
+<p>Surfaced as percentage of cohort flagged on the confound watch panel. Not punitive against reps; flags the comp design (per K.M. §8 ask to RevOps).</p>
+<hr />
+<h2 id="5-item-writing-rules-per-haladyna-downing-2013">5 · Item-writing rules (per Haladyna &amp; Downing 2013)</h2>
+<p>These rules apply to every L1 / L2 / L3 / L4 instrument:</p>
+<ol>
+<li><strong>Scenario-anchored, not recall-anchored.</strong> Every L2 item embeds a buyer line, a Gong call ID, or an archetype profile. No "what does AML stand for?" style items.</li>
+<li><strong>Distractors from documented failure patterns.</strong> Per <code>l2-quiz-blueprint.md</code> §5 — every wrong answer maps to a real GC failure ID or a §10 SME failure-mode quote. Random/plausible-but-arbitrary distractors are rejected.</li>
+<li><strong>Single correct answer per item.</strong> No "select all that apply" — increases ambiguity and cognitive load on the grader.</li>
+<li><strong>Items written at Bloom Apply / Analyse / Evaluate / Create.</strong> Never Remember-only (per <code>learning-outcomes-abcd-bloom.md</code> discipline).</li>
+<li><strong>No double-barrelled prompts.</strong> Each item tests one outcome.</li>
+<li><strong>L1 Likert anchored to behaviour.</strong> "I could use this on a call today" is behavioural intent, not satisfaction.</li>
+<li><strong>L3 rubric anchors observable.</strong> No "demonstrates confidence" or "shows ownership" — every anchor names a specific behaviour (silence ≥ 4 s · two slots stated · etc.).</li>
+<li><strong>L4 metric source-of-truth named.</strong> Every L4 line cites the Salesforce field + HRIS field + owner (J.V.) per <code>l4-ramp-retention-tracking.md</code> §6.</li>
+<li><strong>Stem-options independence.</strong> The stem must not be answerable from the options alone (e.g. no "all of the above" or "none of the above" patterns).</li>
+<li><strong>No trick items.</strong> If 70 % of well-prepared reps miss an item, it is rewritten — the item is the failure, not the rep (per <code>l2-quiz-blueprint.md</code> §7 quarterly item-stat review).</li>
+</ol>
+<hr />
+<h2 id="6-outcome-to-item-full-traceability-matrix">6 · Outcome-to-item full traceability matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Outcome ID</th>
+<th>L1 instrument</th>
+<th>L2 end-of-module item</th>
+<th>L2 +7-d item</th>
+<th>L3 rubric row / anchor</th>
+<th>L4 metric / proxy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>Q1 (program-rollup)</td>
+<td>—</td>
+<td>—</td>
+<td>All 3 rows (live calls weeks 4–8)</td>
+<td>Salesforce <code>Ramp_Time__c</code></td>
+</tr>
+<tr>
+<td>T2</td>
+<td>M1 Q1</td>
+<td>LO-M1.1/2/3 items §4.1</td>
+<td>3 items same outcomes</td>
+<td>M1 row anchor ≥ 4</td>
+<td>(cascades to T1)</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>M2 Q1</td>
+<td>LO-M2.1/2/3 items §4.2</td>
+<td>3 items same outcomes</td>
+<td>M2 row anchor ≥ 4</td>
+<td>(cascades to T1)</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>M3 Q1</td>
+<td>LO-M3.1/2 items §4.3</td>
+<td>3 items same outcomes</td>
+<td>M3 row anchor ≥ 4</td>
+<td>Salesforce <code>Next_Step_Booked__c = TRUE</code></td>
+</tr>
+<tr>
+<td>T5</td>
+<td>M4 Q1</td>
+<td>LO-ICP.1–4 items §4.4</td>
+<td>3 items same outcomes</td>
+<td>All 3 rows × 3 archetypes</td>
+<td>(cascades to T1)</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>M5 Q1</td>
+<td>LO-PP.1–4 items §4.5</td>
+<td>3 items same outcomes</td>
+<td>M1 row ×2 + M2 + M3 (multi-stakeholder)</td>
+<td>(cascades to T1) + Salesforce</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>M6 Q1</td>
+<td>LO-REG.1–2 items §4.6</td>
+<td>3 items same outcomes</td>
+<td>(v2 backlog row) — manager observation in v1</td>
+<td>(cascades — not direct)</td>
+</tr>
+<tr>
+<td>LO-M1.1</td>
+<td>—</td>
+<td>§4.1 item 1 scenario-classification</td>
+<td>+7-d novel stem</td>
+<td>M1 anchor 4</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-M1.2</td>
+<td>—</td>
+<td>§4.1 worked-example completion</td>
+<td>+7-d novel stem (§4.1 verbatim Tom example)</td>
+<td>M1 anchor 4</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-M1.3</td>
+<td>M1 Q2 (forgotten-move self-report)</td>
+<td>§4.1 silence scenario</td>
+<td>+7-d novel stem</td>
+<td>M1 anchor 5</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-M2.1</td>
+<td>—</td>
+<td>§4.2 scenario-classification (Brex example)</td>
+<td>+7-d novel stem</td>
+<td>M2 anchor 4</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-M2.2</td>
+<td>—</td>
+<td>§4.2 worked-example completion (accountant example)</td>
+<td>+7-d novel stem</td>
+<td>M2 anchor 4 + 5</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-M2.3</td>
+<td>—</td>
+<td>§4.2 scenario</td>
+<td>+7-d novel stem</td>
+<td>M2 anchor 5</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-M3.1</td>
+<td>—</td>
+<td>§4.3 scenario (no-calendar-open consequence)</td>
+<td>+7-d novel stem</td>
+<td>M3 anchor 4 prerequisite</td>
+<td>mini-OS event log (no L2 quantitative)</td>
+</tr>
+<tr>
+<td>LO-M3.2</td>
+<td>—</td>
+<td>§4.3 worked-example completion (two-slot close)</td>
+<td>+7-d novel stem</td>
+<td>M3 anchor 4 + 5</td>
+<td>Salesforce <code>Next_Step_Booked__c</code></td>
+</tr>
+<tr>
+<td>LO-ICP.1</td>
+<td>—</td>
+<td>§4.4 decision-card</td>
+<td>+7-d novel stem</td>
+<td>M1 row (correct opener per archetype)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-ICP.2</td>
+<td>—</td>
+<td>§4.4 scenario</td>
+<td>+7-d novel stem</td>
+<td>M1 row</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-ICP.3</td>
+<td>M4 Q2</td>
+<td>§4.4 cross-archetype scenario</td>
+<td>+7-d novel stem</td>
+<td>All 3 rows × 3 archetypes</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-ICP.4</td>
+<td>—</td>
+<td>§4.4 decision-card</td>
+<td>+7-d novel stem</td>
+<td>— (Module 5 picks this up)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-PP.1</td>
+<td>—</td>
+<td>§4.5 scenario-classification (Emma/receipts)</td>
+<td>+7-d novel stem</td>
+<td>(n/a — prop selection not directly rubric-scored)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-PP.2</td>
+<td>M5 Q3 (forced jargon flag)</td>
+<td>§4.5 anti-jargon item</td>
+<td>+7-d novel stem</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-PP.3</td>
+<td>—</td>
+<td>§4.5 multi-stakeholder scenario</td>
+<td>+7-d novel stem</td>
+<td>M1 row ×2 (cohort-1 Gong hook)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-PP.4</td>
+<td>—</td>
+<td>§4.5 multi-invitee completion</td>
+<td>+7-d novel stem</td>
+<td>M3 row</td>
+<td>Salesforce</td>
+</tr>
+<tr>
+<td>LO-REG.1</td>
+<td>—</td>
+<td>§4.6 decision-card (Lukas trust)</td>
+<td>+7-d novel stem</td>
+<td>(v2 backlog row)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>LO-REG.2</td>
+<td>M6 Q2</td>
+<td>§4.6 escalate-decision item</td>
+<td>+7-d novel stem</td>
+<td>(v2 backlog row, cohort-1 Gong hook)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-what-this-design-sends-downstream">7 · What this design sends downstream</h2>
+<table>
+<thead>
+<tr>
+<th>Sends</th>
+<th>To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reconciled placeholder LO-IDs</td>
+<td><code>05-evaluate/l2-quiz-blueprint.md</code> (Phase 5 owner: re-key §3 placeholder table to canonical IDs above)</td>
+</tr>
+<tr>
+<td>Rubric design rationale + v2 backlog</td>
+<td><code>02-design/rubric-design.md</code></td>
+</tr>
+<tr>
+<td>Item-writing rules</td>
+<td><code>03-develop/scorm-shell/</code> content-authoring guide</td>
+</tr>
+<tr>
+<td>Outcome-to-item traceability</td>
+<td><code>05-evaluate/kirkpatrick-measurement-plan.md</code> Sprint 5.1</td>
+</tr>
+<tr>
+<td>Mini-OS instrumentation requirements (event-log fields per outcome)</td>
+<td><code>03-develop/scorm-shell/event-log-spec.md</code> (Phase 3 build)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§5, 7, 8, 10.1, 10.2, 10.4, 10.6, 10.8, 11, 12, 13.1, 17, 18.2, 19, 20.</li>
+<li>Haladyna, T. M., &amp; Downing, S. M. (2013). <em>Handbook of test development</em> (2nd ed.). Routledge — assessment-validity guidance.</li>
+<li>Wiggins, G., &amp; McTighe, J. (2005). <em>Understanding by Design</em> (2nd ed.).</li>
+<li>Anderson, L. W., &amp; Krathwohl, D. R. (2001). <em>A taxonomy for learning, teaching, and assessing.</em> Longman.</li>
+<li>Mager, R. F. (1962/1997). <em>Preparing instructional objectives.</em></li>
+<li>Thalheimer, W. (2018). <em>The Learning-Transfer Evaluation Model.</em> Work-Learning Research.</li>
+<li>Roediger, H. L., &amp; Karpicke, J. D. (2006). <em>Perspectives on Psychological Science</em>, 1(3), 181–210.</li>
+<li>Phillips, J. J. (2003). <em>Return on investment in training and performance improvement programs.</em></li>
+<li>Sweller, J., Ayres, P., &amp; Kalyuga, S. (2011). <em>Cognitive load theory.</em></li>
+<li><code>01-analyze/kirkpatrick-l4-l1-cascade.md</code>, <code>01-analyze/task-inventory.md</code>, <code>01-analyze/gap-analysis.md</code>.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code>, <code>02-design/curriculum-blueprint.md</code>, <code>02-design/4cid-blueprint.md</code>, <code>02-design/rubric-design.md</code>.</li>
+<li><code>05-evaluate/l1-pulse-survey.md</code>, <code>05-evaluate/l2-quiz-blueprint.md</code>, <code>05-evaluate/l3-call-rubric.md</code>, <code>05-evaluate/l4-ramp-retention-tracking.md</code>.</li>
+<li>Decisions <code>D-002</code>, <code>D-003</code>, <code>D-004</code>, <code>D-008</code>.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 02-design/assessment-design.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

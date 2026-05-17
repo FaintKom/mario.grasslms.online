@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Cognitive load analysis · per persona × per task class — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Quantifies the intrinsic, extraneous, and germane load of a live cold call against each persona, using Sweller's element-interactivity lens (Sweller 1988; Sweller, Ayres &amp; Kalyu"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>01-analyze/cognitive-load-analysis.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Quantifies the intrinsic, extraneous, and germane load of a live cold call against each persona, using Sweller's element-interactivity lens (Sweller 1988; Sweller, Ayres &amp; Kalyuga 2011). The brief's ≤ 10-min cohort-tolerance constraint (§7) is a hard germane-load budget; this file says what fits inside it and what has to be off-loaded to job aids, scaffolds, or part-task drills.</p>
+</blockquote>
+<h1 id="cognitive-load-analysis-per-persona-per-task-class">Cognitive load analysis · per persona × per task class</h1>
+<h2 id="1-framing-three-loads-one-budget">1 · Framing — three loads, one budget</h2>
+<table>
+<thead>
+<tr>
+<th>Load type</th>
+<th>Source</th>
+<th>Lever</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Intrinsic load</strong></td>
+<td>Inherent complexity of the task (number of interacting elements held in working memory)</td>
+<td>Sequence simple→complex; isolate elements; pre-train sub-skills</td>
+</tr>
+<tr>
+<td><strong>Extraneous load</strong></td>
+<td>Poor presentation, split attention, redundancy, irrelevant detail</td>
+<td>UI design, signalling, spatial contiguity (Mayer)</td>
+</tr>
+<tr>
+<td><strong>Germane load</strong></td>
+<td>Effort spent constructing schemas</td>
+<td>What we <em>want</em> to maximise — within the budget</td>
+</tr>
+</tbody>
+</table>
+<p>Per Kalyuga's <em>expertise reversal effect</em> (Kalyuga 2007), what is germane for a novice (worked examples) becomes extraneous for an expert. We design the worked-example fading sequence accordingly per <code>D-002</code>.</p>
+<p>The <strong>budget for germane load per module is ≤ 10 minutes</strong> (brief §7 cohort-tolerance constraint). Per 4C/ID per <code>task-inventory.md</code> §6, ≤ 5 min goes to part-task drill, ≤ 5 min to whole-task application.</p>
+<h2 id="2-element-interactivity-of-a-live-cold-call">2 · Element-interactivity of a live cold call</h2>
+<p>The live call has at least seven simultaneous elements the rep must hold or operate:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Element</th>
+<th>Where it lives</th>
+<th>Who's looking at it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>E1</strong></td>
+<td>Buyer auditory signal — tone, hesitation, push-back</td>
+<td>Phone</td>
+<td>Rep's ears</td>
+</tr>
+<tr>
+<td><strong>E2</strong></td>
+<td>Talk-track / move plan — M1 → M2 → M3 sequence</td>
+<td>Memory (or cheat sheet)</td>
+<td>Rep's working memory</td>
+</tr>
+<tr>
+<td><strong>E3</strong></td>
+<td>Screen scanning — LinkedIn / Companies House profile open</td>
+<td>Browser tab 1</td>
+<td>Rep's eyes</td>
+</tr>
+<tr>
+<td><strong>E4</strong></td>
+<td>Calendar — open in second tab to read out two free slots</td>
+<td>Browser tab 2</td>
+<td>Rep's eyes (alternating with E3)</td>
+</tr>
+<tr>
+<td><strong>E5</strong></td>
+<td>CRM logging — Salesforce next-step field, called-disposition tag</td>
+<td>Browser tab 3</td>
+<td>Rep's hands (typing during call)</td>
+</tr>
+<tr>
+<td><strong>E6</strong></td>
+<td>Objection inventory — pre-loaded "if buyer says X, restate as Y"</td>
+<td>Memory or printout</td>
+<td>Rep's working memory</td>
+</tr>
+<tr>
+<td><strong>E7</strong></td>
+<td>Regulatory awareness — when to defer, when to use §19 table</td>
+<td>Memory</td>
+<td>Rep's working memory</td>
+</tr>
+</tbody>
+</table>
+<p>Three more elements appear in advanced classes:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Element</th>
+<th>Class trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E8</td>
+<td>ICP archetype match</td>
+<td>Class 2+</td>
+</tr>
+<tr>
+<td>E9</td>
+<td>Competitive frame (additive-not-replacement)</td>
+<td>Class 4</td>
+</tr>
+<tr>
+<td>E10</td>
+<td>Second-stakeholder voice</td>
+<td>Class 5</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Element-interactivity score</strong> (Sweller 2011 method — count of elements that must be held simultaneously to perform the act): for a Class 3 hostile cold call, the rep holds E1 + E2 + E3 + E4 + E6 + E8 simultaneously, with E5 + E7 in standby. That's <strong>6–8 interacting elements at peak</strong>.</p>
+<p>For context: chunked working memory holds ~4 elements (Cowan 2001). The call is, intrinsically, <em>above</em> working-memory capacity unless <strong>some elements are automated</strong> (P1–P4 procedurals in <code>task-inventory.md</code>) or <strong>off-loaded to job aids</strong> (regulatory deflection table; objection inventory).</p>
+<p>This is <em>exactly</em> the diagnosis behind H.K.'s quote: &gt; "I know the three moves but I forget them under pressure. By call 3 of a tough day I'm just pitching." — §10.3 — element interactivity exceeds her current schema capacity, so under fatigue the elements collapse to "pitch."</p>
+<h2 id="3-intrinsic-load-profile-per-persona">3 · Intrinsic-load profile per persona</h2>
+<table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Pre-existing schemas</th>
+<th>Element-interactivity tolerance</th>
+<th>Implication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>M.G. (top-decile)</strong></td>
+<td>All seven elements automated; 4 months of self-discovery built the schemas (§10.1)</td>
+<td>High</td>
+<td>She <em>can</em> run Class 5 multi-stakeholder. She does not need worked examples (would trigger expertise reversal); she needs the system to articulate <em>what she's already doing</em> so it can be taught.</td>
+</tr>
+<tr>
+<td><strong>L.D. (top-decile · DE)</strong></td>
+<td>Same as M.G., plus competitive-displacement schema (§10.2)</td>
+<td>High</td>
+<td>She is the Class 4 reference performer. Same expertise-reversal caveat.</td>
+</tr>
+<tr>
+<td><strong>Mid-band (H.K. / N.W. / R.A. / O.B.)</strong></td>
+<td>M1/M2/M3 schemas <em>partially</em> built; collapse under load (§10.3)</td>
+<td>Medium — works on easy calls, fails on hard ones</td>
+<td>Part-task drills (D1–D3) are the priority. Their schemas need to <em>automate</em> so working memory frees up for E1 + E2.</td>
+</tr>
+<tr>
+<td><strong>P.B. (bottom-quartile)</strong></td>
+<td>No move-level schemas; product schemas only (§10.4 "It loaded knowledge, not moves")</td>
+<td>Low</td>
+<td>Worked examples are non-negotiable. Without them she defaults to E2-only pitch-launch.</td>
+</tr>
+<tr>
+<td><strong>Exit interviewee</strong></td>
+<td>Same as P.B. at exit</td>
+<td>Low</td>
+<td>Same as P.B., plus motivation collapse (§10.5) — see <code>gap-analysis.md</code> motivation row</td>
+</tr>
+<tr>
+<td><strong>High-cadence manager (J.T.)</strong></td>
+<td>Has built her own rubric (§10.6)</td>
+<td>High</td>
+<td>She's the rubric author; she doesn't need the rubric explained, she needs calibration with peers.</td>
+</tr>
+<tr>
+<td><strong>Low-cadence manager (composite)</strong></td>
+<td>Variable; some have rubrics, some don't</td>
+<td>Variable</td>
+<td>Single-page rubric (<code>D-004</code>) keeps grader cognitive load low.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-high-intrinsic-load-means-for-design">What "high intrinsic load" means for design</h3>
+<p>For P.B. and mid-band reps, <strong>Class 3 (hostile cold call) is above their working-memory capacity</strong> until M1/M2/M3 are automated. Sequencing implication: Class 1 and Class 2 must <em>automate the moves</em> before Class 3 introduces the objection-load element. This is what 4C/ID's task-class progression operationalises (per <code>task-inventory.md</code> §2).</p>
+<h2 id="4-extraneous-load-what-to-eliminate">4 · Extraneous load — what to eliminate</h2>
+<table>
+<thead>
+<tr>
+<th>Source of extraneous load</th>
+<th>Where it shows up today</th>
+<th>Phase-2 / 3 mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tool training in isolation</strong> (§14 audit)</td>
+<td>Week 2 self-paced LMS tour</td>
+<td>Tools learned <em>inside the mini-OS</em> during call practice (<code>D-007</code>) — eliminates "where was that button?" load mid-call</td>
+</tr>
+<tr>
+<td><strong>Split-attention between transcript and audio</strong> (Mayer split-attention)</td>
+<td>Audio-narrated SCORM common pattern</td>
+<td>No-audio constraint (<code>D-006</code>) already eliminates this — text + on-screen transcript, no parallel audio channel</td>
+</tr>
+<tr>
+<td><strong>Cheat-sheet language mismatch</strong> (R.A. §10.3 EN → ES translation in-head)</td>
+<td>Today's EN-only cheat sheets used by ES pod</td>
+<td>v2 ES + DE translation; v1 acknowledges this as an extraneous-load tax on ES pod</td>
+</tr>
+<tr>
+<td><strong>Slide-deck format with no behavioural anchor</strong> (K.M. §8 "Articulate slide-deck no one finishes")</td>
+<td>Existing onboarding</td>
+<td>Replaced by mini-OS-embedded worked examples + part-task drills</td>
+</tr>
+<tr>
+<td><strong>Leaderboard surveillance</strong> (§10.5 "Every Monday I was bottom 3")</td>
+<td>Slack leaderboard</td>
+<td>Per <code>frameworks-applied.md</code> §18: no leaderboard gamification in v1 — emotional load suppresses germane load</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-germane-load-what-we-want-the-rep-building">5 · Germane load — what we want the rep building</h2>
+<p>Germane load = schema construction. For this program, the schemas are:</p>
+<ol>
+<li><strong>M1 schema:</strong> "When I encounter a buyer, I extract one signal, ask one diagnostic, and wait." (Class 1–6)</li>
+<li><strong>M2 schema:</strong> "When the buyer objects, I restate their words before I respond." (Class 3–5)</li>
+<li><strong>M3 schema:</strong> "Before I hang up, the calendar invite is sent." (Class 2–6)</li>
+<li><strong>ICP-match schema:</strong> "Given this signal-set, this is a Maria / Tom / Emma / Lukas call." (Class 2–6)</li>
+<li><strong>Prop-to-pain schema:</strong> "Given this stated pain, this is Prop 1/2/3/4." (Class 2–6)</li>
+<li><strong>Regulatory deflection schema:</strong> "Given this question, this is the §19 row response." (Class 6)</li>
+</ol>
+<p><strong>The germane-load budget per module</strong> (≤ 10 min) must produce <em>measurable construction of one of these schemas</em>, evidenced by the L2 first-attempt + +7-day retention scores (brief §5).</p>
+<h2 id="6-recommendations-what-gets-off-loaded-what-gets-scaffolded-what-stays-in-head">6 · Recommendations — what gets off-loaded, what gets scaffolded, what stays in-head</h2>
+<h3 id="off-load-to-job-aids-rossett-schafer-2007">Off-load to job aids (Rossett &amp; Schafer 2007)</h3>
+<p>The cost of forgetting is high <em>during</em> the call; full memorisation is unrealistic. Off-load:</p>
+<ul>
+<li><strong>Regulatory deflection table (§19) → 1-page desktop job aid.</strong> Five rows. Lives in mini-OS Slack channel pinned message + post-launch on rep's actual desktop.</li>
+<li><strong>Objection inventory (5 most common objections × restate-template) → 1-page job aid.</strong> Stays open in browser tab during dial.</li>
+<li><strong>ICP archetype card (4 buyers × diagnostic templates) → 1-page job aid.</strong> Replaces the in-head 4-month discovery M.G. described.</li>
+</ul>
+<h3 id="scaffold-worked-example-completion-solo-problem">Scaffold (worked example → completion → solo problem)</h3>
+<p>Per Renkl &amp; Atkinson 2003. Inside each module:</p>
+<ol>
+<li><strong>Worked example</strong> — annotated Gong-style transcript with M1/M2/M3 markers visible (≈ 3 min reading).</li>
+<li><strong>Completion problem</strong> — same call but with M1 question redacted; rep fills in (≈ 2 min).</li>
+<li><strong>Solo problem</strong> — new buyer profile, mini-OS live; rep makes the call (≈ 5 min).</li>
+</ol>
+<p>Total ≤ 10 min per module. Fits the cohort-tolerance budget.</p>
+<h3 id="keep-in-head-automated">Keep in-head (automated)</h3>
+<p>After spaced retrieval (brief §5 L2 target ≥ 70 % at +7 d):</p>
+<ul>
+<li>The M1/M2/M3 sequence itself (3-element list).</li>
+<li>The 5-second silence threshold (single affective tolerance).</li>
+<li>ICP-pain-to-prop pairings for the <em>most common</em> buyer (Maria) — extended to all four buyers by end of program.</li>
+</ul>
+<h2 id="7-the-10-min-budget-per-module-what-it-means">7 · The ≤ 10-min budget per module — what it means</h2>
+<table>
+<thead>
+<tr>
+<th>Slice</th>
+<th>Time</th>
+<th>Activity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Activation (Merrill)</td>
+<td>~1 min</td>
+<td>Trigger scenario — show the failure-mode call (Class-relevant)</td>
+</tr>
+<tr>
+<td>Worked example</td>
+<td>~3 min</td>
+<td>Annotated transcript of the same scenario done right</td>
+</tr>
+<tr>
+<td>Completion problem</td>
+<td>~2 min</td>
+<td>Fill in the missing move</td>
+</tr>
+<tr>
+<td>Solo problem</td>
+<td>~3 min</td>
+<td>Mini-OS live; new buyer, same task class</td>
+</tr>
+<tr>
+<td>Reflection + spaced-retrieval hook</td>
+<td>~1 min</td>
+<td>"What's the move you're most likely to forget?" (L1 tier-3 prompt)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Net: ≤ 10 min, germane-load-dense, extraneous-load-minimised.</strong> Worked-example slice is the heaviest germane-load chunk; completion problem is the schema-test; solo problem is the schema-application.</p>
+<p>For Modules 5 (Product Prop Mapping) and 6 (Regulatory Deflection), the worked example becomes a <em>job-aid-in-use</em> example — rep practises <em>referencing</em> the job aid mid-call, not memorising it.</p>
+<h2 id="8-element-interactivity-reduction-strategy-per-task-class">8 · Element-interactivity reduction strategy per task class</h2>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Elements at peak</th>
+<th>Reduction strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 Warm inbound</td>
+<td>E1 + E2 + E5 (3)</td>
+<td>Below threshold — no reduction needed</td>
+</tr>
+<tr>
+<td>2 Cold receptive</td>
+<td>E1 + E2 + E3 + E4 + E5 (5)</td>
+<td>Pre-train E3 (LinkedIn scan) as separate drill (D1)</td>
+</tr>
+<tr>
+<td>3 Cold hostile</td>
+<td>E1 + E2 + E3 + E4 + E5 + E6 (6)</td>
+<td>Add objection-inventory job aid; drill D2</td>
+</tr>
+<tr>
+<td>4 Competitive displacement</td>
+<td>E1–E6 + E9 (7)</td>
+<td>Add competitive-frame card; drill D5</td>
+</tr>
+<tr>
+<td>5 Multi-stakeholder</td>
+<td>E1–E6 + E10 (7)</td>
+<td>Pre-train both diagnostics; expertise prerequisite — gate behind passing Class 3</td>
+</tr>
+<tr>
+<td>6 Regulatory deflection</td>
+<td>E1–E6 + E7 (7)</td>
+<td>Off-load to job aid (§19 table on desktop) — never in-head</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-what-this-analysis-sends-to-phase-2">9 · What this analysis sends to Phase 2</h2>
+<table>
+<thead>
+<tr>
+<th>Sends</th>
+<th>To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Three-job-aid spec (regulatory · objection · ICP card)</td>
+<td><code>02-design/job-aids/</code></td>
+</tr>
+<tr>
+<td>Worked-example → completion → solo slot structure for every module</td>
+<td><code>02-design/module-storyboards/</code> template</td>
+</tr>
+<tr>
+<td>The "no leaderboard" constraint (extraneous emotional load)</td>
+<td><code>04-implement/launch-comms.md</code></td>
+</tr>
+<tr>
+<td>Class 5 multi-stakeholder requires Class 3 completion (prerequisite gate)</td>
+<td><code>02-design/curriculum-blueprint.md</code> sequencing</td>
+</tr>
+<tr>
+<td>Per-persona load budget (M.G. needs less worked example; P.B. needs more)</td>
+<td>Adaptive sequencing in Phase 6 iteration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§5, 7, 8, 10.1, 10.3, 10.4, 10.5, 10.6, 12, 14, 18.2, 19.</li>
+<li>Sweller, J. (1988). "Cognitive load during problem solving." <em>Cognitive Science</em>, 12(2), 257–285.</li>
+<li>Sweller, J., Ayres, P., &amp; Kalyuga, S. (2011). <em>Cognitive load theory.</em> Springer.</li>
+<li>Kalyuga, S. (2007). "Expertise reversal effect and its implications for learner-tailored instruction." <em>Educational Psychology Review</em>, 19(4), 509–539.</li>
+<li>Cowan, N. (2001). "The magical number 4 in short-term memory." <em>Behavioral and Brain Sciences</em>, 24(1), 87–114.</li>
+<li>Renkl, A., &amp; Atkinson, R. K. (2003). <em>Educational Psychologist</em>, 38(1), 15–22.</li>
+<li>Rossett, A., &amp; Schafer, L. (2007). <em>Job aids and performance support.</em></li>
+<li>Decisions <code>D-002</code>, <code>D-004</code>, <code>D-006</code>, <code>D-007</code>.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 01-analyze/cognitive-load-analysis.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

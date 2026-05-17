@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Hand-off pack · for K.M.'s in-house team (and successor) — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Brief §20 risk row &quot;Sponsor turnover (K.M. has been in role 11 months)&quot; is the existential risk to the program; mitigation is &quot;every phase summary documents decisions"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>06-iterate/handoff-pack.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Brief §20 risk row "Sponsor turnover (K.M. has been in role 11 months)" is the existential risk to the program; mitigation is "every phase summary documents decisions in writing; successor inherits signed paper trail". This pack is that paper trail — runnable cold by an in-house designer with no prior context, and surveying every dependency that needs an owner when designer engagement ends. Frameworks: ADDIE Phase 6 close-out + Action Mapping ownership clarity (Moore 2017) + Phillips Phase-7 sustainment.</p>
+</blockquote>
+<hr />
+<h1 id="hand-off-pack-for-kms-in-house-team-and-successor">Hand-off pack · for K.M.'s in-house team (and successor)</h1>
+<p>This file is the single entry point for anyone inheriting the program. Read in order; every section ends with what to do next.</p>
+<hr />
+<h2 id="1-what-you-inherit">1 · What you inherit</h2>
+<table>
+<thead>
+<tr>
+<th>Artefact</th>
+<th>File path</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Engagement brief (source of truth)</td>
+<td><code>F:\LXD task\case-study-tz.md</code></td>
+<td>The original input pack. Treat as the master record for stakeholders, success measures, scope, constraints.</td>
+</tr>
+<tr>
+<td>Master plan</td>
+<td><code>F:\LXD task\00-project-management\master-plan.md</code></td>
+<td>Phase-gate timeline + critic-agent gate criteria</td>
+</tr>
+<tr>
+<td>Decisions log</td>
+<td><code>F:\LXD task\00-project-management\decisions-log.md</code></td>
+<td>Every non-trivial decision + framework + brief evidence. Append-only.</td>
+</tr>
+<tr>
+<td>Frameworks pack</td>
+<td><code>F:\LXD task\00-project-management\frameworks-applied.md</code></td>
+<td>Full citation list for every ID framework used</td>
+</tr>
+<tr>
+<td>Stakeholder + business + learner analyses</td>
+<td><code>F:\LXD task\01-analyze\</code></td>
+<td>Phase 1 artefacts (audit, personas, journeys, task inventory, gap analysis, L4→L1 cascade)</td>
+</tr>
+<tr>
+<td>Curriculum architecture</td>
+<td><code>F:\LXD task\02-design\4cid-blueprint.md</code> · <code>learning-outcomes-abcd-bloom.md</code> · <code>curriculum-blueprint.md</code></td>
+<td>The 4C/ID task-class progression + ABCD outcomes</td>
+</tr>
+<tr>
+<td>Module storyboards (6)</td>
+<td><code>F:\LXD task\02-design\module-storyboards\module-1.md</code> … <code>module-6.md</code></td>
+<td>One per module, Merrill + Gagné structured</td>
+</tr>
+<tr>
+<td>Mini-OS shell + 6 SCORMs</td>
+<td><code>F:\LXD task\03-develop\scorm-shell\</code> + <code>F:\LXD task\03-develop\module-1\</code> … <code>module-6\</code></td>
+<td>The actual learner-facing build (see §2)</td>
+</tr>
+<tr>
+<td>Manager rubric</td>
+<td><code>F:\LXD task\02-design\rubric-design.md</code> + <code>F:\LXD task\03-develop\rubric-tool\</code></td>
+<td>3-row × 5-anchor call-review rubric (single A4)</td>
+</tr>
+<tr>
+<td>Launch comms + LMS runbook</td>
+<td><code>F:\LXD task\04-implement\</code></td>
+<td>Phase 4: launch sequence, Sana deployment, manager calibration plans</td>
+</tr>
+<tr>
+<td>Kirkpatrick measurement plan</td>
+<td><code>F:\LXD task\05-evaluate\kirkpatrick-measurement-plan.md</code></td>
+<td>L1–L4 wiring: instruments, sources, owners, cadence</td>
+</tr>
+<tr>
+<td>Iteration playbook</td>
+<td><code>F:\LXD task\06-iterate\iteration-playbook.md</code></td>
+<td>IF-THEN rules for post-launch sprints</td>
+</tr>
+<tr>
+<td>Content-refresh template</td>
+<td><code>F:\LXD task\06-iterate\content-refresh-sprint-template.md</code></td>
+<td>4-week sprint template for between-cohort changes</td>
+</tr>
+<tr>
+<td>Exec deck</td>
+<td><code>F:\LXD task\06-iterate\exec-deck.md</code></td>
+<td>10-slide CRO review markdown</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What you do not inherit:</strong> any artefact that depends on the original designer's tooling licences (Articulate 360 personal seat, Gong viewer licence). Those revert to client ownership at engagement close — already in client tenant.</p>
+<hr />
+<h2 id="2-how-the-mini-os-shell-works">2 · How the mini-OS shell works</h2>
+<blockquote>
+<p>Forward reference: the shell itself lives in <code>F:\LXD task\03-develop\scorm-shell\</code> (built in Phase 3 of the engagement).</p>
+</blockquote>
+<p>The mini-OS is a custom HTML/JS/CSS workspace that simulates the SDR's actual desktop: Outreach, Gong, Salesforce, LinkedIn / Companies House, Calendar, Phone-dialler, Slack. All six modules run inside it. The decision to build custom (not Articulate) is <strong>D-005</strong> in the decisions log.</p>
+<p><strong>Top-level shape:</strong></p>
+<pre><code>03-develop/scorm-shell/
+├── index.html                  Shell entry point
+├── scorm-api-wrapper.js        SCORM 1.2 LMS communication layer (cmi.core.score.raw, cmi.core.lesson_status)
+├── window-manager.js           Draggable window logic, z-index, focus
+├── taskbar.js                  Bottom dock, app launcher
+├── apps/
+│   ├── outreach/               Mock Outreach sequence + dial pad
+│   ├── salesforce/             Mock SF record, next-step booking widget
+│   ├── gong/                   Mock call transcript viewer with M1/M2/M3 tags
+│   ├── linkedin/               Mock prospect profile + Companies House view
+│   ├── calendar/               Mock calendar with slot-picker
+│   ├── phone-dialer/           Audio-free dial-tone simulation
+│   └── slack/                  Mock #sdr-onboarding-design channel
+├── a11y-audit.md               WCAG 2.1 AA conformance evidence
+└── README.md                   How to add a new app, how to package as SCORM
+</code></pre>
+<p><strong>Key contracts:</strong></p>
+<ul>
+<li>Each app is a self-contained folder with <code>app.html</code> + <code>app.css</code> + <code>app.js</code> + a <code>manifest.json</code> declaring its window size, icon, and required SCORM API hooks.</li>
+<li>The window manager loads apps on demand (not on page load) → modules stay under the 10-min cohort tolerance.</li>
+<li>The SCORM API wrapper is the <strong>only</strong> file allowed to touch <code>cmi.*</code> properties. Modules talk to a thin <code>progress.js</code> interface that proxies to the wrapper.</li>
+</ul>
+<p><strong>Versioning:</strong> the shell follows semver. Bumping a major version requires a sponsor sign-off (per <code>iteration-playbook.md</code> rule O-B convention).</p>
+<hr />
+<h2 id="3-how-to-add-a-new-module">3 · How to add a new module</h2>
+<p>The 4C/ID task-class progression supports up to ~12 modules before the architecture needs revisiting. Steps to add the 7th:</p>
+<ol>
+<li><strong>Confirm the task class.</strong> Re-read <code>02-design/4cid-blueprint.md</code>. The new module must be a <em>task class</em> of increasing complexity, not a topic-add (per D-002).</li>
+<li><strong>Draft the ABCD outcome.</strong> Add to <code>02-design/learning-outcomes-abcd-bloom.md</code>. Apply or Analyse level (no Remember/Understand-only).</li>
+<li><strong>Use the storyboard template.</strong> Copy <code>02-design/module-storyboards/_template.md</code>. Fill in: trigger scenario · worked example · completion problem · solo problem · debrief · spaced-retrieval hook. Confirm Merrill + Gagné spine intact.</li>
+<li><strong>Build in the shell.</strong> Add module folder under <code>03-develop/module-7/</code>. Reuse existing apps from <code>scorm-shell/apps/</code>. Build any new app per the shell's README contract.</li>
+<li><strong>Update the assessment plan.</strong> Add items to L2 quiz bank (<code>05-evaluate/l2-quiz-blueprint.md</code>); add an L1 pulse item if the module needs its own application-intent read.</li>
+<li><strong>Phase-gate the module.</strong> Run the 4-week content-refresh sprint as if it were a refresh (one designer + critic + sponsor sign-off). Do not skip the critic step.</li>
+<li><strong>Log the decision.</strong> Append D-009+ to <code>decisions-log.md</code> with the trigger, framework, evidence, alternatives rejected.</li>
+</ol>
+<hr />
+<h2 id="4-sme-continuity-plan-quarterly">4 · SME continuity plan (quarterly)</h2>
+<p>ICP / competitive / regulatory content drifts. Refresh by interviewing 4 SMEs per quarter:</p>
+<table>
+<thead>
+<tr>
+<th>Quarter</th>
+<th>SME to interview</th>
+<th>Why</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>M.G. (UK top-decile, Manchester)</td>
+<td>Refresh M1 worked example with current LinkedIn / Companies House intelligence patterns</td>
+<td>Updated GC-01 / GC-02 substitution in Module 1</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>L.D. (DE top-decile, Berlin)</td>
+<td>Refresh M2 worked example on Brex / competitive displacement</td>
+<td>Updated competitive scenario in Module 4</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>M.K. (DE Pod 1 manager)</td>
+<td>Refresh rubric anchor descriptors against latest call patterns; revisit the bilingual cheat-sheet ask</td>
+<td>Rubric anchors v.N+1; cheat-sheet status update</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>A.S. (Head of SDR) + 1 ICP buyer (Maria archetype proxy)</td>
+<td>Refresh ICP archetypes against real customer wins from prior 12 months</td>
+<td>Updated <code>01-analyze/learner-personas.md</code> + ICP buyer specs</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cadence rule:</strong> 30 min per SME interview, max. Output is appended to the relevant artefact + a Slack post in <code>#sdr-onboarding-design</code>. Decisions log entry only if the SME pull triggers a content-refresh sprint.</p>
+<p><strong>Compliance carve-out:</strong> regulatory content (KYC, AML, SCA, PSD2, GDPR — brief §19) is <strong>not</strong> refreshed via this SME process. It is refreshed when the compliance team updates the Cornerstone modules — coordinate with their owner. Per brief §6, scope discipline.</p>
+<hr />
+<h2 id="5-dashboard-maintenance">5 · Dashboard maintenance</h2>
+<table>
+<thead>
+<tr>
+<th>Data source</th>
+<th>Field(s)</th>
+<th>Owner</th>
+<th>Cadence</th>
+<th>Drift check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Salesforce</td>
+<td><code>Ramp_Time__c</code>, <code>Tenure_Cohort__c</code>, <code>Pod__c</code>, <code>First_Paid_Quota_Date__c</code>, <code>Next_Step_Booked__c</code></td>
+<td>J.V. (RevOps Director)</td>
+<td>Nightly automated</td>
+<td>Quarterly: confirm <code>Ramp_Time__c</code> calculation logic matches the original definition (days from hire date to first paid quota).</td>
+</tr>
+<tr>
+<td>HRIS (BambooHR-equivalent)</td>
+<td><code>Day_120_Retained</code></td>
+<td>D.R. (Head of People)</td>
+<td>Nightly automated</td>
+<td>Quarterly: confirm <code>Day_120_Retained</code> is computed from hire date + 120 calendar days (not working days).</td>
+</tr>
+<tr>
+<td>Gong</td>
+<td><code>tag:diagnostic-opener</code>, <code>tag:objection-acknowledged</code>, <code>tag:calendar-booked</code> + custom rubric scorecards</td>
+<td>A.S. (Head of SDR)</td>
+<td>Real-time tag, weekly rubric</td>
+<td><strong>Drift-recalibration cadence: every 6 months.</strong> Gong's NLP tag definitions drift as Gong updates its models. Pull a 50-call sample, hand-score against the rubric, compare to Gong's auto-tags. If accuracy &lt; 85 %, request a tag-definition recalibration with Gong support.</td>
+</tr>
+<tr>
+<td>Sana LMS</td>
+<td><code>cmi.core.score.raw</code>, +7 d quiz scores, L1 pulse responses</td>
+<td>LMS admin</td>
+<td>Per cohort</td>
+<td>Per cohort: confirm SCORM packages report correctly to Sana's reporting API.</td>
+</tr>
+<tr>
+<td>Outreach</td>
+<td><code>Sequence_Completion_Rate</code></td>
+<td>J.V. (RevOps Director)</td>
+<td>Weekly</td>
+<td>Used as SPIF-distortion proxy per brief §15.4 — surface to K.M. monthly.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Single point of failure to watch:</strong> J.V. owns three of the five sources. If J.V. moves on, the dashboard health depends on her successor inheriting the field definitions in <code>05-evaluate/dashboard-schema.md</code>. Add to the standing risk register.</p>
+<hr />
+<h2 id="6-v2-plan-es-de-rollout">6 · v2 plan · ES + DE rollout</h2>
+<p>Two distinct asks shape v2:</p>
+<p><strong>Ask 1 — ES rubric translation (brief §9 A.S., I.C. ES Pod waiting).</strong></p>
+<ul>
+<li>I.C. (Barcelona ES Pod manager) has been running call reviews in Spanish on an untranslated rubric since cohort 1. This is the highest-priority v2 item.</li>
+<li>Translation pipeline: native ES speaker (sourced from the Barcelona office, ideally a senior SDR) translates anchor descriptors → I.C. validates → back-translation review by a third-party native EN speaker for semantic equivalence → A.S. signs off.</li>
+<li>Timeline: 3 weeks from kick-off to deployed rubric in I.C.'s Gong scorecard.</li>
+</ul>
+<p><strong>Ask 2 — Bilingual cheat sheet (brief §10.7 M.K.).</strong></p>
+<ul>
+<li>M.K. (DE Pod 1 manager) flagged the language-switching scenario mid-call as a blocker for DE reps. A bilingual EN/DE cheat sheet for each keystone move + each common objection.</li>
+<li>Format: 1-page job aid (per <code>frameworks-applied.md</code> #20, Rossett &amp; Schafer). DE text in left column, EN equivalent in right column. Phosphor iconography.</li>
+<li>Timeline: 2 weeks to draft + validate with M.K. and one mid-DE-rep (N.W. or equivalent).</li>
+</ul>
+<p><strong>Module translation (six modules, EN → ES + DE):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Owner</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storyboard text export from <code>02-design/module-storyboards/</code></td>
+<td>In-house designer</td>
+<td>1 day</td>
+</tr>
+<tr>
+<td>Translation by native speakers (one per language)</td>
+<td>External or internal native-speaker resource</td>
+<td>2 weeks</td>
+</tr>
+<tr>
+<td>In-context review (translator reads the rendered SCORM)</td>
+<td>Translator + in-house designer</td>
+<td>3 days</td>
+</tr>
+<tr>
+<td>Sponsor sign-off (K.M. or successor)</td>
+<td>K.M.</td>
+<td>1 day</td>
+</tr>
+<tr>
+<td>SCORM repackage per language (locale flag in <code>imsmanifest.xml</code>)</td>
+<td>In-house designer</td>
+<td>2 days</td>
+</tr>
+<tr>
+<td>Sana enrollment routing by pod language</td>
+<td>LMS admin</td>
+<td>1 day</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total v2 timeline:</strong> 6 weeks per language from sign-off. Budget for v2: out of scope of original €58 K engagement; new budget cycle required.</p>
+<p><strong>Brand voice carve-out:</strong> the internal brand voice (peer-to-peer, anti-jargon, show-then-name per brief §18.2) is preserved in translation. Do not let the translator drift into L&amp;D-speak; the back-translation review is the check.</p>
+<hr />
+<h2 id="7-known-limitations-what-we-deliberately-scoped-out-the-v3-ask">7 · Known limitations · what we deliberately scoped out · the v3 ask</h2>
+<h3 id="limitations-we-knew-about-going-in">Limitations we knew about going in</h3>
+<ul>
+<li><strong>No audio narration in v1</strong> (brief §7, D-006). All instruction is text + transcript-based. Accessibility-wise we comply with WCAG 2.1 AA without audio, but v2 or v3 should revisit if budget allows for human-voice production.</li>
+<li><strong>L4 attribution is associative, not causal</strong> (D-008). The 25 % ramp compression target shares causality with lead quality (R.K. / CMO) and comp plan (J.V. / RevOps). The dashboard surfaces all three lines; the CRO conversation per brief §8 is honest about this.</li>
+<li><strong>EN-only v1.</strong> ES + DE deferred to v2 (brief §3, §9). I.C. ES Pod manager has been waiting for the rubric translation since cohort 1.</li>
+<li><strong>No mid-market / enterprise SDR.</strong> Brief §6 out-of-scope item; separate engagement in Q4 2026.</li>
+</ul>
+<h3 id="v3-ask-push-for-next-budget-cycle">v3 ask (push for next budget cycle)</h3>
+<ol>
+<li><strong>Audio narration layer</strong> — adds a Mayer-modality channel and unlocks reps who learn aurally. Budget estimate: €15K for human voice across 6 modules (English) + €10K per additional language.</li>
+<li><strong>xAPI-full LRS integration</strong> — Sana supports xAPI statements but not full LRS query (brief §16). Hooking into an external LRS (e.g. Veracity, Watershed) would enable behaviour-pattern analytics that the current L3 layer can only approximate.</li>
+<li><strong>Manager-coaching module</strong> — explicitly out of scope in v1 (brief §6) because the brief said "don't try to retrain managers" (K.M. §8). After 12 months of rubric data, the case for a structured manager-coaching layer will likely be made by the variance data itself. Push for it in v3.</li>
+<li><strong>Comp-plan feedback loop integration</strong> — comp-plan redesign is RevOps-owned (J.V., brief §17), but the training program could surface specific SPIF-chasing patterns from Outreach sequence data → feed J.V.'s redesign. Coordinate at v3 scoping.</li>
+<li><strong>Mid-market SDR program</strong> — separate engagement in brief §6, but the mini-OS shell + 4C/ID architecture are reusable. The biggest reuse leverage in the budget.</li>
+</ol>
+<hr />
+<h2 id="8-the-one-page-survival-map">8 · The one-page survival map</h2>
+<p>If the in-house designer reads only this section, they have what they need to keep the program running for 6 months:</p>
+<ol>
+<li><strong>Read</strong> <code>iteration-playbook.md</code>. Memorise the IF-THEN rules.</li>
+<li><strong>Check the dashboard weekly.</strong> L1 + L2 per module · L3 pod adherence + rubric variance · L4 trailing-4 ramp + retention.</li>
+<li><strong>When a rule fires:</strong> open <code>content-refresh-sprint-template.md</code> and run the 4-week sequence. Log decisions in <code>decisions-log.md</code>.</li>
+<li><strong>Every quarter:</strong> run the SME interview cadence (§4 above).</li>
+<li><strong>Every 6 months:</strong> Gong tag drift recalibration (§5 above).</li>
+<li><strong>If K.M. leaves:</strong> stop. Walk the successor through this file. Resume only after they co-sign the next decisions-log entry.</li>
+</ol>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §6 (scope) · §16 (tooling) · §18 (brand voice) · §19 (regulatory) · §20 (risks) · §21 (done-state) · §9, §10.7 (v2 asks).</li>
+<li><code>frameworks-applied.md</code> #1, #2, #6, #20 (ADDIE, 4C/ID, Action Mapping, job-aid theory).</li>
+<li><code>decisions-log.md</code> D-002 (4C/ID), D-005 (custom SCORM), D-006 (no audio), D-007 (mini-OS), D-008 (L4 attribution).</li>
+<li><code>master-plan.md</code> §6 (Phase-6 gate — runnable by in-house designer with no prior context).</li>
+<li><code>iteration-playbook.md</code> rules O-A, O-B (operational triggers).</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 06-iterate/handoff-pack.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

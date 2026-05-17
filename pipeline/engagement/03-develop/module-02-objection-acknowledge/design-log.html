@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Module 2 · design log — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: a single page of the choices baked into M2, the evidence
+traces behind each choice, the dry-run timing of the 10-minute budget, and the
+open issues for the next reviewer. Owned by M"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>03-develop\module-02-objection-acknowledge/design-log.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../../">← Portfolio</a>
+    <a class="btn" href="../../../">← Pipeline</a>
+    <a class="btn" href="../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="module-2-design-log">Module 2 · design log</h1>
+<blockquote>
+<p>Why this artefact: a single page of the choices baked into M2, the evidence
+traces behind each choice, the dry-run timing of the 10-minute budget, and the
+open issues for the next reviewer. Owned by Mario; reviewed by A.S. for
+behavioural fidelity and K.M. for cohort tolerance.</p>
+</blockquote>
+<h2 id="identifier">Identifier</h2>
+<ul>
+<li>SCORM identifier: <code>FTC.SDR.M2.objection-acknowledge.v1</code></li>
+<li>Storyboard: <code>02-design/module-storyboards/M2-objection-acknowledge.md</code></li>
+<li>Outcomes: T3 · LO-M2.1 · LO-M2.2 · LO-M2.3 (<code>02-design/learning-outcomes-abcd-bloom.md</code>)</li>
+<li>Shell: <code>03-develop/scorm-shell/</code> (D-005 custom SCORM, D-007 mini-OS)</li>
+</ul>
+<h2 id="file-map">File map</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+<th>Approx. lines</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>imsmanifest.xml</code></td>
+<td>SCORM 1.2 package manifest</td>
+<td>50</td>
+</tr>
+<tr>
+<td><code>index.html</code></td>
+<td>SCO entry · mounts shell DOM + <code>#m2-stage</code> panel</td>
+<td>55</td>
+</tr>
+<tr>
+<td><code>module.js</code></td>
+<td>Gagné timeline · 10 stages · event-log emissions</td>
+<td>450</td>
+</tr>
+<tr>
+<td><code>styles.css</code></td>
+<td>Overlay styles · objection-bank UI · debrief cards</td>
+<td>280</td>
+</tr>
+<tr>
+<td><code>data/transcripts.json</code></td>
+<td>GC-06 · GC-06b · GC-09 · GC-19</td>
+<td>65</td>
+</tr>
+<tr>
+<td><code>data/prospects.json</code></td>
+<td>Tom + secondary Sven</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>data/objection-bank.json</code></td>
+<td>5 archetype objections × ideal phrases + anti-patterns</td>
+<td>70</td>
+</tr>
+<tr>
+<td><code>data/quiz.json</code></td>
+<td>3 LO-evidenced items</td>
+<td>45</td>
+</tr>
+<tr>
+<td><code>design-log.md</code></td>
+<td>this file</td>
+<td>110</td>
+</tr>
+</tbody>
+</table>
+<h2 id="decisions">Decisions</h2>
+<h3 id="d-m201-two-worked-examples-not-one">D-M2.01 · Two worked examples, not one</h3>
+<p><strong>Choice.</strong> Show GC-06 (L.D. + Tom · Brex) <em>and</em> GC-06b (M.G. + Maria · Visa)
+back-to-back before the completion problem.</p>
+<p><strong>Why.</strong> Van Merriënboer's 4C/ID variability-of-demonstration principle:
+schema transfer is unreliable from a single exemplar. Pairing a competitor-
+displacement objection (Class 4 variant) with a bank-card objection (Class 3
+canonical) forces the rep to abstract the <em>acknowledge-then-ask</em> shape.</p>
+<p><strong>Evidence.</strong> Brief §10.1 (M.G. verbatim), §10.2 (L.D. verbatim), §11 GC-01 +
+GC-06 outcomes; Renkl &amp; Atkinson (2003).</p>
+<h3 id="d-m202-restate-scoring-by-word-overlap-not-by-exact-match">D-M2.02 · Restate scoring by word-overlap, not by exact match</h3>
+<p><strong>Choice.</strong> <code>restate_word_overlap</code> event fires the live count of buyer-noun
+tokens echoed in the rep's restate, plus a rebuttal-token detector.
+Threshold: ≥ 2 overlap + 0 rebuttal tokens = anchor 4 on M2 rubric.</p>
+<p><strong>Why.</strong> A typed-string-exact-match scorer would penalise valid synonyms and
+reward parroting. The rep cohort uses voice paraphrase; we score the
+<em>pattern</em> (re-uses buyer nouns; contains no "but/however/cheaper/lower"), not
+the spelling. Matches L3 rubric anchor 4–5 (<code>l3-call-rubric.md</code> row M2) without
+requiring NLP.</p>
+<p><strong>Stopword list + rebuttal-token list</strong> kept inline in <code>module.js</code> so cohort 1
+managers can tune without redeploying the shell.</p>
+<h3 id="d-m203-anti-pattern-toggle-not-anti-pattern-by-default">D-M2.03 · Anti-pattern toggle, not anti-pattern by default</h3>
+<p><strong>Choice.</strong> GC-19 P.B. contrast clip is hidden by default behind a "Show what
+NOT to do" toggle in the solo problem. Reps with anchor 4–5 can skip it; reps
+with anchor 1–3 self-select into it.</p>
+<p><strong>Why.</strong> Per <code>cognitive-load-analysis.md</code> extraneous-load rule + Sweller's
+worked-example effect: showing both the right and the wrong move
+simultaneously doubles the schema load. Failure-mode framing belongs <em>before</em>
+the worked example (trigger scenario, stage 1) and <em>as optional contrast</em>
+after the attempt — not in the middle.</p>
+<p><strong>Evidence.</strong> §10.4 P.B. — <em>"I argue. I know I'm not supposed to. I just
+don't have anything better loaded."</em> — quoted verbatim in the toggle and the
+debrief stage.</p>
+<h3 id="d-m204-solo-problem-is-random-across-5-families">D-M2.04 · Solo problem is random across 5 families</h3>
+<p><strong>Choice.</strong> Each solo attempt picks one of 5 objection families at random
+(<code>bank_visa</code>, <code>competitor_brex</code>, <code>accountant_friction</code>, <code>trust_fintech</code>,
+<code>comp_distraction</code>). Re-take attempts produce a different objection.</p>
+<p><strong>Why.</strong> Variability of practice + interleaving (Van Merriënboer 2018 ch. 7;
+Rohrer &amp; Taylor 2007). Blocked practice on one objection family overfits the
+rep to one verbatim restate.</p>
+<h3 id="d-m205-mini-os-apps-launched-gong-phone-dialler-slack">D-M2.05 · Mini-OS apps launched: Gong + Phone-dialler + Slack</h3>
+<p><strong>Choice.</strong> M2 boots three mini-OS apps. Outreach and LinkedIn/Companies House
+are intentionally omitted — pre-dial signal-scanning is M1's job.</p>
+<p><strong>Why.</strong> Mayer coherence: only show apps used in the scenario. Gong hosts the
+worked-example transcript; Phone-dialler hosts the live solo turn; Slack
+exposes the pinned 5-family objection-inventory job aid (Rossett &amp; Schafer
+2007).</p>
+<h2 id="evidence-sources">Evidence sources</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Worked example A (Tom/Brex)</td>
+<td>§10.2 L.D. verbatim · §11 GC-06 · §12.2 Tom archetype</td>
+</tr>
+<tr>
+<td>Worked example B (Maria/Visa)</td>
+<td>§10.1 M.G. verbatim · §12.1 Maria archetype</td>
+</tr>
+<tr>
+<td>Trigger failure clip</td>
+<td>§11 GC-09 H.K. (mid-band, argued)</td>
+</tr>
+<tr>
+<td>Anti-pattern contrast clip</td>
+<td>§11 GC-19 P.B. (bottom-quartile, argued on fees)</td>
+</tr>
+<tr>
+<td>Anti-pattern verbatim</td>
+<td>§10.4 P.B. "I argue. I know I'm not supposed to."</td>
+</tr>
+<tr>
+<td>Completion-problem options</td>
+<td>GC-06 (correct) · GC-19 (A) · GC-12 deflect (C) · §10.4 dismiss (D)</td>
+</tr>
+<tr>
+<td>Solo objection bank</td>
+<td>§12.1–§12.4 archetype top objections + §11 patterns</td>
+</tr>
+<tr>
+<td>LOs + ABCD/Bloom tagging</td>
+<td><code>02-design/learning-outcomes-abcd-bloom.md</code> §4.2</td>
+</tr>
+<tr>
+<td>Brand voice</td>
+<td>§18.2 peer-to-peer · §18.3 green <code>#00b67a</code> + Phosphor icons</td>
+</tr>
+<tr>
+<td>WCAG 2.1 AA</td>
+<td>brief §7 · <code>02-design/ux-design-system.md</code> §9</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dry-run-timing-mario-solo-walkthrough-no-a11y-reader">Dry-run timing (Mario, solo walkthrough, no a11y reader)</h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Budget</th>
+<th>Observed</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 · trigger (GC-09)</td>
+<td>0:30</td>
+<td>0:28</td>
+<td>within budget</td>
+</tr>
+<tr>
+<td>2 · outcome</td>
+<td>0:30</td>
+<td>0:18</td>
+<td>one-screen card</td>
+</tr>
+<tr>
+<td>3 · recall (M1)</td>
+<td>0:30</td>
+<td>0:22</td>
+<td></td>
+</tr>
+<tr>
+<td>4 · worked A (Brex)</td>
+<td>0:45</td>
+<td>0:48</td>
+<td>slight over · acceptable</td>
+</tr>
+<tr>
+<td>5 · worked B (Visa)</td>
+<td>0:45</td>
+<td>0:42</td>
+<td></td>
+</tr>
+<tr>
+<td>6 · completion (Tom)</td>
+<td>2:00</td>
+<td>1:35</td>
+<td>feedback re-reads add a few seconds for slower reps</td>
+</tr>
+<tr>
+<td>7 · solo (random)</td>
+<td>3:00</td>
+<td>2:48</td>
+<td>classify + type-restate combined</td>
+</tr>
+<tr>
+<td>8 · debrief</td>
+<td>1:00</td>
+<td>0:45</td>
+<td>self-score radio</td>
+</tr>
+<tr>
+<td>9 · quiz (3 items)</td>
+<td>0:30</td>
+<td>0:55</td>
+<td>over by 25 s · acceptable for first L2 attempt</td>
+</tr>
+<tr>
+<td>10 · retention card</td>
+<td>0:30</td>
+<td>0:20</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>10:00</strong></td>
+<td><strong>9:19</strong></td>
+<td>inside the brief §7 cohort tolerance</td>
+</tr>
+</tbody>
+</table>
+<p>NVDA pass adds an estimated +60–90 s for reps using a screen reader; still
+inside budget at ~ 10:30 worst case. To be confirmed in the Phase 3 a11y
+sweep against <code>03-develop/scorm-shell/a11y-audit.md</code>.</p>
+<h2 id="event-log-emissions-phase-5-analytics-surface">Event-log emissions (Phase 5 analytics surface)</h2>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>LO</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>module_started</code></td>
+<td>—</td>
+<td>boot</td>
+</tr>
+<tr>
+<td><code>worked_example_completed</code></td>
+<td>pacing</td>
+<td>stages 4 + 5</td>
+</tr>
+<tr>
+<td><code>objection_family_picked</code></td>
+<td>LO-M2.1</td>
+<td>solo stage classify</td>
+</tr>
+<tr>
+<td><code>restate_word_overlap</code></td>
+<td>LO-M2.2</td>
+<td>solo stage submit</td>
+</tr>
+<tr>
+<td><code>objection_restated</code></td>
+<td>LO-M2.2 (positive)</td>
+<td>completion + solo</td>
+</tr>
+<tr>
+<td><code>objection_argued</code></td>
+<td>LO-M2.2 (negative)</td>
+<td>completion + solo</td>
+</tr>
+<tr>
+<td><code>completion_problem_completed</code></td>
+<td>pacing</td>
+<td>stage 6</td>
+</tr>
+<tr>
+<td><code>solo_problem_completed</code></td>
+<td>pacing</td>
+<td>stage 7</td>
+</tr>
+<tr>
+<td><code>quiz_completed</code></td>
+<td>LO-M2.1/2/3</td>
+<td>stage 9</td>
+</tr>
+<tr>
+<td><code>module_completed</code></td>
+<td>All LOs · score</td>
+<td>retention card</td>
+</tr>
+</tbody>
+</table>
+<p>Persisted to <code>cmi.suspend_data</code> per <code>03-develop/scorm-shell/event-log-spec.md</code>
+§1. KPI summary updated on every <code>record()</code>.</p>
+<h2 id="accessibility-explicit-conformance-points">Accessibility — explicit conformance points</h2>
+<ul>
+<li>All interactive elements <code>role</code>-tagged · <code>aria-pressed</code> on family chooser ·
+  <code>aria-checked</code> on option radios · <code>aria-expanded</code> on anti-pattern toggle.</li>
+<li>Restate input has <code>aria-describedby</code> pointing at the overlap meter, which is
+  itself <code>aria-live="polite"</code>.</li>
+<li>Tab order: progress bar → heading → quote → family chooser → restate input →
+  overlap meter → anti-pattern toggle → submit. Matches narrative order.</li>
+<li>Reduced-motion media query disables transitions on <code>.m2-stage</code>, <code>.m2-option</code>,
+  <code>.btn</code>.</li>
+<li>Contrast: every token used is verified against <code>ux-design-system.md</code> §1
+  (text ≥ 4.5:1, non-text UI ≥ 3:1). Failure-mode tint <code>#fff5f4</code> is background
+  only; failure text uses <code>--ftc-danger-muted</code> <code>#b42318</code> (5.1:1 on white).</li>
+</ul>
+<h2 id="open-issues-next-reviewer">Open issues / next reviewer</h2>
+<ol>
+<li><strong>NVDA + JAWS sweep.</strong> Pending Phase 3 a11y audit. Suspect the
+   family-chooser <code>aria-pressed</code> toggle states need a discrete announcement.</li>
+<li><strong>Cohort 1 calibration of the rebuttal-token list.</strong> Five tokens may
+   under-detect "we'd actually" type rebuttals. Tune from cohort-1 Gong.</li>
+<li><strong>Random solo pick reproducibility.</strong> L3 rubric calibration needs the same
+   objection across reps; consider a manager-set <code>?seed=</code> query param so
+   pod-review sessions all hit the same objection.</li>
+<li><strong>DE-language variant.</strong> L.D.'s German-pod opener is in the §10.2 source;
+   currently English-only. Queued for v2 post-pilot (brief §3 · ES + DE).</li>
+<li><strong>Anti-pattern toggle adoption.</strong> Phase 5 should track open rate; if &lt; 20 %
+   of reps open it, surface it earlier (e.g. inside completion feedback).</li>
+</ol>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§5, 7, 10.1, 10.2, 10.4, 11 (GC-06, GC-09, GC-19), 12.1, 12.2, 12.3,
+  12.4, 18.2, 18.3.</li>
+<li><code>02-design/module-storyboards/M2-objection-acknowledge.md</code>.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code> §4.2 (LO-M2.1/2/3).</li>
+<li><code>02-design/ux-design-system.md</code> §§1, 2, 5, 6, 8, 9.</li>
+<li><code>03-develop/scorm-shell/README.md</code>, <code>event-log-spec.md</code>, <code>a11y-audit.md</code>.</li>
+<li>Decisions: D-005 (custom SCORM), D-006 (no audio), D-007 (mini-OS).</li>
+<li>Frameworks: Gagné (1985), Merrill (2002), Renkl &amp; Atkinson (2003), Mayer
+  (2014), Sweller, Ayres &amp; Kalyuga (2011), Van Merriënboer &amp; Kirschner (2018),
+  Rohrer &amp; Taylor (2007), CAST (2018), W3C WCAG 2.1.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 03-develop\module-02-objection-acknowledge/design-log.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

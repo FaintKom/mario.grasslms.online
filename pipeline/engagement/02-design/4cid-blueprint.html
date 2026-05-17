@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>4C/ID blueprint · whole-task curriculum architecture — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Full whole-task blueprint per Van Merriënboer &amp; Kirschner (2018) Ten Steps to Complex Learning (3rd ed.). Operationalises D-002 — the curriculum spine is 4C/ID, not topic-by-top"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>02-design/4cid-blueprint.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Full whole-task blueprint per Van Merriënboer &amp; Kirschner (2018) <em>Ten Steps to Complex Learning</em> (3rd ed.). Operationalises <code>D-002</code> — the curriculum spine is 4C/ID, not topic-by-topic. Inherits the six task classes from <code>01-analyze/task-inventory.md</code> §2 and the supportive / procedural / part-task component lists from §§3–6. Sequences the modules so configural M1+M2+M3 mastery emerges across Classes 1→6 with deliberate variability of practice.</p>
+</blockquote>
+<h1 id="4cid-blueprint-whole-task-curriculum-architecture">4C/ID blueprint · whole-task curriculum architecture</h1>
+<h2 id="1-whole-task-definition">1 · Whole-task definition</h2>
+<p>Verbatim from <code>01-analyze/task-inventory.md</code> §1:</p>
+<blockquote>
+<p><strong>Conduct a 60-second-opener-to-calendar-close cold call against an ICP buyer.</strong></p>
+<p>Operationally: from the moment the rep clicks "dial" in Outreach to the moment a calendar invite for a next-step meeting is sent and accepted, against a buyer matching one of the four ICP archetypes in brief §12.</p>
+</blockquote>
+<p>The whole task is <strong>configural</strong> (per brief §9 A.S.: <em>"Top reps sound nothing alike. They don't follow a script. But those three moves are always there."</em>). 4C/ID is the only framework in <code>frameworks-applied.md</code> that prescribes a curriculum architecture for configural mastery — <code>D-002</code> is the binding decision.</p>
+<hr />
+<h2 id="2-the-four-components-design-summary">2 · The four components · design summary</h2>
+<p>Van Merriënboer &amp; Kirschner (2018) prescribe four components for any complex-skill program. This blueprint maps each onto the FinTechCard build:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Definition</th>
+<th>Where it lives in this program</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>(1) Learning tasks</strong></td>
+<td>Whole-task experiences sequenced simple → complex across <em>task classes</em>. Variability inside each class.</td>
+<td>The six 4C/ID task classes from <code>task-inventory.md</code> §2 → six modules. The solo-problem block of each module = the whole-task instance for that class.</td>
+</tr>
+<tr>
+<td><strong>(2) Supportive information</strong></td>
+<td>Mental models / strategies the learner activates to handle non-routine aspects of the task.</td>
+<td>The 3-move model, ICP archetype model, 4-prop model, regulatory deflection table, brand-voice rules (§18.1). Delivered before / alongside learning tasks; referenced not memorised.</td>
+</tr>
+<tr>
+<td><strong>(3) Procedural information</strong></td>
+<td>Just-in-time how-tos for routine sub-skills (tool operations).</td>
+<td>Delivered as mini-OS coach-marks (<code>D-007</code>) at point-of-use: Outreach dial → Salesforce log → Gong tag review → Calendar second-tab → LinkedIn scan.</td>
+</tr>
+<tr>
+<td><strong>(4) Part-task practice</strong></td>
+<td>Repetitive drill on automatable sub-skills until they free working memory for the configural task.</td>
+<td>The six D1–D6 drills from <code>task-inventory.md</code> §6. Each module hosts its drill in the part-task block (≤ 5 min).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-task-class-progression-6-classes-6-modules">3 · Task-class progression · 6 classes → 6 modules</h2>
+<p>Per Van Merriënboer &amp; Kirschner (2018) Ch. 4, task classes ladder from simplest meaningful whole task to most complex, with explicit scaffolding fade. Variability inside each class is mandatory (Ch. 5).</p>
+<h3 id="31-class-by-class-spec">3.1 · Class-by-class spec</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Class</th>
+<th>Module</th>
+<th>Cognitive demand</th>
+<th>Scaffolding fade plan</th>
+<th>Variability axis (which §12 archetypes)</th>
+<th>Keystone moves practised (configural)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>Warm inbound — buyer already interested</td>
+<td>(scaffold inside M3)</td>
+<td>Lowest. E1+E2+E5 (3 elements per <code>cognitive-load-analysis.md</code> §8). Rep practises M1+M2+M3 structure without rejection load.</td>
+<td>Worked example (full) → completion (close-line redacted) → solo (mini-OS)</td>
+<td>Maria (low-friction); used as a <em>Class 1 ramp</em> inside M3's worked-example slice — not its own module</td>
+<td>M1 (light) + M3 (full)</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>Cold outbound to receptive buyer</td>
+<td>M1</td>
+<td>5 elements. Diagnostic creation is the new load.</td>
+<td>Worked example → completion → solo</td>
+<td>Maria (retail) + Tom (Series-B founder) — UK behavioural vs DE quant axis per §10.1 / §10.2</td>
+<td>M1 (full) + M3 (light)</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>Cold outbound to hostile buyer</td>
+<td>M2</td>
+<td>6 elements; objection inventory adds E6.</td>
+<td>Worked example × 2 (UK Visa + DE Brex) → completion → solo</td>
+<td>Maria ("Visa") + Tom ("Brex") + Emma ("accountant friction")</td>
+<td>M1 + <strong>M2 (full)</strong> + M3</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>Competitive displacement (Brex named)</td>
+<td>(integrated in M2 + M4)</td>
+<td>7 elements; competitive frame E9 adds.</td>
+<td>Worked example (L.D. GC-06) → completion → solo</td>
+<td>Tom + (extended) Lukas trust variant</td>
+<td>M1 + M2 (Brex variant) + M3</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>Multi-stakeholder</td>
+<td>M5</td>
+<td>7 elements; second voice E10.</td>
+<td>Worked example (Emma + accountant) → completion → solo (founder + finance)</td>
+<td>Emma + Tom-dual-voice variant</td>
+<td>M1 ×2 + M2 + M3 + Prop mapping</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td>Regulatory-question deflection</td>
+<td>M6</td>
+<td>7 elements; reg overhead E7 + job-aid lookup.</td>
+<td>Worked example × 5 acronyms (§19 row-per-row) → completion → solo (5 calls, 2 distractors)</td>
+<td>Lukas (lead) + all 4 archetypes asking reg questions</td>
+<td>M1 + M2 (reg-as-objection) + M3 + Reg deflection</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-scaffolding-fade-across-modules">3.2 · Scaffolding fade (across modules)</h3>
+<p>4C/ID's fade is not within-module-only; it's <em>across</em> the program too. The rep gets more scaffolding in M1 (their first whole-task experience) and less in M6 (their last):</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Worked-example detail</th>
+<th>Completion redact size</th>
+<th>Solo problem variability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1</td>
+<td>Full transcript + annotation + Mayer signalling on every M-move</td>
+<td>Single move redacted (M1 only)</td>
+<td>One new archetype, same task class</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>Two worked examples (UK + DE) + annotation</td>
+<td>M2-only redaction</td>
+<td>Same archetype, hostile variant</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>Worked example side-by-side with mini-OS Calendar</td>
+<td>Close-line redacted</td>
+<td>Mini-OS habit-instrumented (Calendar must open pre-dial)</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>Four mini worked examples (one per archetype)</td>
+<td>Archetype-match redacted</td>
+<td>Three interleaved calls, full M1+M2+M3</td>
+</tr>
+<tr>
+<td>M5</td>
+<td>One worked example, multi-voice</td>
+<td>Prop-pick redacted</td>
+<td>Multi-stakeholder, both voices arrive</td>
+</tr>
+<tr>
+<td>M6</td>
+<td>Five mini examples (one per acronym)</td>
+<td>Deflection-row redacted</td>
+<td>Five calls, 2 distractors + 1 escalate case</td>
+</tr>
+</tbody>
+</table>
+<p>Per Kalyuga's expertise reversal effect (Kalyuga 2007, <code>frameworks-applied.md</code> §8), top-decile reps (M.G., L.D. profile) need <em>less</em> worked-example. The Phase 6 iteration playbook surfaces adaptive sequencing (<code>06-iterate/iteration-playbook.md</code>); v1 ships a single track because cohort sizes (10–15) don't power per-rep adaptation.</p>
+<h3 id="33-variability-of-practice-module-by-module">3.3 · Variability of practice — module-by-module</h3>
+<p>Per Van Merriënboer (2018) Ch. 5, practice items within a class must vary on the dimensions that drive <em>schema generalisation</em>. Blocked practice (all Maria then all Tom) is rejected; interleaving is mandatory.</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Variability dimension</th>
+<th>Source of variance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1</td>
+<td>UK behavioural-anchored vs DE quant-anchored diagnostic</td>
+<td>§10.1 vs §10.2 — explicit cultural-frame split</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>5 objection families</td>
+<td>§10 + §12 spread: "we already have", fees, accountant friction, trust, Brex</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>Warm vs cold close stems</td>
+<td>§11 close patterns: GC-01 (warm-ish) vs GC-15/16 (cold receptive)</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>4 §12 archetypes, interleaved</td>
+<td>Maria / Tom / Emma / Lukas — interleaved not blocked</td>
+</tr>
+<tr>
+<td>M5</td>
+<td>Founder+finance vs owner+accountant pairing</td>
+<td>§12.2 Tom + analyst vs §12.3 Emma + accountant</td>
+</tr>
+<tr>
+<td>M6</td>
+<td>5 §19 acronyms × 4 archetypes</td>
+<td>KYC / AML / SCA / PSD2 / GDPR × Maria / Tom / Emma / Lukas, with explicit "do not deflect" distractors</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-supportive-information-per-class">4 · Supportive information per class</h2>
+<p>Supportive info = the <em>frameworks</em> the rep references on non-routine aspects (Van Merriënboer &amp; Kirschner 2018 Ch. 8). It is delivered before / alongside the learning task, <em>not</em> memorised — it lives in the rep's referenceable workspace.</p>
+<table>
+<thead>
+<tr>
+<th>Mental model</th>
+<th>Delivered in</th>
+<th>Reference location post-launch</th>
+<th>Phase 1 source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>3-move model (M1/M2/M3)</strong></td>
+<td>M1 introduction; reinforced every module</td>
+<td>Mini-OS pinned Slack channel + rep desktop 1-pager</td>
+<td>brief §9 A.S.; §11 aggregate</td>
+</tr>
+<tr>
+<td><strong>ICP archetype model (Maria/Tom/Emma/Lukas)</strong></td>
+<td>Pre-training card (<code>curriculum-blueprint.md</code> §5) + M4 deep dive</td>
+<td>Mini-OS sidebar widget; pre-dial preview</td>
+<td>§12.1–§12.4</td>
+</tr>
+<tr>
+<td><strong>4-prop model (Spend control / Multi-user / Auto-FX / Receipt-sync)</strong></td>
+<td>M5 introduction; referenced in M1 + M4</td>
+<td>Mini-OS sidebar widget</td>
+<td>§13.1</td>
+</tr>
+<tr>
+<td><strong>Regulatory deflection table (5 rows × buyer Q × rep response)</strong></td>
+<td>M6 entire module</td>
+<td>Mini-OS pinned Slack channel + 1-page job aid on desktop</td>
+<td>§19</td>
+</tr>
+<tr>
+<td><strong>Brand-voice rules (transparent · anti-jargon · specific · concedes weakness)</strong></td>
+<td>Every worked-example transcript demonstrates the rules; named in M5 LO-PP.2</td>
+<td>Worked-example annotations</td>
+<td>§18.1</td>
+</tr>
+<tr>
+<td><strong>Strategy: which prop against which objection</strong></td>
+<td>M5 decision card</td>
+<td>Job aid</td>
+<td>M.G. §10.1 ("the framing of when to use which prop against which objection")</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mayer pre-training principle.</strong> The 3-move model + ICP archetype card are delivered <em>before</em> M1 fires so the rep enters M1 with the supporting schemas already cued. Reduces extraneous load in the first whole-task encounter.</p>
+<hr />
+<h2 id="5-procedural-information">5 · Procedural information</h2>
+<p>Procedural info = the <em>how</em> of tooling, delivered just-in-time inside the workflow (Van Merriënboer &amp; Kirschner 2018 Ch. 9). The §14 audit verdict — <em>"Tools learned in isolation, not in workflow"</em> — is the direct trigger for <code>D-007</code> (mini-OS) and this section.</p>
+<p>All procedural info lives inside the mini-OS as coach-marks or context-sensitive sidebars. No standalone tooling module.</p>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Trigger</th>
+<th>Where delivered</th>
+<th>Module that introduces it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Outreach dial sequence (queue · dial · log call disposition)</td>
+<td>First time rep enters mini-OS Outreach app</td>
+<td>Coach-mark overlay on the Outreach window</td>
+<td>M1 pre-dial workflow</td>
+</tr>
+<tr>
+<td>Salesforce next-step logging (<code>Next_Step_Booked__c = TRUE</code>)</td>
+<td>After first successful calendar-close attempt</td>
+<td>Coach-mark on Salesforce record window</td>
+<td>M3</td>
+</tr>
+<tr>
+<td>Gong post-call self-tag review</td>
+<td>After Module 1 solo-problem call completes</td>
+<td>Coach-mark in mini-OS Gong app</td>
+<td>M1 closing screen</td>
+</tr>
+<tr>
+<td>LinkedIn / Companies House 90-second signal scan</td>
+<td>Pre-call workflow, every cold module</td>
+<td>Coach-mark + 1-page job aid</td>
+<td>M1 + M2 + M4</td>
+</tr>
+<tr>
+<td>Calendar-in-second-tab habit</td>
+<td>M3 part-task block + every cold module afterwards</td>
+<td>Mini-OS Calendar app + event-log instrumentation</td>
+<td>M3</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-part-task-practice">6 · Part-task practice</h2>
+<p>Part-task drills (Van Merriënboer &amp; Kirschner 2018 Ch. 10) automate sub-skills until they free working memory for the whole task. Each drill ≤ 5 minutes per module per <code>task-inventory.md</code> §6 (within the ≤ 10-min cohort budget — <code>cognitive-load-analysis.md</code> §7).</p>
+<table>
+<thead>
+<tr>
+<th>Drill</th>
+<th>Sub-skill automated</th>
+<th>Cadence (when in week)</th>
+<th>Timing</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>D1 · Diagnostic-question reframing</strong></td>
+<td>LinkedIn snippet → ≤ 15-word diagnostic</td>
+<td>Once during M1 part-task block (first half of W1)</td>
+<td>5 min · 10 cards</td>
+<td>M1</td>
+</tr>
+<tr>
+<td><strong>D2 · Objection one-question reframe</strong></td>
+<td>10 objection phrasings → buyer-back restatements</td>
+<td>M2 part-task block (W2)</td>
+<td>5 min · 10 cards</td>
+<td>M2</td>
+</tr>
+<tr>
+<td><strong>D3 · Calendar-time stating</strong></td>
+<td>Speak two slots in one sentence (no read-out)</td>
+<td>M3 part-task block (W3)</td>
+<td>3 min · drill against transcript</td>
+<td>M3</td>
+</tr>
+<tr>
+<td><strong>D4 · ICP archetype identification</strong></td>
+<td>Signal-set → Maria/Tom/Emma/Lukas in &lt; 5 s</td>
+<td>M4 part-task block (W4)</td>
+<td>4 min · 20 cards</td>
+<td>M4</td>
+</tr>
+<tr>
+<td><strong>D5 · Prop-to-objection mapping</strong></td>
+<td>Objection card → prop + framing</td>
+<td>M5 part-task block (W5)</td>
+<td>5 min · 15 cards</td>
+<td>M5</td>
+</tr>
+<tr>
+<td><strong>D6 · Regulatory deflection one-liner</strong></td>
+<td>KYC/AML/SCA/PSD2/GDPR question → §19 verbatim</td>
+<td>M6 part-task block (W6)</td>
+<td>4 min · 5 cards</td>
+<td>M6</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Drill scoring rule.</strong> ≥ 95 % completion on first attempt qualifies as automated. Below 95 % triggers re-drill after the +7-day spaced-retrieval mini-quiz; the spaced quiz already targets the same outcomes so the re-drill amplifies retrieval-mode practice.</p>
+<p><strong>Drill placement inside the 10-min module.</strong> The drill runs <em>inside</em> the module's "Apply" slice — not as a separate session. Per <code>cognitive-load-analysis.md</code> §7 the slice plan is: ≈ 1 min activate + 3 min worked example + 2 min completion + 3 min solo. The drill substitutes for the completion-+-solo combination on drill-heavy modules (M4, M5, M6 where the card decks are larger).</p>
+<hr />
+<h2 id="7-configural-mapping-task-class-module-keystone-moves">7 · Configural mapping · task class → module → keystone moves</h2>
+<p>This is the explicit table the brief asks for: which Phase 1 task class drives which module, and which keystone moves the rep is practising (configural — multiple at once, not isolated).</p>
+<table>
+<thead>
+<tr>
+<th>Task class</th>
+<th>Module</th>
+<th style="text-align: center;">M1 practised?</th>
+<th style="text-align: center;">M2 practised?</th>
+<th style="text-align: center;">M3 practised?</th>
+<th>Additional moves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Class 1 — Warm inbound (scaffold)</td>
+<td>inside M3 demonstrate</td>
+<td style="text-align: center;">✓ (light)</td>
+<td style="text-align: center;">(n/a — no objection)</td>
+<td style="text-align: center;">✓ (full)</td>
+<td>Calendar habit</td>
+</tr>
+<tr>
+<td>Class 2 — Cold receptive</td>
+<td>M1</td>
+<td style="text-align: center;">✓ (full)</td>
+<td style="text-align: center;">(n/a)</td>
+<td style="text-align: center;">✓ (light)</td>
+<td>Signal extraction · diagnostic phrasing · 5-s silence</td>
+</tr>
+<tr>
+<td>Class 3 — Cold hostile</td>
+<td>M2</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓ (full)</td>
+<td style="text-align: center;">✓</td>
+<td>Objection classify + restate + surface</td>
+</tr>
+<tr>
+<td>Class 4 — Competitive displacement</td>
+<td>distributed in M2 + M4</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓ (Brex variant)</td>
+<td style="text-align: center;">✓</td>
+<td>Additive-not-replacement frame</td>
+</tr>
+<tr>
+<td>Class 5 — Multi-stakeholder</td>
+<td>M5</td>
+<td style="text-align: center;">✓×2 (one per stakeholder)</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓ (multi-invitee)</td>
+<td>Pain→prop mapping · dual diagnostic</td>
+</tr>
+<tr>
+<td>Class 6 — Regulatory deflection</td>
+<td>M6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓ (reg-as-obj)</td>
+<td style="text-align: center;">✓</td>
+<td>§19 verbatim deflection + escalate decision</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reading the table.</strong> Every module practises <em>at least two</em> keystone moves simultaneously; Modules 4 + 5 + 6 practise all three plus the module's additional move. This is the operational definition of configural mastery (per <code>D-002</code>).</p>
+<hr />
+<h2 id="8-how-the-modules-also-serve-part-skill-whole-skill-blend">8 · How the modules also serve part-skill / whole-skill blend</h2>
+<p>Per Van Merriënboer (2018) Ch. 3, the 4C/ID instructor must decide for each task class: <em>whole-skill from the start</em> or <em>part-skill on the way to whole-skill</em>?</p>
+<p>Decision per class:</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Decision</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Class 1</td>
+<td>Whole-skill (scaffolded)</td>
+<td>Low element count; whole is feasible</td>
+</tr>
+<tr>
+<td>Class 2</td>
+<td>Whole-skill from the start</td>
+<td>M1 module IS the whole-task experience; M3 is "light" but present</td>
+</tr>
+<tr>
+<td>Class 3</td>
+<td>Whole-skill, M2 emphasised</td>
+<td>M1 already automated from M1 module; the rep practises the whole call but M2 is the only un-automated move</td>
+</tr>
+<tr>
+<td>Class 4</td>
+<td>Part-skill (objection variant within M2; competitive frame in M4)</td>
+<td>The competitive frame is a <em>variant</em> of M2, not a new whole skill</td>
+</tr>
+<tr>
+<td>Class 5</td>
+<td>Whole-skill with high element-interactivity prerequisite</td>
+<td>Gated behind Classes 2 + 3 completion (<code>cognitive-load-analysis.md</code> §8)</td>
+</tr>
+<tr>
+<td>Class 6</td>
+<td>Whole-skill, reg-deflection on top of automated M1+M2+M3</td>
+<td>The §19 deflection move slots into the existing whole-task structure</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-what-this-blueprint-sends-downstream">9 · What this blueprint sends downstream</h2>
+<table>
+<thead>
+<tr>
+<th>Sends</th>
+<th>To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Module-by-module task-class assignment + scaffolding fade plan</td>
+<td><code>02-design/module-storyboards/*.md</code></td>
+</tr>
+<tr>
+<td>Supportive-info delivery plan</td>
+<td><code>02-design/ux-design-system.md</code> (sidebar widget design) + pre-training cards</td>
+</tr>
+<tr>
+<td>Procedural-info coach-mark inventory</td>
+<td><code>03-develop/scorm-shell/</code> (Phase 3 build spec)</td>
+</tr>
+<tr>
+<td>Part-task drill scripts (D1–D6)</td>
+<td><code>02-design/module-storyboards/*.md</code> part-task block + <code>03-develop/scorm-shell/</code></td>
+</tr>
+<tr>
+<td>Variability axes for each module</td>
+<td><code>03-develop/</code> content-authoring guide</td>
+</tr>
+<tr>
+<td>Configural-mapping table (§7 above)</td>
+<td><code>02-design/assessment-design.md</code> outcome-to-item trace</td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§5, 7, 9, 10.1, 10.2, 11, 12, 13.1, 14, 18.1, 19.</li>
+<li>Van Merriënboer, J. J. G. (1997). <em>Training complex cognitive skills.</em> Educational Technology.</li>
+<li>Van Merriënboer, J. J. G., &amp; Kirschner, P. A. (2018). <em>Ten steps to complex learning</em> (3rd ed.). Routledge — Chs. 3 (sequence), 4 (task classes), 5 (variability), 8 (supportive info), 9 (procedural info), 10 (part-task).</li>
+<li>Kalyuga, S. (2007). "Expertise reversal effect and its implications for learner-tailored instruction." <em>Educational Psychology Review</em>, 19(4), 509–539.</li>
+<li>Sweller, J., Ayres, P., &amp; Kalyuga, S. (2011). <em>Cognitive load theory.</em></li>
+<li>Rossett, A., &amp; Schafer, L. (2007). <em>Job aids and performance support.</em></li>
+<li><code>01-analyze/task-inventory.md</code>, <code>01-analyze/cognitive-load-analysis.md</code>, <code>01-analyze/learner-personas.md</code>.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code>, <code>02-design/curriculum-blueprint.md</code>.</li>
+<li>Decisions <code>D-002</code>, <code>D-005</code>, <code>D-006</code>, <code>D-007</code>.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 02-design/4cid-blueprint.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

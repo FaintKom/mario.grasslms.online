@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Module 6 · Regulatory Deflection — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Storyboard for Module 6 — Regulatory Deflection — the job-aid-in-use module. Inherits _template.md. Operationalises 4C/ID Task Class 6 from 01-analyze/task-inventory.md §2. The §19 "/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>02-design\module-storyboards/M6-regulatory-deflection.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../../">← Portfolio</a>
+    <a class="btn" href="../../../">← Pipeline</a>
+    <a class="btn" href="../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Storyboard for Module 6 — Regulatory Deflection — the <em>job-aid-in-use</em> module. Inherits <code>_template.md</code>. Operationalises 4C/ID Task Class 6 from <code>01-analyze/task-inventory.md</code> §2. The §19 deflection table is productionised as a 1-page desktop job aid (Rossett &amp; Schafer 2007 per <code>frameworks-applied.md</code> §20) — the module trains the rep to <em>use</em> the aid, not memorise it. Threshold concept <em>"Deflect to proof, never invent."</em></p>
+<p><strong>Evidence note (per <code>critic-log.md</code> Phase 1 Pass 1 issue (c)).</strong> Task Class 6 is derived from brief §19 (the regulatory deflection table — KYC / AML / SCA / PSD2 / GDPR with rep responses) + §12.4 (Lukas — German hospitality, low-trust on fintechs, who explicitly raises the trust + bank-segregation question per §12.4 closing move). No §11 Gong call contains regulatory-deflection content. <strong>Phase 5 cohort-1 Gong validation hook:</strong> A.S. + M.B. weekly Gong sample, weeks 5–8 post-cohort-1 launch, generates the base-rate corpus for the frequency and distribution of buyer regulatory questions. If buyer reg questions cover &lt; 80 % of the §19 5-row table, the v2 backlog extends the table; if a 4th rubric row for "deflect-vs-escalate" decision quality is justified by the corpus, it is added in Phase 6 (current <code>D-004</code> constraint = 3 rows; revisited at Phase 6 per critic discipline). Storyboard <code>D</code> criterion is re-validated against that corpus.</p>
+</blockquote>
+<h1 id="module-6-regulatory-deflection">Module 6 · Regulatory Deflection</h1>
+<h2 id="storyboard-header">Storyboard header</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Module ID</td>
+<td>M6</td>
+</tr>
+<tr>
+<td>Terminal outcome</td>
+<td><strong>T7</strong> — SDR responds to any KYC / AML / SCA / PSD2 / GDPR question with one sentence from the §19 deflection table verbatim, without inventing; correctly distinguishes answer-here vs escalate-to-Compliance on ≤ 1 incorrect call out of 5.</td>
+</tr>
+<tr>
+<td>Enabling outcomes</td>
+<td><strong>LO-REG.1</strong> Match buyer Q to §19 row ≤ 3 s · <strong>LO-REG.2</strong> Deliver §19 verbatim + escalate decision</td>
+</tr>
+<tr>
+<td>Task class</td>
+<td>Class 6 — Regulatory-question deflection (<code>task-inventory.md</code> §2)</td>
+</tr>
+<tr>
+<td>Time budget</td>
+<td>10:00 (brief §7)</td>
+</tr>
+<tr>
+<td>Mini-OS apps used</td>
+<td>LinkedIn / Companies House · Outreach · Phone-dialler · Calendar · Salesforce · Gong · <strong>Slack (§19 job aid forced visible)</strong></td>
+</tr>
+<tr>
+<td>Pre-requisite outcomes</td>
+<td>All prior modules (T2 + T3 + T4 + T5 + T6) — reg-deflection is <em>additive</em> to the keystone, never a replacement</td>
+</tr>
+<tr>
+<td>Spaced-retrieval drop</td>
+<td>+7 days on LO-REG.1 + LO-REG.2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gagne-event-timeline-seconds-level-pacing">Gagné event timeline · seconds-level pacing</h2>
+<h3 id="000030-gain-attention-trigger-scenario">0:00–0:30 · Gain attention · trigger scenario</h3>
+<p><strong>Screen.</strong> Lukas-style call (§12.4 verbatim):</p>
+<blockquote>
+<p><strong>Lukas:</strong> <em>I don't trust new fintechs with my money. What happens to my money if you go under?</em></p>
+</blockquote>
+<p>Caption (muted red): <em>"You have three seconds. Pitch your way out of this and you lose the call. Defer to the regulator page and you keep it."</em></p>
+<h3 id="030100-state-outcome">0:30–1:00 · State outcome</h3>
+<blockquote>
+<p><strong>By the end of these 10 minutes you respond to any regulatory question with one sentence from a single sheet on your desktop — and you know when to escalate.</strong></p>
+</blockquote>
+<p>Brand-voice peer line (§18.1 + §19 honest carve-out): <em>"Sales reps don't sell against regulation; we defer to it. The sheet does the heavy lifting — your job is to know which row to point at."</em></p>
+<h3 id="100130-recall-prior">1:00–1:30 · Recall prior</h3>
+<p>"All the moves are locked. This is the move <em>on top of</em> the moves. Reg questions are not objections — don't try to acknowledge-and-restate. They're proof requests. The proof is on the sheet."</p>
+<h3 id="130300-present-stimulus-guide-five-micro-worked-examples-19-row-per-row">1:30–3:00 · Present stimulus + guide · five micro worked examples (§19 row-per-row)</h3>
+<p><strong>Screen.</strong> Mini-OS Slack pinned-channel window forced open showing the 1-page job aid (the §19 table productionised). Each row shows: acronym · what it actually means · rep's response · "where in cohort" (per §19 column 4 — used for Module 6 anchor).</p>
+<table>
+<thead>
+<tr>
+<th>Row</th>
+<th>Buyer Q (synthetic, anchored to archetypes)</th>
+<th>Rep response (§19 verbatim)</th>
+<th>Module 6 anchor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>KYC</strong></td>
+<td>Maria: <em>"How long does signup take? My bookkeeper hates paperwork."</em></td>
+<td><em>"We run KYC at signup. Takes 10 minutes for the owner. We've done it for 12 000+ businesses; the process is smoother than your bank's."</em> (§19)</td>
+<td>LO-REG.1 + LO-REG.2</td>
+</tr>
+<tr>
+<td><strong>AML</strong></td>
+<td>Tom: <em>"What about transaction monitoring — do you flag stuff?"</em></td>
+<td><em>"Every transaction is monitored. You will not see this as a customer unless something gets flagged, which is rare and we walk you through it."</em> (§19)</td>
+<td>LO-REG.1 + LO-REG.2</td>
+</tr>
+<tr>
+<td><strong>SCA</strong></td>
+<td>Emma: <em>"Will my employees have to do 2FA on every coffee?"</em></td>
+<td><em>"Every card transaction over €30 triggers SCA. Your team will see a push to approve. Takes 2 seconds."</em> (§19)</td>
+<td>LO-REG.1 + LO-REG.2</td>
+</tr>
+<tr>
+<td><strong>PSD2</strong></td>
+<td>(rare ask, Tom) <em>"Are you PSD2 compliant?"</em></td>
+<td><em>"We're PSD2-compliant. The short version: it's the regulation that lets us be additive to your bank, not a replacement."</em> (§19)</td>
+<td>LO-REG.1 + LO-REG.2</td>
+</tr>
+<tr>
+<td><strong>GDPR</strong></td>
+<td>Lukas: <em>"Where does my company data live? Can I see your DPA?"</em></td>
+<td><em>"Your card data lives in the EU. We don't sell it. We don't share it. Here's our DPA — happy to send it over."</em> (§19)</td>
+<td>LO-REG.1 + LO-REG.2</td>
+</tr>
+</tbody>
+</table>
+<p>Below the table: a sixth row in muted style — <em>"If the buyer goes deeper than these five rows: defer to compliance. The honest carve-out (§19) is not a weakness; it's the trust move."</em> This is the LO-REG.2 escalate-vs-answer threshold.</p>
+<p><strong>Mayer signalling.</strong> Each row's response is highlighted in primary green when the rep mouses / focuses on the buyer question. <strong>Spatial contiguity</strong> — buyer question and rep response sit side-by-side per row.</p>
+<h3 id="300500-elicit-performance-d6-drill-part-task-replaces-completion">3:00–5:00 · Elicit performance · D6 drill (part-task replaces completion)</h3>
+<p><strong>Drill D6 — Regulatory deflection one-liner.</strong> 5 cards, one per acronym. Each card: a buyer's reg question. Rep must select the correct §19 row in ≤ 3 s, then speak/type the §19 verbatim response. Mini-OS event log captures <code>row_pick_time_ms</code> + <code>verbatim_match_score</code> (token overlap with §19 text).</p>
+<p><strong>Pass criterion.</strong> ≥ 95 % on 5 cards (<code>task-inventory.md</code> §6). Below 95 % triggers re-drill after +7-day mini-quiz.</p>
+<h3 id="500800-elicit-performance-solo-problem-5-calls-with-distractors-escalate">5:00–8:00 · Elicit performance · solo problem (5 calls with distractors + escalate)</h3>
+<p><strong>The 5-call composition.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Buyer</th>
+<th>Buyer's mid-call question</th>
+<th>Correct rep move</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Maria (§12.1)</td>
+<td>"How fast is signup?"</td>
+<td>KYC row — <em>deflect and answer</em></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tom (§12.2)</td>
+<td>"What's your AWS bill / What's your spend visibility?"</td>
+<td><strong>DISTRACTOR — not a reg question.</strong> Correct: continue M1+M2+M3 normally, do <em>not</em> deflect.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Emma (§12.3)</td>
+<td>"Will my accountant see every transaction?"</td>
+<td><strong>DISTRACTOR — not a reg question</strong> (it's a product question). Correct: Prop 4 framing from Module 5, no deflection.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Lukas (§12.4)</td>
+<td>"What happens to my money if you go under?"</td>
+<td>Combined KYC + bank-segregation — deflect with bank-tier-1 + regulator page line (per §12.4 closing move + §13.4 + §19 KYC row composite)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Tom (§12.2)</td>
+<td>"How do you handle data subject access requests when ex-employees ask for their card history?"</td>
+<td><strong>ESCALATE.</strong> This goes beyond the §19 GDPR row. Correct: <em>"That's a deeper GDPR question than I should answer on the fly — let me get our compliance team on the next call. I'll put it on the calendar."</em> (Per §19 honest carve-out.)</td>
+</tr>
+</tbody>
+</table>
+<p>The two distractors (calls 2 + 3) force the rep to <em>not</em> over-apply the deflection move. The escalate case (call 5) forces LO-REG.2 evaluation.</p>
+<p><strong>Mini-OS event log per call.</strong> <code>is_reg_question_true_or_distractor</code>, <code>row_picked</code>, <code>response_token_overlap_with_§19</code>, <code>escalate_decision</code>, <code>calendar_invite_for_escalate_sent</code>.</p>
+<p><strong>Success criteria.</strong>
+- LO-REG.1 row identified on calls 1, 4 in ≤ 3 s; calls 2 + 3 <em>not</em> flagged as reg.
+- LO-REG.2 response verbatim on calls 1, 4; escalate on call 5; ≤ 1 incorrect decision across all 5.</p>
+<h3 id="800900-feedback-self-score">8:00–9:00 · Feedback · self-score</h3>
+<p><strong>Screen.</strong> Five-row matrix (one per call) with three columns: row-picked (or N/A for distractor) · response-correct-yes-no · escalate-decision-correct. Mini-OS surfaces the §19 honest carve-out line again as the framing of the rep's escalate decision.</p>
+<blockquote>
+<p>Note: v1 manager rubric (<code>l3-call-rubric.md</code>) has 3 rows (M1/M2/M3) per <code>D-004</code>. A 4th row for "regulatory deflection" is on the v2 backlog (<code>rubric-design.md</code> §5) pending cohort-1 Gong validation per the Evidence note above.</p>
+</blockquote>
+<h3 id="900930-assess-3-item-quiz">9:00–9:30 · Assess · 3-item quiz</h3>
+<p>From <code>l2-quiz-blueprint.md</code> §4.6:</p>
+<ul>
+<li>Item 1 (LO-REG.1): decision-card lookup — Lukas's trust question (the §4.6 verbatim item).</li>
+<li>Item 2 (LO-REG.1): distractor item — <em>"Tom asks 'how do you handle expense categories?' Which row?"</em> Correct: <em>None — this is a product question, not regulatory.</em></li>
+<li>Item 3 (LO-REG.2): escalate decision — <em>"Buyer asks a GDPR follow-up about cross-border data transfer between EU and Switzerland. What do you do?"</em> Correct: <em>Escalate — beyond the §19 GDPR row.</em></li>
+</ul>
+<h3 id="9301000-enhance-retentiontransfer">9:30–10:00 · Enhance retention/transfer</h3>
+<p><strong>Key-takeaway card:</strong></p>
+<blockquote>
+<p><em>"Don't sell against regulation — defer to it. The sheet is your working memory. When the question goes deeper than the sheet, escalating </em>is<em> the trust move." — composite of §19 honest carve-out + brand voice §18.1.</em></p>
+</blockquote>
+<p><strong>Job aid hand-off.</strong> The §19 one-pager is e-mailed to the rep + pinned to their actual desktop Slack channel — Rossett &amp; Schafer's <em>point-of-use support</em> principle. This is the deliverable the rep keeps after the program ends.</p>
+<p><strong>+7-day mini-quiz</strong> auto-scheduled. <strong>L1 pulse</strong> fires. <strong>Program-end key-takeaway card</strong> also fires — <em>"You opened. You acknowledged. You closed. You did it across four buyers, you mapped pain to prop, and you deferred regulation honestly. That's the program."</em></p>
+<hr />
+<h2 id="worked-example-specification">Worked-example specification</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Buyer profile</td>
+<td>5 archetype-anchored buyer questions (Maria/Tom/Emma/Tom/Lukas spread) drawn from §12 + §19</td>
+</tr>
+<tr>
+<td>SME pattern</td>
+<td>§19 verbatim responses — no SME interview required for the deflection (the table IS the canon)</td>
+</tr>
+<tr>
+<td>Call timeline</td>
+<td>Not full transcripts — 5 mini Q+A pairs in the job-aid sidebar</td>
+</tr>
+<tr>
+<td>M-move highlight points</td>
+<td>Each §19 row highlighted on focus; the honest carve-out row is muted style (LO-REG.2 escalate cue)</td>
+</tr>
+<tr>
+<td>Mayer principles</td>
+<td><strong>Spatial contiguity</strong> (buyer Q + rep response per row, side-by-side); <strong>Pre-training</strong> (the job aid is the supportive info — rep doesn't memorise); Signalling, Coherence</td>
+</tr>
+<tr>
+<td>Length</td>
+<td>5 rows × ≈ 50 words = ≤ 90 s reading total</td>
+</tr>
+</tbody>
+</table>
+<h2 id="completion-problem-specification">Completion-problem specification</h2>
+<p><strong>Replaced by drill D6</strong> — 5-card row identification + §19 verbatim. Pass = ≥ 95 %.</p>
+<h2 id="solo-problem-specification">Solo-problem specification</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Buyer profile</td>
+<td>5-call mixed-archetype sequence with 2 distractors + 1 escalate case</td>
+</tr>
+<tr>
+<td>Success criteria</td>
+<td>LO-REG.1 (correct row identification on actual reg Qs; no false-positive on distractors) · LO-REG.2 (§19 verbatim on answerable cases; escalate-with-calendar-invite on the deep GDPR case)</td>
+</tr>
+<tr>
+<td>Hint affordances</td>
+<td>The §19 job aid is <strong>forced visible</strong> the entire module — there is no "show me the move" hint because the job aid <em>is</em> the move</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>≤ 3 min total (≈ 35 s per call)</td>
+</tr>
+<tr>
+<td>Apps active</td>
+<td>Full mini-OS stack with Slack pinned-channel forced open</td>
+</tr>
+<tr>
+<td>Event-log</td>
+<td><code>is_reg_question_true_or_distractor</code>, <code>row_picked</code>, <code>response_token_overlap_with_§19</code>, <code>escalate_decision</code>, <code>calendar_invite_for_escalate_sent</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="mini-os-app-set-used">Mini-OS app set used</h2>
+<p>Full stack. <strong>Slack pinned-channel is forced visible</strong> with the §19 1-pager — this is the only module where a job aid is mandatory rather than optional, because LO-REG outcomes <em>require</em> job-aid use (per Rossett &amp; Schafer 2007 + brief §19 honest carve-out).</p>
+<h2 id="accessibility-checklist">Accessibility checklist</h2>
+<ul>
+<li>[ ] §19 job-aid table is rendered as semantic <code>&lt;table&gt;</code> with <code>&lt;th scope="row"&gt;</code> per acronym row.</li>
+<li>[ ] Row-pick is keyboard operable: number keys 1–5 map to KYC/AML/SCA/PSD2/GDPR rows; Escape selects "this isn't a reg question" (distractor pathway).</li>
+<li>[ ] <code>aria-live="polite"</code> announces row selection: <em>"Row selected: KYC"</em>.</li>
+<li>[ ] Escalate button has <code>aria-label="Escalate to Compliance — book follow-up"</code>.</li>
+<li>[ ] Distractor calls do not present a row-picker by default — the rep must explicitly invoke it (<code>Cmd/Ctrl + R</code>) so the "not a reg question" path is the default; this prevents over-deflection by accident.</li>
+<li>[ ] Reduced-motion: row-highlight transitions disabled; replaced with instant background colour change.</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§5, 7, 9, 11 (no direct Gong evidence — see Evidence note), 12.1–12.4, 13.4 (regulatory positioning), 18.1, <strong>§19 (the canonical deflection table — every response verbatim from here)</strong>.</li>
+<li><code>01-analyze/task-inventory.md</code> §2 Class 6; §6 drill D6; §3 component C8.</li>
+<li><code>01-analyze/cognitive-load-analysis.md</code> §6 off-load-to-job-aid (Rossett &amp; Schafer); §8 Class 6.</li>
+<li><code>01-analyze/gap-analysis.md</code> §3 regulatory-deflection gap.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code> T7, LO-REG.1, LO-REG.2 (LO-REG.2 carries the cohort-1 Gong validation hook).</li>
+<li><code>02-design/curriculum-blueprint.md</code> §3.2 Module 6 (with Evidence note).</li>
+<li><code>02-design/4cid-blueprint.md</code> §3.1 Class 6; §4 supportive info (reg deflection table); §6 D6 part-task.</li>
+<li><code>02-design/module-storyboards/_template.md</code>.</li>
+<li><code>02-design/rubric-design.md</code> §5 — v2 backlog item for 4th rubric row pending cohort-1 validation.</li>
+<li><code>05-evaluate/l1-pulse-survey.md</code>; <code>05-evaluate/l2-quiz-blueprint.md</code> §4.6; <code>05-evaluate/l3-call-rubric.md</code> (current 3-row scope).</li>
+<li><code>05-evaluate/kirkpatrick-measurement-plan.md</code> Sprint 5.2 — receives the cohort-1 Gong validation hook for LO-REG.2.</li>
+<li>Decisions <code>D-002</code> (4C/ID), <code>D-004</code> (3-row rubric, with v2 backlog escape), <code>D-005</code> (custom SCORM), <code>D-006</code> (no audio), <code>D-007</code> (mini-OS + job aids).</li>
+<li>Frameworks: Gagné (1985), Merrill (2002), Renkl &amp; Atkinson (2003), Mayer (2014), Van Merriënboer &amp; Kirschner (2018), Rossett &amp; Schafer (2007 — job aid central to this module), Sweller (2011).</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 02-design\module-storyboards/M6-regulatory-deflection.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

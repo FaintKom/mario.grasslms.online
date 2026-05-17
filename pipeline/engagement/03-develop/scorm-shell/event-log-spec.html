@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Event-log spec · mini-OS telemetry → SCORM `cmi.suspend_data` — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Canonical field list, types, firing conditions, and LO-mapping for every
+keystone-move telemetry event captured by js/event-log.js. Phase 5 analytics
+reads this; Phase 3 module authors emit against it"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>03-develop\scorm-shell/event-log-spec.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../../">← Portfolio</a>
+    <a class="btn" href="../../../">← Pipeline</a>
+    <a class="btn" href="../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="event-log-spec-mini-os-telemetry-scorm-cmisuspend_data">Event-log spec · mini-OS telemetry → SCORM <code>cmi.suspend_data</code></h1>
+<blockquote>
+<p>Canonical field list, types, firing conditions, and LO-mapping for every
+keystone-move telemetry event captured by <code>js/event-log.js</code>. Phase 5 analytics
+reads this; Phase 3 module authors emit against it.</p>
+</blockquote>
+<h2 id="1-persistence-model">1 · Persistence model</h2>
+<p>Every event is appended to an in-memory log inside <code>EventLog</code>. On every <code>record()</code>
+call the most recent <strong>32 events</strong> + the <strong>KPI summary</strong> are flushed to
+<code>cmi.suspend_data</code> (JSON-stringified). SCORM 1.2 caps <code>suspend_data</code> at 4096
+chars — the KPI table is the assessment payload, so it's never truncated.</p>
+<h3 id="11-persisted-blob-shape">1.1 · Persisted blob shape</h3>
+<pre><code class="language-jsonc">{
+  &quot;version&quot;: 1,
+  &quot;moduleId&quot;: &quot;M1&quot;,
+  &quot;kpis&quot;: {
+    &quot;silence_duration_ms&quot;: 4200,
+    &quot;calendar_open_before_dial&quot;: true,
+    &quot;restate_word_overlap&quot;: 4,
+    &quot;salesforce_next_step_booked_set_at&quot;: &quot;2026-05-17T13:08:42.000Z&quot;,
+    &quot;m1_diagnostic_specificity_score&quot;: 3,
+    &quot;objection_argued_count&quot;: 0,
+    &quot;reg_question_escalated&quot;: false,
+    &quot;time_in_module_ms&quot;: 412345,
+    &quot;worked_example_completed&quot;: true,
+    &quot;completion_problem_completed&quot;: true,
+    &quot;solo_problem_completed&quot;: true
+  },
+  &quot;events&quot;: [
+    {
+      &quot;event_name&quot;: &quot;silence_observed&quot;,
+      &quot;module_id&quot;: &quot;M1&quot;,
+      &quot;ts_iso&quot;: &quot;2026-05-17T13:04:32.000Z&quot;,
+      &quot;ts_ms&quot;: 142500,
+      &quot;payload&quot;: { &quot;duration_ms&quot;: 4200 }
+    }
+  ]
+}
+</code></pre>
+<ul>
+<li><code>ts_iso</code> is ISO-8601 UTC (<code>new Date().toISOString()</code>).</li>
+<li><code>ts_ms</code> is <code>performance.now()</code> relative to module start — useful for pacing.</li>
+</ul>
+<h2 id="2-event-catalogue">2 · Event catalogue</h2>
+<table>
+<thead>
+<tr>
+<th><code>event_name</code></th>
+<th>Trigger</th>
+<th>Payload fields</th>
+<th>LO evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>module_started</code></td>
+<td>First call to <code>bootModule()</code></td>
+<td><code>{ title }</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>module_completed</code></td>
+<td><code>api.complete()</code> called</td>
+<td><code>{ score }</code></td>
+<td>All LOs</td>
+</tr>
+<tr>
+<td><code>silence_observed</code></td>
+<td>Phone-dialler silence ≥ 4 s after a diagnostic</td>
+<td><code>{ duration_ms }</code></td>
+<td>LO-M1.3</td>
+</tr>
+<tr>
+<td><code>diagnostic_delivered</code></td>
+<td>Rep submits their M1 diagnostic</td>
+<td><code>{ specificity_score: 0-3, signal_id, word_count }</code></td>
+<td>LO-M1.1 · LO-M1.2</td>
+</tr>
+<tr>
+<td><code>hint_used</code></td>
+<td>Rep clicks the "show me the move" affordance</td>
+<td><code>{ where, hint_id }</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>objection_restated</code></td>
+<td>Rep submits a restate that contains ≥ 1 buyer noun</td>
+<td><code>{ word_overlap, family }</code></td>
+<td>LO-M2.1</td>
+</tr>
+<tr>
+<td><code>objection_argued</code></td>
+<td>Rep submits a rebuttal w/o restating first (anti-pattern)</td>
+<td><code>{ rebuttal_tokens, family }</code></td>
+<td>LO-M2.1 (negative)</td>
+</tr>
+<tr>
+<td><code>followup_question_asked</code></td>
+<td>Rep submits an open follow-up question</td>
+<td><code>{ is_open, family }</code></td>
+<td>LO-M2.2</td>
+</tr>
+<tr>
+<td><code>calendar_opened</code></td>
+<td>Calendar app mounts</td>
+<td>—</td>
+<td>LO-M3.1</td>
+</tr>
+<tr>
+<td><code>phone_dial_attempt</code></td>
+<td>Rep clicks "Dial" in Outreach</td>
+<td><code>{ lead_id, archetype, calendar_open_before_dial }</code></td>
+<td>LO-M3.1</td>
+</tr>
+<tr>
+<td><code>slots_stated</code></td>
+<td>Rep selects a slot in Calendar</td>
+<td><code>{ slot_id, slot_day, slot_time }</code></td>
+<td>LO-M3.2</td>
+</tr>
+<tr>
+<td><code>invite_sent</code></td>
+<td>Rep clicks "Send invite"</td>
+<td><code>{ invitee_email, slot_ids }</code></td>
+<td>LO-M3.2</td>
+</tr>
+<tr>
+<td><code>next_step_booked_set</code></td>
+<td>Salesforce "Confirm next step" clicked</td>
+<td><code>{ account }</code></td>
+<td>LO-M3.2</td>
+</tr>
+<tr>
+<td><code>archetype_picked</code></td>
+<td>Rep picks an ICP archetype in M4</td>
+<td><code>{ archetype, correct }</code></td>
+<td>LO-M4.1</td>
+</tr>
+<tr>
+<td><code>prop_mapped</code></td>
+<td>Rep maps a pain to a prop in M5</td>
+<td><code>{ pain_id, prop_id, correct }</code></td>
+<td>LO-M5.1</td>
+</tr>
+<tr>
+<td><code>reg_question_classified</code></td>
+<td>Rep classifies a buyer question as reg vs. distractor</td>
+<td><code>{ is_reg_actual, picked }</code></td>
+<td>LO-M6.1</td>
+</tr>
+<tr>
+<td><code>reg_row_picked</code></td>
+<td>Rep picks a row from the §19 table</td>
+<td><code>{ row_id, correct }</code></td>
+<td>LO-M6.1</td>
+</tr>
+<tr>
+<td><code>reg_question_escalated</code></td>
+<td>Rep escalates a reg question via Calendar invite</td>
+<td><code>{ invitee }</code></td>
+<td>LO-M6.2</td>
+</tr>
+<tr>
+<td><code>worked_example_completed</code></td>
+<td>Rep finishes the worked-example Gagné step</td>
+<td>—</td>
+<td>pacing</td>
+</tr>
+<tr>
+<td><code>completion_problem_completed</code></td>
+<td>Rep finishes the completion problem</td>
+<td>—</td>
+<td>pacing</td>
+</tr>
+<tr>
+<td><code>solo_problem_completed</code></td>
+<td>Rep finishes the solo problem</td>
+<td>—</td>
+<td>pacing</td>
+</tr>
+<tr>
+<td><code>stakeholder_switch_handled</code></td>
+<td>M5 solo problem completes a stakeholder-switch round (CFO joins and rep redoes M1)</td>
+<td><code>boolean</code> — <code>true</code> on success</td>
+<td>LO-PP.3</td>
+</tr>
+<tr>
+<td><code>m1_repeat_for_new_stakeholder</code></td>
+<td>M5 solo detects rep re-issued M1 for second-arriving stakeholder</td>
+<td><code>{ stakeholder_id, m1_quality_score: 0-3 }</code></td>
+<td>LO-PP.3</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-kpi-summary">3 · KPI summary</h2>
+<p>The KPI table mirrors the build-brief field list verbatim. Every KPI is one of:
+<code>number | boolean | string | null</code>. The summary is always preserved across
+truncation cycles.</p>
+<table>
+<thead>
+<tr>
+<th>KPI</th>
+<th>Type</th>
+<th>Updated by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>silence_duration_ms</code></td>
+<td>number</td>
+<td><code>silence_observed</code></td>
+</tr>
+<tr>
+<td><code>calendar_open_before_dial</code></td>
+<td>boolean</td>
+<td><code>phone_dial_attempt</code></td>
+</tr>
+<tr>
+<td><code>restate_word_overlap</code></td>
+<td>number</td>
+<td><code>objection_restated</code></td>
+</tr>
+<tr>
+<td><code>salesforce_next_step_booked_set_at</code></td>
+<td>ISO-8601</td>
+<td><code>next_step_booked_set</code></td>
+</tr>
+<tr>
+<td><code>m1_diagnostic_specificity_score</code></td>
+<td>0-3</td>
+<td><code>diagnostic_delivered</code></td>
+</tr>
+<tr>
+<td><code>objection_argued_count</code></td>
+<td>number</td>
+<td>incremented on every <code>objection_argued</code></td>
+</tr>
+<tr>
+<td><code>reg_question_escalated</code></td>
+<td>boolean</td>
+<td><code>reg_question_escalated</code></td>
+</tr>
+<tr>
+<td><code>time_in_module_ms</code></td>
+<td>number</td>
+<td>every <code>record()</code></td>
+</tr>
+<tr>
+<td><code>worked_example_completed</code></td>
+<td>boolean</td>
+<td><code>worked_example_completed</code></td>
+</tr>
+<tr>
+<td><code>completion_problem_completed</code></td>
+<td>boolean</td>
+<td><code>completion_problem_completed</code></td>
+</tr>
+<tr>
+<td><code>solo_problem_completed</code></td>
+<td>boolean</td>
+<td><code>solo_problem_completed</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-how-to-emit">4 · How to emit</h2>
+<p>Two equivalent paths:</p>
+<h3 id="41-via-the-event-bus-preferred-from-inside-an-app">4.1 · Via the event bus (preferred from inside an app)</h3>
+<pre><code class="language-js">eventBus.dispatchEvent(new CustomEvent(&quot;telemetry&quot;, {
+  detail: { event_name: &quot;silence_observed&quot;, duration_ms: 4200 },
+}));
+</code></pre>
+<p>The <code>EventLog</code> instance subscribes to <code>eventBus</code> and auto-records.</p>
+<h3 id="42-direct-call-from-module-code">4.2 · Direct call (from module code)</h3>
+<pre><code class="language-js">const { eventLog } = bootModule({ moduleId: &quot;M1&quot;, ... });
+eventLog.record(&quot;diagnostic_delivered&quot;, { specificity_score: 3, word_count: 28 });
+</code></pre>
+<h2 id="5-lo-event-name-index">5 · LO → event-name index</h2>
+<table>
+<thead>
+<tr>
+<th>LO</th>
+<th>Primary event(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LO-M1.1</td>
+<td><code>diagnostic_delivered</code></td>
+</tr>
+<tr>
+<td>LO-M1.2</td>
+<td><code>diagnostic_delivered</code> (specificity_score ≥ 2)</td>
+</tr>
+<tr>
+<td>LO-M1.3</td>
+<td><code>silence_observed</code></td>
+</tr>
+<tr>
+<td>LO-M2.1</td>
+<td><code>objection_restated</code> (positive) / <code>objection_argued</code> (negative)</td>
+</tr>
+<tr>
+<td>LO-M2.2</td>
+<td><code>followup_question_asked</code></td>
+</tr>
+<tr>
+<td>LO-M3.1</td>
+<td><code>calendar_opened</code> + <code>phone_dial_attempt.calendar_open_before_dial</code></td>
+</tr>
+<tr>
+<td>LO-M3.2</td>
+<td><code>slots_stated</code>, <code>invite_sent</code>, <code>next_step_booked_set</code></td>
+</tr>
+<tr>
+<td>LO-M4.1</td>
+<td><code>archetype_picked</code></td>
+</tr>
+<tr>
+<td>LO-M5.1</td>
+<td><code>prop_mapped</code></td>
+</tr>
+<tr>
+<td>LO-M6.1</td>
+<td><code>reg_question_classified</code>, <code>reg_row_picked</code></td>
+</tr>
+<tr>
+<td>LO-M6.2</td>
+<td><code>reg_question_escalated</code></td>
+</tr>
+<tr>
+<td>LO-PP.3</td>
+<td><code>stakeholder_switch_handled</code>, <code>m1_repeat_for_new_stakeholder</code>, <code>m1_diagnostic_specificity_score</code> (re-fired per stakeholder)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-versioning">6 · Versioning</h2>
+<p>The persisted blob carries <code>version: 1</code>. Bump on <strong>breaking</strong> changes only
+(field rename, type change). Additive changes (new event_name) are
+forward-compatible — old resumes parse, new fields default to <code>null</code>.</p>
+<h2 id="7-downstream-consumers">7 · Downstream consumers</h2>
+<ul>
+<li>Phase 4 — <code>05-evaluate/learning-evaluation-plan.md</code> runs L2 against the KPI table.</li>
+<li>Phase 5 — <code>06-iterate/cohort-analytics-spec.md</code> exports suspend_data → BigQuery.</li>
+<li>Manager review — <code>cmi.suspend_data</code> is read back by the Gong app's L3 rubric panel.</li>
+</ul>
+<hr />
+<p><em>Additive update 2026-05-18 per Phase 3 critic Pass 1; no version bump required (no breaking changes to existing event names or schemas). Added: <code>stakeholder_switch_handled</code> and <code>m1_repeat_for_new_stakeholder</code> (both LO-PP.3, emitted by M5 <code>module.js</code>).</em></p>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 03-develop\scorm-shell/event-log-spec.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

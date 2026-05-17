@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>L2 quiz blueprint · end-of-module + 7-day spaced retrieval — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: brief §5 sets two distinct L2 targets — first-attempt mastery (≥80 %) and spaced retrieval at +7 days (≥70 %). Frameworks: spaced retrieval practice (frameworks-applied #11, Roedige"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>05-evaluate/l2-quiz-blueprint.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="l2-quiz-blueprint-end-of-module-7-day-spaced-retrieval">L2 quiz blueprint · end-of-module + 7-day spaced retrieval</h1>
+<blockquote>
+<p>Why this artefact: brief §5 sets two distinct L2 targets — first-attempt mastery (≥80 %) and spaced retrieval at +7 days (≥70 %). Frameworks: spaced retrieval practice (frameworks-applied #11, Roediger &amp; Karpicke 2006), worked-example fading (#10), Bloom revised verbs (#5), ABCD outcomes (#4). Items are scored via Sana <code>cmi.core.score.raw</code> per §15.3 / §16 of the brief.</p>
+</blockquote>
+<p>Two instruments per module. Same outcomes, different stems. Identical rigor.</p>
+<hr />
+<h2 id="1-quiz-architecture-per-module">1 · Quiz architecture per module</h2>
+<table>
+<thead>
+<tr>
+<th>Instrument</th>
+<th>Items</th>
+<th>Pass</th>
+<th>When fired</th>
+<th>SCO</th>
+<th>Cadence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>End-of-module quiz</strong></td>
+<td>5–7</td>
+<td>≥ 80 % first attempt</td>
+<td>Immediately after final completion problem in module</td>
+<td>Same SCORM SCO as the module</td>
+<td>Once per learner per module</td>
+</tr>
+<tr>
+<td><strong>+7-day spaced retrieval mini-quiz</strong></td>
+<td>3</td>
+<td>≥ 70 %</td>
+<td>Sana auto-schedules 7 days post-completion</td>
+<td>Separate SCO ("Module N · +7d")</td>
+<td>Once per learner per module</td>
+</tr>
+<tr>
+<td><strong>+30-day retrieval — v2 backlog</strong></td>
+<td><em>deferred to v2</em></td>
+<td>n/a (v1)</td>
+<td>n/a — not built in v1</td>
+<td>n/a</td>
+<td>Reason: Sana xAPI LRS dependency (see §6). Trigger to re-evaluate: Sana LRS GA + sponsor request.</td>
+</tr>
+</tbody>
+</table>
+<p>Both report to <code>cmi.core.score.raw</code> (SCORM 1.2). The two scores roll up to the per-module L2 metric in the dashboard.</p>
+<hr />
+<h2 id="2-item-types-used">2 · Item types used</h2>
+<p>Three item types only, chosen to match how the move is actually performed:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>What it tests</th>
+<th>Example use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scenario-classification</strong></td>
+<td>"Which M-move applies?" — give a buyer line, the rep must pick the right move.</td>
+<td>"Buyer: 'We already have a Visa.' What does the rep do <em>first</em>?" → M2 acknowledge before pitch.</td>
+</tr>
+<tr>
+<td><strong>Worked-example completion</strong></td>
+<td>Fill the blank inside a real rep transcript.</td>
+<td>"Rep: 'I noticed you've opened a second location in the last 6 months — ____' (best continuation)"</td>
+</tr>
+<tr>
+<td><strong>Decision-card lookup</strong></td>
+<td>Module 4 (ICP) and Module 6 (regulatory) — does the rep know which card to reach for?</td>
+<td>"A retail SMB owner asks about KYC delay. Where does the rep go?" → Reg-101 deflection card.</td>
+</tr>
+</tbody>
+</table>
+<p>Multiple-choice with 4 options. One correct, three distractors drawn from real failure patterns surfaced in the §10 SME interviews and §11 Gong reviews.</p>
+<hr />
+<h2 id="3-outcome-linkage-table">3 · Outcome linkage table</h2>
+<blockquote>
+<p><strong>Reconciliation required.</strong> Outcome IDs LO-Mx.y below are placeholders. Phase 2 <code>02-design/learning-outcomes-abcd-bloom.md</code> defines the canonical IDs. Reconcile before W17 cohort-1 launch.</p>
+</blockquote>
+<p>Each item ties to an outcome ID from <code>02-design/learning-outcomes-abcd-bloom.md</code> (to be created in Phase 2). Placeholder IDs below; M.B. cross-walks on Phase 2 completion.</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Outcome ID (placeholder)</th>
+<th>Bloom level</th>
+<th>Item type used</th>
+<th># items end-of-module</th>
+<th># items +7d</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 · Diagnostic Opener (M1)</td>
+<td>LO-M1.1 / LO-M1.2 / LO-M1.3</td>
+<td>Apply / Analyse</td>
+<td>Scenario-classification + worked-example completion</td>
+<td>6</td>
+<td>3</td>
+</tr>
+<tr>
+<td>2 · Objection Acknowledge (M2)</td>
+<td>LO-M2.1 / LO-M2.2 / LO-M2.3</td>
+<td>Apply / Analyse</td>
+<td>Scenario-classification + worked-example completion</td>
+<td>6</td>
+<td>3</td>
+</tr>
+<tr>
+<td>3 · Calendar Close (M3)</td>
+<td>LO-M3.1 / LO-M3.2</td>
+<td>Apply</td>
+<td>Worked-example completion + scenario-classification</td>
+<td>5</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4 · ICP Buyer Fit</td>
+<td>LO-ICP.1 / LO-ICP.2 / LO-ICP.3 / LO-ICP.4</td>
+<td>Analyse</td>
+<td>Decision-card lookup + scenario-classification</td>
+<td>7</td>
+<td>3</td>
+</tr>
+<tr>
+<td>5 · Product Prop Mapping</td>
+<td>LO-PP.1 / LO-PP.2 / LO-PP.3 / LO-PP.4</td>
+<td>Apply / Analyse</td>
+<td>Scenario-classification</td>
+<td>6</td>
+<td>3</td>
+</tr>
+<tr>
+<td>6 · Regulatory Deflection</td>
+<td>LO-REG.1 / LO-REG.2</td>
+<td>Apply (Remember on jargon)</td>
+<td>Decision-card lookup</td>
+<td>5</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Open dependency.</strong> The Phase 2 outcomes file does not yet exist. When created, IDs above are reconciled and any item not tied to a live outcome is rewritten.</p>
+<hr />
+<h2 id="4-sample-items-per-module-actual-text">4 · Sample items per module (actual text)</h2>
+<h3 id="41-module-1-diagnostic-opener-m1">4.1 · Module 1 · Diagnostic Opener (M1)</h3>
+<p><strong>End-of-module item · scenario-classification:</strong></p>
+<blockquote>
+<p>You're calling Maria, a retail SMB owner with 2 stores. You noticed on Companies House that she opened the second location 6 months ago. Which opener is most likely to keep her on the line past 60 seconds?</p>
+<p><strong>A)</strong> "Hi Maria, this is [name] from FinTechCard. Do you have a moment to discuss your corporate spending?"
+<strong>B)</strong> "Hi Maria — I noticed you've opened a second store in the last 6 months. Who's currently approving expense reports across both locations?" ✓
+<strong>C)</strong> "Hi Maria, we help SMB owners get real-time visibility into their team spend. Can I tell you about it?"
+<strong>D)</strong> "Hi Maria, I'll be quick — our card is cheaper than your bank's. Worth 10 minutes?"</p>
+<p><em>Correct: B. Distractors A, C, D are the three failure modes Gong tagged in GC-19, GC-20, GC-22 (P.B. / exit interview bottom-quartile).</em></p>
+</blockquote>
+<p><strong>+7-day mini-quiz item · worked-example completion (same outcome LO-M1.1):</strong></p>
+<blockquote>
+<p>Rep: "I see you closed your Series-B last quarter — ____"
+Best continuation:
+<strong>A)</strong> "Want to hear how we handle FX for cross-border SaaS spend?"
+<strong>B)</strong> "Do you have a moment to talk about corporate cards?"
+<strong>C)</strong> "How are you handling per-employee card issuance for your new hires?" ✓
+<strong>D)</strong> "We're built for EU multi-currency. Are you interested?"</p>
+<p><em>Correct: C. The opener pairs an observation with a who-controls-what question (per M.G. §10.1).</em></p>
+</blockquote>
+<h3 id="42-module-2-objection-acknowledge-m2">4.2 · Module 2 · Objection Acknowledge (M2)</h3>
+<p><strong>End-of-module item · scenario-classification:</strong></p>
+<blockquote>
+<p>Buyer: "We already use Brex." The rep's <em>first</em> sentence should:</p>
+<p><strong>A)</strong> Point out Brex's weaknesses on EU FX.
+<strong>B)</strong> State that FinTechCard is different and explain why.
+<strong>C)</strong> Restate the buyer's position in the buyer's own words, then ask what's not working. ✓
+<strong>D)</strong> Move to closing for a 10-minute demo.</p>
+<p><em>Correct: C. Per §10.2 L.D. and §10.1 M.G. — acknowledge first, in buyer-back-in-buyer-words form, before any displacement language.</em></p>
+</blockquote>
+<p><strong>+7-day mini-quiz item · worked-example completion:</strong></p>
+<blockquote>
+<p>Buyer: "Our accountant won't deal with another tool."
+Rep (best response): "____ — what's broken about the current setup?"
+<strong>A)</strong> "Our Xero sync is automated — you won't add work."
+<strong>B)</strong> "So you're protecting your accountant's bandwidth." ✓
+<strong>C)</strong> "Have you tried showing them our integration page?"
+<strong>D)</strong> "Most accountants love us once they see it."</p>
+<p><em>Correct: B. Acknowledge → wait → buyer reveals the actual broken thing.</em></p>
+</blockquote>
+<h3 id="43-module-3-calendar-close-m3">4.3 · Module 3 · Calendar Close (M3)</h3>
+<p><strong>End-of-module item · worked-example completion:</strong></p>
+<blockquote>
+<p>The buyer has shown interest. The rep has the calendar open in a second tab. Best move:</p>
+<p><strong>A)</strong> "I'll send you some times by email."
+<strong>B)</strong> "Want me to follow up next week?"
+<strong>C)</strong> "What's the best 20 minutes next week to walk you through the SMB version — I have Tuesday 11 or Thursday 2?" ✓
+<strong>D)</strong> "Let me know when works for you."</p>
+<p><em>Correct: C. Pattern from M.G. §10.1 — name slots, do not leave to follow-up.</em></p>
+</blockquote>
+<h3 id="44-module-4-icp-buyer-fit-decision-card-lookup">4.4 · Module 4 · ICP Buyer Fit · decision-card lookup</h3>
+<blockquote>
+<p>The buyer is a Series-B tech founder who just raised €15M. Which ICP card should the rep open?</p>
+<p><strong>A)</strong> Maria (retail SMB)
+<strong>B)</strong> Tom (Series-B tech, Brex-comparison) ✓
+<strong>C)</strong> Emma (manufacturing operations)
+<strong>D)</strong> Lukas (restaurant group, DE)</p>
+<p><em>Correct: B. ICP archetype per §12.2.</em></p>
+</blockquote>
+<h3 id="45-module-5-product-prop-mapping">4.5 · Module 5 · Product Prop Mapping</h3>
+<blockquote>
+<p>Emma (manufacturing ops, 78 FTE) says: "Our bookkeeper re-keys every supplier receipt." Best prop to lead with:</p>
+<p><strong>A)</strong> Prop 1 (real-time spend control)
+<strong>B)</strong> Prop 2 (multi-user cards + per-card limits)
+<strong>C)</strong> Prop 3 (auto FX at interbank)
+<strong>D)</strong> Prop 4 (receipt capture + accounting sync) ✓</p>
+<p><em>Correct: D. Per §12.3 + §13.1.</em></p>
+</blockquote>
+<h3 id="46-module-6-regulatory-deflection-decision-card-lookup">4.6 · Module 6 · Regulatory Deflection · decision-card lookup</h3>
+<blockquote>
+<p>Lukas (DE restaurant group) asks: "I don't trust new fintechs. What happens to my money if you go under?" The rep should:</p>
+<p><strong>A)</strong> Quote the AML transaction-monitoring stat.
+<strong>B)</strong> Explain SCA on payments over €30.
+<strong>C)</strong> Say funds are held at a regulated tier-1 partner bank and offer the regulator page. ✓
+<strong>D)</strong> Defer to the compliance team.</p>
+<p><em>Correct: C. Per §13.4 + §19 + §12.4 Lukas closing move.</em></p>
+</blockquote>
+<hr />
+<h2 id="5-distractor-design-rule">5 · Distractor design rule</h2>
+<p>Distractors are not random. Every wrong answer is a documented failure pattern from §10 SME interviews or §11 Gong call reviews. This keeps items diagnostic — when a learner picks distractor D, the data tells us which real-world failure mode they are at risk of, and the +7-day mini-quiz can target it.</p>
+<table>
+<thead>
+<tr>
+<th>Distractor source</th>
+<th>Example call IDs (§11)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Skip-the-diagnostic opener</td>
+<td>GC-10, GC-17, GC-19, GC-20, GC-22</td>
+</tr>
+<tr>
+<td>Argue-with-objection</td>
+<td>GC-09, GC-14, GC-17, GC-19, GC-20, GC-21</td>
+</tr>
+<tr>
+<td>"Follow up" close</td>
+<td>GC-10, GC-11, GC-19, GC-21, GC-22</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-spaced-retrieval-design-frameworks-applied-11">6 · Spaced retrieval design (frameworks-applied #11)</h2>
+<p>The +7-day mini-quiz is <strong>not</strong> the same items. Same <em>outcome</em>, different <em>stem</em>. This is the difference between recognition and retrieval — and Roediger &amp; Karpicke (2006) is explicit that retrieval-mode practice at expanding intervals drives durable transfer, not item-recognition repetition.</p>
+<p>Sequence:</p>
+<ol>
+<li><strong>t = 0</strong> — end-of-module quiz (immediate; high context support).</li>
+<li><strong>t = +7 days</strong> — mini-quiz (3 items, novel stems, same outcomes; lower context support).</li>
+<li><strong>t = +30 days (v2 backlog)</strong> — second retrieval pass with even less context support. Not in v1 to keep within the no-new-tooling envelope; logged for v2 once Sana's xAPI LRS is fully queryable.</li>
+</ol>
+<p><strong>No re-attempts on the same item within the +7-day window.</strong> Sana enforces this via item-ID tracking. Re-attempts are reserved for failed first-attempt remediation, not for spaced retrieval.</p>
+<hr />
+<h2 id="7-item-quality-maintenance-phase-6">7 · Item-quality maintenance (Phase 6)</h2>
+<p>Every quarter A.S. + M.B. (during engagement) / A.S. solo (post-engagement) review item stats:</p>
+<table>
+<thead>
+<tr>
+<th>Stat</th>
+<th>Threshold</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Item p-value (first-attempt correct rate)</td>
+<td>&lt; 0.35 or &gt; 0.95</td>
+<td>Rewrite. Too hard or too easy.</td>
+</tr>
+<tr>
+<td>Distractor selection rate</td>
+<td>Any distractor chosen by &lt; 5 %</td>
+<td>Replace distractor; it's not pulling weight.</td>
+</tr>
+<tr>
+<td>Item-total correlation</td>
+<td>&lt; 0.20</td>
+<td>Investigate alignment with outcome.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-sana-implementation-notes">8 · Sana implementation notes</h2>
+<ul>
+<li><strong>SCORM version:</strong> 1.2 (matches §16 tooling).</li>
+<li><strong>Score field:</strong> <code>cmi.core.score.raw</code> for both quizzes; <code>cmi.core.lesson_status</code> carries pass/fail.</li>
+<li><strong>Mastery threshold:</strong> set via <code>cmi.student_data.mastery_score = 80</code> for end-of-module, <code>70</code> for +7d mini-quiz (separate SCO).</li>
+<li><strong>Auto-schedule for +7d:</strong> Sana cohort settings — set "follow-up assessment" SCO with <code>start = completion_date + 7 days</code>.</li>
+<li><strong>Locked retake policy:</strong> failed first attempt can retry once after a 24-hour cool-down; the <em>first-attempt</em> score is the one reported to the L2 dashboard (per §5 brief wording).</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><code>case-study-tz.md</code> §5, §10, §11, §12, §13, §15, §16, §18.2</li>
+<li><code>00-project-management/decisions-log.md</code> D-002, D-003</li>
+<li><code>00-project-management/frameworks-applied.md</code> #4 (ABCD), #5 (Bloom revised), #10 (worked-example fading), #11 (spaced retrieval)</li>
+<li><code>05-evaluate/kirkpatrick-measurement-plan.md</code> §2</li>
+<li>Roediger, H. L., &amp; Karpicke, J. D. (2006). <em>Perspectives on Psychological Science</em>, 1(3), 181–210.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code> (Phase 2 dependency · placeholder IDs above)</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 05-evaluate/l2-quiz-blueprint.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

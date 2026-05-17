@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Module 1 · M1 Diagnostic Opener — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Storyboard for Module 1 — M1 Diagnostic Opener — the keystone-anchoring first module. Inherits the _template.md scaffold; instantiates it for the M1 keystone against 4C/ID Task Clas"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>02-design\module-storyboards/M1-diagnostic-opener.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../../">← Portfolio</a>
+    <a class="btn" href="../../../">← Pipeline</a>
+    <a class="btn" href="../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Storyboard for Module 1 — M1 Diagnostic Opener — the keystone-anchoring first module. Inherits the <code>_template.md</code> scaffold; instantiates it for the M1 keystone against 4C/ID Task Class 2 (cold outbound to receptive buyer · <code>01-analyze/task-inventory.md</code> §2). The threshold concept <em>"5 seconds of silence is where the deal happens"</em> (M.G. §10.1 verbatim) is exposed here. Worked example anchored on M.G. + Maria (GC-01 pattern, §11). Solo problem switches to Tom (§12.2) for variability of practice (Van Merriënboer 2018 Ch. 5).</p>
+</blockquote>
+<h1 id="module-1-m1-diagnostic-opener">Module 1 · M1 Diagnostic Opener</h1>
+<h2 id="storyboard-header">Storyboard header</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Module ID</td>
+<td>M1</td>
+</tr>
+<tr>
+<td>Terminal outcome</td>
+<td><strong>T2</strong> — SDR opens a cold call with a buyer-specific diagnostic question (anchored to one LinkedIn / Companies House signal) and waits ≥ 4 seconds for the buyer to answer; scoring ≥ 4 on M1 rubric row on 4 of 5 simulated calls.</td>
+</tr>
+<tr>
+<td>Enabling outcomes</td>
+<td><strong>LO-M1.1</strong> Extract diagnostic-worthy signal · <strong>LO-M1.2</strong> Phrase diagnostic ≤ 15 words · <strong>LO-M1.3</strong> Tolerate 5-s silence</td>
+</tr>
+<tr>
+<td>Task class</td>
+<td>Class 2 — Cold outbound to receptive buyer</td>
+</tr>
+<tr>
+<td>Time budget</td>
+<td>10:00 (brief §7)</td>
+</tr>
+<tr>
+<td>Mini-OS apps used</td>
+<td>LinkedIn / Companies House · Outreach · Phone-dialler · Gong · Slack (job-aid access)</td>
+</tr>
+<tr>
+<td>Pre-requisite outcomes</td>
+<td>None (program-anchoring module). Pre-training: 3-move card + ICP card already read.</td>
+</tr>
+<tr>
+<td>Spaced-retrieval drop</td>
+<td>+7 days (3-item mini-quiz, novel stems, outcomes LO-M1.1 / LO-M1.2 / LO-M1.3)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gagne-event-timeline-seconds-level-pacing">Gagné event timeline · seconds-level pacing</h2>
+<h3 id="000030-gain-attention-trigger-scenario">0:00–0:30 · Gain attention · trigger scenario</h3>
+<p><strong>Screen.</strong> Mini-OS desktop fades up. Phone-dialler app opens with an incoming-call appearance. A muted-red transcript ribbon shows P.B.-style hang-up call (per GC-19 pattern, §11):</p>
+<blockquote>
+<p><strong>Rep:</strong> <em>Hi, this is P. calling from FinTechCard. Do you have a moment to talk about your corporate spending?</em>
+<strong>Buyer:</strong> <em>No.</em> <code>[click — 0:08]</code></p>
+</blockquote>
+<p>A floating annotation in muted red: <em>"This is the third hang-up this morning. The next call doesn't have to be."</em> (P.B. §10.4 — anonymised paraphrase of <em>"That was the third one this morning."</em>)</p>
+<p><strong>Mayer principle.</strong> Signalling on the failure pattern; coherence (no other UI distraction).</p>
+<h3 id="030100-state-outcome">0:30–1:00 · State outcome</h3>
+<p><strong>Screen.</strong> Phone-dialler dissolves; outcome card slides in (no decorative motion if <code>prefers-reduced-motion: reduce</code>):</p>
+<blockquote>
+<p><strong>By the end of these 10 minutes you open every cold call with a buyer-specific diagnostic — and you tolerate 5 seconds of silence before you fill it.</strong></p>
+</blockquote>
+<p>Below the outcome: a single line in §18.2 brand voice (peer-to-peer): <em>"5 seconds feels like an hour. That's where the deal happens."</em> — M.G. §10.1 verbatim.</p>
+<h3 id="100130-recall-prior">1:00–1:30 · Recall prior</h3>
+<p><strong>Screen.</strong> "This is your first module. Two things you already know going in: (1) the 3-move sequence M1 → M2 → M3. (2) the four buyers (Maria · Tom · Emma · Lukas). Both cards stay pinned in Slack." Slack pinned-channel preview shows the two cards.</p>
+<h3 id="130300-present-stimulus-guide-worked-example">1:30–3:00 · Present stimulus + guide · worked example</h3>
+<p><strong>Screen.</strong> Mini-OS Gong window opens. Transcript fades in turn-by-turn. Buyer is <strong>Maria</strong> (§12.1 — retail SMB owner, 2 stores). SME is M.G. (top decile, §10.1; GC-01 pattern).</p>
+<pre><code>GC-01-style worked example · Manchester · Tue 14:02 · M.G. → Maria
+
+[0:00]  Rep:    Hi Maria — quick one.            [Eye] [M1]
+        Rep:    I noticed on Companies House you've opened a second
+                location in the last 6 months — who's approving
+                expense reports across both stores now?
+
+[0:14]  Buyer:  ...                              [silence 0:04]
+
+[0:18]  Buyer:  Well, my bookkeeper does, but honestly she's
+                drowning. Receipts pile up.
+
+[0:38]  Rep:    So you've got someone in seat but the workflow is
+                breaking.                        [ArrowsClockwise] [M2 preview]
+
+(... rest of call — 14 minutes total. Module 2 picks up the M2 thread.)
+</code></pre>
+<p><strong>Signalling cues per Mayer.</strong> M1 line is annotated with <strong>(1)</strong> primary-green chip on the rep line; <strong>(2)</strong> Phosphor <code>Eye</code> icon at line start; <strong>(3)</strong> text label <code>[M1]</code>. The 4-second silence is annotated with <code>[silence 0:04]</code> — making the threshold visible.</p>
+<p><strong>Spatial contiguity.</strong> Annotations sit on the same line as the move, not in a sidebar.</p>
+<h3 id="300500-elicit-performance-completion-problem">3:00–5:00 · Elicit performance · completion problem</h3>
+<p><strong>Screen.</strong> Same Maria, same Companies House context. Rep is shown:</p>
+<blockquote>
+<p><strong>Rep:</strong> <em>Hi Maria — quick one. ______</em></p>
+</blockquote>
+<p><strong>Options (4 multiple choice):</strong></p>
+<ul>
+<li>A) <em>Do you have a moment to talk about your corporate spending?</em> — <em>(distractor: GC-19 P.B. pattern; led to hang-up at 0:08)</em></li>
+<li>B) <em>I noticed on Companies House you've opened a second location in the last 6 months — who's approving expense reports across both stores now?</em> ✓</li>
+<li>C) <em>Our card is cheaper than your bank's — worth 10 minutes?</em> — <em>(distractor: GC-20 P.B. fees-argument pattern; hung up at 0:24)</em></li>
+<li>D) <em>We help SMB owners get real-time visibility into their team spend. Can I tell you more?</em> — <em>(distractor: pitch-launch pattern, GC-10 / GC-17 mid-band failure)</em></li>
+</ul>
+<p><strong>Feedback on incorrect.</strong> Single sentence: <em>"This is the pattern in GC-XX — call ended at YY seconds."</em> No long explanation.</p>
+<h3 id="500800-elicit-performance-solo-problem">5:00–8:00 · Elicit performance · solo problem</h3>
+<p><strong>Buyer profile (different from worked example — variability).</strong> <strong>Tom</strong> (§12.2) — Series-B tech founder, 22 FTE, just raised €15M.</p>
+<p><strong>Mini-OS sequence:</strong></p>
+<ol>
+<li><strong>Pre-dial.</strong> LinkedIn / Companies House app opens with Tom's profile. Rep has 90 seconds (LO-M1.1) to identify one signal. Three signals are visible: (a) Series-B announcement last quarter; (b) 8 new hires LinkedIn-public in 30 days; (c) AWS spend mention in TechCrunch coverage.</li>
+<li><strong>Draft diagnostic.</strong> Rep types a ≤ 15-word diagnostic question (LO-M1.2). Character counter and Phosphor <code>Lightbulb</code> hint icon are visible; one "show me the move" hint allowed.</li>
+<li><strong>Dial.</strong> Phone-dialler opens. Outreach queue logs the dial. Rep speaks (or types in v1 no-audio) the diagnostic.</li>
+<li><strong>Silence countdown.</strong> Phone-dialler shows a 4-second silence counter after the diagnostic delivers. <code>aria-live="polite"</code> announces <em>"buyer is thinking"</em>. Mini-OS event log captures <code>silence_duration_ms</code>.</li>
+<li><strong>Buyer response.</strong> Tom: <em>"We're using a mix of personal cards and one shared corporate card — it's a mess."</em></li>
+<li><strong>End-of-solo.</strong> Rep clicks "end call". Mini-OS event log committed.</li>
+</ol>
+<p><strong>Success criteria (instrumented).</strong>
+- LO-M1.1: correct signal selected (any of a/b/c — all three are valid diagnostic anchors per §12.2).
+- LO-M1.2: diagnostic ≤ 15 words, pairs signal with who-controls-what question.
+- LO-M1.3: silence ≥ 4 s before rep speaks again.</p>
+<h3 id="800900-feedback-self-score-manager-rubric-preview">8:00–9:00 · Feedback · self-score + manager-rubric preview</h3>
+<p><strong>Screen.</strong> Three rows of the L3 rubric (<code>l3-call-rubric.md</code> §1, row M1). Rep self-scores 1–5. The anchor that matches their behaviour (extracted from the event log) is highlighted in primary green.</p>
+<p>Bottom card: <em>"Your manager will score your real calls on this same row in week 4-8 of your tenure. This is a self-coaching tool, not surveillance."</em> (Per §18 self-determination framing.)</p>
+<h3 id="900930-assess-performance-3-item-quiz">9:00–9:30 · Assess performance · 3-item quiz</h3>
+<p>End-of-module quiz from <code>l2-quiz-blueprint.md</code> §4.1:</p>
+<ul>
+<li>Item 1 (LO-M1.1): scenario-classification on Maria-style opener (the §4.1 verbatim item).</li>
+<li>Item 2 (LO-M1.2): worked-example completion on Tom-style opener (variability — not the same buyer as the worked example).</li>
+<li>Item 3 (LO-M1.3): scenario judgement — "the buyer pauses for 6 seconds after your diagnostic. What do you do?" Correct: <em>wait.</em></li>
+</ul>
+<p>Score → <code>cmi.core.score.raw</code>. Mastery threshold 80 % (per <code>l2-quiz-blueprint.md</code> §8).</p>
+<h3 id="9301000-enhance-retentiontransfer">9:30–10:00 · Enhance retention/transfer</h3>
+<p><strong>Key-takeaway card (≤ 30 words):</strong></p>
+<blockquote>
+<p><em>"Pick one signal. Phrase one question. Wait five seconds. The buyer fills the silence — that's where the call begins." — M.G., Manchester pod.</em></p>
+</blockquote>
+<p><strong>+7-day mini-quiz scheduled.</strong> Sana auto-schedules 3 items on outcomes LO-M1.1 / LO-M1.2 / LO-M1.3 with novel stems (per <code>l2-quiz-blueprint.md</code> §6).</p>
+<p><strong>L1 pulse fires.</strong> Three-item <code>l1-pulse-survey.md</code> instrument. ≤ 30 s.</p>
+<hr />
+<h2 id="worked-example-specification">Worked-example specification</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Buyer profile</td>
+<td>Maria · §12.1 · retail SMB, 2 stores, 35 FTE, ~$25K/mo card spend, top pain "who spent what"</td>
+</tr>
+<tr>
+<td>SME pattern</td>
+<td>M.G., Manchester, 14 months, §10.1 verbatim opener; Gong call ID GC-01 pattern</td>
+</tr>
+<tr>
+<td>Call timeline</td>
+<td>4-line transcript (0:00 rep diagnostic · 0:14 silence · 0:18 buyer answer · 0:38 rep M2 preview); 14-minute total call referenced (Module 2 picks up M2)</td>
+</tr>
+<tr>
+<td>M-move highlight points</td>
+<td>M1 (green chip + Phosphor <code>Eye</code> + <code>[M1]</code> label); silence annotation <code>[silence 0:04]</code>; M2 preview cue in faded preview style</td>
+</tr>
+<tr>
+<td>Mayer principles applied</td>
+<td>Signalling (3 cues on M1), Spatial contiguity (line-level annotation), Segmenting (turn-by-turn fade-in), Pre-training (3-move + ICP cards pre-loaded), Coherence (no decorative motion)</td>
+</tr>
+<tr>
+<td>Length</td>
+<td>~ 180 words on screen; ≤ 90 s reading time</td>
+</tr>
+</tbody>
+</table>
+<h2 id="completion-problem-specification">Completion-problem specification</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stem</td>
+<td>Maria, Companies House context already shown; rep's opening sentence redacted</td>
+</tr>
+<tr>
+<td>Options</td>
+<td>A (P.B. opener · GC-19 pattern) · B (M.G. M1 ✓) · C (P.B. fees pattern · GC-20) · D (mid-band pitch-launch · GC-10/17)</td>
+</tr>
+<tr>
+<td>Scoring rubric</td>
+<td>One correct; no partial credit</td>
+</tr>
+<tr>
+<td>Feedback on incorrect</td>
+<td>"This is the pattern in GC-19 — Maria hung up at 0:08." (single sentence; cites Gong ID)</td>
+</tr>
+<tr>
+<td>Time allowance</td>
+<td>≤ 2 min</td>
+</tr>
+</tbody>
+</table>
+<h2 id="solo-problem-specification">Solo-problem specification</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Buyer profile</td>
+<td><strong>Tom</strong> · §12.2 · Series-B founder, 22 FTE, €15M just raised — <em>different</em> archetype from Maria (variability)</td>
+</tr>
+<tr>
+<td>Success criteria</td>
+<td>LO-M1.1 (signal extracted) · LO-M1.2 (diagnostic ≤ 15 words, signal + who-controls-what) · LO-M1.3 (silence ≥ 4 s)</td>
+</tr>
+<tr>
+<td>Hint affordances</td>
+<td>One "show me the move" hint = peek at M.G. pattern. Hint use logged; flagged as completion-stage in event log; no score penalty</td>
+</tr>
+<tr>
+<td>Time allowance</td>
+<td>≤ 3 min</td>
+</tr>
+<tr>
+<td>Mini-OS apps active</td>
+<td>LinkedIn / Companies House · Outreach · Phone-dialler · Gong (post-call only) · Slack (job aid)</td>
+</tr>
+<tr>
+<td>Event-log instrumentation</td>
+<td><code>signal_selected</code>, <code>diagnostic_word_count</code>, <code>silence_duration_ms</code>, <code>hint_used</code>, <code>call_end_reason</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="mini-os-app-set-used">Mini-OS app set used</h2>
+<table>
+<thead>
+<tr>
+<th>App</th>
+<th>Purpose this module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LinkedIn / Companies House</td>
+<td>Pre-dial signal scan (90 s window)</td>
+</tr>
+<tr>
+<td>Outreach</td>
+<td>Dial queue + disposition log</td>
+</tr>
+<tr>
+<td>Phone-dialler</td>
+<td>Live call state + 4-s silence countdown overlay</td>
+</tr>
+<tr>
+<td>Gong</td>
+<td>Worked example transcript host; post-call self-tag</td>
+</tr>
+<tr>
+<td>Slack (pinned)</td>
+<td>3-move card + ICP archetype card (pre-training reference)</td>
+</tr>
+</tbody>
+</table>
+<p>Apps <strong>not visible</strong> this module: Salesforce (added in M3), Calendar (M3).</p>
+<h2 id="accessibility-checklist">Accessibility checklist</h2>
+<ul>
+<li>[ ] All event-log indicators have <code>aria-live="polite"</code> announcements (silence countdown spoken to screen reader).</li>
+<li>[ ] Phosphor <code>Eye</code> icon for M1 has <code>aria-label="M1 diagnostic move"</code>.</li>
+<li>[ ] Primary green <code>#00b67a</code> chip verified ≥ 4.5:1 against white surface and ≥ 3:1 against dark.</li>
+<li>[ ] Tab order: trigger → outcome → recall card → transcript (one focus per turn) → completion options → solo screens → debrief → quiz → retention card → L1 pulse.</li>
+<li>[ ] Reduced-motion: transcript turn-fades disabled; replaced with instant render when <code>prefers-reduced-motion: reduce</code>.</li>
+<li>[ ] No audio dependency: silence is conveyed by <code>[silence 0:04]</code> text + countdown timer + <code>aria-live</code> announcement (3-cue redundancy per <code>D-006</code>).</li>
+<li>[ ] Language: <code>lang="en"</code> root.</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§5, 7, 9, 10.1 (M.G.), 10.4 (P.B.), 11 (GC-01, GC-19, GC-20, GC-10, GC-17), 12.1 (Maria), 12.2 (Tom), 18.2.</li>
+<li><code>01-analyze/task-inventory.md</code> §2 Class 2; §6 drill D1; §3 component skills C1, C3, C4.</li>
+<li><code>01-analyze/learner-personas.md</code> §1 M.G. + §4 P.B.</li>
+<li><code>01-analyze/cognitive-load-analysis.md</code> §8 Class 2 reduction strategy.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code> T2, LO-M1.1, LO-M1.2, LO-M1.3.</li>
+<li><code>02-design/curriculum-blueprint.md</code> §3.2 Module 1 narrative.</li>
+<li><code>02-design/4cid-blueprint.md</code> §3.1 Class 2 row; §3.3 variability axis.</li>
+<li><code>02-design/module-storyboards/_template.md</code>.</li>
+<li><code>05-evaluate/l1-pulse-survey.md</code>; <code>05-evaluate/l2-quiz-blueprint.md</code> §4.1; <code>05-evaluate/l3-call-rubric.md</code> row M1.</li>
+<li>Decisions <code>D-002</code> (4C/ID), <code>D-005</code> (custom SCORM), <code>D-006</code> (no audio), <code>D-007</code> (mini-OS).</li>
+<li>Frameworks: Gagné (1985), Merrill (2002), Renkl &amp; Atkinson (2003), Mayer (2014), Van Merriënboer &amp; Kirschner (2018), Meyer &amp; Land (2005) for threshold concept, Sweller (2011) for cognitive load.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 02-design\module-storyboards/M1-diagnostic-opener.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

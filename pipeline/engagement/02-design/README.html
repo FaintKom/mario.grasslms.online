@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Phase 2 · Design — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Phase 2 entry point. Translates the Phase 1 analysis pack (01-analyze/) into a teachable, assessable architecture before any pixel is built in Phase 3. Cites master-plan.md §2 (gate"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>02-design/README.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Phase 2 entry point. Translates the Phase 1 analysis pack (<code>01-analyze/</code>) into a teachable, assessable architecture before any pixel is built in Phase 3. Cites <code>master-plan.md</code> §2 (gate criteria) + <code>frameworks-applied.md</code> (4C/ID, ABCD, Bloom revised, Backwards Design, Merrill, Gagné, Mayer, Cognitive Load, UDL/WCAG, job-aid theory).</p>
+</blockquote>
+<h1 id="phase-2-design">Phase 2 · Design</h1>
+<h2 id="1-intent">1 · Intent</h2>
+<p>Lock outcomes, curriculum, and module-by-module learning experience for the FinTechCard SMB SDR Onboarding program <strong>before</strong> a single SCORM module is built. Every downstream Phase 3 artefact (six modules + mini-OS shell) consumes the spec written here; every Phase 5 measurement instrument reconciles to the outcome IDs minted here.</p>
+<p>The phase converts:</p>
+<ul>
+<li>Phase 1 task inventory (six 4C/ID task classes) → six fully-spec'd module storyboards.</li>
+<li>Phase 1 gap analysis (training-fixable vs environment-fixable) → ABCD-Bloom outcomes scoped to the training-fixable share.</li>
+<li>Phase 1 personas → variability-of-practice axes inside each storyboard.</li>
+<li>Phase 1 L4→L1 cascade → Stage-2 "acceptable evidence" column in the curriculum blueprint.</li>
+<li>Phase 5 placeholder outcome IDs (<code>LO-M1.1</code> etc.) → real ABCD-Bloom outcomes that reconcile the L2 quiz blueprint.</li>
+</ul>
+<h2 id="2-sprints-per-master-planmd-2">2 · Sprints (per <code>master-plan.md</code> §2)</h2>
+<ul>
+<li><strong>Sprint 2.1 — Outcomes &amp; curriculum.</strong> <code>learning-outcomes-abcd-bloom.md</code>, <code>curriculum-blueprint.md</code> (Backwards Design 1-2-3), <code>4cid-blueprint.md</code>.</li>
+<li><strong>Sprint 2.2 — Module storyboards.</strong> <code>module-storyboards/_template.md</code> + six module storyboards (M1, M2, M3, ICP fit, Product Prop, Reg Deflection). Each follows Merrill's First Principles inside a Gagné nine-event 10-min timeline; Modules 5 + 6 carry the §12 / §19 evidence-substrate note + Phase 5 cohort-1 validation hook (critic issue (c) addressed).</li>
+<li><strong>Sprint 2.3 — Assessment &amp; UX system.</strong> <code>assessment-design.md</code>, <code>rubric-design.md</code>, <code>ux-design-system.md</code>, <code>ui-prototypes/</code>.</li>
+</ul>
+<h2 id="3-gate-criteria-mirrors-master-planmd-2">3 · Gate criteria (mirrors <code>master-plan.md</code> §2)</h2>
+<ul>
+<li>[ ] Every terminal outcome ABCD-complete (audience, behaviour, condition, degree).</li>
+<li>[ ] Every outcome tagged with a Bloom revised verb at Apply or above.</li>
+<li>[ ] Every outcome lineage maps to ≥1 of M1/M2/M3 keystone moves OR to the §19 deflection table.</li>
+<li>[ ] Each storyboard contains: trigger · worked example · completion problem · solo problem · debrief · spaced-retrieval hook.</li>
+<li>[ ] UX system documents WCAG 2.1 AA conformance approach + a Mayer-principle citation against every design rule.</li>
+</ul>
+<h2 id="4-sprint-21-critic-issue-carry-forwards-from-critic-logmd-phase-1-pass-1">4 · Sprint 2.1 critic-issue carry-forwards (from <code>critic-log.md</code> Phase 1 Pass 1)</h2>
+<ul>
+<li>(a) <strong>Low-cadence manager interview.</strong> A.S. brokers a 15-min with F.O. or D.W. in W3 of Phase 2; findings update Manager Persona 2 + Module-6 rubric anchors. Tracked here as an open dependency, not a Phase 2 blocker.</li>
+<li>(b) <strong>60/25/15 % gap split.</strong> Phase 2 does not propagate the quantitative split; outcomes are written against gap <em>categories</em> (training, environment, communication), not the numeric proportions.</li>
+<li>(c) <strong>Modules 5 + 6 evidence substrate.</strong> Both storyboards carry an <code>&gt; Evidence note:</code> blockquote citing §12 / §19 brief content + a Phase 5 cohort-1 Gong validation hook.</li>
+</ul>
+<h2 id="5-links">5 · Links</h2>
+<ul>
+<li>Inputs: <a href="../case-study-tz.html"><code>../case-study-tz.md</code></a> · <a href="../01-analyze/"><code>../01-analyze/</code></a> · <a href="../00-project-management/master-plan.html"><code>../00-project-management/master-plan.md</code></a> · <a href="../00-project-management/decisions-log.html"><code>../00-project-management/decisions-log.md</code></a>.</li>
+<li>Phase 3 consumes: <code>learning-outcomes-abcd-bloom.md</code>, <code>curriculum-blueprint.md</code>, <code>4cid-blueprint.md</code>, <code>module-storyboards/</code>, <code>ux-design-system.md</code>, <code>ui-prototypes/</code>.</li>
+<li>Phase 5 reconciles: <code>learning-outcomes-abcd-bloom.md</code> outcome IDs ↔ <a href="../05-evaluate/l2-quiz-blueprint.html"><code>../05-evaluate/l2-quiz-blueprint.md</code></a>.</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§5, 7, 9, 10, 11, 12, 13, 18, 19.</li>
+<li><code>master-plan.md</code> §2 · <code>decisions-log.md</code> D-001 through D-008 · <code>frameworks-applied.md</code>.</li>
+<li>Wiggins &amp; McTighe (2005); Van Merriënboer &amp; Kirschner (2018); Mayer (2014); Sweller, Ayres &amp; Kalyuga (2011); Merrill (2002); Gagné (1985); Anderson &amp; Krathwohl (2001); Mager (1962/1997); CAST (2018); W3C WCAG 2.1.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 02-design/README.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

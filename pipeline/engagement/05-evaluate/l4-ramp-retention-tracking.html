@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>L4 ramp + retention tracking · dashboard + attribution spec — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: brief §5 fixes two L4 numbers (mean ramp ≤ 71 d; day-120 retention ≥ 92 %). K.M. publicly committed both to the CRO (§4, §8). D-008 binds the engagement to a bounded attribution sta"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>05-evaluate/l4-ramp-retention-tracking.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="l4-ramp-retention-tracking-dashboard-attribution-spec">L4 ramp + retention tracking · dashboard + attribution spec</h1>
+<blockquote>
+<p>Why this artefact: brief §5 fixes two L4 numbers (mean ramp ≤ 71 d; day-120 retention ≥ 92 %). K.M. publicly committed both to the CRO (§4, §8). D-008 binds the engagement to a <em>bounded</em> attribution stance — cohort comparison, not RCT — with three lines on the chart so confounds are visible. Brief §15 supplies the Salesforce / HRIS schema; §17 documents the SPIF confound; §20 lists lead-quality as risk row 1. Framework: Kirkpatrick L4 (#3) + Phillips ROI methodology, the cohort-comparison stance.</p>
+</blockquote>
+<p>The L4 dashboard is the artefact K.M. shows the CRO. It has to be honest about what it can and cannot say.</p>
+<hr />
+<h2 id="1-headline-kpis-verbatim-from-brief-5">1 · Headline KPIs (verbatim from brief §5)</h2>
+<table>
+<thead>
+<tr>
+<th>KPI</th>
+<th>Baseline</th>
+<th>6-mo target</th>
+<th>12-mo target</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mean ramp to first paid quota · rolling-4-cohort</td>
+<td>95 d</td>
+<td>≤ 71 d (−25 %)</td>
+<td>≤ 65 d (−32 %)</td>
+<td>Salesforce <code>Ramp_Time__c</code> + <code>First_Paid_Quota_Date__c</code></td>
+</tr>
+<tr>
+<td>Day-120 retention · per hire cohort</td>
+<td>~83 %</td>
+<td>≥ 92 %</td>
+<td>≥ 95 %</td>
+<td>HRIS <code>Day_120_Retained</code> joined to Salesforce <code>Tenure_Cohort__c</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-data-sources">2 · Data sources</h2>
+<h3 id="21-salesforce-existing-schema-brief-151">2.1 · Salesforce (existing schema, brief §15.1)</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ramp_Time__c</code></td>
+<td>Number (days)</td>
+<td>Days hire → first paid quota</td>
+</tr>
+<tr>
+<td><code>Tenure_Cohort__c</code></td>
+<td>Picklist</td>
+<td>Onboarding cohort ID (e.g. <code>2026-Q3-W27</code>)</td>
+</tr>
+<tr>
+<td><code>Pod__c</code></td>
+<td>Picklist</td>
+<td>UK-Manchester / UK-London-A / UK-London-B / UK-Belfast / DE-Berlin / DE-Munich / ES-Barcelona / NL-Amsterdam / IT-Milan</td>
+</tr>
+<tr>
+<td><code>First_Paid_Quota_Date__c</code></td>
+<td>Date</td>
+<td>First paid commission date</td>
+</tr>
+<tr>
+<td><code>Next_Step_Booked__c</code></td>
+<td>Checkbox</td>
+<td>TRUE if a calendar invite went out same-call (M3 proxy)</td>
+</tr>
+<tr>
+<td><code>Sequence_Completion_Rate</code></td>
+<td>Percentage</td>
+<td>Outreach completion · used for SPIF-chasing detection</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-hris-bamboohr-equivalent-brief-152">2.2 · HRIS (BambooHR-equivalent, brief §15.2)</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Day_120_Retained</code></td>
+<td>Boolean</td>
+<td>Computed nightly: TRUE if rep still active 120 days post-hire</td>
+</tr>
+<tr>
+<td><code>Hire_Date</code></td>
+<td>Date</td>
+<td>Anchor for cohort grouping</td>
+</tr>
+<tr>
+<td><code>Pod</code></td>
+<td>String</td>
+<td>Joined to Salesforce <code>Pod__c</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-revops-composite-existing-owned-by-jv">2.3 · RevOps composite (existing, owned by J.V.)</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Marketing_Lead_Quality_Index</code></td>
+<td>Number 0–100</td>
+<td>Composite of close-rate, response-rate, SQL-ratio per CMO source. Pre-existing RevOps metric.</td>
+</tr>
+<tr>
+<td><code>SPIF_Activity_Flag</code></td>
+<td>Boolean</td>
+<td>TRUE for any rep-month with <code>Sequence_Completion_Rate</code> &gt; 90 % AND net-new pipeline below pod median</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-dashboard-layout">3 · Dashboard layout</h2>
+<pre><code>+-------------------------------------------------------------------------+
+| L4 · Ramp &amp; Retention · Rolling 4-cohort view · refresh: nightly        |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  MEAN RAMP TO FIRST PAID QUOTA · target ≤ 71 d                          |
+|   +--------------------------------------------------------+            |
+|   |                                                        |            |
+|   |      Line A (program cohorts) ────                     |            |
+|   |      Line B (baseline / pre-program) ─ ─ ─             |            |
+|   |      Line C (marketing lead-quality index) ····        |            |
+|   |                                                        |            |
+|   |  95d -----o-----o-----o-----o-----o-----o-----         |            |
+|   |              o     o     o                             |            |
+|   |              71d ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄       |            |
+|   +--------------------------------------------------------+            |
+|                                                                         |
+|  DAY-120 RETENTION BY COHORT · target &gt;= 92 %                           |
+|   [Bar chart: each cohort retention rate, target line at 92 %]          |
+|                                                                         |
+|  POD-SEGMENTED RAMP  +  COHORT-SEGMENTED RAMP                           |
+|   [Two side-by-side small-multiples grids: 9 pods × cohort waves]       |
+|                                                                         |
+|  CONFOUND WATCH                                                         |
+|   &gt; Marketing lead-quality index: [trend sparkline + delta vs Q-1]      |
+|   &gt; SPIF activity flag: [% reps with flag = TRUE this month]            |
+|                                                                         |
++-------------------------------------------------------------------------+
+</code></pre>
+<hr />
+<h2 id="4-the-three-line-chart-d-008-implementation">4 · The three-line chart · D-008 implementation</h2>
+<p>K.M. §8 verbatim:</p>
+<blockquote>
+<p>"If we miss it, I need to know whether the cause was training or lead quality or comp, because the conversation with the CRO is honest either way."</p>
+</blockquote>
+<p>The ramp chart carries three series:</p>
+<ol>
+<li>
+<p><strong>Line A · Program-cohort ramp.</strong> Mean <code>Ramp_Time__c</code> for reps whose <code>Tenure_Cohort__c</code> falls inside or after <code>2026-Q3-W27</code> (first cohort live 1 July 2026 per brief §3). Rolling 4-cohort average to smooth noise.</p>
+</li>
+<li>
+<p><strong>Line B · Baseline / pre-program ramp.</strong> Same metric for reps whose <code>Tenure_Cohort__c</code> is before the program-live date and who are still inside their first 120 days at each measurement point. Anchored at the §5 baseline of 95 d for periods before the engagement.</p>
+</li>
+<li>
+<p><strong>Line C · Marketing lead-quality index.</strong> Inverted-scale overlay (so "improving lead quality" trends the same direction as "improving ramp" for visual parity). Confound visibility, not a target line.</p>
+</li>
+</ol>
+<p><strong>Interpretation matrix</strong> — same as <code>kirkpatrick-measurement-plan.md</code> §4.1:</p>
+<table>
+<thead>
+<tr>
+<th>Line A trend</th>
+<th>Line B trend</th>
+<th>Line C trend</th>
+<th>Read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>↓ improving</td>
+<td>≈ flat</td>
+<td>≈ flat</td>
+<td>Program works · clean attribution</td>
+</tr>
+<tr>
+<td>↓</td>
+<td>↓</td>
+<td>flat</td>
+<td>Org tailwind · program contribution unclear</td>
+</tr>
+<tr>
+<td>↓</td>
+<td>flat</td>
+<td>↑</td>
+<td>Lead-quality + program co-vary · not isolable</td>
+</tr>
+<tr>
+<td>flat</td>
+<td>flat</td>
+<td>↓</td>
+<td>Lead-quality drag masks program · escalate to CMO</td>
+</tr>
+<tr>
+<td>↑ worse</td>
+<td>flat</td>
+<td>flat</td>
+<td>Program not landing · trigger Phase 6 sprint 6.1 + 6.2</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-segmentation-views">5 · Segmentation views</h2>
+<h3 id="51-pod-segmented">5.1 · Pod-segmented</h3>
+<p>9 pods × rolling-4-cohort mean. Heatmap-style table. Flags any pod where:</p>
+<ul>
+<li>Pod-level mean ramp &gt; 80 days, OR</li>
+<li>Pod-level retention &lt; 88 %, OR</li>
+<li>Pod-level L3 manager rubric adherence (from <code>l3-call-rubric.md</code> flow) &lt; 70 %.</li>
+</ul>
+<p>A flagged pod triggers Phase 6 sprint 6.2.A — that pod's manager calibration.</p>
+<h3 id="52-cohort-segmented">5.2 · Cohort-segmented</h3>
+<p>Each cohort tracked as its own row, with month-by-month ramp progress. Top-decile and bottom-quartile sub-bands visible. Lets the sponsor see whether cohort N is doing better/worse than cohort N-1 — the only fair comparison while the org-wide baseline shifts.</p>
+<hr />
+<h2 id="6-refresh-ownership">6 · Refresh + ownership</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Refresh</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Line A · program-cohort ramp</td>
+<td>Nightly</td>
+<td>J.V. (RevOps)</td>
+</tr>
+<tr>
+<td>Line B · baseline ramp</td>
+<td>Weekly (recomputes the tail)</td>
+<td>J.V.</td>
+</tr>
+<tr>
+<td>Line C · lead-quality index</td>
+<td>Weekly (RevOps existing job)</td>
+<td>J.V. (data) · R.K. (interpretation)</td>
+</tr>
+<tr>
+<td>Day-120 retention</td>
+<td>Daily</td>
+<td>D.R. (data) · J.V. (rollup)</td>
+</tr>
+<tr>
+<td>Pod heatmap</td>
+<td>Nightly</td>
+<td>J.V.</td>
+</tr>
+<tr>
+<td>Confound watch panel</td>
+<td>Daily</td>
+<td>J.V.</td>
+</tr>
+<tr>
+<td>Monthly sponsor review</td>
+<td>Monthly meeting</td>
+<td>K.M. + M.B. + J.V.</td>
+</tr>
+</tbody>
+</table>
+<p>J.V. (RevOps Director) is the named L4 dashboard owner per brief §2 and master plan §5.</p>
+<hr />
+<h2 id="7-attribution-caveats-what-the-dashboard-does-not-claim">7 · Attribution caveats · what the dashboard does NOT claim</h2>
+<p>Per D-008 the dashboard does not assert causation. The following caveats are <strong>printed in the dashboard footer</strong>, every page, every export:</p>
+<blockquote>
+<p><em>Attribution caveat. This dashboard uses a cohort-comparison design, not a randomised control trial. Movement in ramp time can reflect program effect, lead-quality drift, comp-plan dynamics, hiring-mix changes, or seasonality. Lines B and C are surfaced to support honest joint interpretation. Per K.M. (sponsor) §8: "the conversation with the CRO is honest either way."</em></p>
+</blockquote>
+<p>This carve-out exists because:</p>
+<ul>
+<li><strong>Sample size.</strong> Cohort cadence is 10–15 reps per cohort (§3). Underpowered for inferential tests.</li>
+<li><strong>No control group.</strong> Withholding training from new hires was rejected on ethical and operational grounds (D-008).</li>
+<li><strong>Pre-period data granularity.</strong> Insufficient for difference-in-differences with synthetic control (D-008).</li>
+</ul>
+<hr />
+<h2 id="8-spif-comp-plan-confound-flag-per-brief-17">8 · SPIF / comp-plan confound flag (per brief §17)</h2>
+<p>K.M. §8 verbatim:</p>
+<blockquote>
+<p>"Comp plan rewards closed-won regardless of source. New reps grind on stale leads chasing the SPIF rather than working the day-1 list. RevOps owns the redesign. I'm not asking you to fix it; I am asking you to surface it."</p>
+</blockquote>
+<p><strong>Detection.</strong> A binary <code>SPIF_Activity_Flag</code> per rep-month, TRUE when:</p>
+<ul>
+<li><code>Sequence_Completion_Rate</code> &gt; 90 % (Outreach grind), AND</li>
+<li>Net-new pipeline below pod median for that month, AND</li>
+<li>A SPIF is active in the comp calendar for that month.</li>
+</ul>
+<p><strong>Surface.</strong> Confound watch panel shows <code>% reps with flag = TRUE this month</code>. If &gt; 25 % of the cohort under review is flagged, the monthly report includes an explicit "L4 reading is influenced by active SPIF; comp-plan redesign is RevOps Q3 roadmap (§17)".</p>
+<p><strong>What this is not.</strong> It is not a punitive flag against reps. It is a flag against the <em>comp design</em>, surfaced to RevOps as documented K.M. ask. The flag is invisible to pod managers; it shows only in the sponsor-facing dashboard.</p>
+<hr />
+<h2 id="9-day-120-retention-interpretation-rules">9 · Day-120 retention interpretation rules</h2>
+<table>
+<thead>
+<tr>
+<th>Cohort retention</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥ 92 %</td>
+<td>On-target. No action.</td>
+</tr>
+<tr>
+<td>88–91.9 %</td>
+<td>Within tolerance. Note in monthly report; watch trend.</td>
+</tr>
+<tr>
+<td>84–87.9 %</td>
+<td>Below tolerance. Trigger qualitative pull: 1:1 exit interview review by D.R. + A.S.</td>
+</tr>
+<tr>
+<td>&lt; 84 %</td>
+<td>Major regression. Triggers Phase 6 sprint 6.4 (attribution-recovery deep-dive) + emergency cohort review.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exit-interview integration.</strong> Per brief §10.5 the recent exit interview surfaced three reasons (no call feedback, public bottom-3 leaderboard, cold-call rejection rate). Each cohort exit gets a structured exit interview using the same three-bucket structure; results feed Phase 6.</p>
+<hr />
+<h2 id="10-phase-6-iteration-triggers-from-l4">10 · Phase-6 iteration triggers (from L4)</h2>
+<p>Mirrors <code>kirkpatrick-measurement-plan.md</code> §6:</p>
+<table>
+<thead>
+<tr>
+<th>L4 signal</th>
+<th>Phase-6 sprint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Program-cohort ramp improving, confounds quiet</td>
+<td>No iteration · preserve content</td>
+</tr>
+<tr>
+<td>Program-cohort ramp flat, confounds quiet</td>
+<td>Sprint 6.3 — full content review</td>
+</tr>
+<tr>
+<td>Program-cohort ramp worse</td>
+<td>Sprint 6.1 + 6.2 — content + manager calibration</td>
+</tr>
+<tr>
+<td>Confound flags active (lead-quality or SPIF)</td>
+<td>Sprint 6.4 — attribution-recovery, NOT content change</td>
+</tr>
+<tr>
+<td>Pod-level flag (any of the three pod thresholds)</td>
+<td>Sprint 6.2.A — that pod's manager calibration</td>
+</tr>
+<tr>
+<td>Cohort retention &lt; 84 %</td>
+<td>Sprint 6.4 + emergency exit-interview pull</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><code>case-study-tz.md</code> §3, §4, §5, §8, §10.5, §15.1, §15.2, §15.4, §17, §20</li>
+<li><code>00-project-management/decisions-log.md</code> D-008</li>
+<li><code>00-project-management/frameworks-applied.md</code> #3 (Kirkpatrick · Phillips)</li>
+<li><code>05-evaluate/kirkpatrick-measurement-plan.md</code> §4</li>
+<li><code>05-evaluate/l3-call-rubric.md</code> §4 (Call_Review__c rollup feeds pod-level adherence)</li>
+<li>Phillips, J. J. (2003). <em>Return on investment in training and performance improvement programs</em> (2nd ed.). Routledge.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 05-evaluate/l4-ramp-retention-tracking.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

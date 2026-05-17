@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Learner journey map · Day 0 → Day 120 — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Maps the Day-0 → Day-120 experience of the median new SDR across activities, emotion, pain, learning need, keystone-move opportunity, and manager touchpoint. Built from the brief §1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>01-analyze/learner-journey-map.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Maps the Day-0 → Day-120 experience of the median new SDR across activities, emotion, pain, learning need, keystone-move opportunity, and manager touchpoint. Built from the brief §14 current-onboarding table (what they get) crossed with §10 SME interviews (what they feel) — so Phase 2 sequencing knows <em>when</em> M1/M2/M3 are teachable and <em>when</em> the rep is too overloaded to absorb them.</p>
+</blockquote>
+<h1 id="learner-journey-map-day-0-day-120">Learner journey map · Day 0 → Day 120</h1>
+<h2 id="1-framing">1 · Framing</h2>
+<p>The journey is the median new SDR — closer to P.B. (§10.4) than to M.G. (§10.1). The brief gives us:</p>
+<ul>
+<li>The <strong>current-onboarding scaffold</strong> (§14): six weeks of formal content, then ad-hoc.</li>
+<li>The <strong>rep's lived experience</strong> in their own words (§§10.3, 10.4, 10.5).</li>
+<li>The <strong>outcome distribution</strong> (§1): mean ramp 95 d · top 52 d · bottom &gt; 120 d.</li>
+</ul>
+<p>The map columns are: <strong>stage · activities · emotional state (with evidence) · pain points · learning needs · keystone-move opportunity · manager touchpoint</strong>.</p>
+<p>The map rows are: <strong>W1–2 · W3–4 · W5–8 · W9–12 · W13–17 (Day-120 gate)</strong>.</p>
+<p>This is the journey <em>as it exists today</em>. Phase 2 redesigns it; this artefact tells Phase 2 where to intervene.</p>
+<hr />
+<h2 id="2-the-map">2 · The map</h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Activities (today, §14)</th>
+<th>Emotional state · evidence</th>
+<th>Pain points</th>
+<th>Learning needs</th>
+<th>Keystone-move opportunity</th>
+<th>Manager touchpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>W1–2</strong> Days 0–14 · Product + tool dump</td>
+<td>6 × 90-min live product walkthrough sessions (4 props · tool stack tour); Salesforce + Outreach + Gong self-paced LMS modules; reg-101 / AML / GDPR Cornerstone modules</td>
+<td><strong>Optimistic but overloaded.</strong> &gt; "They taught me the four product props in week 1. Useful but not what I needed." — M.G., §10.1</td>
+<td>Knowledge-dense with no anchor. Tool training in isolation, not in workflow (§14 audit verdict).</td>
+<td>(a) Product literacy. (b) Tooling literacy. (c) Recognition that <em>the work is calling</em>, not the LMS modules.</td>
+<td><strong>None yet.</strong> Reps cannot try the moves — they have not heard them named.</td>
+<td>Cohort manager; no 1:1 rubric yet.</td>
+</tr>
+<tr>
+<td><strong>W3–4</strong> Days 15–28 · Shadow + first dials</td>
+<td>Ride-along — shadow 4 calls with a senior rep; first solo calls if floor allows; manager observation <em>if cadence permits</em></td>
+<td><strong>Awe + comparison anxiety.</strong> Top reps' moves are invisible to the new rep — they sound like personality, not method (per §20 risk row 3 articulation gap). Mid-rep N.W. by W4 equivalent: &gt; "My manager has not listened to one of my calls in three weeks. I don't know what I'm doing wrong." — §10.3</td>
+<td>Quality of shadow varies by which senior rep (§14). No vocabulary for what the senior is doing. Manager cadence variance kicks in (§14).</td>
+<td>M1/M2/M3 should be <strong>named</strong> here. Today they are not.</td>
+<td><strong>Highest leverage point in the entire journey.</strong> Reps are watching live calls — if M1/M2/M3 were named <em>before</em> shadowing, every shadow becomes a worked example.</td>
+<td>Variable by pod (§9). In J.T.'s pod, this is the start of weekly call review. In P.B.'s pod, "officially weekly, in practice every 9–14 days."</td>
+</tr>
+<tr>
+<td><strong>W5–8</strong> Days 29–56 · First solo dials at volume · cohort wrap-up</td>
+<td>First solo cold calls + first pipeline; cohort wrap-up live session (§14 row 5); ad-hoc 1:1 onwards</td>
+<td><strong>Dread + reflexive pitch-launch.</strong> Bottom-quartile evidence — &gt; "By the fourth I just started saying 'I know you're busy, but our card is cheaper than your bank's...' which I know is wrong but I don't know what else to say." — P.B., §10.4 · And &gt; "Around 70 % of dials were hangups within 10 seconds. I started dreading mornings." — exit interview, §10.5</td>
+<td>(a) No move loaded before the dial. (b) High rejection rate normalised. (c) Argument-reflex on objections (P.B.: "I argue. I know I'm not supposed to."). (d) Calendar not in second tab.</td>
+<td>(a) Pre-loaded diagnostics per ICP archetype. (b) Pre-loaded objection-acknowledgement script. (c) Calendar-close habit.</td>
+<td><strong>M1 (diagnostic opener)</strong> is the highest-priority drill in this window. <strong>M2 (acknowledge)</strong> opens here too. <strong>M3 (calendar-close)</strong> introduced but not yet expected.</td>
+<td>This is the window where manager-cadence variance <em>causes</em> ramp variance. High-cadence pod (O.B., §10.3): "I'm getting better fast." Low-cadence pod (P.B., §10.4): "He's busy."</td>
+</tr>
+<tr>
+<td><strong>W9–12</strong> Days 57–84 · The make-or-break window</td>
+<td>Ad-hoc 1:1; pipeline review; first commission attempts; SPIF chase begins (§17)</td>
+<td><strong>Plateau or progress · the bimodal split.</strong> Top-quartile by W12 has started hitting M1/M2/M3 consistently (per §11 — top decile averages 8:42 min call duration, 28× the bottom). Bottom quartile inverts all three (§11 bottom 0/4 across all moves). The comp SPIF distortion (§17) starts pulling reps onto stale leads.</td>
+<td>(a) SPIF temptation overrides M3 net-new behaviour (§17). (b) No feedback loop in low-cadence pods. (c) Bottom-quartile rep starts considering exit. &gt; "If I don't see ramp by month 6 I'm going back." — P.B., §10.4</td>
+<td>(a) M1/M2/M3 <em>integrated</em>, not as three separate skills but as one configural call motion (§9 A.S.: "Top reps sound nothing alike. But those three moves are always there."). (b) Resilience to comp-SPIF distraction. (c) Calibrated feedback.</td>
+<td><strong>All three moves should be integrated</strong> by end of W12. This is the latest acceptable window.</td>
+<td>This is the window where the L3 rubric <em>would</em> be in play if it existed. Currently absent in 7 of 9 pods.</td>
+</tr>
+<tr>
+<td><strong>W13–17</strong> Days 85–120 · Ramp gate · paid-quota window</td>
+<td>First paid quota attainment for top-decile (~52 d already passed) and mid-band (~95 d hits here); bottom-quartile still below quota; day-120 retention gate</td>
+<td><strong>Bifurcation: ramping reps gain compounding confidence; bottom-quartile reps spiral.</strong> Exit-interview evidence — &gt; "No feedback on my calls for the last 6 weeks of my tenure. I genuinely didn't know if I was getting better or worse." — §10.5 — describes this exact window.</td>
+<td>(a) Visible leaderboard bottom-3 ranking (§10.5) damages competence/relatedness — reps exit. (b) No structured retention-conversation cadence. (c) Bottom-quartile churn becomes the €90K event (§4).</td>
+<td>(a) Feedback that is <em>decision-relevant</em>, not "you're behind" (LTEM tier-3 framing). (b) Pathway visibility — what does the next 30 d look like if I'm not at quota yet?</td>
+<td>Less about <em>teaching</em> new moves; more about <strong>reinforcement + retention conversation</strong>. The L3 rubric provides the language for "you're 1 move away" rather than "you're below quota."</td>
+<td>The L3 rubric is the only honest substrate for the day-120 retention conversation. Without it, the conversation is "are you closing?" — which is the exit-interviewee's described experience.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-what-this-map-sends-to-phase-2">3 · What this map sends to Phase 2</h2>
+<table>
+<thead>
+<tr>
+<th>Insight from the map</th>
+<th>Phase-2 design implication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W1–2 currently has zero behavioural anchor — it's product + tools</td>
+<td>Module 1 (M1 Diagnostic Opener) <strong>must run in W1</strong>, not W3+. The brief's §14 sequence is wrong here; we shift M1 left.</td>
+</tr>
+<tr>
+<td>W3–4 shadow window has no vocabulary</td>
+<td>Before any shadow, rep watches Module 1 worked-example transcripts (Gong-style annotation per <code>D-006</code>). Shadows become <em>named</em> worked examples.</td>
+</tr>
+<tr>
+<td>W5–8 is the dread window because no moves are loaded</td>
+<td>This is the 4C/ID part-task practice window. Drill M1 in mini-OS <em>before</em> W5 solo calls. (<code>D-007</code>)</td>
+</tr>
+<tr>
+<td>W9–12 is where SPIF distortion kicks in</td>
+<td>Module 3 (M3 calendar-close) explicitly addresses the comp-confound in framing, not as a comp-fix but as a motivational scaffold.</td>
+</tr>
+<tr>
+<td>W13–17 is where retention is lost without a rubric</td>
+<td>L3 rubric live in Gong by W16 (per <code>master-plan.md</code> §5 sprint 5.2). Day-120 retention conversation uses rubric language.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-the-redesigned-journey-preview-belongs-in-phase-2">4 · The redesigned journey (preview · belongs in Phase 2)</h2>
+<p>For reference — Phase 2 will detail this. The redesign collapses §14's six weeks of front-loaded knowledge into a configural arc that introduces M1 in W1, M2 in W2, M3 in W3, and integrates by W5. Manager calibration sessions at W17 (week-2 of cohort-1's working life) and W21 (week-6). See <code>02-design/curriculum-blueprint.md</code> <em>(to be authored)</em>.</p>
+<h2 id="5-persona-overlays-on-the-same-journey">5 · Persona overlays on the same journey</h2>
+<p>Same map, different reps. This is qualitative; Phase 2 sharpens it.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>M.G. (top-decile) at this stage, in retrospect</th>
+<th>P.B. (bottom-quartile) at this stage today</th>
+<th>Exit interviewee at this stage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W1–2</td>
+<td>"Useful but not what I needed" (§10.1)</td>
+<td>Optimistic; product training feels thorough</td>
+<td>Optimistic</td>
+</tr>
+<tr>
+<td>W3–4</td>
+<td>Started piecing moves together from shadows</td>
+<td>Generic openers; "I know I'm not supposed to" already (§10.4)</td>
+<td>Watching the moves but not naming them</td>
+</tr>
+<tr>
+<td>W5–8</td>
+<td>Found the diagnostic-question pattern (took her months, §10.1)</td>
+<td>All three moves inverted (GC-19/20/21 in §11)</td>
+<td>All three moves absent</td>
+</tr>
+<tr>
+<td>W9–12</td>
+<td>Hit ramp around month 4–5 (her 14-month tenure consistent)</td>
+<td>"If I don't see ramp by month 6 I'm going back" — §10.4</td>
+<td>Last feedback received</td>
+</tr>
+<tr>
+<td>W13–17</td>
+<td>Sustaining; mentoring shadow reps</td>
+<td>Decision point; retention at risk</td>
+<td><strong>Exit.</strong> §10.5: "I started dreading mornings."</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-data-gaps-to-address">6 · Data gaps to address</h2>
+<table>
+<thead>
+<tr>
+<th>Gap</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quantitative emotional-state data per week (today this is qualitative from §10)</td>
+<td>Phase 5 L1 pulse instrument tags each cohort week with the LTEM tier-3 prompt; we'll have data after cohort 1</td>
+</tr>
+<tr>
+<td>Pod-by-pod ramp distribution (W9–12 bifurcation assumed from §1 baseline)</td>
+<td>J.V. to slice <code>Ramp_Time__c</code> × <code>Pod__c</code> × cohort in W2</td>
+</tr>
+<tr>
+<td>Day-by-day call volume per rep across the 120 days (today aggregated, not per-rep journey)</td>
+<td>A.S.: pull Outreach <code>Sequence_Completion_Rate</code> per rep per week (§15.4)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§1, 4, 9, 10.1, 10.3, 10.4, 10.5, 11, 14, 15.4, 17, 20.</li>
+<li>Thalheimer, W. (2018). <em>The Learning-Transfer Evaluation Model.</em> Work-Learning Research.</li>
+<li>Decisions <code>D-002</code>, <code>D-004</code>, <code>D-006</code>, <code>D-007</code>, <code>D-008</code>.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 01-analyze/learner-journey-map.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

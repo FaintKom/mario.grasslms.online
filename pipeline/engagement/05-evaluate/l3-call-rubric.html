@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>L3 call-review rubric · M1 / M2 / M3 × 1–5 — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: D-004 commits the manager rubric to exactly 3 rows × 5 anchored levels, single A4 page. Brief §8 is K.M. verbatim (&quot;a single sheet with 3 rows (one per move) and 1–5 scoring wi"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>05-evaluate/l3-call-rubric.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="l3-call-review-rubric-m1-m2-m3-15">L3 call-review rubric · M1 / M2 / M3 × 1–5</h1>
+<blockquote>
+<p>Why this artefact: D-004 commits the manager rubric to exactly 3 rows × 5 anchored levels, single A4 page. Brief §8 is K.M. verbatim ("a single sheet with 3 rows (one per move) and 1–5 scoring with anchored descriptors"). Brief §10.6 J.T. and §10.8 confirm the highest-cadence pod managers already converged on this design and are waiting to adopt a calibrated version. Brief §10.1 M.G. examples + §11 Gong calls supply the anchors. Frameworks: criterion-referenced rubric (Wiggins &amp; McTighe 2005), cognitive-load minimisation for the grader.</p>
+</blockquote>
+<p>This is the single page managers print and keep on the desk for the 4-calls-per-rep-per-month review.</p>
+<hr />
+<h2 id="1-one-page-rubric-the-actual-artefact">1 · One-page rubric (the actual artefact)</h2>
+<blockquote>
+<p><strong>FinTechCard · SDR Call Review Rubric · v1.0</strong>
+Rep: <strong><em>_</em></strong><strong><em>_</em></strong><strong><em> · Date of call: </em></strong><strong><em>_</em>_ · Reviewer: </strong><strong><em>_</em></strong> · Gong call ID: GC-______</p>
+<p>Score each row 1–5. Circle the anchor that best matches what the rep did.</p>
+</blockquote>
+<h3 id="row-1-m1-diagnostic-opener-first-60-seconds">Row 1 · M1 · Diagnostic opener (first 60 seconds)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Score</th>
+<th>Anchor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1 — Absent</strong></td>
+<td>Rep launches into pitch within 15 seconds. No diagnostic question. Example: "Hi, I'm calling from FinTechCard, our card is cheaper than your bank's." <em>(GC-19, GC-20 pattern.)</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2 — Partial / wrong</strong></td>
+<td>Generic question, no anchor to the buyer's specific situation. "Do you have a moment to talk about corporate spending?" <em>(GC-21 pattern.)</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>3 — Present but generic</strong></td>
+<td>A diagnostic question is asked, but it could apply to any business. "Who currently approves expense reports?" — no buyer-specific anchor.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4 — Specific + situational</strong></td>
+<td>Diagnostic anchored to something observable about <em>this</em> buyer. "I noticed you've opened a second location in the last 6 months — who's approving expense reports across both stores now?" <em>(M.G. pattern, GC-01, GC-02, GC-07.)</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>5 — Anchored + buyer-back-in-buyer-words</strong></td>
+<td>Specific diagnostic + the rep stays silent for ≥ 4 seconds to let the buyer answer, then re-states what the buyer said before continuing. <em>(M.G. §10.1 "5 seconds feels like an hour"; L.D. quant-anchored opener §10.2, GC-03, GC-06, GC-08.)</em></td>
+</tr>
+</tbody>
+</table>
+<h3 id="row-2-m2-objection-acknowledge">Row 2 · M2 · Objection acknowledge</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Score</th>
+<th>Anchor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1 — Absent</strong></td>
+<td>Rep argues with the objection. "But our fees are lower / our controls are better." <em>(GC-19, GC-20, P.B. §10.4 verbatim "I argue. I know I'm not supposed to.")</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2 — Partial / wrong</strong></td>
+<td>Rep deflects the objection ("let me come back to that") or talks past it. <em>(GC-12 pattern.)</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>3 — Present but generic</strong></td>
+<td>Rep acknowledges in a textbook way: "I hear you." No buyer-specific re-statement.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4 — Specific + situational</strong></td>
+<td>Rep names the objection back accurately and waits for buyer to expand. "So you've got the card-issuing side sorted." Then silence. <em>(M.G. §10.1 verbatim, GC-01, GC-07.)</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>5 — Anchored + buyer-back-in-buyer-words</strong></td>
+<td>Rep re-states in the buyer's exact phrasing, then asks the one question that surfaces the real broken thing. "So you've got the card-issuing side sorted — what's not working about it?" Buyer reveals actual pain. <em>(L.D. Brex-displacement, GC-06, GC-03; M.G. GC-01.)</em></td>
+</tr>
+</tbody>
+</table>
+<h3 id="row-3-m3-calendar-close">Row 3 · M3 · Calendar close</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Score</th>
+<th>Anchor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1 — Absent</strong></td>
+<td>"I'll follow up." No calendar action. <em>(GC-10, GC-19, GC-20, GC-22 entire P.B. + exit-interview sample.)</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2 — Partial / wrong</strong></td>
+<td>"I'll send you some times by email." No live calendar move. <em>(GC-11 pattern.)</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>3 — Present but generic</strong></td>
+<td>"Let me check my calendar and get back to you" or "When's good for you?" — calendar acknowledged but not opened live.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4 — Specific + situational</strong></td>
+<td>Rep names two specific slots from a live calendar. "Tuesday 11 or Thursday 2 — which works?" <em>(GC-05 partial; reaching for M.G. pattern.)</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>5 — Anchored + buyer-back-in-buyer-words</strong></td>
+<td>Rep ties the slot to what the buyer just said. "You mentioned the bookkeeper is overwhelmed by Q-end — let me book 20 minutes Tuesday 11 to show your accountant the Xero sync." Calendar invite goes out same-call. <em>(M.G. §10.1 verbatim "I do not say I'll send you something"; GC-01, GC-02, GC-07, GC-08.)</em></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Totals.</strong> M1 ___ / 5 · M2 ___ / 5 · M3 ___ / 5 · <strong>Total ___ / 15</strong></p>
+<p><strong>Coaching focus for next week:</strong> the <em>lowest</em> row, not the average. Per J.T. §10.6: the rubric is a self-coaching tool, not a surveillance score.</p>
+<p><strong>Reviewer note (free text, ≤ 30 words):</strong> <strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong></p>
+</blockquote>
+<hr />
+<h2 id="2-scoring-instructions-for-managers">2 · Scoring instructions for managers</h2>
+<ol>
+<li><strong>One rep, one call, one rubric.</strong> Each rubric scores exactly one call. Do not average across calls inside a single rubric.</li>
+<li><strong>Pick the closest anchor.</strong> If the call sits between two anchors, score the lower of the two and note why in the free-text field.</li>
+<li><strong>Score what was done, not what was intended.</strong> "He was about to acknowledge but the buyer interrupted" → score the actual behaviour.</li>
+<li><strong>Silence on M2 counts as M2 = n/a if there was no objection.</strong> Record <code>n/a</code>; do not score it as 1. Brief §11 GC-04, GC-12 are precedents.</li>
+<li><strong>The total is not the point.</strong> The lowest row is the coaching focus. Total is for trend tracking only.</li>
+</ol>
+<hr />
+<h2 id="3-cadence-per-brief-8-master-plan-3">3 · Cadence (per brief §8 + master plan §3)</h2>
+<table>
+<thead>
+<tr>
+<th>Cadence</th>
+<th>Action</th>
+<th>Per rep</th>
+<th>Per pod manager</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Weekly</strong></td>
+<td>Manager listens to 1 call per rep</td>
+<td>1 / week</td>
+<td>4–6 / week (1 per direct report)</td>
+</tr>
+<tr>
+<td><strong>Monthly</strong></td>
+<td>4 calls per rep scored on the rubric</td>
+<td>4 / month</td>
+<td>16–24 / month</td>
+</tr>
+<tr>
+<td><strong>Quarterly</strong></td>
+<td>Calibration session — all 9 pod managers score the same 3 sample calls</td>
+<td>—</td>
+<td>3 calls × 9 managers</td>
+</tr>
+</tbody>
+</table>
+<p>The 4-calls-per-rep-per-month floor is K.M.'s explicit ask (§8). Managers in the highest-cadence pods (J.T. UK Pod 1, M.K. DE Pod 1) already exceed this; the floor is binding on the others.</p>
+<hr />
+<h2 id="4-data-flow-gong-scorecards-salesforce">4 · Data flow · Gong scorecards → Salesforce</h2>
+<pre><code>[Manager listens to call in Gong]
+        |
+        v
+[Manager opens Gong Scorecard &quot;FTC · L3 · M1-M2-M3 v1.0&quot;]
+        |
+        v
+[3 row scores + free-text note saved in Gong]
+        |
+        v  (nightly sync, owned by J.V. / RevOps)
+        v
+[Salesforce custom object Call_Review__c]
+   |- Call_ID__c            (Gong ID, GC-XXXX)
+   |- Rep_ID__c             (Salesforce User lookup)
+   |- Reviewer_ID__c        (Salesforce User lookup)
+   |- Review_Date__c
+   |- M1_Score__c           (number, 1-5)
+   |- M2_Score__c           (number, 1-5 or null for n/a)
+   |- M3_Score__c           (number, 1-5)
+   |- Reviewer_Note__c      (long text)
+   |- Pod__c                (denormalised picklist)
+        |
+        v
+[Dashboard rollup: pod-level adherence + rep-level trend]
+</code></pre>
+<p>Schema additions to <code>Call_Review__c</code> are minimal (per §15.3 of the brief the object already exists with rubric scores destination). The <code>M1/M2/M3_Score__c</code> field naming is consistent with the auto-tag pattern in §15.3.</p>
+<hr />
+<h2 id="5-auto-tag-vs-rubric-two-signals-jointly-interpreted">5 · Auto-tag vs rubric · two signals, jointly interpreted</h2>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>What it is</th>
+<th>Cost</th>
+<th>Noise</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gong auto-tag (<code>tag:diagnostic-opener</code> etc.)</td>
+<td>NLP detects keyword pattern + structure</td>
+<td>Free, nightly</td>
+<td>High false-positive on M2 in particular</td>
+<td>Aggregate trend lines (master plan §3)</td>
+</tr>
+<tr>
+<td>Manager rubric score</td>
+<td>Human judgement against anchors</td>
+<td>~5 min per call × 4 calls/rep/month</td>
+<td>Low after calibration</td>
+<td>Coaching + L3 dashboard scoring</td>
+</tr>
+</tbody>
+</table>
+<p>The two signals <strong>must not be conflated</strong>. The auto-tag drives the L3 <em>adherence</em> metric (brief §5 "talk-track adherence weeks 4–8 → ≥ 80 %"); the rubric drives the <em>quality</em> metric (§5 "objection-handling rubric → ≥ 3.5 / 5"). The dashboard surfaces both.</p>
+<p><strong>Cross-check rule.</strong> If Gong auto-tag adherence and manager rubric score diverge by &gt; 1.5 points on the same call sample, recalibrate. Tag drift = first hypothesis.</p>
+<hr />
+<h2 id="6-anchored-examples-provenance-map">6 · Anchored examples · provenance map</h2>
+<p>Every anchor at score 4 and 5 traces back to a real call or SME quote. If an anchor is updated, the source must update with it.</p>
+<table>
+<thead>
+<tr>
+<th>Row</th>
+<th>Score</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1</td>
+<td>4</td>
+<td>M.G. opener pattern, §10.1; GC-01, GC-02, GC-07</td>
+</tr>
+<tr>
+<td>M1</td>
+<td>5</td>
+<td>M.G. + L.D. patterns, §10.1, §10.2; GC-03, GC-06, GC-08; the 5-second silence is M.G. verbatim</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>4</td>
+<td>M.G. "card-issuing side sorted" §10.1; GC-01, GC-07</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>5</td>
+<td>L.D. Brex displacement §10.2; GC-03, GC-06; M.G. §10.1</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>4</td>
+<td>M.G. §10.1 "I have my calendar open in a second tab"</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>5</td>
+<td>M.G. §10.1 closing move; GC-01, GC-02, GC-07, GC-08</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-calibration-session-structure-week-6-repeated-quarterly">7 · Calibration session structure (week-6, repeated quarterly)</h2>
+<p>60 minutes. All 9 pod managers + A.S. Three sample calls (one each at score 5, score 3, score 1 — chosen by A.S.). Each manager scores cold, then debate:</p>
+<ol>
+<li><strong>Sample 1 (5 min listening + 5 min scoring + 10 min debate)</strong> — calibration on the top end.</li>
+<li><strong>Sample 2 (same structure)</strong> — calibration on the middle.</li>
+<li><strong>Sample 3 (same structure)</strong> — calibration on the bottom.</li>
+</ol>
+<p>Disagreements are not closed by vote; they're closed by clarifying the anchor wording. Updated anchors version-bump the rubric (v1.1, v1.2). Version history lives in <code>06-iterate/rubric-version-log.md</code>.</p>
+<hr />
+<h2 id="8-multilingual-note-per-brief-107-mk-103-ra">8 · Multilingual note (per brief §10.7 M.K. + §10.3 R.A.)</h2>
+<ul>
+<li>v1 anchors are EN-only.</li>
+<li>ES + DE translations are a v2 deliverable (post-pilot, per brief §3).</li>
+<li>Phase 6 schedules the ES translation first (R.A. §10.3 explicit ask) and DE second (M.K. §10.7).</li>
+<li>Calibration sessions in the ES + DE pods continue in EN during v1; managers may discuss in local language but the rubric anchors stay in EN until v2.</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><code>case-study-tz.md</code> §5, §8, §10.1, §10.2, §10.6, §10.7, §10.8, §11, §15.3, §18.2</li>
+<li><code>00-project-management/decisions-log.md</code> D-004</li>
+<li><code>00-project-management/frameworks-applied.md</code> #8 (Cognitive Load for grader)</li>
+<li><code>05-evaluate/kirkpatrick-measurement-plan.md</code> §3</li>
+<li>Wiggins, G., &amp; McTighe, J. (2005). <em>Understanding by Design</em> (2nd ed.). ASCD.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 05-evaluate/l3-call-rubric.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

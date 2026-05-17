@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Manager calibration session plans · week 2 + week 6 — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: K.M. §8 verbatim — &quot;I want managers to walk out of the week-2 calibration session with a rubric they can use on 4 calls per rep per month. Not a 12-page document — a single she"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>04-implement/manager-calibration-session-plan.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: K.M. §8 verbatim — "I want managers to walk out of the week-2 calibration session with a rubric they can use on 4 calls per rep per month. Not a 12-page document — a single sheet with 3 rows." Brief §10.8 — the calibrated 3-row rubric is the single most-requested artefact from the manager side. This artefact turns that ask into two run-of-show 60-minute sessions. Framework anchoring: criterion-referenced rubric calibration (Wiggins) + Dirksen environment-gap fix (manager-cadence variance is the environment, brief §9 A.S. pod-level cadence data).</p>
+</blockquote>
+<h1 id="manager-calibration-session-plans-week-2-week-6">Manager calibration session plans · week 2 + week 6</h1>
+<p><strong>Audience:</strong> 9 pod managers (UK-Manchester · UK-London A · UK-London B · UK-Belfast · DE-Berlin · DE-Munich · ES-Barcelona · NL-Amsterdam · IT-Milan) + A.S. (facilitator) + K.M. (observer) + designer (rubric holder, note-taker).</p>
+<p><strong>Sessions:</strong>
+1. <strong>Week-2 calibration</strong> · Tuesday 15 July 2026 · 14:00–15:00 UK · hybrid (Manchester room + Zoom for remote pods).
+2. <strong>Week-6 calibration</strong> · Tuesday 12 August 2026 · 14:00–15:00 UK · hybrid.</p>
+<p><strong>Framing rule (K.M. verbatim, §8):</strong> <em>"Don't try to retrain managers. Give them a shared rubric and two calibration sessions. That's enough."</em> No didactic content. Every minute either scores a call or surfaces variance.</p>
+<hr />
+<h2 id="1-week-2-session-tuesday-15-july-2026">1 · Week-2 session · Tuesday 15 July 2026</h2>
+<h3 id="11-outcomes-falsifiable-measured-in-session">1.1 · Outcomes (falsifiable, measured in-session)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Outcome</th>
+<th>How we know we got there</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O1</td>
+<td>Every manager has scored the same anchor call (GC-15, O.B., Manchester, mid-band) using the 3-row rubric</td>
+<td>9/9 score cards visible on a shared whiteboard (or Miro) by the 30-min mark</td>
+</tr>
+<tr>
+<td>O2</td>
+<td>Inter-rater variance ≤1 scale point per row across the 9 managers</td>
+<td>Calculated live: max(score) − min(score) per row ≤1</td>
+</tr>
+<tr>
+<td>O3</td>
+<td>Every manager has booked 4 call-review sessions per rep in their pod for weeks 3–6 of cohort 1</td>
+<td>All 9 managers show their calendar in the last 10 min; bookings visible</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-pre-session-asks-sent-in-manager-pre-read-day-14">1.2 · Pre-session asks (sent in manager pre-read, Day -14)</h3>
+<ul>
+<li>Read the rubric (1 A4 page).</li>
+<li>Score the anchor call GC-15 <em>individually before the session</em>. Bring the score sheet (paper or screenshot).</li>
+<li>Bring own pod's call-review cadence template — pods that don't have one bring their Outlook calendar.</li>
+</ul>
+<h3 id="13-materials">1.3 · Materials</h3>
+<ul>
+<li>The 3-row rubric, printed for room attendees and shared as PDF in Slack for remote.</li>
+<li>Anchor call GC-15 (Gong link, pre-loaded).</li>
+<li>Shared Miro board (or physical whiteboard) with a 3-row × 9-column grid (rows = M1/M2/M3; columns = 9 managers).</li>
+<li>Stopwatch for the 5-second-silence drill in segment 30–50 min (see below).</li>
+<li>A4 print-outs of the rubric anchors per row, large-font, on the wall.</li>
+</ul>
+<h3 id="14-run-of-show-60-min">1.4 · Run-of-show (60 min)</h3>
+<h4 id="010-min-open-ground-rules">0–10 min · Open + ground rules</h4>
+<p><strong>Facilitator:</strong> A.S.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>What happens</th>
+<th>Facilitator prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–2 min</td>
+<td>A.S. opens. Names the public number (−25 % ramp, ≥92 % retention). Names what this session is <em>not</em> (a manager training).</td>
+<td>"This is 60 minutes about calibration, not training. By the end of it, the 9 of us are going to score the same call within 1 point of each other on each row. That's the bar."</td>
+</tr>
+<tr>
+<td>2–5 min</td>
+<td>K.M. (observer) names sponsor commitment in one sentence. Then steps back.</td>
+<td>K.M.: "I committed −25 % ramp to the CRO. If this rubric lands in 9 pods, we hit it. If it doesn't, we don't. That's why I'm here today and not in the room next door."</td>
+</tr>
+<tr>
+<td>5–10 min</td>
+<td>Designer reads the rubric out loud — row by row, anchor by anchor. Slow. Names J.T.'s and M.K.'s contribution explicitly.</td>
+<td>Designer: "Row 1 — M1, the diagnostic opener. A 1 sounds like this: [reads anchor]. A 3 sounds like this: [reads]. A 5 sounds like this: [reads]. Questions on this row only."</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Materials in use:</strong> rubric PDF on screen, A4 anchors on the wall.</p>
+<h4 id="1030-min-score-the-anchor-call-silently-first-then-surface">10–30 min · Score the anchor call (silently first, then surface)</h4>
+<p><strong>Facilitator:</strong> A.S.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>What happens</th>
+<th>Facilitator prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10–11 min</td>
+<td>A.S. confirms everyone has the call pre-scored. Anyone who didn't pre-score uses these next 12 minutes to score it.</td>
+<td>"Anyone who didn't pre-score, head down for 12 minutes. The rest of us are about to write our scores up."</td>
+</tr>
+<tr>
+<td>11–22 min</td>
+<td>Each manager writes their three scores on a sticky note (or in Miro). Names hidden until reveal. No discussion yet.</td>
+<td>"Don't discuss yet. We want the variance to be honest, not socially adjusted."</td>
+</tr>
+<tr>
+<td>22–25 min</td>
+<td>Reveal. All 9 score sets go up on the 3×9 grid simultaneously.</td>
+<td>A.S. flips the grid. Pause. Read the room before talking.</td>
+</tr>
+<tr>
+<td>25–30 min</td>
+<td>Calculate variance per row. Per row, identify the max − min spread.</td>
+<td>A.S.: "Row M1: spread is X points. Row M2: spread is Y. Row M3: spread is Z. Where's the disagreement biggest?"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variance scoring rule:</strong> if all three rows are at ≤1 point spread, skip the variance-resolution block (30–50 min) and use the extra time to expand the call-review booking exercise. This rule is the planned upside.</p>
+<h4 id="3050-min-surface-and-resolve-the-highest-variance-row">30–50 min · Surface and resolve the highest-variance row</h4>
+<p><strong>Facilitator:</strong> A.S. with designer support.</p>
+<p>The point of this segment is <strong>not to teach the right answer</strong>. It's to surface <em>why</em> the spread is what it is — usually because two managers are interpreting the same anchor differently. That's where the rubric ambiguity log gets seeded.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>What happens</th>
+<th>Facilitator prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30–35 min</td>
+<td>Pick the highest-variance row. Each manager who gave the extreme score (highest and lowest) explains their reasoning in 60 seconds.</td>
+<td>A.S. (to the manager who gave a 5): "Walk us through why this was a 5 for you. What anchor did you hit?" Then to the manager who gave a 2: "Same question. What did you hear that didn't show up for them?"</td>
+</tr>
+<tr>
+<td>35–40 min</td>
+<td>Designer captures language that surfaces ambiguity. Writes verbatim in the rubric ambiguity log.</td>
+<td>Designer notes: "Manager X said 'the rep paused, which I scored as M2 acknowledge'; manager Y said 'I scored the same pause as a hesitation, not an acknowledge'." → ambiguity in M2 row 5 anchor.</td>
+</tr>
+<tr>
+<td>40–45 min</td>
+<td>Group re-scores the same row in light of the surfaced ambiguity. New scores go up.</td>
+<td>"Now that we've heard each other, anyone want to change their score? Same 60 seconds, silent."</td>
+</tr>
+<tr>
+<td>45–50 min</td>
+<td>A.S. and designer note the rubric refinement candidates for v1.1. <strong>Do not edit the v1 rubric in-session.</strong> Edits go through Phase 6 sprint.</td>
+<td>A.S.: "Rubric ambiguity in M2 anchor 5 — logged for v1.1. We will not change v1 mid-cohort. Cohort 1 keeps using v1 as-is so the data is consistent."</td>
+</tr>
+</tbody>
+</table>
+<p><strong>"Stuck pod" recovery plan:</strong> if one manager has scored ≥3 points away from the median on every row, that manager is likely calibrating against a different mental model entirely. A.S. takes them aside after the session for a 20-min 1:1, not in front of the group. Brief reason for the carve-out: brief §18.2 honest-about-hard-parts × no public-shaming. The Belfast pod (D.W., newly promoted, no structured call review in 5 weeks, §9) is the most likely candidate for this carve-out.</p>
+<h4 id="5060-min-book-the-4-call-review-sessions-live">50–60 min · Book the 4 call-review sessions live</h4>
+<p><strong>Facilitator:</strong> A.S.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>What happens</th>
+<th>Facilitator prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>50–55 min</td>
+<td>Every manager opens their calendar. Books 4 call-review slots per rep (~30 min each) across weeks 3–6 of cohort 1 (i.e. 22 July – 12 August). Visible on screen.</td>
+<td>A.S.: "Calendar open. Slot 1: name the day. Slot 2: name the day. Slot 3, slot 4. Done. Next manager."</td>
+</tr>
+<tr>
+<td>55–58 min</td>
+<td>Each manager states one specific thing they will use the rubric for on their <em>next</em> call review (not in general).</td>
+<td>"Concrete commitment. Not 'I will use the rubric.' Try: 'On Tuesday with H.K., I will score his next two opening 60 seconds against the M1 row before we discuss anything else.'"</td>
+</tr>
+<tr>
+<td>58–60 min</td>
+<td>A.S. closes. K.M. closes with a one-line thanks. Next session date confirmed (12 August).</td>
+<td>A.S.: "Same room, same time, 12 August. Bring 3 sample calls from your own pod. We'll calibrate across pods next time."</td>
+</tr>
+</tbody>
+</table>
+<h3 id="15-post-session-artefacts-designer-produces-within-24-h">1.5 · Post-session artefacts (designer produces within 24 h)</h3>
+<ul>
+<li>Inter-rater variance summary table (3 rows × variance numbers) appended to <code>00-project-management/critic-log.md</code>.</li>
+<li>Rubric ambiguity log v0.1 (input to Phase 6 sprint 6.1 rubric refinement).</li>
+<li>9 × 4 = 36 booked call-review slots confirmed in a shared cadence tracker.</li>
+</ul>
+<hr />
+<h2 id="2-week-6-session-tuesday-12-august-2026">2 · Week-6 session · Tuesday 12 August 2026</h2>
+<h3 id="21-outcomes-falsifiable-measured-in-session">2.1 · Outcomes (falsifiable, measured in-session)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Outcome</th>
+<th>How we know we got there</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O1</td>
+<td>Managers compare scores on 3 cohort-1 sample calls (1 per move keystone: M1-heavy, M2-heavy, M3-heavy)</td>
+<td>9/9 score sheets visible by 30-min mark; spread per row across all 3 calls computed</td>
+</tr>
+<tr>
+<td>O2</td>
+<td>Rubric ambiguity flagged for v2 refinement, with verbatim language captured</td>
+<td>Phase 6 sprint 6.1 ambiguity log updated with ≥3 specific anchor refinements</td>
+</tr>
+<tr>
+<td>O3</td>
+<td>All 9 managers commit (signed in-session) to the ongoing 4-calls-per-rep-per-month cadence past cohort 1</td>
+<td>9/9 commitment signatures in the session output doc</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-pre-session-asks-sent-in-slack-7-days-before">2.2 · Pre-session asks (sent in Slack 7 days before)</h3>
+<ul>
+<li>A.S. picks 3 cohort-1 calls from Gong, one per keystone-move emphasis (a call where M1 was the high-leverage move; a call where M2 was; a call where M3 was). Anonymises rep names in the file metadata.</li>
+<li>Each manager pre-scores all 3 calls. Brings the score sheets.</li>
+<li>Each manager brings 1 cohort-1 rep's rubric trajectory (4 weeks of scores) to discuss in segment 50–60 min.</li>
+</ul>
+<h3 id="23-materials">2.3 · Materials</h3>
+<ul>
+<li>The same v1 rubric (NOT v1.1 — v1.1 enters cohort 2 only).</li>
+<li>3 cohort-1 Gong call links, anonymised.</li>
+<li>Same 3×9 grid format on Miro, replicated 3 times (once per call).</li>
+<li>The rubric ambiguity log from week-2 session, projected as starting point.</li>
+<li>A4 print-out: "the 4-calls-per-rep-per-month commitment" with space for 9 signatures.</li>
+</ul>
+<h3 id="24-run-of-show-60-min">2.4 · Run-of-show (60 min)</h3>
+<h4 id="010-min-reconvene-variance-check">0–10 min · Reconvene + variance check</h4>
+<p><strong>Facilitator:</strong> A.S.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>What happens</th>
+<th>Facilitator prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–3 min</td>
+<td>A.S. opens. Reports the week-2 inter-rater variance + the 4-week cadence-adoption count.</td>
+<td>A.S.: "Week-2 variance was X-Y-Z per row. Across the 9 pods, you scored Q calls in the last 4 weeks against the cadence floor of 36. We're at R %."</td>
+</tr>
+<tr>
+<td>3–6 min</td>
+<td>K.M. names what changed in the dashboard since week 2 (L3 adherence trend, no L4 yet). Then steps back.</td>
+<td>K.M.: "L3 talk-track adherence is at Y % across cohort 1. Bottom-quartile lift is the part I'm watching most."</td>
+</tr>
+<tr>
+<td>6–10 min</td>
+<td>Designer projects the week-2 ambiguity log. Asks: "Has any of this become clearer in 4 weeks of using the rubric? Or muddier?"</td>
+<td>Designer: "We logged 3 ambiguities at week 2. Show of hands — who still feels stuck on M2 anchor 5?"</td>
+</tr>
+</tbody>
+</table>
+<h4 id="1030-min-score-the-3-cohort-1-sample-calls">10–30 min · Score the 3 cohort-1 sample calls</h4>
+<p><strong>Facilitator:</strong> A.S.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>What happens</th>
+<th>Facilitator prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10–13 min</td>
+<td>Confirm all 9 managers pre-scored. Anyone who didn't — 12 minutes to do so, head down.</td>
+<td>"Same drill as last time. Pre-scores are honest scores."</td>
+</tr>
+<tr>
+<td>13–22 min</td>
+<td>Reveal calls one at a time. 3 minutes per call. Scores go up on the grid.</td>
+<td>A.S. controls the reveal pacing. "Call 1: scores up. Call 2: scores up. Call 3: scores up."</td>
+</tr>
+<tr>
+<td>22–25 min</td>
+<td>Calculate spread per row per call. 3 rows × 3 calls = 9 spread numbers.</td>
+<td>Designer fills out a 3×3 spread matrix on Miro.</td>
+</tr>
+<tr>
+<td>25–30 min</td>
+<td>Compare against week-2 spread. Has it converged?</td>
+<td>A.S.: "Week 2 we were at 1.8 / 2.1 / 1.4. Today we're at A / B / C. Where did we move? Where did we backslide?"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Expected outcome (per K.M. §8):</strong> ≤1-point spread per row per call. If achieved, the rubric is calibrated. If not, it's not yet — and the next 20 minutes finds out why.</p>
+<h4 id="3050-min-cross-pod-pattern-surfacing">30–50 min · Cross-pod pattern surfacing</h4>
+<p><strong>Facilitator:</strong> designer with A.S. support. This is the most diagnostic 20 minutes of the entire engagement on the manager side.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>What happens</th>
+<th>Facilitator prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30–35 min</td>
+<td>For each row × call combination where spread &gt;1, identify which 2 pods are most divergent. Name the pods, not the managers individually.</td>
+<td>Designer: "On Call 2, M2 row, UK-London B and DE-Berlin are 3 points apart. Why?"</td>
+</tr>
+<tr>
+<td>35–45 min</td>
+<td>Have the two pod managers each describe their interpretation in 90 seconds. The other 7 listen.</td>
+<td>A.S.: "UK-London B first. What were you hearing? … OK. DE-Berlin same question."</td>
+</tr>
+<tr>
+<td>45–50 min</td>
+<td>Designer captures the language of disagreement verbatim. This becomes the v2 rubric refinement input.</td>
+<td>Designer notes verbatim. Asks: "Is this an anchor ambiguity or a pod-context difference (UK vs DE buyer style, per L.D.'s §10.2 input)?"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>"Stuck pod" recovery plan v2:</strong> if the Belfast pod (D.W.) is still systematically off-median 4 weeks in, the recovery is no longer rubric-side. It's a cadence problem — Belfast may still not be running real weekly call reviews. A.S. flags for a separate 1:1 with D.W. and offers J.T. (UK Pod 1) as an informal mentor for 4 weeks. <strong>Not</strong> a re-training; a peer-cadence apprenticeship. Brief §9 cadence-variance is the underlying environment gap (Dirksen).</p>
+<h4 id="5060-min-commitment-close">50–60 min · Commitment + close</h4>
+<p><strong>Facilitator:</strong> A.S. with K.M.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>What happens</th>
+<th>Facilitator prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>50–55 min</td>
+<td>Each manager states their cohort-1 rep's 4-week rubric trajectory in 30 seconds: starting score, current score, the one row they're focusing on.</td>
+<td>A.S.: "30 seconds each. Don't name the rep — just the trajectory. Go."</td>
+</tr>
+<tr>
+<td>55–58 min</td>
+<td>A.S. circulates the "4-calls-per-rep-per-month" commitment sheet. Each manager signs. Public, on paper.</td>
+<td>A.S.: "This commits you to the cadence past cohort 1. The rubric is only as good as the cadence. Sign or don't — both are honest."</td>
+</tr>
+<tr>
+<td>58–60 min</td>
+<td>K.M. closes. One line. Designer notes ambiguity log handover to Phase 6 sprint 6.1.</td>
+<td>K.M.: "Thank you. Designer hands the ambiguity log to me by Friday. Cohort 2 starts with v1.1 rubric."</td>
+</tr>
+</tbody>
+</table>
+<h3 id="25-post-session-artefacts-designer-produces-within-24-h">2.5 · Post-session artefacts (designer produces within 24 h)</h3>
+<ul>
+<li>Updated inter-rater variance log: week-2 numbers + week-6 numbers, per row per call.</li>
+<li>Rubric v2 ambiguity log (≥3 verbatim language flags + proposed anchor refinement).</li>
+<li>Signed 4-calls-per-rep-per-month commitment sheet (9/9 signatures expected).</li>
+<li>Trigger entry in <code>06-iterate/</code> for Phase 6 sprint 6.1 (rubric v1.1 → v2 evolution).</li>
+</ul>
+<hr />
+<h2 id="3-failure-modes-recovery-across-both-sessions">3 · Failure modes + recovery (across both sessions)</h2>
+<table>
+<thead>
+<tr>
+<th>Failure mode</th>
+<th>Probability (brief §20)</th>
+<th>Recovery</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;7 / 9 managers attend</td>
+<td>Medium (D.W. Belfast, possibly S.B. Munich)</td>
+<td>A.S. runs a 20-min make-up calibration 1:1 within 1 week. Variance contribution still counted retroactively.</td>
+</tr>
+<tr>
+<td>Inter-rater variance &gt;1.5 points on one row after week 6</td>
+<td>Medium</td>
+<td>Phase 6 sprint 6.1 prioritises that row's anchor refinement for v1.1. Variance is not a failure — it's a signal.</td>
+</tr>
+<tr>
+<td>Inter-rater variance =0 on every row at week 6</td>
+<td>Low</td>
+<td>Suspicious. Suggests over-anchoring / social-conformity. Designer schedules a "stress test" call (deliberately ambiguous) for cohort 2 calibration.</td>
+</tr>
+<tr>
+<td>A manager refuses to sign the cadence commitment at week 6</td>
+<td>Low</td>
+<td>A.S. has the 1:1 conversation that day. K.M. is informed but does not intervene directly. Refusal is signal, not insubordination.</td>
+</tr>
+<tr>
+<td>K.M. cannot attend either session</td>
+<td>Low</td>
+<td>D.R. (Head of People) observes instead. Sessions still run; observer role is bearing-witness, not facilitation.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-why-two-sessions-and-not-three-or-one">4 · Why two sessions and not three (or one)</h2>
+<ul>
+<li><strong>One session</strong> is not enough — variance reveals itself on the second pass, not the first. (Wiggins on rubric calibration: 2 passes minimum.)</li>
+<li><strong>Three sessions</strong> breaks K.M. §8 constraint: <em>"two calibration sessions. That's enough."</em> Burning a third session adds cost without diagnostic gain at this cohort size.</li>
+<li><strong>Week-2 + week-6 spacing</strong> is deliberate: week 2 anchors the rubric in managers' hands at the moment reps are still pre-solo-call; week 6 surfaces real cohort-1 call data, which is the <em>only</em> time cross-pod pattern variance becomes detectable.</li>
+</ul>
+<hr />
+<h3 id="references">References</h3>
+<ul>
+<li>Brief: §3 (cohort timeline), §8 (K.M. verbatim on calibration sessions + rubric design), §9 (A.S. pod-level cadence data — used to identify Belfast as stuck-pod risk), §10.5 (exit interview anti-public-shaming signal — used in stuck-pod carve-out), §10.6 (J.T. rubric origin), §10.7 (M.K. on language switching — feeds the stuck-pod recovery for DE-pods), §10.8 (single most-requested artefact), §18.2 (voice rules — honest about hard parts).</li>
+<li>Frameworks: Criterion-referenced rubric calibration (Wiggins, <em>Understanding by Design</em> 2005) · Dirksen behaviour-gap (environment dimension — manager cadence variance is the environment, not the knowledge gap) · Action Mapping (training vs environment separation — calibration is the environment fix, not training; Moore 2017) · Self-determination theory light touch (autonomy-supportive language; D-007 / SDT, no public shaming).</li>
+<li>Internal: <a href="README.html"><code>README.md</code></a> §2 · <a href="launch-comms-plan.html"><code>launch-comms-plan.md</code></a> §3 (manager pre-read seeds week-2 outcomes) · <a href="cohort-1-launch-checklist.html"><code>cohort-1-launch-checklist.md</code></a> Day +14 / Day +42 rows · <code>00-project-management/decisions-log.md</code> D-004 (3-row rubric design), D-007 (no leaderboards) · <code>02-design/rubric-design.md</code> (Phase 2 rubric content) · <code>06-iterate/sprint-6-1-rubric-v2.md</code> (Phase 6 receiver of ambiguity log).</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 04-implement/manager-calibration-session-plan.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

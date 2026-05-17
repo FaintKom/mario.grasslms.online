@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Decisions log — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Every non-trivial design decision goes here. Format: ID · date · decision · framework lens · brief evidence · alternatives rejected · consequences. Append-only. Sorted oldest-first."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>00-project-management/decisions-log.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="decisions-log">Decisions log</h1>
+<blockquote>
+<p>Every non-trivial design decision goes here. Format: <code>ID · date · decision · framework lens · brief evidence · alternatives rejected · consequences</code>. Append-only. Sorted oldest-first.</p>
+</blockquote>
+<p>The point of this log is auditability: a reviewer who disagrees with a choice should be able to trace exactly which evidence and which framework drove it.</p>
+<hr />
+<h2 id="d-001-2026-05-18-addie-as-the-spine-not-sam-or-llama">D-001 · 2026-05-18 · ADDIE as the spine, not SAM or LLAMA</h2>
+<p><strong>Decision.</strong> Use ADDIE phase structure for the project, with internal sprints inside each phase. Reject SAM and LLAMA.</p>
+<p><strong>Framework lens.</strong> Process-model selection.</p>
+<p><strong>Brief evidence.</strong>
+- §3 Engagement contract: "Full instructional-design cycle · Discover → Iterate · 6 months end-to-end" — phased language, sponsor expects phase-gates.
+- §3 Payment schedule: 25 / 50 / 25 at Phase 1 / 4 / 6 gates → sponsor's procurement contract is ADDIE-shaped.
+- §8 K.M.: "I've committed −25 % ramp compression to the CRO. That's the public number." → high-accountability sponsor wants documented phase sign-offs, not iterative SAM-style continuous prototyping.</p>
+<p><strong>Alternatives considered.</strong>
+- <em>SAM (Allen 2012)</em> — rejected: would suit a smaller-scope engagement; phase-gate payments don't match SAM's iterative paradigm.
+- <em>LLAMA (Torrance)</em> — rejected: too lightweight for a measurement-heavy, sponsor-public-commitment engagement.
+- <em>Action Mapping alone (Moore)</em> — kept as a <em>layer inside</em> ADDIE Phase 1, not a replacement.</p>
+<p><strong>Consequences.</strong>
+- Sprint cadence runs inside phases (3 weeks/phase typical) → keeps the <em>spirit</em> of agile inside an ADDIE shell.
+- Critic gate at each phase, not at each sprint.</p>
+<hr />
+<h2 id="d-002-2026-05-18-4cid-as-the-curriculum-backbone-not-topic-by-topic">D-002 · 2026-05-18 · 4C/ID as the curriculum backbone, not topic-by-topic</h2>
+<p><strong>Decision.</strong> Build the curriculum as a 4C/ID whole-task progression (Van Merriënboer 1997 / 2018), not as a topic-list module-by-module breakdown.</p>
+<p><strong>Framework lens.</strong> Whole-task vs part-task instructional architecture.</p>
+<p><strong>Brief evidence.</strong>
+- §9 A.S.: "Top reps sound nothing alike. They don't follow a script. But those three moves are always there." → mastery is configural (M1 + M2 + M3 working together on a live call), not additive.
+- §10.1 M.G.: "What I needed was the framing of when to use which prop against which objection. Took me 4 months to figure that out on my own." → the gap is in <em>combining</em> component skills, not in any one of them.
+- §14 Audit verdict: "It does <strong>not</strong> teach the three keystone behavioural moves (M1/M2/M3) explicitly." → current onboarding is part-task only.</p>
+<p><strong>Alternatives considered.</strong>
+- <em>Topic-by-topic (one module per product prop)</em> — rejected: replicates the existing failed onboarding.
+- <em>Pure action mapping (Moore)</em> — kept as gap-analysis lens, but Action Mapping does not prescribe the whole-task progression; 4C/ID does.</p>
+<p><strong>Consequences.</strong>
+- Each of the 6 modules is a <em>task class</em> of progressively harder whole calls, not a "topic".
+- Worked-example → completion → solo problem fading sequence is mandatory in every module.</p>
+<hr />
+<h2 id="d-003-2026-05-18-kirkpatrick-l1-reframed-via-thalheimer-ltem">D-003 · 2026-05-18 · Kirkpatrick L1 reframed via Thalheimer LTEM</h2>
+<p><strong>Decision.</strong> L1 is <em>not</em> a satisfaction smile-sheet. It is a tier-3 (Thalheimer LTEM) "decision-relevant feedback" instrument with one quantitative item ("I could use this on a call today, 1–5") and two open items ("the move I'm most likely to forget" + "what I'd remove").</p>
+<p><strong>Framework lens.</strong> Evaluation-instrument selection.</p>
+<p><strong>Brief evidence.</strong>
+- §5 Success measures: L1 target = "I could use this on a call today ≥ 4.0/5" — already worded as application-intent, not satisfaction.
+- §8 K.M.: "Another Articulate slide-deck no one finishes" — sponsor's stated failure mode is generic happy-sheet training.
+- §18.2 Brand voice (internal): "Honest about hard parts" — instrument should ask for honest negative feedback, not validation.</p>
+<p><strong>Alternatives considered.</strong>
+- <em>Standard 5-item Likert satisfaction survey</em> — rejected: invites the failure mode sponsor cited.
+- <em>Net Promoter Score</em> — rejected: not decision-relevant, doesn't drive iteration.</p>
+<p><strong>Consequences.</strong>
+- L1 instrument is two open-ended questions + one Likert item, total ≤30 seconds to complete.
+- Open responses are coded weekly and feed Phase 6 iteration sprints.</p>
+<hr />
+<h2 id="d-004-2026-05-18-manager-rubric-is-3-rows-5-anchors-single-sheet">D-004 · 2026-05-18 · Manager rubric is 3 rows × 5 anchors, single sheet</h2>
+<p><strong>Decision.</strong> The manager call-review rubric has exactly 3 rows (M1 opener · M2 acknowledge · M3 close), each scored 1–5 with 3 anchored descriptors per row. Total: one A4 page.</p>
+<p><strong>Framework lens.</strong> Criterion-referenced rubric design (Wiggins) + cognitive-load minimisation for the <em>grader</em>.</p>
+<p><strong>Brief evidence.</strong>
+- §8 K.M.: "Not a 12-page document — a single sheet with 3 rows (one per move) and 1–5 scoring with anchored descriptors." → sponsor verbatim.
+- §10.6 J.T.: "I made my own. Three rows — opener / objection / close — each scored 1–5 with 3 example anchors per row." → highest-performing pod manager already converged on this design.
+- §10.7 M.K.: "Wenn ihr eine bessere baut, ich übernehme sie." → second-highest-performing manager will adopt if better.
+- §10.8: This is the single most-requested artefact from the manager side.</p>
+<p><strong>Alternatives considered.</strong>
+- <em>Behaviourally-anchored 8-row rubric</em> — rejected: violates K.M. constraint; raises grader cognitive load above the calibration session can support.</p>
+<p><strong>Consequences.</strong>
+- Inter-rater reliability is achievable in a single week-6 calibration session.
+- Rubric becomes the L3 measurement instrument and the Phase 2 sprint-2.3 lead artefact.</p>
+<hr />
+<h2 id="d-005-2026-05-18-scorm-modules-built-custom-vanilla-htmljs-not-articulate">D-005 · 2026-05-18 · SCORM modules built custom (vanilla HTML/JS), not Articulate</h2>
+<p><strong>Decision.</strong> Build each SCORM module as custom HTML/JS/CSS packaged with <code>imsmanifest.xml</code> (SCORM 1.2). Articulate Rise/Storyline available but rejected for this engagement.</p>
+<p><strong>Framework lens.</strong> Tool-vs-craft tradeoff in interactive media.</p>
+<p><strong>Brief evidence.</strong>
+- §7 Constraints: "Use that OR custom SCORM if interaction outpaces Storyline." — brief allows it.
+- §8 K.M.: "Last vendor spent the kickoff call pitching me Articulate add-ons. They built a 90-minute slide deck no one finished." — sponsor primed against Articulate-as-a-crutch.
+- §14 Audit verdict: existing self-paced LMS modules in Articulate failed because they were "Tools learned in isolation, not in workflow" — Articulate's slide model encourages this.
+- Mini-OS workspace simulation (per user requirement) is impossible inside Storyline's slide paradigm without contorted JS injection.</p>
+<p><strong>Alternatives considered.</strong>
+- <em>Articulate Rise</em> — rejected: cannot host a window-managed mini-OS.
+- <em>Storyline + custom JS</em> — rejected: cost of fighting Storyline &gt; cost of building straight.</p>
+<p><strong>Consequences.</strong>
+- Reusable <code>scorm-shell/</code> framework built once in Sprint 3.1; modules consume it.
+- Higher up-front engineering cost, lower marginal cost per module.
+- Eventual hand-off must include the shell as part of the SME continuity pack.</p>
+<hr />
+<h2 id="d-006-2026-05-18-no-audio-narration-anywhere-in-v1">D-006 · 2026-05-18 · No audio narration anywhere in v1</h2>
+<p><strong>Decision.</strong> Zero audio narration. All instruction delivered via text, code-anchored timestamps in mock Gong transcripts, and on-screen captions inside the mini-OS.</p>
+<p><strong>Framework lens.</strong> Mayer multimedia principles + brief constraint.</p>
+<p><strong>Brief evidence.</strong>
+- §7 Constraints: "No audio narration in v1. No in-house studio." → contractual.
+- §10.4 P.B. (bottom-quartile): "I want to know the move before I'm on the call — not have to invent it while a CFO is breathing down the line." → preferred modality is <em>advance text</em> over real-time audio.
+- Mayer's modality principle would normally favour audio + visual; but the constraint inverts this and forces leaning on signalling, spatial-contiguity, and pre-training to compensate.</p>
+<p><strong>Alternatives considered.</strong>
+- <em>Auto-TTS narration</em> — rejected: out-of-budget for licensing + maintenance; voice quality variance fails the brand-voice "peer-to-peer" requirement.</p>
+<p><strong>Consequences.</strong>
+- All call examples appear as transcripts with timing annotations.
+- Every interactive scenario must work fully keyboard-driven (WCAG + no-audio).
+- v2 considers human-voice or curated audio if budget allows.</p>
+<hr />
+<h2 id="d-007-2026-05-18-mini-os-shell-as-the-consistent-learner-facing-ux">D-007 · 2026-05-18 · Mini-OS shell as the consistent learner-facing UX</h2>
+<p><strong>Decision.</strong> Build a custom mini-OS (window manager, taskbar, app launcher) that simulates the rep's real workstation: Outreach, Gong, Salesforce, LinkedIn / Companies House, Calendar, Phone-dialler, Slack. All six modules run inside it.</p>
+<p><strong>Framework lens.</strong> Authentic-context learning (situated cognition · Lave &amp; Wenger) + 4C/ID variability of practice.</p>
+<p><strong>Brief evidence.</strong>
+- §14 Audit verdict (failure mode for Week 2): "Tools learned in isolation, not in workflow." → directly addressed by simulating the workflow.
+- §10.4 P.B.: "I just don't have anything better loaded." → reps need to rehearse the move <em>in the place</em> they will perform it.
+- §16 Tooling configuration: lists the exact tools (Salesforce + Outreach + Gong + Slack + Sana) → simulation has an authoritative shopping list.
+- Brand voice §18.2: "Show the move, then name the move (worked example first, framework after)." → mini-OS is the canvas on which the worked example happens.</p>
+<p><strong>Alternatives considered.</strong>
+- <em>Slide-deck walkthrough of each tool</em> — rejected: replicates the audit's failure mode.
+- <em>Video screen-recordings of senior reps</em> — rejected: top-rep articulation gap (risk §20) means recorded reps can't make the moves explicit.</p>
+<p><strong>Consequences.</strong>
+- Up-front investment in shell pays off across all six modules and any v2 modules.
+- Hand-off pack must include shell code + a "how to add a new app" guide.</p>
+<hr />
+<h2 id="d-008-2026-05-18-l4-attribution-explicitly-bounded-ramp-quality-control-via-cohort-comparison-not-rct">D-008 · 2026-05-18 · L4 attribution explicitly bounded; ramp-quality control via cohort comparison, not RCT</h2>
+<p><strong>Decision.</strong> L4 attribution is documented as <em>associative, not causal</em>. Cohort comparison (post-program cohorts vs pre-program ramp baseline cohort) is the chosen quasi-experimental design. RCT rejected.</p>
+<p><strong>Framework lens.</strong> Phillips Levels 4–5 ROI methodology + practical evaluation design.</p>
+<p><strong>Brief evidence.</strong>
+- §8 K.M.: "If we miss it, I need to know whether the cause was training or lead quality or comp, because the conversation with the CRO is honest either way." → sponsor wants attribution honesty, not inflated claims.
+- §8 K.M.: "The 25 % ramp compression target assumes I get the lead-quality conversation moving on my end." → confounds are pre-acknowledged by sponsor.
+- §17 Comp plan: known SPIF distortion → another confound.
+- §20 Risks: marketing lead-quality decline is risk row 1.</p>
+<p><strong>Alternatives considered.</strong>
+- <em>Randomised control trial (split cohort)</em> — rejected: sales-org headcount + cohort cadence too small to power; ethically dubious to withhold training from new hires.
+- <em>Difference-in-differences with synthetic control</em> — rejected: insufficient pre-period data granularity.</p>
+<p><strong>Consequences.</strong>
+- L4 dashboard surfaces <em>three</em> lines: program cohort ramp, baseline ramp, marketing-lead-quality index (from RevOps). Movement is interpreted jointly.
+- Phase-7 iteration playbook includes a "no-attribution-confidence" branch when confounds shift.</p>
+<hr />
+<h2 id="d-009-2026-05-18-operational-trigger-thresholds-documented-as-designer-set-not-brief-derived">D-009 · 2026-05-18 · Operational trigger thresholds documented as designer-set, not brief-derived</h2>
+<p><strong>Decision.</strong> The 5 % SDR cohort attrition threshold (<code>iteration-playbook.md</code> O-A) and the 5-day ramp-regression-vs-prior-cohort threshold are designer-set defaults, not derived from the brief. They are flagged here so future iteration playbook reviewers can rerun the threshold tuning once 4+ cohorts of L4 data exist.</p>
+<p><strong>Framework lens.</strong> Statistical-process-control style trigger tuning — initial defaults set by domain judgement; future re-tuning is data-driven.</p>
+<p><strong>Brief evidence.</strong> None directly. The brief §5 success-measures table sets <em>outcome</em> targets (ramp ≤ 71 d, retention ≥ 92 %) but not <em>trigger</em> thresholds for intermediate iteration. Brief §21 done-state similarly sets endpoint, not intermediate alarm thresholds.</p>
+<p><strong>Alternatives considered.</strong>
+- <em>Brief-derived thresholds.</em> Rejected: brief does not provide them; inventing brief-citations would be a measurement-integrity failure.
+- <em>Wider thresholds (e.g. 10 % attrition / 10 d regression).</em> Rejected: would let cohort-1 problems propagate to cohort-2 before action; too late for a 4-cohort program window.
+- <em>Tighter thresholds (e.g. 3 % / 3 d).</em> Rejected: noise floor on 10–15 rep cohorts makes 3 % a one-rep difference, which is signal-poor.</p>
+<p><strong>Consequences.</strong>
+- After cohort 4 (≥40 SDRs L4 data), re-tune thresholds against observed cohort-to-cohort variance.
+- <code>06-iterate/iteration-playbook.md</code> Sprint 7.1 candidate includes "re-tune O-A and L4-A thresholds against observed cohort variance" once n ≥ 40.
+- Documented honestly so a successor designer does not mistake these for sponsor-set targets.</p>
+<hr />
+<p><em>Decisions log v1.0 · seeded at Phase 0 · grows through every subsequent phase.</em></p>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 00-project-management/decisions-log.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

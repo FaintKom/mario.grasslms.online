@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Case brief · FinTechCard · SMB SDR Onboarding — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="The full engagement input pack. Everything you need to build the case study from scratch — client snapshot, named stakeholders with verbatim inputs, 10 SME interviews, 22 Gong call findings, ICP buyer"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>case-study-tz.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../">← Portfolio</a>
+    <a class="btn" href="../">← Pipeline</a>
+    <a class="btn" href="">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="case-brief-fintechcard-smb-sdr-onboarding">Case brief · FinTechCard · SMB SDR Onboarding</h1>
+<blockquote>
+<p>The full engagement input pack. Everything you need to build the case study from scratch — client snapshot, named stakeholders with verbatim inputs, 10 SME interviews, 22 Gong call findings, ICP buyer specs, product facts, dashboard schema, comp plan, brand voice, regulatory context. Anonymised composite; numbers preserve real proportions for a Series-B B2B card issuer.</p>
+</blockquote>
+<hr />
+<h2 id="1-client-snapshot">1 · Client snapshot</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client</td>
+<td>FinTechCard Ltd. (anonymised)</td>
+</tr>
+<tr>
+<td>Industry</td>
+<td>Fintech · corporate cards + expense management for SMB segment</td>
+</tr>
+<tr>
+<td>Stage</td>
+<td>Series-B · €48m raised · 18 months post-Series-A</td>
+</tr>
+<tr>
+<td>Revenue</td>
+<td>ARR ~€22m · target ARR €40m by EOY</td>
+</tr>
+<tr>
+<td>Headcount</td>
+<td>~280 FTE · <strong>120-rep sales org</strong></td>
+</tr>
+<tr>
+<td>Pods</td>
+<td>UK · IE · NL · DE · ES · IT</td>
+</tr>
+<tr>
+<td>ICP</td>
+<td>SMB owners · 5–100 FTE · recurring card spend ≥€10K / month · EU-incorporated</td>
+</tr>
+<tr>
+<td>Product</td>
+<td>Corporate card + spend-control platform: real-time limits, multi-user cards, auto-FX at interbank, receipt capture, QuickBooks / Xero / Sage sync</td>
+</tr>
+<tr>
+<td>Regulator</td>
+<td>Tier-1 EU partner bank (anonymised); funds segregated from FinTechCard balance sheet</td>
+</tr>
+<tr>
+<td>Existing onboarding length</td>
+<td>6 weeks formal + ad-hoc afterwards</td>
+</tr>
+<tr>
+<td>Existing ramp time (baseline)</td>
+<td>Mean 95 days to first paid quota · top decile 52 d · bottom quartile &gt;120 d</td>
+</tr>
+<tr>
+<td>Existing day-120 retention</td>
+<td>~83 % (i.e. ~17 % bottom-quartile churn pre-payback)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-named-stakeholders">2 · Named stakeholders</h2>
+<table>
+<thead>
+<tr>
+<th>Name (anonymised)</th>
+<th>Role</th>
+<th>Decision power</th>
+<th>Engagement role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>K.M.</strong></td>
+<td>VP Sales Enablement · 11 months in role · ex-Stripe SE manager</td>
+<td>Sponsor · economic buyer · final sign-off on curriculum</td>
+<td>Kickoff lead · weekly check-ins · phase-gate signer</td>
+</tr>
+<tr>
+<td><strong>A.S.</strong></td>
+<td>Head of SDR Org (UK + IE) · 3 yrs at FinTechCard, promoted from senior SDR</td>
+<td>Champion · SME gatekeeper</td>
+<td>Provides 8 SDR + 2 manager SMEs · validates behavioural moves</td>
+</tr>
+<tr>
+<td><strong>D.R.</strong></td>
+<td>Head of People · L&amp;D budget owner</td>
+<td>Contract co-signer · phased payment trigger</td>
+<td>Signs contract + invoices</td>
+</tr>
+<tr>
+<td><strong>J.V.</strong></td>
+<td>RevOps Director · owns Salesforce + Outreach + Gong stack</td>
+<td>L4 measurement plan signer</td>
+<td>Dashboard wiring · ramp-time data · day-120 retention rollup</td>
+</tr>
+<tr>
+<td><strong>8 × SDR SMEs</strong></td>
+<td>2 top-decile · 4 mid-band · 2 bottom-quartile (1 current + 1 recent exit)</td>
+<td>n/a</td>
+<td>Interview source for M1/M2/M3</td>
+</tr>
+<tr>
+<td><strong>2 × SDR Managers</strong></td>
+<td>UK pod · DE pod</td>
+<td>n/a</td>
+<td>Manager-side persona · L3 rubric calibration</td>
+</tr>
+<tr>
+<td><strong>R.K.</strong></td>
+<td>CMO · owns marketing-sourced inbound</td>
+<td>n/a</td>
+<td>Lead-quality dependency (out of scope; K.M. owns the conversation)</td>
+</tr>
+<tr>
+<td><strong>LMS admin</strong></td>
+<td>Sana administrator</td>
+<td>Phase 5 launch signer</td>
+<td>SCORM upload + cohort enrollment</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-engagement-contract">3 · Engagement contract</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Engagement</td>
+<td>Full instructional-design cycle · Discover → Iterate · 6 months end-to-end</td>
+</tr>
+<tr>
+<td>Start</td>
+<td>March 2026 · week 1 Monday</td>
+</tr>
+<tr>
+<td>First cohort live</td>
+<td>1 July 2026 (16 weeks from kickoff)</td>
+</tr>
+<tr>
+<td>Hard date</td>
+<td>Slip past 15 July pushes to September (sales-org kickoff blackout)</td>
+</tr>
+<tr>
+<td>Budget</td>
+<td>€58 000 fixed-fee</td>
+</tr>
+<tr>
+<td>Payment schedule</td>
+<td>25 % at Phase 1 gate · 50 % at Phase 4 gate · 25 % at Phase 6 gate</td>
+</tr>
+<tr>
+<td>Lead designer</td>
+<td>Mario Becerra · solo + 2 client SMEs + 1 client LMS admin</td>
+</tr>
+<tr>
+<td>Cohort cadence post-launch</td>
+<td>Every 4 weeks · 10–15 reps per cohort</td>
+</tr>
+<tr>
+<td>Language v1</td>
+<td>EN only · ES + DE post-pilot</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-business-problem-kms-words-at-kickoff">4 · Business problem · K.M.'s words at kickoff</h2>
+<blockquote>
+<p>"Ramp time for new SDRs is sitting at ~95 days to first paid quota attainment. Top decile hits it in ~52. Bottom quartile churns out before day 120 without ever paying for themselves. We need to compress mean ramp by 25 % and stop the bottom-quartile churn — losing two reps before they pay back costs us ~€90K each in unrecovered onboarding."</p>
+<p>"I've committed −25 % ramp compression to the CRO. That's the public number. If we hit it, we hit it together. If we miss it, I need to know whether the cause was training or lead quality or comp, because the conversation with the CRO is honest either way."</p>
+</blockquote>
+<hr />
+<h2 id="5-success-measures-agreed-at-kickoff">5 · Success measures (agreed at kickoff)</h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Measure</th>
+<th>Baseline</th>
+<th>6-month target</th>
+<th>12-month target</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L4</td>
+<td>Mean ramp to first paid quota</td>
+<td>95 d</td>
+<td>≤ 71 d (−25 %)</td>
+<td>≤ 65 d (−32 %)</td>
+<td>Salesforce <code>Ramp_Time__c</code> field</td>
+</tr>
+<tr>
+<td>L4</td>
+<td>Day-120 retention</td>
+<td>~83 %</td>
+<td>≥ 92 % (churn ≤ 8 %)</td>
+<td>≥ 95 % (churn ≤ 5 %)</td>
+<td>HRIS exit rollup + Salesforce</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Talk-track adherence weeks 4–8</td>
+<td>~52 %</td>
+<td>≥ 80 %</td>
+<td>≥ 85 %</td>
+<td>Gong opener-tag adherence flag</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Objection-handling rubric, week 4</td>
+<td>~2.4 / 5</td>
+<td>≥ 3.5 / 5</td>
+<td>≥ 4.0 / 5</td>
+<td>Manager rubric (built in Phase 6)</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>SCORM quiz mastery, first attempt</td>
+<td>n/a</td>
+<td>≥ 80 %</td>
+<td>≥ 85 %</td>
+<td><code>cmi.core.score.raw</code></td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Spaced retrieval at +7 d</td>
+<td>n/a</td>
+<td>≥ 70 %</td>
+<td>≥ 75 %</td>
+<td>LMS-scheduled mini-quiz</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>"I could use this on a call today"</td>
+<td>n/a</td>
+<td>≥ 4.0 / 5</td>
+<td>≥ 4.2 / 5</td>
+<td>Thalheimer post-module micro-pulse</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-scope">6 · Scope</h2>
+<p><strong>In scope:</strong>
+- 0–60 day ramp arc for newly hired SDRs in the SMB segment.
+- Call-motion craft: discovery, positioning, objection handling, call close.
+- Manager-side reinforcement layer: shared 1:1 rubric, week-2 + week-6 calibration sessions, manager call-review cadence.
+- Measurement plumbing: Kirkpatrick L1–L4 wired to Gong + Salesforce + HRIS (no new tooling).
+- Manager-side training adoption: a floor under 1:1 cadence quality.</p>
+<p><strong>Out of scope (K.M. co-signed):</strong>
+1. Regulatory / compliance training (KYC, AML, SCA, PSD2, GDPR) — handled by compliance team via separate Cornerstone modules: "Reg-101", "AML for Card Sellers", "GDPR Refresher".
+2. Manager hiring + onboarding — separate engagement.
+3. Mid-Market + Enterprise SDR motion — different cycle, different stakeholder map; Q4 2026 separate engagement.
+4. Comp-plan redesign — RevOps-owned; surface findings only.
+5. CRM / tooling swap — Salesforce + Outreach + Gong + Slack are fixed.
+6. Marketing-source lead-quality fix — outside training-side responsibility; K.M. owns CMO conversation.</p>
+<hr />
+<h2 id="7-constraints">7 · Constraints</h2>
+<ul>
+<li><strong>Cohort tolerance ≤ 10 min per module.</strong> Between-call windows. No 90-min training sessions; floor schedule blocks them.</li>
+<li><strong>No new authoring-tool purchase.</strong> Client already owns Articulate 360 (Rise + Storyline) + SCORM Cloud. Use that OR custom SCORM if interaction outpaces Storyline.</li>
+<li><strong>LMS = Sana.</strong> SCORM 1.2 compatibility required. xAPI nice-to-have.</li>
+<li><strong>WCAG 2.1 AA · GDPR no PII in training content.</strong> Use anonymised buyer personas ("Maria, retail SMB owner") not real customer data.</li>
+<li><strong>No audio narration in v1.</strong> No in-house studio.</li>
+</ul>
+<hr />
+<h2 id="8-km-sponsor-full-kickoff-input">8 · K.M. (Sponsor) · full kickoff input</h2>
+<h3 id="what-km-said-about-the-business-outcome">What K.M. said about the business outcome</h3>
+<blockquote>
+<p>"Two KPIs live on the same dashboard: days-to-first-paid-quota in Salesforce, and day-120 retention in the HRIS rollup. Move both."</p>
+<p>"Six months in: mean ramp ≤ 71, churn ≤ 8 %. Twelve months: mean ramp ≤ 65, churn ≤ 5 %. The 25 % compression on ramp is what I've committed publicly."</p>
+</blockquote>
+<h3 id="what-km-said-about-previous-training">What K.M. said about previous training</h3>
+<blockquote>
+<p>"Last vendor spent the kickoff call pitching me Articulate add-ons. They built a 90-minute slide deck no one finished. Don't do that."</p>
+<p>"K.M.'s phrasing on failure mode: 'Another Articulate slide-deck no one finishes.' Use this verbatim if you ever build a 'what we learned' section."</p>
+</blockquote>
+<h3 id="what-km-said-about-the-manager-layer">What K.M. said about the manager layer</h3>
+<blockquote>
+<p>"Manager 1:1 quality varies massively. I've got pods where managers do 30-min weekly call reviews with rubrics, and pods where the manager hasn't sat in on a call in a month. If you can put a floor under that, the program lands. If you can't, the program lives on the LMS and never makes it into 1:1s."</p>
+<p>"Don't try to retrain managers. Give them a shared rubric and two calibration sessions. That's enough."</p>
+</blockquote>
+<h3 id="what-km-said-about-non-training-causes">What K.M. said about non-training causes</h3>
+<blockquote>
+<p>"Lead quality is messy. Marketing-sourced inbound close-rate dropped 12 % → 8 % over the last two quarters. I've told the CMO. Not your problem, but I want you to know I know it's in the picture."</p>
+<p>"Comp plan rewards closed-won regardless of source. New reps grind on stale leads chasing the SPIF rather than working the day-1 list. RevOps owns the redesign. I'm not asking you to fix it; I am asking you to surface it."</p>
+<p>"The 25 % ramp compression target assumes I get the lead-quality conversation moving on my end. I am not asking you to fix marketing."</p>
+</blockquote>
+<h3 id="what-km-said-about-scope-discipline">What K.M. said about scope discipline</h3>
+<blockquote>
+<p>"Three things we are explicitly not solving: compliance training, manager hiring + onboarding, and the mid-market segment. They have their own programs / owners."</p>
+<p>"I co-sign your additions: comp-plan redesign, CRM swap, marketing lead-quality. Document them."</p>
+</blockquote>
+<h3 id="what-km-said-about-the-spoc">What K.M. said about the SPOC</h3>
+<blockquote>
+<p>"A.S. for SME access. Me for sign-offs. D.R. for contract amendments and payment triggers."</p>
+</blockquote>
+<h3 id="what-km-said-about-the-timeline">What K.M. said about the timeline</h3>
+<blockquote>
+<p>"First cohort live July 1st. That's 16 weeks from this call. Slipping past July 15th puts us into a sales-org kickoff blackout — would push to September. We do not want September."</p>
+</blockquote>
+<h3 id="what-km-wants-in-the-manager-reinforcement-layer-week-2-follow-up-call">What K.M. wants in the manager-reinforcement layer (week 2 follow-up call)</h3>
+<blockquote>
+<p>"I want managers to walk out of the week-2 calibration session with a rubric they can use on 4 calls per rep per month. Not a 12-page document — a single sheet with 3 rows (one per move) and 1–5 scoring with anchored descriptors."</p>
+<p>"The week-6 session should be calibration: managers score the same 3 sample calls and we surface where they disagree. That's where the real coaching skill develops."</p>
+</blockquote>
+<hr />
+<h2 id="9-as-head-of-sdr-full-input">9 · A.S. (Head of SDR) · full input</h2>
+<h3 id="what-as-said-about-the-top-vs-bottom-delta-kickoff-03">What A.S. said about the top-vs-bottom delta (kickoff §03)</h3>
+<blockquote>
+<p>"Three things stand out from Gong reviews. One — top reps spend the first 60 seconds of every cold call asking one diagnostic question that exposes which pain to pitch against. The rest of them launch into the pitch in the first 15 seconds. Two — when the buyer pushes back, top reps re-state the objection back in the buyer's own words before responding. The rest of them argue. Three — top reps end every call with a written next step booked in the calendar before they hang up. The rest say 'I'll follow up.'"</p>
+<p>"Top reps sound nothing alike. They don't follow a script. But those three moves are always there."</p>
+<p>"Bottom quartile inverts all three. Skip the diagnostic. Argue with objections. End with 'I'll follow up.'"</p>
+</blockquote>
+<h3 id="what-as-said-about-the-keystone-behaviour">What A.S. said about the keystone behaviour</h3>
+<blockquote>
+<p>"If a rep finishes this program, the first observable thing they do differently on Monday morning is open every cold call with the diagnostic question. That's the keystone."</p>
+</blockquote>
+<h3 id="what-as-said-about-pod-level-cadence-variance">What A.S. said about pod-level cadence variance</h3>
+<blockquote>
+<p>"Pod-by-pod manager cadence:
+- UK Pod 1 (Manchester) — weekly 30-min call review, rubric-led. Manager: J.T.
+- UK Pod 2 (London A) — weekly 1:1 but no call review. Manager: H.M.
+- UK Pod 3 (London B) — bi-weekly, ad-hoc. Manager: F.O.
+- UK Pod 4 (Belfast) — has not had a structured call review in 5 weeks. Manager: D.W. (newly promoted)
+- DE Pod 1 (Berlin) — weekly call review. Manager: M.K. (the closest analogue to the UK Pod 1 cadence)
+- DE Pod 2 (Munich) — bi-weekly. Manager: S.B.
+- ES Pod (Barcelona) — weekly but in Spanish; rubric not translated. Manager: I.C.
+- NL Pod (Amsterdam) — weekly. Manager: T.V.
+- IT Pod (Milan) — bi-weekly. Manager: G.R."</p>
+<p>"If we get the rubric translated and adopted in all 9 pods within the first 6 weeks of the program, that's the floor I'm asking for."</p>
+</blockquote>
+<h3 id="what-as-said-about-gong-access">What A.S. said about Gong access</h3>
+<blockquote>
+<p>"I'll give you a Gong viewer license for the duration of the engagement. You can pull any call by rep, by week, by tag. Don't share recordings outside the engagement team — Gong has consent flags on each call and not every buyer is on a recorded line."</p>
+</blockquote>
+<h3 id="what-as-said-about-the-sme-interview-list">What A.S. said about the SME interview list</h3>
+<blockquote>
+<p>"I'll set up 10 interviews. 8 SDRs + 2 managers. Top-decile reps: <strong>M.G.</strong> (Manchester, 14 months) and <strong>L.D.</strong> (Berlin, 11 months). Bottom-quartile: <strong>P.B.</strong> (London, struggling at month 4) + one we just exited (her name is anonymised in your notes, treat as 'exit interview'). Mid: 4 reps across UK + DE + ES. Managers: J.T. (UK Pod 1) and M.K. (DE Pod 1) — the two highest-cadence pods, so you can see what 'good' looks like."</p>
+</blockquote>
+<hr />
+<h2 id="10-10-sme-interview-pack-key-qa-per-rep">10 · 10 SME interview pack · key Q&amp;A per rep</h2>
+<h3 id="101-mg-top-decile-manchester-14-months-32-min">10.1 · M.G. (top-decile · Manchester · 14 months) — 32 min</h3>
+<p><strong>Q: Walk me through your first 60 seconds of a cold call.</strong></p>
+<blockquote>
+<p>"I never start with 'how are you.' I open with one diagnostic that I've picked off LinkedIn or their Companies House filing. Last week I called a retail SMB owner — opened with 'I noticed you've opened a second location in the last 6 months — who's approving expense reports across both stores now?' She paused for 4 seconds. Then she told me her bookkeeper was overwhelmed. From there it was a 14-min call."</p>
+</blockquote>
+<p><strong>Q: What do you do when the buyer pushes back?</strong></p>
+<blockquote>
+<p>"I repeat what they said back in their own words. If they say 'we already have a Visa,' I say 'so you've got the card-issuing side sorted.' Then I wait. Usually they tell me what's actually broken. 'But the controls are a mess' or 'our bookkeeper hates it.' That's where the actual pitch happens."</p>
+</blockquote>
+<p><strong>Q: What do you do at the end of every call?</strong></p>
+<blockquote>
+<p>"I have my calendar open in a second tab the entire time. The moment they show any interest, I say 'what's the best 20 minutes next week to walk you through the SMB version?' and I read out two slots. I do not say 'I'll send you something.' I have lost too many deals to follow-up."</p>
+</blockquote>
+<p><strong>Q: What would you tell a brand-new SDR?</strong></p>
+<blockquote>
+<p>"Stop trying to sound smart. The buyer doesn't care if you know fintech jargon. They care if you understand their problem. Ask one good question and then shut up for 5 seconds. Five seconds feels like an hour but it's where the deal happens."</p>
+</blockquote>
+<p><strong>Q: What's broken about current onboarding for you?</strong></p>
+<blockquote>
+<p>"They taught me the four product props in week 1. Useful but not what I needed. What I needed was the framing of when to use which prop against which objection. Took me 4 months to figure that out on my own."</p>
+</blockquote>
+<h3 id="102-ld-top-decile-berlin-11-months-28-min">10.2 · L.D. (top-decile · Berlin · 11 months) — 28 min</h3>
+<p><strong>Q: Same first-60-seconds question.</strong></p>
+<blockquote>
+<p>"Mein Standard-Opener auf Deutsch: 'Ich rufe an, weil ich sehe, Sie haben in den letzten 6 Monaten 12 neue Mitarbeiter eingestellt — wer genehmigt zur Zeit die Spesenabrechnungen?' Auf Englisch ist es derselbe Move. Eine spezifische Beobachtung über ihr Geschäft + eine Frage darüber, wer was kontrolliert."</p>
+</blockquote>
+<p><strong>Q: How do you handle "we already use Brex" or competitive displacement?</strong></p>
+<blockquote>
+<p>"I never argue against Brex. I say 'Brex is great if you're a US-based startup with USD-only spend. We're built for EU multi-currency and we sit on top of your existing accounts — additive, not replacement.' Then I ask what their FX exposure looks like. 90 % of the time they don't know and I have a wedge."</p>
+</blockquote>
+<p><strong>Q: What separates DE pods from UK pods in your view?</strong></p>
+<blockquote>
+<p>"DE buyers want more numbers and more process. UK buyers want more relationship. Same product, different opening. The diagnostic question I pick for a DE call is always quant-anchored — FX volume, headcount growth, monthly card spend. For UK I lean more behavioural — who approves what, who hates what."</p>
+</blockquote>
+<h3 id="103-4-mid-band-reps-summary">10.3 · 4 mid-band reps · summary</h3>
+<table>
+<thead>
+<tr>
+<th>Rep</th>
+<th>Pod</th>
+<th>Tenure</th>
+<th>Key quote</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H.K.</td>
+<td>UK Pod 2 (London A)</td>
+<td>8 months</td>
+<td>"I know the three moves but I forget them under pressure. By call 3 of a tough day I'm just pitching."</td>
+</tr>
+<tr>
+<td>N.W.</td>
+<td>DE Pod 2 (Munich)</td>
+<td>6 months</td>
+<td>"My manager has not listened to one of my calls in three weeks. I don't know what I'm doing wrong."</td>
+</tr>
+<tr>
+<td>R.A.</td>
+<td>ES Pod (Barcelona)</td>
+<td>9 months</td>
+<td>"Half my pipeline is Spanish-speaking but the cheat sheets I get are all in English. I translate them in my head live on the call."</td>
+</tr>
+<tr>
+<td>O.B.</td>
+<td>UK Pod 1 (Manchester)</td>
+<td>5 months</td>
+<td>"My manager runs call reviews every week with a rubric. I'm getting better fast but I see other pods don't have that and I think that's why they're behind."</td>
+</tr>
+</tbody>
+</table>
+<h3 id="104-pb-bottom-quartile-london-month-4-still-in-role-41-min">10.4 · P.B. (bottom-quartile · London · month 4 · still in role) — 41 min</h3>
+<p><strong>Q: Walk me through your last cold call.</strong></p>
+<blockquote>
+<p>"I opened with 'hi, this is P. calling from FinTechCard, do you have a moment to talk about your corporate spending?' She said 'no' and hung up. That was the third one this morning. By the fourth I just started saying 'I know you're busy, but our card is cheaper than your bank's...' which I know is wrong but I don't know what else to say."</p>
+</blockquote>
+<p><strong>Q: What do you do when the buyer pushes back?</strong></p>
+<blockquote>
+<p>"I argue. I know I'm not supposed to. I say things like 'but our fees are lower' or 'but our controls are better.' I can hear it not working. I just don't have anything better loaded."</p>
+</blockquote>
+<p><strong>Q: What would help?</strong></p>
+<blockquote>
+<p>"I want to know the move before I'm on the call — not have to invent it while a CFO is breathing down the line. The product training I got in week 1 was thorough but it didn't load any moves. It loaded knowledge."</p>
+</blockquote>
+<p><strong>Q: What's your manager 1:1 cadence?</strong></p>
+<blockquote>
+<p>"Officially weekly. In practice every 9–14 days. Last call review was 19 days ago. He's busy."</p>
+</blockquote>
+<p><strong>Q: Why do you stay?</strong></p>
+<blockquote>
+<p>"I want this to work. I left retail for this, this was supposed to be my upgrade. But if I don't see ramp by month 6 I'm going back. Probably to Klarna or one of the other fintechs hiring."</p>
+</blockquote>
+<h3 id="105-exit-interview-recent-exit-uk-left-at-month-45-22-min">10.5 · Exit interview (recent exit · UK · left at month 4.5) — 22 min</h3>
+<p><strong>Q: Top 3 reasons you left.</strong></p>
+<blockquote>
+<p>"One — no feedback on my calls for the last 6 weeks of my tenure. I genuinely didn't know if I was getting better or worse. Two — the leaderboard in Slack. Every Monday I was bottom 3 and everyone could see it. Three — the cold-call rejection rate. Around 70 % of dials were hangups within 10 seconds. I started dreading mornings."</p>
+</blockquote>
+<p><strong>Q: Anything that would have changed your decision?</strong></p>
+<blockquote>
+<p>"Probably the call-feedback piece. If my manager had sat in on a call once a week for 30 minutes and told me what to fix, I think I would have made it past month 6."</p>
+</blockquote>
+<h3 id="106-jt-uk-pod-1-manager-highest-cadence-pod-35-min">10.6 · J.T. (UK Pod 1 Manager · highest-cadence pod) — 35 min</h3>
+<p><strong>Q: Walk me through your weekly cadence with each rep.</strong></p>
+<blockquote>
+<p>"Monday morning standup — 15 min, pipeline review. Tuesday 1:1 — 30 min, rotating focus: weeks 1 + 3 = call review, weeks 2 + 4 = pipeline + comp + career. Thursday floor walk — I sit at a rep's desk for 30 min listening to live calls + giving live feedback between dials."</p>
+</blockquote>
+<p><strong>Q: What rubric do you use during call review?</strong></p>
+<blockquote>
+<p>"I made my own. Three rows — opener / objection / close — each scored 1–5 with 3 example anchors per row. Took me 6 months to develop. I'd happily share it with the program."</p>
+</blockquote>
+<p><strong>Q: Why does your pod ramp faster?</strong></p>
+<blockquote>
+<p>"Two reasons. The cadence is real — I actually do the call review every week, not just put it on the calendar. And the rubric is shared — reps know what I'm grading them on so they self-correct between calls."</p>
+</blockquote>
+<h3 id="107-mk-de-pod-1-manager-2nd-highest-cadence-31-min">10.7 · M.K. (DE Pod 1 Manager · 2nd-highest cadence) — 31 min</h3>
+<p><strong>Q: Same cadence question.</strong></p>
+<blockquote>
+<p>"Wöchentliches 1:1 mit Call-Review. 30 Min. Ich nutze eine eigene Rubrik aber sie ist nicht so strukturiert wie J.T.'s. Wenn ihr eine bessere baut, ich übernehme sie."</p>
+</blockquote>
+<p><strong>Q: What's the biggest blocker for new reps in your pod?</strong></p>
+<blockquote>
+<p>"Language switching mid-call. A buyer answers in DE, mid-call switches to EN because their CFO joined, and the rep is caught flat-footed. We need bilingual cheat sheets for cohort 2."</p>
+</blockquote>
+<h3 id="108-combined-manager-view-on-the-missing-rubric">10.8 · Combined manager view on the missing rubric</h3>
+<blockquote>
+<p>Both managers asked unprompted for a <strong>shared, calibrated 3-row rubric</strong> they could use during call reviews — and for a way to compare scores across pods so they could spot pattern misses early. This is the single most-requested artefact from the manager side. (Becomes the L3 observation rubric in Phase 6.)</p>
+</blockquote>
+<hr />
+<h2 id="11-22-gong-call-review-1-line-findings-per-call">11 · 22 Gong call review · 1-line findings per call</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Rep band</th>
+<th>M1 (diagnostic)</th>
+<th>M2 (acknowledge)</th>
+<th>M3 (calendar-close)</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GC-01</td>
+<td>Top (M.G.)</td>
+<td>✓ (38 s)</td>
+<td>✓</td>
+<td>✓ (booked 20-min demo)</td>
+<td>Demo booked</td>
+</tr>
+<tr>
+<td>GC-02</td>
+<td>Top (M.G.)</td>
+<td>✓ (52 s)</td>
+<td>✓</td>
+<td>✓</td>
+<td>Demo booked</td>
+</tr>
+<tr>
+<td>GC-03</td>
+<td>Top (L.D.)</td>
+<td>✓ (29 s)</td>
+<td>✓</td>
+<td>✓ (booked 10-min product-fit)</td>
+<td>Booked</td>
+</tr>
+<tr>
+<td>GC-04</td>
+<td>Top (L.D.)</td>
+<td>✓ (45 s)</td>
+<td>n/a (no objection)</td>
+<td>✓</td>
+<td>Booked</td>
+</tr>
+<tr>
+<td>GC-05</td>
+<td>Top (M.G.)</td>
+<td>✓ (50 s)</td>
+<td>✓</td>
+<td>partial ("I'll send a calendar invite")</td>
+<td>Booked w/ follow-up</td>
+</tr>
+<tr>
+<td>GC-06</td>
+<td>Top (L.D.)</td>
+<td>✓ (33 s)</td>
+<td>✓ (Brex displacement)</td>
+<td>✓</td>
+<td>Booked</td>
+</tr>
+<tr>
+<td>GC-07</td>
+<td>Top (M.G.)</td>
+<td>✓ (42 s)</td>
+<td>✓</td>
+<td>✓</td>
+<td>Booked</td>
+</tr>
+<tr>
+<td>GC-08</td>
+<td>Top (L.D.)</td>
+<td>✓ (29 s)</td>
+<td>✓</td>
+<td>✓</td>
+<td>Booked</td>
+</tr>
+<tr>
+<td>GC-09</td>
+<td>Mid (H.K.)</td>
+<td>✓ (58 s)</td>
+<td>✗ (argued)</td>
+<td>partial</td>
+<td>Lost mid-call</td>
+</tr>
+<tr>
+<td>GC-10</td>
+<td>Mid (H.K.)</td>
+<td>✗ (skipped)</td>
+<td>n/a</td>
+<td>✗ ("follow up")</td>
+<td>No re-engage</td>
+</tr>
+<tr>
+<td>GC-11</td>
+<td>Mid (N.W.)</td>
+<td>✓ (60 s)</td>
+<td>✓</td>
+<td>✗ ("I'll email")</td>
+<td>Re-engaged via Outreach</td>
+</tr>
+<tr>
+<td>GC-12</td>
+<td>Mid (N.W.)</td>
+<td>✓ (44 s)</td>
+<td>✗ (deflected)</td>
+<td>✓</td>
+<td>Booked w/ low intent</td>
+</tr>
+<tr>
+<td>GC-13</td>
+<td>Mid (R.A.)</td>
+<td>✓ in ES (38 s)</td>
+<td>✓ in ES</td>
+<td>✓ in ES</td>
+<td>Booked (Spanish call)</td>
+</tr>
+<tr>
+<td>GC-14</td>
+<td>Mid (R.A.)</td>
+<td>✗ (skipped)</td>
+<td>✗ (argued)</td>
+<td>✗</td>
+<td>Hung up at 1:08</td>
+</tr>
+<tr>
+<td>GC-15</td>
+<td>Mid (O.B.)</td>
+<td>✓ (51 s)</td>
+<td>✓</td>
+<td>✓</td>
+<td>Booked</td>
+</tr>
+<tr>
+<td>GC-16</td>
+<td>Mid (O.B.)</td>
+<td>✓ (40 s)</td>
+<td>✓</td>
+<td>✓</td>
+<td>Booked</td>
+</tr>
+<tr>
+<td>GC-17</td>
+<td>Mid (H.K.)</td>
+<td>✗ (15 s pitch launch)</td>
+<td>✗ (defensive)</td>
+<td>✗</td>
+<td>Hung up at 0:22</td>
+</tr>
+<tr>
+<td>GC-18</td>
+<td>Mid (N.W.)</td>
+<td>✓ (35 s)</td>
+<td>✓</td>
+<td>✓</td>
+<td>Booked</td>
+</tr>
+<tr>
+<td>GC-19</td>
+<td>Bottom (P.B.)</td>
+<td>✗ (12 s pitch launch)</td>
+<td>✗ (argued on fees)</td>
+<td>✗ ("follow up")</td>
+<td>Hung up at 0:18</td>
+</tr>
+<tr>
+<td>GC-20</td>
+<td>Bottom (P.B.)</td>
+<td>✗ (skipped)</td>
+<td>✗ (argued)</td>
+<td>✗</td>
+<td>Hung up at 0:24</td>
+</tr>
+<tr>
+<td>GC-21</td>
+<td>Bottom (P.B.)</td>
+<td>partial (asked but generic)</td>
+<td>✗ (defensive)</td>
+<td>✗ ("I'll send pricing")</td>
+<td>Lost</td>
+</tr>
+<tr>
+<td>GC-22</td>
+<td>Bottom (exit interview rep)</td>
+<td>✗ (skipped, all 3 calls in sample)</td>
+<td>✗ (argued on all 3)</td>
+<td>✗ ("follow up" all 3)</td>
+<td>All 3 lost</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Aggregate:</strong>
+- Top decile (n=8): M1 8/8 · M2 7/7 (1 n/a) · M3 7/8
+- Mid (n=10): M1 7/10 · M2 5/9 · M3 5/10
+- Bottom (n=4): M1 0/4 · M2 0/4 · M3 0/4
+- Avg call duration top: 8:42 · mid: 4:11 · bottom: 0:31</p>
+<hr />
+<h2 id="12-icp-buyer-specs-4-archetypes">12 · ICP buyer specs · 4 archetypes</h2>
+<h3 id="121-maria-retail-smb-owner">12.1 · Maria · Retail SMB owner</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Industry</td>
+<td>Multi-location retail (2 stores, growing online)</td>
+</tr>
+<tr>
+<td>FTE</td>
+<td>35</td>
+</tr>
+<tr>
+<td>Revenue</td>
+<td>$4M annual</td>
+</tr>
+<tr>
+<td>Card spend</td>
+<td>~$25K / month across team</td>
+</tr>
+<tr>
+<td>Tenure as owner</td>
+<td>7 years</td>
+</tr>
+<tr>
+<td>Top pain</td>
+<td>"Who spent what" — last quarter $1 200 charge nobody could explain for 2 weeks</td>
+</tr>
+<tr>
+<td>Decision criteria</td>
+<td>Visibility · per-card limits · receipt capture</td>
+</tr>
+<tr>
+<td>Top objection</td>
+<td>"We already have a corporate Visa from our bank"</td>
+</tr>
+<tr>
+<td>Ideal opener</td>
+<td>"Who's currently approving every expense report, and how long does it take?"</td>
+</tr>
+<tr>
+<td>Best pitch prop</td>
+<td>Prop 4 (receipt capture + accounting sync)</td>
+</tr>
+<tr>
+<td>Closing move</td>
+<td>"What's the best 20 minutes next week to walk you through the SMB version with both your stores in mind?"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="122-tom-series-b-tech-founder-brex-comparison-buyer">12.2 · Tom · Series-B tech founder (Brex-comparison buyer)</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Industry</td>
+<td>SaaS · pre-revenue scale-up</td>
+</tr>
+<tr>
+<td>FTE</td>
+<td>22</td>
+</tr>
+<tr>
+<td>Card spend</td>
+<td>~€18K / month, heavy on AWS + SaaS subscriptions</td>
+</tr>
+<tr>
+<td>Stage</td>
+<td>Series-B, just raised €15M</td>
+</tr>
+<tr>
+<td>Top pain</td>
+<td>FX on international SaaS · per-employee card issuance speed</td>
+</tr>
+<tr>
+<td>Decision criteria</td>
+<td>Speed to issue · API for engineering · FX rate</td>
+</tr>
+<tr>
+<td>Top objection</td>
+<td>"We already use Brex"</td>
+</tr>
+<tr>
+<td>Ideal opener</td>
+<td>"I see you closed your Series-B last quarter — how are you handling per-employee card issuance for your new hires?"</td>
+</tr>
+<tr>
+<td>Best pitch prop</td>
+<td>Prop 2 (multi-user cards) + Prop 3 (auto-FX)</td>
+</tr>
+<tr>
+<td>Closing move</td>
+<td>"Want me to show you the difference in FX cost vs Brex on your last month's spend? 10 minutes."</td>
+</tr>
+</tbody>
+</table>
+<h3 id="123-emma-manufacturing-operations-head">12.3 · Emma · Manufacturing operations head</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Industry</td>
+<td>Industrial manufacturing · regional SMB</td>
+</tr>
+<tr>
+<td>FTE</td>
+<td>78</td>
+</tr>
+<tr>
+<td>Card spend</td>
+<td>~€42K / month, heavy on raw materials + supplier payments</td>
+</tr>
+<tr>
+<td>Tenure</td>
+<td>4 years in role, reports to MD</td>
+</tr>
+<tr>
+<td>Top pain</td>
+<td>Bookkeeping drudgery — supplier receipts arrive late, accountant re-keys</td>
+</tr>
+<tr>
+<td>Decision criteria</td>
+<td>Accounting sync · spend control across 3 sites</td>
+</tr>
+<tr>
+<td>Top objection</td>
+<td>"Our accountant won't deal with another tool"</td>
+</tr>
+<tr>
+<td>Ideal opener</td>
+<td>"How much time does your bookkeeping team spend re-keying supplier receipts every month?"</td>
+</tr>
+<tr>
+<td>Best pitch prop</td>
+<td>Prop 4 (receipt capture + accounting sync)</td>
+</tr>
+<tr>
+<td>Closing move</td>
+<td>"Let me set up a 10-minute call with your accountant — we'll walk them through the Xero sync and they can ask whatever they want."</td>
+</tr>
+</tbody>
+</table>
+<h3 id="124-lukas-restaurant-group-owner-german-market">12.4 · Lukas · Restaurant group owner (German market)</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Industry</td>
+<td>Hospitality · 4-location restaurant group</td>
+</tr>
+<tr>
+<td>FTE</td>
+<td>52 (mostly part-time)</td>
+</tr>
+<tr>
+<td>Card spend</td>
+<td>~€31K / month, heavy on fresh produce + supplier deliveries</td>
+</tr>
+<tr>
+<td>Tenure</td>
+<td>12 years</td>
+</tr>
+<tr>
+<td>Top pain</td>
+<td>Expense fraud (had to fire someone last year) + multi-currency on Italian supplier</td>
+</tr>
+<tr>
+<td>Decision criteria</td>
+<td>Per-card limits · real-time alerts · auto-FX</td>
+</tr>
+<tr>
+<td>Top objection</td>
+<td>"I don't trust new fintechs with my money"</td>
+</tr>
+<tr>
+<td>Ideal opener</td>
+<td>"I noticed you opened a fourth location in Hamburg last month — how are you handling spend visibility across the 4 sites?"</td>
+</tr>
+<tr>
+<td>Best pitch prop</td>
+<td>Prop 1 (real-time spend control) + Prop 2 (per-card limits)</td>
+</tr>
+<tr>
+<td>Closing move</td>
+<td>"Funds are held at a regulated tier-1 partner bank — here's the regulator page. Want a 15-min call where you can ask all the trust questions and then decide?"</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="13-product-facts">13 · Product facts</h2>
+<h3 id="131-four-value-props">13.1 · Four value props</h3>
+<table>
+<thead>
+<tr>
+<th>Prop</th>
+<th>Name</th>
+<th>What it does</th>
+<th>Best buyer fit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Real-time spend control</td>
+<td>See every transaction the moment it clears. Freeze a card from your phone in 2 taps.</td>
+<td>Owners who got burned by expense fraud</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Multi-user cards · per-card limits</td>
+<td>Issue a card per employee or per project. Set spending caps. Cancel instantly.</td>
+<td>Growing teams; scale-ups; manufacturing</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Auto FX at interbank rate</td>
+<td>Pay foreign suppliers at the interbank rate. No markup, no spread surprise.</td>
+<td>Cross-border SMBs; SaaS-buying scale-ups</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Receipt capture + accounting sync</td>
+<td>Photo a receipt; auto-matches the transaction; QuickBooks / Xero / Sage pulls it pre-coded.</td>
+<td>Bookkeeping-painful operations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="132-pricing-structure">13.2 · Pricing structure</h3>
+<ul>
+<li><strong>Free tier:</strong> up to 50 transactions / month, no card issuance fee.</li>
+<li><strong>Growth tier:</strong> €12 / user / month, unlimited transactions, all 4 props.</li>
+<li><strong>Business tier:</strong> €25 / user / month, adds SSO, custom approval workflows, dedicated CSM.</li>
+</ul>
+<h3 id="133-integration-partners">13.3 · Integration partners</h3>
+<ul>
+<li>Accounting: QuickBooks · Xero · Sage Business Cloud</li>
+<li>HR: Personio · BambooHR (for auto-card-issue on new hire)</li>
+<li>SSO: Okta · Azure AD · Google Workspace</li>
+</ul>
+<h3 id="134-regulatory-positioning">13.4 · Regulatory positioning</h3>
+<ul>
+<li>Funds held at tier-1 EU partner bank (segregated from FinTechCard balance sheet).</li>
+<li>Regulated by [national financial regulator, anonymised].</li>
+<li>Public regulator page + audited annually.</li>
+<li>Uptime: 99.99 % over last 12 months, status page public.</li>
+</ul>
+<hr />
+<h2 id="14-current-onboarding-state-what-new-sdrs-get-today">14 · Current onboarding state · what new SDRs get today</h2>
+<table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Current content</th>
+<th>Format</th>
+<th>Failure mode (per Phase 1 audit)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Product walkthrough · 4 props · tool stack tour</td>
+<td>6 × 90-min live sessions</td>
+<td>Knowledge load with no behavioural anchor</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Salesforce + Outreach + Gong tooling · CRM hygiene</td>
+<td>Self-paced LMS modules (Articulate)</td>
+<td>Tools learned in isolation, not in workflow</td>
+</tr>
+<tr>
+<td>3</td>
+<td>"Ride-along" with senior rep · shadow 4 calls</td>
+<td>Floor-based</td>
+<td>Quality varies wildly by which senior rep you shadow</td>
+</tr>
+<tr>
+<td>4</td>
+<td>First solo calls · manager observation (if cadence allows)</td>
+<td>On-the-job</td>
+<td>Manager cadence variance kicks in here</td>
+</tr>
+<tr>
+<td>5–6</td>
+<td>Cohort wrap-up + first pipeline review</td>
+<td>Live cohort session</td>
+<td>Generic; not anchored on observable behavioural moves</td>
+</tr>
+<tr>
+<td>Post-6</td>
+<td>Ad-hoc · 1:1 cadence varies by pod</td>
+<td>Manager-led</td>
+<td>This is where bottom-quartile loses signal</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Audit verdict:</strong> the current onboarding teaches <em>product + tool</em> (correctly). It does <strong>not</strong> teach the three keystone behavioural moves (M1/M2/M3) explicitly. Reps either pick them up via osmosis from top performers (slow, uneven) or never pick them up (churn).</p>
+<hr />
+<h2 id="15-dashboard-data-schema">15 · Dashboard + data schema</h2>
+<h3 id="151-salesforce-custom-fields-wired-to-ramp-tracking">15.1 · Salesforce custom fields wired to ramp tracking</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ramp_Time__c</code></td>
+<td>Number (days)</td>
+<td>Days from hire date to first paid quota attainment</td>
+</tr>
+<tr>
+<td><code>Tenure_Cohort__c</code></td>
+<td>Picklist</td>
+<td>Onboarding cohort ID (e.g. "2026-Q1-W3")</td>
+</tr>
+<tr>
+<td><code>Pod__c</code></td>
+<td>Picklist</td>
+<td>UK-Manchester / UK-London-A / etc.</td>
+</tr>
+<tr>
+<td><code>First_Paid_Quota_Date__c</code></td>
+<td>Date</td>
+<td>When the rep hit their first paid commission</td>
+</tr>
+<tr>
+<td><code>Next_Step_Booked__c</code></td>
+<td>Checkbox</td>
+<td>TRUE if a calendar invite went out same-call</td>
+</tr>
+</tbody>
+</table>
+<h3 id="152-hris-retention-rollup">15.2 · HRIS retention rollup</h3>
+<ul>
+<li>Source: BambooHR-equivalent.</li>
+<li>Field: <code>Day_120_Retained</code> (boolean), computed nightly.</li>
+<li>Slice: by hire cohort + by pod.</li>
+</ul>
+<h3 id="153-gong-tags-rubric-schema">15.3 · Gong tags + rubric schema</h3>
+<ul>
+<li><code>tag:diagnostic-opener</code> — set if M1 detected by Gong NLP.</li>
+<li><code>tag:objection-acknowledged</code> — set if M2 detected.</li>
+<li><code>tag:calendar-booked</code> — set if M3 detected.</li>
+<li>Custom rubric: 3 rows (M1/M2/M3), each scored 1–5, applied by manager during call review.</li>
+<li>Rubric scores live in Gong scorecards and flow to a Salesforce custom object <code>Call_Review__c</code>.</li>
+</ul>
+<h3 id="154-outreach-sequence-completion">15.4 · Outreach sequence completion</h3>
+<ul>
+<li>Field: <code>Sequence_Completion_Rate</code> per rep per week.</li>
+<li>Used as a proxy for grind-on-stale-leads behaviour (high completion + low conversion = SPIF-chasing).</li>
+</ul>
+<hr />
+<h2 id="16-tooling-configuration">16 · Tooling configuration</h2>
+<ul>
+<li><strong>LMS: Sana.</strong> SCORM 1.2 supported. xAPI partial (statements supported, full LRS query not yet). Cohort enrollment via API. Single sign-on through Okta.</li>
+<li><strong>Authoring: Articulate 360</strong> (12 seats, mostly idle). Mario gets a seat for the engagement. Storyline + Rise both available.</li>
+<li><strong>Preview: SCORM Cloud</strong> account for pre-LMS testing.</li>
+<li><strong>Gong</strong> viewer license issued by A.S. for engagement duration.</li>
+<li><strong>Slack:</strong> training-team channel #sdr-onboarding-design (set up week 1).</li>
+<li><strong>Notion:</strong> shared workspace for raw notes, separate from sponsor-facing artefacts.</li>
+</ul>
+<hr />
+<h2 id="17-comp-plan-spifs-the-friction">17 · Comp plan + SPIFs (the friction)</h2>
+<ul>
+<li><strong>Base + commission:</strong> €36K base + €18K OTE (variable). Standard EU SDR pattern.</li>
+<li><strong>SPIF mechanics:</strong> monthly SPIF rewards closed-won regardless of pipeline source. Top SPIF tier = €500/month.</li>
+<li><strong>The distortion:</strong> new reps in month 2–4 see senior reps closing stale leads chasing SPIF. They emulate the behaviour, work the same stale leads, lose their day-1 fresh list, fall behind on net-new pipeline.</li>
+<li><strong>Why RevOps owns the fix:</strong> J.V. has the comp-plan redesign on her Q3 roadmap. Surfaced to her by K.M. in week 2 of this engagement.</li>
+</ul>
+<hr />
+<h2 id="18-brand-voice-tonality">18 · Brand voice + tonality</h2>
+<h3 id="181-external-how-fintechcard-speaks-to-buyers">18.1 · External (how FinTechCard speaks to buyers)</h3>
+<ul>
+<li>Transparent (regulator-aware, names the partner bank).</li>
+<li>Anti-jargon ("spend control" not "expense management orchestration").</li>
+<li>Specific over generic ("you'll see every transaction the moment it clears" not "real-time visibility").</li>
+<li>Concedes weakness when it builds trust ("we explicitly recommend keeping one bank card as backup").</li>
+</ul>
+<h3 id="182-internal-how-training-should-sound">18.2 · Internal (how training should sound)</h3>
+<ul>
+<li>Peer-to-peer (a senior rep talking to a junior, not a trainer talking to a student).</li>
+<li>No L&amp;D-speak ("learning objectives" stays in the design doc, not in the cohort-facing copy).</li>
+<li>Show the move, then name the move (worked example first, framework after).</li>
+<li>Honest about hard parts ("you will get hung up on. That's not a sign you're failing. Here's what to do next.").</li>
+</ul>
+<h3 id="183-visual-brand-the-part-mario-inherits">18.3 · Visual brand (the part Mario inherits)</h3>
+<ul>
+<li>Primary: green (<code>#00b67a</code> — close to Mario's Lively green-600). Lean on this in the SCORM module to avoid Salesforce-blue confusion.</li>
+<li>Mono accent for data + numbers (matches the Geist Mono Mario already uses).</li>
+<li>No stock photography. FinTechCard uses iconography + flat illustration only.</li>
+<li>Icon set: Phosphor (open-source). Mario can use it in the SCORM module if he wants iconography.</li>
+</ul>
+<hr />
+<h2 id="19-regulatory-context-what-compliance-owns-surface-area-for-sales">19 · Regulatory context (what compliance owns; surface-area for sales)</h2>
+<p>Sales reps <strong>do not sell against regulation</strong>; they <strong>defer to it as proof of seriousness</strong>. The compliance modules (handled by Cornerstone team, out of this engagement's scope) cover the formal training. What this engagement covers is the <strong>rep's response when a buyer asks a regulatory question</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Acronym</th>
+<th>What it actually means</th>
+<th>Rep's response</th>
+<th>Where in cohort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KYC</td>
+<td>Know Your Customer · identity verification at signup</td>
+<td>"We run KYC at signup. Takes 10 minutes for the owner. We've done it for 12 000+ businesses; the process is smoother than your bank's."</td>
+<td>Week 1 product walkthrough</td>
+</tr>
+<tr>
+<td>AML</td>
+<td>Anti-Money Laundering · transaction monitoring</td>
+<td>"Every transaction is monitored. You will not see this as a customer unless something gets flagged, which is rare and we walk you through it."</td>
+<td>Week 1</td>
+</tr>
+<tr>
+<td>SCA</td>
+<td>Strong Customer Authentication · 2FA on payments</td>
+<td>"Every card transaction over €30 triggers SCA. Your team will see a push to approve. Takes 2 seconds."</td>
+<td>Week 1</td>
+</tr>
+<tr>
+<td>PSD2</td>
+<td>EU Payment Services Directive · open banking framework</td>
+<td>Rarely asked. If asked: "We're PSD2-compliant. The short version: it's the regulation that lets us be additive to your bank, not a replacement."</td>
+<td>Reference only</td>
+</tr>
+<tr>
+<td>GDPR</td>
+<td>EU data protection</td>
+<td>"Your card data lives in the EU. We don't sell it. We don't share it. Here's our DPA — happy to send it over."</td>
+<td>Week 1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Honest carve-out for sales reps:</strong> if a regulatory question goes deeper than the table above, the rep should defer to compliance — never invent answers. The cohort training includes a "when to escalate" decision card.</p>
+<hr />
+<h2 id="20-risks-from-the-engagement-brief-restated">20 · Risks (from the engagement brief, restated)</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Marketing lead-quality keeps declining; L4 target misses</td>
+<td>Medium</td>
+<td>High</td>
+<td>Surface in Mager analysis; K.M. owns CMO conversation; contract caps training-side responsibility</td>
+</tr>
+<tr>
+<td>Manager-side adoption uneven (1–2 pods don't run the rubric)</td>
+<td>High</td>
+<td>Medium</td>
+<td>Phase 5 launch comms + week-1-of-cohort calibration; revisit at Phase 5 gate</td>
+</tr>
+<tr>
+<td>Top-decile articulation gap (M.G. + L.D. can't teach by demonstration)</td>
+<td>High</td>
+<td>Medium</td>
+<td>Mitigated by 4C/ID whole-task framework — the system teaches the moves, not the mentor</td>
+</tr>
+<tr>
+<td>Cohort cadence (every 4 weeks) leaves no slack for v2 mid-rollout</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Phase 7 schedules quarterly content-refresh sprints between cohort waves</td>
+</tr>
+<tr>
+<td>Sponsor turnover (K.M. has been in role 11 months)</td>
+<td>Low</td>
+<td>High</td>
+<td>Every phase summary documents decisions in writing; successor inherits signed paper trail</td>
+</tr>
+<tr>
+<td>ES pod gets the program in English (translation delayed to v2)</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Phase 3 sequences ES + DE for v2; v1 EN-only cohorts in UK + DE pods first</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="21-done-what-the-engagement-looks-like-at-close">21 · Done · what the engagement looks like at close</h2>
+<p>By 15 December 2026 (6 months after first cohort live):
+- 4 cohorts shipped (cadence every 4 weeks starting 1 July).
+- ~50 SDRs through the program.
+- Mean ramp time on the trailing-4-cohort average ≤ 71 days.
+- Day-120 retention on the same cohort base ≥ 92 %.
+- Manager 1:1 rubric adopted in all 9 pods.
+- L3 + L1 telemetry flowing into the dashboard nightly.
+- Engagement closed with phase-7 iteration log handed to K.M. for in-house ownership.</p>
+<hr />
+<p><em>Brief v1.0 · written 17 May 2026 by Mario Becerra · all anonymisation initials and synthetic numbers consistent across this document.</em></p>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · case-study-tz.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>UI prototypes · low-fi mockups — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Low-fidelity UI prototypes for the mini-OS shell. Implements the ux-design-system.md paradigm in ASCII-art form for cold-readability without binary asset dependency. Drives Phase 3 "/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>02-design\ui-prototypes/README.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../../">← Portfolio</a>
+    <a class="btn" href="../../../">← Pipeline</a>
+    <a class="btn" href="../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Low-fidelity UI prototypes for the mini-OS shell. Implements the <code>ux-design-system.md</code> paradigm in ASCII-art form for cold-readability without binary asset dependency. Drives Phase 3 SCORM shell build (<code>03-develop/scorm-shell/</code>). The five mockups below cover the most load-bearing screens identified across the six module storyboards.</p>
+</blockquote>
+<h1 id="ui-prototypes-low-fi-mockups">UI prototypes · low-fi mockups</h1>
+<p>Each mockup is a markdown / ASCII representation of one mini-OS state. Phase 3 implements these as HTML/CSS components per <code>ux-design-system.md</code>.</p>
+<p>Conventions used below:
+- <code>[Btn]</code> = primary green action button
+- <code>[btn]</code> = secondary outline button
+- <code>(•)</code> = M-move indicator chip (green)
+- <code>▣</code> = focused / selected item
+- <code>→</code> = read order / tab order</p>
+<hr />
+<h2 id="1-desktop-view-outreach-gong-side-by-side-m1-worked-example">1 · Desktop view · Outreach + Gong side-by-side (M1 worked example)</h2>
+<pre><code>+----------------------------------------------------------------------+
+|  ⬢ FTC  |  Module 1 · M1 Diagnostic Opener · 1:42 / 10:00  | [?Help] |
+|  [Outreach](•) [Gong](•) [SF] [LinkedIn] [Cal] [Phone] [Slack]       |
++----------------------------------------------------------------------+
+|                                                                      |
+|  +-- Outreach ────────────────+    +-- Gong · GC-01 worked──────+    |
+|  | Queue · 4 leads             |    | Manchester · Tue 14:02     |    |
+|  |                             |    |                            |    |
+|  | ▣ Maria (Retail · 2 stores) |    | [0:00] Rep:  (•)[M1]      |    |
+|  |   Last touch: 3 d ago       |    |   &quot;Hi Maria — quick one.  |    |
+|  |   [Btn Dial]                |    |    I noticed on Companies |    |
+|  |                             |    |    House you've opened a  |    |
+|  |   Tom (Series-B SaaS)       |    |    second location in the |    |
+|  |   [btn Dial]                |    |    last 6 months — who's  |    |
+|  |                             |    |    approving expense      |    |
+|  |   Emma (Mfg · 78 FTE)       |    |    reports across both    |    |
+|  |   [btn Dial]                |    |    stores now?&quot;           |    |
+|  |                             |    |                            |    |
+|  |   Lukas (DE Hospitality)    |    | [0:14] Buyer: ...          |    |
+|  |   [btn Dial]                |    |        [silence 0:04]      |    |
+|  |                             |    |                            |    |
+|  +-----------------------------+    | [0:18] Buyer: &quot;Well, my   |    |
+|                                     |        bookkeeper does,    |    |
+|                                     |        but she's drowning.&quot;|    |
+|                                     +----------------------------+    |
+|                                                                      |
++----------------------------------------------------------------------+
+</code></pre>
+<p><strong>Tab order →</strong> Outreach queue (Maria row first since focused) → Maria's Dial CTA → Tom row → ... → Gong transcript turn-by-turn → silence annotation → buyer answer turn.</p>
+<p><strong>Mayer spatial contiguity</strong> — the M1 annotation <code>[M1]</code> sits <em>on the rep line itself</em>, not in a sidebar. Per <code>ux-design-system.md</code> §6.1.</p>
+<p><strong>No-audio compensation</strong> — silence shown as <code>[silence 0:04]</code> in mono font + ARIA live announcement.</p>
+<hr />
+<h2 id="2-phone-dialler-in-call-state-with-live-m1m2m3-indicators">2 · Phone-dialler in-call state with live M1/M2/M3 indicators</h2>
+<pre><code>+----------------------------------------------------------------------+
+|  ⬢ FTC  |  Module 1 · solo problem · 5:48 / 10:00      | [?Help]    |
++----------------------------------------------------------------------+
+|                                                                      |
+|     +-- Phone-dialler ──────────────────────────────────────────+    |
+|     |                                                            |    |
+|     |   Calling: Tom (Series-B SaaS founder)                     |    |
+|     |   ────────────────────────────────────────                 |    |
+|     |                                                            |    |
+|     |   ┌─────────┐  ┌─────────┐  ┌─────────┐                   |    |
+|     |   │ (•) M1  │  │ ( ) M2  │  │ ( ) M3  │                   |    |
+|     |   │ ✓ asked │  │ pending │  │ pending │                   |    |
+|     |   └─────────┘  └─────────┘  └─────────┘                   |    |
+|     |                                                            |    |
+|     |   ┌────────────────────────────────────┐                   |    |
+|     |   │   Silence countdown: 0:03 / 0:04   │  (aria-live)     |    |
+|     |   │   ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░     │                  |    |
+|     |   └────────────────────────────────────┘                   |    |
+|     |                                                            |    |
+|     |   Diagnostic asked (word count: 14)                        |    |
+|     |   &quot;I see you closed your Series-B last quarter — how       |    |
+|     |   are you handling per-employee card issuance for hires?&quot;  |    |
+|     |                                                            |    |
+|     |   [btn End call]                  [Btn Take notes]         |    |
+|     |                                                            |    |
+|     +------------------------------------------------------------+    |
+|                                                                      |
++----------------------------------------------------------------------+
+</code></pre>
+<p><strong>M-move chips.</strong> Green-filled when registered, outline when pending. Three-cue redundancy preserved: colour + icon (above) + text label (<code>✓ asked</code> / <code>pending</code>).</p>
+<p><strong>Silence countdown.</strong> Ticks 0:00 → 0:04 in 1-second increments. ARIA live announces <em>"buyer is thinking — 1, 2, 3, 4 seconds"</em>. Per <code>M1-diagnostic-opener.md</code> solo problem.</p>
+<p><strong>Diagnostic preview.</strong> Word count gives LO-M1.2 ≤ 15-word feedback inline.</p>
+<hr />
+<h2 id="3-salesforce-next-step-booking-modal-with-calendar-peek-m3-close">3 · Salesforce next-step booking modal with calendar peek (M3 close)</h2>
+<pre><code>+----------------------------------------------------------------------+
+|  ⬢ FTC  |  Module 3 · M3 Calendar Close · 7:12 / 10:00 | [?Help]   |
++----------------------------------------------------------------------+
+|                                                                      |
+|  +-- Gong · live call ────────+    +-- Calendar (2nd tab) ────+     |
+|  | [12:08] Buyer:             |    |        Week of 8 Jul     |     |
+|  |   &quot;...so the bookkeeper    |    |  Mon | Tue | Wed | Thu   |     |
+|  |    is overwhelmed at       |    | ──── | ──── | ──── | ──── |     |
+|  |    Q-end.&quot;                 |    |      |  ▣  |      |  ▣  |     |
+|  |                            |    |      | 11:00|      | 14:00|     |
+|  | [12:14] Rep: (•)[M3]       |    |      |  20m |      |  20m |     |
+|  |   &quot;Let me book 20 mins     |    |      | free |      | free |     |
+|  |    Tuesday 11 — Xero       |    |      |      |      |      |     |
+|  |    sync demo.&quot;             |    |      |      |      |      |     |
+|  |                            |    +-----------------------------+   |
+|  +----------------------------+                                       |
+|                                                                      |
+|  +-- Salesforce · Account: Maria's Retail Co. ──────────────────+   |
+|  |                                                                |   |
+|  |   Next_Step_Booked__c:  [ ] FALSE → [▣] TRUE   (just flipped)| |
+|  |   First_Paid_Quota_Date__c: —                                  |   |
+|  |   Pod__c: UK-Manchester                                        |   |
+|  |   Tenure_Cohort__c: 2026-Q3-W27                                |   |
+|  |                                                                |   |
+|  |   [Btn Send invite to Maria + bookkeeper]                      |   |
+|  |   ✓ Calendar invite sent at 12:32 during call                  |   |
+|  +----------------------------------------------------------------+   |
+|                                                                      |
++----------------------------------------------------------------------+
+</code></pre>
+<p><strong>Spatial contiguity</strong> — Gong + Calendar side-by-side per <code>M3-calendar-close.md</code>. Both slot options visible at once; rep selects one (▣).</p>
+<p><strong>Salesforce flag flip.</strong> <code>Next_Step_Booked__c</code> shown transitioning. ARIA live announces <em>"Next step booked: true"</em>.</p>
+<p><strong>Salesforce-blue.</strong> This is the only window where the Salesforce blue (<code>#1B5297</code>) appears — per <code>ux-design-system.md</code> §4.3 authentic-context realism.</p>
+<hr />
+<h2 id="4-module-end-summary-card-with-key-takeaway-7-day-quiz-preview">4 · Module-end summary card with key-takeaway + +7-day quiz preview</h2>
+<pre><code>+----------------------------------------------------------------------+
+|  ⬢ FTC  |  Module 1 complete · 9:48 / 10:00            | [?Help]    |
++----------------------------------------------------------------------+
+|                                                                      |
+|         +-- Key takeaway ────────────────────────────────+           |
+|         |                                                 |           |
+|         |   &quot;Pick one signal. Phrase one question.       |           |
+|         |    Wait five seconds.                          |           |
+|         |    The buyer fills the silence — that's       |           |
+|         |    where the call begins.&quot;                     |           |
+|         |                                                 |           |
+|         |                            — M.G., Manchester  |           |
+|         +-------------------------------------------------+          |
+|                                                                      |
+|         +-- Next up ──────────────────────────────────────+          |
+|         |                                                 |           |
+|         |   📅  +7-day mini-quiz · scheduled              |           |
+|         |       3 items · ≤ 2 min · drops in Sana on     |           |
+|         |       Mon 22 Jul                                |           |
+|         |                                                 |           |
+|         |   📋  Module 2 · M2 Objection Acknowledge      |           |
+|         |       unlocks now                               |           |
+|         |       [Btn Start Module 2]                     |           |
+|         |                                                 |           |
+|         +-------------------------------------------------+          |
+|                                                                      |
+|         +-- Pulse · 30 seconds ────────────────────────────+         |
+|         |                                                   |          |
+|         |   Q1. I could use this on a call today.          |          |
+|         |       ◯ 1   ◯ 2   ◯ 3   ◯ 4   ◯ 5                |          |
+|         |                                                   |          |
+|         |   Q2. Move you're most likely to forget?         |          |
+|         |       [ ____________________________ ]            |          |
+|         |                                                   |          |
+|         |   Q3. What would you remove from this module?    |          |
+|         |       [ ____________________________ ]            |          |
+|         |                                                   |          |
+|         |   [Btn Submit]                                   |          |
+|         +---------------------------------------------------+          |
+|                                                                      |
++----------------------------------------------------------------------+
+</code></pre>
+<p><strong>Personalisation principle.</strong> "You" not "the learner." Brand voice §18.2 peer-to-peer.</p>
+<p><strong>L1 instrument.</strong> Three items from <code>l1-pulse-survey.md</code>. ≤ 30 seconds.</p>
+<p><strong>+7-day mini-quiz preview.</strong> Pre-training principle — telling the learner it's coming reduces the surprise / friction at retrieval.</p>
+<hr />
+<h2 id="5-manager-rubric-overlay-in-module-self-score-moment-gagne-event-7">5 · Manager rubric overlay · in-module self-score moment (Gagné event 7)</h2>
+<pre><code>+----------------------------------------------------------------------+
+|  ⬢ FTC  |  Module 2 · feedback · 8:24 / 10:00          | [?Help]    |
++----------------------------------------------------------------------+
+|                                                                      |
+|  +-- L3 rubric · self-score ──────────────────────────────────────+ |
+|  |                                                                  | |
+|  |  Score the solo call you just made on M2 (1–5).                 | |
+|  |  This is the same rubric your manager will use on real calls.   | |
+|  |                                                                  | |
+|  |  Row M2 · Objection acknowledge                                 | |
+|  |  ─────────────────────────────────────────────────────────────  | |
+|  |                                                                  | |
+|  |  ◯ 1 · Absent · Argued with the objection                       | |
+|  |       &quot;But our fees are lower&quot;                                  | |
+|  |       (P.B. §10.4 pattern, GC-19/20)                            | |
+|  |                                                                  | |
+|  |  ◯ 2 · Partial · Deflected / talked past                        | |
+|  |       (GC-12 pattern)                                            | |
+|  |                                                                  | |
+|  |  ◯ 3 · Present but generic · &quot;I hear you&quot;                       | |
+|  |                                                                  | |
+|  |  ▣ 4 · Specific + situational · ←  (this matches your call)    | |
+|  |       Named the objection back; waited.                         | |
+|  |       (M.G. §10.1, GC-01)                                        | |
+|  |                                                                  | |
+|  |  ◯ 5 · Anchored + buyer-back-in-buyer-words                     | |
+|  |       Restate + the one question that surfaces broken thing.    | |
+|  |       (L.D. §10.2, GC-06)                                        | |
+|  |                                                                  | |
+|  |  Lowest row = coaching focus for next week.                     | |
+|  |  This stays between you and your manager. No leaderboard.       | |
+|  |                                                                  | |
+|  |                                          [Btn Submit self-score]| |
+|  +------------------------------------------------------------------+|
+|                                                                      |
++----------------------------------------------------------------------+
+</code></pre>
+<p><strong>Anchor highlight.</strong> Anchor 4 is highlighted (▣) because the mini-OS event log detected the rep's call matched that anchor (buyer-word overlap ≥ 2, zero rebuttal tokens). The rep can change the selection — self-determination autonomy support.</p>
+<p><strong>Anchor provenance.</strong> Every anchor cites its evidence (GC ID + §10 SME quote). Per <code>rubric-design.md</code> §4 provenance discipline.</p>
+<p><strong>Anti-leaderboard.</strong> Last two lines are verbatim §10.5 anti-public-shaming framing.</p>
+<hr />
+<h2 id="6-app-icons-taskbar-reference">6 · App icons taskbar reference</h2>
+<pre><code>[Outreach]   PaperPlaneRight icon · queue-style avatar
+[Gong]       Waveform icon · transcript-style avatar
+[SF]         Cloud icon (Salesforce-blue tint inside the icon only)
+[LinkedIn]   GlobeNetwork icon
+[Cal]        Calendar icon (Phosphor)
+[Phone]      Phone icon
+[Slack]      Hash icon
+[?Help]      Question icon
+[Progress]   Circular progress arc (e.g. ⬢ 17%)
+</code></pre>
+<p>All Phosphor icons (open-source MIT, per §18.3). Each has <code>aria-label</code> per <code>ux-design-system.md</code> §8.</p>
+<hr />
+<h2 id="7-card-stack-mode-viewport-1024-px-reference">7 · Card-stack mode (viewport &lt; 1024 px) reference</h2>
+<p>When the viewport narrows below 1024 px, draggable windows collapse to a stacked card-list. The narrative order is preserved — paired windows (e.g. Gong + Calendar in M3) appear adjacent in the stack so spatial contiguity becomes vertical proximity.</p>
+<pre><code>+--------------------------------+
+|  ⬢ FTC  | M3 · 7:12 / 10:00   |
+| [Gong][Cal][SF][Phone][≡ more] |
++--------------------------------+
+|  ▣ Gong · live call            |
+|     ...transcript...           |
++--------------------------------+
+|  Calendar (2nd tab)            |
+|     ...slot grid...            |
++--------------------------------+
+|  Salesforce · account record   |
+|     ...next-step modal...      |
++--------------------------------+
+</code></pre>
+<p>Per <code>ux-design-system.md</code> §3.1 — pure-CSS responsive collapse, no JS condition required for the layout.</p>
+<hr />
+<h2 id="8-what-these-prototypes-send-downstream">8 · What these prototypes send downstream</h2>
+<table>
+<thead>
+<tr>
+<th>Sends</th>
+<th>To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Per-screen wireframe + tab order</td>
+<td><code>03-develop/scorm-shell/screens/*</code></td>
+</tr>
+<tr>
+<td>App-icon + Phosphor mapping</td>
+<td><code>03-develop/scorm-shell/components/AppIcon.tsx</code> (or .html)</td>
+</tr>
+<tr>
+<td>Card-stack collapse breakpoint</td>
+<td><code>03-develop/scorm-shell/tokens.css</code> viewport rules</td>
+</tr>
+<tr>
+<td>Self-score rubric overlay structure</td>
+<td><code>03-develop/scorm-shell/components/RubricSelfScore.html</code> + WAI-ARIA roles</td>
+</tr>
+<tr>
+<td>L1 pulse screen</td>
+<td><code>03-develop/scorm-shell/components/L1Pulse.html</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§7, 15.1, 18.2, 18.3.</li>
+<li><code>02-design/ux-design-system.md</code> (tokens, signalling, a11y).</li>
+<li><code>02-design/module-storyboards/*</code> (every screen above is the wireframe-form of an event in one of the six storyboards).</li>
+<li><code>02-design/rubric-design.md</code> (§5 self-score overlay).</li>
+<li><code>05-evaluate/l1-pulse-survey.md</code> (§4 pulse screen).</li>
+<li>Mayer (2014) — spatial contiguity, segmenting, signalling, redundancy, pre-training.</li>
+<li>W3C WCAG 2.1 (tab order, focus management, ARIA roles).</li>
+<li>Phosphor Icons (open-source MIT).</li>
+<li>Decisions <code>D-005</code>, <code>D-006</code>, <code>D-007</code>.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 02-design\ui-prototypes/README.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

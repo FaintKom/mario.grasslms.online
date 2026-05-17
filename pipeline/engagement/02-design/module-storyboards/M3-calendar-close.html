@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Module 3 · M3 Calendar Close — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Storyboard for Module 3 — M3 Calendar Close — the keystone-completing module. Inherits _template.md. Instantiates the M3 keystone across both Class 1 (warm) and Class 2 (cold recept"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>02-design\module-storyboards/M3-calendar-close.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../../">← Portfolio</a>
+    <a class="btn" href="../../../">← Pipeline</a>
+    <a class="btn" href="../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Storyboard for Module 3 — M3 Calendar Close — the keystone-completing module. Inherits <code>_template.md</code>. Instantiates the M3 keystone across both Class 1 (warm) and Class 2 (cold receptive) close patterns per <code>01-analyze/task-inventory.md</code> §2. Threshold concept <em>"Calendar in second tab is a habit, not a tool"</em>. Worked example uses M.G. + Maria close (§10.1 verbatim + GC-01). Solo problem switches to Emma (§12.3) and includes the instrumented "Calendar must be open before dial" habit gate.</p>
+</blockquote>
+<h1 id="module-3-m3-calendar-close">Module 3 · M3 Calendar Close</h1>
+<h2 id="storyboard-header">Storyboard header</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Module ID</td>
+<td>M3</td>
+</tr>
+<tr>
+<td>Terminal outcome</td>
+<td><strong>T4</strong> — SDR names two specific calendar slots aloud, sends the calendar invite during the live call, and confirms acceptance before hanging up; ≥ 4 on M3 rubric on 3 of 5 simulated calls; Salesforce <code>Next_Step_Booked__c = TRUE</code> on each successful close.</td>
+</tr>
+<tr>
+<td>Enabling outcomes</td>
+<td><strong>LO-M3.1</strong> Open calendar pre-dial (habit) · <strong>LO-M3.2</strong> State two slots + send invite during call</td>
+</tr>
+<tr>
+<td>Task class</td>
+<td>Class 1 + Class 2 close pattern (warm + cold)</td>
+</tr>
+<tr>
+<td>Time budget</td>
+<td>10:00 (brief §7)</td>
+</tr>
+<tr>
+<td>Mini-OS apps used</td>
+<td>LinkedIn / Companies House · Outreach · Phone-dialler · Calendar · Salesforce · Gong · Slack</td>
+</tr>
+<tr>
+<td>Pre-requisite outcomes</td>
+<td>T2 (M1) + T3 (M2)</td>
+</tr>
+<tr>
+<td>Spaced-retrieval drop</td>
+<td>+7 days on LO-M3.1 + LO-M3.2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gagne-event-timeline-seconds-level-pacing">Gagné event timeline · seconds-level pacing</h2>
+<h3 id="000030-gain-attention-trigger-scenario">0:00–0:30 · Gain attention · trigger scenario</h3>
+<p><strong>Screen.</strong> GC-22-style transcript (exit-interview rep, §11):</p>
+<blockquote>
+<p><strong>Buyer:</strong> <em>Yeah, that does sound interesting. Send me something?</em>
+<strong>Rep:</strong> <em>I'll follow up — let me know what works.</em> <code>[end of call · no re-engage]</code></p>
+</blockquote>
+<p>Muted-red annotation: <em>"Rep exited at month 4.5. All 3 calls sampled ended in 'follow up'. None re-engaged."</em> (Exit interview §10.5.)</p>
+<h3 id="030100-state-outcome">0:30–1:00 · State outcome</h3>
+<blockquote>
+<p><strong>By the end of these 10 minutes the calendar invite goes out <em>during</em> the call. Not after.</strong></p>
+</blockquote>
+<p>Brand-voice peer line (§18.2): <em>"'I'll follow up' is where deals go to die. Two slots. One invite. Sent before you hang up."</em> (M.G. §10.1 paraphrase: <em>"I do not say 'I'll send you something.' I have lost too many deals to follow-up."</em>)</p>
+<h3 id="100130-recall-prior">1:00–1:30 · Recall prior</h3>
+<p>"M1 opened the call. M2 kept it alive past the pushback. M3 turns it into pipeline. The calendar has to already be open when you dial — that's the habit."</p>
+<h3 id="130300-present-stimulus-guide-worked-example">1:30–3:00 · Present stimulus + guide · worked example</h3>
+<p><strong>Screen — side-by-side (Mayer spatial contiguity).</strong> Left half: Gong transcript window. Right half: mini-OS Calendar app showing M.G.'s actual two free slots.</p>
+<pre><code>[12:08] Buyer:  ...so yeah, the bookkeeper is overwhelmed at Q-end.
+
+[12:14] Rep:    You mentioned the bookkeeper is overwhelmed by Q-end —
+                let me book 20 minutes Tuesday 11 to show your        [Calendar] [M3]
+                accountant the Xero sync.
+
+                [Calendar invite &quot;Maria + bookkeeper · Xero sync demo&quot;
+                 sent during call — 12:32]
+
+[12:42] Buyer:  Sounds good — I'll forward to Sarah.
+
+[12:48] Rep:    Perfect — Sarah will get the invite in about a minute.
+                                                                       [Check] [M3 confirmed]
+
+[Salesforce: Next_Step_Booked__c = TRUE · cmi.activity logged]
+</code></pre>
+<p><strong>Mayer signalling.</strong> M3 line carries (1) primary-green chip; (2) Phosphor <code>Calendar</code> icon; (3) text label <code>[M3]</code>. Calendar pane on the right pulses subtly when the invite send fires (reduced-motion: instant render).</p>
+<h3 id="300500-elicit-performance-completion-problem">3:00–5:00 · Elicit performance · completion problem</h3>
+<p><strong>Stem.</strong> Buyer (Tom, §12.2): <em>"Yeah, FX is a real headache. What would a demo even look like?"</em></p>
+<p><strong>Rep close (best of 4):</strong></p>
+<ul>
+<li>A) <em>I'll send you some times by email.</em> — <em>(distractor: GC-11 pattern, "I'll email"; re-engage-from-cold failure)</em></li>
+<li>B) <em>Want me to follow up next week?</em> — <em>(distractor: closed question + delayed action; GC-19 / GC-22 pattern)</em></li>
+<li>C) <em>What's the best 20 minutes next week to walk you through the FX-cost vs Brex on your last month's spend — Tuesday 11 or Thursday 2?</em> ✓ <em>(per L.D. §12.2 closing move + M.G. two-slot pattern · <code>l2-quiz-blueprint.md</code> §4.3)</em></li>
+<li>D) <em>Let me know when works for you.</em> — <em>(distractor: open-ended; no two-slot anchor)</em></li>
+</ul>
+<h3 id="500800-elicit-performance-solo-problem">5:00–8:00 · Elicit performance · solo problem</h3>
+<p><strong>Buyer profile (variability).</strong> <strong>Emma</strong> (§12.3) — Manufacturing operations head, 78 FTE, multi-site spend pain.</p>
+<p><strong>Mini-OS sequence — habit-gated.</strong></p>
+<ol>
+<li><strong>Pre-dial habit gate (LO-M3.1).</strong> Mini-OS Outreach dial button is <strong>disabled</strong> until the Calendar app is open in a second window. Coach-mark surfaces if rep clicks dial without Calendar: <em>"Open Calendar before dialling — second tab."</em> Event log captures <code>calendar_open_before_dial: true/false</code>.</li>
+<li><strong>Dial.</strong> Phone-dialler opens.</li>
+<li><strong>M1 + M2 recap.</strong> Rep does M1 + M2 (already automated from prior modules); Phone-dialler auto-tags.</li>
+<li><strong>Buyer interest signal.</strong> Emma: <em>"Honestly... if your tool actually pulls supplier receipts off-platform, that would save my bookkeeper a week per month."</em></li>
+<li><strong>LO-M3.2 close.</strong> Rep selects two slots from the visible Calendar pane, speaks them in one sentence, clicks "Send invite". Mini-OS Calendar app sends invite. Salesforce <code>Next_Step_Booked__c</code> field flips to TRUE <em>during the call</em>.</li>
+<li><strong>Confirm acceptance.</strong> Buyer line: <em>"Tuesday 11 works. I'll bring my accountant."</em></li>
+<li><strong>End-of-solo.</strong> Event log committed.</li>
+</ol>
+<p><strong>Success criteria (instrumented).</strong>
+- LO-M3.1 <code>calendar_open_before_dial = true</code>.
+- LO-M3.2 two slots stated in one sentence (token count check); invite sent before call end timestamp; Salesforce flag TRUE before <code>call_end_reason</code>.</p>
+<h3 id="800900-feedback-self-score-manager-rubric-preview">8:00–9:00 · Feedback · self-score + manager-rubric preview</h3>
+<p>L3 rubric row M3 (<code>l3-call-rubric.md</code> row 3). Self-score; anchor highlight. Bottom card includes M.G. §10.1 verbatim: <em>"I have my calendar open in a second tab the entire time."</em></p>
+<h3 id="900930-assess-3-item-quiz">9:00–9:30 · Assess · 3-item quiz</h3>
+<p>From <code>l2-quiz-blueprint.md</code> §4.3:</p>
+<ul>
+<li>Item 1 (LO-M3.2): worked-example completion on two-slot close (the §4.3 verbatim item with Tuesday 11 / Thursday 2).</li>
+<li>Item 2 (LO-M3.1): scenario — <em>"You dial without opening Calendar. Buyer shows interest. What happens?"</em> Correct: <em>invite delayed → re-engagement risk · GC-11 pattern</em>.</li>
+<li>Item 3 (LO-M3.2): scenario — <em>"Buyer accepts a slot but you forgot to send the invite during the call. What's the cost?"</em> Correct: <em>Salesforce flag stays FALSE; re-engage from cold next week → drops to GC-10 pattern</em>.</li>
+</ul>
+<h3 id="9301000-enhance-retentiontransfer">9:30–10:00 · Enhance retention/transfer</h3>
+<p><strong>Key-takeaway card:</strong></p>
+<blockquote>
+<p><em>"Calendar in second tab. Two slots. One invite. Sent before you hang up. 'Follow up' is the failure mode — make it impossible by sending live." — M.G., Manchester pod.</em></p>
+</blockquote>
+<p><strong>+7-day mini-quiz</strong> auto-scheduled. <strong>L1 pulse</strong> fires.</p>
+<hr />
+<h2 id="worked-example-specification">Worked-example specification</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Buyer profile</td>
+<td>Maria (§12.1); GC-01 close pattern</td>
+</tr>
+<tr>
+<td>SME pattern</td>
+<td>M.G. §10.1 verbatim — closing move + "I do not say 'I'll send you something'" + second-tab calendar habit</td>
+</tr>
+<tr>
+<td>M-move highlight points</td>
+<td><code>[M3]</code> Calendar icon on rep slot-statement line; invite-send event marked <code>[12:32]</code>; <code>[Check] [M3 confirmed]</code> on acceptance line</td>
+</tr>
+<tr>
+<td>Mayer principles</td>
+<td>Signalling, <strong>Spatial contiguity</strong> (Gong + Calendar side-by-side — explicit Mayer principle citation), Segmenting, Pre-training, Coherence</td>
+</tr>
+<tr>
+<td>Length</td>
+<td>≤ 90 s reading time</td>
+</tr>
+</tbody>
+</table>
+<h2 id="completion-problem-specification">Completion-problem specification</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stem</td>
+<td>Tom (§12.2) interest signal post-Brex restate</td>
+</tr>
+<tr>
+<td>Options</td>
+<td>A (email · GC-11) · B (follow-up · GC-19/22) · C (two-slot close ✓) · D (open-ended · failure pattern)</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>≤ 2 min</td>
+</tr>
+</tbody>
+</table>
+<h2 id="solo-problem-specification">Solo-problem specification</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Buyer profile</td>
+<td><strong>Emma</strong> (§12.3) — multi-site manufacturing ops head; not Maria (variability)</td>
+</tr>
+<tr>
+<td>Success criteria</td>
+<td>LO-M3.1 (<code>calendar_open_before_dial = true</code>) · LO-M3.2 (two slots + invite during call + Salesforce flag flips)</td>
+</tr>
+<tr>
+<td>Habit gate</td>
+<td>Dial button disabled until Calendar open</td>
+</tr>
+<tr>
+<td>Hint affordances</td>
+<td>One "show me the move" hint = peek at M.G. two-slot pattern</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>≤ 3 min</td>
+</tr>
+<tr>
+<td>Apps active</td>
+<td>LinkedIn / Companies House · Outreach · Phone-dialler · <strong>Calendar</strong> (new) · <strong>Salesforce</strong> (new) · Gong · Slack</td>
+</tr>
+<tr>
+<td>Event-log</td>
+<td><code>calendar_open_before_dial</code>, <code>slots_stated_in_one_sentence</code>, <code>invite_sent_during_call_ms</code>, <code>salesforce_next_step_booked_set_at</code>, <code>call_end_reason</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="mini-os-app-set-used">Mini-OS app set used</h2>
+<table>
+<thead>
+<tr>
+<th>App</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LinkedIn / Companies House</td>
+<td>Pre-dial signal scan</td>
+</tr>
+<tr>
+<td>Outreach</td>
+<td>Dial queue (with habit-gate disable)</td>
+</tr>
+<tr>
+<td>Phone-dialler</td>
+<td>Live call state</td>
+</tr>
+<tr>
+<td><strong>Calendar</strong></td>
+<td>Second-tab habit + two-slot speak + invite send (first time exposed)</td>
+</tr>
+<tr>
+<td><strong>Salesforce</strong></td>
+<td><code>Next_Step_Booked__c</code> field visible + flips during call (first time exposed)</td>
+</tr>
+<tr>
+<td>Gong</td>
+<td>Worked-example transcript + post-call self-tag</td>
+</tr>
+<tr>
+<td>Slack (pinned)</td>
+<td>3-move card visible</td>
+</tr>
+</tbody>
+</table>
+<h2 id="accessibility-checklist">Accessibility checklist</h2>
+<ul>
+<li>[ ] Calendar app keyboard-navigable; two slots selectable via Tab + Enter.</li>
+<li>[ ] Habit-gate disabled-dial-button has <code>aria-disabled="true"</code> + <code>aria-describedby</code> pointing to the coach-mark.</li>
+<li>[ ] <code>Calendar</code> Phosphor icon <code>aria-label="M3 calendar close move"</code>; <code>Check</code> icon <code>aria-label="M3 acceptance confirmed"</code>.</li>
+<li>[ ] Side-by-side Gong + Calendar layout collapses to stacked single-column at narrow viewport (≤ 768 px); spatial-contiguity preserved via vertical proximity.</li>
+<li>[ ] Salesforce flag flip announced via <code>aria-live="polite"</code>: <em>"Next step booked: true"</em>.</li>
+<li>[ ] Reduced-motion: calendar-pulse on invite-send disabled.</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§5, 7, 9, 10.1 (M.G. — "calendar in second tab" + closing move), 10.5 (exit interview), 11 (GC-01, GC-10, GC-11, GC-22), 12.1, 12.2, 12.3, 15.1 (Salesforce <code>Next_Step_Booked__c</code>), 18.2.</li>
+<li><code>01-analyze/task-inventory.md</code> §2 Class 1 + Class 2 close; §3 components P3 (calendar second-tab) + P2 (Salesforce log); §6 drill D3.</li>
+<li><code>01-analyze/learner-personas.md</code> §1 M.G. + §5 exit interview.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code> T4, LO-M3.1, LO-M3.2.</li>
+<li><code>02-design/curriculum-blueprint.md</code> §3.2 Module 3.</li>
+<li><code>02-design/4cid-blueprint.md</code> §3.1 close pattern.</li>
+<li><code>02-design/module-storyboards/_template.md</code>.</li>
+<li><code>05-evaluate/l1-pulse-survey.md</code>; <code>05-evaluate/l2-quiz-blueprint.md</code> §4.3; <code>05-evaluate/l3-call-rubric.md</code> row M3; <code>05-evaluate/l4-ramp-retention-tracking.md</code> (<code>Next_Step_Booked__c</code> proxy).</li>
+<li>Decisions <code>D-002</code>, <code>D-005</code>, <code>D-006</code>, <code>D-007</code>.</li>
+<li>Frameworks: Gagné (1985), Merrill (2002), Renkl &amp; Atkinson (2003), Mayer (2014 — spatial contiguity explicit), Van Merriënboer &amp; Kirschner (2018), Sweller (2011).</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 02-design\module-storyboards/M3-calendar-close.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

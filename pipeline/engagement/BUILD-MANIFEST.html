@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Build manifest — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="One-page artefact summary of what was delivered against case-study-tz.md v1.0. Generated 17 May 2026 against the post-Phase-6 build."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>BUILD-MANIFEST.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../">← Portfolio</a>
+    <a class="btn" href="../">← Pipeline</a>
+    <a class="btn" href="">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="build-manifest">Build manifest</h1>
+<blockquote>
+<p>One-page artefact summary of what was delivered against <code>case-study-tz.md v1.0</code>. Generated 17 May 2026 against the post-Phase-6 build.</p>
+</blockquote>
+<hr />
+<h2 id="phase-by-phase-counts">Phase-by-phase counts</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Folder</th>
+<th style="text-align: right;">Files</th>
+<th style="text-align: right;">Lines</th>
+<th>Headline artefact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>00-project-management/</code></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">638</td>
+<td><code>decisions-log.md</code> (D-001 → D-009)</td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>01-analyze/</code></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">882</td>
+<td><code>task-inventory.md</code> (4C/ID six task classes)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>02-design/</code></td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">2 167</td>
+<td><code>4cid-blueprint.md</code> + 6 module storyboards</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>03-develop/</code></td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">12 895</td>
+<td><code>scorm-shell/index.html</code> + 6 SCORM modules</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>04-implement/</code></td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">590</td>
+<td><code>cohort-1-launch-checklist.md</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>05-evaluate/</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">803</td>
+<td><code>l3-call-rubric.md</code> + <code>l4-ramp-retention-tracking.md</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>06-iterate/</code></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">~1 050</td>
+<td><code>case-study-summary.html</code> + <code>exec-deck.md</code></td>
+</tr>
+<tr>
+<td>—</td>
+<td>Root</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">~700</td>
+<td><code>README.md</code> + <code>case-study-tz.md</code> + this file + <code>PROJECT-INDEX.md</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Project total:</strong> 7 phases (6 ADDIE + Phase 0 PM) · <strong>121 files</strong> (post-build, includes the 3 portfolio-polish artefacts created in this batch) · <strong>~19 800 lines</strong>.</p>
+<p>Pre-portfolio-polish snapshot (before this batch): 118 files · ~18 988 lines.</p>
+<hr />
+<h2 id="critic-verdicts-per-phase">Critic verdicts per phase</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Pass #</th>
+<th>Date</th>
+<th>Verdict</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 · Analyse</td>
+<td>1</td>
+<td>18 May 2026</td>
+<td><strong>PASS</strong></td>
+<td>3 quality-of-defence issues raised; none required rework.</td>
+</tr>
+<tr>
+<td>2 · Design</td>
+<td>1</td>
+<td>18 May 2026</td>
+<td><strong>PASS</strong></td>
+<td>Forward LO-ID reconciliation closed at Phase 5 source.</td>
+</tr>
+<tr>
+<td>3 · Develop</td>
+<td>1</td>
+<td>17 May 2026</td>
+<td><strong>CONDITIONAL PASS → PASS</strong></td>
+<td>3 fixes (M2 manifest, event-log spec drift, SCORM Cloud preview log) all closed in one rework.</td>
+</tr>
+<tr>
+<td>4 · Implement</td>
+<td>1</td>
+<td>18 May 2026</td>
+<td><strong>PASS (w/ rework) → PASS re-affirmed</strong></td>
+<td>3 fact/date hygiene fixes applied: GC-derived hangup citation, 17 Jun pre-read alignment, Day +60/+120 weekday correction.</td>
+</tr>
+<tr>
+<td>5 · Evaluate</td>
+<td>1</td>
+<td>17 May 2026</td>
+<td><strong>PASS</strong></td>
+<td>3 non-blocking polish items applied in same pass (disclaimer bolded, v2 backlog row, LO-ID reconciliation note).</td>
+</tr>
+<tr>
+<td>6 · Iterate</td>
+<td>1</td>
+<td>18 May 2026</td>
+<td><strong>PASS (w/ rework) → PASS re-affirmed</strong></td>
+<td>Exec deck slide 4 cohort count, slide 5 honest read, slide 6 below-trigger framing rewritten; D-009 logged.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>All six phases passed within max 1 critic pass + at most 1 single-revision rework.</strong> Critic was a fresh subagent with no access to drafting context — saw only the brief, the artefacts, and the gate criteria.</p>
+<p>Full audit trail: <code>00-project-management/critic-log.md</code>.</p>
+<hr />
+<h2 id="open-conditional-items">Open conditional items</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Owner</th>
+<th>Gate</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phase 3 Gate 1 · live SCORM Cloud preview runs for all 6 modules</td>
+<td>LMS admin</td>
+<td>Day −7 pre-launch</td>
+<td>Sign-off required before LMS admin uploads to Sana production. Procedure documented in <code>03-develop/scorm-shell/README.md</code> §8.</td>
+</tr>
+<tr>
+<td>Phase 1 follow-up · low-cadence manager interview (broker via A.S.)</td>
+<td>A.S. + Mario</td>
+<td>Sprint 2.1 (Phase 2)</td>
+<td>Manager Persona 2 currently uses borrowed P.B. quote about F.O.; replace with direct interview when scheduled.</td>
+</tr>
+<tr>
+<td>Phase 5 forward dependency · Sana xAPI LRS GA for +30 d retrieval</td>
+<td>Sana product roadmap</td>
+<td>v2 backlog</td>
+<td>Currently deferred to v2 per <code>05-evaluate/l2-quiz-blueprint.md</code> §6.</td>
+</tr>
+</tbody>
+</table>
+<p>No other open items at hand-off. All other gate criteria fully met.</p>
+<hr />
+<h2 id="frameworks">Frameworks</h2>
+<ul>
+<li><strong>Applied:</strong> 20 (ADDIE · 4C/ID · Kirkpatrick · ABCD · Bloom revised · Action Mapping · Backwards Design · Cognitive Load Theory · Multimedia Learning · Worked-example fading · Spaced retrieval · LTEM · Dirksen · Merrill · Gagné · UDL + WCAG · Situated cognition · Self-determination · Threshold concepts · Job-aid theory).</li>
+<li><strong>Explicitly rejected:</strong> 8 (Kemp · Dick &amp; Carey · ASSURE · 70-20-10 · Bloom 1956 · SOLO · HPT/ISPI · Biggs constructive alignment).</li>
+</ul>
+<p>Full citation pack with brief-evidence triggers and rejection reasoning: <code>00-project-management/frameworks-applied.md</code>.</p>
+<hr />
+<h2 id="decisions">Decisions</h2>
+<p><strong>9 decisions logged</strong>, each with: ID · date · framework lens · brief evidence · alternatives rejected · consequences. Append-only.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Decision</th>
+<th>Lens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-001</td>
+<td>ADDIE as spine (not SAM, not LLAMA)</td>
+<td>Process-model selection</td>
+</tr>
+<tr>
+<td>D-002</td>
+<td>4C/ID as curriculum backbone (not topic-by-topic)</td>
+<td>Instructional architecture</td>
+</tr>
+<tr>
+<td>D-003</td>
+<td>Kirkpatrick L1 reframed via Thalheimer LTEM tier-3</td>
+<td>Evaluation instrument</td>
+</tr>
+<tr>
+<td>D-004</td>
+<td>Manager rubric = 3 rows × 5 anchors, single A4 page</td>
+<td>Criterion-referenced rubric design</td>
+</tr>
+<tr>
+<td>D-005</td>
+<td>SCORM modules built custom (vanilla HTML/JS), not Articulate</td>
+<td>Tool-vs-craft tradeoff</td>
+</tr>
+<tr>
+<td>D-006</td>
+<td>No audio narration anywhere in v1</td>
+<td>Mayer + brief constraint</td>
+</tr>
+<tr>
+<td>D-007</td>
+<td>Mini-OS shell as the consistent learner-facing UX</td>
+<td>Situated cognition + 4C/ID variability</td>
+</tr>
+<tr>
+<td>D-008</td>
+<td>L4 attribution bounded; cohort comparison, not RCT</td>
+<td>Phillips L4-5 evaluation design</td>
+</tr>
+<tr>
+<td>D-009</td>
+<td>O-A 5 % attrition + L4-A 5 d ramp-regression triggers are designer-set</td>
+<td>Statistical-process-control tuning</td>
+</tr>
+</tbody>
+</table>
+<p>Source: <code>00-project-management/decisions-log.md</code>.</p>
+<hr />
+<h2 id="what-would-i-do-differently-next-time">What would I do differently next time</h2>
+<ol>
+<li><strong>Schedule the low-cadence manager interview before Phase 1 closes, not after.</strong> Manager Persona 2 carried a borrowed quote through Phase 2 storyboarding; closing the data gap earlier would have removed a quality-of-defence concern from every subsequent critic pass.</li>
+<li><strong>Build the mini-OS shell behind a feature-flag boot in Sprint 3.0, before any module is wired to it.</strong> Two modules (M1 + M3) were partially rewritten when the shell's <code>bootApi</code> signature stabilised in Sprint 3.2; a thin boot stub one sprint earlier would have absorbed that churn.</li>
+</ol>
+<hr />
+<p><em>Manifest v1.0 · regenerate by globbing the repo + reading <code>critic-log.md</code> after any phase change.</em></p>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · BUILD-MANIFEST.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>

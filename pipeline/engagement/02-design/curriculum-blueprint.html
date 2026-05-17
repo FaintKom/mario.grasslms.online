@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Curriculum blueprint · Backwards Design × 4C/ID × Merrill — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: Curriculum blueprint built per Wiggins &amp; McTighe's Backwards Design (2005) — Stage 1 (desired results) → Stage 2 (acceptable evidence) → Stage 3 (learning experiences). Inside S"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink-900: #0a1a10; --ink-700: #1a2a1f; --ink-500: #4d5a51; --ink-400: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --green-700: #07683f; --green-600: #0a8754; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink-900);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  background: var(--ink-900); color: var(--paper);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
+.topbar .brand .mark {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--green-600);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-family: var(--sans); font-size: 13px; color: #fff;
+}
+.topbar .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar .btn {
+  background: transparent; color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+  padding: 4px 10px; font: inherit; cursor: pointer; text-decoration: none;
+}
+.topbar .btn:hover { background: rgba(255,255,255,0.08); }
+
+main.sheet {
+  max-width: 880px; margin: 32px auto; padding: 40px 56px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px -12px rgba(0,0,0,0.08);
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 16px auto; padding: 24px 18px; border-radius: 0; }
+}
+
+main.sheet h1, main.sheet h2, main.sheet h3, main.sheet h4, main.sheet h5 {
+  font-family: var(--sans); color: var(--ink-900);
+  font-weight: 700; letter-spacing: -0.005em;
+  margin: 1.6em 0 0.5em;
+}
+main.sheet h1 { font-size: 32px; line-height: 1.15; margin-top: 0; padding-bottom: 14px; border-bottom: 2px solid var(--green-600); }
+main.sheet h2 { font-size: 23px; border-top: 1px solid var(--ink-100); padding-top: 22px; }
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; }
+main.sheet h3 { font-size: 18px; color: var(--green-700); }
+main.sheet h4 { font-size: 16px; }
+main.sheet h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-500); }
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a { color: var(--green-700); text-decoration: underline; text-underline-offset: 2px; }
+main.sheet a:hover { color: var(--green-600); }
+main.sheet strong { color: var(--ink-900); font-weight: 700; }
+main.sheet em { color: var(--ink-700); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr { border: none; border-top: 1px solid var(--ink-100); margin: 32px 0; }
+
+main.sheet blockquote {
+  margin: 1em 0; padding: 10px 18px;
+  background: var(--sun-50); border-left: 3px solid var(--sun-500);
+  border-radius: 0 6px 6px 0;
+  font-style: italic; color: var(--ink-700);
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--coral-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 14px 18px;
+  border-left: 3px solid var(--green-600); border-radius: 0 6px 6px 0;
+  overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  margin: 1em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink-900);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1em 0;
+  font-size: 13.5px;
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-700);
+  text-align: left; padding: 10px 12px;
+  border-bottom: 2px solid var(--ink-200);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+main.sheet tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--ink-100);
+  vertical-align: top; line-height: 1.5;
+}
+main.sheet tbody tr:nth-child(even) td { background: var(--ink-50); }
+
+footer.foot {
+  max-width: 880px; margin: 16px auto 40px; padding: 0 56px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--ink-400); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+footer.foot a { color: var(--green-700); }
+@media (max-width: 720px) {
+  footer.foot { padding: 0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>02-design/curriculum-blueprint.md</span>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../../../">← Portfolio</a>
+    <a class="btn" href="../../">← Pipeline</a>
+    <a class="btn" href="../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<blockquote>
+<p>Why this artefact: Curriculum blueprint built per Wiggins &amp; McTighe's <em>Backwards Design</em> (2005) — Stage 1 (desired results) → Stage 2 (acceptable evidence) → Stage 3 (learning experiences). Inside Stage 3 each module follows Merrill's First Principles of Instruction (2002) inside a 4C/ID whole-task progression (<code>D-002</code>, Van Merriënboer &amp; Kirschner 2018). The course-architecture table maps the six 4C/ID task classes from <code>01-analyze/task-inventory.md</code> §2 to the six modules, with variability axes per <code>frameworks-applied.md</code> §2 and spaced-retrieval drop schedule per §11.</p>
+</blockquote>
+<h1 id="curriculum-blueprint-backwards-design-4cid-merrill">Curriculum blueprint · Backwards Design × 4C/ID × Merrill</h1>
+<h2 id="1-stage-1-desired-results">1 · Stage 1 · Desired results</h2>
+<h3 id="11-program-terminal-t1">1.1 · Program terminal (T1)</h3>
+<p>Inherits <code>learning-outcomes-abcd-bloom.md</code> §2 verbatim:</p>
+<blockquote>
+<p>A newly-hired SDR executes the M1 + M2 + M3 keystone sequence on a live cold call against an SMB ICP buyer (Maria / Tom / Emma / Lukas) inside the rep's actual workstation, achieving ≥ 80 % Gong-tag adherence by week 8 of tenure.</p>
+</blockquote>
+<h3 id="12-module-level-terminals-t2t7">1.2 · Module-level terminals (T2–T7)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Module</th>
+<th>Terminal</th>
+<th>Task class</th>
+<th>Keystone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T2</td>
+<td>M1 Diagnostic Opener</td>
+<td>Opens with buyer-specific diagnostic; tolerates 5-s silence</td>
+<td>Class 2 — Cold receptive</td>
+<td>M1</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>M2 Objection Acknowledge</td>
+<td>Restates in buyer's own words; surfaces broken thing</td>
+<td>Class 3 — Cold hostile</td>
+<td>M2</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>M3 Calendar Close</td>
+<td>Two slots aloud + invite sent during call</td>
+<td>Class 1 + 2 close pattern</td>
+<td>M3</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>ICP Buyer Fit</td>
+<td>Discriminates 4 archetypes; runs M1+M2+M3 under interleaved variability</td>
+<td>Classes 2/3/4 integrated</td>
+<td>M1+M2+M3 × ICP</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>Product Prop Mapping</td>
+<td>Pain→prop mapping; multi-stakeholder dual diagnostic</td>
+<td>Class 5 — Multi-stakeholder</td>
+<td>M1+M2+M3 × Prop</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>Regulatory Deflection</td>
+<td>§19 verbatim deflection; answer-vs-escalate decision</td>
+<td>Class 6 — Reg deflection</td>
+<td>Reg</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-threshold-concepts-that-must-be-crossed-per-frameworks-appliedmd-19">1.3 · Threshold concepts that must be crossed (per <code>frameworks-applied.md</code> §19)</h3>
+<ul>
+<li><strong>"The diagnostic creates the pitch."</strong> The rep does not pre-decide what to pitch — the buyer's answer to M1 selects which prop to deploy. Surfaced explicitly in M1.</li>
+<li><strong>"5 seconds of silence is where the deal happens."</strong> Tolerating silence after the diagnostic — M.G. §10.1 verbatim. Threshold concept exposed in M1; reinforced in M4 / M5 interleaving.</li>
+<li><strong>"Acknowledge before respond."</strong> Restate-then-question dissolves the argumentation reflex. Threshold in M2.</li>
+<li><strong>"Calendar in second tab is a habit, not a tool."</strong> M3 sub-skill that habituates before the live close.</li>
+<li><strong>"Deflect to proof, never invent."</strong> Regulatory questions are evidence-positions, not sales pitches. Threshold in M6.</li>
+</ul>
+<hr />
+<h2 id="2-stage-2-acceptable-evidence-assessment-alignment">2 · Stage 2 · Acceptable evidence (assessment alignment)</h2>
+<p>This is the column that pairs 1:1 with <code>05-evaluate/l2-quiz-blueprint.md</code> + <code>05-evaluate/l3-call-rubric.md</code> + <code>05-evaluate/l1-pulse-survey.md</code>. Wiggins's rule: never plan activities before evidence.</p>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th>Evidence type</th>
+<th>Instrument</th>
+<th>L-level</th>
+<th>Dashboard line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>Behavioural performance on the rep's live calls</td>
+<td>Gong <code>tag:diagnostic-opener</code> + <code>tag:objection-acknowledged</code> + <code>tag:calendar-booked</code> (brief §15.3)</td>
+<td>L3 + L4</td>
+<td>Talk-track adherence ≥ 80 % (brief §5)</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Manager-scored simulated calls in M1 module solo block + live calls</td>
+<td>L3 rubric M1 row (1–5 anchors per <code>l3-call-rubric.md</code> §1)</td>
+<td>L3</td>
+<td>Pod-rollup M1 anchor avg</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>Manager-scored sim + live</td>
+<td>L3 rubric M2 row</td>
+<td>L3</td>
+<td>M2 rubric avg ≥ 3.5 (brief §5)</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>Manager-scored sim + live + Salesforce <code>Next_Step_Booked__c = TRUE</code></td>
+<td>L3 rubric M3 row + Salesforce instrumentation</td>
+<td>L3 + L4</td>
+<td>M3 close rate (mid-band ≥ 60 %)</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>Module 4 SCORM + drill D4 + interleaved solo problem</td>
+<td>L2 first-attempt mastery + L3 across rows</td>
+<td>L2 + L3</td>
+<td>L2 ≥ 80 % first attempt (brief §5)</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>Module 5 SCORM + drill D5 + multi-stakeholder sim</td>
+<td>L2 + L3 + cohort-1 Gong validation hook</td>
+<td>L2 + L3</td>
+<td>L2 ≥ 80 % first attempt; cohort-1 Gong substantiation</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>Module 6 SCORM + drill D6 + escalate-vs-answer decision</td>
+<td>L2 decision-card lookup + cohort-1 Gong base-rate</td>
+<td>L2 + (v2 rubric row backlog)</td>
+<td>L2 ≥ 80 % first attempt</td>
+</tr>
+<tr>
+<td>LO-M1.1..3</td>
+<td>Drill D1 + end-of-module quiz + +7-d mini-quiz</td>
+<td><code>l2-quiz-blueprint.md</code> §4.1 items</td>
+<td>L2</td>
+<td>L2 first attempt ≥ 80 %, +7-d ≥ 70 %</td>
+</tr>
+<tr>
+<td>LO-M2.1..3</td>
+<td>Drill D2 + quizzes</td>
+<td>§4.2 items</td>
+<td>L2</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>LO-M3.1..2</td>
+<td>Drill D3 + mini-OS event log + quizzes</td>
+<td>§4.3 items + Salesforce</td>
+<td>L2 + L4 proxy</td>
+<td>Same + <code>Next_Step_Booked__c</code></td>
+</tr>
+<tr>
+<td>LO-ICP.1..4</td>
+<td>Drill D4 + interleaved sim + quizzes</td>
+<td>§4.4 items</td>
+<td>L2</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>LO-PP.1..4</td>
+<td>Drill D5 + multi-stakeholder sim + quizzes</td>
+<td>§4.5 items</td>
+<td>L2 + L3 cohort-1 hook</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>LO-REG.1..2</td>
+<td>Drill D6 + escalate decision + quizzes</td>
+<td>§4.6 items</td>
+<td>L2 + cohort-1 Gong hook</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>L1 (per module)</td>
+<td>"I could use this on a call today" Likert + two open prompts</td>
+<td><code>l1-pulse-survey.md</code></td>
+<td>L1 (LTEM tier 3)</td>
+<td>Q1 ≥ 4.0 / 5 (brief §5)</td>
+</tr>
+<tr>
+<td>L4 ramp</td>
+<td>Cohort comparison vs baseline</td>
+<td>Salesforce <code>Ramp_Time__c</code></td>
+<td>L4</td>
+<td>≤ 71 d 6-mo target</td>
+</tr>
+<tr>
+<td>L4 retention</td>
+<td>HRIS <code>Day_120_Retained</code></td>
+<td>HRIS rollup</td>
+<td>L4</td>
+<td>≥ 92 % 6-mo target</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backwards Design discipline.</strong> Every outcome above has at least one evidence row. Any outcome that <em>cannot</em> produce evidence inside the existing tooling (per brief §7: no new tools) is rewritten or rejected. None were rejected; T6 + T7 carry cohort-1 Gong validation hooks for the v2 rubric extension question.</p>
+<hr />
+<h2 id="3-stage-3-learning-experiences">3 · Stage 3 · Learning experiences</h2>
+<h3 id="31-the-canonical-module-structure-every-module-uses-this">3.1 · The canonical module structure (every module uses this)</h3>
+<p>Per Merrill's First Principles (2002), every module runs: <strong>activate → demonstrate → apply → integrate</strong> — anchored in a real-world problem. Inside the demonstrate/apply slices, Renkl &amp; Atkinson's worked-example → completion → solo fading sequence runs (per <code>D-002</code> + <code>cognitive-load-analysis.md</code> §6). Gagné's Nine Events provides the second-level timing structure (see <code>module-storyboards/_template.md</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Merrill phase</th>
+<th>Inside the 10-min module</th>
+<th>Time slice</th>
+<th>Gagné event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Trigger (problem)</strong></td>
+<td>Show the failure-mode call for this task class. Real Gong-style transcript with the move missing.</td>
+<td>0:00–0:30</td>
+<td>1 Gain attention</td>
+</tr>
+<tr>
+<td><strong>Activate</strong></td>
+<td>One-sentence outcome state + callback to prior module's keystone</td>
+<td>0:30–1:30</td>
+<td>2 State outcome · 3 Recall prior</td>
+</tr>
+<tr>
+<td><strong>Demonstrate</strong></td>
+<td>Worked-example transcript (M.G. or L.D. pattern). M-move highlighted via Mayer signalling.</td>
+<td>1:30–3:00</td>
+<td>4 Present stimulus · 5 Guide</td>
+</tr>
+<tr>
+<td><strong>Apply (completion)</strong></td>
+<td>Same transcript, M-move redacted. Rep fills in.</td>
+<td>3:00–5:00</td>
+<td>6 Elicit performance</td>
+</tr>
+<tr>
+<td><strong>Apply (solo)</strong></td>
+<td>New buyer profile inside mini-OS. Rep makes the call.</td>
+<td>5:00–8:00</td>
+<td>6 Elicit performance (transfer level)</td>
+</tr>
+<tr>
+<td><strong>Integrate (debrief)</strong></td>
+<td>Rubric self-score + manager-rubric preview</td>
+<td>8:00–9:00</td>
+<td>7 Feedback</td>
+</tr>
+<tr>
+<td><strong>Assess</strong></td>
+<td>3-item end-of-module quiz</td>
+<td>9:00–9:30</td>
+<td>8 Assess performance</td>
+</tr>
+<tr>
+<td><strong>Retain</strong></td>
+<td>Key-takeaway card + +7-day spaced quiz scheduled</td>
+<td>9:30–10:00</td>
+<td>9 Enhance retention/transfer</td>
+</tr>
+</tbody>
+</table>
+<p>This is the storyboard-template scaffold every module inherits. See <code>02-design/module-storyboards/_template.md</code> for the seconds-level detail.</p>
+<h3 id="32-module-by-module-narrative">3.2 · Module-by-module narrative</h3>
+<h4 id="module-1-m1-diagnostic-opener">Module 1 · M1 Diagnostic Opener</h4>
+<p><strong>Trigger.</strong> Open with GC-19 / GC-20 style hang-up call (P.B. §10.4 verbatim: <em>"By the fourth I just started saying 'I know you're busy, but our card is cheaper than your bank's...' which I know is wrong but I don't know what else to say."</em>). The rep sees the failure mode they may have already done themselves.</p>
+<p><strong>Activate.</strong> State: "By the end of this 10 minutes you will open every cold call with a buyer-specific diagnostic and tolerate 5 seconds of silence." Recall prior: none (Module 1 anchors the program).</p>
+<p><strong>Demonstrate.</strong> Worked-example transcript: M.G. + Maria (retail SMB, §12.1). The diagnostic <em>"I noticed you've opened a second location in the last 6 months — who's approving expense reports across both stores now?"</em> is highlighted in green per the signalling system (<code>ux-design-system.md</code> §6). The 4-second silence is shown in the transcript as <code>[silence 0:04]</code> — Mayer signalling principle.</p>
+<p><strong>Apply (completion).</strong> Same Maria transcript, the diagnostic question redacted. Rep picks from 4 options (3 distractors are documented Gong failure patterns).</p>
+<p><strong>Apply (solo).</strong> New buyer: a different §12 archetype (Tom, Series-B founder). Rep opens mini-OS LinkedIn tab → identifies one signal → phrases the diagnostic → dials → tolerates silence. Mini-OS event log captures silence duration.</p>
+<p><strong>Integrate.</strong> Rubric self-score on M1 row. Preview: manager will score the rep's real calls on this rubric in week 2.</p>
+<p><strong>Spaced-retrieval drop.</strong> +7 days: 3 mini-quiz items, novel stems, same outcomes.</p>
+<h4 id="module-2-m2-objection-acknowledge">Module 2 · M2 Objection Acknowledge</h4>
+<p><strong>Trigger.</strong> GC-09 (mid-band, H.K., argued and lost) or GC-17 (hung up at 0:22) — the argumentation failure mode.</p>
+<p><strong>Activate.</strong> "By the end of this 10 minutes you restate the buyer's objection in their own words and surface what's actually broken — instead of arguing."</p>
+<p><strong>Recall prior.</strong> "Last module you opened the call. This one assumes the buyer pushed back."</p>
+<p><strong>Demonstrate.</strong> M.G. transcript GC-01 — "so you've got the card-issuing side sorted" verbatim, M2 highlighted. L.D. GC-06 Brex displacement variant shown as second worked example. Two examples = variability, per 4C/ID.</p>
+<p><strong>Apply (completion).</strong> Buyer line: <em>"We already use Brex."</em> Rep picks the right one-sentence restatement from 4 options.</p>
+<p><strong>Apply (solo).</strong> New buyer + new objection family. Rep dials, hears objection, restates, asks the follow-up question, waits.</p>
+<p><strong>Integrate.</strong> Rubric self-score M2 row.</p>
+<p><strong>Spaced-retrieval drop.</strong> +7 days.</p>
+<h4 id="module-3-m3-calendar-close">Module 3 · M3 Calendar Close</h4>
+<p><strong>Trigger.</strong> GC-22 exit-interview style call ending in <em>"I'll follow up."</em> No re-engage.</p>
+<p><strong>Activate.</strong> "By the end of this 10 minutes the calendar invite goes out <em>during</em> the call."</p>
+<p><strong>Recall prior.</strong> "M1 opened. M2 kept the call alive. M3 turns it into pipeline."</p>
+<p><strong>Demonstrate.</strong> M.G. GC-01 close: <em>"You mentioned the bookkeeper is overwhelmed by Q-end — let me book 20 minutes Tuesday 11 to show your accountant the Xero sync."</em> The mini-OS Calendar app is shown side-by-side with the transcript (Mayer spatial contiguity).</p>
+<p><strong>Apply (completion).</strong> Buyer interest signal given. Rep picks the close from 4 options.</p>
+<p><strong>Apply (solo).</strong> Mini-OS: rep must open Calendar in second tab <em>before</em> dialling (instrumented). On the call, state two slots, send invite, see Salesforce <code>Next_Step_Booked__c</code> flip to TRUE.</p>
+<p><strong>Integrate.</strong> Rubric self-score M3 row.</p>
+<p><strong>Spaced-retrieval drop.</strong> +7 days.</p>
+<h4 id="module-4-icp-buyer-fit">Module 4 · ICP Buyer Fit</h4>
+<p><strong>Trigger.</strong> Show a buyer signal-set with no archetype tag. Rep guesses; mini-OS reveals correct archetype with the §12 ideal opener.</p>
+<p><strong>Activate.</strong> "By the end of this 10 minutes you identify which of four buyers you're calling in under 5 seconds and run M1+M2+M3 against them."</p>
+<p><strong>Recall prior.</strong> M1 + M2 + M3 individually mastered. Now they get <em>interleaved</em> across archetypes.</p>
+<p><strong>Demonstrate.</strong> Four 30-second worked-example clips, one per archetype (Maria · Tom · Emma · Lukas).</p>
+<p><strong>Apply (completion).</strong> D4 drill — 20 archetype cards. ≥ 95 % required.</p>
+<p><strong>Apply (solo).</strong> Three calls back-to-back. Buyer archetype changes each call (interleaved per <code>task-inventory.md</code> §7). Same M1+M2+M3 sequence in each.</p>
+<p><strong>Integrate.</strong> Self-score across all three rubric rows × three archetypes.</p>
+<p><strong>Spaced-retrieval drop.</strong> +7 days.</p>
+<h4 id="module-5-product-prop-mapping">Module 5 · Product Prop Mapping</h4>
+<blockquote>
+<p><strong>Evidence note.</strong> Task class 5 (multi-stakeholder) is derived from brief §12.3 (Emma — manufacturing operations head with bookkeeper dependency) and §12.2 (Tom — founder with finance team) rather than from a §11 Gong call. Cohort-1 Phase 5 hook: A.S. + M.B. weekly Gong sample weeks 5–8 to generate base-rate corpus for multi-stakeholder dual-diagnostic execution; degree threshold in <code>learning-outcomes-abcd-bloom.md</code> LO-PP.3 is re-validated against that corpus.</p>
+</blockquote>
+<p><strong>Trigger.</strong> A buyer says: <em>"Our bookkeeper re-keys every supplier receipt"</em> (Emma §12.3 verbatim). The rep has to pick the prop AND prepare for the accountant to join mid-call.</p>
+<p><strong>Activate.</strong> "By the end of this 10 minutes you map any stated pain to one of the 4 props in the buyer's own language, and you hold two simultaneous diagnostics on a multi-stakeholder call."</p>
+<p><strong>Recall prior.</strong> ICP archetype + M1+M2+M3 sequence locked. Now add prop-mapping + second voice.</p>
+<p><strong>Demonstrate.</strong> Worked example with Emma + her accountant joining at minute 3. Both diagnostics shown; both responses paired to props 4 + 1 (per §13.1). Job-aid (4-prop decision card) visible in mini-OS sidebar (per Rossett &amp; Schafer 2007).</p>
+<p><strong>Apply (completion).</strong> D5 drill — 15 pain-to-prop cards.</p>
+<p><strong>Apply (solo).</strong> Multi-stakeholder simulated call. Both voices arrive on the line; rep handles each.</p>
+<p><strong>Integrate.</strong> Self-score; preview that L3 rubric M1 row will be scored <em>twice</em> (once per stakeholder) on real calls.</p>
+<p><strong>Spaced-retrieval drop.</strong> +7 days.</p>
+<h4 id="module-6-regulatory-deflection">Module 6 · Regulatory Deflection</h4>
+<blockquote>
+<p><strong>Evidence note.</strong> Task class 6 is derived from brief §19 (regulatory deflection table) + §12.4 (Lukas — German hospitality, low-trust on fintechs). No §11 Gong call contains regulatory deflection content. Phase 5 hook: cohort-1 Gong listening (A.S. + M.B., weeks 5–8) generates the base-rate corpus; if buyer reg questions cover &lt; 80 % of the §19 5-row table, v2 backlog extends the table; if a manager-rubric row is needed for "deflect-vs-escalate" decision quality, it is added as a 4th rubric row (current <code>D-004</code> constraint is 3 rows, revisited at Phase 6).</p>
+</blockquote>
+<p><strong>Trigger.</strong> Lukas §12.4 verbatim: <em>"I don't trust new fintechs with my money."</em> The rep has 3 seconds to identify this as a trust-row question (§19 KYC + bank-segregation row).</p>
+<p><strong>Activate.</strong> "By the end of this 10 minutes you respond to any KYC / AML / SCA / PSD2 / GDPR question with one sentence from a single sheet on your desktop — and you know when to escalate."</p>
+<p><strong>Recall prior.</strong> All keystone moves locked. Now: the regulatory question is <em>not</em> an objection (M2) and <em>not</em> a pain (M5). It is its own move class with its own deflection table.</p>
+<p><strong>Demonstrate.</strong> Five 20-second worked examples, one per acronym. Job aid (§19 table) visible in the mini-OS Slack-pinned channel — point-of-use, not memorised.</p>
+<p><strong>Apply (completion).</strong> D6 drill — 5 acronym cards.</p>
+<p><strong>Apply (solo).</strong> Five mini-OS calls. Two are non-reg buyer questions (distractor) — rep must <em>not</em> deflect. Three are reg-deflection cases. One contains a follow-up that requires Compliance escalation per the §19 "honest carve-out" — rep must escalate, not invent.</p>
+<p><strong>Integrate.</strong> Self-assessment; calibration with the §19 job aid.</p>
+<p><strong>Spaced-retrieval drop.</strong> +7 days.</p>
+<hr />
+<h2 id="4-course-architecture-table">4 · Course architecture table</h2>
+<table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Module</th>
+<th>Task class (<code>task-inventory.md</code> §2)</th>
+<th>Variability axis</th>
+<th>Cohort time</th>
+<th>Spaced-retrieval drop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W1</td>
+<td>M1 Diagnostic Opener</td>
+<td>Class 2 — Cold receptive</td>
+<td>UK behavioural-anchored vs DE quant-anchored diagnostic (per §10.1 vs §10.2)</td>
+<td>≤ 10 min</td>
+<td>W2 — +7 d mini-quiz</td>
+</tr>
+<tr>
+<td>W2</td>
+<td>M2 Objection Acknowledge</td>
+<td>Class 3 — Cold hostile</td>
+<td>5 objection families (§10 / §12 spread)</td>
+<td>≤ 10 min</td>
+<td>W3 — +7 d</td>
+</tr>
+<tr>
+<td>W3</td>
+<td>M3 Calendar Close</td>
+<td>Class 1 + 2 close pattern</td>
+<td>Warm vs cold close stems</td>
+<td>≤ 10 min</td>
+<td>W4 — +7 d</td>
+</tr>
+<tr>
+<td>W4</td>
+<td>ICP Buyer Fit</td>
+<td>Classes 2/3/4 integrated</td>
+<td>4 §12 archetypes interleaved</td>
+<td>≤ 10 min</td>
+<td>W5 — +7 d</td>
+</tr>
+<tr>
+<td>W5</td>
+<td>Product Prop Mapping</td>
+<td>Class 5 — Multi-stakeholder</td>
+<td>Founder+finance vs owner+accountant</td>
+<td>≤ 10 min</td>
+<td>W6 — +7 d</td>
+</tr>
+<tr>
+<td>W6</td>
+<td>Regulatory Deflection</td>
+<td>Class 6 — Reg deflection</td>
+<td>5 §19 acronyms × 4 archetypes</td>
+<td>≤ 10 min</td>
+<td>W7 — +7 d</td>
+</tr>
+<tr>
+<td>W7</td>
+<td>(no new module)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>All six +7-d quizzes complete by W7</td>
+</tr>
+<tr>
+<td>W8</td>
+<td>First live-call L3 rubric scoring window</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>(per <code>kirkpatrick-l4-l1-cascade.md</code> §3 — week 4–8 adherence window opens)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Module ordering rationale.</strong></p>
+<ul>
+<li>M1 → M2 → M3 sequenced <strong>simple-to-complex by element-interactivity</strong> (per <code>cognitive-load-analysis.md</code> §8). M1 = 5 elements; M2 = 6; M3 = 6; M4 = 7 (interleaved); M5 = 7 (multi-voice); M6 = 7 (reg overhead).</li>
+<li>Module 4 (ICP × variability) is the integration module — must follow M1+M2+M3 so the keystone schemas exist before being interleaved.</li>
+<li>Module 5 (multi-stakeholder) is gated behind Class 3 mastery per <code>cognitive-load-analysis.md</code> §8 — the rep cannot hold a second voice if M2 is not automated.</li>
+<li>Module 6 (regulatory deflection) comes last because the deflection move is <em>additive</em> to the keystone, not a replacement; it lands cleanest when the rep can already execute M1+M2+M3.</li>
+</ul>
+<p><strong>Cohort time discipline.</strong> Each module ≤ 10 min per brief §7. Per <code>cognitive-load-analysis.md</code> §7 the slice is ≈ 1 min activate + 3 min worked example + 2 min completion + 3 min solo + 1 min reflection.</p>
+<p><strong>Spaced-retrieval drop schedule.</strong> All six +7-day mini-quizzes are auto-scheduled by Sana on <code>cmi.core.lesson_status = completed</code>. No manual cohort management. Per <code>l2-quiz-blueprint.md</code> §8.</p>
+<hr />
+<h2 id="5-pre-training-mayer-pre-training-principle">5 · Pre-training (Mayer pre-training principle)</h2>
+<p>Before Module 1 fires, the rep receives:</p>
+<ul>
+<li>The <strong>ICP archetype card</strong> (Maria / Tom / Emma / Lukas one-pager). 30 seconds of reading. Reduces extraneous load in Modules 1 + 4.</li>
+<li>The <strong>3-move model card</strong> (M1 / M2 / M3 + one-sentence definition each). 20 seconds. Recall scaffold for Module 1.</li>
+</ul>
+<p>Both deliverables are 1-page job aids (Rossett &amp; Schafer 2007). They live in the mini-OS pinned-Slack channel + the rep's actual desktop after launch.</p>
+<hr />
+<h2 id="6-what-this-blueprint-sends-downstream">6 · What this blueprint sends downstream</h2>
+<table>
+<thead>
+<tr>
+<th>Sends</th>
+<th>To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stage-2 evidence per outcome</td>
+<td><code>02-design/assessment-design.md</code> traceability matrix</td>
+</tr>
+<tr>
+<td>Stage-3 narrative per module</td>
+<td><code>02-design/module-storyboards/M1..M6</code> (one per module)</td>
+</tr>
+<tr>
+<td>Pre-training assets list (ICP card + 3-move card)</td>
+<td><code>02-design/ux-design-system.md</code> job-aid system</td>
+</tr>
+<tr>
+<td>Module ordering + variability axes</td>
+<td><code>02-design/4cid-blueprint.md</code> task-class progression</td>
+</tr>
+<tr>
+<td>Cohort-1 Gong validation hooks for M5 + M6</td>
+<td><code>05-evaluate/kirkpatrick-measurement-plan.md</code> (Phase 5 sprint 5.2)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§5, 7, 9, 10.1, 10.2, 10.4, 11, 12, 13.1, 18.1, 19.</li>
+<li>Wiggins, G., &amp; McTighe, J. (2005). <em>Understanding by Design</em> (2nd ed.).</li>
+<li>Van Merriënboer, J. J. G., &amp; Kirschner, P. A. (2018). <em>Ten steps to complex learning</em> (3rd ed.).</li>
+<li>Merrill, M. D. (2002). "First principles of instruction." <em>ETR&amp;D</em>, 50(3), 43–59.</li>
+<li>Gagné, R. M. (1985). <em>The conditions of learning</em> (4th ed.).</li>
+<li>Mayer, R. E. (2014). <em>Cambridge Handbook of Multimedia Learning</em> (2nd ed.).</li>
+<li>Renkl, A., &amp; Atkinson, R. K. (2003). <em>Educational Psychologist</em>, 38(1), 15–22.</li>
+<li>Roediger, H. L., &amp; Karpicke, J. D. (2006). <em>Perspectives on Psychological Science</em>, 1(3), 181–210.</li>
+<li>Meyer, J. H. F., &amp; Land, R. (2005). <em>Higher Education</em>, 49(3), 373–388.</li>
+<li>Rossett, A., &amp; Schafer, L. (2007). <em>Job aids and performance support.</em></li>
+<li><code>01-analyze/task-inventory.md</code>, <code>01-analyze/cognitive-load-analysis.md</code>, <code>01-analyze/kirkpatrick-l4-l1-cascade.md</code>.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code>.</li>
+<li>Decisions <code>D-002</code>, <code>D-004</code>, <code>D-005</code>, <code>D-006</code>, <code>D-007</code>.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Mario Becerra · FinTechCard engagement · 02-design/curriculum-blueprint.md</span>
+  <span>v1.0</span>
+</footer>
+
+</body>
+</html>
