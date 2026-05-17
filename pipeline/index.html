@@ -56,6 +56,36 @@ a { color: inherit; text-decoration: none; }
   .doc { padding: 32px 20px 80px; }
 }
 
+.doc-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 24px;
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--ink-100);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.doc-topbar-back {
+  color: var(--green-700);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.15s;
+}
+.doc-topbar-back:hover { color: var(--green-600); }
+.doc-topbar-here { color: var(--ink-500); }
+@media (max-width: 640px) {
+  .doc-topbar-here { display: none; }
+  .doc-topbar { padding: 10px 16px; }
+}
+
 .doc-head {
   display: grid;
   grid-template-columns: 64px 1fr auto;
@@ -615,6 +645,12 @@ a { color: inherit; text-decoration: none; }
 </style>
 </head>
 <body>
+
+<div class="doc-topbar">
+  <a class="doc-topbar-back" href="../">← Mario Becerra · portfolio</a>
+  <span class="doc-topbar-here">Course-design pipeline · v1.0</span>
+</div>
+
 <div class="doc">
 
   <header class="doc-head">
@@ -841,8 +877,8 @@ a { color: inherit; text-decoration: none; }
         </div>
         <div class="deliverable">
           <span class="label">Live demo · Phase 3</span>
-          <span class="title"><a href="artefacts/addie-case-sat-math/" target="_blank" style="color:var(--green-700);">ADDIE case study · Yandex Practicum UX / UI program ↗</a></span>
-          <span class="meta">Career-switcher curriculum built end-to-end with a cross-functional team · 4C/ID architecture + multi-modal materials + Kirkpatrick L1–L4 plan layered in. <a href="artefacts/addie-case-sat-math/design-log.md" target="_blank" style="color:var(--green-700);">Design log →</a></span>
+          <span class="title"><a href="artefacts/addie-case-yandex/" target="_blank" style="color:var(--green-700);">ADDIE case study · Yandex Practicum UX / UI program ↗</a></span>
+          <span class="meta">Career-switcher curriculum built end-to-end with a cross-functional team · 4C/ID architecture + multi-modal materials + Kirkpatrick L1–L4 plan layered in. <a href="artefacts/addie-case-yandex/design-log.md" target="_blank" style="color:var(--green-700);">Design log →</a></span>
         </div>
       </div>
     </div>
@@ -924,7 +960,7 @@ a { color: inherit; text-decoration: none; }
         <div class="icon">i</div>
         <div>
           <h5>Sample artefacts · scope note</h5>
-          <p>The four Phase-4 demos are stand-ins for a sales-enablement onboarding flow in a generic FinTech B2B card context — deliberately not aligned to any specific product. They demonstrate Articulate-equivalent authoring (SCORM 1.2 / xAPI), facilitator guides, participant workbooks, and job aids — built to portfolio quality, not production scale.</p>
+          <p>The four Phase-4 demos cover a sales-enablement onboarding flow in a generic FinTech B2B card context — deliberately not tied to any specific product. They show Articulate-equivalent authoring (SCORM 1.2 / xAPI), facilitator guides, participant workbooks, and job aids — the same artefact shapes I ship for named clients elsewhere on this site.</p>
         </div>
       </div>
     </div>

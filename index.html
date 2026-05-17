@@ -231,6 +231,41 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   font-size: 16px;
   text-transform: none;
 }
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+  align-items: center;
+}
+.hero-actions .hero-pipeline-cta { margin-top: 0; }
+.hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.hero-link:hover {
+  background: var(--rule);
+  color: var(--ink);
+  border-color: var(--rule-strong);
+}
+.hero-link .arrow {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  text-transform: none;
+  color: var(--accent);
+}
 
 /* ticker */
 .ticker {
@@ -711,7 +746,12 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   margin-bottom: 48px;
 }
 @media (max-width: 980px) {
+  .cases { grid-template-columns: repeat(2, 1fr); }
+  .cases .case:nth-child(3) { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
   .cases { grid-template-columns: 1fr; }
+  .cases .case:nth-child(3) { grid-column: auto; }
 }
 .case {
   background: var(--bg);
@@ -1866,10 +1906,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="hero-meta">
-    <div><span class="k">Location</span><span class="v">Remote · UTC+3</span></div>
+    <div><span class="k">Location</span><span class="v">Türkiye · ready to relocate to Spain · Remote EU</span></div>
     <div><span class="k">Role</span><span class="v">LXD · AI EdTech Engineer</span></div>
-    <div><span class="k">Status</span><span class="v">Open to work</span></div>
-    <div><span class="k">Updated</span><span class="v" id="updatedAt">Apr 2026</span></div>
+    <div><span class="k">Status</span><span class="v">Open · available immediately</span></div>
+    <div><span class="k">Updated</span><span class="v" id="updatedAt">May 2026</span></div>
   </div>
 
   <h1>Mario<br>Becerra<em>.</em></h1>
@@ -1881,10 +1921,15 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <div class="hero-stats">
       <div><div class="n">10+</div><div class="l">yrs in EdTech</div></div>
       <div><div class="n">50+</div><div class="l">courses designed</div></div>
-      <div><div class="n">60%</div><div class="l">content time ↓ (AI)</div></div>
+      <div><div class="n">60–85%</div><div class="l">content time saved · AI pipelines</div></div>
       <div><div class="n">80+</div><div class="l">features in own LMS</div></div>
     </div>
-    <a class="hero-pipeline-cta" href="pipeline/">Course-design pipeline <span class="arrow">→</span></a>
+    <div class="hero-actions">
+      <a class="hero-pipeline-cta" href="pipeline/">Course-design pipeline <span class="arrow">→</span></a>
+      <a class="hero-link" href="Mario_Becerra_CV.pdf" target="_blank" rel="noopener">CV (PDF) <span class="arrow">↓</span></a>
+      <a class="hero-link" href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
+      <a class="hero-link" href="mailto:mrbecerraduenias@gmail.com">Email</a>
+    </div>
   </div>
 </section>
 
@@ -1919,7 +1964,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <div class="case-tags">
         <span>4C/ID</span><span>multi-modal</span><span>Kirkpatrick L1–L4</span><span>cross-functional</span>
       </div>
-      <a class="case-cta" href="pipeline/artefacts/addie-case-sat-math/" target="_blank">ADDIE walk-through <span class="arrow">→</span></a>
+      <a class="case-cta" href="pipeline/artefacts/addie-case-yandex/" target="_blank">ADDIE walk-through <span class="arrow">→</span></a>
     </article>
 
     <article class="case">
@@ -1944,8 +1989,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
       <div class="case-employer">BEAM Institute of Technology</div>
       <h3>Data Governance course built<br>with <em>Billigence</em> SMEs</h3>
-      <p class="case-period">2024 — 2026 · Learning Experience Designer · Freelance/Project</p>
-      <p class="case-desc">Full instructional design cycle from scratch: needs analysis, curriculum architecture, content development, QA. Coordinated with industry practitioners to keep real-world relevance and up-to-date regulatory content.</p>
+      <p class="case-period">2024 — 2026 · Learning Experience Designer · Freelance · project-based</p>
+      <p class="case-desc">Full instructional design cycle from scratch at BEAM Institute, with subject-matter experts from Billigence (data governance consultancy): needs analysis, curriculum architecture, content development, QA. Coordinated with industry practitioners to keep real-world relevance and up-to-date regulatory content.</p>
       <div class="case-tags">
         <span>regulated content</span><span>SME-driven</span><span>full ID cycle</span><span>industry practitioners</span>
       </div>
@@ -1981,7 +2026,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
           <li>Math Slides Add-on</li>
         </ul>
       </div>
-      <div class="service-metric">60%<span class="unit">content time ↓</span></div>
+      <div class="service-metric">60–85%<span class="unit">content time ↓</span></div>
     </article>
 
     <article class="service">
@@ -2152,7 +2197,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ FLAGSHIP ============ -->
 <section class="wrap" id="flagship">
   <div class="section-head">
-    <span class="num">§ 04 / FEATURED</span>
+    <span class="num">§ 04 / FLAGSHIP</span>
     <h2>Flagship</h2>
     <span class="count">1 project · production</span>
   </div>
@@ -3003,6 +3048,12 @@ function renderTicker() {
   const bits = [
     `<b>Stack</b>`,
     ...unique.map((s) => `<span>${s}</span>`),
+    `<span class="sep">✦</span>`,
+    `<b>Authoring</b>`,
+    `<span>Articulate Rise</span><span>Storyline</span><span>iSpring</span><span>SCORM 1.2</span><span>xAPI</span>`,
+    `<span class="sep">✦</span>`,
+    `<b>Sales methods</b>`,
+    `<span>MEDDIC</span><span>Sandler</span><span>Challenger</span><span>Force Mgmt</span>`,
     `<span class="sep">✦</span>`,
     `<b>Python</b><span>3.12</span>`,
     `<span class="sep">✦</span>`,

@@ -41,6 +41,25 @@ a { color: var(--green-700); }
   box-shadow: var(--shadow-md);
 }
 
+.ext-topbar {
+  display: flex;
+  gap: 14px;
+  padding: 8px 24px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--ink-100);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ext-back {
+  color: var(--green-700);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.15s;
+}
+.ext-back:hover { color: var(--green-600); }
+
 .shell-head {
   display: grid;
   grid-template-columns: auto 1fr auto;
