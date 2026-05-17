@@ -17,10 +17,10 @@ Three reasons:
 2. **Cross-functional production.** The work coordinated designers, developers, and reviewers — the Implement and Develop phases get to demonstrate real-world team dynamics, not solo-build heroics.
 3. **L4 outcome target is unambiguous.** "Did the graduate land a UX / UI role within 3–5 months?" is a single, defensible measurement anchor — exactly what New World Kirkpatrick reverse-design asks for.
 
-## Honest scope notes
+## Scope of this write-up
 
-- Specific cohort placement percentages are not stated on the public artefact; they are reportable in interview where the figure can be contextualised against the cohort baseline.
-- Module-level rubric scoring data is described in shape, not in specific cohort numbers — production telemetry is not the artefact's purpose.
+- Cohort placement percentages contextualise against the baseline of the prior cohort, so they are shared in conversation rather than printed on the case study — the unanchored number does more harm than good.
+- Module-level rubric scoring is described by shape and instrument rather than cohort-specific numbers; the case study is an architecture walk-through, not a data dump.
 
 ## QC
 

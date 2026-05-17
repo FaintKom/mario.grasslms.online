@@ -45,7 +45,7 @@
 - No real product name (generic FinTech B2B card).
 
 **Scope — explicitly NOT in this module:**
-- Regulatory / compliance content (KYC, AML, SCA, PSD2, GDPR). A real fintech-card sales-rep onboarding would include regulatory modules running alongside or before product training. My BEAM Institute Data Governance work (with Billigence SMEs) demonstrates the regulated-content cycle I would apply to those modules — out of scope here to keep the portfolio focused on the sales-motion artefact shape.
+- Regulatory / compliance content (KYC, AML, SCA, PSD2, GDPR). A full fintech-card sales-rep onboarding ships regulatory modules running alongside or before product training; the regulated-content cycle for those modules follows the same approach I used at BEAM Institute on the Data Governance course with Billigence SMEs. This module sits inside the sales-motion track only.
 - Qualification depth (MEDDIC / BANT / CHAMP) — covered in a separate week-2 module.
 - Close-call scripts (trial close, mutual action plan) — covered in a separate week-3 module.
 - "Pull an example" / story-anchored close — Screen 4 openers jump acknowledge → prop → next-step ask, omitting the "we saw an SMB exactly like you cut X by Y" example-pull beat. Covered in the week-2 deal-stage module.
@@ -60,7 +60,7 @@
 
 ### 2a · ADDIE.Design — chose 4C/ID over linear ADDIE / SAM
 
-- **ADDIE (linear)** rejected — overkill for a single 10-min asset, and ADDIE's sequential strength (compliance sign-off per phase) is irrelevant in a portfolio context.
+- **ADDIE (linear)** rejected — overkill for a single 10-min asset, and ADDIE's sequential strength (compliance sign-off per phase) does not apply when the asset has no regulatory gate to pass.
 - **SAM** rejected — SAM's iteration-with-stakeholder loop has no counterparty here.
 - **4C/ID** picked — the on-the-job behaviour (match a diagnostic phrase to a positioning prop and the right opener) is a *complex cognitive whole-task skill*, which is exactly what 4C/ID was built for.
 
@@ -150,7 +150,7 @@
 | **Engagement** | Module completion ≥90 %; mean time-on-module 9–11 min (design = 10 ±10 %); match interaction completion ≥95 %; quiz attempt rate ≥98 % | SCORM `cmi.core.session_time` + match completion telemetry via `cmi.interactions` |
 | **Authoring quality** | Content error rate <2 %; refresh cycle ≤90 days; module weight (zip) <500 KB | Issue log; quarterly content review schedule |
 
-All targets stated as if the module were rolled out at cohort scale, even though this portfolio context has no production telemetry. Stating them is part of the demo.
+Targets are stated for a first-cohort rollout at the scale this module is sized for. Naming the instrument next to the target is the part that turns it from a wish into a measurable plan.
 
 ---
 

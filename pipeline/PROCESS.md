@@ -123,7 +123,7 @@ Build log:
 | **Engagement** | completion ≥85 %, mean time on module ±20 % of design, interaction count per learner ≥N | (LMS telemetry / xAPI statements) |
 | **Authoring quality** | content error rate <2 %, refresh cycle ≤90 days | (review pipeline + issue log) |
 
-**Targets are stated even if unmeasured in this portfolio context** — that itself is part of the demo (showing how I would measure if shipped at scale).
+**Targets are stated alongside their instrument** — the instrument is the part that turns a target from a wish into a measurable plan, regardless of whether the first cohort has run yet.
 
 ---
 
@@ -194,7 +194,7 @@ The shipping gate from `QUALITY.md` now requires:
 
 - Existing 6-dim QC rubric ≥ ship gate
 - **PLUS** a complete `design-log.md` next to the artefact, with all 6 phases populated and at least one modern LXD method named per artefact
-- **PLUS** Kirkpatrick L4 → L1 measurement plan stated (targets allowed to be qualitative if no production telemetry available)
+- **PLUS** Kirkpatrick L4 → L1 measurement plan stated (each level names a target + instrument; targets may be qualitative when the instrument is observational)
 - **PLUS** failures honestly logged in Phase 3 (not just successes)
 
 Without all three, the artefact does not ship to the pipeline page.
