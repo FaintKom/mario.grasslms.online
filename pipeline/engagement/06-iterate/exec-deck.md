@@ -34,20 +34,13 @@ Manager-side: a 3-row × 5-anchor call-review rubric on a single A4 page, paired
 
 ## Slide 3 · The frameworks
 
-| Framework | Where it shows |
+Three load-bearing frameworks the rest of the build hangs off. The full list (20 named, 8 explicitly rejected, with citations) lives in [`frameworks-applied.md`](../00-project-management/frameworks-applied.md).
+
+| Framework | Why it matters for this number |
 |---|---|
-| ADDIE | Six-phase project structure, phase-gates aligned to 25 / 50 / 25 payment |
-| 4C/ID (Van Merriënboer) | Whole-task curriculum: six task classes of increasing complexity, not topic-by-topic |
-| Kirkpatrick L1–L4 + Phillips | Measurement plumbed end-to-end through Salesforce, Gong, HRIS, Sana |
-| ABCD outcomes + Bloom revised | Every outcome at Apply or above; never Remember-only |
-| Action Mapping (Moore) | Separated training-fixable from environment-fixable (comp plan + lead quality surfaced) |
-| Cognitive Load Theory + Mayer | Cohort tolerance ≤ 10 min absorbed as a germane-load budget |
-| Worked-example → completion → solo (Renkl/Atkinson) | Mandatory in every module — system does the fading, not a mentor |
-| Spaced retrieval (Roediger/Karpicke) | +7-day mini-quiz scheduled in Sana |
-| LTEM tier-3 (Thalheimer) | L1 reframed as application-intent, not satisfaction |
-| Dirksen 5-dimension gap model | Diagnostic lens for every iteration sprint |
-| Merrill First Principles + Gagné Nine Events | Module-internal sequence in every storyboard |
-| UDL + WCAG 2.1 AA | Mini-OS audit passes; contractual conformance |
+| **ADDIE** | Phase structure aligned 1:1 to the 25 / 50 / 25 payment schedule — every payment trigger is a signed gate with evidence on file. |
+| **Kirkpatrick L1–L4 + Phillips** | The reason this slide can show real numbers next month and not just commitments. L4 wired to Salesforce + HRIS; L3 to Gong; L2 to Sana; L1 to a tier-3 LTEM pulse. |
+| **Action Mapping (Moore)** | The reason we caught lead quality + comp-plan distortion at kickoff and put them on the right owners' plates. Training is what we shipped; environment is what K. shipped — both had to move. |
 
 ---
 
