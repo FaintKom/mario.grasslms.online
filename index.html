@@ -701,6 +701,105 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   letter-spacing: .04em;
 }
 
+/* ---------- case studies ---------- */
+.cases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin-bottom: 48px;
+}
+@media (max-width: 980px) {
+  .cases { grid-template-columns: 1fr; }
+}
+.case {
+  background: var(--bg);
+  padding: calc(32px * var(--density)) calc(28px * var(--density));
+  display: grid;
+  grid-template-rows: auto auto auto auto 1fr auto auto;
+  gap: 14px;
+  transition: background .25s;
+}
+.case:hover { background: var(--bg-2); }
+.case-head {
+  display: flex; align-items: baseline; gap: 12px;
+}
+.case-num {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .08em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.case-tag {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .08em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+.case-employer {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink);
+  letter-spacing: .02em;
+  padding: 3px 8px;
+  background: var(--sun-300);
+  justify-self: start;
+  border-radius: 2px;
+}
+.case h3 {
+  font-family: var(--serif);
+  font-size: clamp(24px, 2.4vw, 32px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: balance;
+  margin: 0;
+}
+.case h3 em {
+  font-style: italic; color: var(--accent);
+}
+.case-period {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: .04em;
+  margin: 0;
+}
+.case-desc {
+  font-size: 14.5px; line-height: 1.55;
+  color: var(--ink-dim);
+  text-wrap: pretty;
+  margin: 0;
+}
+.case-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  border-top: 1px dashed var(--rule-strong);
+  padding-top: 14px;
+}
+.case-tags span {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-dim);
+  padding: 3px 8px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  letter-spacing: .02em;
+}
+.case-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  display: inline-flex; align-items: center; gap: 6px;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+  transition: gap .2s;
+}
+.case-cta:hover { gap: 10px; }
+.case-cta .arrow { font-size: 14px; }
+
 /* ---------- services ---------- */
 .services {
   display: grid;
@@ -1747,6 +1846,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <b>MB</b><span>/ Mario Becerra</span>
     </a>
     <nav>
+      <a class="navlink" href="#cases">Cases</a>
       <a class="navlink" href="#services">Services</a>
       <a class="navlink" href="#engagement">Engagement</a>
       <a class="navlink" href="#flagship">Flagship</a>
@@ -1779,7 +1879,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="hero-sub">
     <p class="hero-lede">
-      <b>Learning Experience Designer</b> with 10+ years in EdTech. I design curricula and build the AI tools that make a content team ship faster — custom pipelines, internal automations, and end-to-end LMS platforms.
+      <b>Learning Experience Designer</b> with 10+ years in EdTech — built end-to-end curricula at Yandex Practicum, TripleTen and BEAM Institute. I also build the AI tools that let a content team ship faster: 4C/ID pipelines, internal automations, an LMS shipped solo.
     </p>
     <div class="hero-stats">
       <div><div class="n">10+</div><div class="l">yrs in EdTech</div></div>
@@ -1800,10 +1900,66 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
 </main>
 
+<!-- ============ CASE STUDIES ============ -->
+<section class="wrap" id="cases">
+  <div class="section-head">
+    <span class="num">§ 01 / CASES</span>
+    <h2>Three programs<br>I shipped<em>.</em></h2>
+    <span class="count">end-to-end ID · 2023 — 2026</span>
+  </div>
+
+  <div class="cases">
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 01</span>
+        <span class="case-tag">UX / UI program</span>
+      </div>
+      <div class="case-employer">Yandex Practicum</div>
+      <h3>Career-switcher curriculum,<br><em>reverse-designed</em> from hiring requirements</h3>
+      <p class="case-period">Jan 2023 — Jan 2024 · Learning Experience Designer</p>
+      <p class="case-desc">End-to-end curricula for Web Design, UX/UI and Graphic Design programs aligned with industry hiring requirements. Cross-functional pipeline: designers, developers, reviewers; on-time cohort launches every 4–6 weeks.</p>
+      <div class="case-tags">
+        <span>4C/ID</span><span>multi-modal</span><span>Kirkpatrick L1–L4</span><span>cross-functional</span>
+      </div>
+      <a class="case-cta" href="pipeline/artefacts/addie-case-sat-math/" target="_blank">ADDIE walk-through <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 02</span>
+        <span class="case-tag">B2B localisation</span>
+      </div>
+      <div class="case-employer">TripleTen (Nebius Group)</div>
+      <h3>15+ B2B courses<br><em>localised</em> for Latin America</h3>
+      <p class="case-period">Jan 2024 — Oct 2024 · Learning Experience Designer</p>
+      <p class="case-desc">Localised 15+ B2B courses for the LatAm market — cultural + professional context adaptation. Cross-functional status-tracking system that improved team visibility and cut handoff delays. HeyGen AI-avatar scripts and presentations for video-based learning.</p>
+      <div class="case-tags">
+        <span>localisation</span><span>HeyGen scripts</span><span>SME collab</span><span>status pipeline</span>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 03</span>
+        <span class="case-tag">Data Governance · from-scratch</span>
+      </div>
+      <div class="case-employer">BEAM Institute of Technology</div>
+      <h3>Data Governance course built<br>with <em>Billigence</em> SMEs</h3>
+      <p class="case-period">2024 — 2026 · Learning Experience Designer · Freelance/Project</p>
+      <p class="case-desc">Full instructional design cycle from scratch: needs analysis, curriculum architecture, content development, QA. Coordinated with industry practitioners to keep real-world relevance and up-to-date regulatory content.</p>
+      <div class="case-tags">
+        <span>regulated content</span><span>SME-driven</span><span>full ID cycle</span><span>industry practitioners</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
 <!-- ============ SERVICES ============ -->
 <section class="wrap" id="services">
   <div class="section-head">
-    <span class="num">§ 01 / SERVICES</span>
+    <span class="num">§ 02 / SERVICES</span>
     <h2>Four things<br>I build</h2>
     <span class="count">across 10 yrs in EdTech</span>
   </div>
@@ -1894,7 +2050,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ ENGAGEMENT ============ -->
 <section class="wrap" id="engagement">
   <div class="section-head">
-    <span class="num">§ 02 / ENGAGEMENT</span>
+    <span class="num">§ 03 / ENGAGEMENT</span>
     <h2>Current work</h2>
     <span class="count">2024 — present · freelance</span>
   </div>
@@ -1997,7 +2153,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ FLAGSHIP ============ -->
 <section class="wrap" id="flagship">
   <div class="section-head">
-    <span class="num">§ 03 / FEATURED</span>
+    <span class="num">§ 04 / FEATURED</span>
     <h2>Flagship</h2>
     <span class="count">1 project · production</span>
   </div>
@@ -2071,7 +2227,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
     <!-- body -->
     <div class="flagship-body">
-      <span class="flag-tag">§ 03 · Full-stack · Production</span>
+      <span class="flag-tag">§ 04 · Full-stack · Production</span>
       <h2>GrassLMS <em>LMS</em></h2>
       <div class="flag-role">Solo developer · Backend + Frontend + Infra + Deploy</div>
       <p class="flag-desc">
@@ -2099,7 +2255,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ WORK GRID ============ -->
 <section class="wrap" id="work">
   <div class="section-head">
-    <span class="num">§ 04 / INDEX</span>
+    <span class="num">§ 05 / INDEX</span>
     <h2>Index of work</h2>
     <span class="count"><span id="countN">17</span> projects</span>
   </div>
@@ -2118,7 +2274,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ BACKGROUND ============ -->
 <section class="wrap" id="background">
   <div class="section-head">
-    <span class="num">§ 05 / BACKGROUND</span>
+    <span class="num">§ 06 / BACKGROUND</span>
     <h2>Where I've worked</h2>
     <span class="count">10+ years · EdTech</span>
   </div>
@@ -2989,7 +3145,7 @@ function renderCards() {
       const num = String(ci + 3).padStart(2, "0");
       html += `
         <div class="section-head" style="padding-top:${ci === 0 ? "24px" : "48px"}">
-          <span class="num">§ 0${ci + 2} / ${cat.label[state.language].toUpperCase()}</span>
+          <span class="num">§ 05.${String(ci + 1).padStart(2, "0")} / ${cat.label[state.language].toUpperCase()}</span>
           <h2 style="font-size: clamp(24px, 3.2vw, 40px);">${cat.label[state.language]}</h2>
           <span class="count">${inCat.length}</span>
         </div>`;
