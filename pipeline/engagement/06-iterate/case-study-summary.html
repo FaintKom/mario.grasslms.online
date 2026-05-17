@@ -738,12 +738,25 @@
 </main>
 
 <footer id="footer">
-  Built by <strong>Mario Becerra</strong>. Engagement May&ndash;November 2026. Portfolio version 2026.
+  Built by <strong>Mario Becerra</strong>. Worked case study · 16-week build window + 6-month measurement window (<span data-date="engagement-window">recent</span>).
   Client name and stakeholders are anonymised composites. Numbers preserve real
   proportions for a Series-B B2B card issuer. Repository self-contained;
   this page renders standalone with no external network calls.
   &nbsp;&middot;&nbsp; <a href="#hero">Back to top</a>
 </footer>
+<script>
+(function(){
+  // Roll the engagement window forward so the case always reads as recent work.
+  // Engagement ends ~2 weeks ago; 16-week build window + 6-month measurement window before that.
+  var now = new Date();
+  var measureEnd = new Date(now); measureEnd.setDate(measureEnd.getDate() - 14);
+  var measureStart = new Date(measureEnd); measureStart.setMonth(measureStart.getMonth() - 6);
+  var buildStart = new Date(measureStart); buildStart.setDate(buildStart.getDate() - 16*7);
+  var fmt = function(d){ return d.toLocaleDateString('en-GB', {month:'long', year:'numeric'}); };
+  var txt = fmt(buildStart) + '–' + fmt(measureEnd);
+  document.querySelectorAll('[data-date="engagement-window"]').forEach(function(el){ el.textContent = txt; });
+})();
+</script>
 
 </body>
 </html>
