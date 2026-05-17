@@ -230,6 +230,20 @@ h1.title em {
 .row .cell .v { font-size: 11px; color: var(--ink-700); }
 .row .cell.buyer .v { font-style: italic; color: var(--ink-900); }
 .row .cell.respond .v { color: var(--ink-900); font-weight: 600; }
+.row .cell .h .method {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--green-700);
+  background: var(--green-50);
+  border: 1px solid var(--green-300);
+  border-radius: 2px;
+  font-weight: 600;
+}
 
 @media (max-width: 720px) {
   .row .cell .h { font-size: 9.5px !important; }

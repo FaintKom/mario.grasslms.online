@@ -19,6 +19,10 @@
   <a class="ext-back" href="design-log.md">Design log</a>
 </div>
 
+<div class="designer-note">
+  I built this 7-screen SCORM 1.2 module end-to-end — content, interactions, manifest, and JS API wrapper — to show authoring-tool fluency from first principles. The learner experience starts below.
+</div>
+
 <div class="shell">
 
   <header class="shell-head">
@@ -198,6 +202,10 @@
       <div class="match-col" id="matchResponses">
         <h3>Responses</h3>
       </div>
+    </div>
+
+    <div class="match-gate-hint" id="matchGateHint" aria-live="polite" role="status">
+      <span id="matchGateCount">0</span> of 4 matched · <strong>match at least 3 to continue</strong>.
     </div>
 
     <div class="match-feedback" id="matchFeedback" aria-live="polite" role="status">
@@ -388,12 +396,17 @@
 
   function applyMatchGate() {
     var matched = Object.keys(state.matchMatched).length;
+    var hintCount = document.getElementById('matchGateCount');
+    if (hintCount) hintCount.textContent = matched;
+    var hint = document.getElementById('matchGateHint');
     if (matched < MATCH_GATE) {
       nextBtn.disabled = true;
       nextBtn.title = 'Match at least ' + MATCH_GATE + ' of 4 objections before continuing.';
+      if (hint) hint.classList.remove('gate-cleared');
     } else {
       nextBtn.disabled = false;
       nextBtn.title = '';
+      if (hint) hint.classList.add('gate-cleared');
     }
   }
 
