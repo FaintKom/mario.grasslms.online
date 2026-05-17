@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Engagement · FinTechCard SMB SDR Onboarding — Mario Becerra</title>
+<meta name="description" content="Full worked engagement showing the 7-phase pipeline applied end-to-end on the FinTechCard SMB SDR onboarding case. Each phase is a sub-folder of real deliverables."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="phase-1-discover/style.css"/>
+<style>
+.phase-list { display: grid; gap: 14px; margin: 18px 0; }
+.phase-card {
+  border: 1px solid var(--ink-100);
+  border-left: 4px solid var(--ink-200);
+  border-radius: 6px;
+  padding: 14px 18px;
+  background: var(--paper-2);
+}
+.phase-card.done { border-left-color: var(--green-600); background: var(--green-50); }
+.phase-card.live { border-left-color: var(--sun-500); background: var(--sun-50); }
+.phase-card .head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.phase-card .num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green-700);
+}
+.phase-card h3 {
+  font-size: 18px;
+  margin: 0;
+  color: var(--ink-900);
+}
+.phase-card .status {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  color: var(--ink-400);
+  background: var(--ink-50);
+  margin-left: auto;
+}
+.phase-card.done .status { background: #d4f1c4; color: var(--green-800); }
+.phase-card.live .status { background: #fff2b3; color: var(--sun-700); }
+.phase-card .desc { font-size: 13px; line-height: 1.5; color: var(--ink-700); margin: 4px 0 8px; }
+.phase-card .links { display: flex; gap: 10px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; }
+.phase-card .links a { color: var(--green-700); text-decoration: none; padding: 3px 8px; border: 1px solid var(--green-300); border-radius: 3px; }
+.phase-card .links a:hover { background: var(--green-50); }
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 14px 0 20px;
+}
+@media (max-width: 720px) { .kpi-row { grid-template-columns: 1fr 1fr; } }
+.kpi {
+  padding: 12px 14px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: 6px;
+}
+.kpi .v {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-size: 26px;
+  color: var(--green-700);
+  line-height: 1;
+}
+.kpi .l {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+  margin-top: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>Engagement · FinTechCard SMB SDR Onboarding</span>
+  </div>
+  <div class="actions">
+    <a class="btn secondary" href="../../">← Portfolio</a>
+    <a class="btn secondary" href="../">← Pipeline</a>
+    <a class="btn secondary" href="engagement-brief.md">Brief</a>
+    <button class="btn" onclick="window.print()">Print / save as PDF</button>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <p class="eyebrow">Worked engagement · McKinsey-tier · 7 phases · 16 weeks</p>
+  <h1 class="title">FinTechCard · SMB SDR <em>Onboarding</em></h1>
+  <p class="subtitle">A full instructional-design engagement walked phase-by-phase as if it were a real client engagement. <a href="../artefacts/" style="color:var(--green-700);">/pipeline/artefacts/</a> contains the template / methodology layer; this folder contains the worked case — same methodology applied end-to-end on one defensible engagement at production rigor.</p>
+
+  <div class="meta-strip">
+    <span><strong>Client:</strong> FinTechCard Ltd. (anonymised · Series-B B2B card issuer)</span>
+    <span><strong>Engagement:</strong> 16 weeks · Mar–Jul 2026 · €58 000 fixed-fee</span>
+    <span><strong>First cohort live:</strong> 1 July 2026</span>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">−25 %</div><div class="l">ramp time target (95 → 71 d)</div></div>
+    <div class="kpi"><div class="v">17 → 8 %</div><div class="l">day-120 churn target</div></div>
+    <div class="kpi"><div class="v">120</div><div class="l">SDRs in scope · UK + EU pods</div></div>
+    <div class="kpi"><div class="v">22</div><div class="l">deliverables across 7 phases</div></div>
+  </div>
+
+  <p>The engagement walks the seven phases of the pipeline applied to a single SDR onboarding brief. Every deliverable references the same <a href="engagement-brief.md" style="color:var(--green-700);">engagement brief</a>, the same named stakeholders (anonymised initials), the same numbers, the same scope. Each phase ends with a sign-off summary that the sponsor signs before the next phase opens.</p>
+
+  <div class="phase-list">
+
+    <div class="phase-card done">
+      <div class="head">
+        <span class="num">Phase 1 · Discover</span>
+        <h3>What needs to change, and what training can actually move</h3>
+        <span class="status">Shipped · gate signed</span>
+      </div>
+      <p class="desc">42-min kickoff interview · 10 SME interviews · 22 Gong recordings · 2 floor shadowings · 3-move keystone delta · Mager root-cause matrix capping training-side responsibility at the rep-craft layer.</p>
+      <div class="links">
+        <a href="phase-1-discover/">Phase 1 home</a>
+        <a href="phase-1-discover/phase-1-summary.md">Summary + sign-off</a>
+        <a href="phase-1-discover/stakeholder-interview-transcript.md">Kickoff transcript</a>
+        <a href="phase-1-discover/needs-assessment-filled.html">Needs Assessment</a>
+        <a href="phase-1-discover/learner-persona-filled.html">Persona · Sam Reyes</a>
+        <a href="phase-1-discover/performance-gap-analysis.html">Gap analysis</a>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="head">
+        <span class="num">Phase 2 · Define</span>
+        <h3>Turn behavioural outcomes into Bloom-coded learning objectives</h3>
+        <span class="status">Pending Phase 1 gate</span>
+      </div>
+      <p class="desc">Learning Objectives sheet (Bloom-coded, one objective per row, derived from M1/M2/M3) · Assessment Blueprint (objective → evidence → instrument matrix) · Competency-to-skill matrix mapping to FinTechCard's existing SDR competency framework.</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="head">
+        <span class="num">Phase 3 · Design</span>
+        <h3>Pick the architecture · 4C/ID whole-task with branching simulation</h3>
+        <span class="status">Pending</span>
+      </div>
+      <p class="desc">Course blueprint with module map and sequence · 4C/ID architecture (learning tasks, supportive info, procedural info, part-task practice) · SCORM module storyboard (Jira-analog task feed → CRM simulation → branching consequences → manager debrief) · Facilitator session blueprint.</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="head">
+        <span class="num">Phase 4 · Develop</span>
+        <h3>Ship the production assets</h3>
+        <span class="status">Pending · biggest phase</span>
+      </div>
+      <p class="desc">Interactive SCORM rebuild (5 sim levels — desktop, Jira-analog task feed, CRM workflow, decision points, branching consequences, AI-style manager debrief) · Facilitator guide v2 · Participant workbook · Job aid v2 · Video script.</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="head">
+        <span class="num">Phase 5 · Deliver</span>
+        <h3>Roll-out plan + launch comms + facilitator briefing</h3>
+        <span class="status">Pending</span>
+      </div>
+      <p class="desc">Cohort roll-out plan (16-week pre-launch + first 4 cohorts) · Launch comms pack (Slack templates, manager emails, week-1 calibration session deck) · Facilitator briefing one-pager.</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="head">
+        <span class="num">Phase 6 · Measure</span>
+        <h3>Kirkpatrick L1–L4 wired to existing dashboards</h3>
+        <span class="status">Pending</span>
+      </div>
+      <p class="desc">Kirkpatrick L1–L4 plan filled with real targets + instruments + dashboard sources · L3 observation rubric (Gong + manager call-review) · Lesson Review Toolkit cohort-data wire-up.</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="head">
+        <span class="num">Phase 7 · Iterate</span>
+        <h3>Treat the program as a product</h3>
+        <span class="status">Pending</span>
+      </div>
+      <p class="desc">Iteration log (filled with v1 → v2 changes after pilot cohort) · Content refresh schedule (quarterly cadence between cohort waves) · Performance support map (5 Moments of Need overlay).</p>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <span>Mario Becerra · FinTechCard engagement · 7-phase worked engagement · <a href="../artefacts/" style="color:var(--green-700);">template layer</a></span>
+    <span class="v">v1.0 · March 2026</span>
+  </div>
+
+</div>
+
+</body>
+</html>
