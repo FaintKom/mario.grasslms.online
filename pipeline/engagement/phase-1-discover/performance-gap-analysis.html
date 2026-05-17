@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Performance Gap Analysis · FinTechCard SDR — Mario Becerra</title>
+<meta name="description" content="Top-decile vs bottom-quartile SDR behavioural deltas + Mager root-cause findings. Phase 1 Discover deliverable for the FinTechCard engagement."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.delta-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0 18px; }
+.delta-table th { background: var(--ink-50); color: var(--ink-700); font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--ink-200); }
+.delta-table td { padding: 10px; border-bottom: 1px solid var(--ink-100); vertical-align: top; line-height: 1.45; }
+.delta-table tr:last-child td { border-bottom: none; }
+.delta-table .move { font-weight: 700; color: var(--ink-900); }
+.delta-table .top { background: var(--green-50); color: var(--green-800); }
+.delta-table .bottom { background: var(--coral-50); color: var(--coral-700); }
+.delta-table .metric { font-family: var(--mono); font-size: 11px; color: var(--ink-700); white-space: nowrap; }
+.mager-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 10px 0 18px; }
+@media print, (max-width: 720px) { .mager-grid { grid-template-columns: 1fr; } }
+.mager-card { border-left: 4px solid var(--coral-500); background: var(--coral-50); padding: 12px 14px; border-radius: 0 6px 6px 0; }
+.mager-card h4 { font-size: 13px; margin: 0 0 6px; color: var(--coral-700); }
+.mager-card p { font-size: 12px; line-height: 1.5; margin: 0 0 6px; color: var(--ink-900); }
+.mager-card .verdict { font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 8px; background: var(--ink-50); border-radius: 3px; display: inline-block; margin-top: 6px; }
+.mager-card .verdict.in { background: #d4f1c4; color: var(--green-800); }
+.mager-card .verdict.out { background: #fbd0c8; color: var(--coral-700); }
+.recco { display: grid; grid-template-columns: 80px 1fr; gap: 14px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--ink-100); }
+.recco:last-child { border-bottom: none; }
+.recco .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green-700); padding: 3px 6px; background: var(--green-50); border-radius: 3px; text-align: center; }
+.recco .body { font-size: 13px; line-height: 1.5; color: var(--ink-900); }
+.recco .body strong { color: var(--ink-900); }
+.evidence-note { font-size: 11px; color: var(--ink-400); font-style: italic; margin-top: 6px; padding-left: 12px; border-left: 2px solid var(--ink-200); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>Performance Gap Analysis · FinTechCard SDR · v1.0</span>
+  </div>
+  <div class="actions">
+    <a class="btn secondary" href="../../../">← Portfolio</a>
+    <a class="btn secondary" href="../../">← Pipeline</a>
+    <a class="btn secondary" href="../">← Engagement</a>
+    <a class="btn secondary" href="learner-persona-filled.html">Persona</a>
+    <button class="btn" onclick="window.print()">Print / save as PDF</button>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <p class="eyebrow">Phase 1 · Discover · top-vs-bottom behavioural delta + Mager root-cause</p>
+  <h1 class="title">Performance <em>Gap</em> Analysis</h1>
+  <p class="subtitle">Top-decile vs bottom-quartile SDR behavioural deltas at FinTechCard, derived from 22 Gong call recordings (week 2) cross-referenced with 10 SME interviews and 2 floor shadowings. Closes with a Mager root-cause matrix that names which gaps training can address and which it cannot — directly informs the §08 Out-of-scope section of the <a href="needs-assessment-filled.html" style="color:var(--green-700);">Needs Assessment</a> and the scope-cap K.M. signed at kickoff.</p>
+
+  <div class="meta-strip">
+    <span><strong>Evidence base:</strong> 22 Gong calls · 10 SME interviews · 2 floor days · 8-cohort Salesforce ramp data</span>
+    <span><strong>Author:</strong> Mario Becerra</span>
+    <span><strong>Date:</strong> Week 3, Friday · March 2026</span>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h3>The keystone behavioural delta · three observable moves</h3>
+      <span class="section-desc">top decile vs bottom quartile, same three moves inverted</span>
+    </div>
+
+    <p>A.S. (Head of SDR) flagged three call-motion moves where top reps and bottom reps diverge consistently. Gong review (22 calls — 8 top-decile, 10 mid, 4 bottom-quartile) confirms the pattern; the three moves below appear in &gt; 85 % of top-decile calls and in &lt; 20 % of bottom-quartile calls. <strong>This is the spine of the engagement.</strong></p>
+
+    <table class="delta-table">
+      <thead>
+        <tr>
+          <th>Move</th>
+          <th>Top decile (≥ 85 % of calls)</th>
+          <th>Bottom quartile (≤ 20 % of calls)</th>
+          <th>Gong-measurable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="move">M1 · Diagnostic-first opener</td>
+          <td class="top">Opens with one specific diagnostic question (e.g. "Who's currently approving every expense report?") inside the first 60 s. Earns a 90+ s window in ~70 % of calls.</td>
+          <td class="bottom">Skips diagnostic; launches into pitch within first 15 s. Hung up on within 22 s in ~68 % of calls.</td>
+          <td class="metric">Gong opener-tag adherence · Call-duration histogram</td>
+        </tr>
+        <tr>
+          <td class="move">M2 · Acknowledge-then-respond</td>
+          <td class="top">Re-states the objection in the buyer's own words ("you've already invested in Brex — sounds like the card stack is sorted") before responding. Buys a micro-pause that signals respect.</td>
+          <td class="bottom">Argues with the objection ("but our fees are lower"). Buyer typically ends the call within 30 s of the argument starting.</td>
+          <td class="metric">Gong rubric scorecard · objection-handling 1–5</td>
+        </tr>
+        <tr>
+          <td class="move">M3 · Calendar-booked close</td>
+          <td class="top">Books the next-step calendar slot before hang-up ("what's the best 20 min next week to walk you through the SMB version?"). 73 % of warm calls in sample.</td>
+          <td class="bottom">Closes with "I'll follow up." Of those, ~ 40 % never re-engage (Outreach sequence data, last 4 cohorts).</td>
+          <td class="metric">Salesforce next-step field · Outreach follow-up rate</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="evidence-note">Source: Gong sample reviewed week 2 of engagement (22 calls). Top-decile reps: M.G. (Manchester pod, 14 mo), L.D. (Berlin pod, 11 mo). Bottom-quartile: P.B. (London, month 4) + 1 recent exit. A.S. validated the three-move framing at week 3 review.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h3>Why the top decile is hard to copy</h3>
+      <span class="section-desc">curse-of-expertise check</span>
+    </div>
+    <p>The top reps "sound nothing alike" (A.S., week 1) and cannot articulate what they do differently — when asked, they say things like "I just listen" or "I read the room." This is the standard <strong>curse-of-expertise</strong> failure mode: experts have internalised their move-set so deeply they cannot teach it to novices by demonstration alone.</p>
+
+    <p>Practical consequence for the program: <strong>direct mentoring by top reps will not work as the primary intervention</strong>. The intervention has to extract the three observable moves into a teachable framework, then drill those moves under low-stakes simulated conditions until they are loaded into recall. This is the <strong>4C/ID whole-task</strong> case par excellence.</p>
+
+    <p>Evidence: in week 2 interviews, when asked "what do you do that newer reps don't?" both top-decile reps initially gave abstract answers ("I'm just curious about the buyer"). When shown specific call snippets, both could name the three moves — but neither had previously articulated them as a system. <em>The framework is more valuable than the mentor.</em></p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h3>Time-to-skill-acquisition · current vs. target</h3>
+      <span class="section-desc">why ramp time is a behaviour problem, not a knowledge problem</span>
+    </div>
+
+    <p>Salesforce ramp-time data (last 4 cohorts, 48 reps) sliced by tenure-band:</p>
+
+    <table class="delta-table">
+      <thead>
+        <tr>
+          <th>Cohort week</th>
+          <th>% of reps consistently showing all 3 moves</th>
+          <th>Inferred cause</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Week 4</strong> (post-current-onboarding)</td>
+          <td>~ 18 %</td>
+          <td>Current onboarding teaches product knowledge + tool fluency. The three behavioural moves are not explicitly taught.</td>
+        </tr>
+        <tr>
+          <td><strong>Week 8</strong></td>
+          <td>~ 34 %</td>
+          <td>Reps who survive get the moves by manager-1:1 osmosis — uneven across pods, hence variance.</td>
+        </tr>
+        <tr>
+          <td><strong>Week 12</strong></td>
+          <td>~ 51 %</td>
+          <td>By month 3, surviving reps have absorbed the moves from call-shadowing top performers. ~ 17 % churn before this point.</td>
+        </tr>
+        <tr>
+          <td><strong>Top decile (mature)</strong></td>
+          <td>~ 88 %</td>
+          <td>Internalised. Articulation gap remains (see §02).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Implication: <strong>current onboarding leaves the three keystone moves to chance — picked up by osmosis, with manager-cadence variance as the primary determinant of whether a rep gets them by week 8 or not at all.</strong> Compressing ramp by 25 % means moving the "consistently shows all 3 moves" milestone from week 12 to week 8, and the week-4 floor from 18 % to ≥ 60 %.</p>
+  </div>
+
+</div>
+
+<div class="sheet">
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h3>Mager root-cause matrix · what training can and cannot fix</h3>
+      <span class="section-desc">honest scope cap — three causes, three verdicts</span>
+    </div>
+
+    <p>Mager's framing (Mager &amp; Pipe, <em>Analyzing Performance Problems</em>, 1970/1997): if a perfectly trained employee were dropped into this role tomorrow, would they hit the target? The non-training root causes named below were surfaced at kickoff by K.M. and A.S., re-confirmed in 4 of 10 SME interviews. <strong>K.M. accepted the cap in writing — see Needs Assessment §03.</strong></p>
+
+    <div class="mager-grid">
+      <div class="mager-card">
+        <h4>Cause A · Manager 1:1 cadence variance</h4>
+        <p><strong>Evidence:</strong> 2 of 4 UK pods run weekly 30-min call reviews with rubrics; 1 of 4 has not had a call review in 5 weeks. DE pods marginally better but inconsistent.</p>
+        <p><strong>Effect on ramp:</strong> reps in low-cadence pods take ~ 30 % longer to hit week-8 milestone. Direct correlation with bottom-quartile churn (3 of last 4 exit-interviews cited "no feedback on my calls" as a top-3 reason for leaving).</p>
+        <span class="verdict in">IN SCOPE · partial</span>
+        <p style="margin-top:8px; font-size:11px;">Training cannot fix manager behaviour directly; the program will put a <strong>floor</strong> under it via a shared 1:1 rubric + week-2 and week-6 calibration sessions for managers. Cap: we lift the floor, we do not redesign manager hiring or 1:1 culture.</p>
+      </div>
+
+      <div class="mager-card">
+        <h4>Cause B · Marketing lead-quality decline</h4>
+        <p><strong>Evidence:</strong> inbound close-rate dropped 12 % → 8 % over last two quarters (K.M., kickoff). Three SDR interviews cited "leads have gotten noticeably worse" unprompted.</p>
+        <p><strong>Effect on ramp:</strong> a rep with the three moves loaded still cannot close stale or mis-fit leads. Estimated to account for ~ 20–30 % of bottom-quartile churn (cannot be isolated cleanly without an A/B; quoted as range).</p>
+        <span class="verdict out">OUT OF SCOPE</span>
+        <p style="margin-top:8px; font-size:11px;">K.M. owns the CMO conversation. Documented in Needs Assessment §08. The 25 % ramp-compression target assumes lead quality stabilises; the engagement cannot guarantee the target if lead quality continues to decline.</p>
+      </div>
+
+      <div class="mager-card">
+        <h4>Cause C · Comp plan SPIF distortion</h4>
+        <p><strong>Evidence:</strong> SPIFs reward closed-won regardless of pipeline source. New reps grind on stale leads chasing the SPIF instead of working the fresh day-1 list. Documented in 2 of 10 SME interviews + A.S. observation.</p>
+        <p><strong>Effect on ramp:</strong> new reps spend ~ 30 % of week-3-to-8 dialling on opportunities outside their assigned territory. Lowers the denominator on calls-with-ICP-fit, slows ramp.</p>
+        <span class="verdict out">OUT OF SCOPE</span>
+        <p style="margin-top:8px; font-size:11px;">RevOps-owned redesign. Surfaced to J.V. for handling separately. Documented in Needs Assessment §08.</p>
+      </div>
+    </div>
+
+    <p>Net: <strong>two of three named non-training causes are out of scope</strong>; one is partially addressable. K.M. signed the cap. This is the honest framing the engagement is operating under.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <h3>What this means for the training intervention</h3>
+      <span class="section-desc">the recommendations the program is designed to execute</span>
+    </div>
+
+    <div class="recco">
+      <span class="lbl">REC 1</span>
+      <div class="body"><strong>Frame the program around the three keystone moves (M1 / M2 / M3), not around product or tool knowledge.</strong> Bottom-quartile reps do not have a product-knowledge gap — they have a behavioural-recall gap. Existing onboarding already covers product + tooling; this engagement targets the call-motion craft layer specifically.</div>
+    </div>
+
+    <div class="recco">
+      <span class="lbl">REC 2</span>
+      <div class="body"><strong>Use 4C/ID whole-task simulation as the primary instructional model.</strong> The keystone moves are recall-under-pressure skills, not declarative knowledge. Whole-task simulated call practice with branching scenarios is the only mode of practice that loads the moves into Sam's call-time recall. (See <a href="../phase-3-design/4cid-architecture.html" style="color:var(--green-700);">Phase 3 · 4C/ID architecture</a> for the spec.)</div>
+    </div>
+
+    <div class="recco">
+      <span class="lbl">REC 3</span>
+      <div class="body"><strong>Build a manager-side reinforcement layer.</strong> The training-side floor on manager 1:1 quality is achievable via a shared call-review rubric + two calibration sessions (week 2 + week 6). Anything beyond that is a separate engagement.</div>
+    </div>
+
+    <div class="recco">
+      <span class="lbl">REC 4</span>
+      <div class="body"><strong>Use Gong + Salesforce as the L3 measurement instruments.</strong> The three moves are all observable on existing Gong recordings (opener-tag, objection-handling rubric, next-step calendar field). No new instrumentation required.</div>
+    </div>
+
+    <div class="recco">
+      <span class="lbl">REC 5</span>
+      <div class="body"><strong>Document the lead-quality + comp-plan dependencies in the sponsor sign-off.</strong> If the engagement's L4 target is missed at six months and the non-training causes have not been resolved on K.M.'s and J.V.'s side, the attribution conversation has to be honest. The phase-1 summary contains the language to defend the cap.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <h3>What I would change next iteration of this analysis</h3>
+      <span class="section-desc">honest limitations</span>
+    </div>
+    <ul style="margin:0; padding:0; list-style:none; display:grid; gap:8px;">
+      <li style="display:grid; grid-template-columns:22px 1fr; gap:10px; font-size:13px;"><span style="color:var(--green-600); font-weight:700;">→</span><div>Bigger Gong sample. 22 calls is sufficient to surface the three moves but not to estimate prevalence with tight confidence intervals. Phase 6 measurement plan includes a 100-call sample per cohort to refine the baseline.</div></li>
+      <li style="display:grid; grid-template-columns:22px 1fr; gap:10px; font-size:13px;"><span style="color:var(--green-600); font-weight:700;">→</span><div>Quantify the lead-quality contribution. The 20–30 % bottom-quartile-churn attribution range is a sponsor-side estimate; a controlled comparison (cohort with current lead mix vs. cohort with curated leads) would isolate the training-side contribution. Out of engagement scope but recommended to RevOps.</div></li>
+      <li style="display:grid; grid-template-columns:22px 1fr; gap:10px; font-size:13px;"><span style="color:var(--green-600); font-weight:700;">→</span><div>Manager-side interviews more depth. 2 manager interviews is the minimum viable; a future iteration should include 5–6 to map cadence variance to behavioural outcomes more rigorously.</div></li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <span>Mario Becerra · FinTechCard engagement · Phase 1 Discover · evidence base: 22 Gong calls + 10 SME interviews + 2 floor days + 8-cohort SF ramp data</span>
+    <span class="v">v1.0 · Week 3 · March 2026</span>
+  </div>
+
+</div>
+
+</body>
+</html>
