@@ -105,7 +105,7 @@ QC: F=5 P=5
 
 ### 09 · Knowles Andragogy
 
-**Author:** Malcolm Knowles · **Year:** 1968 (*The Modern Practice of Adult Education*)
+**Author:** Malcolm Knowles · **Year:** 1968+ andragogy work; codified in *The Modern Practice of Adult Education* (1970)
 **One line:** Adults learn best when content is problem-centred · relevant to their role · respects their experience · supports self-direction · explains the why.
 **When:** any adult learner audience, especially professionals.
 **Avoid:** K–12 pedagogy by default (children need different scaffolding).

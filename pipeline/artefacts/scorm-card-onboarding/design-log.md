@@ -24,6 +24,7 @@
 - **Anna Sabramowicz** — scenario-based learning for sales-rep training; persona-anchored micro-decisions outperform feature dumps.
 - **Will Thalheimer — *Performance-Focused Smile Sheets* (2016)** — replacing happy-sheet L1 with predictive 3-Q micro-pulse.
 - **Charles Jennings — 70-20-10** — a 10-min module is the "10 %" formal layer; expect 90 % of competency to land via reps + manager 1:1s.
+- **Malcolm Knowles — andragogy (1968+ work; codified 1970 in *The Modern Practice of Adult Education*)** — adults learn best when content is problem-centred + role-relevant + respects experience + supports self-direction.
 - **Forrester Sales Enablement model (post-SiriusDecisions)** — content + training + coaching + tools mapped to buyer journey.
 
 ---
@@ -42,6 +43,11 @@
 - Must run standalone in browser **and** as SCORM-packaged content in an LMS.
 - Must be reviewable by a hiring manager without an LMS.
 - No real product name (generic FinTech B2B card).
+
+**Scope — explicitly NOT in this module:**
+- Regulatory / compliance content (KYC, AML, SCA, PSD2, GDPR). A real fintech-card sales-rep onboarding would include regulatory modules running alongside or before product training. My BEAM Institute Data Governance work (with Billigence SMEs) demonstrates the regulated-content cycle I would apply to those modules — out of scope here to keep the portfolio focused on the sales-motion artefact shape.
+- Qualification depth (MEDDIC / BANT / CHAMP) — covered in a separate week-2 module.
+- Close-call scripts (trial close, mutual action plan) — covered in a separate week-3 module.
 
 **Prior-art scan.** Typical sales onboarding programs dump product features over 90-min decks; learners forget within a week. Best-in-class enablement (Highspot, Lessonly, MindTickle public materials) lean on persona + objection rehearsal + spaced retrieval. The signal: the highest-leverage 10 minutes of any sales-rep ramp is *talk-track practice with feedback*, not product trivia.
 

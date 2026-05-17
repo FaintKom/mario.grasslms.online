@@ -45,6 +45,13 @@
 
 **Prior-art scan.** Most sales kickoff agendas in the wild are deck + Q&A — facilitator narrates, learners watch. That violates Bowman's 6 trumps and Pike's 90/20/10. Best-in-class (HubSpot Solutions Partner Academy, MEDDIC Academy live workshops) flip the ratio: 20 % facilitator talk, 60 % rep practice, 20 % peer + coach feedback. Adopting that ratio here.
 
+**Pike 90/20/10 application note.** The 5-block agenda (5 + 15 + 25 + 30 + 15 min) has blocks 3 and 4 at 25 + 30 min — superficially violating Pike's "change activity every 20 min" rule. In practice, blocks 3 + 4 internally rotate every ~8 min (trio role-play turns: 8 min role-play → debrief → rotate roles → 8 min role-play). Effective activity change is well inside 20 min; the block boundary is logistical, not cognitive.
+
+**Scope — explicitly NOT in this workshop:**
+- Regulatory / compliance content (KYC, AML, SCA, PSD2, GDPR) — separate compliance workshop track.
+- Qualification depth (MEDDIC / BANT / CHAMP) — covered in week-2 deep-dive.
+- Close-call scripts (trial close, mutual action plan) — covered in week-3 deep-dive.
+
 ---
 
 ## 2 · Design
