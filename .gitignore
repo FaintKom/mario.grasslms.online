@@ -1,27 +1,14 @@
-# Backups
-*.bak
-*.bak.html
-index.html.bak
-
-# Local dev / preview tooling
-.claude/
+.DS_Store
+node_modules/
+*.log
+.env
+.env.local
 .vscode/
 .idea/
 
-# OS clutter
-.DS_Store
-Thumbs.db
-desktop.ini
+# Server-config snapshots (local staging only, do not commit)
+_server-*.conf
 
-# Logs
-*.log
-
-# Python (just in case dev scripts land here)
-__pycache__/
-*.pyc
-.venv/
-venv/
-
-# Node (just in case)
-node_modules/
-.npm/
+# Review-agent scratch files (WebFetch dumps for audit, do not ship)
+_review_*.html
+_review_*.md
