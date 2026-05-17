@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Lesson Review Toolkit — Mario Becerra</title>
+<meta name="description" content="Python pipeline that turns scattered lesson-review feedback into a normalised issue DB. Collect → extract → normalise → apply. Authored by Mario Becerra."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.pipeline-diagram {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 18px 0 22px;
+}
+@media (max-width: 760px) {
+  .pipeline-diagram { grid-template-columns: 1fr 1fr; }
+}
+.pipe-step {
+  background: var(--bg-2);
+  padding: 16px 14px;
+  display: grid;
+  gap: 6px;
+  position: relative;
+}
+.pipe-step .num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--green-700);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.pipe-step .h {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.15;
+  color: var(--ink);
+  font-style: italic;
+}
+.pipe-step .d {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-dim);
+}
+.pipe-step .script {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--green-700);
+  padding-top: 4px;
+  border-top: 1px dashed var(--rule);
+  margin-top: 4px;
+}
+.pipe-step::after {
+  content: "→";
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 24px;
+  color: var(--green-600);
+  z-index: 2;
+  background: var(--bg);
+  padding: 0 2px;
+}
+.pipe-step:last-child::after { content: ""; }
+@media (max-width: 760px) {
+  .pipe-step:nth-child(2)::after { content: ""; }
+}
+.code {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+  background: var(--bg-3);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--green-600);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 14px;
+  margin: 10px 0 14px;
+  white-space: pre;
+  overflow-x: auto;
+  color: var(--ink);
+}
+.code .k { color: var(--green-700); }
+.code .s { color: var(--coral-700); }
+.code .c { color: var(--ink-faint); font-style: italic; }
+.code .n { color: var(--sun-700); }
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 14px 0 18px;
+}
+@media (max-width: 720px) {
+  .stat-row { grid-template-columns: 1fr 1fr; }
+}
+.stat {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  padding: 12px 14px;
+  border-radius: 6px;
+}
+.stat .v {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-style: italic;
+  color: var(--green-700);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat .l {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>Lesson Review Toolkit · v1.0</span>
+  </div>
+  <div class="actions">
+    <a class="btn secondary" href="../../../">← Portfolio</a>
+    <a class="btn secondary" href="../../">← Pipeline</a>
+    <a class="btn secondary" href="design-log.md">Design log</a>
+    <button class="btn" onclick="window.print()">Print / save as PDF</button>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <p class="eyebrow">Phase 6 · Measure · feedback intake pipeline</p>
+  <h1 class="title">Lesson Review <em>Toolkit</em></h1>
+  <p class="subtitle">A Python pipeline that turns scattered lesson-review feedback — Slack threads, Notion comments, mentor rubric forms, post-cohort survey CSVs — into a single normalised issue database that the design team can triage in standup. Same shape used on the Algonova video-lesson analysis pipeline.</p>
+
+  <div class="meta-strip">
+    <span><strong>Stack:</strong> Python 3.12 · Pandas · OpenAI structured outputs · JSON Schema</span>
+    <span><strong>Inputs:</strong> 4 source types · ~25 scripts · ~4 700 LOC</span>
+    <span><strong>Output:</strong> normalised JSON issue DB + HTML triage viewer</span>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h3>The pipeline · four stages</h3>
+      <span class="section-desc">collect → extract → normalise → apply</span>
+    </div>
+
+    <div class="pipeline-diagram">
+      <div class="pipe-step">
+        <span class="num">Stage 01</span>
+        <div class="h">Collect</div>
+        <div class="d">Pull raw reviews from each source. Slack export, Notion API, mentor rubric Google Sheets, post-cohort survey CSV, Zoom call transcripts.</div>
+        <div class="script">collect_reviews.py</div>
+      </div>
+      <div class="pipe-step">
+        <span class="num">Stage 02</span>
+        <div class="h">Extract</div>
+        <div class="d">Run each raw item through an LLM with a strict JSON-schema response. Extract issue text, severity, lesson reference, source ID, timestamp.</div>
+        <div class="script">extract_content.py</div>
+      </div>
+      <div class="pipe-step">
+        <span class="num">Stage 03</span>
+        <div class="h">Normalise</div>
+        <div class="d">Cluster near-duplicates (cosine similarity on embeddings); collapse to a single canonical issue with a list of sources. De-dupe to one row per real problem.</div>
+        <div class="script">normalize_items.py</div>
+      </div>
+      <div class="pipe-step">
+        <span class="num">Stage 04</span>
+        <div class="h">Apply</div>
+        <div class="d">Match each normalised issue against the lesson's content checklist. Emit a triage HTML page grouped by severity + lesson with one-click fix / defer / dismiss buttons.</div>
+        <div class="script">apply_to_checklist.py</div>
+      </div>
+    </div>
+
+    <p>The pipeline is built so each stage emits a stable JSON intermediate. A new source can be added by writing only the Collect adapter — Extract, Normalise, and Apply do not change. A new LLM model is swapped in Extract without touching the other three stages.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h3>Stage 02 · Extract · structured-output schema</h3>
+      <span class="section-desc">what each raw review collapses into</span>
+    </div>
+
+    <div class="code"><span class="c"># extract_content.py — schema passed to OpenAI structured outputs</span>
+<span class="k">SCHEMA</span> = {
+  <span class="s">"type"</span>: <span class="s">"object"</span>,
+  <span class="s">"properties"</span>: {
+    <span class="s">"issue_text"</span>:       {<span class="s">"type"</span>: <span class="s">"string"</span>, <span class="s">"description"</span>: <span class="s">"the problem in one sentence, reviewer's words preserved"</span>},
+    <span class="s">"severity"</span>:         {<span class="s">"type"</span>: <span class="s">"string"</span>, <span class="s">"enum"</span>: [<span class="s">"blocker"</span>, <span class="s">"major"</span>, <span class="s">"minor"</span>, <span class="s">"polish"</span>]},
+    <span class="s">"category"</span>:         {<span class="s">"type"</span>: <span class="s">"string"</span>, <span class="s">"enum"</span>: [<span class="s">"content"</span>, <span class="s">"pacing"</span>, <span class="s">"clarity"</span>, <span class="s">"interaction"</span>, <span class="s">"assessment"</span>, <span class="s">"tooling"</span>]},
+    <span class="s">"lesson_id"</span>:        {<span class="s">"type"</span>: [<span class="s">"string"</span>, <span class="s">"null"</span>], <span class="s">"description"</span>: <span class="s">"e.g. M3.L2.S05; null if reviewer did not specify"</span>},
+    <span class="s">"reviewer_role"</span>:    {<span class="s">"type"</span>: <span class="s">"string"</span>, <span class="s">"enum"</span>: [<span class="s">"mentor"</span>, <span class="s">"peer"</span>, <span class="s">"learner"</span>, <span class="s">"sme"</span>, <span class="s">"unknown"</span>]},
+    <span class="s">"suggested_action"</span>: {<span class="s">"type"</span>: [<span class="s">"string"</span>, <span class="s">"null"</span>], <span class="s">"description"</span>: <span class="s">"reviewer's own fix if offered, else null"</span>},
+    <span class="s">"source_meta"</span>: {
+      <span class="s">"type"</span>: <span class="s">"object"</span>,
+      <span class="s">"properties"</span>: {
+        <span class="s">"source"</span>:        {<span class="s">"type"</span>: <span class="s">"string"</span>, <span class="s">"enum"</span>: [<span class="s">"slack"</span>, <span class="s">"notion"</span>, <span class="s">"sheets"</span>, <span class="s">"survey"</span>, <span class="s">"transcript"</span>]},
+        <span class="s">"source_id"</span>:     {<span class="s">"type"</span>: <span class="s">"string"</span>, <span class="s">"description"</span>: <span class="s">"thread ID, page ID, row ID — for round-trip linking"</span>},
+        <span class="s">"timestamp_iso"</span>: {<span class="s">"type"</span>: <span class="s">"string"</span>, <span class="s">"description"</span>: <span class="s">"ISO 8601 UTC"</span>}
+      },
+      <span class="s">"required"</span>: [<span class="s">"source"</span>, <span class="s">"source_id"</span>, <span class="s">"timestamp_iso"</span>]
+    }
+  },
+  <span class="s">"required"</span>: [<span class="s">"issue_text"</span>, <span class="s">"severity"</span>, <span class="s">"category"</span>, <span class="s">"reviewer_role"</span>, <span class="s">"source_meta"</span>]
+}</div>
+
+    <p>Schema-enforced LLM output means the Normalise stage can rely on the shape of every record. No defensive parsing, no try / except chains downstream.</p>
+  </div>
+
+</div>
+
+<div class="sheet">
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h3>Stage 03 · Normalise · canonical issue shape</h3>
+      <span class="section-desc">post-dedup, sources collapsed</span>
+    </div>
+
+    <div class="code"><span class="c">// example canonical issue after normalisation — what the triage UI consumes</span>
+{
+  <span class="s">"issue_id"</span>:    <span class="s">"ISS-0142"</span>,
+  <span class="s">"canonical"</span>:   <span class="s">"Screen 4 talk-track is too dense — reviewers cannot find the opener inside the prop description."</span>,
+  <span class="s">"severity"</span>:    <span class="s">"major"</span>,
+  <span class="s">"category"</span>:    <span class="s">"clarity"</span>,
+  <span class="s">"lesson_id"</span>:   <span class="s">"M1.L4.S04"</span>,
+  <span class="s">"reviewer_mix"</span>: {<span class="s">"mentor"</span>: <span class="n">2</span>, <span class="s">"peer"</span>: <span class="n">1</span>, <span class="s">"learner"</span>: <span class="n">4</span>},
+  <span class="s">"first_seen"</span>:  <span class="s">"2026-03-04T09:12:00Z"</span>,
+  <span class="s">"last_seen"</span>:   <span class="s">"2026-05-09T16:48:00Z"</span>,
+  <span class="s">"sources"</span>: [
+    {<span class="s">"source"</span>: <span class="s">"slack"</span>,  <span class="s">"source_id"</span>: <span class="s">"thread:C12345/p1234567"</span>, <span class="s">"text"</span>: <span class="s">"the props block runs into the opener, hard to scan mid-call"</span>},
+    {<span class="s">"source"</span>: <span class="s">"sheets"</span>, <span class="s">"source_id"</span>: <span class="s">"mentor-rubric/row:48"</span>,        <span class="s">"text"</span>: <span class="s">"Screen 4 opener buried"</span>},
+    {<span class="s">"source"</span>: <span class="s">"survey"</span>, <span class="s">"source_id"</span>: <span class="s">"post-cohort-Q4/row:127"</span>,     <span class="s">"text"</span>: <span class="s">"I cant find what to say on screen 4"</span>}
+  ],
+  <span class="s">"suggested_action"</span>: <span class="s">"Move opener to its own line with bold trigger phrase; collapse prop description into a details disclosure."</span>,
+  <span class="s">"triage_state"</span>:   <span class="s">"open"</span>
+}</div>
+
+    <p>Embedding clustering collapses near-duplicate phrasing (e.g. "buried opener", "opener hidden", "cannot find what to say on screen 4") into a single canonical issue. The <code>sources</code> array preserves the original wording for audit — designers click through to the original Slack thread when triaging.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h3>Output · what the design team sees in standup</h3>
+      <span class="section-desc">illustrative numbers from a real cohort run (anonymised)</span>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="v">472</div><div class="l">raw items collected</div></div>
+      <div class="stat"><div class="v">214</div><div class="l">extracted &amp; tagged</div></div>
+      <div class="stat"><div class="v">63</div><div class="l">canonical issues</div></div>
+      <div class="stat"><div class="v">12</div><div class="l">blocker / major</div></div>
+    </div>
+
+    <p>The Apply stage emits a single HTML page grouped first by severity (blocker → major → minor → polish), then by lesson. Each issue card shows the canonical text, source links, suggested action, and three buttons: <strong>fix</strong> (creates a Linear ticket), <strong>defer</strong> (moves to next-cohort backlog), <strong>dismiss</strong> (closes with a one-line reason that gets written back to the JSON).</p>
+    <p>Standup goes from "skim 472 Slack messages + 96 survey rows + 35 mentor rubric forms" to "triage 63 cards in 25 minutes." The pipeline is the difference between feedback that lives in chat scrollback and feedback that lands as a fix.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <h3>Where this sits in the program</h3>
+      <span class="section-desc">Phase 6 · Measure · the intake half</span>
+    </div>
+    <p>This pipeline is the <strong>intake</strong> half of Phase 6 Measure. The <strong>output</strong> half is the Kirkpatrick L1–L4 plan — what to measure and how. Together they close the loop:</p>
+    <ul>
+      <li><strong>Kirkpatrick plan</strong> says what we want to know (e.g. "L2 quiz mastery ≥80 %", "L3 talk-track adherence ≥80 % in first 5 calls").</li>
+      <li><strong>Lesson Review Toolkit</strong> is one of the instruments — qualitative feedback intake that complements the quantitative SCORM / xAPI telemetry.</li>
+      <li>Together they tell the team which iteration to ship next, not just whether the last cohort was happy.</li>
+    </ul>
+    <p>See <a href="../kirkpatrick-plan-fintech/" target="_blank" style="color:var(--green-700);">Kirkpatrick plan ↗</a> for the output half.</p>
+  </div>
+
+  <div class="foot">
+    <span>Mario Becerra · <a href="../../">Course-design pipeline</a> · <a href="design-log.md">Design log</a></span>
+    <span class="v">v1.0 · 17 May 2026</span>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Stakeholder Interview Script — Mario Becerra</title>
+<meta name="description" content="30–45-minute kickoff-call script. Robinson 4-needs ordering, Mager root-cause guard, scope discipline. Authored by Mario Becerra."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<style>
+/* Script-specific overlay on the needs-assessment-template base */
+.script-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 18px;
+  margin-bottom: 14px;
+  align-items: start;
+}
+.script-row .t {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-top: 3px;
+}
+.script-row .body {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.script-row .body strong { color: var(--ink); }
+.script-row.you .body {
+  border-left: 3px solid var(--green-600);
+  padding: 8px 12px 8px 14px;
+  background: var(--green-50);
+  border-radius: 0 6px 6px 0;
+}
+.script-row.listen .body {
+  border-left: 3px dashed var(--sun-500);
+  padding: 8px 12px 8px 14px;
+  background: var(--sun-50);
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+  color: var(--ink-dim);
+}
+.script-row.dig .body {
+  border-left: 3px solid var(--coral-500);
+  padding: 8px 12px 8px 14px;
+  background: var(--coral-50);
+  border-radius: 0 6px 6px 0;
+}
+.timing-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 22px;
+  padding: 14px 18px;
+  background: var(--bg-3);
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+}
+.timing-strip strong { color: var(--green-700); }
+.timing-strip .sep { color: var(--rule-strong); }
+.legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.legend .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--rule-strong);
+}
+.legend .chip.you { border-color: var(--green-600); color: var(--green-700); background: var(--green-50); }
+.legend .chip.listen { border-color: var(--sun-500); color: var(--sun-700); background: var(--sun-50); font-style: italic; }
+.legend .chip.dig { border-color: var(--coral-500); color: var(--coral-700); background: var(--coral-50); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>Stakeholder Interview Script · v1.0</span>
+  </div>
+  <div class="actions">
+    <a class="btn secondary" href="../../../">← Portfolio</a>
+    <a class="btn secondary" href="../../">← Pipeline</a>
+    <a class="btn secondary" href="design-log.md">Design log</a>
+    <button class="btn" onclick="window.print()">Print / save as PDF</button>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <p class="eyebrow">Phase 1 · Discover · kickoff call</p>
+  <h1 class="title">Stakeholder Interview <em>Script</em></h1>
+  <p class="subtitle">A 30–45-minute talk-track for the first conversation with a learning sponsor. Robinson 4-needs ordering; Mager root-cause guard inside the performance section; scope discipline closes the call. Designed to run from memory after one read-through.</p>
+
+  <div class="meta-strip">
+    <span><strong>Duration:</strong> 30–45 min</span>
+    <span><strong>Setting:</strong> Zoom / Meet / in-person</span>
+    <span><strong>Output:</strong> 9-section Needs Assessment + go / no-go</span>
+  </div>
+
+  <div class="timing-strip">
+    <strong>Opening</strong> 3 min
+    <span class="sep">·</span>
+    <strong>Business need</strong> 7 min
+    <span class="sep">·</span>
+    <strong>Performance gap + root cause</strong> 10 min
+    <span class="sep">·</span>
+    <strong>Audience + environment</strong> 7 min
+    <span class="sep">·</span>
+    <strong>Constraints + scope</strong> 5 min
+    <span class="sep">·</span>
+    <strong>Wrap + next step</strong> 3 min
+  </div>
+
+  <div class="legend">
+    <span class="chip you">You say</span>
+    <span class="chip listen">Listen for</span>
+    <span class="chip dig">If you hear X, dig into Y</span>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h3>Opening · frame the call</h3>
+      <span class="section-desc">3 min · permission + scope</span>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Thanks for the time. The goal of this call is for me to understand what you actually need from this program — not to pitch a solution. I'll ask a series of questions about your business, your team's behaviour today, and the constraints we'll work inside. By the end we'll know whether training is the right intervention at all, and if it is, what it has to do."</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Three ground rules. <strong>One</strong> — I'll repeat back what I hear so we agree before we move on. <strong>Two</strong> — I'd rather hear a brutal answer than a polite one. <strong>Three</strong> — if a question doesn't apply, just say so and we skip it. Sound fair?"</div>
+    </div>
+
+    <div class="script-row listen">
+      <span class="t">Listen for</span>
+      <div class="body">Energy + speed of response. A sponsor who answers in two sentences is engaged. A sponsor who deflects to "ask my team" is not the real sponsor — surface that and reschedule.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h3>Business need · Robinson #1</h3>
+      <span class="section-desc">7 min · "what changes for the business if this works?"</span>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"In one sentence — if this program ships and lands, what changes for the business in six months?"</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Which existing KPI moves? Pick one — revenue, ramp time, churn, NPS, defect rate, anything you already report on. We need a number that's already on a dashboard somewhere."</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"What's the baseline number right now, and what would success look like in three / six / twelve months?"</div>
+    </div>
+
+    <div class="script-row dig">
+      <span class="t">If you hear</span>
+      <div class="body"><strong>"We just need everyone trained on X."</strong> → Dig: "What problem is the lack of training causing today? Walk me through the most recent example you saw." — they often skip the business outcome and jump to the solution.</div>
+    </div>
+
+    <div class="script-row dig">
+      <span class="t">If you hear</span>
+      <div class="body"><strong>"It's hard to put a number on it."</strong> → Dig: "What would your CFO ask if this line item showed up in next quarter's budget?" — forces specificity by proxy.</div>
+    </div>
+  </div>
+
+  <div class="section big">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h3>Performance gap · Robinson #2 + Mager root-cause</h3>
+      <span class="section-desc">10 min · current behaviour, desired behaviour, why the gap</span>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Describe what your top performers do that the rest don't. Not the abstract competency — the actual moves. What do they say, click, choose, prioritise?"</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Now the same question for the bottom 25 %. What do they do that the top performers don't?"</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"If a learner finishes this program, what is the first observable thing they do differently on the job on Monday morning?"</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"<strong>Mager's root-cause check.</strong> Imagine I drop a perfectly trained employee into the role tomorrow. Would they hit the target — or would the process, tooling, incentives, or manager get in the way? Walk me through the top 3 non-training causes you can think of."</div>
+    </div>
+
+    <div class="script-row dig">
+      <span class="t">If you hear</span>
+      <div class="body"><strong>"We've trained them before and nothing stuck."</strong> → Dig: "What changed after the last training? Did the process, the tool, the manager's behaviour, or the metric they're measured on change? If nothing changed, that's a process problem, not a training problem."</div>
+    </div>
+
+    <div class="script-row dig">
+      <span class="t">If you hear</span>
+      <div class="body"><strong>"The CRM / tool is bad but we can't change it."</strong> → Flag now: "Then training will lift the ceiling by maybe 10–15 %. The remaining 85 % needs a tooling fix and is out of our scope. Should I document that in the proposal?"</div>
+    </div>
+
+    <div class="script-row listen">
+      <span class="t">Listen for</span>
+      <div class="body">Whether the sponsor blames learners or system. Sponsors who blame learners often have a Mager problem — the system is broken and training is being asked to compensate. Name it on the call.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sheet">
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h3>Audience + environment · Robinson #3 + #4</h3>
+      <span class="section-desc">7 min · who learns, in what setting</span>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Walk me through the audience. Role, tenure, prior knowledge, what they're already good at, what they hate doing."</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"How much time per learner can we realistically take — in total, and in any single sitting? Be honest. If it's 'whatever it takes' that's actually 30 minutes a week."</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"What's already in place that we'll inherit or work around? LMS, authoring tools, knowledge base, internal comms channels, manager 1:1 cadence?"</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Any compliance, accessibility, or DEI requirements I should know about up front? (WCAG, GDPR, regulated industry, multilingual workforce.)"</div>
+    </div>
+
+    <div class="script-row dig">
+      <span class="t">If you hear</span>
+      <div class="body"><strong>"They're all remote, all senior, all different time zones."</strong> → Lean async + microlearning + manager-led debrief. Live cohort sessions become extraction-of-value, not delivery-of-content.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <h3>Constraints + budget + dates</h3>
+      <span class="section-desc">5 min · stop scope creep early</span>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"What's the budget bracket — even ballpark? &lt;€5K, €5–25K, €25–75K, &gt;€75K. I don't need exact, I need the order of magnitude so I don't over-design."</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Hard launch date or soft target? What happens externally if we slip a week, a month?"</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Who else has a vote on what ships? SME, manager line, legal / compliance, brand, IT? Name them so I can include them in review cycles up front, not at the gate."</div>
+    </div>
+  </div>
+
+  <div class="section coral">
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <h3>Out of scope · what we are NOT solving</h3>
+      <span class="section-desc">3 min · Malamed scope discipline</span>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"I want to name three things we are explicitly <em>not</em> solving in this engagement. Things that came up but live outside the brief. Helps us defend the timeline and gives you a clean list for a future engagement. What would you put on that list?"</div>
+    </div>
+
+    <div class="script-row listen">
+      <span class="t">Listen for</span>
+      <div class="body">Sponsor's willingness to scope down. A sponsor who can't name a single out-of-scope item will let scope creep onto the build. Name something yourself if they go blank — it sets the precedent.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">07</span>
+      <h3>Wrap · next step + commitment</h3>
+      <span class="section-desc">3 min · close clean, propose async confirm</span>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Two things to close. <strong>One</strong> — I'll send you a one-page Needs Assessment within 48 hours that captures everything we just covered. <strong>Two</strong> — I'll propose three options at three price points so you can choose how much program you want to buy. Sound right?"</div>
+    </div>
+
+    <div class="script-row you">
+      <span class="t">You say</span>
+      <div class="body">"Last thing — name one person on your side who'll be my single point of contact for SME interviews and review cycles. I need one throat to choke, not a committee."</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">08</span>
+      <h3>Mapping · script → Needs Assessment template</h3>
+      <span class="section-desc">where each answer lands</span>
+    </div>
+
+    <table class="kirk-table">
+      <thead>
+        <tr><th>Script section</th><th>Lands in Needs Assessment section</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="l">01</td><td>Section 01 · Project context (sponsor, stakeholders)</td></tr>
+        <tr><td class="l">02</td><td>Section 02 · Business outcome + Section 09 · L4 success indicator</td></tr>
+        <tr><td class="l">03</td><td>Section 03 · Performance gap + Section 09 · L3 success indicator</td></tr>
+        <tr><td class="l">04</td><td>Section 04 · Audience persona + Section 07 · Constraints</td></tr>
+        <tr><td class="l">05</td><td>Section 01 · Project context (budget, dates) + Section 06 · Stakeholder hopes / fears</td></tr>
+        <tr><td class="l">06</td><td>Section 08 · Out of scope</td></tr>
+        <tr><td class="l">07</td><td>Section 06 · Stakeholder inputs (SPOC name)</td></tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:14px;">Full template lives at <a href="../needs-assessment-template/" target="_blank" style="color:var(--green-700);">Needs Assessment Template ↗</a>.</p>
+  </div>
+
+  <div class="foot">
+    <span>Mario Becerra · <a href="../../">Course-design pipeline</a> · <a href="design-log.md">Design log</a></span>
+    <span class="v">v1.0 · 17 May 2026</span>
+  </div>
+
+</div>
+
+</body>
+</html>

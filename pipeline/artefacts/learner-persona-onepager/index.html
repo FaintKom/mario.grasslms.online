@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Learner Persona One-Pager — Mario Becerra</title>
+<meta name="description" content="One-page learner persona template. JTBD + behavioural anchors + scenarios + anti-patterns. Authored by Mario Becerra."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.persona-head {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+.persona-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: var(--sun-300);
+  border: 3px solid var(--green-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 44px;
+  color: var(--green-800);
+  font-style: italic;
+  font-weight: 600;
+}
+.persona-id { display: grid; gap: 4px; }
+.persona-name {
+  font-family: var(--serif);
+  font-size: 32px;
+  line-height: 1;
+  color: var(--ink);
+  margin: 0;
+}
+.persona-strap {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+.persona-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--green-800);
+  line-height: 1.4;
+  margin: 6px 0 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--sun-500);
+}
+.dual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+@media print, (max-width: 720px) {
+  .dual { grid-template-columns: 1fr; }
+}
+.dual .section { margin-bottom: 0; }
+.jtbd-list {
+  margin: 0; padding: 0; list-style: none;
+  display: grid; gap: 8px;
+}
+.jtbd-list li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.jtbd-list li::before {
+  content: "→";
+  color: var(--green-600);
+  font-weight: 700;
+}
+.scenario {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: var(--bg-2);
+  margin-bottom: 8px;
+}
+.scenario .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green-700);
+  display: block;
+  margin-bottom: 4px;
+}
+.scenario .desc {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.anti {
+  border-left: 3px solid var(--coral-500);
+  background: var(--coral-50);
+  padding: 8px 12px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.anti strong { color: var(--coral-700); }
+.kvline {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 10px;
+  font-size: 13.5px;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--rule);
+}
+.kvline:last-child { border-bottom: none; }
+.kvline .k {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+.kvline .v { color: var(--ink); }
+.fillme {
+  color: var(--ink-faint);
+  font-style: italic;
+  background: var(--bg-3);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 12.5px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>Learner Persona One-Pager · v1.0</span>
+  </div>
+  <div class="actions">
+    <a class="btn secondary" href="../../../">← Portfolio</a>
+    <a class="btn secondary" href="../../">← Pipeline</a>
+    <a class="btn secondary" href="design-log.md">Design log</a>
+    <button class="btn" onclick="window.print()">Print / save as PDF</button>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <p class="eyebrow">Phase 1 · Discover · audience worksheet</p>
+  <h1 class="title">Learner Persona <em>One-Pager</em></h1>
+  <p class="subtitle">One segment, one page. JTBD-anchored (Christensen / Klement) with behavioural scenarios + named anti-patterns. Designed to be filled in 20 minutes from a single SME call + observation pass, then printed and pinned over the designer's monitor.</p>
+
+  <div class="meta-strip">
+    <span><strong>Segment name:</strong> _________________________</span>
+    <span><strong>Fill date:</strong> ____________________________</span>
+    <span><strong>Designer:</strong> ____________________________</span>
+  </div>
+
+  <div class="persona-head">
+    <div class="persona-avatar">M</div>
+    <div class="persona-id">
+      <h2 class="persona-name"><span class="fillme">Persona name + age</span></h2>
+      <span class="persona-strap"><span class="fillme">Role · tenure band · org type</span></span>
+      <p class="persona-quote">"<span class="fillme">One sentence the persona actually says in week one.</span>"</p>
+    </div>
+  </div>
+
+  <div class="dual">
+
+    <div class="section">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h3>Snapshot</h3>
+        <span class="section-desc">demographics + context</span>
+      </div>
+      <div>
+        <div class="kvline"><span class="k">Role / title</span><span class="v"><span class="fillme">Sales Development Rep, Tier-1 EU</span></span></div>
+        <div class="kvline"><span class="k">Tenure</span><span class="v"><span class="fillme">3–9 months · post-onboarding ramp</span></span></div>
+        <div class="kvline"><span class="k">Reports to</span><span class="v"><span class="fillme">SDR Manager · 1:1 weekly</span></span></div>
+        <div class="kvline"><span class="k">Day shape</span><span class="v"><span class="fillme">~50 outbound + ~10 inbound calls / day</span></span></div>
+        <div class="kvline"><span class="k">Devices</span><span class="v"><span class="fillme">Laptop primary · phone secondary · headset always</span></span></div>
+        <div class="kvline"><span class="k">Language(s)</span><span class="v"><span class="fillme">EN primary · ES / PT for LatAm coverage</span></span></div>
+        <div class="kvline"><span class="k">Tools in front of them</span><span class="v"><span class="fillme">Salesforce · Outreach · Gong · Slack · LinkedIn Sales Nav</span></span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h3>JTBD · what they're hired to do</h3>
+        <span class="section-desc">Christensen / Klement job statement</span>
+      </div>
+      <ul class="jtbd-list">
+        <li><strong>Functional:</strong> <span class="fillme">Book qualified discovery calls with the right ICP buyer at the right account.</span></li>
+        <li><strong>Emotional:</strong> <span class="fillme">Feel like a credible peer to the buyer within the first 30 seconds of a call, not a script-reading rookie.</span></li>
+        <li><strong>Social:</strong> <span class="fillme">Be in the top half of the SDR team's leaderboard by month 6.</span></li>
+      </ul>
+      <p class="persona-quote" style="margin-top:12px;">"<span class="fillme">When I'm getting hung up on inside 10 seconds, help me reframe the opener so I get a 90-second window — so I can prove I respect their time.</span>"</p>
+    </div>
+
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h3>Three real scenarios</h3>
+      <span class="section-desc">where the persona uses what we ship</span>
+    </div>
+
+    <div class="scenario">
+      <span class="label">Scenario A · happy path</span>
+      <div class="desc"><span class="fillme">8:45 Monday — pulls today's call list from Salesforce, scans Gong snippets of last week's top 3 demo openers, drafts 12 personalised opening lines in 25 minutes, starts dialling at 9:30. By 11:00 has booked 2 discovery calls. Uses the program's "trigger phrase → prop" cheat sheet on screen during call 11.</span></div>
+    </div>
+
+    <div class="scenario">
+      <span class="label">Scenario B · pressure path</span>
+      <div class="desc"><span class="fillme">Late Wednesday — 3 days behind monthly meeting quota. Sales floor is loud. Manager has pinged Slack twice. Persona starts cutting corners on personalisation; uses the program's "if you only have 15 min" express-flow card to triage which 20 accounts to call hot.</span></div>
+    </div>
+
+    <div class="scenario">
+      <span class="label">Scenario C · stuck path</span>
+      <div class="desc"><span class="fillme">First call with a Series-B fintech CFO who interrupts after 8 seconds: "We already use Brex." Persona freezes — script doesn't cover competitive displacement. Opens the program's objection matrix on a second monitor, finds the "additive-not-switch" framing, recovers the call. Books a 20-min follow-up.</span></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sheet">
+
+  <div class="dual">
+
+    <div class="section">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h3>Top 3 pains</h3>
+        <span class="section-desc">what costs them sleep</span>
+      </div>
+      <ul class="jtbd-list">
+        <li><span class="fillme">Cold-open rejection inside 10 seconds, ~70 % of dials.</span></li>
+        <li><span class="fillme">Re-keying notes between Salesforce + Outreach + manager-asked-for spreadsheet.</span></li>
+        <li><span class="fillme">No clean framework for what to do when the buyer says "we already use X" — wastes the rest of the call.</span></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <h3>Top 3 gains</h3>
+        <span class="section-desc">what would make their week</span>
+      </div>
+      <ul class="jtbd-list">
+        <li><span class="fillme">Predictable 90-second window after the opener.</span></li>
+        <li><span class="fillme">A pasteable objection response that doesn't sound like marketing copy.</span></li>
+        <li><span class="fillme">A leaderboard rank they can show their partner / parents without explanation.</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <h3>Anti-patterns · what to NOT design for this persona</h3>
+      <span class="section-desc">named misreads we will not repeat</span>
+    </div>
+
+    <div class="anti">
+      <strong>Anti-pattern A:</strong> <span class="fillme">long-form async video. They do not have 14 uninterrupted minutes mid-shift; they have 90-second gaps between calls. Microlearning ≤2 min or it goes unwatched.</span>
+    </div>
+
+    <div class="anti">
+      <strong>Anti-pattern B:</strong> <span class="fillme">tool-agnostic theory ("understand your buyer"). They need named-tool, named-objection, named-response cards. Theory without the worked example reads as L&amp;D speak and gets ignored.</span>
+    </div>
+
+    <div class="anti">
+      <strong>Anti-pattern C:</strong> <span class="fillme">gamification with weekly leaderboards visible to everyone. The bottom-third quits applying the framework once they realise public ranking is locked in. Use private % completion + manager 1:1 instead.</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">07</span>
+      <h3>Sources for this persona</h3>
+      <span class="section-desc">name the evidence, no hand-waving</span>
+    </div>
+    <div>
+      <div class="kvline"><span class="k">SME interviews</span><span class="v"><span class="fillme">3 × 30 min with senior SDR; 1 × 45 min with SDR Manager</span></span></div>
+      <div class="kvline"><span class="k">Call recordings</span><span class="v"><span class="fillme">~20 calls reviewed in Gong, mixed segments</span></span></div>
+      <div class="kvline"><span class="k">Shadowing</span><span class="v"><span class="fillme">2 half-days on the floor (or remote co-pilot via Zoom)</span></span></div>
+      <div class="kvline"><span class="k">Quant signal</span><span class="v"><span class="fillme">Salesforce close-rate by tenure band · time-to-first-meeting</span></span></div>
+      <div class="kvline"><span class="k">Date refreshed</span><span class="v"><span class="fillme">YYYY-MM-DD · refresh every 6 months OR after major comp / product change</span></span></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Mario Becerra · <a href="../../">Course-design pipeline</a> · <a href="design-log.md">Design log</a></span>
+    <span class="v">v1.0 · 17 May 2026</span>
+  </div>
+
+</div>
+
+</body>
+</html>
