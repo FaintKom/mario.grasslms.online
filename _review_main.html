@@ -1852,6 +1852,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <a class="navlink" href="#flagship">Flagship</a>
       <a class="navlink" href="#work">Work</a>
       <a class="navlink" href="#background">Background</a>
+      <!-- "Why me" link hidden while the section is in hidden state. Uncomment after filling in the reasons:
+      <a class="navlink" href="#why">Why me</a>
+      -->
       <a class="navlink" href="#contact">Booking</a>
       <button class="theme-btn" id="themeBtn" title="Toggle theme">
         <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="3.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M3 13l1.5-1.5M11.5 4.5L13 3"/></svg>
@@ -1867,7 +1870,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <section class="hero">
   <div class="hero-meta">
     <div><span class="k">Location</span><span class="v">Remote · UTC+3</span></div>
-    <div><span class="k">Role</span><span class="v">LXD · AI EdTech Engineer</span></div>
+    <div><span class="k">Role</span><span class="v">LX Designer + AI Automation</span></div>
     <div><span class="k">Status</span><span class="v">Open to work</span></div>
     <div><span class="k">Updated</span><span class="v" id="updatedAt">Apr 2026</span></div>
   </div>
@@ -1934,7 +1937,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <div class="case-tags">
         <span>localisation</span><span>HeyGen scripts</span><span>SME collab</span><span>status pipeline</span>
       </div>
-      <a class="case-cta" href="pipeline/artefacts/facilitator-guide-sales-kickoff/" target="_blank">B2B production sample <span class="arrow">→</span></a>
     </article>
 
     <article class="case">
@@ -1949,7 +1951,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <div class="case-tags">
         <span>regulated content</span><span>SME-driven</span><span>full ID cycle</span><span>industry practitioners</span>
       </div>
-      <a class="case-cta" href="pipeline/artefacts/kirkpatrick-plan-fintech/" target="_blank">Regulated-domain L1–L4 plan <span class="arrow">→</span></a>
     </article>
 
   </div>
@@ -2226,7 +2227,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
     <!-- body -->
     <div class="flagship-body">
-      <span class="flag-tag">Full-stack · Production</span>
+      <span class="flag-tag">§ 04 · Full-stack · Production</span>
       <h2>GrassLMS <em>LMS</em></h2>
       <div class="flag-role">Solo developer · Backend + Frontend + Infra + Deploy</div>
       <p class="flag-desc">
@@ -2413,10 +2414,69 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
 </section>
 
+<!-- ============ WHY ME (HIDDEN) ============
+     Hidden until the 4 reasons are filled in.
+     To bring it back: remove style="display:none" from the <section> tag below
+     and fill in the [REASON HEADING X] + [FILL IN] blocks with your copy.
+============================================== -->
+<section class="wrap why" id="why" style="display:none">
+  <div class="section-head">
+    <span class="sec-n">§ 05</span>
+    <h2>Why <em>hire me.</em></h2>
+    <span class="sec-meta">4 reasons · [to fill]</span>
+  </div>
+
+  <div class="why-grid">
+    <article class="why-card">
+      <div class="why-num">01</div>
+      <h3 class="why-h">[REASON HEADING 1]</h3>
+      <p class="why-p" data-placeholder>
+        [A short reason in 2–3 sentences. e.g. "10+ years in EdTech — I know how a instructional designer thinks and where a content team's pain is. I won't arrive to retrain you on a new process — I'll plug into the existing one and tighten the bottlenecks."]
+      </p>
+      <div class="why-proof">
+        <span class="why-k">Proof</span><span class="why-v">[link to case / number / artefact]</span>
+      </div>
+    </article>
+
+    <article class="why-card">
+      <div class="why-num">02</div>
+      <h3 class="why-h">[REASON HEADING 2]</h3>
+      <p class="why-p" data-placeholder>
+        [e.g. "I write code myself, so I can discuss solutions with developers — not just with the product manager. That removes the translation layer and speeds up iteration."]
+      </p>
+      <div class="why-proof">
+        <span class="why-k">Proof</span><span class="why-v">[link / number]</span>
+      </div>
+    </article>
+
+    <article class="why-card">
+      <div class="why-num">03</div>
+      <h3 class="why-h">[REASON HEADING 3]</h3>
+      <p class="why-p" data-placeholder>
+        [e.g. "I don't sell AI for AI's sake. Before building a pipeline I run the math — if a manual process is faster, I keep it manual."]
+      </p>
+      <div class="why-proof">
+        <span class="why-k">Proof</span><span class="why-v">[link / number]</span>
+      </div>
+    </article>
+
+    <article class="why-card">
+      <div class="why-num">04</div>
+      <h3 class="why-h">[REASON HEADING 4]</h3>
+      <p class="why-p" data-placeholder>
+        [e.g. "I work autonomously. Give me the task, the data, and the context — I'll assemble the team, spec, and timeline myself."]
+      </p>
+      <div class="why-proof">
+        <span class="why-k">Proof</span><span class="why-v">[link / number]</span>
+      </div>
+    </article>
+  </div>
+</section>
+
 <!-- ============ CONSULTATION FORM ============ -->
 <section class="wrap booking" id="contact">
   <div class="section-head">
-    <span class="sec-n">§ 07</span>
+    <span class="sec-n">§ 06</span>
     <h2>Book a<br><em>consultation.</em></h2>
     <span class="sec-meta">free · 30 min · zoom / google meet</span>
   </div>
@@ -2426,24 +2486,24 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <div class="booking-side-block">
         <span class="bs-k">What we'll cover</span>
         <ul class="bs-list">
-          <li>Your current bottleneck — onboarding ramp time, content production speed, or measurement gap</li>
-          <li>Where ID craft pays off vs. where AI tooling pays off (and the order to apply them)</li>
-          <li>A 2–4 week scoped plan if it makes sense to keep going</li>
+          <li>[FILL IN — e.g. your current pain with content / process]</li>
+          <li>[FILL IN — where AI actually helps, where it doesn't]</li>
+          <li>[FILL IN — a 2–4 week plan if it makes sense to go further]</li>
         </ul>
       </div>
       <div class="booking-side-block">
         <span class="bs-k">Who it's for</span>
         <ul class="bs-list">
-          <li>Sales Enablement, L&amp;D, and Revenue Operations leaders</li>
-          <li>EdTech content teams of 10+ shipping at cohort cadence</li>
-          <li>Founders building their own LMS or internal training tooling</li>
+          <li>[FILL IN — e.g. EdTech teams of 10+]</li>
+          <li>[FILL IN — methodology departments at schools and online platforms]</li>
+          <li>[FILL IN — startups building their own LMS / trainer]</li>
         </ul>
       </div>
       <div class="booking-side-block">
         <span class="bs-k">What you'll get</span>
         <ul class="bs-list">
-          <li>A written summary with prioritised recommendations</li>
-          <li>A cost + timeline estimate if we move forward</li>
+          <li>[FILL IN — e.g. a written summary with recommendations]</li>
+          <li>[FILL IN — a cost and timeline estimate if we move forward]</li>
         </ul>
       </div>
       <div class="booking-side-block alt">

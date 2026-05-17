@@ -18,11 +18,11 @@
   <header class="shell-head">
     <h1 class="shell-brand">
       <span class="mark" aria-hidden="true">m</span>
-      <span>FinTech B2B Card Onboarding · sample</span>
+      <span>FinTech B2B Card Onboarding</span>
     </h1>
     <div class="progress-wrap">
-      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:16.6%"></div></div>
-      <div class="progress-step" id="progressStep">1 / 6</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:14.3%"></div></div>
+      <div class="progress-step" id="progressStep">1 / 7</div>
     </div>
     <div class="shell-status">
       Mode <span class="mode" id="scormMode">…</span>
@@ -278,17 +278,68 @@
   </section>
 </template>
 
+<template id="screen-7">
+  <section class="screen">
+    <p class="eyebrow">Screen 7 · Reaction · 60 seconds</p>
+    <h2 class="screen-title">Three questions before you <em>close</em></h2>
+    <p class="lede">A Thalheimer-style micro-pulse — these answers predict behaviour change far better than a "did you enjoy it?" rating. Result is logged to the LMS alongside your score.</p>
+
+    <div class="reaction" id="reaction">
+
+      <div class="rx-q" data-id="rx1" data-prompt="I could use what I just learned on a real call today.">
+        <p class="rx-prompt"><span class="n">R1</span>I could use what I just learned on a real call today.</p>
+        <div class="rx-scale" role="radiogroup" aria-label="rate 1 to 5">
+          <label class="rx-opt"><input type="radio" name="rx1" value="1"><span>1 · not at all</span></label>
+          <label class="rx-opt"><input type="radio" name="rx1" value="2"><span>2</span></label>
+          <label class="rx-opt"><input type="radio" name="rx1" value="3"><span>3 · partly</span></label>
+          <label class="rx-opt"><input type="radio" name="rx1" value="4"><span>4</span></label>
+          <label class="rx-opt"><input type="radio" name="rx1" value="5"><span>5 · absolutely</span></label>
+        </div>
+      </div>
+
+      <div class="rx-q" data-id="rx2" data-prompt="The time I spent on this module was well-spent.">
+        <p class="rx-prompt"><span class="n">R2</span>The time I spent on this module was well-spent.</p>
+        <div class="rx-scale" role="radiogroup" aria-label="rate 1 to 5">
+          <label class="rx-opt"><input type="radio" name="rx2" value="1"><span>1 · no</span></label>
+          <label class="rx-opt"><input type="radio" name="rx2" value="2"><span>2</span></label>
+          <label class="rx-opt"><input type="radio" name="rx2" value="3"><span>3 · neutral</span></label>
+          <label class="rx-opt"><input type="radio" name="rx2" value="4"><span>4</span></label>
+          <label class="rx-opt"><input type="radio" name="rx2" value="5"><span>5 · yes</span></label>
+        </div>
+      </div>
+
+      <div class="rx-q" data-id="rx3" data-prompt="One thing I will do differently on my next call.">
+        <p class="rx-prompt"><span class="n">R3</span>One thing I will do differently on my next call (free text).</p>
+        <textarea class="rx-textarea" id="rx3" rows="3" maxlength="280" placeholder="e.g. Ask 'who approves every expense report?' before pitching anything."></textarea>
+      </div>
+
+    </div>
+
+    <div class="reaction-summary" id="reactionSummary" aria-live="polite" role="status">
+      <strong>Reaction logged.</strong> Click Finish to close the module.
+    </div>
+
+    <div style="text-align:center; margin-top:24px;">
+      <button class="btn btn-primary" id="submitReaction">Submit reaction</button>
+    </div>
+  </section>
+</template>
+
 <script>
 (function () {
   var state = {
     screen: 1,
-    total: 6,
+    total: 7,
     quizAnswers: {},
     quizScore: null,
     quizSubmitted: false,
     matchPicked: null,
-    matchMatched: {}
+    matchMatched: {},
+    reactionAnswers: {},
+    reactionSubmitted: false
   };
+
+  var MATCH_GATE = 3; // Screen 5: require >= 3 of 4 matches before Next enabled
 
   var host = document.getElementById('screenHost');
   var prevBtn = document.getElementById('prevBtn');
@@ -298,7 +349,7 @@
   var screenLabel = document.getElementById('screenLabel');
   var scormModeEl = document.getElementById('scormMode');
 
-  var labels = ['Welcome', 'The buyer', 'The product', 'Positioning', 'Objections', 'Check'];
+  var labels = ['Welcome', 'The buyer', 'The product', 'Positioning', 'Objections', 'Check', 'Reaction'];
 
   function loadScreen(n) {
     state.screen = n;
@@ -313,30 +364,56 @@
     nextBtn.disabled = false;
     host.scrollTop = 0;
 
-    if (n === 5) setupMatch();
+    if (n === 5) {
+      setupMatch();
+      applyMatchGate();
+    }
     if (n === 6) setupQuiz();
+    if (n === 7) setupReaction();
 
-    SCORM.setProgress({ screen: n, quizAnswers: state.quizAnswers, matched: state.matchMatched });
+    SCORM.setProgress({
+      screen: n,
+      quizAnswers: state.quizAnswers,
+      matched: state.matchMatched,
+      reactionAnswers: state.reactionAnswers,
+      reactionSubmitted: state.reactionSubmitted
+    });
+  }
+
+  function applyMatchGate() {
+    var matched = Object.keys(state.matchMatched).length;
+    if (matched < MATCH_GATE) {
+      nextBtn.disabled = true;
+      nextBtn.title = 'Match at least ' + MATCH_GATE + ' of 4 objections before continuing.';
+    } else {
+      nextBtn.disabled = false;
+      nextBtn.title = '';
+    }
   }
 
   prevBtn.addEventListener('click', function () {
     if (state.screen > 1) loadScreen(state.screen - 1);
   });
   nextBtn.addEventListener('click', function () {
+    // Screen 6 -> 7 requires quiz submission first
+    if (state.screen === 6 && !state.quizSubmitted) {
+      alert('Please submit the quiz first to continue.');
+      return;
+    }
     if (state.screen < state.total) {
       loadScreen(state.screen + 1);
-    } else {
-      if (state.quizSubmitted) {
-        SCORM.setStatus(state.quizScore >= 80 ? 'passed' : 'completed');
-        SCORM.finish();
-        nextBtn.disabled = true;
-        nextBtn.textContent = 'Done ✓';
-        // SEP3: replace screen body with next-steps panel
-        showNextSteps();
-      } else {
-        alert('Please submit the quiz first to complete the module.');
-      }
+      return;
     }
+    // Screen 7 (final) -> finish requires reaction submission first
+    if (!state.reactionSubmitted) {
+      alert('Please submit the 3-question reaction first to complete the module.');
+      return;
+    }
+    SCORM.setStatus(state.quizScore >= 80 ? 'passed' : 'completed');
+    SCORM.finish();
+    nextBtn.disabled = true;
+    nextBtn.textContent = 'Done ✓';
+    showNextSteps();
   });
 
   function showNextSteps() {
@@ -430,8 +507,93 @@
   }
 
   function checkMatchComplete(pairs) {
-    if (Object.keys(state.matchMatched).length === pairs.length) {
+    var matched = Object.keys(state.matchMatched).length;
+    if (matched === pairs.length) {
       document.getElementById('matchFeedback').classList.add('show');
+    }
+    applyMatchGate();
+  }
+
+  function setupReaction() {
+    var wrap = document.getElementById('reaction');
+    if (!wrap) return;
+
+    // Restore prior answers
+    Object.keys(state.reactionAnswers).forEach(function (rid) {
+      var val = state.reactionAnswers[rid];
+      if (rid === 'rx3') {
+        var ta = document.getElementById('rx3');
+        if (ta) ta.value = val || '';
+      } else {
+        var input = wrap.querySelector('input[name="' + rid + '"][value="' + val + '"]');
+        if (input) {
+          input.checked = true;
+          input.closest('.rx-opt').classList.add('selected');
+        }
+      }
+    });
+
+    // Capture radio picks (rx1, rx2)
+    wrap.querySelectorAll('input[type="radio"]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        var name = input.name;
+        var val = input.value;
+        state.reactionAnswers[name] = val;
+        wrap.querySelectorAll('input[name="' + name + '"]').forEach(function (n) {
+          n.closest('.rx-opt').classList.remove('selected');
+        });
+        input.closest('.rx-opt').classList.add('selected');
+      });
+    });
+
+    // Capture free text on input (rx3)
+    var ta = document.getElementById('rx3');
+    if (ta) {
+      ta.addEventListener('input', function () {
+        state.reactionAnswers.rx3 = ta.value;
+      });
+    }
+
+    var submit = document.getElementById('submitReaction');
+    if (submit && state.reactionSubmitted) {
+      submit.disabled = true;
+      submit.textContent = 'Submitted ✓';
+      document.getElementById('reactionSummary').classList.add('show');
+    }
+    if (submit) {
+      submit.addEventListener('click', function () {
+        var rx1 = state.reactionAnswers.rx1;
+        var rx2 = state.reactionAnswers.rx2;
+        var rx3 = (state.reactionAnswers.rx3 || '').trim();
+        if (!rx1 || !rx2) {
+          alert('Please answer R1 and R2 (rating questions) before submitting.');
+          return;
+        }
+        // Record SCORM interactions for each reaction question
+        var rxItems = wrap.querySelectorAll('.rx-q');
+        rxItems.forEach(function (q) {
+          var id = q.dataset.id;
+          var prompt = q.dataset.prompt;
+          var answer = state.reactionAnswers[id] || '';
+          SCORM.recordInteraction(
+            id,
+            id === 'rx3' ? 'fill-in' : 'likert',
+            String(answer),
+            'neutral'
+          );
+        });
+        state.reactionSubmitted = true;
+        submit.disabled = true;
+        submit.textContent = 'Submitted ✓';
+        document.getElementById('reactionSummary').classList.add('show');
+        SCORM.setProgress({
+          screen: state.screen,
+          quizAnswers: state.quizAnswers,
+          matched: state.matchMatched,
+          reactionAnswers: state.reactionAnswers,
+          reactionSubmitted: true
+        });
+      });
     }
   }
 
@@ -529,6 +691,8 @@
     if (saved && saved.screen) {
       state.quizAnswers = saved.quizAnswers || {};
       state.matchMatched = saved.matched || {};
+      state.reactionAnswers = saved.reactionAnswers || {};
+      state.reactionSubmitted = !!saved.reactionSubmitted;
       loadScreen(saved.screen);
     } else {
       loadScreen(1);

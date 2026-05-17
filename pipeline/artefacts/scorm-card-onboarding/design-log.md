@@ -143,7 +143,7 @@
 
 | Metric class | Target | How measured |
 |---|---|---|
-| **L1 — Reaction** (Thalheimer 3-Q) | "I could use this on a real call today" ≥4.0/5; "Time well-spent" ≥4.2/5; NPS ≥30 | Embedded post-module micro-pulse (v2) |
+| **L1 — Reaction** (Thalheimer 3-Q) | "I could use this on a real call today" ≥4.0/5; "Time well-spent" ≥4.2/5; one-thing-different open text ≥80 % completion | Embedded post-module micro-pulse on Screen 7 — emits `cmi.interactions.{n}.{id,type,student_response}` (likert / fill-in) for R1, R2, R3 |
 | **L2 — Learning** | Quiz mastery ≥80 % first attempt; +7 d retention ≥70 %; +30 d ≥60 % | SCORM `cmi.core.score.raw`; LMS-scheduled spaced retrieval mini-quiz |
 | **L3 — Behaviour** | Talk-track adherence first 5 calls ≥80 %; objection improvisation rubric ≥3.5/5 at week 4 | Call-recording sample (Gong / Modjo / manual); manager observation rubric one-pager |
 | **L4 — Results** | SMB-segment ramp 90 d → ≤67 d (−25 %); SMB win-rate +5 pts within 6 months of cohort | CRM ramp-time field, segment-tagged opportunity outcomes |
@@ -168,9 +168,9 @@ Targets are stated for a first-cohort rollout at the scale this module is sized 
 - `cmi.interactions` index reservation (quiz 0–4, match 5–8) is fine but undocumented in code comments — added to v2 backlog.
 
 **What I would change next iteration**
-- Add Screen 7: Thalheimer-style 3-Q L1 micro-pulse before `SCORM.finish`. Reaction data is currently absent.
-- Emit xAPI statements in parallel for richer analytics (verb / object / actor for each match + quiz).
-- Gate **Next** on Screen 5 only after at least 3 of 4 matches succeed — currently you can advance with 0 matches and still pass the module via quiz alone.
+- ~~Add Screen 7: Thalheimer-style 3-Q L1 micro-pulse before `SCORM.finish`. Reaction data is currently absent.~~ **Shipped.** Screen 7 captures R1 (would-use-on-call 1–5) + R2 (time-well-spent 1–5) + R3 (one-thing-different free text). Each emits a `cmi.interactions.{n}` likert / fill-in record.
+- ~~Gate **Next** on Screen 5 only after at least 3 of 4 matches succeed — currently you can advance with 0 matches and still pass the module via quiz alone.~~ **Shipped.** `applyMatchGate()` disables Next until ≥3 matches, with a tooltip explaining the requirement; gate re-evaluates after each correct match.
+- Emit xAPI statements in parallel for richer analytics (verb / object / actor for each match + quiz + reaction).
 - Add `aria-live="polite"` regions for match feedback so screen-reader users hear the result.
 
 **Open questions for stakeholder**
