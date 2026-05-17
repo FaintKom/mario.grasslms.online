@@ -61,7 +61,7 @@
 | **Methodologies (chips)** | **ADDIE** · **SAM (Successive Approximation)** · **4C/ID (Four-Component ID)** · Merrill First Principles · Mayer Multimedia · Knowles Andragogy · 5 Moments of Need |
 | **Why each, when** | ADDIE = compliance / scale · SAM = fast iteration / rapid prototyping · 4C/ID = complex cognitive skill (UX/UI, math, programming) |
 | **Real example** | Algonova `cs-course-9-11` — 36-lesson narrative-driven curriculum with quest progression for kids 9–11 |
-| **Existing portfolio artefact** | `ai-course-for-ids` (4C/ID) · `sat-math-pro` (4C/ID + widget pipeline) · `practico-django` (template + autograder) |
+| **Existing portfolio artefact** | `ai-course-for-ids` (4C/ID) · `sat-math-pro` (4C/ID + widget pipeline) · `beam-course-site` (static site + course materials) |
 | **New artefact needed** | Course blueprint template · Blended-learning mix diagram · "When to use which framework" decision matrix |
 | **Tools** | Figma · Miro · Notion |
 | **Deliverables shown** | Course blueprint PDF · Module map · Framework decision matrix |
@@ -91,7 +91,7 @@
 | **Headline** | Ship to the LMS, enable the facilitators, brief the learners |
 | **Methodologies (chips)** | LMS deploy · Facilitator enablement · Launch comms · Pilot → Scale |
 | **Real example** | `ai-course-for-ids` — `seed_course.py` logs into GrassLMS, creates course, uploads modules/lessons, publishes, enrolls test student via REST API |
-| **Existing portfolio artefact** | **GrassLMS — full LMS built solo** (80+ features, 59 routes, FastAPI + Next.js 16) · `practico-django` deploy template |
+| **Existing portfolio artefact** | **GrassLMS — full LMS built solo** (80+ features, 59 routes, FastAPI + Next.js 16) · `beam-course-site` GH Pages deploy |
 | **New artefact needed** | Roll-out plan template · Launch comms checklist · Facilitator briefing one-pager |
 | **Tools** | Sana · Moodle · GrassLMS · REST APIs · Slack / Email comms |
 | **Deliverables shown** | LMS screenshot (GrassLMS course view) · Roll-out plan PDF · Comms checklist |
