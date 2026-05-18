@@ -575,3 +575,103 @@ code, kbd, samp {
 .app-card[data-accent="#00875f"] { --acc: #00875f; }
 .app-card[data-accent="#0f1419"] { --acc: #0f1419; }
 .app-card[data-accent="#4a154b"] { --acc: #4a154b; }
+
+/* =========================================================================
+   Task banner · in-app sub-task instruction surface
+   Mounted at the top of an .os-window-body by task-banner.js. Drives the
+   rep's attention to the next concrete in-app action.
+   ========================================================================= */
+.task-banner {
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  column-gap: var(--sp-3);
+  align-items: center;
+  margin: 0 0 var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: linear-gradient(180deg, #ecf9e7 0%, #f6fdf3 100%);
+  border: 1px solid #b8e3a5;
+  border-left: 3px solid var(--brand-green);
+  border-radius: var(--radius-md);
+  font-family: var(--ftc-font-sans);
+  position: relative;
+  overflow: hidden;
+}
+.task-banner__dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--brand-green);
+  box-shadow: 0 0 0 0 rgba(10, 135, 84, 0.55);
+  animation: task-banner-pulse 1.6s ease-out infinite;
+}
+.task-banner__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.task-banner__label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ftc-ink);
+  line-height: 1.35;
+}
+.task-banner__hint {
+  font-family: var(--ftc-font-mono);
+  font-size: 11px;
+  color: var(--ftc-ink-2);
+  line-height: 1.4;
+}
+.task-banner__check {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--brand-green);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 13px;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 180ms ease-out, transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Done state: dot freezes, check pops in, gradient relaxes */
+.task-banner--done {
+  background: #f4f7f2;
+  border-color: var(--rule-strong);
+  border-left-color: var(--brand-green);
+}
+.task-banner--done .task-banner__dot {
+  animation: none;
+  background: var(--rule-strong);
+  box-shadow: none;
+}
+.task-banner--done .task-banner__label {
+  text-decoration: line-through;
+  color: var(--ftc-ink-2);
+}
+.task-banner--done .task-banner__check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Pending state: muted, no pulse */
+.task-banner--pending {
+  background: var(--bg-3);
+  border-color: var(--rule);
+  border-left-color: var(--rule-strong);
+}
+.task-banner--pending .task-banner__dot {
+  animation: none;
+  background: var(--ink-faint);
+  box-shadow: none;
+}
+
+@keyframes task-banner-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(10, 135, 84, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(10, 135, 84, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(10, 135, 84, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task-banner__dot { animation: none; }
+}

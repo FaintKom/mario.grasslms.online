@@ -13,6 +13,7 @@
  */
 
 import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
+import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 
 // ===========================================================================
 // State
@@ -156,15 +157,26 @@ function stepGainAttention(body) {
   body.innerHTML = `
     <p><strong>Outreach</strong> just lit up — your sequenced lead <em>Maria
     R.</em> opened your fourth email twice in 15 minutes. She is a warm
-    lead. You have a window of maybe an hour before that signal cools.</p>
-    <p>Last cohort, the rep on this exact play said <em>"I'll follow up"</em>
-    and never re-engaged. Today, you're going to do it differently.</p>
+    lead. Window of maybe an hour before that signal cools.</p>
     <blockquote class="peer-quote">
       I have lost too many deals to follow-up.
       <cite>— M.G., Manchester · top-decile rep</cite>
     </blockquote>
   `;
   state.api.os.openApp("outreach", { highlightLeadId: "L-MARIA" });
+
+  // Mount the in-app task banner so the rep's eye is in the app, not the
+  // narrative panel. Wait one tick for the outreach app to render its body.
+  setTimeout(() => {
+    const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (!outreachBody) return;
+    mountTaskBanner(outreachBody, {
+      id: "m3-s1-pick-warm",
+      label: "Click the warm lead (Maria) — she opened your email twice in 15 min",
+      hint: "Look at the open-signal chip on her row",
+      state: "active",
+    });
+  }, 120);
 }
 
 // ===========================================================================
