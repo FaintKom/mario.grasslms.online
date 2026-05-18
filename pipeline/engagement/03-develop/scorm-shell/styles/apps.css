@@ -225,48 +225,195 @@
 }
 
 /* =========================================================================
-   5 · Calendar
+   5 · Calendar — Mon-Fri week-view (30-min bands)
    ========================================================================= */
-.app--calendar .cal-grid {
-  display: grid; grid-template-columns: 56px repeat(5, 1fr);
-  gap: 1px; background: var(--ftc-border);
+.app--calendar .cal-toolbar {
+  display: flex; align-items: center; gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+  font-family: var(--ftc-font-sans);
+}
+.app--calendar .cal-nav {
+  background: var(--bg-elevated);
   border: 1px solid var(--ftc-border);
   border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  font-size: 14px; color: var(--ftc-ink-2);
+  cursor: pointer;
 }
-.app--calendar .cal-grid > div {
-  background: var(--bg-elevated);
-  padding: var(--sp-1);
-  font-size: 11px;
-  min-height: 28px;
+.app--calendar .cal-nav:hover { background: var(--app-accent-tint); color: var(--app-accent); }
+.app--calendar .cal-week-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ftc-ink);
+  margin: 0 var(--sp-2);
+  min-width: 130px;
+}
+.app--calendar .cal-today-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--app-accent);
+  color: #fff;
+  border-radius: 999px;
+  font-family: var(--ftc-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.app--calendar .cal-legend {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--ftc-font-mono);
+  font-size: 10px;
+  color: var(--ftc-ink-2);
+}
+.app--calendar .cal-legend__dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  margin-right: 3px;
+  vertical-align: middle;
+  background: var(--ftc-border);
+}
+.app--calendar .cal-legend__dot--suggested { background: var(--app-accent-tint); border-left: 3px solid var(--app-accent); }
+.app--calendar .cal-legend__dot--selected  { background: var(--app-accent); }
+.app--calendar .cal-legend__dot--busy      { background: #e8eaed; }
+
+.app--calendar .cal-grid {
+  display: grid;
+  grid-template-columns: 52px repeat(5, 1fr);
+  gap: 1px;
+  background: var(--ftc-border);
+  border: 1px solid var(--ftc-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
 .app--calendar .cal-head {
-  font-family: var(--ftc-font-mono);
+  background: var(--ftc-surface);
+  font-family: var(--ftc-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ftc-ink);
   text-align: center;
-  color: var(--ftc-ink-2);
-  background: var(--ftc-surface) !important;
+  padding: 6px 4px;
 }
-.app--calendar .cal-slot { cursor: pointer; }
-.app--calendar .cal-slot[data-status="free"]:hover { background: var(--app-accent-tint); }
-.app--calendar .cal-slot[data-status="busy"] {
-  background: #f3f4f6 !important; color: var(--ftc-ink-2);
+.app--calendar .cal-head--corner { background: var(--ftc-surface); }
+.app--calendar .cal-head--today {
+  background: var(--app-accent-tint);
+  color: var(--app-accent);
+  position: relative;
+}
+.app--calendar .cal-head--today::after {
+  content: "";
+  position: absolute;
+  left: 6px; right: 6px; bottom: 2px;
+  height: 2px;
+  background: var(--app-accent);
+  border-radius: 2px;
+}
+.app--calendar .cal-time {
+  background: var(--ftc-surface);
   font-family: var(--ftc-font-mono);
+  font-size: 10px;
+  color: var(--ftc-ink-2);
+  text-align: right;
+  padding: 4px 6px 0 0;
 }
+.app--calendar .cal-slot {
+  background: var(--bg-elevated);
+  border: 0;
+  padding: 2px 4px;
+  min-height: 22px;
+  font-family: var(--ftc-font-sans);
+  font-size: 10.5px;
+  text-align: left;
+  color: var(--ftc-ink-2);
+  cursor: pointer;
+  position: relative;
+  transition: background 0.1s ease, transform 0.05s ease;
+  overflow: hidden;
+}
+.app--calendar .cal-slot:hover { background: var(--app-accent-tint); }
+.app--calendar .cal-slot:active { transform: scale(0.97); }
+.app--calendar .cal-slot__label {
+  display: block;
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.app--calendar .cal-slot[data-status="busy"] {
+  background: #e8eaed;
+  color: var(--ftc-ink-2);
+  cursor: not-allowed;
+}
+.app--calendar .cal-slot[data-status="busy"] .cal-slot__label { font-weight: 500; }
 .app--calendar .cal-slot[data-status="suggested"] {
   background: var(--app-accent-tint);
   border-left: 3px solid var(--app-accent);
-  font-weight: 600; color: var(--app-accent);
+  color: var(--app-accent);
+  font-weight: 600;
 }
 .app--calendar .cal-slot[data-status="selected"] {
-  background: var(--app-accent); color: var(--ftc-paper); font-weight: 600;
+  background: var(--app-accent);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 2px var(--app-accent);
+}
+.app--calendar .cal-slot[data-status="selected"] .cal-slot__label { color: #fff; }
+
+.app--calendar .cal-foot {
+  display: flex; align-items: center; gap: var(--sp-3);
+  margin-top: var(--sp-3);
+}
+.app--calendar .cal-invitee {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px;
+  color: var(--ftc-ink-2);
+}
+.app--calendar .cal-invitee input {
+  padding: 5px 8px;
+  border: 1px solid var(--ftc-border);
+  border-radius: 4px;
+  font: inherit;
+  width: 220px;
+  background: var(--bg-elevated);
+  color: var(--ftc-ink);
+}
+.app--calendar .cal-invitee input:focus {
+  outline: none;
+  border-color: var(--app-accent);
+  box-shadow: 0 0 0 2px var(--app-accent-tint);
 }
 .app--calendar .invite-btn {
-  margin-top: var(--sp-3);
-  background: var(--app-accent); color: var(--ftc-paper);
+  margin-left: auto;
+  background: var(--app-accent); color: #fff;
   border: 0; border-radius: var(--radius-md);
-  padding: var(--sp-2) var(--sp-4); font-weight: 600;
+  padding: 7px 16px;
+  font-weight: 700;
+  font-size: 12.5px;
+  display: inline-flex; align-items: center; gap: 6px;
+  cursor: pointer;
+  transition: background 0.12s, transform 0.06s;
 }
+.app--calendar .invite-btn:hover:not(:disabled) { background: #07683f; }
+.app--calendar .invite-btn:active:not(:disabled) { transform: translateY(1px); }
 .app--calendar .invite-btn:disabled {
-  background: var(--ftc-border); color: var(--ftc-ink-2); cursor: not-allowed;
+  background: var(--ftc-border); color: var(--ftc-ink-2);
+  cursor: not-allowed; opacity: 0.6;
+}
+.app--calendar .cal-readout {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--ftc-ink-2);
+  font-family: var(--ftc-font-mono);
+}
+.app--calendar .cal-readout.is-success {
+  color: var(--app-accent);
+  font-weight: 600;
 }
 
 /* =========================================================================

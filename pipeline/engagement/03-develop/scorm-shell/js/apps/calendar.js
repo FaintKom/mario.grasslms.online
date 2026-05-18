@@ -1,8 +1,11 @@
 /**
  * calendar.js · simulated calendar.
  *
- * Week-view grid (Mon-Fri × 6 half-hour bands) with two highlighted
- * "suggested" slots per the M.G. close-pattern in §10.1.
+ * Mon-Fri × 09:00-18:00 (30-min bands) week-view grid. Click empty slots to
+ * select (up to 2 for the M3 two-slot close pattern). Busy slots show their
+ * block title (Stand-up, Sync, Lunch, etc.). Suggested slots get a green
+ * left-stripe + preview label. Send-invite fires the EVENT.INVITE_SENT
+ * telemetry event so M3 module logic can react.
  *
  * Fires `calendar:opened` when mounted (M3 habit-gate consumes this).
  *
@@ -12,27 +15,54 @@
 import { registerApp, icon } from "./registry.js";
 import { EVENT } from "../event-log.js";
 
-const DAYS  = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-const BANDS = ["09:00", "09:30", "10:00", "10:30", "11:00", "14:00"];
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-/** Default synthetic week — two slots flagged as "suggested" for the rep to read aloud. */
+function generateBands() {
+  const bands = [];
+  for (let h = 9; h < 18; h++) {
+    bands.push(`${String(h).padStart(2, "0")}:00`);
+    bands.push(`${String(h).padStart(2, "0")}:30`);
+  }
+  return bands;
+}
+const BANDS = generateBands();
+
 function defaultSlots() {
   const slots = [];
   DAYS.forEach((day) => {
     BANDS.forEach((time) => {
-      slots.push({ slot_id: `${day}-${time}`, day, time, duration_min: 20, status: "free", invitee_emails: [] });
+      slots.push({
+        slot_id: `${day}-${time}`,
+        day, time,
+        duration_min: 30,
+        status: "free",
+        label: "",
+        invitee_emails: [],
+      });
     });
   });
-  setStatus(slots, "Mon", "09:00", "busy");
-  setStatus(slots, "Mon", "09:30", "busy");
-  setStatus(slots, "Tue", "10:00", "suggested");
-  setStatus(slots, "Wed", "10:30", "suggested");
-  setStatus(slots, "Thu", "14:00", "busy");
+  const block = (day, time, label) => {
+    const s = slots.find(x => x.day === day && x.time === time);
+    if (s) { s.status = "busy"; s.label = label; }
+  };
+  DAYS.forEach(d => block(d, "09:00", "Stand-up · pod"));
+  DAYS.forEach(d => { block(d, "12:30", "Lunch"); block(d, "13:00", "Lunch"); });
+  block("Wed", "15:00", "1:1 · J.T.");
+  block("Wed", "15:30", "1:1 · J.T.");
+  block("Fri", "16:00", "Pipeline review");
+  block("Fri", "16:30", "Pipeline review");
+  block("Mon", "14:00", "Demo · Tom (Northwind)");
+  block("Mon", "14:30", "Demo · Tom (Northwind)");
+  block("Thu", "11:00", "Demo · Lukas (Tafelrunde)");
+
+  const suggest = (day, time, label) => {
+    const s = slots.find(x => x.day === day && x.time === time);
+    if (s) { s.status = "suggested"; s.label = label; }
+  };
+  suggest("Tue", "11:00", "Suggest · Maria");
+  suggest("Thu", "14:00", "Suggest · Maria");
+
   return slots;
-}
-function setStatus(slots, day, time, status) {
-  const s = slots.find(x => x.day === day && x.time === time);
-  if (s) s.status = status;
 }
 
 registerApp({
@@ -45,6 +75,7 @@ registerApp({
     /** @type {any[]} */
     let slots = Array.isArray(options.slots) ? options.slots.slice() : defaultSlots();
     let inviteeEmail = options.invitee_email ?? "";
+    const todayIdx = Math.min(Math.max(new Date().getDay() - 1, 0), 4);
 
     container.classList.add("app--calendar");
     container.innerHTML = renderShell();
@@ -53,24 +84,40 @@ registerApp({
     eventBus.dispatchEvent(new CustomEvent("calendar:opened", { detail: { ts: Date.now() } }));
     eventBus.dispatchEvent(new CustomEvent("telemetry", { detail: { event_name: EVENT.CALENDAR_OPENED } }));
 
+    function weekRange() {
+      const now  = new Date();
+      const day  = now.getDay();
+      const mon  = new Date(now); mon.setDate(now.getDate() - ((day + 6) % 7));
+      const fri  = new Date(mon); fri.setDate(mon.getDate() + 4);
+      const fmt  = d => d.toLocaleDateString("en-GB", { month: "short", day: "numeric" });
+      return `${fmt(mon)} – ${fmt(fri)}`;
+    }
+
     function renderShell() {
       return `
-        <div class="cal-head-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-          <strong style="font-size:14px">This week</strong>
-          <span class="tag">Suggested slots highlighted</span>
+        <div class="cal-toolbar" role="toolbar" aria-label="Calendar week navigation">
+          <button type="button" class="cal-nav" aria-label="Previous week">‹</button>
+          <strong class="cal-week-label">${weekRange()}</strong>
+          <button type="button" class="cal-nav" aria-label="Next week">›</button>
+          <span class="cal-today-pill">Today</span>
+          <span class="cal-legend">
+            <span class="cal-legend__dot cal-legend__dot--suggested"></span>Suggested
+            <span class="cal-legend__dot cal-legend__dot--selected"></span>Selected
+            <span class="cal-legend__dot cal-legend__dot--busy"></span>Busy
+          </span>
         </div>
         <div class="cal-grid" data-region="grid"></div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
-          <label style="font-size:12px">
-            Invitee email
-            <input type="email" data-field="invitee" value="${escapeAttr(inviteeEmail)}" placeholder="buyer@example.com"
-              style="margin-left:6px;padding:4px 6px;border:1px solid var(--ftc-border);border-radius:4px;font:inherit;width:200px">
+        <div class="cal-foot">
+          <label class="cal-invitee">
+            <span>Invitee</span>
+            <input type="email" data-field="invitee" value="${escapeAttr(inviteeEmail)}"
+                   placeholder="buyer@example.com" aria-label="Invitee email">
           </label>
           <button type="button" class="invite-btn" data-action="send-invite" disabled>
             ${icon("check","Send invite")} Send invite
           </button>
         </div>
-        <p data-region="readout" style="margin-top:8px;font-size:12px;color:var(--ftc-ink-2)"></p>
+        <p data-region="readout" class="cal-readout"></p>
       `;
     }
 
@@ -78,39 +125,53 @@ registerApp({
       const grid = container.querySelector("[data-region='grid']");
       if (!grid) return;
       const cells = [];
-      cells.push(`<div class="cal-head"></div>`);
-      DAYS.forEach(d => cells.push(`<div class="cal-head">${d}</div>`));
+      cells.push(`<div class="cal-head cal-head--corner"></div>`);
+      DAYS.forEach((d, i) => {
+        const cls = i === todayIdx ? "cal-head cal-head--today" : "cal-head";
+        cells.push(`<div class="${cls}">${d}</div>`);
+      });
       BANDS.forEach(b => {
-        cells.push(`<div class="cal-head">${b}</div>`);
+        cells.push(`<div class="cal-time">${b}</div>`);
         DAYS.forEach(d => {
           const s = slots.find(x => x.day === d && x.time === b);
           const status = s?.status ?? "free";
+          const label  = s?.label || "";
+          const labelHtml = label
+            ? `<span class="cal-slot__label">${escapeHtml(label)}</span>`
+            : "";
           cells.push(`
-            <div class="cal-slot" role="button" tabindex="0"
+            <button type="button" class="cal-slot"
               data-status="${status}"
               data-slot="${escapeAttr(s?.slot_id ?? "")}"
-              aria-label="${escapeAttr(`${d} ${b} ${status}`)}">
-              ${status === "busy" ? "busy" : ""}
-            </div>
+              aria-label="${escapeAttr(`${d} ${b} ${status}${label ? ' · ' + label : ''}`)}">
+              ${labelHtml}
+            </button>
           `);
         });
       });
       grid.innerHTML = cells.join("");
 
-      const readout = container.querySelector("[data-region='readout']");
+      const readout  = container.querySelector("[data-region='readout']");
       const selected = slots.filter(s => s.status === "selected");
       if (readout) {
-        readout.textContent = selected.length
-          ? `Selected: ${selected.map(s => `${s.day} ${s.time}`).join(" + ")}`
-          : `Tip: read two slots aloud — e.g. "${suggestedSummary()}"`;
+        if (selected.length === 0) {
+          readout.textContent = `Tip: read two suggested slots aloud — e.g. "${suggestedSummary()}"`;
+          readout.classList.remove("is-success");
+        } else {
+          readout.textContent = `Selected: ${selected.map(s => `${s.day} ${s.time}`).join(" + ")} (${selected.length}/2)`;
+          readout.classList.remove("is-success");
+        }
       }
       const btn = container.querySelector("[data-action='send-invite']");
-      if (btn) /** @type {HTMLButtonElement} */ (btn).disabled = !(selected.length >= 1 && inviteeEmail.includes("@"));
+      if (btn) /** @type {HTMLButtonElement} */ (btn).disabled =
+        !(selected.length === 2 && inviteeEmail.includes("@"));
     }
 
     function suggestedSummary() {
       const sug = slots.filter(s => s.status === "suggested");
-      return sug.map(s => `${s.day} at ${s.time}`).join(" or ");
+      return sug.length >= 2
+        ? sug.slice(0, 2).map(s => `${s.day} at ${s.time}`).join(" or ")
+        : "Tuesday 11 or Thursday 2";
     }
 
     function bind() {
@@ -120,8 +181,16 @@ registerApp({
           const id = cell.getAttribute("data-slot");
           const s = slots.find(x => x.slot_id === id);
           if (!s || s.status === "busy") return;
-          if (s.status === "selected") s.status = s.slot_id.match(/^(Tue-10:00|Wed-10:30)$/) ? "suggested" : "free";
-          else s.status = "selected";
+          const currentlySelected = slots.filter(x => x.status === "selected").length;
+          if (s.status === "selected") {
+            const wasSug = /^(Tue-11:00|Thu-14:00)$/.test(s.slot_id);
+            s.status = wasSug ? "suggested" : "free";
+            s.label  = wasSug ? "Suggest · Maria" : "";
+          } else {
+            if (currentlySelected >= 2) return;
+            s.status = "selected";
+            s.label  = s.label || "Selected slot";
+          }
           eventBus.dispatchEvent(new CustomEvent("telemetry", {
             detail: { event_name: EVENT.SLOTS_STATED, slot_id: s.slot_id, slot_day: s.day, slot_time: s.time },
           }));
@@ -157,9 +226,11 @@ registerApp({
       }));
       const readout = container.querySelector("[data-region='readout']");
       if (readout) {
-        readout.style.color = "var(--brand-green-deep)";
-        readout.textContent = `✓ Invite sent to ${inviteeEmail} for ${selected.map(s => `${s.day} ${s.time}`).join(", ")}`;
+        readout.classList.add("is-success");
+        readout.textContent = `✓ Invite sent to ${inviteeEmail} for ${selected.map(s => `${s.day} ${s.time}`).join(" or ")}`;
       }
+      selected.forEach(s => { s.label = `📨 Sent · ${(inviteeEmail.split("@")[0] || "buyer")}`; });
+      render();
     }
 
     bind();
@@ -174,3 +245,4 @@ registerApp({
 });
 
 function escapeAttr(s) { return String(s ?? "").replace(/[<>&"]/g, c => ({ "<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;" }[c])); }
+function escapeHtml(s) { return String(s ?? "").replace(/[<>&]/g, c => ({ "<":"&lt;",">":"&gt;","&":"&amp;" }[c])); }
