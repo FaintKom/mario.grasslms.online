@@ -154,8 +154,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .hero h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(56px, 10vw, 176px);
-  line-height: .86;
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: .92;
   letter-spacing: -0.02em;
   margin: 0;
   color: var(--ink);
@@ -166,64 +166,84 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--accent);
 }
 .hero-sub {
-  display: grid; grid-template-columns: 2fr 1fr;
-  gap: 48px;
-  margin-top: 36px;
-  align-items: end;
+  display: grid; grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 28px;
+  max-width: 720px;
 }
 .hero-lede {
-  font-family: var(--serif);
-  font-size: clamp(22px, 2.4vw, 32px);
-  line-height: 1.25;
-  font-style: italic;
+  font-family: var(--sans);
+  font-size: 18px;
+  line-height: 1.55;
+  font-style: normal;
+  font-weight: 400;
   color: var(--ink);
-  max-width: 28ch;
+  max-width: 640px;
+  margin: 0;
 }
-.hero-lede b { font-style: normal; font-family: var(--sans); font-weight: 500; background: var(--accent); color: var(--accent-ink); padding: 0 .25em; }
+.hero-lede b {
+  font-style: normal;
+  font-family: var(--sans);
+  font-weight: 600;
+  background: none;
+  color: var(--ink);
+  padding: 0;
+  border-bottom: 2px solid var(--accent);
+}
 .hero-stats {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;
-  border: 1px solid var(--rule);
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
   background: var(--rule);
+  margin-top: 4px;
 }
 .hero-stats > div {
   background: var(--bg);
-  padding: 16px 14px;
+  padding: 14px 16px;
 }
 .hero-stats .n {
   font-family: var(--serif);
-  font-size: 44px;
+  font-size: 30px;
   line-height: 1;
   font-style: italic;
   letter-spacing: -.02em;
+  color: var(--ink);
 }
 .hero-stats .l {
   font-family: var(--mono);
   font-size: 10px;
   text-transform: uppercase;
   color: var(--ink-dim);
-  margin-top: 4px;
+  margin-top: 6px;
   letter-spacing: .06em;
+  line-height: 1.3;
+}
+@media (max-width: 720px) {
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* Primary CTA — filled, dominant */
 .hero-pipeline-cta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 24px;
-  padding: 10px 16px;
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--accent);
-  background: transparent;
-  color: inherit;
+  margin-top: 0;
+  padding: 12px 20px;
+  border: 2px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, transform 0.1s;
 }
 .hero-pipeline-cta:hover {
-  background: var(--rule);
+  background: var(--ink);
+  border-color: var(--ink);
+  transform: translateY(-1px);
 }
 .hero-pipeline-cta .arrow {
   font-family: var(--serif);
@@ -233,36 +253,41 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .hero-actions {
   display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 12px;
+  align-items: flex-start;
+}
+.hero-actions-secondary {
+  display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 24px;
+  gap: 18px;
   align-items: center;
 }
-.hero-actions .hero-pipeline-cta { margin-top: 0; }
+/* Secondary links — borderless ghost, thin row */
 .hero-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 14px;
-  border: 1px solid var(--rule);
+  gap: 4px;
+  padding: 0;
+  border: none;
   background: transparent;
   color: var(--ink-dim);
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-transform: none;
   text-decoration: none;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition: color 0.15s;
 }
 .hero-link:hover {
-  background: var(--rule);
-  color: var(--ink);
-  border-color: var(--rule-strong);
+  color: var(--accent);
+  background: transparent;
 }
 .hero-link .arrow {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 14px;
+  font-size: 13px;
   text-transform: none;
   color: var(--accent);
 }
@@ -808,18 +833,20 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   margin: 0;
 }
 .case-tags {
-  display: flex; flex-wrap: wrap; gap: 6px;
-  border-top: 1px dashed var(--rule-strong);
-  padding-top: 14px;
-}
-.case-tags span {
+  display: flex; flex-wrap: wrap; gap: 0;
+  border-top: 1px dashed var(--rule);
+  padding-top: 10px;
+  margin-top: auto;
   font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-dim);
-  padding: 3px 8px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 2px;
-  letter-spacing: .02em;
+  font-size: 10px;
+  color: var(--ink-faint);
+  letter-spacing: .04em;
+  text-transform: lowercase;
+}
+.case-tags span:not(:last-child)::after {
+  content: " · ";
+  margin: 0 4px;
+  color: var(--rule-strong);
 }
 .case-cta {
   font-family: var(--mono);
@@ -848,8 +875,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   background: var(--bg);
   padding: calc(32px * var(--density)) calc(28px * var(--density));
   display: grid;
+  grid-template-columns: 56px 1fr;
   grid-template-rows: auto auto 1fr auto;
-  gap: 18px;
+  column-gap: 18px;
+  row-gap: 14px;
   position: relative;
   transition: background .25s;
   cursor: default;
@@ -857,12 +886,21 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .service:hover { background: var(--bg-2); }
 .service-head {
   display: flex; align-items: baseline; gap: 12px;
+  grid-column: 2;
 }
+.service > h3, .service > .service-desc, .service > .service-proof, .service > .service-metric { grid-column: 2; }
 .service-num {
-  font-family: var(--mono);
-  font-size: 11px; letter-spacing: .08em;
+  grid-column: 1;
+  grid-row: 1 / 4;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -0.02em;
   color: var(--accent);
-  text-transform: uppercase;
+  text-transform: none;
+  align-self: start;
+  padding-top: 4px;
 }
 .service-tag {
   font-family: var(--mono);
@@ -1911,19 +1949,22 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="hero-sub">
     <p class="hero-lede">
-      <b>Learning Experience Designer</b> with 10+ years in EdTech — built end-to-end curricula at Yandex Practicum, TripleTen and BEAM Institute. I also build the AI tools that let a content team ship faster: 4C/ID pipelines, internal automations, an LMS shipped solo.
+      <b>Learning Experience Designer</b> with 10+ years in EdTech. End-to-end curricula at Yandex Practicum, TripleTen and BEAM Institute — plus the AI tooling that lets a content team ship faster: 4C/ID pipelines, internal automations, an LMS shipped solo.
     </p>
+    <div class="hero-actions">
+      <a class="hero-pipeline-cta" href="pipeline/engagement/">See the worked engagement <span class="arrow">→</span></a>
+      <div class="hero-actions-secondary">
+        <a class="hero-link" href="pipeline/">Course-design pipeline <span class="arrow">→</span></a>
+        <a class="hero-link" href="Mario_Becerra_CV.pdf" target="_blank" rel="noopener">CV (PDF) <span class="arrow">↓</span></a>
+        <a class="hero-link" href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
+        <a class="hero-link" href="mailto:mrbecerraduenias@gmail.com">Email</a>
+      </div>
+    </div>
     <div class="hero-stats">
       <div><div class="n">10+</div><div class="l">yrs in EdTech</div></div>
       <div><div class="n">50+</div><div class="l">courses designed</div></div>
       <div><div class="n">60–85%</div><div class="l">content time saved · AI pipelines</div></div>
       <div><div class="n">80+</div><div class="l">features in own LMS</div></div>
-    </div>
-    <div class="hero-actions">
-      <a class="hero-pipeline-cta" href="pipeline/">Course-design pipeline <span class="arrow">→</span></a>
-      <a class="hero-link" href="Mario_Becerra_CV.pdf" target="_blank" rel="noopener">CV (PDF) <span class="arrow">↓</span></a>
-      <a class="hero-link" href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
-      <a class="hero-link" href="mailto:mrbecerraduenias@gmail.com">Email</a>
     </div>
   </div>
 </section>
@@ -2021,8 +2062,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   <div class="services">
 
     <article class="service">
+      <span class="service-num">01</span>
       <div class="service-head">
-        <span class="service-num">— 01</span>
         <span class="service-tag">AI pipelines</span>
       </div>
       <h3>AI pipelines<br>for <em>content</em></h3>
@@ -2040,8 +2081,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     </article>
 
     <article class="service">
+      <span class="service-num">02</span>
       <div class="service-head">
-        <span class="service-num">— 02</span>
         <span class="service-tag">Interactive</span>
       </div>
       <h3>Simulators &amp;<br><em>hands-on</em> practice</h3>
@@ -2059,8 +2100,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     </article>
 
     <article class="service">
+      <span class="service-num">03</span>
       <div class="service-head">
-        <span class="service-num">— 03</span>
         <span class="service-tag">Internal tooling</span>
       </div>
       <h3>Tools for<br><em>instructional</em> teams</h3>
@@ -2078,8 +2119,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     </article>
 
     <article class="service">
+      <span class="service-num">04</span>
       <div class="service-head">
-        <span class="service-num">— 04</span>
         <span class="service-tag">Full-stack LMS</span>
       </div>
       <h3>LMS &amp;<br><em>infrastructure</em></h3>
@@ -2397,25 +2438,25 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         <li class="tl-row">
           <span class="tl-yr">2021 — 2023</span>
           <div class="tl-body">
-            <div class="co">Foxford</div>
-            <div class="role">Senior Instructional Designer</div>
-            <div class="note">Led a team of IDs. Automated a code evaluation system for Python courses, cutting manual grading effort by 40%.</div>
+            <div class="co">Senior Instructional Designer</div>
+            <div class="role">EdTech platform · Python + CS programs</div>
+            <div class="note">Led a team of IDs. Automated a code evaluation system for Python courses, cutting manual grading effort by 40 %.</div>
           </div>
         </li>
         <li class="tl-row">
           <span class="tl-yr">2019 — 2021</span>
           <div class="tl-body">
-            <div class="co">SIT Programming School</div>
-            <div class="role">LX Designer &amp; Team Lead</div>
+            <div class="co">LX Designer &amp; Team Lead</div>
+            <div class="role">Programming school · B2B + B2C</div>
             <div class="note">Built multi-course progression paths that raised student LTV. Led teams across B2B corporate training and B2C consumer courses.</div>
           </div>
         </li>
         <li class="tl-row">
           <span class="tl-yr">2016 — 2019</span>
           <div class="tl-body">
-            <div class="co">Earlier teaching</div>
-            <div class="role">Algorithmics · Lego Education · AEFE · RobolabKids</div>
-            <div class="note">Seven years of hands-on teaching CS, robotics, and programming to kids and teens across multiple schools in parallel — the foundation for everything that came after.</div>
+            <div class="co">Teacher &amp; curriculum designer</div>
+            <div class="role">CS · robotics · programming for kids and teens</div>
+            <div class="note">Seven years of hands-on teaching across multiple schools in parallel — the foundation for everything that came after.</div>
           </div>
         </li>
       </ul>
