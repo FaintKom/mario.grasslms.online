@@ -528,14 +528,15 @@ function stepSoloProblem(body) {
   const emma = state.prospects.find(p => p.archetype === "emma") ?? state.prospects[0];
 
   body.innerHTML = `
-    <p><strong>Live mini-OS.</strong> Lead: <strong>${emma.name}</strong>
-    (${emma.archetype_label}). She's warmed by your previous touch.</p>
-    <p>The <em>Dial</em> button in Outreach is <strong>disabled</strong>
-    until you open the <strong>Calendar app</strong>. That's the habit. It
-    enables the moment Calendar opens.</p>
-    <p>Then: dial → pick two slots → speak them → send the invite. Watch
-    the Salesforce <code>Next_Step_Booked__c</code> flag flip while the
-    call is still live.</p>
+    <p style="font-size:14px;">
+      <strong>Solo run.</strong> Lead: <strong>${emma.name}</strong>
+      (${emma.archetype_label}). Warmed by your previous touch.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Dial stays disabled until Calendar opens. Then: dial → speak two
+      slots → send invite. Watch Salesforce
+      <code>Next_Step_Booked__c</code> flip live.
+    </p>
     <p id="solo-status" class="retention-note" aria-live="polite">
       Status: Calendar closed · Dial disabled
     </p>
@@ -545,6 +546,20 @@ function stepSoloProblem(body) {
   api.os.openApp("outreach",      { highlightLeadId: emma.id, dialDisabled: true });
   api.os.openApp("phone-dialler");
   api.os.openApp("salesforce",    { accountId: emma.id });
+
+  // Task banner inside Outreach so the rep knows what to do without
+  // reading the side panel.
+  setTimeout(() => {
+    const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (outreachBody) {
+      mountTaskBanner(outreachBody, {
+        id: "m3-s6-solo",
+        label: `Run the solo close on ${emma.name} — Calendar first, then dial`,
+        hint: "Habit gate enforces this. Try it cold.",
+        state: "active",
+      });
+    }
+  }, 200);
 
   installHabitGate(emma);
 }
@@ -748,6 +763,7 @@ function showInterestLine(emma) {
 
   endBtn.addEventListener("click", () => {
     overlay.remove();
+    markTaskBannerDone("m3-s6-solo");
     state.api.eventLog.record("solo_problem_completed");
     runStep(state.step + 1);
   });
@@ -815,26 +831,72 @@ function openSalesforceModal(emma, endBtn, overlay) {
 // ===========================================================================
 
 function stepFeedback(body) {
+  // Narrative pane shrinks; manager DM thread renders in Slack.
   body.innerHTML = `
-    <p>Here's what your event log captured during the solo. This is what
-    your manager will see in Gong + Salesforce on Friday's call review.</p>
-    <ol class="event-timeline" aria-label="Event log timeline">
-      ${state.timeline.map(e => `
-        <li class="event-timeline__item" data-state="${e.state || 'ok'}">
-          <span class="event-timeline__dot" aria-hidden="true"></span>
-          <span>
-            <span class="event-timeline__label">${e.label}</span>
-            <span class="event-timeline__detail">${e.detail}</span>
-          </span>
-          <span class="event-timeline__ts">${e.ts}</span>
-        </li>
-      `).join("")}
-    </ol>
-    <blockquote class="peer-quote" style="margin-top:14px">
-      I have my calendar open in a second tab the entire time.
-      <cite>— M.G., Manchester</cite>
-    </blockquote>
+    <p style="font-size:14px;">
+      Your manager <strong>J.T.</strong> just pinged you in Slack with the
+      review of what your event log captured during the solo.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Read the thread, then mark as read to continue.
+    </p>
   `;
+
+  // Build a DM channel populated from the event log + manager voice.
+  const dmMessages = [
+    { author: "J.T. (pod lead)", initials: "JT", ts: "12:48",
+      body: "Watched your solo on " + (state.prospects.find(p => p.archetype === "emma")?.name || "Emma") + ". Couple of marks for you 👇" },
+    ...state.timeline.map(e => ({
+      author: "J.T. (pod lead)", initials: "JT", ts: e.ts,
+      body: `✅ ${e.label} — ${e.detail}`,
+    })),
+    { author: "J.T. (pod lead)", initials: "JT", ts: "12:52",
+      body: "Calendar was open before dial. Invite during the call. That's the habit — keep it." },
+    { author: "M.G. (peer)", initials: "MG", ts: "12:54",
+      body: "Nice. I have my calendar open in a second tab the entire time. Try it on the cold leads too — habit transfers." },
+  ];
+
+  state.api.os.openApp("slack", {
+    channel: {
+      channel_id: "dm-jt-podlead",
+      pinned_messages: [
+        { title: "3-move card", content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: "M3" },
+      ],
+      messages: dmMessages,
+    },
+  });
+
+  setTimeout(() => {
+    const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
+    if (!slackBody) return;
+    mountTaskBanner(slackBody, {
+      id: "m3-s7-read-dm",
+      label: "Read your manager's feedback in this DM",
+      hint: "Click 'Mark thread read' below when done",
+      state: "active",
+    });
+    // Inject a 'Mark thread read' CTA at the bottom of the messages area.
+    if (!slackBody.querySelector("[data-m3-s7-done]")) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+      bar.innerHTML = `
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">
+          J.T. waits for you to acknowledge before pinging the next move.
+        </span>
+        <button type="button"
+                data-m3-s7-done
+                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+          ✓ Mark thread read
+        </button>
+      `;
+      slackBody.appendChild(bar);
+      bar.querySelector("[data-m3-s7-done]").addEventListener("click", () => {
+        markTaskBannerDone("m3-s7-read-dm");
+        state.api.eventLog?.record?.("step7_feedback_read");
+        setTimeout(() => runStep(state.step + 1), 500);
+      });
+    }
+  }, 200);
 }
 
 // ===========================================================================
@@ -844,46 +906,92 @@ function stepFeedback(body) {
 function stepQuiz(body) {
   state.quizIndex = 0;
   state.quizScore = 0;
-  renderQuizItem(body);
+  // Narrative pane: short framing only.
+  body.innerHTML = `
+    <p style="font-size:14px;">
+      <strong>Quick check</strong> · 3 questions from J.T. in the same
+      Slack DM. Answer in the thread.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Two correct out of three advances the module.
+    </p>
+  `;
+  setTimeout(() => mountQuizInSlack(), 200);
 }
 
-function renderQuizItem(body) {
+function mountQuizInSlack() {
+  const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
+  if (!slackBody) {
+    // Re-open Slack if user closed it.
+    state.api.os.openApp("slack");
+    return setTimeout(mountQuizInSlack, 250);
+  }
+  mountTaskBanner(slackBody, {
+    id: "m3-s8-quiz",
+    label: "Answer the 3 quiz questions J.T. just posted",
+    hint: "Each click logs in cmi.interactions",
+    state: "active",
+  });
+
+  // Find or create a container for the quiz thread (appended to messages).
+  let thread = slackBody.querySelector("[data-m3-quiz-thread]");
+  if (thread) thread.remove();
+  thread = document.createElement("div");
+  thread.setAttribute("data-m3-quiz-thread", "");
+  thread.style.cssText = "margin:14px 0 0; padding:14px 16px; background:#fff8e0; border-left:3px solid var(--sun-500, #f5b800); border-radius:6px; font-family:var(--ftc-font-sans);";
+  thread.innerHTML = `
+    <div style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--ftc-ink-2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+      J.T. · 12:55 · quick check thread
+    </div>
+    <div data-quiz-host></div>
+  `;
+  // Find the slack messages region and append the thread.
+  const messages = slackBody.querySelector(".slack-msgs, .slack-messages, .slack-main") || slackBody;
+  messages.appendChild(thread);
+
+  renderQuizItemInSlack(thread.querySelector("[data-quiz-host]"));
+}
+
+function renderQuizItemInSlack(host) {
   const item = state.quizItems[state.quizIndex];
-  body.innerHTML = `
-    <div class="quiz">
-      <div class="quiz__progress">Question ${state.quizIndex + 1} of ${state.quizItems.length} · ${item.lo}</div>
-      <p class="quiz__stem">${item.stem}</p>
-      <div role="radiogroup" aria-label="Answer choices">
-        ${item.options.map((o, i) => `
-          <button type="button"
-                  class="completion-option"
-                  role="radio"
-                  aria-checked="false"
-                  data-idx="${i}">
-            <span class="opt-label">${o.label}</span>${o.text}
-          </button>
-        `).join("")}
-      </div>
-      <div class="completion-feedback" id="quiz-fb" hidden></div>
-      <div style="margin-top:12px;text-align:right">
-        <button type="button" class="btn btn--primary" id="quiz-next" disabled>
-          ${state.quizIndex === state.quizItems.length - 1 ? "Finish quiz" : "Next question"}
+  host.innerHTML = `
+    <div style="font-size:12px; color:var(--ftc-ink-2); margin-bottom:6px;">
+      Question ${state.quizIndex + 1} of ${state.quizItems.length} · ${item.lo}
+    </div>
+    <p style="font-size:14px; margin:0 0 10px; color:var(--ftc-ink);">${item.stem}</p>
+    <div role="radiogroup" aria-label="Answer choices" style="display:grid; gap:6px;">
+      ${item.options.map((o, i) => `
+        <button type="button"
+                class="tom-drawer__opt"
+                role="radio"
+                aria-checked="false"
+                data-idx="${i}">
+          <span class="tom-drawer__label">${o.label}</span>
+          <span class="tom-drawer__text">${o.text}</span>
         </button>
-      </div>
+      `).join("")}
+    </div>
+    <div class="tom-drawer__fb" id="m3-s8-fb" hidden></div>
+    <div style="margin-top:10px; text-align:right;">
+      <button type="button" id="m3-s8-next" disabled
+              style="background:var(--brand-green); color:#fff; padding:6px 14px; border:0; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; opacity:0.5;">
+        ${state.quizIndex === state.quizItems.length - 1 ? "Finish quiz" : "Next question"}
+      </button>
     </div>
   `;
 
-  const fb      = body.querySelector("#quiz-fb");
-  const nextBtn = body.querySelector("#quiz-next");
+  const fb      = host.querySelector("#m3-s8-fb");
+  const nextBtn = host.querySelector("#m3-s8-next");
 
-  body.querySelectorAll(".completion-option").forEach(btn => {
+  host.querySelectorAll(".tom-drawer__opt").forEach(btn => {
     btn.addEventListener("click", () => {
       const idx = Number(btn.dataset.idx);
       const opt = item.options[idx];
-      body.querySelectorAll(".completion-option").forEach(b => {
+      host.querySelectorAll(".tom-drawer__opt").forEach(b => {
         b.classList.remove("is-correct", "is-incorrect");
         b.setAttribute("aria-checked", "false");
         b.disabled = true;
+        b.style.cursor = "default";
       });
       btn.setAttribute("aria-checked", "true");
       btn.classList.add(opt.correct ? "is-correct" : "is-incorrect");
@@ -891,15 +999,18 @@ function renderQuizItem(body) {
       fb.textContent = opt.rationale;
       if (opt.correct) state.quizScore += 1;
       nextBtn.disabled = false;
+      nextBtn.style.opacity = "1";
     });
   });
 
   nextBtn.addEventListener("click", () => {
     if (state.quizIndex < state.quizItems.length - 1) {
       state.quizIndex += 1;
-      renderQuizItem(body);
+      renderQuizItemInSlack(host);
     } else {
-      runStep(state.step + 1);
+      markTaskBannerDone("m3-s8-quiz");
+      state.api.eventLog?.record?.("step8_quiz_completed", { score: state.quizScore });
+      setTimeout(() => runStep(state.step + 1), 500);
     }
   });
 }
@@ -910,22 +1021,68 @@ function renderQuizItem(body) {
 
 function stepTakeaway(body) {
   const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
+  // Narrative pane: short context only — pinned message lives in Slack.
   body.innerHTML = `
-    <blockquote class="takeaway">
-      Calendar in second tab. Two slots. One invite. Sent before you hang
-      up. "Follow up" is the failure mode — make it impossible by sending
-      live.
-      <cite>— M.G., Manchester pod</cite>
-    </blockquote>
-    <p class="retention-note">
-      📅 A 3-item retrieval drop is scheduled for <strong>+7 days</strong>
-      in your Sana inbox.
+    <p style="font-size:14px;">
+      <strong>Module complete.</strong> M.G. just pinned the takeaway in
+      your Slack channel so you'll see it every time you open the workspace.
     </p>
-    <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
-      Quiz score: <strong>${state.quizScore} / ${state.quizItems.length}</strong>
-      (${scorePct}%) · L1 pulse fires when you click Finish.
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Quiz: <strong>${state.quizScore} / ${state.quizItems.length}</strong>
+      (${scorePct}%). Click "Set +7d retrieval drop" in Slack to finish.
     </p>
   `;
+
+  setTimeout(() => {
+    const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
+    if (!slackBody) {
+      state.api.os.openApp("slack");
+      return setTimeout(() => stepTakeaway(body), 250);
+    }
+    // Remove the quiz thread.
+    slackBody.querySelector("[data-m3-quiz-thread]")?.remove();
+    mountTaskBanner(slackBody, {
+      id: "m3-s9-takeaway",
+      label: "Read M.G.'s pinned takeaway, then set the +7d retrieval drop",
+      hint: "One click. Module commits when the drop is scheduled.",
+      state: "active",
+    });
+
+    // Inject a pinned-message style card at the top of messages region.
+    if (!slackBody.querySelector("[data-m3-pinned]")) {
+      const pinned = document.createElement("div");
+      pinned.setAttribute("data-m3-pinned", "");
+      pinned.style.cssText = "margin:14px 0 0; padding:16px 18px; background:linear-gradient(180deg, var(--ftc-green-tint, #ecf9e7) 0%, #ffffff 100%); border:1px solid var(--brand-green); border-left:4px solid var(--brand-green); border-radius:8px; font-family:var(--ftc-font-sans); box-shadow:0 6px 16px -8px rgba(10,26,16,0.12);";
+      pinned.innerHTML = `
+        <div style="font-family:var(--ftc-font-mono); font-size:10px; color:var(--brand-green); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
+          📌 Pinned by M.G. (peer · Manchester pod)
+        </div>
+        <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
+          "Calendar in second tab. Two slots. One invite. Sent before you
+          hang up. 'Follow up' is the failure mode — make it impossible by
+          sending live."
+        </p>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
+          <span style="font-size:12.5px; color:var(--ftc-ink-2);">
+            📅 3-item retrieval drop · +7 days in your Sana inbox
+          </span>
+          <button type="button"
+                  data-m3-s9-finish
+                  style="background:var(--brand-green); color:#fff; padding:9px 16px; border:0; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
+            Set +7d retrieval drop &rarr;
+          </button>
+        </div>
+      `;
+      const messages = slackBody.querySelector(".slack-msgs, .slack-messages, .slack-main") || slackBody;
+      messages.appendChild(pinned);
+
+      pinned.querySelector("[data-m3-s9-finish]").addEventListener("click", () => {
+        markTaskBannerDone("m3-s9-takeaway");
+        state.api.eventLog?.record?.("step9_retrieval_drop_set");
+        finishModule();
+      });
+    }
+  }, 200);
 }
 
 function finishModule() {
