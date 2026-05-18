@@ -71,11 +71,14 @@ async function start() {
     renderFatal(err.message);
     return;
   }
-  state.api = bootModule({
+  bootModule({
     moduleId: "M3",
     title: "Module 3 · Calendar Close",
     appsToLaunch: [],   // we open apps explicitly inside each step
-    onReady() {
+    onReady(api) {
+      // bootModule fires onReady before its return, so assign api here —
+      // not from the return value (which would still be null at this point).
+      state.api = api;
       state.startedAt = Date.now();
       wireProgressTimer();
       wireHelpButton();
