@@ -80,7 +80,7 @@ function showWelcomeCard(onStart) {
   card.innerHTML = `
     <div class="welcome-card__panel">
       <span class="welcome-card__logo" aria-hidden="true">FTC</span>
-      <div class="welcome-card__kicker">Module 4 &middot; keystone defer</div>
+      <div class="welcome-card__kicker">Module 6 &middot; keystone defer</div>
       <h2 class="welcome-card__title">Regulatory Deflection</h2>
       <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
       <p class="welcome-card__lede">
