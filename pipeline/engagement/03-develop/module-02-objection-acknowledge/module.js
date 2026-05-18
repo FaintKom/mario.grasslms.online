@@ -1,533 +1,889 @@
 /**
- * Module 2 · Objection Acknowledge — Gagné timeline implementation.
+ * Module 2 · M2 Objection Acknowledge · runtime (in-app driven)
+ * ---------------------------------------------------------------------------
+ * Same architecture as M1/M3 — bootModule + task-banner + welcome/summary
+ * cards + 9-step Gagné timeline + window autoarrange. Content swapped for M2:
+ * restate the buyer's objection in their own words (≥2 token overlap) before
+ * any rebuttal.
  *
- * Storyboard: 02-design/module-storyboards/M2-objection-acknowledge.md
- * LOs: LO-M2.1 (classify ≤3s) · LO-M2.2 (restate, ≥2 buyer-word overlap) · LO-M2.3 (open follow-up).
- * Worked examples: GC-06 L.D.+Tom (Brex) · GC-06b M.G.+Maria (Visa).
- * Anti-pattern contrasts: GC-09 (mid argued) · GC-19 (bottom argued, P.B. §10.4).
- * Solo: random objection from objection-bank.json → restate_word_overlap event.
- *
- * Imports bootModule from ../scorm-shell/js/shell.js (per scorm-shell/README §3).
+ * Storyboard:  02-design/module-storyboards/M2-objection-acknowledge.md
+ * Outcomes:    LO-M2.1 (classify ≤3s) · LO-M2.2 (restate ≥2 token overlap) · LO-M2.3 (open follow-up)
+ * Voice:       peer-to-peer (brief §18.2)
  */
 
-import { bootModule } from "../scorm-shell/js/shell.js";
+import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
+import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 
-// ---------------------------------------------------------------------------
-// Data loading
-// ---------------------------------------------------------------------------
+function closeAppsByName(appIds) {
+  if (!state.api?.os?.listWindows) return;
+  const set = new Set(appIds);
+  for (const w of state.api.os.listWindows()) {
+    if (set.has(w.appId)) state.api.os.closeApp(w);
+  }
+}
+function keepOnly(appIds) {
+  if (!state.api?.os?.listWindows) return;
+  const keep = new Set(appIds);
+  for (const w of state.api.os.listWindows()) {
+    if (!keep.has(w.appId)) state.api.os.closeApp(w);
+  }
+}
 
-async function loadData() {
-  const [transcripts, prospects, bank, quiz] = await Promise.all([
-    fetch("./data/transcripts.json").then(r => r.json()),
-    fetch("./data/prospects.json").then(r => r.json()),
-    fetch("./data/objection-bank.json").then(r => r.json()),
-    fetch("./data/quiz.json").then(r => r.json()),
+const state = {
+  api: null,
+  step: 0,
+  startedAt: 0,
+  objectionRead: false,
+  restateOk: false,
+  completionAnswer: null,
+  quizIndex: 0,
+  quizScore: 0,
+  transcripts: [],
+  prospects: [],
+  quizItems: [],
+  timeline: [],
+};
+
+async function loadJson(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
+  return res.json();
+}
+async function loadAllData() {
+  const [transcripts, prospects, quizItems] = await Promise.all([
+    loadJson("./data/transcripts.json"),
+    loadJson("./data/prospects.json"),
+    loadJson("./data/quiz.json"),
   ]);
-  return { transcripts, prospects, bank, quiz };
+  state.transcripts = transcripts;
+  state.prospects   = prospects;
+  state.quizItems   = quizItems;
 }
 
-// ---------------------------------------------------------------------------
-// Tokenisation — used by restate_word_overlap scoring (LO-M2.2).
-// ---------------------------------------------------------------------------
-
-const STOPWORDS = new Set([
-  "the","a","an","of","to","in","on","for","and","or","but","we","you","i",
-  "is","are","was","were","be","been","am","do","does","did","it","this",
-  "that","those","these","my","our","your","their","his","her","its","with",
-  "at","by","from","as","not","no","so","if","then","than","up","down","out",
-  "have","has","had","get","got","just","very","already","use","using","used",
-  "like","about","really"
-]);
-
-function tokenise(s) {
-  return new Set(
-    (s ?? "")
-      .toLowerCase()
-      .replace(/[^\p{L}\p{N}\s']/gu, " ")
-      .split(/\s+/)
-      .filter(w => w && !STOPWORDS.has(w) && w.length > 2)
-  );
-}
-
-function wordOverlap(repText, buyerText) {
-  const r = tokenise(repText);
-  const b = tokenise(buyerText);
-  let overlap = 0;
-  for (const w of r) if (b.has(w)) overlap++;
-  return overlap;
-}
-
-const REBUTTAL_TOKENS = ["but","however","actually","cheaper","lower","better","wrong","superior"];
-function rebuttalTokens(s) {
-  const lc = (s ?? "").toLowerCase();
-  return REBUTTAL_TOKENS.filter(t => new RegExp(`\\b${t}\\b`).test(lc));
-}
-
-// ---------------------------------------------------------------------------
-// Stage controller — renders into #m2-stage.
-// ---------------------------------------------------------------------------
-
-class Stage {
-  constructor(root, api, data) {
-    this.root = root;
-    this.api = api;
-    this.data = data;
-    this.score = { completion: 0, solo: 0, quiz: 0 };
-    this.stages = ["trigger","outcome","recall","workedA","workedB","completion","solo","debrief","quiz","retention"];
-    this.cursor = 0;
-    this.t0 = performance.now();
+async function start() {
+  try { await loadAllData(); }
+  catch (err) {
+    console.error("[M2] Failed to load module data", err);
+    renderFatal(err.message);
+    return;
   }
-
-  render() {
-    const step = this.stages[this.cursor];
-    this.root.innerHTML = "";
-    this.root.appendChild(this._progressBar());
-    const body = document.createElement("div");
-    body.className = `m2-step m2-step--${step}`;
-    this.root.appendChild(body);
-    this[`stage_${step}`](body);
-    body.querySelector("h2, h3, button, [tabindex]")?.focus?.({ preventScroll: true });
-  }
-
-  next() {
-    this.cursor = Math.min(this.cursor + 1, this.stages.length - 1);
-    this.render();
-  }
-
-  _progressBar() {
-    const wrap = document.createElement("div");
-    wrap.className = "m2-progress";
-    wrap.setAttribute("aria-label", `Progress · step ${this.cursor + 1} of ${this.stages.length}`);
-    this.stages.forEach((_, i) => {
-      const cell = document.createElement("span");
-      cell.dataset.state = i < this.cursor ? "done" : i === this.cursor ? "active" : "pending";
-      wrap.appendChild(cell);
-    });
-    const pct = Math.round(((this.cursor) / (this.stages.length - 1)) * 100);
-    const progEl = document.getElementById("module-progress");
-    if (progEl) progEl.textContent = `${pct}%`;
-    return wrap;
-  }
-
-  // 0:00–0:30 · Gain attention · GC-09 failure trigger
-  stage_trigger(host) {
-    const gc09 = this.data.transcripts.find(t => t.id === "GC-09");
-    host.innerHTML = `
-      <span class="meta">Stage 1 of 10 · 0:00–0:30</span>
-      <h2 tabindex="-1">Listen first.</h2>
-      <div class="m2-trigger">
-        <span class="fail-tag">failure · ${gc09.id} · ended at ${gc09.ended_at}</span>
-        <div class="m2-transcript" aria-label="Failed call transcript">
-          ${gc09.lines.map(l => `
-            <div class="line">
-              <span class="ts">${l.ts}</span>
-              <div><span class="speaker">${l.speaker}:</span>${l.text}</div>
-            </div>`).join("")}
-        </div>
-        <p class="meta">Mid-band rep · call 3 of a tough day. Argued. Lost it at ${gc09.ended_at}.</p>
-      </div>
-      <div class="m2-actions">
-        <button type="button" class="btn" data-next>Show me the move</button>
-      </div>`;
-    host.querySelector("[data-next]").addEventListener("click", () => this.next());
-  }
-
-  // 0:30–1:00 · State outcome
-  stage_outcome(host) {
-    host.innerHTML = `
-      <span class="meta">Stage 2 of 10 · 0:30–1:00</span>
-      <h2 tabindex="-1">By the end of 10 minutes…</h2>
-      <p><strong>You restate every objection in the buyer's own words before you respond.</strong>
-         You'll be surprised what the buyer says next.</p>
-      <p class="meta">Brand-voice peer line, §18.2 — <em>"The argument feels natural. It's still wrong. Here's the move."</em></p>
-      <div class="m2-actions">
-        <button type="button" class="btn" data-next>Got it</button>
-      </div>`;
-    host.querySelector("[data-next]").addEventListener("click", () => this.next());
-  }
-
-  // 1:00–1:30 · Recall prior
-  stage_recall(host) {
-    host.innerHTML = `
-      <span class="meta">Stage 3 of 10 · 1:00–1:30</span>
-      <h2 tabindex="-1">Recall · Module 1.</h2>
-      <p>Last module you <strong>opened with a diagnostic</strong> and tolerated 5 seconds of silence.</p>
-      <p>This module assumes the buyer pushed back. <strong>One job: re-state, don't argue.</strong></p>
-      <div class="m2-actions">
-        <button type="button" class="btn" data-next>Next</button>
-      </div>`;
-    host.querySelector("[data-next]").addEventListener("click", () => this.next());
-  }
-
-  // 1:30–2:15 · Worked example A · GC-06 L.D. + Tom (Brex)
-  stage_workedA(host) {
-    const gc = this.data.transcripts.find(t => t.id === "GC-06");
-    this._renderWorked(host, gc, "Stage 4 of 10 · 1:30–2:15", "Worked example · L.D. handles Brex");
-    try { this.api.os?.openApp?.("gong"); } catch (_) {}
-  }
-
-  // 2:15–3:00 · Worked example B · M.G. + Maria (Visa)
-  stage_workedB(host) {
-    const gc = this.data.transcripts.find(t => t.id === "GC-06b");
-    this._renderWorked(host, gc, "Stage 5 of 10 · 2:15–3:00", "Worked example · M.G. handles Visa");
-  }
-
-  _renderWorked(host, gc, meta, title) {
-    host.innerHTML = `
-      <span class="meta">${meta}</span>
-      <h2 tabindex="-1">${title}</h2>
-      <p class="meta">${gc.id} · ${gc.rep} · prospect: ${gc.prospect_name} (${gc.prospect_archetype})</p>
-      <div class="m2-transcript" aria-label="Worked example transcript">
-        ${gc.lines.map(l => {
-          if (l.silence) return `<div class="silence" aria-label="silence ${l.silence} seconds">[silence ${l.silence}s]</div>`;
-          const m2 = l.m_move_tag === "M2";
-          return `
-            <div class="line ${m2 ? "line--m2" : ""}">
-              <span class="ts">${l.ts}</span>
-              <div>
-                <span class="speaker">${l.speaker}:</span>${l.text}
-                ${m2 ? `<span class="chip" aria-label="M2 acknowledge move">[M2 ${l.move_label || "acknowledge"}]</span>` : ""}
-              </div>
-            </div>`;
-        }).join("")}
-      </div>
-      <p>Notice: <strong>${gc.coach_phrase}</strong> — buyer's own words, no rebuttal.</p>
-      <div class="m2-actions">
-        <button type="button" class="btn" data-next>Your turn</button>
-      </div>`;
-    host.querySelector("[data-next]").addEventListener("click", () => this.next());
-  }
-
-  // 3:00–5:00 · Completion problem · Tom raises "We already use Brex"
-  stage_completion(host) {
-    const tom = this.data.prospects.find(p => p.lead_id === "L-002");
-    const options = [
-      { id: "A", text: "But our FX rates are lower than Brex — you'd save 0.5% per quarter.",
-        correct: false, reason: "Argues on fees · GC-19 P.B. anti-pattern (§10.4). Bottom-quartile failure mode." },
-      { id: "B", text: "Brex is great if you're US-based with USD spend. How does FX show up on your quarter?",
-        correct: true,  reason: "Restate in buyer's frame, then surface FX wedge (L.D. verbatim, GC-06)." },
-      { id: "C", text: "Have you compared the engineering APIs?",
-        correct: false, reason: "Deflects — doesn't acknowledge the objection (GC-12 pattern)." },
-      { id: "D", text: "Most Series-B teams switch off Brex within a year.",
-        correct: false, reason: "Dismisses the buyer's prior choice — bridge burned." },
-    ];
-
-    host.innerHTML = `
-      <span class="meta">Stage 6 of 10 · 3:00–5:00</span>
-      <h2 tabindex="-1">${tom.name} (${tom.industry}) · completion problem</h2>
-      <div class="m2-buyer-quote" role="figure" aria-label="Buyer objection">
-        <span class="speaker">${tom.name} · buyer</span>
-        "${tom.top_objection}"
-      </div>
-      <h3>Pick the response.</h3>
-      <div class="m2-options" role="radiogroup" aria-label="Response options">
-        ${options.map(o => `
-          <button type="button" class="m2-option" role="radio" aria-checked="false"
-                  data-opt="${o.id}" data-correct="${o.correct}">
-            <strong>${o.id}.</strong> ${o.text}
-          </button>`).join("")}
-      </div>
-      <div class="m2-feedback" hidden id="completion-fb"></div>
-      <div class="m2-actions">
-        <button type="button" class="btn" data-next disabled>Continue</button>
-      </div>`;
-
-    const fb = host.querySelector("#completion-fb");
-    const cont = host.querySelector("[data-next]");
-    host.querySelectorAll(".m2-option").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.dataset.opt;
-        const opt = options.find(o => o.id === id);
-        host.querySelectorAll(".m2-option").forEach(b => {
-          b.setAttribute("aria-checked", "false");
-          b.removeAttribute("data-state");
-          b.disabled = true;
-        });
-        btn.setAttribute("aria-checked", "true");
-        btn.dataset.state = opt.correct ? "correct" : "incorrect";
-        fb.hidden = false;
-        fb.textContent = (opt.correct ? "Correct. " : "Not quite. ") + opt.reason;
-        if (opt.correct) this.score.completion = 1;
-        if (opt.correct) {
-          this.api.eventLog.record("objection_restated",
-            { word_overlap: 4, family: "competitor_brex" });
-        } else {
-          this.api.eventLog.record("objection_argued",
-            { rebuttal_tokens: rebuttalTokens(opt.text), family: "competitor_brex" });
-        }
-        this.api.eventLog.record("completion_problem_completed");
-        cont.disabled = false;
-      });
-    });
-    cont.addEventListener("click", () => this.next());
-  }
-
-  // 5:00–8:00 · Solo problem · random objection-bank pick
-  stage_solo(host) {
-    const bank = this.data.bank.slice();
-    const pick = bank[Math.floor(Math.random() * bank.length)];
-    let chosenFamily = null;
-    const familyStart = performance.now();
-    const families = ["bank_visa","competitor_brex","accountant_friction","trust_fintech","comp_distraction"];
-
-    host.innerHTML = `
-      <span class="meta">Stage 7 of 10 · 5:00–8:00</span>
-      <h2 tabindex="-1">Solo · ${pick.prospect_name} (${pick.prospect_archetype})</h2>
-      <div class="m2-objection-bank">
-        <div class="m2-buyer-quote" role="figure" aria-label="Buyer objection">
-          <span class="speaker">${pick.prospect_name} · buyer</span>
-          "${pick.buyer_verbatim}"
-        </div>
-
-        <h3>1 · Classify (LO-M2.1 · ≤ 3 s)</h3>
-        <div class="m2-family-chooser" role="group" aria-label="Objection family">
-          ${families.map(f => `
-            <button type="button" data-family="${f}" aria-pressed="false">
-              ${f.replace(/_/g," ").toUpperCase()}
-            </button>`).join("")}
-        </div>
-
-        <h3>2 · Restate in the buyer's own words (LO-M2.2)</h3>
-        <label for="restate-in" class="meta">One sentence · re-use buyer nouns · no rebuttal</label>
-        <textarea id="restate-in" class="m2-restate-input"
-                  aria-describedby="overlap-meter"
-                  placeholder="So you've got the … sorted — what's actually broken about it?"></textarea>
-        <div id="overlap-meter" class="m2-overlap" aria-live="polite" data-band="weak">
-          Word overlap: 0 · target ≥ 2 buyer words · rebuttal tokens: 0
-        </div>
-
-        <h3>3 · Anti-pattern · what NOT to do</h3>
-        <button type="button" class="btn btn--ghost" data-antitoggle
-                aria-expanded="false" aria-controls="ap-clip">
-          Show the GC-19 P.B. contrast clip
-        </button>
-        <div id="ap-clip" class="m2-antipattern" hidden></div>
-      </div>
-      <div class="m2-actions">
-        <button type="button" class="btn" data-submit disabled>Submit restate</button>
-      </div>`;
-
-    host.querySelectorAll("[data-family]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        host.querySelectorAll("[data-family]").forEach(b => b.setAttribute("aria-pressed","false"));
-        btn.setAttribute("aria-pressed","true");
-        chosenFamily = btn.dataset.family;
-        const elapsed_ms = performance.now() - familyStart;
-        this.api.eventLog.record("objection_family_picked",
-          { family: chosenFamily, correct: chosenFamily === pick.family, elapsed_ms });
-        recompute();
-      });
-    });
-
-    const input = host.querySelector("#restate-in");
-    const meter = host.querySelector("#overlap-meter");
-    const submit = host.querySelector("[data-submit]");
-    const recompute = () => {
-      const overlap = wordOverlap(input.value, pick.buyer_verbatim);
-      const rebut = rebuttalTokens(input.value);
-      meter.dataset.band = overlap >= 2 && rebut.length === 0 ? "strong"
-                        : rebut.length > 0 ? "weak" : "neutral";
-      meter.textContent = `Word overlap: ${overlap} · target ≥ 2 · rebuttal tokens: ${rebut.length}` +
-                          (rebut.length ? ` (${rebut.join(", ")})` : "");
-      submit.disabled = !(input.value.trim().length >= 8 && chosenFamily);
-    };
-    input.addEventListener("input", recompute);
-
-    const apBtn = host.querySelector("[data-antitoggle]");
-    const apClip = host.querySelector("#ap-clip");
-    const gc19 = this.data.transcripts.find(t => t.id === "GC-19");
-    apBtn.addEventListener("click", () => {
-      const open = apBtn.getAttribute("aria-expanded") === "true";
-      apBtn.setAttribute("aria-expanded", String(!open));
-      apClip.hidden = open;
-      if (!open) {
-        apClip.innerHTML = `
-          <p class="meta">${gc19.id} · ${gc19.rep} · ended ${gc19.ended_at} · argued on fees.</p>
-          ${gc19.lines.map(l => `<div class="line"><span class="speaker">${l.speaker}:</span> ${l.text}</div>`).join("")}
-          <p class="meta">P.B., §10.4 — <em>"I argue. I know I'm not supposed to."</em></p>`;
-      }
-    });
-
-    submit.addEventListener("click", () => {
-      const overlap = wordOverlap(input.value, pick.buyer_verbatim);
-      const rebut = rebuttalTokens(input.value);
-      this.api.eventLog.record("restate_word_overlap",
-        { overlap, rebuttal_tokens: rebut, family: pick.family, prospect: pick.prospect_name });
-      if (overlap >= 2 && rebut.length === 0) {
-        this.api.eventLog.record("objection_restated", { word_overlap: overlap, family: pick.family });
-        this.score.solo = 1;
-      } else {
-        this.api.eventLog.record("objection_argued", { rebuttal_tokens: rebut, family: pick.family });
-      }
-      this.api.eventLog.record("solo_problem_completed");
-      this._renderSoloFeedback(host, pick, overlap, rebut);
-    });
-  }
-
-  _renderSoloFeedback(host, pick, overlap, rebut) {
-    const fb = document.createElement("div");
-    fb.className = "m2-feedback";
-    const pass = overlap >= 2 && rebut.length === 0;
-    fb.innerHTML = `
-      <strong>${pass ? "Anchor ≥ 4 on M2 rubric." : "Anchor ≤ 3 — try the move again next call."}</strong>
-      Buyer-word overlap: <code>${overlap}</code>. Rebuttal tokens: <code>${rebut.length}</code>.<br>
-      Ideal phrases that would have echoed: <em>${pick.ideal_phrases.join(" / ")}</em>.`;
-    host.appendChild(fb);
-    const actions = host.querySelector(".m2-actions");
-    actions.innerHTML = "";
-    const btn = document.createElement("button");
-    btn.className = "btn"; btn.textContent = "Continue";
-    btn.addEventListener("click", () => this.next());
-    actions.appendChild(btn);
-  }
-
-  // 8:00–9:00 · Feedback · self-score against M2 rubric
-  stage_debrief(host) {
-    host.innerHTML = `
-      <span class="meta">Stage 8 of 10 · 8:00–9:00</span>
-      <h2 tabindex="-1">Self-score · M2 rubric row</h2>
-      <p class="meta">L3 rubric row M2. Score yourself 1–5.</p>
-      <fieldset class="m2-quiz-item">
-        <legend>How did your restate land?</legend>
-        ${[1,2,3,4,5].map(n => `
-          <label style="display:block;margin:6px 0;">
-            <input type="radio" name="self" value="${n}"> ${n} —
-            ${n === 5 ? "Buyer revealed the actual broken thing."
-            : n === 4 ? "Restate used buyer words; follow-up open."
-            : n === 3 ? "Restate OK but follow-up closed."
-            : n === 2 ? "Half-restate, half-rebut."
-            : "Argued."}
-          </label>`).join("")}
-      </fieldset>
-      <p class="m2-feedback">
-        From P.B., §10.4 — the rep you just <strong>avoided becoming</strong>:
-        <em>"I argue. I know I'm not supposed to. I just don't have anything better loaded."</em>
-        You now have the move loaded.
-      </p>
-      <div class="m2-actions">
-        <button type="button" class="btn" data-next>To the quiz</button>
-      </div>`;
-    host.querySelector("[data-next]").addEventListener("click", () => this.next());
-  }
-
-  // 9:00–9:30 · 3-item L2 quiz
-  stage_quiz(host) {
-    const items = this.data.quiz;
-    const picks = {};
-    host.innerHTML = `
-      <span class="meta">Stage 9 of 10 · 9:00–9:30</span>
-      <h2 tabindex="-1">Quiz · 3 items</h2>
-      <div id="quiz-items"></div>
-      <div class="m2-actions">
-        <button type="button" class="btn" data-submitq disabled>Submit</button>
-      </div>
-      <div class="m2-feedback" id="quiz-fb" hidden></div>`;
-
-    const qHost = host.querySelector("#quiz-items");
-    items.forEach((it, idx) => {
-      const fs = document.createElement("fieldset");
-      fs.className = "m2-quiz-item";
-      fs.innerHTML = `
-        <legend>${idx + 1}. ${it.stem}</legend>
-        <p class="meta">Evidence: ${it.lo}</p>
-        ${it.options.map(o => `
-          <label style="display:block;margin:6px 0;">
-            <input type="radio" name="q-${it.id}" value="${o.id}"> ${o.id}. ${o.text}
-          </label>`).join("")}`;
-      qHost.appendChild(fs);
-    });
-
-    const submitBtn = host.querySelector("[data-submitq]");
-    host.addEventListener("change", () => {
-      const ok = items.every(it => host.querySelector(`input[name="q-${it.id}"]:checked`));
-      submitBtn.disabled = !ok;
-    });
-
-    submitBtn.addEventListener("click", () => {
-      let correct = 0;
-      const lines = [];
-      items.forEach(it => {
-        const chosen = host.querySelector(`input[name="q-${it.id}"]:checked`)?.value;
-        picks[it.id] = chosen;
-        const right = chosen === it.correct;
-        if (right) correct++;
-        lines.push(`Q${it.id}: ${right ? "correct" : `picked ${chosen}, was ${it.correct} — ${it.feedback}`}`);
-      });
-      const pct = Math.round((correct / items.length) * 100);
-      this.score.quiz = pct;
-      const fb = host.querySelector("#quiz-fb");
-      fb.hidden = false;
-      fb.innerHTML = `<strong>${correct}/${items.length} · ${pct}%</strong><br>${lines.join("<br>")}`;
-      this.api.eventLog.record("quiz_completed", { score: pct, picks });
-      submitBtn.disabled = true;
-      const cont = document.createElement("button");
-      cont.className = "btn"; cont.textContent = "Continue"; cont.style.marginTop = "10px";
-      cont.addEventListener("click", () => this.next());
-      host.querySelector(".m2-actions").appendChild(cont);
-    });
-  }
-
-  // 9:30–10:00 · Enhance retention/transfer
-  stage_retention(host) {
-    const elapsed = Math.round((performance.now() - this.t0) / 1000);
-    const score = Math.round(
-      (this.score.completion * 30) + (this.score.solo * 30) + (this.score.quiz * 0.40)
-    );
-    host.innerHTML = `
-      <span class="meta">Stage 10 of 10 · 9:30–10:00</span>
-      <h2 tabindex="-1">Key takeaway</h2>
-      <blockquote style="border-left:3px solid var(--ftc-green-primary,#00b67a);padding:10px 14px;background:var(--ftc-green-tint,#e6f7f0);border-radius:6px;margin:0;">
-        "Restate, then wait. The buyer tells you what's actually broken — that's where the pitch begins."
-        <footer style="margin-top:6px;font-size:12px;color:var(--ftc-ink-2,#475467);">— M.G., Manchester pod (§10.1)</footer>
-      </blockquote>
-      <p class="meta">+7-day spaced mini-quiz auto-scheduled · L1 pulse fired · time on module: ${Math.floor(elapsed/60)}m ${elapsed%60}s.</p>
-      <p>Score: <strong>${score}/100</strong> (completion ${this.score.completion*30} · solo ${this.score.solo*30} · quiz ${Math.round(this.score.quiz*0.40)}).</p>
-      <div class="m2-actions">
-        <button type="button" class="btn" data-finish>Mark module complete</button>
-      </div>`;
-    host.querySelector("[data-finish]").addEventListener("click", () => {
-      this.api.complete(score);
-      host.innerHTML = `<h2>Module complete.</h2><p>SCORM status: completed. Score: ${score}.</p>`;
-    });
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Boot
-// ---------------------------------------------------------------------------
-
-(async function main() {
-  const data = await loadData();
-  const api = bootModule({
+  bootModule({
     moduleId: "M2",
     title: "Module 2 · Objection Acknowledge",
-    appsToLaunch: [
-      { id: "gong",          options: {} },
-      { id: "phone-dialler", options: {} },
-      { id: "slack",         options: {} },
-    ],
-    onReady({ coachMarks }) {
-      coachMarks?.show?.({
-        id: "m2-restate-hint",
-        anchor: "#m2-stage",
-        text: "Restate, then wait. The buyer tells you what's broken.",
-      });
+    appsToLaunch: [],
+    onReady(api) {
+      state.api = api;
+      state.startedAt = Date.now();
+      wireProgressTimer();
+      wireHelpButton();
+      wireNarrativeButtons();
+      showWelcomeCard(() => runStep(0));
     },
-    onComplete() { /* shell handles persistence */ },
   });
+}
+start();
 
-  const root = document.getElementById("m2-stage");
-  const stage = new Stage(root, api, data);
-  stage.render();
+const STEPS = [
+  { title: "Buyer pushed back. Rep argued. Buyer hung up.",             handler: stepGainAttention },
+  { title: "By the end · restate before you respond, then wait",        handler: stepStateOutcome },
+  { title: "M1 opens it. M2 saves it. M3 books it.",                    handler: stepRecallPrior },
+  { title: "Watch · M.G. acknowledges Tom's FX objection",              handler: stepWorkedExample },
+  { title: "Your turn · pick the acknowledge for Sven",                 handler: stepCompletionProblem },
+  { title: "Solo · acknowledge Tom's 'We use Brex' before you pitch",   handler: stepSoloProblem },
+  { title: "Your event log · what just happened",                       handler: stepFeedback },
+  { title: "Quick check · 3 questions",                                 handler: stepQuiz },
+  { title: "Key takeaway + your next retrieval drop",                   handler: stepTakeaway },
+];
 
-  document.addEventListener("keydown", (e) => {
-    if (e.altKey && e.key === "ArrowRight") {
-      const nx = root.querySelector("[data-next]");
-      if (nx && !nx.disabled) nx.click();
+function runStep(i) {
+  state.step = i;
+  document.getElementById("gagne-step").textContent      = `${i + 1} of ${STEPS.length}`;
+  document.getElementById("narrative-title").textContent = STEPS[i].title;
+  updateProgressBar(i + 1);
+  const body = document.getElementById("narrative-body");
+  body.innerHTML = "";
+  document.getElementById("narrative-back").hidden = i === 0;
+  const next = document.getElementById("narrative-next");
+  next.textContent = i === STEPS.length - 1 ? "Finish module" : "Continue";
+  next.disabled = false;
+  next.setAttribute("aria-disabled", "false");
+  STEPS[i].handler(body);
+}
+
+function showWelcomeCard(onStart) {
+  const overlay = document.getElementById("narrative-overlay");
+  if (overlay) overlay.style.visibility = "hidden";
+  const card = document.createElement("div");
+  card.className = "welcome-card";
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-modal", "true");
+  card.setAttribute("aria-labelledby", "welcome-title");
+  card.innerHTML = `
+    <div class="welcome-card__panel">
+      <span class="welcome-card__logo" aria-hidden="true">FTC</span>
+      <div class="welcome-card__kicker">Module 2 &middot; keystone save</div>
+      <h2 class="welcome-card__title" id="welcome-title">Objection Acknowledge</h2>
+      <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
+      <p class="welcome-card__lede">
+        When the buyer pushes back, restate the objection in their own words
+        before you respond. Two-token overlap minimum. Then wait — the open
+        follow-up question writes itself.
+      </p>
+      <button type="button" class="welcome-card__start" data-action="start">
+        Start module &rarr;
+      </button>
+    </div>
+  `;
+  document.body.appendChild(card);
+  const btn = card.querySelector("[data-action='start']");
+  btn?.focus({ preventScroll: true });
+  btn?.addEventListener("click", () => {
+    card.classList.add("welcome-card--out");
+    setTimeout(() => {
+      card.remove();
+      if (overlay) overlay.style.visibility = "";
+      onStart?.();
+    }, 220);
+  });
+}
+
+function updateProgressBar(currentStep) {
+  const bar = document.getElementById("step-progress");
+  if (!bar) return;
+  bar.setAttribute("aria-valuenow", String(currentStep));
+  bar.querySelectorAll(".step-progress__seg").forEach(seg => {
+    const n = Number(seg.dataset.step);
+    seg.dataset.state = n < currentStep ? "done" : n === currentStep ? "current" : "pending";
+  });
+}
+
+function wireNarrativeButtons() {
+  document.getElementById("narrative-next").addEventListener("click", () => {
+    if (state.step >= STEPS.length - 1) return finishModule();
+    runStep(state.step + 1);
+  });
+  document.getElementById("narrative-back").addEventListener("click", () => {
+    if (state.step > 0) runStep(state.step - 1);
+  });
+  document.getElementById("narrative-redo")?.addEventListener("click", () => runStep(state.step));
+  document.getElementById("narrative-skip")?.addEventListener("click", () => {
+    if (state.step >= STEPS.length - 1) return finishModule();
+    runStep(state.step + 1);
+  });
+}
+
+function wireHelpButton() {
+  document.getElementById("help-button").addEventListener("click", () => {
+    const highlight = state.step === 2 ? "pre-training" : "M2";
+    state.api.os.openApp("slack", { highlightModule: highlight });
+  });
+}
+
+function wireProgressTimer() {
+  const el = document.getElementById("module-progress");
+  const tick = () => {
+    const ms = Date.now() - state.startedAt;
+    const m = Math.floor(ms / 60000);
+    const s = Math.floor((ms % 60000) / 1000).toString().padStart(2, "0");
+    el.textContent = `${m}:${s} / 10:00`;
+  };
+  tick(); setInterval(tick, 1000);
+}
+
+// --- Step 1 -----------------------------------------------------------------
+
+function stepGainAttention(body) {
+  body.innerHTML = `
+    <blockquote class="peer-quote">
+      Buyer: "Too expensive." Rep: "Let me explain the value." Buyer: "Bye."
+      <cite>— Gong sample · GC-11, 14 sec call</cite>
+    </blockquote>
+    <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
+      Bottom-quartile reps argue with objections. Top reps restate them. The
+      buyer needs to hear you've actually listened before any rebuttal lands.
+    </p>
+  `;
+  state.api.os.openApp("outreach", { highlightLeadId: "L-002" });
+  setTimeout(() => decorateOutreachForStep1(), 140);
+}
+
+function decorateOutreachForStep1() {
+  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!outreachBody) return;
+  mountTaskBanner(outreachBody, {
+    id: "m2-s1-pick-tom",
+    label: "Click Tom (Series-B SaaS) — his objection lives in step 4",
+    hint: "We'll set up the Gong worked example next",
+    state: "active",
+  });
+  let tries = 0;
+  const tick = () => {
+    const tomRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /Tom/i.test(r.textContent || ""));
+    if (!tomRow) {
+      if (++tries < 20) return setTimeout(tick, 100);
+      return;
+    }
+    if (tomRow.dataset.m2Done === "true") return;
+    tomRow.classList.add("is-warm-highlight");
+    tomRow.dataset.m2Done = "true";
+    tomRow.addEventListener("click", e => {
+      if (e.target.closest('[data-action="dial"]')) return;
+      if (state.step !== 0) return;
+      markTaskBannerDone("m2-s1-pick-tom");
+      state.api.eventLog?.record?.("step1_picked_tom");
+      setTimeout(() => runStep(1), 450);
+    });
+  };
+  tick();
+}
+
+// --- Step 2 -----------------------------------------------------------------
+
+function stepStateOutcome(body) {
+  body.innerHTML = `
+    <p style="font-size:14px;">By the end of these 10 min:</p>
+    <ul style="font-size:13.5px;margin:6px 0 10px 18px;">
+      <li><strong>Restate</strong> the buyer's objection in their own words
+          (≥2 token overlap) before any rebuttal.</li>
+      <li><strong>Then wait</strong> — the open follow-up writes itself.</li>
+    </ul>
+    <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
+      Next: confirm you know Tom's top objection.
+    </p>
+  `;
+  setTimeout(() => {
+    const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (!outreachBody) return;
+    mountTaskBanner(outreachBody, {
+      id: "m2-s2-confirm",
+      label: "Confirm: Tom's top objection is 'We already use Brex.'",
+      hint: "Click the chip below to acknowledge",
+      state: "active",
+    });
+    if (!outreachBody.querySelector("[data-m2-s2-done]")) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+      bar.innerHTML = `
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">
+          Top objection: <em>"We already use Brex."</em> (per CRM · Tom's notes)
+        </span>
+        <button type="button" data-m2-s2-done
+                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+          ✓ Got it
+        </button>
+      `;
+      outreachBody.appendChild(bar);
+      bar.querySelector("[data-m2-s2-done]").addEventListener("click", () => {
+        if (state.step !== 1) return;
+        state.objectionRead = true;
+        markTaskBannerDone("m2-s2-confirm");
+        state.api.eventLog?.record?.("step2_objection_confirmed");
+        setTimeout(() => runStep(2), 450);
+      });
+    }
+  }, 200);
+}
+
+// --- Step 3 -----------------------------------------------------------------
+
+function stepRecallPrior(body) {
+  body.innerHTML = `
+    <p style="font-size:14px;">Quick recall — three keystone moves:</p>
+    <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
+      <li><strong>M1 · Diagnostic.</strong> One sharp question off the profile.</li>
+      <li><strong>M2 · Acknowledge.</strong> ← <em>this module.</em></li>
+      <li><strong>M3 · Close.</strong> Two slots, one invite, during the call.</li>
+    </ol>
+    <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
+      Next: watch M.G.'s worked example in Gong.
+    </p>
+  `;
+  setTimeout(() => {
+    const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (outreachBody) {
+      mountTaskBanner(outreachBody, {
+        id: "m2-s3-open-gong",
+        label: "Open Gong to watch M.G. acknowledge Tom's objection",
+        hint: "Use the button below or the taskbar",
+        state: "active",
+      });
+      if (!outreachBody.querySelector("[data-m2-s3-open-gong]")) {
+        const bar = document.createElement("div");
+        bar.style.cssText = "margin-top:10px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+        bar.innerHTML = `
+          <span style="font-size:12.5px;color:var(--ftc-ink-2);">
+            Watch the M2 chip light up when M.G. restates.
+          </span>
+          <button type="button" data-m2-s3-open-gong
+                  style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+            🎙 Open Gong
+          </button>
+        `;
+        outreachBody.appendChild(bar);
+        bar.querySelector("[data-m2-s3-open-gong]").addEventListener("click", () => {
+          state.api.os.openApp("gong", {
+            transcripts: state.transcripts,
+            activeTranscriptId: state.transcripts[0]?.id,
+          });
+        });
+      }
+    }
+    const onAppOpened = (ev) => {
+      if (ev.detail?.appId !== "gong") return;
+      if (state.step !== 2) return;
+      state.api.eventBus.removeEventListener("app:opened", onAppOpened);
+      markTaskBannerDone("m2-s3-open-gong");
+      state.api.eventLog?.record?.("step3_gong_opened");
+      setTimeout(() => runStep(3), 500);
+    };
+    state.api.eventBus.addEventListener("app:opened", onAppOpened);
+  }, 140);
+}
+
+// --- Step 4 -----------------------------------------------------------------
+
+function stepWorkedExample(body) {
+  body.innerHTML = `
+    <p style="font-size:14px;">
+      Watch <strong>M.G.</strong> handle <strong>Tom's "We use Brex"</strong>
+      objection. Note the restate before any rebuttal.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Find the <strong>[M2]</strong> chip in the transcript. Click it to mark
+      this watched.
+    </p>
+  `;
+  setTimeout(() => {
+    const gongBody = document.querySelector(".os-window.app--gong .os-window-body");
+    if (!gongBody) return;
+    mountTaskBanner(gongBody, {
+      id: "m2-s4-watch",
+      label: "Watch M.G.'s restate — find the M2 [Acknowledge] chip",
+      hint: "Click any M2 chip OR 'Watched it' below",
+      state: "active",
+    });
+    if (!gongBody.querySelector("[data-m2-s4-done]")) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+      bar.innerHTML = `
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">
+          M.G. uses 'Brex' + 'speed' — same tokens Tom used. Then asks.
+        </span>
+        <button type="button" data-m2-s4-done
+                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+          ✓ Watched it
+        </button>
+      `;
+      gongBody.appendChild(bar);
+      const complete = () => {
+        if (state.step !== 3) return;
+        markTaskBannerDone("m2-s4-watch");
+        state.api.eventLog?.record?.("step4_worked_example_completed");
+        state.timeline.push({
+          label: "Watched M.G.'s restate",
+          detail: "Brex objection · ≥2 token overlap before rebuttal",
+          ts: timestamp(),
+        });
+        setTimeout(() => runStep(4), 450);
+      };
+      bar.querySelector("[data-m2-s4-done]").addEventListener("click", complete);
+      gongBody.addEventListener("click", e => {
+        if (e.target.closest?.('.m-chip[data-move="M2"]')) complete();
+      });
+    }
+  }, 200);
+}
+
+// --- Step 5 -----------------------------------------------------------------
+
+function stepCompletionProblem(body) {
+  keepOnly(["outreach"]);
+  body.innerHTML = `
+    <p style="font-size:14px;">
+      <strong>Sven</strong> (DE industrial wholesale · 64 FTE) just said:
+      <em>"Our accountant won't deal with another tool."</em>
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Pick your acknowledge in the Outreach drawer.
+    </p>
+  `;
+  const options = [
+    { label: "A", result: "anti",
+      text: `"FinTechCard integrates with most accounting platforms — it's actually less work for them."`,
+      rationale: "Rebuttal without restate. You skipped the listening step." },
+    { label: "B", result: "correct",
+      text: `"So your accountant pushes back on new tools — what's the friction usually look like for her?"`,
+      rationale: "Yes. Token overlap ('accountant', 'tool') + open follow-up." },
+    { label: "C", result: "partial",
+      text: `"That's fair, accountants are busy. What can I do to help?"`,
+      rationale: "Soft restate but no specifics. Open question is too generic." },
+    { label: "D", result: "anti",
+      text: `"Most accountants change their mind once they see the demo."`,
+      rationale: "Pre-empts the accountant. Top reps never argue against the absent stakeholder." },
+  ];
+  setTimeout(() => mountSvenDrawer(options), 160);
+}
+
+function mountSvenDrawer(options) {
+  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!outreachBody) return;
+  mountTaskBanner(outreachBody, {
+    id: "m2-s5-pick-ack",
+    label: "Pick Sven's acknowledge — drawer just opened under his row",
+    hint: "Wrong picks reveal why + flash the correct option",
+    state: "active",
+  });
+  const svenRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /Sven|Emma|Lukas/i.test(r.textContent || "")) || outreachBody.querySelector(".lead-row");
+  if (!svenRow) return;
+  svenRow.classList.add("is-warm-highlight");
+  outreachBody.querySelector("[data-m2-s5-drawer]")?.remove();
+  const drawer = document.createElement("div");
+  drawer.setAttribute("data-m2-s5-drawer", "");
+  drawer.className = "tom-drawer";
+  drawer.innerHTML = `
+    <header class="tom-drawer__head">
+      <strong>Sven · live call · 01:14</strong>
+      <span class="tom-drawer__cue">Pick your acknowledge</span>
+    </header>
+    <p class="tom-drawer__stem">
+      <em>"Our accountant won't deal with another tool."</em>
+    </p>
+    <div class="tom-drawer__opts" role="radiogroup" aria-label="Pick the acknowledge">
+      ${options.map((o, i) => `
+        <button type="button" class="tom-drawer__opt" role="radio"
+                aria-checked="false" data-result="${o.result}" data-idx="${i}">
+          <span class="tom-drawer__label">${o.label}</span>
+          <span class="tom-drawer__text">${o.text}</span>
+        </button>`).join("")}
+    </div>
+    <div class="tom-drawer__fb" id="m2-s5-fb" hidden></div>
+  `;
+  svenRow.insertAdjacentElement("afterend", drawer);
+  const fb = drawer.querySelector("#m2-s5-fb");
+  drawer.querySelectorAll(".tom-drawer__opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.dataset.idx);
+      const opt = options[idx];
+      drawer.querySelectorAll(".tom-drawer__opt").forEach(b => {
+        b.classList.remove("is-correct", "is-incorrect");
+        b.setAttribute("aria-checked", "false");
+      });
+      btn.setAttribute("aria-checked", "true");
+      btn.classList.add(opt.result === "correct" ? "is-correct" : "is-incorrect");
+      if (opt.result !== "correct") {
+        drawer.querySelector('.tom-drawer__opt[data-result="correct"]')?.classList.add("is-reveal");
+      }
+      fb.hidden = false;
+      fb.textContent = opt.rationale;
+      state.completionAnswer = opt.result;
+      if (opt.result === "correct") {
+        markTaskBannerDone("m2-s5-pick-ack");
+        state.api.eventLog?.record?.("completion_problem_completed");
+        state.timeline.push({
+          label: "Picked the correct acknowledge for Sven",
+          detail: "Option B · token overlap + open follow-up",
+          ts: timestamp(),
+        });
+        setTimeout(() => runStep(5), 700);
+      }
+    });
+  });
+}
+
+// --- Step 6 -----------------------------------------------------------------
+
+function stepSoloProblem(body) {
+  const tom = state.prospects.find(p => /tom/i.test(p.name)) ?? state.prospects[0];
+  body.innerHTML = `
+    <p style="font-size:14px;">
+      <strong>Solo.</strong> ${tom.name} just hit you with:
+      <em>"${tom.top_objection ?? "We already use Brex."}"</em>
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Type your restate. Must include ≥2 tokens from the objection.
+    </p>
+  `;
+  setTimeout(() => decorateSoloFlow(tom), 200);
+}
+
+function decorateSoloFlow(tom) {
+  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!outreachBody) return;
+  mountTaskBanner(outreachBody, {
+    id: "m2-s6-solo",
+    label: `Restate ${tom.name}'s objection (≥2 token overlap) before any rebuttal`,
+    hint: "Then wait — the open follow-up writes itself",
+    state: "active",
+  });
+  if (outreachBody.querySelector("[data-m2-s6-stage]")) return;
+  const stageWrap = document.createElement("div");
+  stageWrap.setAttribute("data-m2-s6-stage", "");
+  stageWrap.style.cssText = "margin-top:14px; padding:14px; background:#fff; border:1px solid var(--ftc-border); border-radius:8px;";
+  const objection = tom.top_objection ?? "We already use Brex.";
+  stageWrap.innerHTML = `
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px; padding:10px 12px; background:#fde7e3; border-left:3px solid var(--coral-700, #c33d22); border-radius:6px;">
+      <span style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--coral-700, #c33d22); text-transform:uppercase; letter-spacing:0.06em;">Objection</span>
+      <span style="font-size:13px; color:var(--ftc-ink);">"${escapeHtml(objection)}"</span>
+    </div>
+    <label style="display:block; font-size:12.5px; color:var(--ftc-ink-2); margin-bottom:4px;">
+      Your restate (use the buyer's words):
+    </label>
+    <textarea data-m2-restate rows="2"
+      placeholder="e.g. So you're already on Brex and switching feels like risk — what tipped you toward them?"
+      style="width:100%; padding:8px; border:1px solid var(--ftc-border); border-radius:4px; font-family:var(--ftc-font-sans); font-size:13px; resize:vertical;"></textarea>
+    <div style="display:flex; gap:8px; margin-top:10px; align-items:center;">
+      <button type="button" data-m2-send
+              style="background:#ccc; color:#666; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:not-allowed;" disabled>
+        Send restate &amp; wait
+      </button>
+      <span data-m2-status style="font-size:12px; color:var(--ftc-ink-2);">
+        Need ≥2 tokens that overlap with the objection.
+      </span>
+    </div>
+  `;
+  outreachBody.appendChild(stageWrap);
+
+  const ta = stageWrap.querySelector("[data-m2-restate]");
+  const send = stageWrap.querySelector("[data-m2-send]");
+  const status = stageWrap.querySelector("[data-m2-status]");
+  const objTokens = objection.toLowerCase().split(/\W+/).filter(t => t.length >= 3);
+
+  ta.addEventListener("input", () => {
+    const repTokens = new Set(ta.value.toLowerCase().split(/\W+/).filter(t => t.length >= 3));
+    const overlap = objTokens.filter(t => repTokens.has(t)).length;
+    const ok = overlap >= 2 && ta.value.trim().length >= 20;
+    send.disabled = !ok;
+    send.style.background = ok ? "var(--brand-green)" : "#ccc";
+    send.style.color = ok ? "#fff" : "#666";
+    send.style.cursor = ok ? "pointer" : "not-allowed";
+    status.textContent = ok
+      ? `Good — ${overlap} token overlap. Send when ready.`
+      : `Token overlap so far: ${overlap}. Need ≥2 from the objection.`;
+  });
+  send.addEventListener("click", () => {
+    if (send.disabled) return;
+    state.restateOk = true;
+    state.timeline.push({
+      label: `Restated ${tom.name}'s objection · token overlap`,
+      detail: ta.value.trim().slice(0, 80),
+      ts: timestamp(),
+    });
+    markTaskBannerDone("m2-s6-solo");
+    state.api.eventLog?.record?.("solo_problem_completed");
+    setTimeout(() => runStep(6), 600);
+  });
+}
+
+// --- Step 7 -----------------------------------------------------------------
+
+function stepFeedback(body) {
+  keepOnly(["slack"]);
+  body.innerHTML = `
+    <p style="font-size:14px;">
+      <strong>J.T.</strong> DM'd the review of your restate.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Read it, then mark as read to continue.
+    </p>
+  `;
+  const dmMessages = [
+    { author: "J.T. (pod lead)", initials: "JT", ts: "13:02",
+      body: "Watched your restate. Token overlap landed 👇" },
+    ...state.timeline.map(e => ({
+      author: "J.T. (pod lead)", initials: "JT", ts: e.ts,
+      body: `✅ ${e.label} — ${e.detail}`,
+    })),
+    { author: "J.T. (pod lead)", initials: "JT", ts: "13:05",
+      body: "Restate first, rebut never. If you must rebut, do it after a question they answered." },
+    { author: "M.G. (peer)", initials: "MG", ts: "13:06",
+      body: "Train the restate reflex — the rebuttal mostly stops being needed. Buyers self-correct." },
+  ];
+  state.api.os.openApp("slack", {
+    channel: {
+      channel_id: "dm-jt-podlead",
+      pinned_messages: [
+        { title: "3-move card", content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: "M2" },
+      ],
+      messages: dmMessages,
+    },
+  });
+  setTimeout(() => {
+    const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
+    if (!slackBody) return;
+    mountTaskBanner(slackBody, {
+      id: "m2-s7-read-dm",
+      label: "Read J.T.'s feedback DM",
+      hint: "'Mark thread read' below to continue",
+      state: "active",
+    });
+    if (!slackBody.querySelector("[data-m2-s7-done]")) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+      bar.innerHTML = `
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. waits for the read receipt.</span>
+        <button type="button" data-m2-s7-done
+                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+          ✓ Mark thread read
+        </button>
+      `;
+      slackBody.appendChild(bar);
+      bar.querySelector("[data-m2-s7-done]").addEventListener("click", () => {
+        markTaskBannerDone("m2-s7-read-dm");
+        state.api.eventLog?.record?.("step7_feedback_read");
+        setTimeout(() => runStep(state.step + 1), 500);
+      });
+    }
+  }, 200);
+}
+
+// --- Step 8 -----------------------------------------------------------------
+
+function stepQuiz(body) {
+  state.quizIndex = 0;
+  state.quizScore = 0;
+  body.innerHTML = `
+    <p style="font-size:14px;"><strong>Quick check</strong> · 3 questions from J.T.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Two of three correct advances the module.</p>
+  `;
+  setTimeout(() => mountQuizInSlack(), 200);
+}
+
+function mountQuizInSlack() {
+  const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
+  if (!slackBody) {
+    state.api.os.openApp("slack");
+    return setTimeout(mountQuizInSlack, 250);
+  }
+  mountTaskBanner(slackBody, {
+    id: "m2-s8-quiz",
+    label: "Answer the 3 quiz questions J.T. just posted",
+    hint: "Wrong picks reveal the correct answer",
+    state: "active",
+  });
+  let thread = slackBody.querySelector("[data-m2-quiz-thread]");
+  thread?.remove();
+  thread = document.createElement("div");
+  thread.setAttribute("data-m2-quiz-thread", "");
+  thread.style.cssText = "margin:14px 0 0; padding:14px 16px; background:#fff8e0; border-left:3px solid var(--sun-500, #f5b800); border-radius:6px; font-family:var(--ftc-font-sans);";
+  thread.innerHTML = `
+    <div style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--ftc-ink-2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+      J.T. · 13:08 · quick check thread
+    </div>
+    <div data-quiz-host></div>
+  `;
+  const messages = slackBody.querySelector(".slack-msgs, .slack-messages, .slack-main") || slackBody;
+  messages.appendChild(thread);
+  renderQuizItemInSlack(thread.querySelector("[data-quiz-host]"));
+}
+
+function renderQuizItemInSlack(host) {
+  const item = state.quizItems[state.quizIndex];
+  host.innerHTML = `
+    <div style="font-size:12px; color:var(--ftc-ink-2); margin-bottom:6px;">
+      Question ${state.quizIndex + 1} of ${state.quizItems.length} · ${item.lo}
+    </div>
+    <p style="font-size:14px; margin:0 0 10px; color:var(--ftc-ink);">${item.stem}</p>
+    <div role="radiogroup" aria-label="Answer choices" style="display:grid; gap:6px;">
+      ${item.options.map((o, i) => `
+        <button type="button" class="tom-drawer__opt" role="radio"
+                aria-checked="false" data-idx="${i}">
+          <span class="tom-drawer__label">${o.label}</span>
+          <span class="tom-drawer__text">${o.text}</span>
+        </button>`).join("")}
+    </div>
+    <div class="tom-drawer__fb" id="m2-s8-fb" hidden></div>
+    <div style="margin-top:10px; text-align:right;">
+      <button type="button" id="m2-s8-next" disabled
+              style="background:var(--brand-green); color:#fff; padding:6px 14px; border:0; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; opacity:0.5;">
+        ${state.quizIndex === state.quizItems.length - 1 ? "Finish quiz" : "Next question"}
+      </button>
+    </div>
+  `;
+  const fb = host.querySelector("#m2-s8-fb");
+  const nextBtn = host.querySelector("#m2-s8-next");
+  host.querySelectorAll(".tom-drawer__opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.dataset.idx);
+      const opt = item.options[idx];
+      host.querySelectorAll(".tom-drawer__opt").forEach(b => {
+        b.classList.remove("is-correct", "is-incorrect");
+        b.setAttribute("aria-checked", "false");
+        b.disabled = true;
+        b.style.cursor = "default";
+      });
+      btn.setAttribute("aria-checked", "true");
+      btn.classList.add(opt.correct ? "is-correct" : "is-incorrect");
+      if (!opt.correct) {
+        host.querySelectorAll(".tom-drawer__opt").forEach((b, j) => {
+          if (item.options[j]?.correct) b.classList.add("is-reveal");
+        });
+      }
+      fb.hidden = false;
+      fb.textContent = opt.rationale;
+      if (opt.correct) state.quizScore += 1;
+      nextBtn.disabled = false;
+      nextBtn.style.opacity = "1";
+    });
+  });
+  nextBtn.addEventListener("click", () => {
+    if (state.quizIndex < state.quizItems.length - 1) {
+      state.quizIndex += 1;
+      renderQuizItemInSlack(host);
+    } else {
+      markTaskBannerDone("m2-s8-quiz");
+      state.api.eventLog?.record?.("step8_quiz_completed", { score: state.quizScore });
+      setTimeout(() => runStep(state.step + 1), 500);
     }
   });
-})().catch(err => {
-  console.error("[M2] boot failed", err);
-  document.getElementById("m2-stage").innerHTML =
-    `<h2>Module failed to load</h2><pre>${String(err)}</pre>`;
-});
+}
+
+// --- Step 9 -----------------------------------------------------------------
+
+function stepTakeaway(body) {
+  const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
+  body.innerHTML = `
+    <p style="font-size:14px;">
+      <strong>Module complete.</strong> M.G. pinned the takeaway in your Slack channel.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Quiz: <strong>${state.quizScore} / ${state.quizItems.length}</strong> (${scorePct}%).
+      Click 'Set +7d retrieval drop' in Slack to finish.
+    </p>
+  `;
+  setTimeout(() => {
+    const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
+    if (!slackBody) {
+      state.api.os.openApp("slack");
+      return setTimeout(() => stepTakeaway(body), 250);
+    }
+    slackBody.querySelector("[data-m2-quiz-thread]")?.remove();
+    mountTaskBanner(slackBody, {
+      id: "m2-s9-takeaway",
+      label: "Read M.G.'s pinned takeaway, then set the +7d retrieval drop",
+      hint: "One click. Module commits when the drop is scheduled.",
+      state: "active",
+    });
+    if (!slackBody.querySelector("[data-m2-pinned]")) {
+      const pinned = document.createElement("div");
+      pinned.setAttribute("data-m2-pinned", "");
+      pinned.style.cssText = "margin:14px 0 0; padding:16px 18px; background:linear-gradient(180deg, var(--ftc-green-tint, #ecf9e7) 0%, #ffffff 100%); border:1px solid var(--brand-green); border-left:4px solid var(--brand-green); border-radius:8px; font-family:var(--ftc-font-sans); box-shadow:0 6px 16px -8px rgba(10,26,16,0.12);";
+      pinned.innerHTML = `
+        <div style="font-family:var(--ftc-font-mono); font-size:10px; color:var(--brand-green); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
+          📌 Pinned by M.G. (peer · Manchester pod)
+        </div>
+        <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
+          "Restate before you rebut. Use the buyer's exact words — two tokens
+          minimum. Then ask one open question. The rebuttal is almost never
+          needed after that."
+        </p>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
+          <span style="font-size:12.5px; color:var(--ftc-ink-2);">
+            📅 3-item retrieval drop · +7 days in your Sana inbox
+          </span>
+          <button type="button" data-m2-s9-finish
+                  style="background:var(--brand-green); color:#fff; padding:9px 16px; border:0; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
+            Set +7d retrieval drop &rarr;
+          </button>
+        </div>
+      `;
+      const messages = slackBody.querySelector(".slack-msgs, .slack-messages, .slack-main") || slackBody;
+      messages.appendChild(pinned);
+      pinned.querySelector("[data-m2-s9-finish]").addEventListener("click", () => {
+        markTaskBannerDone("m2-s9-takeaway");
+        state.api.eventLog?.record?.("step9_retrieval_drop_set");
+        finishModule();
+      });
+    }
+  }, 200);
+}
+
+function finishModule() {
+  const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
+  state.api.complete(scorePct);
+  document.getElementById("narrative-body").innerHTML = `
+    <p><strong>Module complete.</strong> Score posted to the LMS.</p>
+    <p>See you in Module 3 — Calendar Close.</p>
+  `;
+  document.getElementById("narrative-next").hidden = true;
+  document.getElementById("narrative-back").hidden = true;
+  showSummaryCard(scorePct);
+}
+
+function showSummaryCard(scorePct) {
+  keepOnly([]);
+  const overlay = document.getElementById("narrative-overlay");
+  if (overlay) overlay.style.visibility = "hidden";
+  const totalMs = Date.now() - state.startedAt;
+  const totalMin = Math.floor(totalMs / 60000);
+  const totalSec = Math.floor((totalMs % 60000) / 1000).toString().padStart(2, "0");
+  const stepLabels = STEPS.map(s => s.title);
+  const recapEntries = stepLabels.map((label, i) => {
+    const fromLog = state.timeline.find(e => e.label?.toLowerCase().includes(label.toLowerCase().slice(0, 14)));
+    return { n: i + 1, label, ts: fromLog?.ts || "—" };
+  });
+  const card = document.createElement("div");
+  card.className = "summary-card";
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-modal", "true");
+  card.setAttribute("aria-labelledby", "summary-title");
+  card.innerHTML = `
+    <div class="summary-card__panel">
+      <div class="summary-card__check" aria-hidden="true">✓</div>
+      <div class="summary-card__kicker">Module complete</div>
+      <h2 class="summary-card__title" id="summary-title">Objection Acknowledge · cleared</h2>
+      <div class="summary-card__stats">
+        <div class="summary-card__stat">
+          <span class="summary-card__stat-k">Quiz</span>
+          <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
+          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below pass"}</span>
+        </div>
+        <div class="summary-card__stat">
+          <span class="summary-card__stat-k">Time</span>
+          <span class="summary-card__stat-v">${totalMin}:${totalSec}</span>
+          <span class="summary-card__stat-sub">target 10:00</span>
+        </div>
+        <div class="summary-card__stat">
+          <span class="summary-card__stat-k">Steps</span>
+          <span class="summary-card__stat-v">${STEPS.length} / ${STEPS.length}</span>
+          <span class="summary-card__stat-sub">100% complete</span>
+        </div>
+      </div>
+      <details class="summary-card__recap">
+        <summary>9-step recap</summary>
+        <ol class="summary-card__list">
+          ${recapEntries.map(e => `
+            <li><span class="summary-card__list-n">${e.n}</span>
+                <span class="summary-card__list-label">${e.label}</span>
+                <span class="summary-card__list-ts">${e.ts}</span></li>
+          `).join("")}
+        </ol>
+      </details>
+      <div class="summary-card__actions">
+        <a class="summary-card__btn summary-card__btn--ghost" href="../../">&larr; Back to engagement</a>
+        <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">
+          Restart module
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(card);
+  card.querySelector("[data-action='restart']")?.addEventListener("click", () => location.reload());
+}
+
+function timestamp() {
+  const ms = Date.now() - state.startedAt;
+  const m = Math.floor(ms / 60000);
+  const s = Math.floor((ms % 60000) / 1000).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+function renderFatal(msg) {
+  const body = document.getElementById("narrative-body");
+  if (body) {
+    body.innerHTML = `<p style="color:var(--coral-700);">Could not load module data: ${escapeHtml(msg)}</p>`;
+  }
+}
+
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[<>&]/g, c => ({ "<":"&lt;",">":"&gt;","&":"&amp;" }[c]));
+}
