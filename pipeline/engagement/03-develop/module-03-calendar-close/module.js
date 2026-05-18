@@ -413,62 +413,91 @@ function renderTranscriptLine(turn) {
 // ===========================================================================
 
 function stepCompletionProblem(body) {
-  const stem = `Tom (Series-B founder · Brex-comparison buyer) just said:
-    <em>"Yeah, FX is a real headache. What would a demo even look like?"</em>
-    Pick your close.`;
-
-  const options = [
-    {
-      label: "A",
-      text: `"I'll send a calendar invite with some times by email."`,
-      result: "partial",
-      rationale: "Partial credit at best — GC-05 pattern. Invite delayed past the call window.",
-    },
-    {
-      label: "B",
-      text: `"What's the best 20 minutes next week to walk you through the FX-cost-vs-Brex on your last month's spend — Tuesday 11 or Thursday 2?"`,
-      result: "correct",
-      rationale: "Yes. Two specific slots, framed around Tom's actual pain. L.D.'s GC-03 + GC-06 pattern.",
-    },
-    {
-      label: "C",
-      text: `"I'll follow up by email next week."`,
-      result: "anti",
-      rationale: "GC-10 / GC-11 anti-pattern. This is where deals die — no re-engage.",
-    },
-    {
-      label: "D",
-      text: `"Let me check my calendar and get back to you."`,
-      result: "anti",
-      rationale: "GC-19 / GC-22 anti-pattern. Calendar should already be open. Bottom-quartile inverts the habit.",
-    },
-  ];
-
+  // Narrative pane shrinks to single-line framing — drawer lives in Outreach.
   body.innerHTML = `
-    <div class="completion-problem">
-      <p class="completion-problem__stem">${stem}</p>
-      <div role="radiogroup" aria-label="Pick the close">
-        ${options.map((o, i) => `
-          <button type="button"
-                  class="completion-option"
-                  role="radio"
-                  aria-checked="false"
-                  data-result="${o.result}"
-                  data-idx="${i}">
-            <span class="opt-label">${o.label}</span>${o.text}
-          </button>
-        `).join("")}
-      </div>
-      <div class="completion-feedback" id="completion-fb" hidden></div>
-    </div>
+    <p style="font-size:14px;">
+      <strong>Tom</strong> (Series-B founder · Brex-comparison buyer) is on
+      the line. He just said: <em>"Yeah, FX is a real headache. What would a
+      demo even look like?"</em>
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Pick your close in the Outreach drawer that just appeared under Tom's
+      row.
+    </p>
   `;
 
-  const fb = body.querySelector("#completion-fb");
-  body.querySelectorAll(".completion-option").forEach(btn => {
+  const options = [
+    { label: "A", result: "partial",
+      text: `"I'll send a calendar invite with some times by email."`,
+      rationale: "Partial credit at best — GC-05 pattern. Invite delayed past the call window." },
+    { label: "B", result: "correct",
+      text: `"What's the best 20 minutes next week to walk you through the FX-cost-vs-Brex on your last month's spend — Tuesday 11 or Thursday 2?"`,
+      rationale: "Yes. Two specific slots, framed around Tom's actual pain. L.D.'s GC-03 + GC-06 pattern." },
+    { label: "C", result: "anti",
+      text: `"I'll follow up by email next week."`,
+      rationale: "GC-10 / GC-11 anti-pattern. This is where deals die — no re-engage." },
+    { label: "D", result: "anti",
+      text: `"Let me check my calendar and get back to you."`,
+      rationale: "GC-19 / GC-22 anti-pattern. Calendar should already be open." },
+  ];
+
+  setTimeout(() => mountTomDrawer(options), 160);
+}
+
+function mountTomDrawer(options) {
+  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!outreachBody) return;
+  state.api.os.focusApp?.("outreach");
+
+  mountTaskBanner(outreachBody, {
+    id: "m3-s5-pick-close",
+    label: "Pick the right close for Tom — drawer just opened under his row",
+    hint: "Click one of options A / B / C / D. Wrong picks explain why.",
+    state: "active",
+  });
+
+  // Find Tom's row.
+  const tomRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /Tom/i.test(r.textContent || ""));
+  if (!tomRow) return;
+  tomRow.classList.add("is-warm-highlight");
+
+  // Remove a previous drawer if any (idempotent on step replay).
+  outreachBody.querySelector("[data-m3-s5-drawer]")?.remove();
+
+  const drawer = document.createElement("div");
+  drawer.setAttribute("data-m3-s5-drawer", "");
+  drawer.className = "tom-drawer";
+  drawer.innerHTML = `
+    <header class="tom-drawer__head">
+      <strong>Tom · live call · 00:38</strong>
+      <span class="tom-drawer__cue">Pick your close</span>
+    </header>
+    <p class="tom-drawer__stem">
+      <em>"Yeah, FX is a real headache. What would a demo even look like?"</em>
+    </p>
+    <div class="tom-drawer__opts" role="radiogroup" aria-label="Pick the close">
+      ${options.map((o, i) => `
+        <button type="button"
+                class="tom-drawer__opt"
+                role="radio"
+                aria-checked="false"
+                data-result="${o.result}"
+                data-idx="${i}">
+          <span class="tom-drawer__label">${o.label}</span>
+          <span class="tom-drawer__text">${o.text}</span>
+        </button>
+      `).join("")}
+    </div>
+    <div class="tom-drawer__fb" id="m3-s5-fb" hidden></div>
+  `;
+  tomRow.insertAdjacentElement("afterend", drawer);
+
+  const fb = drawer.querySelector("#m3-s5-fb");
+  drawer.querySelectorAll(".tom-drawer__opt").forEach(btn => {
     btn.addEventListener("click", () => {
       const idx = Number(btn.dataset.idx);
       const opt = options[idx];
-      body.querySelectorAll(".completion-option").forEach(b => {
+      drawer.querySelectorAll(".tom-drawer__opt").forEach(b => {
         b.classList.remove("is-correct", "is-incorrect");
         b.setAttribute("aria-checked", "false");
       });
@@ -478,12 +507,14 @@ function stepCompletionProblem(body) {
       fb.textContent = opt.rationale;
       state.completionAnswer = opt.result;
       if (opt.result === "correct") {
-        state.api.eventLog.record("completion_problem_completed");
+        markTaskBannerDone("m3-s5-pick-close");
+        state.api.eventLog?.record?.("completion_problem_completed");
         state.timeline.push({
-          label: "Picked the correct two-slot close",
+          label: "Picked correct two-slot close for Tom",
           detail: "Option B · L.D. pattern · GC-03",
           ts: timestamp(),
         });
+        setTimeout(() => runStep(5), 700);
       }
     });
   });

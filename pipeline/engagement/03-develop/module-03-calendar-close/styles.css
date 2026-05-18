@@ -54,6 +54,88 @@
   .open-signal-chip.is-pulsing { animation: none; }
 }
 
+/* ===== M3 step-5 · Tom drawer (in-Outreach completion problem) ========== */
+.tom-drawer {
+  margin: 6px 0 12px;
+  padding: 14px 16px;
+  background: var(--ftc-paper, #ffffff);
+  border: 1px solid var(--ftc-border, #e6e8e4);
+  border-left: 3px solid var(--brand-green, #0a8754);
+  border-radius: 8px;
+  box-shadow: 0 6px 16px -8px rgba(10,26,16,0.12);
+  font-family: var(--ftc-font-sans);
+  animation: tom-drawer-in 220ms ease-out;
+}
+.tom-drawer__head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12.5px; color: var(--ftc-ink-2);
+  margin-bottom: 6px;
+}
+.tom-drawer__cue {
+  font-family: var(--ftc-font-mono);
+  font-size: 11px;
+  color: var(--brand-green);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.tom-drawer__stem {
+  font-size: 14px; color: var(--ftc-ink);
+  margin: 4px 0 10px;
+}
+.tom-drawer__opts {
+  display: grid; gap: 8px;
+}
+.tom-drawer__opt {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  column-gap: 10px;
+  align-items: start;
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--bg-3, #f4f5f1);
+  border: 1px solid var(--ftc-border);
+  border-radius: 6px;
+  font-family: var(--ftc-font-sans);
+  font-size: 13.5px;
+  color: var(--ftc-ink);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, transform 0.08s;
+}
+.tom-drawer__opt:hover { background: #f0f7ee; border-color: var(--brand-green); }
+.tom-drawer__opt:active { transform: scale(0.99); }
+.tom-drawer__label {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px;
+  background: var(--ftc-ink); color: #fff;
+  border-radius: 50%;
+  font-family: var(--ftc-font-mono); font-weight: 700; font-size: 12px;
+}
+.tom-drawer__text { line-height: 1.4; }
+.tom-drawer__opt.is-correct {
+  background: #d4f1c4; border-color: var(--brand-green);
+}
+.tom-drawer__opt.is-correct .tom-drawer__label { background: var(--brand-green); }
+.tom-drawer__opt.is-incorrect {
+  background: #fde7e3; border-color: var(--coral-700, #c33d22);
+}
+.tom-drawer__opt.is-incorrect .tom-drawer__label { background: var(--coral-700, #c33d22); }
+.tom-drawer__fb {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #fff8e0;
+  border-left: 3px solid var(--sun-500, #f5b800);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--ftc-ink);
+  line-height: 1.5;
+}
+@keyframes tom-drawer-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tom-drawer { animation: none; }
+}
+
 /* ===== Narrative overlay (Gagné event presenter) ======================== */
 .narrative-overlay {
   position: fixed;
