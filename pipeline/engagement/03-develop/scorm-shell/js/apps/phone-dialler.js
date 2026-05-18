@@ -20,7 +20,7 @@ registerApp({
   id: "phone-dialler",
   name: "Phone-dialler",
   iconName: "phone",
-  defaultSize: { w: 360, h: 480 },
+  defaultSize: { w: 420, h: 560 },
   mount(ctx) {
     const { container, eventBus, options = {} } = ctx;
 

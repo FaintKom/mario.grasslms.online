@@ -22,7 +22,7 @@ registerApp({
   id: "gong",
   name: "Gong",
   iconName: "gongWave",
-  defaultSize: { w: 640, h: 460 },
+  defaultSize: { w: 820, h: 580 },
   mount(ctx) {
     const { container, options = {} } = ctx;
     /** @type {any[]|null} */

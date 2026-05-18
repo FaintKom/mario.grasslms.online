@@ -197,6 +197,26 @@ code, kbd, samp {
 }
 .help-button:hover { background: var(--ftc-green-tint); }
 
+.topbar-back {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--sp-1) var(--sp-3);
+  background: transparent;
+  border: 1px solid var(--ftc-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--ftc-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ftc-ink-2);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.topbar-back:hover {
+  background: var(--ftc-green-tint);
+  color: var(--brand-green-deep);
+  border-color: var(--brand-green);
+}
+
 /* --- Desktop (window host) --- */
 #desktop {
   position: relative;

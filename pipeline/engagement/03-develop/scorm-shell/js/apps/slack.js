@@ -34,7 +34,7 @@ registerApp({
   id: "slack",
   name: "Slack",
   iconName: "hash",
-  defaultSize: { w: 560, h: 460 },
+  defaultSize: { w: 720, h: 560 },
   mount(ctx) {
     const { container, options = {} } = ctx;
     const channel = { ...DEFAULT_CHANNEL, ...(options.channel ?? {}) };

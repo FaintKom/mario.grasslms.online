@@ -39,7 +39,7 @@ registerApp({
   id: "calendar",
   name: "Calendar",
   iconName: "calendar",
-  defaultSize: { w: 540, h: 420 },
+  defaultSize: { w: 700, h: 540 },
   mount(ctx) {
     const { container, eventBus, options = {} } = ctx;
     /** @type {any[]} */

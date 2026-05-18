@@ -30,7 +30,7 @@ registerApp({
   id: "outreach",
   name: "Outreach",
   iconName: "briefcase",
-  defaultSize: { w: 520, h: 420 },
+  defaultSize: { w: 720, h: 560 },
   mount(ctx) {
     const { container, eventBus, openApp, options = {} } = ctx;
     let leads = Array.isArray(options.leads) ? options.leads.slice() : null;

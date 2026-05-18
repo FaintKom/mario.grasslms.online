@@ -37,7 +37,7 @@ registerApp({
   id: "salesforce",
   name: "Salesforce",
   iconName: "building",
-  defaultSize: { w: 560, h: 460 },
+  defaultSize: { w: 720, h: 560 },
   mount(ctx) {
     const { container, eventBus, openApp, options = {} } = ctx;
     let record = { ...DEFAULT_RECORD, ...(options.record ?? {}) };

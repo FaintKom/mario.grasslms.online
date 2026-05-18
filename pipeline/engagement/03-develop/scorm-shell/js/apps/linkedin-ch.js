@@ -18,7 +18,7 @@ registerApp({
   id: "linkedin-ch",
   name: "LinkedIn / Companies House",
   iconName: "users",
-  defaultSize: { w: 620, h: 440 },
+  defaultSize: { w: 760, h: 560 },
   mount(ctx) {
     const { container, options = {} } = ctx;
     /** @type {any[]} */

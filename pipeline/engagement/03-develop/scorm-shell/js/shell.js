@@ -200,6 +200,7 @@ export class MiniOS {
           ${icon(def.iconName)} ${def.name}
         </div>
         <div class="os-window-controls">
+          <button type="button" data-action="maximize" aria-label="Maximize ${def.name}" title="Maximize / restore">▢</button>
           <button type="button" data-action="close" aria-label="Close ${def.name}">${icon("x")}</button>
         </div>
       </header>
@@ -208,6 +209,7 @@ export class MiniOS {
     `;
     el.addEventListener("mousedown", () => this._focusWindow(winId), true);
     el.querySelector("[data-action='close']")?.addEventListener("click", () => this.closeApp(winId));
+    el.querySelector("[data-action='maximize']")?.addEventListener("click", () => this._toggleMaximize(winId));
     this._makeDraggable(el);
     this._makeResizable(el);
     return el;
@@ -218,6 +220,38 @@ export class MiniOS {
     const offset = 16 + count * 28;
     el.style.left = `${offset}px`;
     el.style.top  = `${offset}px`;
+  }
+
+  /**
+   * Toggle window to fill the desktop area, or restore prior bounds.
+   * Stores prior bounds on the element so restore is exact.
+   */
+  _toggleMaximize(winId) {
+    const handle = this.windows.get(winId);
+    if (!handle?.el) return;
+    const el = handle.el;
+    if (el.dataset.maximized === "true") {
+      const prior = JSON.parse(el.dataset.priorBounds || "{}");
+      el.style.left   = prior.left   ?? "16px";
+      el.style.top    = prior.top    ?? "16px";
+      el.style.width  = prior.width  ?? "480px";
+      el.style.height = prior.height ?? "360px";
+      el.dataset.maximized = "false";
+    } else {
+      el.dataset.priorBounds = JSON.stringify({
+        left: el.style.left, top: el.style.top,
+        width: el.style.width, height: el.style.height,
+      });
+      const desktop = document.getElementById("desktop");
+      const rect = desktop?.getBoundingClientRect();
+      const pad = 8;
+      el.style.left = `${pad}px`;
+      el.style.top  = `${pad}px`;
+      el.style.width  = `${(rect?.width  ?? 1200) - pad * 2}px`;
+      el.style.height = `${(rect?.height ?? 700)  - pad * 2}px`;
+      el.dataset.maximized = "true";
+    }
+    this._focusWindow(winId);
   }
 
   _makeDraggable(el) {
