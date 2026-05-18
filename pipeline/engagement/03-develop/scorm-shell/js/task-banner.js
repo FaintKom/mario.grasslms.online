@@ -23,15 +23,29 @@ const BANNER_CLASS = "task-banner";
 const REGISTRY     = new Map(); // id -> HTMLElement
 
 /**
+ * Remove every banner currently in the DOM (any host). Used by modules
+ * when transitioning steps so the rep never sees a stack of old banners.
+ */
+export function clearAllTaskBanners() {
+  for (const el of REGISTRY.values()) el.remove();
+  REGISTRY.clear();
+}
+
+/**
  * @param {HTMLElement} hostBody  target .os-window-body element
- * @param {{id:string, label:string, hint?:string, state?:"active"|"pending"}} cfg
+ * @param {{id:string, label:string, hint?:string, state?:"active"|"pending", replacePrior?:boolean}} cfg
  * @returns {HTMLElement}
+ *
+ * `replacePrior` (default true): remove all other active banners before
+ * mounting this one. Pass `false` to layer banners (rare).
  */
 export function mountTaskBanner(hostBody, cfg) {
   if (!hostBody) throw new Error("mountTaskBanner: hostBody required");
   if (!cfg?.id || !cfg?.label) throw new Error("mountTaskBanner: id + label required");
 
-  REGISTRY.get(cfg.id)?.remove();
+  // Default: clear any prior banner anywhere — one step, one active banner.
+  if (cfg.replacePrior !== false) clearAllTaskBanners();
+  else REGISTRY.get(cfg.id)?.remove();
 
   const el = document.createElement("aside");
   el.className   = `${BANNER_CLASS} ${BANNER_CLASS}--${cfg.state ?? "active"}`;

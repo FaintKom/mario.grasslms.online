@@ -20,13 +20,13 @@ import { appRegistry, icon } from "./apps/registry.js";
 // Eager-import every app so registerApp() side-effects populate the registry
 // before any consumer calls MiniOS.openApp(). Browsers cache by URL, so
 // re-imports inside individual modules are free.
-import "./apps/outreach.js?v=20260519a";
-import "./apps/gong.js?v=20260519a";
-import "./apps/salesforce.js?v=20260519a";
-import "./apps/linkedin-ch.js?v=20260519a";
-import "./apps/calendar.js?v=20260519a";
-import "./apps/phone-dialler.js?v=20260519a";
-import "./apps/slack.js?v=20260519a";
+import "./apps/outreach.js?v=20260519b";
+import "./apps/gong.js?v=20260519b";
+import "./apps/salesforce.js?v=20260519b";
+import "./apps/linkedin-ch.js?v=20260519b";
+import "./apps/calendar.js?v=20260519b";
+import "./apps/phone-dialler.js?v=20260519b";
+import "./apps/slack.js?v=20260519b";
 
 /** Shared inter-app + telemetry event bus. */
 export const eventBus = new EventTarget();
@@ -215,11 +215,53 @@ export class MiniOS {
     return el;
   }
 
+  /**
+   * Place a new window next to existing ones, not cascading on top.
+   * Strategy: scan a horizontal row at top, find first x-gap large enough
+   * for the new window. If row is full, fall back to a small cascade
+   * offset from the last window.
+   */
   _positionInitial(el) {
-    const count = this.windows.size;
-    const offset = 16 + count * 28;
-    el.style.left = `${offset}px`;
-    el.style.top  = `${offset}px`;
+    const PAD = 16;
+    const w = parseInt(el.style.width)  || 480;
+    const h = parseInt(el.style.height) || 360;
+    const desktop = document.getElementById("desktop");
+    const dRect = desktop?.getBoundingClientRect();
+    const maxW = (dRect?.width  ?? 1200) - PAD;
+    const maxH = (dRect?.height ?? 700)  - PAD;
+    const existing = [...this.windows.values()]
+      .filter(h => h.el !== el)
+      .map(h => h.el.getBoundingClientRect());
+    const dOff = dRect ? { x: dRect.left, y: dRect.top } : { x: 0, y: 0 };
+
+    // Try to place to the right of the rightmost existing window in the top row.
+    let placed = false;
+    if (existing.length > 0) {
+      const topRow = existing.filter(r => (r.top - dOff.y) < PAD + 50);
+      if (topRow.length) {
+        const rightmost = Math.max(...topRow.map(r => (r.right - dOff.x)));
+        if (rightmost + PAD + w <= maxW) {
+          el.style.left = `${rightmost + PAD}px`;
+          el.style.top  = `${PAD}px`;
+          placed = true;
+        }
+      }
+      // Try below the first row if right has no space.
+      if (!placed) {
+        const rowH = Math.max(...existing.map(r => r.bottom - dOff.y));
+        if (rowH + PAD + h <= maxH) {
+          el.style.left = `${PAD}px`;
+          el.style.top  = `${rowH + PAD}px`;
+          placed = true;
+        }
+      }
+    }
+    if (!placed) {
+      // First window OR no fit — top-left with small per-window cascade.
+      const idx = this.windows.size;
+      el.style.left = `${PAD + (idx % 4) * 20}px`;
+      el.style.top  = `${PAD + (idx % 4) * 20}px`;
+    }
   }
 
   /**

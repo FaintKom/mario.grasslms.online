@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
   <title>Module 3 · M3 Calendar Close · FinTechCard SDR Onboarding</title>
   <meta name="description" content="Calendar in second tab. Two slots. One invite. Sent before you hang up.">
-  <link rel="stylesheet" href="../scorm-shell/styles/shell.css?v=20260519a">
-  <link rel="stylesheet" href="../scorm-shell/styles/apps.css?v=20260519a">
-  <link rel="stylesheet" href="./styles.css?v=20260519a">
+  <link rel="stylesheet" href="../scorm-shell/styles/shell.css?v=20260519b">
+  <link rel="stylesheet" href="../scorm-shell/styles/apps.css?v=20260519b">
+  <link rel="stylesheet" href="./styles.css?v=20260519b">
 </head>
 <body class="module module--m3">
   <a class="skip-link" href="#desktop">Skip to main content</a>
@@ -20,6 +20,19 @@
       <a href="../../" class="topbar-back" aria-label="Back to engagement case study">&larr; Engagement</a>
       <span class="ftc-logo" aria-hidden="true">FTC</span>
       <span id="module-title" aria-live="polite">Module 3 · Calendar Close</span>
+      <div id="step-progress" class="step-progress" role="progressbar"
+           aria-label="Module step progress"
+           aria-valuemin="1" aria-valuemax="9" aria-valuenow="1">
+        <span class="step-progress__seg" data-step="1"></span>
+        <span class="step-progress__seg" data-step="2"></span>
+        <span class="step-progress__seg" data-step="3"></span>
+        <span class="step-progress__seg" data-step="4"></span>
+        <span class="step-progress__seg" data-step="5"></span>
+        <span class="step-progress__seg" data-step="6"></span>
+        <span class="step-progress__seg" data-step="7"></span>
+        <span class="step-progress__seg" data-step="8"></span>
+        <span class="step-progress__seg" data-step="9"></span>
+      </div>
       <span id="module-progress" class="module-progress" aria-live="polite">0:00 / 10:00</span>
       <button id="help-button" type="button" aria-label="Open job aids in Slack">Help</button>
     </header>
@@ -74,6 +87,6 @@
   <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Module entry — imports the shell, then runs the M3 Gagné timeline. -->
-  <script type="module" src="./module.js?v=20260519a"></script>
+  <script type="module" src="./module.js?v=20260519b"></script>
 </body>
 </html>

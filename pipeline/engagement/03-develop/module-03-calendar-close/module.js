@@ -137,6 +137,7 @@ function runStep(i) {
   state.step = i;
   document.getElementById("gagne-step").textContent      = `${i + 1} of ${STEPS.length}`;
   document.getElementById("narrative-title").textContent = STEPS[i].title;
+  updateProgressBar(i + 1);
   const body = document.getElementById("narrative-body");
   body.innerHTML = "";
   document.getElementById("narrative-back").hidden = i === 0;
@@ -145,6 +146,18 @@ function runStep(i) {
   next.disabled = false;
   next.setAttribute("aria-disabled", "false");
   STEPS[i].handler(body);
+}
+
+function updateProgressBar(currentStep) {
+  const bar = document.getElementById("step-progress");
+  if (!bar) return;
+  bar.setAttribute("aria-valuenow", String(currentStep));
+  bar.querySelectorAll(".step-progress__seg").forEach(seg => {
+    const n = Number(seg.dataset.step);
+    seg.dataset.state = n < currentStep ? "done"
+                      : n === currentStep ? "current"
+                      : "pending";
+  });
 }
 
 function wireNarrativeButtons() {

@@ -20,6 +20,43 @@
                           );
 }
 
+/* ===== Step-progress bar in topbar ===================================== */
+.step-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin: 0 12px;
+  padding: 0;
+}
+.step-progress__seg {
+  display: block;
+  width: 22px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--ftc-border, #e6e8e4);
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+.step-progress__seg[data-state="done"]    { background: var(--brand-green, #0a8754); }
+.step-progress__seg[data-state="current"] {
+  background: var(--brand-green, #0a8754);
+  transform: scaleY(1.6);
+  box-shadow: 0 0 0 0 rgba(10, 135, 84, 0.5);
+  animation: step-current-pulse 1.8s ease-out infinite;
+}
+@keyframes step-current-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(10, 135, 84, 0.55); }
+  60%      { box-shadow: 0 0 0 4px rgba(10, 135, 84, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step-progress__seg[data-state="current"] {
+    animation: none;
+    box-shadow: none;
+  }
+}
+@media (max-width: 720px) {
+  .step-progress__seg { width: 14px; height: 4px; }
+}
+
 /* ===== M3 step-1 / step-2 decorations injected into Outreach ============ */
 .is-warm-highlight {
   outline: 2px solid var(--brand-green, #0a8754);
