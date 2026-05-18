@@ -154,29 +154,64 @@ function wireProgressTimer() {
 // ===========================================================================
 
 function stepGainAttention(body) {
+  // Narrative pane shrinks to peer-quote only — apps drive the rest.
   body.innerHTML = `
-    <p><strong>Outreach</strong> just lit up — your sequenced lead <em>Maria
-    R.</em> opened your fourth email twice in 15 minutes. She is a warm
-    lead. Window of maybe an hour before that signal cools.</p>
     <blockquote class="peer-quote">
       I have lost too many deals to follow-up.
       <cite>— M.G., Manchester · top-decile rep</cite>
     </blockquote>
+    <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
+      Do the task in the Outreach window. The narrative panel just
+      describes what you're seeing — the work happens in the apps.
+    </p>
   `;
   state.api.os.openApp("outreach", { highlightLeadId: "L-MARIA" });
+  setTimeout(() => decorateOutreachForStep1(), 140);
+}
 
-  // Mount the in-app task banner so the rep's eye is in the app, not the
-  // narrative panel. Wait one tick for the outreach app to render its body.
-  setTimeout(() => {
-    const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
-    if (!outreachBody) return;
-    mountTaskBanner(outreachBody, {
-      id: "m3-s1-pick-warm",
-      label: "Click the warm lead (Maria) — she opened your email twice in 15 min",
-      hint: "Look at the open-signal chip on her row",
-      state: "active",
+function decorateOutreachForStep1() {
+  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!outreachBody) return;
+  mountTaskBanner(outreachBody, {
+    id: "m3-s1-pick-warm",
+    label: "Click warm lead (Maria) — she opened your email twice in 15 min",
+    hint: "Look at the green open-signal chip on her row",
+    state: "active",
+  });
+  // Inject an open-signal chip on Maria's row + click-to-complete.
+  // The Outreach app renders rows asynchronously; poll briefly until present.
+  let tries = 0;
+  const tick = () => {
+    const mariaBtn = outreachBody.querySelector('[data-lead-id="L-MARIA"], [data-lead-id="lead-001"]');
+    const mariaRow = mariaBtn?.closest(".lead-row")
+                  ?? [...outreachBody.querySelectorAll(".lead-row")].find(r => /Maria/i.test(r.textContent || ""));
+    if (!mariaRow) {
+      if (++tries < 20) return setTimeout(tick, 100);
+      return;
+    }
+    if (mariaRow.querySelector(".open-signal-chip")) return; // already decorated
+    mariaRow.classList.add("is-warm-highlight");
+    const chip = document.createElement("span");
+    chip.className = "open-signal-chip";
+    chip.setAttribute("aria-label", "Opened email twice in 15 minutes");
+    chip.innerHTML = `📨 <strong>2 opens</strong> · 15 min`;
+    // Put the chip alongside the meta line (second .meta div) when present.
+    const meta = mariaRow.querySelector(".meta") ?? mariaRow.firstElementChild;
+    meta?.appendChild(chip);
+    // Click anywhere on the row OR on the chip completes step 1.
+    const complete = () => {
+      if (state.step !== 0) return;
+      markTaskBannerDone("m3-s1-pick-warm");
+      state.api.eventLog?.record?.("step1_picked_warm_lead");
+      setTimeout(() => runStep(1), 450);
+    };
+    mariaRow.addEventListener("click", e => {
+      // Don't fire on the Dial button (let outreach handle that natively).
+      if (e.target.closest('[data-action="dial"]')) return;
+      complete();
     });
-  }, 120);
+  };
+  tick();
 }
 
 // ===========================================================================
@@ -185,16 +220,38 @@ function stepGainAttention(body) {
 
 function stepStateOutcome(body) {
   body.innerHTML = `
-    <p>By the end of these 10 minutes:</p>
-    <ul>
-      <li>The <strong>calendar invite goes out during the call</strong> —
-        not after.</li>
-      <li>You'll be opening <strong>Calendar in a second tab before every
-        dial</strong> — habit, not afterthought.</li>
+    <p style="font-size:14px;">By the end of these 10 minutes:</p>
+    <ul style="font-size:14px; margin:6px 0 10px 18px;">
+      <li><strong>Calendar invite during the call</strong> — not after.</li>
+      <li><strong>Calendar open in a second tab before every dial</strong>
+          — habit, not afterthought.</li>
     </ul>
-    <p><strong>"Follow up"</strong> is where deals go to die. Two slots. One
-    invite. Sent before you hang up.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
+      Next action: confirm the open-signal in Outreach (clicking the chip
+      counts).
+    </p>
   `;
+  // Replace step-1 banner with step-2 banner inside the same app.
+  setTimeout(() => {
+    const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (!outreachBody) return;
+    mountTaskBanner(outreachBody, {
+      id: "m3-s2-read-signal",
+      label: "Read the open-signal chip · Maria opened your email 2× in 15 min",
+      hint: "Click the green chip on her row to confirm",
+      state: "active",
+    });
+    const chip = outreachBody.querySelector(".open-signal-chip");
+    if (!chip) return;
+    chip.classList.add("is-pulsing");
+    chip.addEventListener("click", e => {
+      e.stopPropagation();
+      if (state.step !== 1) return;
+      markTaskBannerDone("m3-s2-read-signal");
+      state.api.eventLog?.record?.("step2_read_signal");
+      setTimeout(() => runStep(2), 450);
+    }, { once: true });
+  }, 140);
 }
 
 // ===========================================================================
@@ -203,18 +260,66 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p>Quick recall — the three keystone moves:</p>
-    <ol>
-      <li><strong>M1 · Diagnostic.</strong> One specific question off
-        their LinkedIn / Companies House profile. Then silence.</li>
+    <p style="font-size:14px;">Quick recall — three keystone moves:</p>
+    <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
+      <li><strong>M1 · Diagnostic.</strong> One sharp question off the
+        LinkedIn / CH profile. Then silence.</li>
       <li><strong>M2 · Acknowledge.</strong> Restate the buyer's objection
-        in their own words before you respond.</li>
+        in their words before you respond.</li>
       <li><strong>M3 · Close.</strong> ← <em>this module.</em> Two slots,
         one invite, during the call.</li>
     </ol>
-    <p>Top reps land all three. Bottom-quartile reps invert all three. The
-    Gong data is unambiguous.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
+      Next action: open the Calendar app — that's the habit gate. Dial
+      stays disabled until Calendar is open in a second window.
+    </p>
   `;
+  // Open the Calendar launcher hint in the taskbar + watch for open event.
+  setTimeout(() => {
+    const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (outreachBody) {
+      mountTaskBanner(outreachBody, {
+        id: "m3-s3-open-calendar",
+        label: "Open the Calendar app — habit gate",
+        hint: "Use the 'Open Calendar' button or the taskbar",
+        state: "active",
+      });
+
+      // Inject a clearly-labelled Open Calendar button into Outreach body
+      // (it stays in the rep's eyeline while they're already looking here).
+      if (!outreachBody.querySelector("[data-m3-s3-open-cal]")) {
+        const wrap = document.createElement("div");
+        wrap.style.cssText = "margin:8px 0 0; padding:10px 12px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+        wrap.innerHTML = `
+          <span style="font-size:12.5px; color:var(--ftc-ink-2);">
+            Calendar must be open before you dial. That's the habit.
+          </span>
+          <button type="button"
+                  class="btn btn--primary"
+                  data-m3-s3-open-cal
+                  style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+            📅 Open Calendar
+          </button>
+        `;
+        outreachBody.appendChild(wrap);
+        wrap.querySelector("[data-m3-s3-open-cal]").addEventListener("click", () => {
+          state.api.os.openApp("calendar", { suggestedSlots: ["Tue 11:00", "Thu 14:00"] });
+        });
+      }
+    }
+
+    // Auto-advance on the actual calendar-opened event from the shell bus.
+    const onAppOpened = (ev) => {
+      if (ev.detail?.appId !== "calendar") return;
+      if (state.step !== 2) return;
+      state.api.eventBus.removeEventListener("app:opened", onAppOpened);
+      markTaskBannerDone("m3-s3-open-calendar");
+      state.calendarOpened = true;
+      state.api.eventLog?.record?.("step3_calendar_opened");
+      setTimeout(() => runStep(3), 500);
+    };
+    state.api.eventBus.addEventListener("app:opened", onAppOpened);
+  }, 140);
 }
 
 // ===========================================================================

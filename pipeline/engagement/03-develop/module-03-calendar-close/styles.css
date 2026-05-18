@@ -20,6 +20,40 @@
                           );
 }
 
+/* ===== M3 step-1 / step-2 decorations injected into Outreach ============ */
+.is-warm-highlight {
+  outline: 2px solid var(--brand-green, #0a8754);
+  outline-offset: -2px;
+  background: linear-gradient(180deg, #f6fdf3 0%, #ffffff 80%);
+  border-radius: 6px;
+}
+.open-signal-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  padding: 2px 9px;
+  background: #d4f1c4;
+  color: #054d2f;
+  border-radius: 999px;
+  font-family: var(--ftc-font-mono, ui-monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+.open-signal-chip strong { font-weight: 700; }
+.open-signal-chip.is-pulsing {
+  animation: open-chip-pulse 1.4s ease-in-out infinite;
+}
+@keyframes open-chip-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(10,135,84,0.45); }
+  50%      { box-shadow: 0 0 0 6px rgba(10,135,84,0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .open-signal-chip.is-pulsing { animation: none; }
+}
+
 /* ===== Narrative overlay (Gagné event presenter) ======================== */
 .narrative-overlay {
   position: fixed;
