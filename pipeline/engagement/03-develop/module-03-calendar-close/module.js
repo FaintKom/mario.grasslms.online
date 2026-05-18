@@ -110,7 +110,8 @@ async function start() {
       wireProgressTimer();
       wireHelpButton();
       wireNarrativeButtons();
-      runStep(0);
+      // Welcome card defers runStep(0) until the rep clicks Start.
+      showWelcomeCard(() => runStep(0));
     },
   });
 }
@@ -146,6 +147,49 @@ function runStep(i) {
   next.disabled = false;
   next.setAttribute("aria-disabled", "false");
   STEPS[i].handler(body);
+}
+
+/**
+ * Welcome intro card · mounts a centered modal on module load.
+ * Dismiss button calls onStart() so the timeline begins on rep's signal.
+ */
+function showWelcomeCard(onStart) {
+  // Hide the narrative panel while the welcome is showing so the rep's
+  // first visual is the card, not the side overlay peeking.
+  const overlay = document.getElementById("narrative-overlay");
+  if (overlay) overlay.style.visibility = "hidden";
+
+  const card = document.createElement("div");
+  card.className = "welcome-card";
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-modal", "true");
+  card.setAttribute("aria-labelledby", "welcome-title");
+  card.innerHTML = `
+    <div class="welcome-card__panel">
+      <span class="welcome-card__logo" aria-hidden="true">FTC</span>
+      <div class="welcome-card__kicker">Module 3 · keystone close</div>
+      <h2 class="welcome-card__title" id="welcome-title">Calendar Close</h2>
+      <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
+      <p class="welcome-card__lede">
+        Learn the M3 keystone close in the apps your team actually uses.
+        Calendar in second tab. Two slots. Invite during the call.
+      </p>
+      <button type="button" class="welcome-card__start" data-action="start">
+        Start module &rarr;
+      </button>
+    </div>
+  `;
+  document.body.appendChild(card);
+  const btn = card.querySelector("[data-action='start']");
+  btn?.focus({ preventScroll: true });
+  btn?.addEventListener("click", () => {
+    card.classList.add("welcome-card--out");
+    setTimeout(() => {
+      card.remove();
+      if (overlay) overlay.style.visibility = "";
+      onStart?.();
+    }, 220);
+  });
 }
 
 function updateProgressBar(currentStep) {

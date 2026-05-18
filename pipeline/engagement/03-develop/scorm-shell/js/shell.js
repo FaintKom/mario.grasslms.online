@@ -20,13 +20,13 @@ import { appRegistry, icon } from "./apps/registry.js";
 // Eager-import every app so registerApp() side-effects populate the registry
 // before any consumer calls MiniOS.openApp(). Browsers cache by URL, so
 // re-imports inside individual modules are free.
-import "./apps/outreach.js?v=20260519b";
-import "./apps/gong.js?v=20260519b";
-import "./apps/salesforce.js?v=20260519b";
-import "./apps/linkedin-ch.js?v=20260519b";
-import "./apps/calendar.js?v=20260519b";
-import "./apps/phone-dialler.js?v=20260519b";
-import "./apps/slack.js?v=20260519b";
+import "./apps/outreach.js?v=20260519d";
+import "./apps/gong.js?v=20260519d";
+import "./apps/salesforce.js?v=20260519d";
+import "./apps/linkedin-ch.js?v=20260519d";
+import "./apps/calendar.js?v=20260519d";
+import "./apps/phone-dialler.js?v=20260519d";
+import "./apps/slack.js?v=20260519d";
 
 /** Shared inter-app + telemetry event bus. */
 export const eventBus = new EventTarget();
@@ -217,39 +217,59 @@ export class MiniOS {
 
   /**
    * Place a new window next to existing ones, not cascading on top.
-   * Strategy: scan a horizontal row at top, find first x-gap large enough
-   * for the new window. If row is full, fall back to a small cascade
-   * offset from the last window.
+   *
+   * Strategy:
+   *   1. If existing windows in the top row, try placing right-of with PAD.
+   *      If width doesn't fit, SHRINK the new window's width to fit the
+   *      remaining horizontal space (preserve aspect, clamp to 280 min).
+   *   2. Else try placing below the first row.
+   *   3. Else top-left with small cascade.
    */
   _positionInitial(el) {
     const PAD = 16;
-    const w = parseInt(el.style.width)  || 480;
-    const h = parseInt(el.style.height) || 360;
+    const MIN_W = 280;
+    const MIN_H = 220;
+    let w = parseInt(el.style.width)  || 480;
+    let h = parseInt(el.style.height) || 360;
+    const ratio = w / h;
     const desktop = document.getElementById("desktop");
     const dRect = desktop?.getBoundingClientRect();
-    const maxW = (dRect?.width  ?? 1200) - PAD;
-    const maxH = (dRect?.height ?? 700)  - PAD;
+    const maxW = (dRect?.width  ?? 1200);
+    const maxH = (dRect?.height ?? 700);
     const existing = [...this.windows.values()]
       .filter(h => h.el !== el)
       .map(h => h.el.getBoundingClientRect());
     const dOff = dRect ? { x: dRect.left, y: dRect.top } : { x: 0, y: 0 };
 
-    // Try to place to the right of the rightmost existing window in the top row.
     let placed = false;
     if (existing.length > 0) {
       const topRow = existing.filter(r => (r.top - dOff.y) < PAD + 50);
       if (topRow.length) {
         const rightmost = Math.max(...topRow.map(r => (r.right - dOff.x)));
-        if (rightmost + PAD + w <= maxW) {
+        const spaceRight = maxW - rightmost - PAD * 2;
+        if (spaceRight >= MIN_W) {
+          // If full width doesn't fit, shrink to spaceRight (preserve aspect).
+          if (w > spaceRight) {
+            w = spaceRight;
+            h = Math.max(MIN_H, Math.round(w / ratio));
+            el.style.width  = `${w}px`;
+            el.style.height = `${h}px`;
+          }
           el.style.left = `${rightmost + PAD}px`;
           el.style.top  = `${PAD}px`;
           placed = true;
         }
       }
-      // Try below the first row if right has no space.
       if (!placed) {
         const rowH = Math.max(...existing.map(r => r.bottom - dOff.y));
-        if (rowH + PAD + h <= maxH) {
+        const spaceBelow = maxH - rowH - PAD * 2;
+        if (spaceBelow >= MIN_H) {
+          if (h > spaceBelow) {
+            h = spaceBelow;
+            w = Math.max(MIN_W, Math.round(h * ratio));
+            el.style.width  = `${w}px`;
+            el.style.height = `${h}px`;
+          }
           el.style.left = `${PAD}px`;
           el.style.top  = `${rowH + PAD}px`;
           placed = true;
@@ -257,7 +277,6 @@ export class MiniOS {
       }
     }
     if (!placed) {
-      // First window OR no fit — top-left with small per-window cascade.
       const idx = this.windows.size;
       el.style.left = `${PAD + (idx % 4) * 20}px`;
       el.style.top  = `${PAD + (idx % 4) * 20}px`;
