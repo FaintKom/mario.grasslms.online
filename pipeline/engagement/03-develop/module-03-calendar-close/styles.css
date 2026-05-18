@@ -338,6 +338,34 @@
   .step-progress__seg { width: 14px; height: 4px; }
 }
 
+/* ===== Mobile layout (narrative overlay → bottom sheet) ================ */
+@media (max-width: 720px) {
+  /* Topbar: shrink module title + truncate */
+  #module-title {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 110px;
+  }
+  /* Hide back-link text label on small screens, keep the ← arrow */
+  .topbar-back { font-size: 0; padding: 4px 8px; }
+  .topbar-back::before { content: "←"; font-size: 14px; }
+  /* Narrative overlay becomes a bottom sheet so it doesn't cover apps */
+  .narrative-overlay {
+    right: 0 !important;
+    left: 0 !important;
+    bottom: 44px !important;        /* clear taskbar */
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 40vh !important;
+    border-radius: 12px 12px 0 0 !important;
+    border-bottom-width: 0 !important;
+  }
+  /* Apps respect the narrative bottom-sheet height */
+  #desktop { padding-bottom: 40vh; }
+}
+
 /* ===== M3 step-1 / step-2 decorations injected into Outreach ============ */
 .is-warm-highlight {
   outline: 2px solid var(--brand-green, #0a8754);
