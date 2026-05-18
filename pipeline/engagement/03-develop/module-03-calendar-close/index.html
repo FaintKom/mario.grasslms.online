@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
   <title>Module 3 · M3 Calendar Close · FinTechCard SDR Onboarding</title>
   <meta name="description" content="Calendar in second tab. Two slots. One invite. Sent before you hang up.">
-  <link rel="stylesheet" href="../scorm-shell/styles/shell.css?v=20260519i">
-  <link rel="stylesheet" href="../scorm-shell/styles/apps.css?v=20260519i">
-  <link rel="stylesheet" href="./styles.css?v=20260519i">
+  <link rel="stylesheet" href="../scorm-shell/styles/shell.css?v=20260519k">
+  <link rel="stylesheet" href="../scorm-shell/styles/apps.css?v=20260519k">
+  <link rel="stylesheet" href="./styles.css?v=20260519k">
 </head>
 <body class="module module--m3">
   <a class="skip-link" href="#desktop">Skip to main content</a>
@@ -58,6 +58,17 @@
       </div>
       <footer class="narrative-overlay__foot">
         <button type="button"
+                class="narrative-icon-btn"
+                id="narrative-redo"
+                title="Redo this step"
+                aria-label="Redo this step">↻</button>
+        <button type="button"
+                class="narrative-icon-btn"
+                id="narrative-skip"
+                title="Skip ahead (preview)"
+                aria-label="Skip to next step without completing">⤼</button>
+        <div class="narrative-overlay__foot-spacer"></div>
+        <button type="button"
                 class="btn btn--ghost"
                 id="narrative-back"
                 hidden>Back</button>
@@ -87,6 +98,6 @@
   <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Module entry — imports the shell, then runs the M3 Gagné timeline. -->
-  <script type="module" src="./module.js?v=20260519i"></script>
+  <script type="module" src="./module.js?v=20260519k"></script>
 </body>
 </html>

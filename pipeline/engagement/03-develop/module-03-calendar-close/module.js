@@ -212,11 +212,27 @@ function wireNarrativeButtons() {
   document.getElementById("narrative-back").addEventListener("click", () => {
     if (state.step > 0) runStep(state.step - 1);
   });
+  // Redo: reset light state for this step + re-run it. Heavy state (telemetry,
+  // quiz score) is intentionally NOT wiped — this is a 'replay the action'
+  // affordance, not a full reset.
+  document.getElementById("narrative-redo")?.addEventListener("click", () => {
+    runStep(state.step);
+  });
+  // Skip: advance one step without completing. Visible-cue only — no telemetry
+  // pretend-completion. Useful for preview / debug / non-linear review.
+  document.getElementById("narrative-skip")?.addEventListener("click", () => {
+    if (state.step >= STEPS.length - 1) return finishModule();
+    runStep(state.step + 1);
+  });
 }
 
 function wireHelpButton() {
   document.getElementById("help-button").addEventListener("click", () => {
-    state.api.os.openApp("slack", { pinnedFocus: "3-move-card" });
+    // Contextual help: pin the move card that matches the current step's focus.
+    // M3 module is M3-themed throughout but step 3 references all 3 moves
+    // (recall prior), so highlight 3-move card; everywhere else highlight M3.
+    const highlight = state.step === 2 ? "pre-training" : "M3";
+    state.api.os.openApp("slack", { highlightModule: highlight });
   });
 }
 
@@ -620,13 +636,9 @@ function stepSoloProblem(body) {
 
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Solo run.</strong> Lead: <strong>${emma.name}</strong>
-      (${emma.archetype_label}). Warmed by your previous touch.
-    </p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Dial stays disabled until Calendar opens. Then: dial → speak two
-      slots → send invite. Watch Salesforce
-      <code>Next_Step_Booked__c</code> flip live.
+      <strong>Solo.</strong> ${emma.name} (${emma.archetype_label}) — warm
+      lead. Calendar gate, then dial, two slots, invite.
+      <code>Next_Step_Booked__c</code> flips during the call.
     </p>
     <p id="solo-status" class="retention-note" aria-live="polite">
       Status: Calendar closed · Dial disabled
