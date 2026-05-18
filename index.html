@@ -3564,9 +3564,29 @@ function submitBooking(e){
     timeline: data.get('timeline'),
     brief: data.get('brief'),
   };
-  // Booking submissions surface via email (mailto fallback below)
-  // + are also logged client-side for quick verification.
+  // Booking submissions reach Mario via mailto handoff — opens the
+  // visitor's mail client with payload pre-filled to mrbecerraduenias@gmail.com.
+  // Client-side log kept for quick verification.
   console.log('[booking submit]', payload);
+  const subject = `Booking · ${payload.name || 'website visitor'}${payload.company ? ' (' + payload.company + ')' : ''}`;
+  const lines = [
+    `Name: ${payload.name || ''}`,
+    payload.company ? `Company: ${payload.company}` : null,
+    `Email: ${payload.email || ''}`,
+    payload.messenger ? `Messenger: ${payload.messenger}` : null,
+    payload.topics?.length ? `Topics: ${payload.topics.join(', ')}` : null,
+    payload.budget ? `Budget: ${payload.budget}` : null,
+    payload.timeline ? `Timeline: ${payload.timeline}` : null,
+    '',
+    'Brief:',
+    payload.brief || '(none)',
+    '',
+    '--- Sent from mario.grasslms.online booking form ---',
+  ].filter(Boolean);
+  const body = encodeURIComponent(lines.join('\n'));
+  const mailto = `mailto:mrbecerraduenias@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+  // Open mail client in a new window — avoids replacing the portfolio page.
+  window.open(mailto, '_blank');
   document.getElementById('bfSuccess').hidden = false;
   form.querySelector('.bf-submit').disabled = true;
   form.querySelector('.bf-submit span').textContent = 'Sent ✓';
