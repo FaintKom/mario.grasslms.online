@@ -1183,6 +1183,90 @@ function finishModule() {
   `;
   document.getElementById("narrative-next").hidden = true;
   document.getElementById("narrative-back").hidden = true;
+  showSummaryCard(scorePct);
+}
+
+/**
+ * End-of-module summary card · centered modal with score + time + 9-step
+ * recap + back/restart actions. Shown when finishModule() runs.
+ */
+function showSummaryCard(scorePct) {
+  // Close all windows so the summary is the only thing on screen.
+  keepOnly([]);
+  // Hide the narrative panel.
+  const overlay = document.getElementById("narrative-overlay");
+  if (overlay) overlay.style.visibility = "hidden";
+
+  const totalMs = Date.now() - state.startedAt;
+  const totalMin = Math.floor(totalMs / 60000);
+  const totalSec = Math.floor((totalMs % 60000) / 1000).toString().padStart(2, "0");
+  const stepLabels = STEPS.map(s => s.title);
+
+  // Reuse state.timeline if non-empty — otherwise synth a generic per-step entry.
+  const recapEntries = stepLabels.map((label, i) => {
+    const fromLog = state.timeline.find(e => e.label?.toLowerCase().includes(label.toLowerCase().slice(0, 14)));
+    return {
+      n: i + 1,
+      label,
+      ts: fromLog?.ts || "—",
+    };
+  });
+
+  const card = document.createElement("div");
+  card.className = "summary-card";
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-modal", "true");
+  card.setAttribute("aria-labelledby", "summary-title");
+  card.innerHTML = `
+    <div class="summary-card__panel">
+      <div class="summary-card__check" aria-hidden="true">✓</div>
+      <div class="summary-card__kicker">Module complete</div>
+      <h2 class="summary-card__title" id="summary-title">Calendar Close · cleared</h2>
+
+      <div class="summary-card__stats">
+        <div class="summary-card__stat">
+          <span class="summary-card__stat-k">Quiz</span>
+          <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
+          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below pass"}</span>
+        </div>
+        <div class="summary-card__stat">
+          <span class="summary-card__stat-k">Time</span>
+          <span class="summary-card__stat-v">${totalMin}:${totalSec}</span>
+          <span class="summary-card__stat-sub">target 10:00</span>
+        </div>
+        <div class="summary-card__stat">
+          <span class="summary-card__stat-k">Steps</span>
+          <span class="summary-card__stat-v">${STEPS.length} / ${STEPS.length}</span>
+          <span class="summary-card__stat-sub">100% complete</span>
+        </div>
+      </div>
+
+      <details class="summary-card__recap">
+        <summary>9-step recap</summary>
+        <ol class="summary-card__list">
+          ${recapEntries.map(e => `
+            <li><span class="summary-card__list-n">${e.n}</span>
+                <span class="summary-card__list-label">${e.label}</span>
+                <span class="summary-card__list-ts">${e.ts}</span></li>
+          `).join("")}
+        </ol>
+      </details>
+
+      <div class="summary-card__actions">
+        <a class="summary-card__btn summary-card__btn--ghost" href="../../">
+          &larr; Back to engagement
+        </a>
+        <button type="button" class="summary-card__btn summary-card__btn--primary"
+                data-action="restart">
+          Restart module
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(card);
+  card.querySelector("[data-action='restart']")?.addEventListener("click", () => {
+    location.reload();
+  });
 }
 
 // ===========================================================================
