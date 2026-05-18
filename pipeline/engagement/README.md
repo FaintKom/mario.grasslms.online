@@ -1,7 +1,5 @@
 # FinTechCard · SMB SDR Onboarding · Case Study Build
 
-*Portfolio case study · anonymised composite based on a real-shape Series-B EU corporate-card fintech. Client name, stakeholder names, and dashboard data are synthetic; numbers preserve real proportions.*
-
 **Engagement shape:** Full instructional-design cycle · Discover → Iterate · 16-week build window · 6-month measurement window post-launch
 **Lead designer (role):** Mario Becerra · solo + 2 client SMEs + 1 LMS admin
 **Budget:** €58 000 fixed-fee · phased 25/50/25

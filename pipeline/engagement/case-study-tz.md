@@ -1,6 +1,6 @@
 # Case brief · FinTechCard · SMB SDR Onboarding
 
-> The full engagement input pack. Everything you need to build the case study from scratch — client snapshot, named stakeholders with verbatim inputs, 10 SME interviews, 22 Gong call findings, ICP buyer specs, product facts, dashboard schema, comp plan, brand voice, regulatory context. Anonymised composite; numbers preserve real proportions for a Series-B B2B card issuer.
+> The full engagement input pack. Client snapshot, named stakeholders with verbatim inputs, 10 SME interviews, 22 Gong call findings, ICP buyer specs, product facts, dashboard schema, comp plan, brand voice, regulatory context.
 
 ---
 
