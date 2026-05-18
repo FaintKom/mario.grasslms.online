@@ -1,765 +1,544 @@
 /**
- * module.js · Module 4 · ICP Buyer Fit (variability of practice)
+ * Module 4 · M4 ICP Buyer Fit · runtime (in-app driven)
+ * ---------------------------------------------------------------------------
+ * Same architecture as M3 — bootModule + task-banner + welcome/summary cards.
+ * Content: score a lead against 5 ICP criteria BEFORE you dial. Don't waste
+ * 8 minutes on a non-ICP buyer.
  *
- * Architecture (Gagné event timeline per M4-icp-buyer-fit.md):
- *   0:00-0:30  Gain attention — 4-card archetype lineup (Maria/Tom/Emma/Lukas)
- *   0:30-1:00  State outcome   — LO-ICP.1 + LO-ICP.2
- *   1:00-1:30  Recall          — 3-move model + 4-prop model
- *   1:30-3:00  Worked example  — M1 pattern adapted to 2 archetypes side-by-side
- *                                (Maria retail vs Lukas restaurant DE)
- *   3:00-5:30  Drill D4        — 4 rapid LinkedIn-CH classification cards
- *                                (replaces canonical completion problem per
- *                                 4C/ID variability — Van Merriënboer Ch.10)
- *                                KPI: m4_archetype_classification_accuracy
- *   5:30-8:30  Solo problem    — 3 interleaved mini-calls (random permutation)
- *                                Per call: open LinkedIn-CH → pick M1 + prop →
- *                                buyer 2-line reply → M2 restate → calendar-close
- *                                KPI: m4_archetype_match_score (fires per call)
- *   8:30-9:00  Feedback        — 3-row archetype-fit self-score matrix
- *   9:00-9:30  Quiz            — 3 scenario items (LO-ICP.x)
- *   9:30-10:00 Take-away       — key line + +7d spaced retrieval
- *
- * Randomisation: seeded RNG (mulberry32) so manager calibration can replay runs.
- *
- * Per Phase 2 critic finding: if dry-run overruns ≤10 min budget, the module
- * falls back to 2 interleaved calls (not 3). Toggle via INTERLEAVED_CALLS const.
- *
- * @see 02-design/module-storyboards/M4-icp-buyer-fit.md
- * @see 02-design/4cid-blueprint.md §3.3 (variability) + §6 (part-task drills)
- * @see 02-design/learning-outcomes-abcd-bloom.md §4.4 (LO-ICP.1–4)
+ * Outcomes: LO-M4.1 (5-criteria score) · LO-M4.2 (skip non-ICP)
  */
 
-// ============================================================================
-// CONFIG
-// ============================================================================
+import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
+import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 
-/** Number of interleaved calls in Solo block. 3 = full variability per
- *  storyboard; 2 = fallback per Phase 2 critic if dry-run overruns 10 min. */
-const INTERLEAVED_CALLS = 3;
+function keepOnly(appIds) { if (!state.api?.os?.listWindows) return; const k = new Set(appIds); for (const w of state.api.os.listWindows()) if (!k.has(w.appId)) state.api.os.closeApp(w); }
 
-/** RNG seed — manager calibration can replay learner runs by passing
- *  ?seed=<int> on the URL. Default seed below for repeatable demos. */
-const DEFAULT_SEED = 20260517;
-
-/** Drill D4 card count. */
-const DRILL_CARDS = 4;
-
-/** Drill per-card flash window (seconds) — keystone rule: ≤5s per card. */
-const DRILL_FLASH_S = 5;
-
-/** Bloom-tagged learning outcomes hit by this module. */
-const LOS = ["LO-ICP.1", "LO-ICP.2", "LO-ICP.3", "LO-ICP.4"];
-
-// ============================================================================
-// UTILITIES
-// ============================================================================
-
-/** Mulberry32 — fast, tiny seedable PRNG. Deterministic per seed. */
-function makeRng(seed) {
-  let a = seed >>> 0;
-  return function rng() {
-    a |= 0; a = (a + 0x6D2B79F5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/** Fisher-Yates shuffle using a provided rng. */
-function shuffle(arr, rng) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-/** Get seed from URL or default. */
-function getSeed() {
-  const url = new URLSearchParams(globalThis.location?.search ?? "");
-  const s = parseInt(url.get("seed") ?? "", 10);
-  return Number.isFinite(s) ? s : DEFAULT_SEED;
-}
-
-/** Format mm:ss from seconds. */
-function fmtTime(s) {
-  const m = Math.floor(s / 60);
-  const r = Math.floor(s % 60);
-  return `${m}:${String(r).padStart(2, "0")}`;
-}
-
-const ARCHETYPE_GLYPH = {
-  storefront: "🏬",
-  rocket:     "🚀",
-  factory:    "🏭",
-  forkKnife:  "🍴",
-};
-const ARCHETYPE_NAME = {
-  storefront: "Maria",
-  rocket:     "Tom",
-  factory:    "Emma",
-  forkKnife:  "Lukas",
-};
-const ARCHETYPE_TAGLINE = {
-  storefront: "Retail SMB owner · UK · behavioural",
-  rocket:     "Series-B SaaS founder · quant",
-  factory:    "Manufacturing ops · accountant-sensitive",
-  forkKnife:  "DE restaurant group · trust-first",
+const state = {
+  api: null, step: 0, startedAt: 0,
+  scoresLogged: false, completionAnswer: null,
+  quizIndex: 0, quizScore: 0,
+  transcripts: [], prospects: [], quizItems: [], timeline: [],
 };
 
-// ============================================================================
-// DATA LOADERS
-// ============================================================================
-
-async function loadJson(path) {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error(`load failed: ${path}`);
-  return res.json();
-}
-
-// ============================================================================
-// MAIN ENTRY
-// ============================================================================
-
-/**
- * Module 4 runner. Called by index.html once bootModule has returned.
- * @param {import("../scorm-shell/js/shell.js").BootApi} ctx
- */
-export async function runModule4(ctx) {
-  const seed = getSeed();
-  const rng = makeRng(seed);
-
-  const [prospects, transcripts, quiz] = await Promise.all([
-    loadJson("./data/prospects.json"),
+async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.json(); }
+async function loadAllData() {
+  const [t, p, q] = await Promise.all([
     loadJson("./data/transcripts.json"),
+    loadJson("./data/prospects.json"),
     loadJson("./data/quiz.json"),
   ]);
-
-  const state = {
-    seed, rng, prospects, transcripts, quiz,
-    drillResults: [],
-    soloResults: [],
-    quizPicks: [],
-    startTs: performance.now(),
-  };
-
-  startProgressTicker();
-
-  await gainAttention(ctx, state);
-  await stateOutcome(ctx, state);
-  await recallPrior(ctx, state);
-  await workedExample(ctx, state);
-  await drillD4(ctx, state);
-  await soloProblem(ctx, state);
-  await feedbackMatrix(ctx, state);
-  const score = await quizBlock(ctx, state);
-  await takeawayCard(ctx, state, score);
-
-  ctx.complete(score);
+  state.transcripts = t; state.prospects = p; state.quizItems = q;
 }
 
-// ============================================================================
-// PROGRESS TICKER
-// ============================================================================
+async function start() {
+  try { await loadAllData(); }
+  catch (err) { console.error("[M4]", err); renderFatal(err.message); return; }
+  bootModule({
+    moduleId: "M4",
+    title: "Module 4 · ICP Buyer Fit",
+    appsToLaunch: [],
+    onReady(api) {
+      state.api = api; state.startedAt = Date.now();
+      wireProgressTimer(); wireHelpButton(); wireNarrativeButtons();
+      showWelcomeCard(() => runStep(0));
+    },
+  });
+}
+start();
 
-function startProgressTicker() {
+const STEPS = [
+  { title: "Rep wasted 8 min on a non-ICP buyer · gross-margin 0",   handler: stepGainAttention },
+  { title: "By the end · score lead 1-5 on each ICP criterion",     handler: stepStateOutcome },
+  { title: "M1 opens. M2 saves. M3 books. M4 picks who.",           handler: stepRecallPrior },
+  { title: "Watch · M.G. scores Maria 23/25 in 90 seconds",          handler: stepWorkedExample },
+  { title: "Your turn · score Sven for ICP fit",                    handler: stepCompletionProblem },
+  { title: "Solo · score a fresh lead, decide dial or skip",        handler: stepSoloProblem },
+  { title: "Your event log · what just happened",                   handler: stepFeedback },
+  { title: "Quick check · 3 questions",                             handler: stepQuiz },
+  { title: "Key takeaway + your next retrieval drop",               handler: stepTakeaway },
+];
+
+function runStep(i) {
+  state.step = i;
+  document.getElementById("gagne-step").textContent = `${i + 1} of ${STEPS.length}`;
+  document.getElementById("narrative-title").textContent = STEPS[i].title;
+  updateProgressBar(i + 1);
+  const body = document.getElementById("narrative-body"); body.innerHTML = "";
+  document.getElementById("narrative-back").hidden = i === 0;
+  const next = document.getElementById("narrative-next");
+  next.textContent = i === STEPS.length - 1 ? "Finish module" : "Continue";
+  next.disabled = false; next.setAttribute("aria-disabled", "false");
+  STEPS[i].handler(body);
+}
+
+function showWelcomeCard(onStart) {
+  const overlay = document.getElementById("narrative-overlay");
+  if (overlay) overlay.style.visibility = "hidden";
+  const card = document.createElement("div");
+  card.className = "welcome-card";
+  card.setAttribute("role", "dialog"); card.setAttribute("aria-modal", "true");
+  card.innerHTML = `
+    <div class="welcome-card__panel">
+      <span class="welcome-card__logo" aria-hidden="true">FTC</span>
+      <div class="welcome-card__kicker">Module 4 &middot; keystone qualify</div>
+      <h2 class="welcome-card__title">ICP Buyer Fit</h2>
+      <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
+      <p class="welcome-card__lede">
+        Score every cold lead 1-5 on five ICP criteria before you dial.
+        Below 18/25 means skip — your hour is worth more than that.
+      </p>
+      <button type="button" class="welcome-card__start" data-action="start">
+        Start module &rarr;
+      </button>
+    </div>`;
+  document.body.appendChild(card);
+  const btn = card.querySelector("[data-action='start']");
+  btn?.focus({ preventScroll: true });
+  btn?.addEventListener("click", () => {
+    card.classList.add("welcome-card--out");
+    setTimeout(() => { card.remove(); if (overlay) overlay.style.visibility = ""; onStart?.(); }, 220);
+  });
+}
+
+function updateProgressBar(c) {
+  const bar = document.getElementById("step-progress");
+  if (!bar) return;
+  bar.setAttribute("aria-valuenow", String(c));
+  bar.querySelectorAll(".step-progress__seg").forEach(s => {
+    const n = Number(s.dataset.step);
+    s.dataset.state = n < c ? "done" : n === c ? "current" : "pending";
+  });
+}
+
+function wireNarrativeButtons() {
+  document.getElementById("narrative-next").addEventListener("click", () => {
+    if (state.step >= STEPS.length - 1) return finishModule();
+    runStep(state.step + 1);
+  });
+  document.getElementById("narrative-back").addEventListener("click", () => { if (state.step > 0) runStep(state.step - 1); });
+  document.getElementById("narrative-redo")?.addEventListener("click", () => runStep(state.step));
+  document.getElementById("narrative-skip")?.addEventListener("click", () => {
+    if (state.step >= STEPS.length - 1) return finishModule();
+    runStep(state.step + 1);
+  });
+}
+function wireHelpButton() {
+  document.getElementById("help-button").addEventListener("click", () => {
+    const h = state.step === 2 ? "pre-training" : "M4";
+    state.api.os.openApp("slack", { highlightModule: h });
+  });
+}
+function wireProgressTimer() {
   const el = document.getElementById("module-progress");
-  if (!el) return;
-  const t0 = performance.now();
-  const id = setInterval(() => {
-    const elapsed = (performance.now() - t0) / 1000;
-    el.textContent = `${fmtTime(elapsed)} / 10:00`;
-    if (elapsed >= 600) clearInterval(id);
-  }, 1000);
+  const tick = () => {
+    const ms = Date.now() - state.startedAt;
+    el.textContent = `${Math.floor(ms / 60000)}:${Math.floor((ms % 60000) / 1000).toString().padStart(2, "0")} / 10:00`;
+  };
+  tick(); setInterval(tick, 1000);
 }
 
-// ============================================================================
-// 0:00-0:30 · GAIN ATTENTION — 4-card archetype lineup
-// ============================================================================
+// --- Steps 1-3 -------------------------------------------------------------
 
-function gainAttention(ctx, state) {
-  const stage = document.getElementById("m4-stage");
-  stage.innerHTML = `
-    <section class="m4-panel" aria-labelledby="m4-gain-h">
-      <h1 id="m4-gain-h">Three dials. Three buyers. Three minutes.</h1>
-      <p class="lead">
-        Real day: the pattern-match has to be fast. M1, M2, M3 are locked —
-        but which buyer you're talking to changes the opener, the objection,
-        and the prop.
-      </p>
-      <div class="archetype-lineup" role="list" aria-label="The four ICP archetypes">
-        ${["storefront","rocket","factory","forkKnife"].map(a => `
-          <div class="archetype-card" data-archetype="${a}" role="listitem">
-            <span class="icon-circle" aria-hidden="true">${ARCHETYPE_GLYPH[a]}</span>
-            <div class="name">${ARCHETYPE_NAME[a]}</div>
-            <div class="tagline">${ARCHETYPE_TAGLINE[a]}</div>
-          </div>
-        `).join("")}
-      </div>
-      <button type="button" class="m4-cta" data-action="next">Got it · next</button>
-    </section>
-  `;
-  return waitForClick(stage, "[data-action='next']");
+function stepGainAttention(body) {
+  body.innerHTML = `
+    <blockquote class="peer-quote">
+      Spent 8 minutes on a 4-person craft shop with no procurement. Closed nothing.
+      <cite>— Exit interview · rep dropped at month 5</cite>
+    </blockquote>
+    <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
+      Bottom-quartile reps dial every name on the list. Top reps score first.
+    </p>`;
+  state.api.os.openApp("outreach", { highlightLeadId: "M4-L-001" });
+  setTimeout(() => decorateOutreachForStep1(), 140);
+}
+function decorateOutreachForStep1() {
+  const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!ob) return;
+  mountTaskBanner(ob, { id: "m4-s1-pick", label: "Click Maria — we'll score her against ICP next", hint: "Two Pines Apparel · 35 FTE retail", state: "active" });
+  let tries = 0;
+  const tick = () => {
+    const row = [...ob.querySelectorAll(".lead-row")].find(r => /Maria/i.test(r.textContent || ""));
+    if (!row) { if (++tries < 20) return setTimeout(tick, 100); return; }
+    if (row.dataset.m4Done === "true") return;
+    row.classList.add("is-warm-highlight"); row.dataset.m4Done = "true";
+    row.addEventListener("click", e => {
+      if (e.target.closest('[data-action="dial"]')) return;
+      if (state.step !== 0) return;
+      markTaskBannerDone("m4-s1-pick");
+      state.api.eventLog?.record?.("step1_picked_lead");
+      setTimeout(() => runStep(1), 450);
+    });
+  };
+  tick();
 }
 
-// ============================================================================
-// 0:30-1:00 · STATE OUTCOME
-// ============================================================================
-
-function stateOutcome(ctx, state) {
-  const stage = document.getElementById("m4-stage");
-  stage.innerHTML = `
-    <section class="m4-panel" aria-labelledby="m4-outcome-h">
-      <h1 id="m4-outcome-h">What you'll do in the next 10 minutes</h1>
-      <div class="m4-outcome">
-        Pick the buyer in under 5 seconds and run M1 + M2 + M3 against three of
-        them back-to-back — without warming up between calls.
-        <small>Outcomes: LO-ICP.1 (classify archetype) · LO-ICP.2 (best opener + prop).</small>
-      </div>
-      <p class="muted">
-        4C/ID variability of practice — the three calls are interleaved, not
-        blocked. You can't pattern-match on a single archetype's cues.
-      </p>
-      <button type="button" class="m4-cta" data-action="next">Ready</button>
-    </section>
-  `;
-  return waitForClick(stage, "[data-action='next']");
-}
-
-// ============================================================================
-// 1:00-1:30 · RECALL PRIOR — 3-move + 4-prop models
-// ============================================================================
-
-function recallPrior(ctx, state) {
-  const stage = document.getElementById("m4-stage");
-  stage.innerHTML = `
-    <section class="m4-panel" aria-labelledby="m4-recall-h">
-      <h1 id="m4-recall-h">Two models already in your head</h1>
-      <h2>The 3-move model (M1 / M2 / M3)</h2>
-      <ul>
-        <li><strong>M1 Diagnostic.</strong> One specific question off LinkedIn or Companies House. Wait 4 seconds.</li>
-        <li><strong>M2 Acknowledge.</strong> Restate the objection in the buyer's own words. Then ask the one follow-up.</li>
-        <li><strong>M3 Calendar close.</strong> Two slots, named aloud, invite sent during the call.</li>
-      </ul>
-      <h2>The 4 product props</h2>
-      <ol>
-        <li>Real-time spend control — owners who got burned by expense fraud.</li>
-        <li>Multi-user cards + per-card limits — growing teams, scale-ups.</li>
-        <li>Auto-FX at interbank — cross-border SMBs.</li>
-        <li>Receipt capture + accounting sync — bookkeeping-painful operations.</li>
-      </ol>
-      <button type="button" class="m4-cta" data-action="next">Onto the worked example</button>
-    </section>
-  `;
-  return waitForClick(stage, "[data-action='next']");
-}
-
-// ============================================================================
-// 1:30-3:00 · WORKED EXAMPLE — same M1 pattern × 2 archetypes (Mayer signalling)
-// ============================================================================
-
-function workedExample(ctx, state) {
-  const stage = document.getElementById("m4-stage");
-  const left  = state.transcripts.find(t => t.archetype === "storefront");
-  const right = state.transcripts.find(t => t.archetype === "forkKnife");
-
-  stage.innerHTML = `
-    <section class="m4-panel" aria-labelledby="m4-worked-h">
-      <h1 id="m4-worked-h">Same move, two domains</h1>
-      <p class="lead">
-        The <strong>M1 diagnostic</strong> structure is identical — signal +
-        who-controls-what question. Watch how the framing flexes to the buyer.
-      </p>
-      <div class="worked-pair">
-        ${[left, right].map(t => `
-          <article class="worked-card" data-archetype="${t.archetype}"
-                   style="--a-cue: ${t.archetype === 'storefront' ? '#d97706' : '#00875f'}">
-            <header>
-              <span class="icon-circle" aria-hidden="true">${ARCHETYPE_GLYPH[t.archetype]}</span>
-              <span class="who">${escapeHtml(t.who)}</span>
-              <span class="domain">${escapeHtml(t.domain)}</span>
-            </header>
-            <div class="worked-line" data-move="signal">
-              <span class="label">Signal</span>
-              <span class="text">${escapeHtml(t.signal)}</span>
-            </div>
-            <div class="worked-line" data-move="M1">
-              <span class="label">M1</span>
-              <span class="text">"${escapeHtml(t.m1_line)}"</span>
-            </div>
-            <div class="worked-line" data-move="prop">
-              <span class="label">Prop</span>
-              <span class="text">${escapeHtml(t.prop_pitch)}</span>
-            </div>
-          </article>
-        `).join("")}
-      </div>
-      <p class="muted">
-        Mayer signalling: the <strong>M1</strong> label is the same colour on
-        both cards — a redundant cue that the underlying move hasn't changed,
-        only the buyer's domain has.
-      </p>
-      <button type="button" class="m4-cta" data-action="next">Got the pattern · drill me</button>
-    </section>
-  `;
-  ctx.eventLog.record("worked_example_completed");
-  return waitForClick(stage, "[data-action='next']");
-}
-
-// ============================================================================
-// 3:00-5:30 · DRILL D4 — 4 LinkedIn-CH cards, classify archetype in ≤ 5 s
-// ============================================================================
-
-async function drillD4(ctx, state) {
-  const stage = document.getElementById("m4-stage");
-  const real = ["storefront","rocket","factory","forkKnife"]
-    .map(a => state.prospects.find(p => p.archetype === a))
-    .filter(Boolean);
-  const cards = shuffle(real, state.rng).slice(0, DRILL_CARDS);
-
-  for (let i = 0; i < cards.length; i++) {
-    await runDrillCard(ctx, state, stage, cards[i], i + 1, cards.length);
-  }
-
-  const correct = state.drillResults.filter(r => r.correct).length;
-  const accuracy = correct / state.drillResults.length;
-  ctx.eventLog.record("completion_problem_completed");
-  ctx.eventLog.record("drill_d4_summary", {
-    correct, total: state.drillResults.length,
-    m4_archetype_classification_accuracy: accuracy,
-  });
-
-  stage.innerHTML = `
-    <section class="m4-panel" aria-labelledby="m4-drill-end-h">
-      <h1 id="m4-drill-end-h">Drill complete · ${correct}/${cards.length} archetype calls correct</h1>
-      <p class="lead">
-        ${accuracy >= 0.75
-          ? "Pattern locked. Now run the moves against three of them — interleaved."
-          : "Below the 75% bar — the Solo block reinforces. Watch the side-rail steps."}
-      </p>
-      <button type="button" class="m4-cta" data-action="next">Open the workspace</button>
-    </section>
-  `;
-  return waitForClick(stage, "[data-action='next']");
-}
-
-function runDrillCard(ctx, state, stage, card, idx, total) {
-  return new Promise(resolve => {
-    let timeLeft = DRILL_FLASH_S;
-    const start = performance.now();
-    stage.innerHTML = `
-      <section class="m4-panel" aria-labelledby="m4-drill-h">
-        <h1 id="m4-drill-h">Drill D4 · card ${idx} of ${total}</h1>
-        <p class="lead">≤ 5 seconds. Use number keys <kbd>1</kbd>–<kbd>4</kbd> or click.</p>
-        <div class="drill-shell">
-          <div class="drill-card" tabindex="0" aria-label="Drill card ${idx}">
-            <div class="drill-meta">
-              <span>LinkedIn / Companies House preview</span>
-              <span class="drill-timer" aria-live="polite" id="drill-timer">${timeLeft}s</span>
-            </div>
-            <dl class="drill-rows">
-              <dt>Industry</dt><dd>${escapeHtml(card.industry)}</dd>
-              <dt>FTE</dt><dd>${card.fte}</dd>
-              <dt>Spend</dt><dd>≈ €${card.monthly_spend.toLocaleString()}/mo</dd>
-              <dt>Stage</dt><dd>${escapeHtml(card.stage)}</dd>
-            </dl>
-            <div class="drill-keys" role="group" aria-label="Pick the archetype">
-              ${["storefront","rocket","factory","forkKnife"].map((a, i) => `
-                <button type="button" data-pick="${a}" aria-label="${ARCHETYPE_NAME[a]}">
-                  <span aria-hidden="true">${ARCHETYPE_GLYPH[a]}</span>
-                  <span>${ARCHETYPE_NAME[a]}</span>
-                  <kbd>${i + 1}</kbd>
-                </button>
-              `).join("")}
-            </div>
-          </div>
-          <aside class="drill-sidebar" aria-label="Drill progress">
-            <h3>Progress</h3>
-            <div class="drill-stats">
-              <div>Card</div><div class="v">${idx}/${total}</div>
-              <div>Correct so far</div><div class="v">${state.drillResults.filter(r => r.correct).length}</div>
-            </div>
-          </aside>
-        </div>
-      </section>
-    `;
-
-    const cardEl = stage.querySelector(".drill-card");
-    const timerEl = stage.querySelector("#drill-timer");
-    const buttons = stage.querySelectorAll("[data-pick]");
-    let done = false;
-
-    const tick = setInterval(() => {
-      timeLeft -= 1;
-      if (timerEl) {
-        timerEl.textContent = `${timeLeft}s`;
-        timerEl.classList.toggle("urgent", timeLeft <= 2);
-      }
-      if (timeLeft <= 0) {
-        clearInterval(tick);
-        if (!done) finish("__timeout__");
-      }
-    }, 1000);
-
-    function finish(pick) {
-      if (done) return;
-      done = true;
-      clearInterval(tick);
-      const ms = performance.now() - start;
-      const correct = pick === card.archetype;
-      state.drillResults.push({ archetype: card.archetype, picked: pick, correct, ms });
-      ctx.eventLog.record("archetype_picked", { archetype: pick, correct, ms });
-      cardEl.classList.add(correct ? "flash-correct" : "flash-wrong");
-      buttons.forEach(b => (b.disabled = true));
-      setTimeout(resolve, 420);
+function stepStateOutcome(body) {
+  body.innerHTML = `
+    <p style="font-size:14px;">By end of 10 min: score every lead on 5 criteria.</p>
+    <ol style="font-size:13.5px;margin:6px 0 10px 18px;">
+      <li>Industry fit · 1-5</li>
+      <li>FTE band · 1-5</li>
+      <li>Monthly spend · 1-5</li>
+      <li>Decision-maker access · 1-5</li>
+      <li>Intent signal (recent) · 1-5</li>
+    </ol>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Below 18/25 means skip. Above 22/25 means dial today.
+    </p>`;
+  setTimeout(() => {
+    const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (!ob) return;
+    mountTaskBanner(ob, { id: "m4-s2-confirm", label: "Confirm: you know the 5-criteria scoring rule", state: "active" });
+    if (!ob.querySelector("[data-m4-s2-done]")) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+      bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">5 criteria · 1-5 each · cutoff 18/25.</span>
+        <button type="button" data-m4-s2-done style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">✓ Got it</button>`;
+      ob.appendChild(bar);
+      bar.querySelector("[data-m4-s2-done]").addEventListener("click", () => {
+        if (state.step !== 1) return;
+        markTaskBannerDone("m4-s2-confirm");
+        setTimeout(() => runStep(2), 450);
+      });
     }
-
-    buttons.forEach(b => b.addEventListener("click", () => finish(b.dataset.pick)));
-    const keyHandler = (e) => {
-      const i = "1234".indexOf(e.key);
-      if (i >= 0) {
-        const map = ["storefront","rocket","factory","forkKnife"];
-        finish(map[i]);
-      }
-    };
-    document.addEventListener("keydown", keyHandler);
-    setTimeout(() => document.removeEventListener("keydown", keyHandler), DRILL_FLASH_S * 1000 + 500);
-    cardEl.focus();
-  });
+  }, 200);
 }
 
-// ============================================================================
-// 5:30-8:30 · SOLO PROBLEM — INTERLEAVED CALLS (3 default, 2 fallback)
-// ============================================================================
-
-async function soloProblem(ctx, state) {
-  const stage = document.getElementById("m4-stage");
-  stage.dataset.mode = "solo";
-
-  const allArche = ["storefront","rocket","factory","forkKnife"];
-  const order = shuffle(allArche, state.rng).slice(0, INTERLEAVED_CALLS);
-
-  for (let i = 0; i < order.length; i++) {
-    await runSoloCall(ctx, state, stage, order[i], i + 1, order.length, order);
-  }
-
-  ctx.eventLog.record("solo_problem_completed");
-  stage.dataset.mode = "";
-  stage.style.cssText = "";
-}
-
-function runSoloCall(ctx, state, stage, archetype, idx, total, order) {
-  return new Promise(resolve => {
-    const prospect = state.prospects.find(p => p.archetype === archetype);
-    const transcript = state.transcripts.find(t => t.archetype === archetype);
-    const stepStatus = { archetypePicked: null, propPicked: null, m2Ok: null, closed: false };
-
-    // Open the LinkedIn-CH mini-OS window for this call (lazy-launched).
-    try { ctx.os.openApp("linkedin-ch", { activeProfileId: prospect.lead_id }); } catch (_) { /* shell may not have profile, that's fine */ }
-
-    function render() {
-      stage.innerHTML = `
-        <div class="solo-panel" role="region" aria-label="Call ${idx} of ${total}">
-          <h3>Call ${idx} of ${total} · interleaved</h3>
-          <div class="call-strip" aria-label="Call queue">
-            ${order.map((a, i) => `
-              <span class="call-pill" data-state="${
-                i + 1 < idx ? (state.soloResults[i]?.archetypeCorrect ? 'done-ok' : 'done-miss')
-                : i + 1 === idx ? 'active' : 'pending'
-              }">
-                <span aria-hidden="true">${ARCHETYPE_GLYPH[a]}</span>
-                <span>${i + 1 === idx ? "now" : i + 1 < idx ? "done" : "next"}</span>
-              </span>
-            `).join("")}
-          </div>
-
-          <div class="solo-step" data-done="${stepStatus.archetypePicked !== null}">
-            <span class="step-num">1</span>
-            <strong>Pick the archetype</strong> from the LinkedIn-CH window.
-            <div style="margin-top:8px">
-              ${["storefront","rocket","factory","forkKnife"].map(a => `
-                <button type="button" class="m4-cta secondary" data-arch="${a}" style="margin:2px 4px 2px 0;font-size:12px;padding:4px 8px"
-                  ${stepStatus.archetypePicked !== null ? "disabled" : ""}>
-                  ${ARCHETYPE_GLYPH[a]} ${ARCHETYPE_NAME[a]}
-                </button>
-              `).join("")}
-            </div>
-          </div>
-
-          ${stepStatus.archetypePicked !== null ? `
-          <div class="solo-step" data-done="${stepStatus.propPicked !== null}">
-            <span class="step-num">2</span>
-            <strong>Pick the best-fit prop</strong> to lead with after M1.
-            <div style="margin-top:8px">
-              ${[1,2,3,4].map(p => `
-                <button type="button" class="m4-cta secondary" data-prop="${p}" style="margin:2px 4px 2px 0;font-size:12px;padding:4px 8px"
-                  ${stepStatus.propPicked !== null ? "disabled" : ""}>
-                  Prop ${p}
-                </button>
-              `).join("")}
-            </div>
-          </div>` : ""}
-
-          ${stepStatus.propPicked !== null ? `
-          <div class="solo-step" data-done="${stepStatus.m2Ok !== null}">
-            <span class="step-num">3</span>
-            <strong>Buyer says:</strong>
-            <div class="buyer-reply">"${escapeHtml(transcript.buyer_reply)}"</div>
-            <div style="margin-top:6px">Which restate is the M2 move?</div>
-            <div style="margin-top:6px">
-              <button type="button" class="m4-cta secondary" data-m2="ok" style="margin:2px 4px 2px 0;font-size:12px;padding:4px 8px"
-                ${stepStatus.m2Ok !== null ? "disabled" : ""}>
-                "${escapeHtml(transcript.m2_line)}"
-              </button>
-              <button type="button" class="m4-cta secondary" data-m2="bad" style="margin:2px 4px 2px 0;font-size:12px;padding:4px 8px"
-                ${stepStatus.m2Ok !== null ? "disabled" : ""}>
-                "Actually our fees are lower than that."
-              </button>
-            </div>
-          </div>` : ""}
-
-          ${stepStatus.m2Ok !== null ? `
-          <div class="solo-step" data-done="${stepStatus.closed}">
-            <span class="step-num">4</span>
-            <strong>Calendar close.</strong>
-            <div style="margin-top:6px">"${escapeHtml(transcript.m3_line)}"</div>
-            <button type="button" class="m4-cta" data-close="1" style="margin-top:8px"
-              ${stepStatus.closed ? "disabled" : ""}>
-              Send invite · finish call
-            </button>
-          </div>` : ""}
-        </div>
-      `;
-
-      stage.querySelectorAll("[data-arch]").forEach(b => b.addEventListener("click", () => {
-        const pick = b.dataset.arch;
-        const correct = pick === archetype;
-        stepStatus.archetypePicked = pick;
-        ctx.eventLog.record("archetype_picked", { archetype: pick, correct, source: "solo" });
-        ctx.eventLog.record("m4_archetype_match_score", { call: idx, archetype, correct });
-        render();
-      }));
-      stage.querySelectorAll("[data-prop]").forEach(b => b.addEventListener("click", () => {
-        const pick = parseInt(b.dataset.prop, 10);
-        const correct = pick === transcript.best_prop;
-        stepStatus.propPicked = pick;
-        ctx.eventLog.record("prop_mapped", { prop_id: pick, correct, source: "m4-solo" });
-        render();
-      }));
-      stage.querySelectorAll("[data-m2]").forEach(b => b.addEventListener("click", () => {
-        const ok = b.dataset.m2 === "ok";
-        stepStatus.m2Ok = ok;
-        if (ok) ctx.eventLog.record("objection_restated", { family: archetype });
-        else    ctx.eventLog.record("objection_argued",   { family: archetype });
-        render();
-      }));
-      stage.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => {
-        stepStatus.closed = true;
-        ctx.eventLog.record("invite_sent", { archetype, slot_ids: [`slot-${idx}`] });
-        ctx.eventLog.record("next_step_booked_set", { account: prospect.company });
-        state.soloResults.push({
-          archetype,
-          archetypeCorrect: stepStatus.archetypePicked === archetype,
-          propCorrect: stepStatus.propPicked === transcript.best_prop,
-          m2Ok: stepStatus.m2Ok === true,
-          closed: true,
+function stepRecallPrior(body) {
+  body.innerHTML = `
+    <p style="font-size:14px;">Recall — the 3 keystone moves run AFTER you pick the right lead.</p>
+    <ol style="font-size:13.5px;margin:6px 0 8px 18px;">
+      <li><strong>M1 Diagnostic</strong> · M2 Acknowledge · M3 Close.</li>
+      <li>None of them save you if the lead never converted.</li>
+      <li>M4 (this one) is the gate before any of them fire.</li>
+    </ol>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Next: watch M.G. score Maria in Gong.</p>`;
+  setTimeout(() => {
+    const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (ob) {
+      mountTaskBanner(ob, { id: "m4-s3-open-gong", label: "Open Gong for the worked example", state: "active" });
+      if (!ob.querySelector("[data-m4-s3-open]")) {
+        const bar = document.createElement("div");
+        bar.style.cssText = "margin-top:10px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+        bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">M.G. scoring Maria 23/25 live.</span>
+          <button type="button" data-m4-s3-open style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">🎙 Open Gong</button>`;
+        ob.appendChild(bar);
+        bar.querySelector("[data-m4-s3-open]").addEventListener("click", () => {
+          state.api.os.openApp("gong", { transcripts: state.transcripts, activeTranscriptId: state.transcripts[0]?.id });
         });
-        const win = ctx.os.listWindows().find(w => w.appId === "linkedin-ch");
-        if (win) win.close();
-        setTimeout(resolve, 200);
-      }));
+      }
     }
-    render();
-  });
+    const onAppOpened = (ev) => {
+      if (ev.detail?.appId !== "gong" || state.step !== 2) return;
+      state.api.eventBus.removeEventListener("app:opened", onAppOpened);
+      markTaskBannerDone("m4-s3-open-gong");
+      setTimeout(() => runStep(3), 500);
+    };
+    state.api.eventBus.addEventListener("app:opened", onAppOpened);
+  }, 140);
 }
 
-// ============================================================================
-// 8:30-9:00 · FEEDBACK · 3-row archetype-fit matrix self-score
-// ============================================================================
+// --- Step 4 -----------------------------------------------------------------
 
-function feedbackMatrix(ctx, state) {
-  const stage = document.getElementById("m4-stage");
-  const calls = state.soloResults;
-  const scores = {};
-  stage.innerHTML = `
-    <section class="m4-panel" aria-labelledby="m4-fb-h">
-      <h1 id="m4-fb-h">Self-score · M1 / M2 / M3 across the ${calls.length} calls</h1>
-      <p class="lead">
-        Rate each row 1 (rough) to 5 (clean). Variance > 1 between calls is the
-        signal — that row needs another pass tomorrow.
-      </p>
-      <table class="fit-matrix">
-        <thead>
-          <tr>
-            <th scope="col">Move</th>
-            ${calls.map(c => `
-              <th scope="col">${ARCHETYPE_GLYPH[c.archetype]} ${ARCHETYPE_NAME[c.archetype]}</th>
-            `).join("")}
-          </tr>
-        </thead>
-        <tbody>
-          ${["M1","M2","M3"].map(m => `
-            <tr>
-              <th scope="row">${m}</th>
-              ${calls.map((c, i) => `
-                <td>
-                  <div class="score-cells" role="radiogroup" aria-label="${m} score for ${ARCHETYPE_NAME[c.archetype]}">
-                    ${[1,2,3,4,5].map(n => `
-                      <button type="button" data-row="${m}" data-call="${i}" data-score="${n}"
-                              aria-pressed="false">${n}</button>
-                    `).join("")}
-                  </div>
-                </td>
-              `).join("")}
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-      <button type="button" class="m4-cta" data-action="next">Save · next</button>
-    </section>
-  `;
+function stepWorkedExample(body) {
+  body.innerHTML = `
+    <p style="font-size:14px;">Watch <strong>M.G.</strong> score Maria 23/25 in 90 seconds.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Click any M-chip in the transcript, or 'Watched it' below.</p>`;
+  setTimeout(() => {
+    const gb = document.querySelector(".os-window.app--gong .os-window-body");
+    if (!gb) return;
+    mountTaskBanner(gb, { id: "m4-s4-watch", label: "Watch M.G.'s scoring pass", state: "active" });
+    if (!gb.querySelector("[data-m4-s4-done]")) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+      bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">Scoring: 5·5·4·5·4 = 23/25. Dial.</span>
+        <button type="button" data-m4-s4-done style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">✓ Watched it</button>`;
+      gb.appendChild(bar);
+      const complete = () => {
+        if (state.step !== 3) return;
+        markTaskBannerDone("m4-s4-watch");
+        state.timeline.push({ label: "Watched scoring pass", detail: "23/25 · dial", ts: timestamp() });
+        setTimeout(() => runStep(4), 450);
+      };
+      bar.querySelector("[data-m4-s4-done]").addEventListener("click", complete);
+      gb.addEventListener("click", e => { if (e.target.closest?.('.m-chip')) complete(); });
+    }
+  }, 200);
+}
 
-  stage.querySelectorAll(".score-cells button").forEach(b => {
-    b.addEventListener("click", () => {
-      const row = b.dataset.row, call = b.dataset.call, score = b.dataset.score;
-      stage.querySelectorAll(`[data-row="${row}"][data-call="${call}"]`)
-        .forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
-      scores[`call${parseInt(call, 10) + 1}_${row}`] = parseInt(score, 10);
+// --- Step 5 -----------------------------------------------------------------
+
+function stepCompletionProblem(body) {
+  keepOnly(["outreach"]);
+  body.innerHTML = `
+    <p style="font-size:14px;">
+      <strong>Sven</strong> · DE industrial wholesale · 64 FTE · €27K/mo spend.
+      Family-owned, ops head decision-maker. Last signal: filed annual accounts.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Pick his ICP total in the drawer.</p>`;
+  const options = [
+    { label: "A", result: "anti", text: "Skip — too small.", rationale: "Wrong. 64 FTE × €27K/mo = clear ICP." },
+    { label: "B", result: "correct", text: "Dial today · score 21/25.", rationale: "Yes. Industry 5 / FTE 5 / Spend 5 / DM 4 / Intent 2 = 21." },
+    { label: "C", result: "partial", text: "Add to nurture · score 17/25.", rationale: "Close to cutoff but borderline. Actual is 21." },
+    { label: "D", result: "anti", text: "Escalate to AE · enterprise tier.", rationale: "64 FTE is mid-SMB, not enterprise. AE handoff wastes the lead." },
+  ];
+  setTimeout(() => mountSvenDrawer(options), 160);
+}
+
+function mountSvenDrawer(options) {
+  const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!ob) return;
+  mountTaskBanner(ob, { id: "m4-s5-pick", label: "Score Sven and pick the verdict", state: "active" });
+  const row = [...ob.querySelectorAll(".lead-row")].find(r => /Sven|Tom|Emma|Lukas/i.test(r.textContent || "")) || ob.querySelector(".lead-row");
+  if (!row) return;
+  row.classList.add("is-warm-highlight");
+  ob.querySelector("[data-m4-s5-drawer]")?.remove();
+  const drawer = document.createElement("div");
+  drawer.setAttribute("data-m4-s5-drawer", "");
+  drawer.className = "tom-drawer";
+  drawer.innerHTML = `
+    <header class="tom-drawer__head">
+      <strong>Sven · pre-dial scoring</strong>
+      <span class="tom-drawer__cue">Pick the verdict</span>
+    </header>
+    <p class="tom-drawer__stem">64 FTE · €27K/mo · ops head DM · CH filing this week</p>
+    <div class="tom-drawer__opts" role="radiogroup">
+      ${options.map((o, i) => `<button type="button" class="tom-drawer__opt" role="radio" aria-checked="false" data-result="${o.result}" data-idx="${i}"><span class="tom-drawer__label">${o.label}</span><span class="tom-drawer__text">${o.text}</span></button>`).join("")}
+    </div>
+    <div class="tom-drawer__fb" id="m4-s5-fb" hidden></div>`;
+  row.insertAdjacentElement("afterend", drawer);
+  const fb = drawer.querySelector("#m4-s5-fb");
+  drawer.querySelectorAll(".tom-drawer__opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const opt = options[Number(btn.dataset.idx)];
+      drawer.querySelectorAll(".tom-drawer__opt").forEach(b => { b.classList.remove("is-correct", "is-incorrect"); b.setAttribute("aria-checked", "false"); });
+      btn.setAttribute("aria-checked", "true");
+      btn.classList.add(opt.result === "correct" ? "is-correct" : "is-incorrect");
+      if (opt.result !== "correct") drawer.querySelector('.tom-drawer__opt[data-result="correct"]')?.classList.add("is-reveal");
+      fb.hidden = false; fb.textContent = opt.rationale;
+      if (opt.result === "correct") {
+        markTaskBannerDone("m4-s5-pick");
+        state.timeline.push({ label: "Scored Sven correctly", detail: "21/25 · dial", ts: timestamp() });
+        setTimeout(() => runStep(5), 700);
+      }
     });
   });
+}
 
-  return waitForClick(stage, "[data-action='next']").then(() => {
-    ctx.eventLog.record("m4_fit_matrix_saved", scores);
+// --- Step 6 solo scorer -----------------------------------------------------
+
+function stepSoloProblem(body) {
+  const lead = state.prospects[2] ?? state.prospects[0];
+  body.innerHTML = `
+    <p style="font-size:14px;"><strong>Solo.</strong> Score ${lead.name} (${lead.industry}). 5 criteria · 1-5 each.</p>
+    <p id="solo-status" class="retention-note" aria-live="polite">Status: not yet scored</p>`;
+  setTimeout(() => mountScorer(lead), 200);
+}
+
+function mountScorer(lead) {
+  const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!ob) return;
+  mountTaskBanner(ob, { id: "m4-s6-solo", label: `Score ${lead.name} on 5 criteria · then dial or skip`, state: "active" });
+  if (ob.querySelector("[data-m4-s6-stage]")) return;
+  const criteria = [
+    { k: "industry", label: "Industry fit" },
+    { k: "fte", label: "FTE band" },
+    { k: "spend", label: "Monthly spend" },
+    { k: "dm", label: "Decision-maker access" },
+    { k: "intent", label: "Intent signal (recent)" },
+  ];
+  const wrap = document.createElement("div");
+  wrap.setAttribute("data-m4-s6-stage", "");
+  wrap.style.cssText = "margin-top:14px; padding:14px; background:#fff; border:1px solid var(--ftc-border); border-radius:8px;";
+  wrap.innerHTML = `
+    <div style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--ftc-ink-2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+      ${escapeHtml(lead.name)} · ${escapeHtml(lead.industry)} · ${lead.fte} FTE · €${lead.monthly_spend?.toLocaleString?.() ?? "?"}/mo
+    </div>
+    ${criteria.map(c => `
+      <div style="display:grid; grid-template-columns:160px 1fr 30px; gap:10px; align-items:center; margin:6px 0;">
+        <label for="m4-${c.k}" style="font-size:13px; color:var(--ftc-ink);">${c.label}</label>
+        <input type="range" id="m4-${c.k}" data-k="${c.k}" min="1" max="5" value="3" step="1" style="width:100%;">
+        <output for="m4-${c.k}" id="m4-${c.k}-v" style="font-family:var(--ftc-font-mono); font-size:13px; font-weight:700; text-align:right; color:var(--brand-green-deep);">3</output>
+      </div>`).join("")}
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
+      <span data-m4-total style="font-family:var(--ftc-font-mono); font-size:14px; color:var(--ftc-ink);">Total: 15 / 25 · skip (cutoff 18)</span>
+      <button type="button" data-m4-decide style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Commit verdict</button>
+    </div>`;
+  ob.appendChild(wrap);
+
+  const update = () => {
+    let total = 0;
+    criteria.forEach(c => {
+      const v = Number(wrap.querySelector(`#m4-${c.k}`).value);
+      wrap.querySelector(`#m4-${c.k}-v`).textContent = String(v);
+      total += v;
+    });
+    const verdict = total >= 22 ? "dial today" : total >= 18 ? "dial this week" : "skip · nurture instead";
+    wrap.querySelector("[data-m4-total]").textContent = `Total: ${total} / 25 · ${verdict}`;
+  };
+  wrap.querySelectorAll("input[type='range']").forEach(i => i.addEventListener("input", update));
+
+  wrap.querySelector("[data-m4-decide]").addEventListener("click", () => {
+    if (state.step !== 5) return;
+    let total = 0;
+    criteria.forEach(c => total += Number(wrap.querySelector(`#m4-${c.k}`).value));
+    state.scoresLogged = true;
+    state.timeline.push({ label: `Scored ${lead.name}`, detail: `Total ${total}/25 · ${total >= 18 ? "DIAL" : "SKIP"}`, ts: timestamp() });
+    markTaskBannerDone("m4-s6-solo");
+    setTimeout(() => runStep(6), 600);
   });
 }
 
-// ============================================================================
-// 9:00-9:30 · QUIZ · 3 scenario items (LO-ICP.x)
-// ============================================================================
+// --- Steps 7-9 -------------------------------------------------------------
 
-function quizBlock(ctx, state) {
-  return new Promise(resolve => {
-    const stage = document.getElementById("m4-stage");
-    const items = state.quiz;
-    const picks = new Array(items.length).fill(null);
+function stepFeedback(body) {
+  keepOnly(["slack"]);
+  body.innerHTML = `<p style="font-size:14px;"><strong>J.T.</strong> DM'd the review of your scoring pass.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Mark thread read to continue.</p>`;
+  const dm = [
+    { author: "J.T. (pod lead)", initials: "JT", ts: "12:48", body: "Scoring discipline 👇" },
+    ...state.timeline.map(e => ({ author: "J.T. (pod lead)", initials: "JT", ts: e.ts, body: `✅ ${e.label} — ${e.detail}` })),
+    { author: "J.T. (pod lead)", initials: "JT", ts: "12:52", body: "If your gut wants to dial below 18, sit on it. The hour you save is the next 5-min closeable." },
+    { author: "M.G. (peer)", initials: "MG", ts: "12:54", body: "I score before I even open Gong. The non-ICP leads stop feeling tempting after 2 weeks." },
+  ];
+  state.api.os.openApp("slack", { channel: { channel_id: "dm-jt-podlead", pinned_messages: [{ title: "3-move card", content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: "M4" }], messages: dm } });
+  setTimeout(() => mountReadCTA("m4-s7"), 200);
+}
 
-    function render(scored = false) {
-      stage.innerHTML = `
-        <section class="m4-panel" aria-labelledby="m4-quiz-h">
-          <h1 id="m4-quiz-h">3 scenario items</h1>
-          ${items.map((q, qi) => `
-            <article class="quiz-item ${scored ? "scored" : ""}" aria-labelledby="q-${q.id}">
-              <div class="stem" id="q-${q.id}">
-                <span class="tag">${q.lo}</span> ${escapeHtml(q.stem)}
-              </div>
-              ${q.options.map((o, oi) => `
-                <button type="button" class="opt"
-                  data-q="${qi}" data-o="${oi}"
-                  data-picked="${picks[qi] === oi}"
-                  data-correct="${o.correct === true}"
-                  aria-pressed="${picks[qi] === oi}"
-                  ${scored ? "disabled" : ""}>
-                  ${escapeHtml(o.text)}
-                </button>
-              `).join("")}
-              ${scored ? `
-                <div class="quiz-feedback">
-                  ${picks[qi] !== null && q.options[picks[qi]]?.correct
-                    ? `<strong>Correct.</strong> ${escapeHtml(q.feedback_correct)}`
-                    : `<strong>Not quite.</strong> ${escapeHtml(q.feedback_incorrect)}`}
-                </div>
-              ` : ""}
-            </article>
-          `).join("")}
-          ${!scored
-            ? `<button type="button" class="m4-cta" data-action="grade"
-                       ${picks.some(p => p === null) ? "disabled" : ""}>Submit</button>`
-            : `<button type="button" class="m4-cta" data-action="next">Continue</button>`}
-        </section>
-      `;
-
-      if (!scored) {
-        stage.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
-          const qi = parseInt(b.dataset.q, 10);
-          const oi = parseInt(b.dataset.o, 10);
-          picks[qi] = oi;
-          render(false);
-        }));
-        stage.querySelector("[data-action='grade']")?.addEventListener("click", () => {
-          render(true);
-        });
-      } else {
-        stage.querySelector("[data-action='next']")?.addEventListener("click", () => {
-          const correct = items.reduce(
-            (n, q, qi) => n + (q.options[picks[qi]]?.correct ? 1 : 0), 0);
-          const score = Math.round((correct / items.length) * 100);
-          items.forEach((q, qi) => {
-            state.quizPicks.push({
-              id: q.id, picked_index: picks[qi],
-              correct: q.options[picks[qi]]?.correct === true,
-            });
-          });
-          ctx.eventLog.record("quiz_completed", { correct, total: items.length, score });
-          resolve(score);
-        });
-      }
-    }
-    render(false);
+function mountReadCTA(prefix) {
+  const sb = document.querySelector(".os-window.app--slack .os-window-body");
+  if (!sb) return;
+  mountTaskBanner(sb, { id: `${prefix}-read`, label: "Read J.T.'s DM", state: "active" });
+  if (sb.querySelector(`[data-${prefix}-done]`)) return;
+  const bar = document.createElement("div");
+  bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+  bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. waits for the read receipt.</span>
+    <button type="button" data-${prefix}-done style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">✓ Mark thread read</button>`;
+  sb.appendChild(bar);
+  bar.querySelector(`[data-${prefix}-done]`).addEventListener("click", () => {
+    markTaskBannerDone(`${prefix}-read`);
+    setTimeout(() => runStep(state.step + 1), 500);
   });
 }
 
-// ============================================================================
-// 9:30-10:00 · TAKE-AWAY CARD + +7d SPACED RETRIEVAL HOOK
-// ============================================================================
+function stepQuiz(body) {
+  state.quizIndex = 0; state.quizScore = 0;
+  body.innerHTML = `<p style="font-size:14px;"><strong>Quick check</strong> · 3 questions.</p>`;
+  setTimeout(() => mountQuizInSlack("m4"), 200);
+}
 
-function takeawayCard(ctx, state, score) {
-  const stage = document.getElementById("m4-stage");
-  const archetypeAcc = state.soloResults.filter(r => r.archetypeCorrect).length /
-                       Math.max(1, state.soloResults.length);
+function mountQuizInSlack(prefix) {
+  const sb = document.querySelector(".os-window.app--slack .os-window-body");
+  if (!sb) { state.api.os.openApp("slack"); return setTimeout(() => mountQuizInSlack(prefix), 250); }
+  mountTaskBanner(sb, { id: `${prefix}-quiz`, label: "Answer the 3 quiz questions", state: "active" });
+  sb.querySelector(`[data-${prefix}-quiz-thread]`)?.remove();
+  const thread = document.createElement("div");
+  thread.setAttribute(`data-${prefix}-quiz-thread`, "");
+  thread.style.cssText = "margin:14px 0 0; padding:14px 16px; background:#fff8e0; border-left:3px solid var(--sun-500,#f5b800); border-radius:6px; font-family:var(--ftc-font-sans);";
+  thread.innerHTML = `<div style="font-family:var(--ftc-font-mono);font-size:11px;color:var(--ftc-ink-2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">J.T. · quick check</div><div data-quiz-host></div>`;
+  const messages = sb.querySelector(".slack-msgs, .slack-messages, .slack-main") || sb;
+  messages.appendChild(thread);
+  renderQuizItemInSlack(thread.querySelector("[data-quiz-host]"), prefix);
+}
 
-  stage.innerHTML = `
-    <section class="m4-panel" aria-labelledby="m4-take-h">
-      <h1 id="m4-take-h">Take-away</h1>
-      <div class="m4-outcome">
-        "M1 + M2 + M3 don't change. The buyer does. Pick the buyer first —
-        in five seconds — then run the moves. The moves are the same; the
-        framing is the buyer's."
-        <small>Composite · M.G. (UK) + L.D. (DE) · §10.1 + §10.2.</small>
+function renderQuizItemInSlack(host, prefix) {
+  const item = state.quizItems[state.quizIndex];
+  host.innerHTML = `
+    <div style="font-size:12px;color:var(--ftc-ink-2);margin-bottom:6px;">Q ${state.quizIndex + 1}/${state.quizItems.length} · ${item.lo}</div>
+    <p style="font-size:14px;margin:0 0 10px;color:var(--ftc-ink);">${item.stem}</p>
+    <div role="radiogroup" style="display:grid;gap:6px;">
+      ${item.options.map((o, i) => `<button type="button" class="tom-drawer__opt" role="radio" aria-checked="false" data-idx="${i}"><span class="tom-drawer__label">${o.label}</span><span class="tom-drawer__text">${o.text}</span></button>`).join("")}
+    </div>
+    <div class="tom-drawer__fb" id="${prefix}-quiz-fb" hidden></div>
+    <div style="margin-top:10px;text-align:right;"><button type="button" id="${prefix}-quiz-next" disabled style="background:var(--brand-green);color:#fff;padding:6px 14px;border:0;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;opacity:0.5;">${state.quizIndex === state.quizItems.length - 1 ? "Finish" : "Next"}</button></div>`;
+  const fb = host.querySelector(`#${prefix}-quiz-fb`);
+  const next = host.querySelector(`#${prefix}-quiz-next`);
+  host.querySelectorAll(".tom-drawer__opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const opt = item.options[Number(btn.dataset.idx)];
+      host.querySelectorAll(".tom-drawer__opt").forEach(b => { b.classList.remove("is-correct", "is-incorrect"); b.setAttribute("aria-checked", "false"); b.disabled = true; b.style.cursor = "default"; });
+      btn.setAttribute("aria-checked", "true");
+      btn.classList.add(opt.correct ? "is-correct" : "is-incorrect");
+      if (!opt.correct) host.querySelectorAll(".tom-drawer__opt").forEach((b, j) => { if (item.options[j]?.correct) b.classList.add("is-reveal"); });
+      fb.hidden = false; fb.textContent = opt.rationale;
+      if (opt.correct) state.quizScore += 1;
+      next.disabled = false; next.style.opacity = "1";
+    });
+  });
+  next.addEventListener("click", () => {
+    if (state.quizIndex < state.quizItems.length - 1) { state.quizIndex += 1; renderQuizItemInSlack(host, prefix); }
+    else { markTaskBannerDone(`${prefix}-quiz`); setTimeout(() => runStep(state.step + 1), 500); }
+  });
+}
+
+function stepTakeaway(body) {
+  const pct = Math.round((state.quizScore / state.quizItems.length) * 100);
+  body.innerHTML = `<p style="font-size:14px;"><strong>Module complete.</strong> M.G. pinned the takeaway.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Quiz: <strong>${state.quizScore}/${state.quizItems.length}</strong> (${pct}%). Click 'Set retrieval drop' to finish.</p>`;
+  setTimeout(() => {
+    const sb = document.querySelector(".os-window.app--slack .os-window-body");
+    if (!sb) { state.api.os.openApp("slack"); return setTimeout(() => stepTakeaway(body), 250); }
+    sb.querySelector("[data-m4-quiz-thread]")?.remove();
+    mountTaskBanner(sb, { id: "m4-s9-pin", label: "Read M.G.'s pinned takeaway + set the +7d drop", state: "active" });
+    if (sb.querySelector("[data-m4-pinned]")) return;
+    const pin = document.createElement("div");
+    pin.setAttribute("data-m4-pinned", "");
+    pin.style.cssText = "margin:14px 0 0; padding:16px 18px; background:linear-gradient(180deg, var(--ftc-green-tint,#ecf9e7) 0%, #ffffff 100%); border:1px solid var(--brand-green); border-left:4px solid var(--brand-green); border-radius:8px; font-family:var(--ftc-font-sans); box-shadow:0 6px 16px -8px rgba(10,26,16,0.12);";
+    pin.innerHTML = `
+      <div style="font-family:var(--ftc-font-mono);font-size:10px;color:var(--brand-green);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">📌 Pinned by M.G.</div>
+      <p style="font-size:15px;font-style:italic;line-height:1.55;color:var(--ftc-ink);margin:0 0 10px;">"Score every lead 1-5 on industry / FTE / spend / DM access / intent. Cutoff 18. Below that, your hour is worth more than that dial."</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--ftc-border);">
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">📅 3-item retrieval drop · +7 days</span>
+        <button type="button" data-m4-fin style="background:var(--brand-green);color:#fff;padding:9px 16px;border:0;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;">Set +7d retrieval drop →</button>
+      </div>`;
+    (sb.querySelector(".slack-msgs, .slack-messages, .slack-main") || sb).appendChild(pin);
+    pin.querySelector("[data-m4-fin]").addEventListener("click", () => { markTaskBannerDone("m4-s9-pin"); finishModule(); });
+  }, 200);
+}
+
+function finishModule() {
+  const pct = Math.round((state.quizScore / state.quizItems.length) * 100);
+  state.api.complete(pct);
+  document.getElementById("narrative-next").hidden = true;
+  document.getElementById("narrative-back").hidden = true;
+  showSummaryCard(pct);
+}
+
+function showSummaryCard(pct) {
+  keepOnly([]);
+  const overlay = document.getElementById("narrative-overlay");
+  if (overlay) overlay.style.visibility = "hidden";
+  const ms = Date.now() - state.startedAt;
+  const mm = Math.floor(ms / 60000);
+  const ss = Math.floor((ms % 60000) / 1000).toString().padStart(2, "0");
+  const card = document.createElement("div");
+  card.className = "summary-card";
+  card.innerHTML = `
+    <div class="summary-card__panel">
+      <div class="summary-card__check">✓</div>
+      <div class="summary-card__kicker">Module complete</div>
+      <h2 class="summary-card__title">ICP Buyer Fit · cleared</h2>
+      <div class="summary-card__stats">
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}% · ${pct >= 67 ? "pass" : "below pass"}</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Time</span><span class="summary-card__stat-v">${mm}:${ss}</span><span class="summary-card__stat-sub">target 10:00</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Steps</span><span class="summary-card__stat-v">${STEPS.length}/${STEPS.length}</span><span class="summary-card__stat-sub">100%</span></div>
       </div>
-      <h2>Your run</h2>
-      <ul>
-        <li>Quiz score: <strong>${score}%</strong></li>
-        <li>Solo archetype match: <strong>${Math.round(archetypeAcc * 100)}%</strong>
-            (${state.soloResults.filter(r => r.archetypeCorrect).length}/${state.soloResults.length} calls)</li>
-        <li>Drill D4 accuracy: <strong>${state.drillResults.filter(r => r.correct).length}/${state.drillResults.length}</strong></li>
-        <li>Seed: <code>${state.seed}</code> · ${INTERLEAVED_CALLS}-call run · replayable with <code>?seed=${state.seed}</code></li>
-      </ul>
-      <p class="muted">
-        +7-day spaced retrieval queued. You'll see 3 quick scenario cards
-        Monday morning before your first dial.
-      </p>
-      <button type="button" class="m4-cta" data-action="done">Close module</button>
-    </section>
-  `;
-  ctx.eventLog.record("spaced_retrieval_scheduled", { delay_days: 7, los: LOS });
-  return waitForClick(stage, "[data-action='done']");
+      <details class="summary-card__recap"><summary>9-step recap</summary><ol class="summary-card__list">${STEPS.map((s, i) => `<li><span class="summary-card__list-n">${i + 1}</span><span class="summary-card__list-label">${s.title}</span></li>`).join("")}</ol></details>
+      <div class="summary-card__actions">
+        <a class="summary-card__btn summary-card__btn--ghost" href="../../">← Back to engagement</a>
+        <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">Restart module</button>
+      </div>
+    </div>`;
+  document.body.appendChild(card);
+  card.querySelector("[data-action='restart']")?.addEventListener("click", () => location.reload());
 }
 
-// ============================================================================
-// HELPERS
-// ============================================================================
-
-function waitForClick(root, selector) {
-  return new Promise(resolve => {
-    const el = root.querySelector(selector);
-    if (!el) return resolve();
-    el.addEventListener("click", () => resolve(), { once: true });
-  });
+function timestamp() {
+  const ms = Date.now() - state.startedAt;
+  return `${Math.floor(ms / 60000)}:${Math.floor((ms % 60000) / 1000).toString().padStart(2, "0")}`;
 }
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[c]));
+function renderFatal(msg) {
+  const b = document.getElementById("narrative-body");
+  if (b) b.innerHTML = `<p style="color:var(--coral-700);">Could not load module data: ${escapeHtml(msg)}</p>`;
 }
+function escapeHtml(s) { return String(s ?? "").replace(/[<>&]/g, c => ({ "<":"&lt;",">":"&gt;","&":"&amp;" }[c])); }

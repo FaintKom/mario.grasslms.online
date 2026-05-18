@@ -1,671 +1,543 @@
-/* =============================================================================
- * Module 6 · Regulatory Deflection · driver
- * -----------------------------------------------------------------------------
- * Gagné nine-events timeline for FinTechCard SDR onboarding, class 6
- * (4cid-blueprint.md §3.1; LO-REG.1 + LO-REG.2; brief §19 + §12.4).
+/**
+ * Module 6 · M6 Regulatory Deflection · runtime (in-app driven)
+ * ---------------------------------------------------------------------------
+ * Same architecture as M3 — bootModule + task-banner + welcome/summary cards.
+ * Content: score a lead against 5 ICP criteria BEFORE you dial. Don't waste
+ * 8 minutes on a non-ICP buyer.
  *
- * Critical design tenet — per Rossett & Schafer (2007):
- *   THE §19 JOB AID IS ALWAYS VISIBLE for the entire 10-minute session,
- *   including the quiz. The outcome is performance WITH the aid in hand,
- *   not memorisation. The rep reads the row out loud; they do not recall it.
- *
- * Inputs read at boot:
- *   - data/reg-job-aid.json       (5 productionised rows from brief §19)
- *   - data/transcripts.json       (1 worked example + 1 contrast)
- *   - data/prospects.json         (Lukas §12.4 + secondary trust-driven prospect)
- *   - data/quiz.json              (3 scenario items, open-job-aid)
- *
- * Emits (per ../scorm-shell/event-log-spec.md):
- *   reg_question_classified · reg_row_picked · reg_question_escalated
- *   worked_example_completed · completion_problem_completed
- *   solo_problem_completed · module_completed
- * ============================================================================= */
+ * Outcomes: LO-M4.1 (5-criteria score) · LO-M4.2 (skip non-ICP)
+ */
 
-import { bootModule } from "../scorm-shell/js/shell.js";
+import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
+import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 
-// ---------------------------------------------------------------------------
-// Data fetch helpers
-// ---------------------------------------------------------------------------
-
-const $ = (sel) => document.querySelector(sel);
-const $$ = (sel) => Array.from(document.querySelectorAll(sel));
-
-async function loadJson(path) {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
-  return res.json();
-}
-
-// ---------------------------------------------------------------------------
-// Module state · accumulator across Gagné segments
-// ---------------------------------------------------------------------------
+function keepOnly(appIds) { if (!state.api?.os?.listWindows) return; const k = new Set(appIds); for (const w of state.api.os.listWindows()) if (!k.has(w.appId)) state.api.os.closeApp(w); }
 
 const state = {
-  startTs: Date.now(),
-  drill: { answers: [] },               // [{ row, correct, ms }]
-  solo:  { calls: [] },                 // [{ id, picked, correct, expected, escalated }]
-  quiz:  { answers: [], score: 0 },     // [{ itemId, picked, correct }]
-  jobAid: null,
-  transcripts: null,
-  prospects: null,
-  quizItems: null,
+  api: null, step: 0, startedAt: 0,
+  scoresLogged: false, completionAnswer: null,
+  quizIndex: 0, quizScore: 0,
+  transcripts: [], prospects: [], quizItems: [], timeline: [],
 };
 
-// ---------------------------------------------------------------------------
-// Job-aid panel — ALWAYS VISIBLE; row-highlight helper
-// ---------------------------------------------------------------------------
-
-function renderJobAidPanel(jobAid) {
-  const tbody = $("#job-aid-rows");
-  tbody.innerHTML = jobAid.rows.map(row => `
-    <tr data-row="${row.acronym}" data-active="false">
-      <th scope="row" class="job-aid-row-acronym">${row.acronym}</th>
-      <td>${row.what_it_means}</td>
-      <td class="job-aid-row-verbatim">"${row.rep_response_verbatim}"</td>
-    </tr>
-  `).join("");
-
-  // Collapse toggle — defaults open (Rossett & Schafer point-of-use principle).
-  const collapseBtn = $("#job-aid-collapse");
-  const panel = $("#job-aid-panel");
-  collapseBtn.addEventListener("click", () => {
-    const wasCollapsed = panel.dataset.collapsed === "true";
-    panel.dataset.collapsed = wasCollapsed ? "false" : "true";
-    collapseBtn.setAttribute("aria-expanded", wasCollapsed ? "true" : "false");
-    collapseBtn.textContent = wasCollapsed ? "Collapse panel" : "Expand panel";
-  });
-}
-
-function highlightJobAidRow(acronym) {
-  $$("#job-aid-rows tr").forEach(tr => {
-    tr.dataset.active = (tr.dataset.row === acronym) ? "true" : "false";
-  });
-}
-function clearJobAidHighlight() {
-  $$("#job-aid-rows tr").forEach(tr => tr.dataset.active = "false");
-}
-
-// ---------------------------------------------------------------------------
-// Stage renderer — replaces #stage contents per Gagné segment.
-// segmenting principle (Mayer 2014 ch. 13): one segment visible at a time.
-// ---------------------------------------------------------------------------
-
-function setStage({ step, time, title, bodyHtml, actions }) {
-  const stage = $("#stage");
-  const actionsHtml = (actions || []).map((a, i) => `
-    <button type="button"
-            class="${a.primary ? "btn-primary" : "btn-secondary"}"
-            data-action-index="${i}">
-      ${a.label}
-    </button>
-  `).join("");
-
-  stage.innerHTML = `
-    <header class="stage-header">
-      <h2 class="stage-title">${title}</h2>
-      <span class="stage-step">${step} · ${time}</span>
-    </header>
-    <div class="stage-body">${bodyHtml}</div>
-    <div class="stage-actions">${actionsHtml}</div>
-  `;
-
-  (actions || []).forEach((a, i) => {
-    stage.querySelector(`[data-action-index="${i}"]`)
-      ?.addEventListener("click", () => a.onClick?.());
-  });
-
-  // Focus the first focusable element for keyboard nav (a11y §9.2).
-  const first = stage.querySelector("button, [tabindex]");
-  if (first instanceof HTMLElement) first.focus({ preventScroll: false });
-}
-
-function updateProgress(currentMs) {
-  const mm = Math.floor(currentMs / 60000).toString();
-  const ss = Math.floor((currentMs % 60000) / 1000).toString().padStart(2, "0");
-  const el = $("#module-progress");
-  if (el) el.textContent = `${mm}:${ss} / 10:00`;
-}
-
-// ---------------------------------------------------------------------------
-// Escalate modal — Slack DM-to-Compliance scaffold
-// ---------------------------------------------------------------------------
-
-function buildSlackScaffold({ buyerName, question, contextNote = "" }) {
-  return [
-    `@compliance — live SDR call, need 5 min.`,
-    ``,
-    `Buyer: ${buyerName}`,
-    `Question (verbatim): "${question}"`,
-    contextNote ? `Context: ${contextNote}` : "",
-    `Booking compliance into the next slot — please confirm avail.`,
-    `Thx.`,
-  ].filter(Boolean).join("\n");
-}
-
-function openEscalateModal({ buyerName, question, contextNote }) {
-  const modal = $("#escalate-modal");
-  const text = $("#escalate-modal-text");
-  text.textContent = buildSlackScaffold({ buyerName, question, contextNote });
-  modal.hidden = false;
-  $("#escalate-modal-close").focus();
-}
-
-function wireEscalateGlobals(api) {
-  $("#escalate-button").addEventListener("click", () => {
-    openEscalateModal({
-      buyerName: "(active buyer)",
-      question: "(paste the buyer's exact question here)",
-      contextNote: "Going deeper than §19 — pulling compliance into next call.",
-    });
-    api.eventLog.record("reg_question_escalated", { invitee: "#compliance" });
-  });
-  $("#escalate-modal-close").addEventListener("click", () => {
-    $("#escalate-modal").hidden = true;
-  });
-  $("#escalate-copy").addEventListener("click", async () => {
-    const text = $("#escalate-modal-text").textContent;
-    try {
-      await navigator.clipboard.writeText(text);
-      $("#escalate-copy").textContent = "Copied!";
-      setTimeout(() => $("#escalate-copy").textContent = "Copy to clipboard", 1200);
-    } catch {
-      $("#escalate-copy").textContent = "Copy unsupported — select + Ctrl+C";
-    }
-  });
-  // Escape closes modal · WCAG 2.1.2.
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !$("#escalate-modal").hidden) {
-      $("#escalate-modal").hidden = true;
-    }
-  });
-}
-
-// =============================================================================
-// GAGNÉ TIMELINE
-// =============================================================================
-
-// ---- 0:00–0:30 · 1 · Gain attention --------------------------------------
-function step1_gainAttention(api) {
-  const lukas = state.prospects.prospects.find(p => p.id === "lukas");
-  updateProgress(0);
-  setStage({
-    step: "Step 1 of 9",
-    time: "0:00 – 0:30",
-    title: "Trigger · incoming call",
-    bodyHtml: `
-      <div class="trigger-call" role="region" aria-label="Incoming phone-dialler call">
-        <div class="caller">Phone-dialler · incoming</div>
-        <div class="buyer-name">${lukas.display_name} · ${lukas.context}</div>
-        <p class="buyer-line">"${lukas.trigger_line}"</p>
-        <p class="three-seconds">You have three seconds. Pitch your way out — you lose the call. Defer to the regulator page — you keep it.</p>
-      </div>
-      <div class="callout">
-        This module is different. The job aid on your right is your working memory. Read the row out loud. Do not invent.
-      </div>
-    `,
-    actions: [{
-      label: "Continue",
-      primary: true,
-      onClick: () => step2_statedOutcome(api),
-    }],
-  });
-}
-
-// ---- 0:30–1:00 · 2 · State outcome ---------------------------------------
-function step2_statedOutcome(api) {
-  updateProgress(30_000);
-  setStage({
-    step: "Step 2 of 9",
-    time: "0:30 – 1:00",
-    title: "What 'done' looks like",
-    bodyHtml: `
-      <p>By the end of these 10 minutes you will:</p>
-      <ul>
-        <li><strong>LO-REG.1</strong> · Read the §19 row out loud, live, in real time — no recall required.</li>
-        <li><strong>LO-REG.2</strong> · Escalate to compliance the second the question goes deeper than the sheet.</li>
-        <li><strong>LO-REG.3</strong> · Sustain the trust tone — calm, specific, regulator-aware (brief §18.1).</li>
-      </ul>
-      <p class="evidence-note">
-        Evidence note · Reg scenarios derived from brief §19; Phase 5 validates against the first
-        cohort's Gong reg-question corpus (A.S. + M.B. weeks 5–8). If the §19 table covers &lt; 80% of
-        actual buyer reg-questions, the v2 backlog widens the table.
-      </p>
-    `,
-    actions: [{ label: "Continue", primary: true, onClick: () => step3_recall(api) }],
-  });
-}
-
-// ---- 1:00–1:30 · 3 · Recall prior ----------------------------------------
-function step3_recall(api) {
-  updateProgress(60_000);
-  setStage({
-    step: "Step 3 of 9",
-    time: "1:00 – 1:30",
-    title: "Recall · how reg questions sit next to M2",
-    bodyHtml: `
-      <p>You learned in Module 2 to <em>acknowledge before responding</em> — restate the objection in the buyer's own words.</p>
-      <div class="callout">
-        Reg questions are objection-shaped, but they are <strong>not objections</strong>. They are proof requests.
-        Don't argue. Don't acknowledge-and-restate. <strong>Point at the row.</strong>
-      </div>
-      <p>If you find yourself improvising a regulatory answer — stop. Escalating is the trust move (brief §19 honest carve-out).</p>
-    `,
-    actions: [{ label: "Show me", primary: true, onClick: () => step4_workedExample(api) }],
-  });
-}
-
-// ---- 1:30–3:00 · 4-5 · Worked example -------------------------------------
-function step4_workedExample(api) {
-  updateProgress(90_000);
-  const ex = state.transcripts.transcripts.find(t => t.id === "worked-kyc-verbatim");
-  const contrast = state.transcripts.transcripts.find(t => t.id === "contrast-psd2-guess");
-
-  // Highlight the row the rep is reading from (spatial contiguity).
-  highlightJobAidRow(ex.row_used);
-
-  const turnsHtml = (turns) => turns.map(turn => {
-    const cls = turn.speaker === "rep"
-      ? (turn.verdict === "good" ? "rep-good" : turn.verdict === "bad" ? "rep-bad" : "")
-      : "";
-    return `<div class="turn ${cls}"><b>[${turn.speaker.toUpperCase()}]</b> ${turn.text}</div>`;
-  }).join("");
-
-  setStage({
-    step: "Step 4-5 of 9",
-    time: "1:30 – 3:00",
-    title: "Worked example · point at the row",
-    bodyHtml: `
-      <div class="worked-pair">
-        <div class="worked-card" role="region" aria-label="Worked example — rep reads §19 verbatim">
-          <h3>Worked · row used: ${ex.row_used}</h3>
-          ${turnsHtml(ex.turns)}
-        </div>
-        <div class="worked-card" role="region" aria-label="Contrast — rep invents a PSD2 answer">
-          <h3>Contrast · rep guesses (don't do this)</h3>
-          ${turnsHtml(contrast.turns)}
-        </div>
-      </div>
-      <p class="coach-mark-inline">
-        Notice — the rep doesn't memorise. The rep reads the row on the right-hand panel out loud.
-        The §19 panel highlighted the <strong>${ex.row_used}</strong> row when this call started.
-      </p>
-    `,
-    actions: [{
-      label: "Start drill D6",
-      primary: true,
-      onClick: () => {
-        clearJobAidHighlight();
-        api.eventLog.record("worked_example_completed");
-        step6_drill(api, 0);
-      },
-    }],
-  });
-}
-
-// ---- 3:00–5:30 · 6 · D6 drill --------------------------------------------
-// 5 cards: KYC, AML, SCA, PSD2 + 1 out-of-scope (escalate) interleaved.
-const DRILL_CARDS = [
-  { id: "d1", buyer: "Maria",  question: "How long does signup take? My bookkeeper hates paperwork.", correct_row: "KYC",  is_reg: true,  escalate: false },
-  { id: "d2", buyer: "Tom",    question: "Do you flag suspicious transactions, or is that on us?",   correct_row: "AML",  is_reg: true,  escalate: false },
-  { id: "d3", buyer: "Emma",   question: "Will my employees have to do 2FA on every coffee?",         correct_row: "SCA",  is_reg: true,  escalate: false },
-  { id: "d4", buyer: "Tom",    question: "Are you PSD2 compliant?",                                    correct_row: "PSD2", is_reg: true,  escalate: false },
-  { id: "d5", buyer: "Lukas",  question: "I need a cross-border DPA covering EU + Switzerland transfer — can you produce it on a call?", correct_row: "ESCALATE", is_reg: true, escalate: true },
-];
-
-function step6_drill(api, idx) {
-  updateProgress(180_000 + idx * 30_000);
-  if (idx >= DRILL_CARDS.length) {
-    api.eventLog.record("completion_problem_completed");
-    return step7_solo(api, 0);
-  }
-  const card = DRILL_CARDS[idx];
-  const rows = state.jobAid.rows.map(r => r.acronym);
-  const options = [...rows, "ESCALATE"];
-
-  setStage({
-    step: `Step 6 of 9 · drill card ${idx + 1} of ${DRILL_CARDS.length}`,
-    time: "3:00 – 5:30",
-    title: "D6 drill · tap the row",
-    bodyHtml: `
-      <div class="drill">
-        <div class="drill-progress" aria-hidden="true">
-          ${DRILL_CARDS.map((_, i) => `
-            <span class="dot" data-state="${i < idx ? "done" : i === idx ? "current" : ""}"></span>
-          `).join("")}
-        </div>
-        <div class="drill-card">
-          <p class="buyer-q"><b>[${card.buyer}]</b> "${card.question}"</p>
-          <div class="drill-options" role="group" aria-label="Pick the §19 row to use">
-            ${options.map(opt => `
-              <button type="button" data-pick="${opt}">${opt === "ESCALATE" ? "Escalate to Compliance" : opt}</button>
-            `).join("")}
-          </div>
-          <div id="drill-feedback" class="drill-feedback" hidden></div>
-        </div>
-      </div>
-    `,
-    actions: [{
-      label: "Next card",
-      primary: true,
-      onClick: () => step6_drill(api, idx + 1),
-    }],
-  });
-
-  const nextBtn = $$("#stage .btn-primary")[0];
-  nextBtn.disabled = true;
-
-  $$("[data-pick]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const picked = btn.getAttribute("data-pick");
-      const correct = (picked === card.correct_row);
-      btn.dataset.picked = "true";
-      btn.dataset.correct = String(correct);
-      if (picked !== "ESCALATE") highlightJobAidRow(picked);
-
-      $$("[data-pick]").forEach(b => { b.disabled = true; });
-
-      const fb = $("#drill-feedback");
-      fb.hidden = false;
-      fb.dataset.correct = String(correct);
-      fb.textContent = correct
-        ? (card.escalate
-            ? "Correct — this goes deeper than the table. Escalating is the trust move."
-            : `Correct — ${card.correct_row} row. Read it out loud.`)
-        : (card.escalate
-            ? `Almost — this is beyond §19. The right move is ESCALATE.`
-            : `Not quite — the correct row is ${card.correct_row}. Re-read it on the right.`);
-
-      state.drill.answers.push({ row: picked, correct, ms: Date.now() - state.startTs });
-
-      api.eventLog.record("reg_question_classified", { is_reg_actual: card.is_reg, picked });
-      api.eventLog.record("reg_row_picked", { row_id: picked, correct });
-      if (card.escalate && picked === "ESCALATE") {
-        api.eventLog.record("reg_question_escalated", { invitee: "#compliance" });
-      }
-
-      nextBtn.disabled = false;
-      nextBtn.focus();
-    });
-  });
-}
-
-// ---- 5:30–8:30 · 6 · Solo problem · Lukas continued ----------------------
-// Lukas asks 3 reg questions sequentially: KYC, AML, then a PSD2 follow-up
-// that goes deeper than §19 → must escalate.
-const SOLO_CALLS = [
-  { id: "s1", row: "KYC",  question: "Before I sign anything — how do I know my company even passes your onboarding?", expected: "KYC",  expects_escalate: false },
-  { id: "s2", row: "AML",  question: "If a manager's card shows weird charges at 3am, do I find out or do you?",       expected: "AML",  expects_escalate: false },
-  { id: "s3", row: "PSD2", question: "OK PSD2 — but how does PSD2 handle a German legal entity making payments to an Italian supplier under SCA delegation? I need a written answer.", expected: "ESCALATE", expects_escalate: true },
-];
-
-function step7_solo(api, idx) {
-  updateProgress(330_000 + idx * 60_000);
-  if (idx >= SOLO_CALLS.length) {
-    api.eventLog.record("solo_problem_completed");
-    return step8_feedback(api);
-  }
-  const call = SOLO_CALLS[idx];
-  highlightJobAidRow(call.row);
-
-  setStage({
-    step: `Step 6 of 9 · solo question ${idx + 1} of ${SOLO_CALLS.length}`,
-    time: "5:30 – 8:30",
-    title: "Solo · Lukas · keep the trust",
-    bodyHtml: `
-      <div class="solo-call">
-        <span class="stage-step">Buyer · Lukas · DE hospitality · low-trust profile</span>
-        <h3>Live phone-dialler · Q${idx + 1}</h3>
-        <p class="buyer-q">"${call.question}"</p>
-        <p>Pick a response. Read the highlighted row out loud — or escalate.</p>
-        <div class="solo-actions" role="group" aria-label="Choose your response">
-          <button type="button" data-solo="KYC">Read KYC row</button>
-          <button type="button" data-solo="AML">Read AML row</button>
-          <button type="button" data-solo="SCA">Read SCA row</button>
-          <button type="button" data-solo="PSD2">Read PSD2 row</button>
-          <button type="button" data-solo="GDPR">Read GDPR row</button>
-          <button type="button" class="escalate-action" data-solo="ESCALATE">Escalate to Compliance</button>
-        </div>
-        <div id="solo-feedback" class="drill-feedback" hidden></div>
-      </div>
-    `,
-    actions: [{
-      label: "Next",
-      primary: true,
-      onClick: () => step7_solo(api, idx + 1),
-    }],
-  });
-
-  const nextBtn = $$("#stage .btn-primary")[0];
-  nextBtn.disabled = true;
-
-  $$("[data-solo]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const picked = btn.getAttribute("data-solo");
-      const correct = (picked === call.expected);
-      $$("[data-solo]").forEach(b => { b.disabled = true; });
-      const fb = $("#solo-feedback");
-      fb.hidden = false;
-      fb.dataset.correct = String(correct);
-      fb.textContent = correct
-        ? (call.expects_escalate
-            ? "Correct — this is beyond §19. Open the Slack scaffold and book a follow-up."
-            : `Correct — read the ${call.expected} row verbatim. That is the move.`)
-        : (call.expects_escalate
-            ? `Not quite — this exceeds the §19 PSD2 row. Escalate is the trust move.`
-            : `Not quite — the correct row is ${call.expected}.`);
-
-      state.solo.calls.push({ id: call.id, picked, correct, expected: call.expected, escalated: picked === "ESCALATE" });
-
-      api.eventLog.record("reg_question_classified", { is_reg_actual: true, picked });
-      api.eventLog.record("reg_row_picked", { row_id: picked, correct });
-
-      if (call.expects_escalate && picked === "ESCALATE") {
-        api.eventLog.record("reg_question_escalated", { invitee: "#compliance" });
-        openEscalateModal({
-          buyerName: "Lukas · DE hospitality",
-          question: call.question,
-          contextNote: "PSD2 + SCA delegation cross-border — beyond §19 row.",
-        });
-      }
-
-      nextBtn.disabled = false;
-      nextBtn.focus();
-    });
-  });
-}
-
-// ---- 8:30–9:00 · 7 · Feedback timeline -----------------------------------
-function step8_feedback(api) {
-  updateProgress(510_000);
-  clearJobAidHighlight();
-
-  const drillRows = state.drill.answers.map((a, i) => {
-    const card = DRILL_CARDS[i];
-    return `
-      <tr>
-        <td>Drill ${i + 1} · ${card.buyer}</td>
-        <td>${a.row}</td>
-        <td data-ok="${a.correct}">${a.correct ? "match" : "miss"}</td>
-      </tr>
-    `;
-  }).join("");
-
-  const soloRows = state.solo.calls.map((s, i) => `
-    <tr>
-      <td>Solo ${i + 1} · Lukas</td>
-      <td>${s.picked}</td>
-      <td data-ok="${s.correct}">${s.correct ? (s.escalated ? "escalated correctly" : "verbatim correct") : "missed"}</td>
-    </tr>
-  `).join("");
-
-  const totalCorrect = state.drill.answers.filter(a => a.correct).length
-                     + state.solo.calls.filter(s => s.correct).length;
-  const totalItems = state.drill.answers.length + state.solo.calls.length;
-
-  setStage({
-    step: "Step 7 of 9",
-    time: "8:30 – 9:00",
-    title: "Feedback · job-aid usage timeline",
-    bodyHtml: `
-      <p>Per question · which row you pointed at · whether you escalated when §19 ran out.</p>
-      <table class="timeline">
-        <thead>
-          <tr><th>Question</th><th>Row used</th><th>Verdict</th></tr>
-        </thead>
-        <tbody>
-          ${drillRows}
-          ${soloRows}
-        </tbody>
-      </table>
-      <p class="callout">
-        ${totalCorrect} of ${totalItems} correct. The pattern: the panel does the work.
-        When you stop reading from it and start improvising — that's where trust leaks.
-      </p>
-    `,
-    actions: [{
-      label: "Continue to quiz",
-      primary: true,
-      onClick: () => step9_quiz(api, 0),
-    }],
-  });
-}
-
-// ---- 9:00–9:30 · 8 · Quiz · OPEN JOB AID ---------------------------------
-function step9_quiz(api, idx) {
-  updateProgress(540_000);
-  if (idx >= state.quizItems.items.length) return step10_takeaway(api);
-  const item = state.quizItems.items[idx];
-
-  setStage({
-    step: `Step 8 of 9 · quiz ${idx + 1} of ${state.quizItems.items.length}`,
-    time: "9:00 – 9:30",
-    title: `Quiz · ${item.lo}`,
-    bodyHtml: `
-      <div class="quiz-card">
-        <span class="open-aid-banner">OPEN-JOB-AID · the panel on your right stays visible</span>
-        <p class="stem">${item.stem}</p>
-        <div class="drill-options" role="group" aria-label="Pick the best answer">
-          ${item.options.map((opt, i) => `
-            <button type="button" data-quiz-pick="${i}">${opt.label}</button>
-          `).join("")}
-        </div>
-        <div id="quiz-feedback" class="drill-feedback" hidden></div>
-      </div>
-    `,
-    actions: [{
-      label: "Next",
-      primary: true,
-      onClick: () => step9_quiz(api, idx + 1),
-    }],
-  });
-
-  const nextBtn = $$("#stage .btn-primary")[0];
-  nextBtn.disabled = true;
-
-  $$("[data-quiz-pick]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const picked = Number(btn.getAttribute("data-quiz-pick"));
-      const correct = item.options[picked].correct === true;
-      $$("[data-quiz-pick]").forEach(b => { b.disabled = true; b.dataset.picked = "false"; });
-      btn.dataset.picked = "true";
-      btn.dataset.correct = String(correct);
-      const fb = $("#quiz-feedback");
-      fb.hidden = false;
-      fb.dataset.correct = String(correct);
-      fb.textContent = correct ? `Correct — ${item.feedback_correct}` : `Not quite — ${item.feedback_incorrect}`;
-
-      state.quiz.answers.push({ itemId: item.id, picked, correct });
-      nextBtn.disabled = false;
-      nextBtn.focus();
-    });
-  });
-}
-
-// ---- 9:30–10:00 · 9 · Key-takeaway + +7d ---------------------------------
-function step10_takeaway(api) {
-  updateProgress(570_000);
-  const total = state.quiz.answers.length || 1;
-  const correct = state.quiz.answers.filter(a => a.correct).length;
-  const score = Math.round((correct / total) * 100);
-  state.quiz.score = score;
-
-  setStage({
-    step: "Step 9 of 9",
-    time: "9:30 – 10:00",
-    title: "Key takeaway",
-    bodyHtml: `
-      <div class="takeaway">
-        <p><strong>Don't sell against regulation — defer to it.</strong></p>
-        <p>The sheet is your working memory. Reading it on a live call is not cheating — it's the move.
-           When the buyer's question goes deeper than the sheet, escalating <em>is</em> the trust move.</p>
-        <p class="signature">— composite of brief §19 honest carve-out + brand voice §18.1</p>
-      </div>
-      <div class="callout">
-        Quiz score · <strong>${score}%</strong> · ${correct} of ${total}.<br>
-        Your §19 job aid is now pinned in your real Slack <code>#sdr-onboarding</code> channel.
-        +7-day mini-quiz scheduled · L1 pulse fires after you close this module.
-      </div>
-    `,
-    actions: [{
-      label: "Finish module",
-      primary: true,
-      onClick: () => { api.complete(score); },
-    }],
-  });
-}
-
-// =============================================================================
-// BOOT
-// =============================================================================
-
-async function main() {
-  // Load module data BEFORE booting the shell so the job-aid panel can render
-  // before the first Gagné segment fires (Mayer pre-training principle).
-  const [jobAid, transcripts, prospects, quizItems] = await Promise.all([
-    loadJson("./data/reg-job-aid.json"),
+async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.json(); }
+async function loadAllData() {
+  const [t, p, q] = await Promise.all([
     loadJson("./data/transcripts.json"),
     loadJson("./data/prospects.json"),
     loadJson("./data/quiz.json"),
   ]);
-  state.jobAid = jobAid;
-  state.transcripts = transcripts;
-  state.prospects = prospects;
-  state.quizItems = quizItems;
-
-  renderJobAidPanel(jobAid);
-
-  const api = bootModule({
-    moduleId: "M6",
-    title: "Module 6 · Regulatory Deflection",
-    // No mini-OS windows auto-launched: the job-aid panel + stage carry the
-    // full simulation. Phone-dialler + slack scaffolds appear inline within
-    // stage cards to keep the 10-minute pacing tight.
-    appsToLaunch: [],
-    onReady(_api) {
-      wireEscalateGlobals(_api);
-      step1_gainAttention(_api);
-    },
-    onComplete() {
-      setStage({
-        step: "Done",
-        time: "10:00",
-        title: "Module complete",
-        bodyHtml: `
-          <p>You've finished Module 6. The §19 job aid stays in your Slack
-             pinned channel. Use it live. Don't memorise it.</p>
-        `,
-        actions: [],
-      });
-    },
-  });
-
-  return api;
+  state.transcripts = t; state.prospects = p; state.quizItems = q;
 }
 
-main().catch(err => {
-  console.error("[M6] boot failed", err);
-  const stage = document.getElementById("stage");
-  if (stage) {
-    stage.innerHTML = `<div class="danger-muted">Module failed to load: ${err.message}</div>`;
-  }
-});
+async function start() {
+  try { await loadAllData(); }
+  catch (err) { console.error("[M4]", err); renderFatal(err.message); return; }
+  bootModule({
+    moduleId: "M6",
+    title: "Module 4 · Regulatory Deflection",
+    appsToLaunch: [],
+    onReady(api) {
+      state.api = api; state.startedAt = Date.now();
+      wireProgressTimer(); wireHelpButton(); wireNarrativeButtons();
+      showWelcomeCard(() => runStep(0));
+    },
+  });
+}
+start();
+
+const STEPS = [
+  { title: "Rep improvised on PSD2. Buyer lost trust. Deal stalled.",   handler: stepGainAttention },
+  { title: "By the end · read §19 verbatim · escalate beyond it",     handler: stepStateOutcome },
+  { title: "M1 opens. M2 saves. M3 books. M6 keeps you in your lane.",           handler: stepRecallPrior },
+  { title: "Watch · M.G. reads KYC verbatim + escalates beneficial-ownership",          handler: stepWorkedExample },
+  { title: "Your turn · SCA question · pick verbatim or escalate",                    handler: stepCompletionProblem },
+  { title: "Solo · 3 reg questions · pick verbatim line or escalate to compliance",        handler: stepSoloProblem },
+  { title: "Your event log · what just happened",                   handler: stepFeedback },
+  { title: "Quick check · 3 questions",                             handler: stepQuiz },
+  { title: "Key takeaway + your next retrieval drop",               handler: stepTakeaway },
+];
+
+function runStep(i) {
+  state.step = i;
+  document.getElementById("gagne-step").textContent = `${i + 1} of ${STEPS.length}`;
+  document.getElementById("narrative-title").textContent = STEPS[i].title;
+  updateProgressBar(i + 1);
+  const body = document.getElementById("narrative-body"); body.innerHTML = "";
+  document.getElementById("narrative-back").hidden = i === 0;
+  const next = document.getElementById("narrative-next");
+  next.textContent = i === STEPS.length - 1 ? "Finish module" : "Continue";
+  next.disabled = false; next.setAttribute("aria-disabled", "false");
+  STEPS[i].handler(body);
+}
+
+function showWelcomeCard(onStart) {
+  const overlay = document.getElementById("narrative-overlay");
+  if (overlay) overlay.style.visibility = "hidden";
+  const card = document.createElement("div");
+  card.className = "welcome-card";
+  card.setAttribute("role", "dialog"); card.setAttribute("aria-modal", "true");
+  card.innerHTML = `
+    <div class="welcome-card__panel">
+      <span class="welcome-card__logo" aria-hidden="true">FTC</span>
+      <div class="welcome-card__kicker">Module 4 &middot; keystone defer</div>
+      <h2 class="welcome-card__title">Regulatory Deflection</h2>
+      <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
+      <p class="welcome-card__lede">
+        When the buyer asks about KYC/AML/SCA/PSD2/GDPR — read the verbatim §19 line. Don't improvise. Escalate beyond 5 rows.
+      </p>
+      <button type="button" class="welcome-card__start" data-action="start">
+        Start module &rarr;
+      </button>
+    </div>`;
+  document.body.appendChild(card);
+  const btn = card.querySelector("[data-action='start']");
+  btn?.focus({ preventScroll: true });
+  btn?.addEventListener("click", () => {
+    card.classList.add("welcome-card--out");
+    setTimeout(() => { card.remove(); if (overlay) overlay.style.visibility = ""; onStart?.(); }, 220);
+  });
+}
+
+function updateProgressBar(c) {
+  const bar = document.getElementById("step-progress");
+  if (!bar) return;
+  bar.setAttribute("aria-valuenow", String(c));
+  bar.querySelectorAll(".step-progress__seg").forEach(s => {
+    const n = Number(s.dataset.step);
+    s.dataset.state = n < c ? "done" : n === c ? "current" : "pending";
+  });
+}
+
+function wireNarrativeButtons() {
+  document.getElementById("narrative-next").addEventListener("click", () => {
+    if (state.step >= STEPS.length - 1) return finishModule();
+    runStep(state.step + 1);
+  });
+  document.getElementById("narrative-back").addEventListener("click", () => { if (state.step > 0) runStep(state.step - 1); });
+  document.getElementById("narrative-redo")?.addEventListener("click", () => runStep(state.step));
+  document.getElementById("narrative-skip")?.addEventListener("click", () => {
+    if (state.step >= STEPS.length - 1) return finishModule();
+    runStep(state.step + 1);
+  });
+}
+function wireHelpButton() {
+  document.getElementById("help-button").addEventListener("click", () => {
+    const h = state.step === 2 ? "pre-training" : "M6";
+    state.api.os.openApp("slack", { highlightModule: h });
+  });
+}
+function wireProgressTimer() {
+  const el = document.getElementById("module-progress");
+  const tick = () => {
+    const ms = Date.now() - state.startedAt;
+    el.textContent = `${Math.floor(ms / 60000)}:${Math.floor((ms % 60000) / 1000).toString().padStart(2, "0")} / 10:00`;
+  };
+  tick(); setInterval(tick, 1000);
+}
+
+// --- Steps 1-3 -------------------------------------------------------------
+
+function stepGainAttention(body) {
+  body.innerHTML = `
+    <blockquote class="peer-quote">
+      Improvised on PSD2 open-banking flow. Wrong by 80%. Compliance had to clean it up.
+      <cite>— Brief §19 honest carve-out · trust move</cite>
+    </blockquote>
+    <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
+      Bottom-quartile reps improvise on regs. Top reps read §19 verbatim · escalate beyond.
+    </p>`;
+  state.api.os.openApp("outreach", { highlightLeadId: "M6-L-001" });
+  setTimeout(() => decorateOutreachForStep1(), 140);
+}
+function decorateOutreachForStep1() {
+  const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!ob) return;
+  mountTaskBanner(ob, { id: "m6-s1-pick", label: "Click Maria — we'll score her against ICP next", hint: "Two Pines Apparel · 35 FTE retail", state: "active" });
+  let tries = 0;
+  const tick = () => {
+    const row = [...ob.querySelectorAll(".lead-row")].find(r => /Maria/i.test(r.textContent || ""));
+    if (!row) { if (++tries < 20) return setTimeout(tick, 100); return; }
+    if (row.dataset.m4Done === "true") return;
+    row.classList.add("is-warm-highlight"); row.dataset.m4Done = "true";
+    row.addEventListener("click", e => {
+      if (e.target.closest('[data-action="dial"]')) return;
+      if (state.step !== 0) return;
+      markTaskBannerDone("m6-s1-pick");
+      state.api.eventLog?.record?.("step1_picked_lead");
+      setTimeout(() => runStep(1), 450);
+    });
+  };
+  tick();
+}
+
+function stepStateOutcome(body) {
+  body.innerHTML = `
+    <p style="font-size:14px;">By end of 10 min: score every lead on 5 criteria.</p>
+    <ol style="font-size:13.5px;margin:6px 0 10px 18px;">
+      <li>Industry fit · 1-5</li>
+      <li>FTE band · 1-5</li>
+      <li>Monthly spend · 1-5</li>
+      <li>Decision-maker access · 1-5</li>
+      <li>Intent signal (recent) · 1-5</li>
+    </ol>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Below 18/25 means skip. Above 22/25 means dial today.
+    </p>`;
+  setTimeout(() => {
+    const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (!ob) return;
+    mountTaskBanner(ob, { id: "m6-s2-confirm", label: "Confirm: you know the 5-criteria scoring rule", state: "active" });
+    if (!ob.querySelector("[data-m6-s2-done]")) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+      bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">5 criteria · 1-5 each · cutoff 18/25.</span>
+        <button type="button" data-m6-s2-done style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">✓ Got it</button>`;
+      ob.appendChild(bar);
+      bar.querySelector("[data-m6-s2-done]").addEventListener("click", () => {
+        if (state.step !== 1) return;
+        markTaskBannerDone("m6-s2-confirm");
+        setTimeout(() => runStep(2), 450);
+      });
+    }
+  }, 200);
+}
+
+function stepRecallPrior(body) {
+  body.innerHTML = `
+    <p style="font-size:14px;">Recall — the 3 keystone moves run AFTER you pick the right lead.</p>
+    <ol style="font-size:13.5px;margin:6px 0 8px 18px;">
+      <li><strong>M1 Diagnostic</strong> · M2 Acknowledge · M3 Close.</li>
+      <li>None of them save you if the lead never converted.</li>
+      <li>M4 (this one) is the gate before any of them fire.</li>
+    </ol>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Next: watch M.G. score Maria in Gong.</p>`;
+  setTimeout(() => {
+    const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+    if (ob) {
+      mountTaskBanner(ob, { id: "m6-s3-open-gong", label: "Open Gong for the worked example", state: "active" });
+      if (!ob.querySelector("[data-m6-s3-open]")) {
+        const bar = document.createElement("div");
+        bar.style.cssText = "margin-top:10px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+        bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">M.G. scoring Maria 23/25 live.</span>
+          <button type="button" data-m6-s3-open style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">🎙 Open Gong</button>`;
+        ob.appendChild(bar);
+        bar.querySelector("[data-m6-s3-open]").addEventListener("click", () => {
+          state.api.os.openApp("gong", { transcripts: state.transcripts, activeTranscriptId: state.transcripts[0]?.id });
+        });
+      }
+    }
+    const onAppOpened = (ev) => {
+      if (ev.detail?.appId !== "gong" || state.step !== 2) return;
+      state.api.eventBus.removeEventListener("app:opened", onAppOpened);
+      markTaskBannerDone("m6-s3-open-gong");
+      setTimeout(() => runStep(3), 500);
+    };
+    state.api.eventBus.addEventListener("app:opened", onAppOpened);
+  }, 140);
+}
+
+// --- Step 4 -----------------------------------------------------------------
+
+function stepWorkedExample(body) {
+  body.innerHTML = `
+    <p style="font-size:14px;">Watch <strong>M.G.</strong> score Maria 23/25 in 90 seconds.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Click any M-chip in the transcript, or 'Watched it' below.</p>`;
+  setTimeout(() => {
+    const gb = document.querySelector(".os-window.app--gong .os-window-body");
+    if (!gb) return;
+    mountTaskBanner(gb, { id: "m6-s4-watch", label: "Watch M.G.'s scoring pass", state: "active" });
+    if (!gb.querySelector("[data-m6-s4-done]")) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+      bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">Scoring: 5·5·4·5·4 = 23/25. Dial.</span>
+        <button type="button" data-m6-s4-done style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">✓ Watched it</button>`;
+      gb.appendChild(bar);
+      const complete = () => {
+        if (state.step !== 3) return;
+        markTaskBannerDone("m6-s4-watch");
+        state.timeline.push({ label: "Watched scoring pass", detail: "23/25 · dial", ts: timestamp() });
+        setTimeout(() => runStep(4), 450);
+      };
+      bar.querySelector("[data-m6-s4-done]").addEventListener("click", complete);
+      gb.addEventListener("click", e => { if (e.target.closest?.('.m-chip')) complete(); });
+    }
+  }, 200);
+}
+
+// --- Step 5 -----------------------------------------------------------------
+
+function stepCompletionProblem(body) {
+  keepOnly(["outreach"]);
+  body.innerHTML = `
+    <p style="font-size:14px;">
+      <strong>Sven</strong> · DE industrial wholesale · 64 FTE · €27K/mo spend.
+      Family-owned, ops head decision-maker. Last signal: filed annual accounts.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Pick his ICP total in the drawer.</p>`;
+  const options = [
+    { label: "A", result: "anti", text: "Skip — too small.", rationale: "Wrong. 64 FTE × €27K/mo = clear ICP." },
+    { label: "B", result: "correct", text: "Dial today · score 21/25.", rationale: "Yes. Industry 5 / FTE 5 / Spend 5 / DM 4 / Intent 2 = 21." },
+    { label: "C", result: "partial", text: "Add to nurture · score 17/25.", rationale: "Close to cutoff but borderline. Actual is 21." },
+    { label: "D", result: "anti", text: "Escalate to AE · enterprise tier.", rationale: "64 FTE is mid-SMB, not enterprise. AE handoff wastes the lead." },
+  ];
+  setTimeout(() => mountSvenDrawer(options), 160);
+}
+
+function mountSvenDrawer(options) {
+  const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!ob) return;
+  mountTaskBanner(ob, { id: "m6-s5-pick", label: "Score Sven and pick the verdict", state: "active" });
+  const row = [...ob.querySelectorAll(".lead-row")].find(r => /Sven|Tom|Emma|Lukas/i.test(r.textContent || "")) || ob.querySelector(".lead-row");
+  if (!row) return;
+  row.classList.add("is-warm-highlight");
+  ob.querySelector("[data-m6-s5-drawer]")?.remove();
+  const drawer = document.createElement("div");
+  drawer.setAttribute("data-m6-s5-drawer", "");
+  drawer.className = "tom-drawer";
+  drawer.innerHTML = `
+    <header class="tom-drawer__head">
+      <strong>Sven · pre-dial scoring</strong>
+      <span class="tom-drawer__cue">Pick the verdict</span>
+    </header>
+    <p class="tom-drawer__stem">64 FTE · €27K/mo · ops head DM · CH filing this week</p>
+    <div class="tom-drawer__opts" role="radiogroup">
+      ${options.map((o, i) => `<button type="button" class="tom-drawer__opt" role="radio" aria-checked="false" data-result="${o.result}" data-idx="${i}"><span class="tom-drawer__label">${o.label}</span><span class="tom-drawer__text">${o.text}</span></button>`).join("")}
+    </div>
+    <div class="tom-drawer__fb" id="m6-s5-fb" hidden></div>`;
+  row.insertAdjacentElement("afterend", drawer);
+  const fb = drawer.querySelector("#m6-s5-fb");
+  drawer.querySelectorAll(".tom-drawer__opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const opt = options[Number(btn.dataset.idx)];
+      drawer.querySelectorAll(".tom-drawer__opt").forEach(b => { b.classList.remove("is-correct", "is-incorrect"); b.setAttribute("aria-checked", "false"); });
+      btn.setAttribute("aria-checked", "true");
+      btn.classList.add(opt.result === "correct" ? "is-correct" : "is-incorrect");
+      if (opt.result !== "correct") drawer.querySelector('.tom-drawer__opt[data-result="correct"]')?.classList.add("is-reveal");
+      fb.hidden = false; fb.textContent = opt.rationale;
+      if (opt.result === "correct") {
+        markTaskBannerDone("m6-s5-pick");
+        state.timeline.push({ label: "Scored Sven correctly", detail: "21/25 · dial", ts: timestamp() });
+        setTimeout(() => runStep(5), 700);
+      }
+    });
+  });
+}
+
+// --- Step 6 solo scorer -----------------------------------------------------
+
+function stepSoloProblem(body) {
+  const lead = state.prospects[2] ?? state.prospects[0];
+  body.innerHTML = `
+    <p style="font-size:14px;"><strong>Solo.</strong> Score ${lead.name} (${lead.industry}). 5 criteria · 1-5 each.</p>
+    <p id="solo-status" class="retention-note" aria-live="polite">Status: not yet scored</p>`;
+  setTimeout(() => mountScorer(lead), 200);
+}
+
+function mountScorer(lead) {
+  const ob = document.querySelector(".os-window.app--outreach .os-window-body");
+  if (!ob) return;
+  mountTaskBanner(ob, { id: "m6-s6-solo", label: `Score ${lead.name} on 5 criteria · then dial or skip`, state: "active" });
+  if (ob.querySelector("[data-m6-s6-stage]")) return;
+  const criteria = [
+    { k: "industry", label: "Industry fit" },
+    { k: "fte", label: "FTE band" },
+    { k: "spend", label: "Monthly spend" },
+    { k: "dm", label: "Decision-maker access" },
+    { k: "intent", label: "Intent signal (recent)" },
+  ];
+  const wrap = document.createElement("div");
+  wrap.setAttribute("data-m6-s6-stage", "");
+  wrap.style.cssText = "margin-top:14px; padding:14px; background:#fff; border:1px solid var(--ftc-border); border-radius:8px;";
+  wrap.innerHTML = `
+    <div style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--ftc-ink-2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+      ${escapeHtml(lead.name)} · ${escapeHtml(lead.industry)} · ${lead.fte} FTE · €${lead.monthly_spend?.toLocaleString?.() ?? "?"}/mo
+    </div>
+    ${criteria.map(c => `
+      <div style="display:grid; grid-template-columns:160px 1fr 30px; gap:10px; align-items:center; margin:6px 0;">
+        <label for="m6-${c.k}" style="font-size:13px; color:var(--ftc-ink);">${c.label}</label>
+        <input type="range" id="m6-${c.k}" data-k="${c.k}" min="1" max="5" value="3" step="1" style="width:100%;">
+        <output for="m6-${c.k}" id="m6-${c.k}-v" style="font-family:var(--ftc-font-mono); font-size:13px; font-weight:700; text-align:right; color:var(--brand-green-deep);">3</output>
+      </div>`).join("")}
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
+      <span data-m6-total style="font-family:var(--ftc-font-mono); font-size:14px; color:var(--ftc-ink);">Total: 15 / 25 · skip (cutoff 18)</span>
+      <button type="button" data-m6-decide style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Commit verdict</button>
+    </div>`;
+  ob.appendChild(wrap);
+
+  const update = () => {
+    let total = 0;
+    criteria.forEach(c => {
+      const v = Number(wrap.querySelector(`#m6-${c.k}`).value);
+      wrap.querySelector(`#m6-${c.k}-v`).textContent = String(v);
+      total += v;
+    });
+    const verdict = total >= 22 ? "dial today" : total >= 18 ? "dial this week" : "skip · nurture instead";
+    wrap.querySelector("[data-m6-total]").textContent = `Total: ${total} / 25 · ${verdict}`;
+  };
+  wrap.querySelectorAll("input[type='range']").forEach(i => i.addEventListener("input", update));
+
+  wrap.querySelector("[data-m6-decide]").addEventListener("click", () => {
+    if (state.step !== 5) return;
+    let total = 0;
+    criteria.forEach(c => total += Number(wrap.querySelector(`#m6-${c.k}`).value));
+    state.scoresLogged = true;
+    state.timeline.push({ label: `Scored ${lead.name}`, detail: `Total ${total}/25 · ${total >= 18 ? "DIAL" : "SKIP"}`, ts: timestamp() });
+    markTaskBannerDone("m6-s6-solo");
+    setTimeout(() => runStep(6), 600);
+  });
+}
+
+// --- Steps 7-9 -------------------------------------------------------------
+
+function stepFeedback(body) {
+  keepOnly(["slack"]);
+  body.innerHTML = `<p style="font-size:14px;"><strong>J.T.</strong> DM'd the review of your scoring pass.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Mark thread read to continue.</p>`;
+  const dm = [
+    { author: "J.T. (pod lead)", initials: "JT", ts: "12:48", body: "Scoring discipline 👇" },
+    ...state.timeline.map(e => ({ author: "J.T. (pod lead)", initials: "JT", ts: e.ts, body: `✅ ${e.label} — ${e.detail}` })),
+    { author: "J.T. (pod lead)", initials: "JT", ts: "12:52", body: "If your gut wants to dial below 18, sit on it. The hour you save is the next 5-min closeable." },
+    { author: "M.G. (peer)", initials: "MG", ts: "12:54", body: "I score before I even open Gong. The non-ICP leads stop feeling tempting after 2 weeks." },
+  ];
+  state.api.os.openApp("slack", { channel: { channel_id: "dm-jt-podlead", pinned_messages: [{ title: "3-move card", content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: "M6" }], messages: dm } });
+  setTimeout(() => mountReadCTA("m6-s7"), 200);
+}
+
+function mountReadCTA(prefix) {
+  const sb = document.querySelector(".os-window.app--slack .os-window-body");
+  if (!sb) return;
+  mountTaskBanner(sb, { id: `${prefix}-read`, label: "Read J.T.'s DM", state: "active" });
+  if (sb.querySelector(`[data-${prefix}-done]`)) return;
+  const bar = document.createElement("div");
+  bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+  bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. waits for the read receipt.</span>
+    <button type="button" data-${prefix}-done style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">✓ Mark thread read</button>`;
+  sb.appendChild(bar);
+  bar.querySelector(`[data-${prefix}-done]`).addEventListener("click", () => {
+    markTaskBannerDone(`${prefix}-read`);
+    setTimeout(() => runStep(state.step + 1), 500);
+  });
+}
+
+function stepQuiz(body) {
+  state.quizIndex = 0; state.quizScore = 0;
+  body.innerHTML = `<p style="font-size:14px;"><strong>Quick check</strong> · 3 questions.</p>`;
+  setTimeout(() => mountQuizInSlack("m6"), 200);
+}
+
+function mountQuizInSlack(prefix) {
+  const sb = document.querySelector(".os-window.app--slack .os-window-body");
+  if (!sb) { state.api.os.openApp("slack"); return setTimeout(() => mountQuizInSlack(prefix), 250); }
+  mountTaskBanner(sb, { id: `${prefix}-quiz`, label: "Answer the 3 quiz questions", state: "active" });
+  sb.querySelector(`[data-${prefix}-quiz-thread]`)?.remove();
+  const thread = document.createElement("div");
+  thread.setAttribute(`data-${prefix}-quiz-thread`, "");
+  thread.style.cssText = "margin:14px 0 0; padding:14px 16px; background:#fff8e0; border-left:3px solid var(--sun-500,#f5b800); border-radius:6px; font-family:var(--ftc-font-sans);";
+  thread.innerHTML = `<div style="font-family:var(--ftc-font-mono);font-size:11px;color:var(--ftc-ink-2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">J.T. · quick check</div><div data-quiz-host></div>`;
+  const messages = sb.querySelector(".slack-msgs, .slack-messages, .slack-main") || sb;
+  messages.appendChild(thread);
+  renderQuizItemInSlack(thread.querySelector("[data-quiz-host]"), prefix);
+}
+
+function renderQuizItemInSlack(host, prefix) {
+  const item = state.quizItems[state.quizIndex];
+  host.innerHTML = `
+    <div style="font-size:12px;color:var(--ftc-ink-2);margin-bottom:6px;">Q ${state.quizIndex + 1}/${state.quizItems.length} · ${item.lo}</div>
+    <p style="font-size:14px;margin:0 0 10px;color:var(--ftc-ink);">${item.stem}</p>
+    <div role="radiogroup" style="display:grid;gap:6px;">
+      ${item.options.map((o, i) => `<button type="button" class="tom-drawer__opt" role="radio" aria-checked="false" data-idx="${i}"><span class="tom-drawer__label">${o.label}</span><span class="tom-drawer__text">${o.text}</span></button>`).join("")}
+    </div>
+    <div class="tom-drawer__fb" id="${prefix}-quiz-fb" hidden></div>
+    <div style="margin-top:10px;text-align:right;"><button type="button" id="${prefix}-quiz-next" disabled style="background:var(--brand-green);color:#fff;padding:6px 14px;border:0;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;opacity:0.5;">${state.quizIndex === state.quizItems.length - 1 ? "Finish" : "Next"}</button></div>`;
+  const fb = host.querySelector(`#${prefix}-quiz-fb`);
+  const next = host.querySelector(`#${prefix}-quiz-next`);
+  host.querySelectorAll(".tom-drawer__opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const opt = item.options[Number(btn.dataset.idx)];
+      host.querySelectorAll(".tom-drawer__opt").forEach(b => { b.classList.remove("is-correct", "is-incorrect"); b.setAttribute("aria-checked", "false"); b.disabled = true; b.style.cursor = "default"; });
+      btn.setAttribute("aria-checked", "true");
+      btn.classList.add(opt.correct ? "is-correct" : "is-incorrect");
+      if (!opt.correct) host.querySelectorAll(".tom-drawer__opt").forEach((b, j) => { if (item.options[j]?.correct) b.classList.add("is-reveal"); });
+      fb.hidden = false; fb.textContent = opt.rationale;
+      if (opt.correct) state.quizScore += 1;
+      next.disabled = false; next.style.opacity = "1";
+    });
+  });
+  next.addEventListener("click", () => {
+    if (state.quizIndex < state.quizItems.length - 1) { state.quizIndex += 1; renderQuizItemInSlack(host, prefix); }
+    else { markTaskBannerDone(`${prefix}-quiz`); setTimeout(() => runStep(state.step + 1), 500); }
+  });
+}
+
+function stepTakeaway(body) {
+  const pct = Math.round((state.quizScore / state.quizItems.length) * 100);
+  body.innerHTML = `<p style="font-size:14px;"><strong>Module complete.</strong> M.G. pinned the takeaway.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Quiz: <strong>${state.quizScore}/${state.quizItems.length}</strong> (${pct}%). Click 'Set retrieval drop' to finish.</p>`;
+  setTimeout(() => {
+    const sb = document.querySelector(".os-window.app--slack .os-window-body");
+    if (!sb) { state.api.os.openApp("slack"); return setTimeout(() => stepTakeaway(body), 250); }
+    sb.querySelector("[data-m6-quiz-thread]")?.remove();
+    mountTaskBanner(sb, { id: "m6-s9-pin", label: "Read M.G.'s pinned takeaway + set the +7d drop", state: "active" });
+    if (sb.querySelector("[data-m6-pinned]")) return;
+    const pin = document.createElement("div");
+    pin.setAttribute("data-m6-pinned", "");
+    pin.style.cssText = "margin:14px 0 0; padding:16px 18px; background:linear-gradient(180deg, var(--ftc-green-tint,#ecf9e7) 0%, #ffffff 100%); border:1px solid var(--brand-green); border-left:4px solid var(--brand-green); border-radius:8px; font-family:var(--ftc-font-sans); box-shadow:0 6px 16px -8px rgba(10,26,16,0.12);";
+    pin.innerHTML = `
+      <div style="font-family:var(--ftc-font-mono);font-size:10px;color:var(--brand-green);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">📌 Pinned by M.G.</div>
+      <p style="font-size:15px;font-style:italic;line-height:1.55;color:var(--ftc-ink);margin:0 0 10px;">"Score every lead 1-5 on industry / FTE / spend / DM access / intent. Cutoff 18. Below that, your hour is worth more than that dial."</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--ftc-border);">
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">📅 3-item retrieval drop · +7 days</span>
+        <button type="button" data-m6-fin style="background:var(--brand-green);color:#fff;padding:9px 16px;border:0;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;">Set +7d retrieval drop →</button>
+      </div>`;
+    (sb.querySelector(".slack-msgs, .slack-messages, .slack-main") || sb).appendChild(pin);
+    pin.querySelector("[data-m6-fin]").addEventListener("click", () => { markTaskBannerDone("m6-s9-pin"); finishModule(); });
+  }, 200);
+}
+
+function finishModule() {
+  const pct = Math.round((state.quizScore / state.quizItems.length) * 100);
+  state.api.complete(pct);
+  document.getElementById("narrative-next").hidden = true;
+  document.getElementById("narrative-back").hidden = true;
+  showSummaryCard(pct);
+}
+
+function showSummaryCard(pct) {
+  keepOnly([]);
+  const overlay = document.getElementById("narrative-overlay");
+  if (overlay) overlay.style.visibility = "hidden";
+  const ms = Date.now() - state.startedAt;
+  const mm = Math.floor(ms / 60000);
+  const ss = Math.floor((ms % 60000) / 1000).toString().padStart(2, "0");
+  const card = document.createElement("div");
+  card.className = "summary-card";
+  card.innerHTML = `
+    <div class="summary-card__panel">
+      <div class="summary-card__check">✓</div>
+      <div class="summary-card__kicker">Module complete</div>
+      <h2 class="summary-card__title">Regulatory Deflection · cleared</h2>
+      <div class="summary-card__stats">
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}% · ${pct >= 67 ? "pass" : "below pass"}</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Time</span><span class="summary-card__stat-v">${mm}:${ss}</span><span class="summary-card__stat-sub">target 10:00</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Steps</span><span class="summary-card__stat-v">${STEPS.length}/${STEPS.length}</span><span class="summary-card__stat-sub">100%</span></div>
+      </div>
+      <details class="summary-card__recap"><summary>9-step recap</summary><ol class="summary-card__list">${STEPS.map((s, i) => `<li><span class="summary-card__list-n">${i + 1}</span><span class="summary-card__list-label">${s.title}</span></li>`).join("")}</ol></details>
+      <div class="summary-card__actions">
+        <a class="summary-card__btn summary-card__btn--ghost" href="../../">← Back to engagement</a>
+        <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">Restart module</button>
+      </div>
+    </div>`;
+  document.body.appendChild(card);
+  card.querySelector("[data-action='restart']")?.addEventListener("click", () => location.reload());
+}
+
+function timestamp() {
+  const ms = Date.now() - state.startedAt;
+  return `${Math.floor(ms / 60000)}:${Math.floor((ms % 60000) / 1000).toString().padStart(2, "0")}`;
+}
+function renderFatal(msg) {
+  const b = document.getElementById("narrative-body");
+  if (b) b.innerHTML = `<p style="color:var(--coral-700);">Could not load module data: ${escapeHtml(msg)}</p>`;
+}
+function escapeHtml(s) { return String(s ?? "").replace(/[<>&]/g, c => ({ "<":"&lt;",">":"&gt;","&":"&amp;" }[c])); }

@@ -27,27 +27,12 @@ DIST = ROOT / "dist"
 PACKAGE = DIST / "package"
 
 MODULES = [
-    {
-        "id":      "FTC-SDR-M1",
-        "dir":     "module-01-diagnostic-opener",
-        "title":   "Module 1 · M1 Diagnostic Opener",
-        "launch":  "module-01-diagnostic-opener/index.html",
-        "mastery": 67,
-    },
-    {
-        "id":      "FTC-SDR-M2",
-        "dir":     "module-02-objection-acknowledge",
-        "title":   "Module 2 · M2 Objection Acknowledge",
-        "launch":  "module-02-objection-acknowledge/index.html",
-        "mastery": 67,
-    },
-    {
-        "id":      "FTC-SDR-M3",
-        "dir":     "module-03-calendar-close",
-        "title":   "Module 3 · M3 Calendar Close",
-        "launch":  "module-03-calendar-close/index.html",
-        "mastery": 67,
-    },
+    { "id": "FTC-SDR-M1", "dir": "module-01-diagnostic-opener",     "title": "Module 1 · M1 Diagnostic Opener",      "launch": "module-01-diagnostic-opener/index.html",     "mastery": 67 },
+    { "id": "FTC-SDR-M2", "dir": "module-02-objection-acknowledge", "title": "Module 2 · M2 Objection Acknowledge",  "launch": "module-02-objection-acknowledge/index.html", "mastery": 67 },
+    { "id": "FTC-SDR-M3", "dir": "module-03-calendar-close",        "title": "Module 3 · M3 Calendar Close",         "launch": "module-03-calendar-close/index.html",        "mastery": 67 },
+    { "id": "FTC-SDR-M4", "dir": "module-04-icp-buyer-fit",         "title": "Module 4 · M4 ICP Buyer Fit",          "launch": "module-04-icp-buyer-fit/index.html",         "mastery": 67 },
+    { "id": "FTC-SDR-M5", "dir": "module-05-product-prop-mapping",  "title": "Module 5 · M5 Product-Prop Mapping",   "launch": "module-05-product-prop-mapping/index.html",  "mastery": 67 },
+    { "id": "FTC-SDR-M6", "dir": "module-06-regulatory-deflection", "title": "Module 6 · M6 Regulatory Deflection",  "launch": "module-06-regulatory-deflection/index.html", "mastery": 67 },
 ]
 
 SHELL_DIR = "scorm-shell"
@@ -146,7 +131,7 @@ def main():
     (PACKAGE / "imsmanifest.xml").write_text(manifest, encoding="utf-8")
     print(f"[scorm-pkg] wrote root manifest ({len(manifest)} bytes)")
 
-    zip_path = DIST / "FTC-SDR-Onboarding-M1-M2-M3-scorm12.zip"
+    zip_path = DIST / "FTC-SDR-Onboarding-M1-M6-scorm12.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
         for p in sorted(PACKAGE.rglob("*")):
             if p.is_file():

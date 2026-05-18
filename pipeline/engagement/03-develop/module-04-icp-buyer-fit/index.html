@@ -6,65 +6,45 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
-  <title>Module 4 · ICP Buyer Fit · FinTechCard SDR Onboarding</title>
-  <link rel="stylesheet" href="../scorm-shell/styles/shell.css">
-  <link rel="stylesheet" href="../scorm-shell/styles/apps.css">
-  <link rel="stylesheet" href="styles.css">
+  <title>Module 4 · M4 ICP Buyer Fit · FinTechCard SDR Onboarding</title>
+  <meta name="description" content="Score every cold lead 1-5 on five ICP criteria before you dial. Below 18/25 means skip.">
+  <link rel="stylesheet" href="../scorm-shell/styles/shell.css?v=20260519m">
+  <link rel="stylesheet" href="../scorm-shell/styles/apps.css?v=20260519m">
+  <link rel="stylesheet" href="./styles.css?v=20260519m">
 </head>
-<body>
+<body class="module module--m4">
   <a class="skip-link" href="#desktop">Skip to main content</a>
   <div id="mini-os-root">
-    <header id="topbar">
-      <div class="topbar-left">
-        <span class="ftc-logo" aria-hidden="true">FTC</span>
-        <span class="module-title" id="module-title">Module 4 · ICP Buyer Fit</span>
+    <header id="topbar" role="banner">
+      <a href="../../" class="topbar-back" aria-label="Back to engagement case study">&larr; Engagement</a>
+      <span class="ftc-logo" aria-hidden="true">FTC</span>
+      <span id="module-title" aria-live="polite">Module 4 · ICP Buyer Fit</span>
+      <div id="step-progress" class="step-progress" role="progressbar" aria-label="Module step progress" aria-valuemin="1" aria-valuemax="9" aria-valuenow="1">
+        <span class="step-progress__seg" data-step="1"></span><span class="step-progress__seg" data-step="2"></span><span class="step-progress__seg" data-step="3"></span>
+        <span class="step-progress__seg" data-step="4"></span><span class="step-progress__seg" data-step="5"></span><span class="step-progress__seg" data-step="6"></span>
+        <span class="step-progress__seg" data-step="7"></span><span class="step-progress__seg" data-step="8"></span><span class="step-progress__seg" data-step="9"></span>
       </div>
-      <div class="topbar-right">
-        <span class="module-progress" id="module-progress" aria-live="polite">0:00 / 10:00</span>
-        <button type="button" class="help-button" id="help-button">Help</button>
-      </div>
+      <span id="module-progress" class="module-progress" aria-live="polite">0:00 / 10:00</span>
+      <button id="help-button" type="button" aria-label="Open job aids in Slack">Help</button>
     </header>
-
-    <main id="desktop">
-      <section id="m4-stage" class="m4-stage" aria-live="polite" aria-atomic="false"></section>
-    </main>
-
-    <nav id="taskbar" aria-label="Open apps">
-      <ul id="taskbar-list" class="taskbar-list" role="toolbar" aria-label="Mini-OS taskbar"></ul>
-    </nav>
+    <main id="desktop" tabindex="-1"></main>
+    <aside id="narrative-overlay" class="narrative-overlay" role="region" aria-label="Module narrative · Gagné event" aria-live="polite">
+      <header class="narrative-overlay__head">
+        <span class="narrative-overlay__step" id="gagne-step">1 of 9</span>
+        <h2 class="narrative-overlay__title" id="narrative-title">Loading…</h2>
+      </header>
+      <div class="narrative-overlay__body" id="narrative-body"></div>
+      <footer class="narrative-overlay__foot">
+        <button type="button" class="narrative-icon-btn" id="narrative-redo" title="Redo this step" aria-label="Redo this step">↻</button>
+        <button type="button" class="narrative-icon-btn" id="narrative-skip" title="Skip ahead (preview)" aria-label="Skip to next step without completing">⤼</button>
+        <div class="narrative-overlay__foot-spacer"></div>
+        <button type="button" class="btn btn--ghost" id="narrative-back" hidden>Back</button>
+        <button type="button" class="btn btn--primary" id="narrative-next">Continue</button>
+      </footer>
+    </aside>
+    <nav id="taskbar" role="navigation" aria-label="Open apps"><ul id="taskbar-list"></ul></nav>
   </div>
-
   <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-  <div id="coachmark-root" aria-hidden="true"></div>
-
-  <script type="module">
-    import { bootModule } from "../scorm-shell/js/shell.js";
-    import { runModule4 } from "./module.js";
-
-    const api = bootModule({
-      moduleId: "M4",
-      title: "Module 4 · ICP Buyer Fit",
-      appsToLaunch: [],
-      onReady(ctx) { runModule4(ctx); },
-      onComplete() {
-        const stage = document.getElementById("m4-stage");
-        if (stage) {
-          stage.innerHTML = `
-            <div class="m4-complete">
-              <h1>Module 4 complete</h1>
-              <p>Take-away saved to your Slack pinned channel · spaced retrieval queued for +7 days.</p>
-            </div>`;
-        }
-      },
-    });
-
-    document.getElementById("help-button")?.addEventListener("click", () => {
-      api.coachMarks.show({
-        id: "m4-help-recap",
-        anchor: "#help-button",
-        text: "M1 diagnostic · M2 acknowledge · M3 close. Pick the buyer in ≤ 5 s, then run the moves.",
-      });
-    });
-  </script>
+  <script type="module" src="./module.js?v=20260519m"></script>
 </body>
 </html>

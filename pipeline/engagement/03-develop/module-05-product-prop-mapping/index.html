@@ -6,41 +6,45 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
-  <title>Module 5 · Product Prop Mapping · FinTechCard SDR Onboarding</title>
-  <meta name="description" content="Map any stated buyer pain to one of the four product props in the buyer's own language — and hold two diagnostics when a second voice joins mid-call.">
-
-  <!-- Shell tokens, window-manager primitives, per-app skins -->
-  <link rel="stylesheet" href="../scorm-shell/styles/shell.css">
-  <link rel="stylesheet" href="../scorm-shell/styles/apps.css">
-  <!-- M5-specific overlay: multi-voice transcript annotation, D5 prop-pain
-       drag-mapping drill, 2nd-participant chip in phone-dialler, jargon flag. -->
-  <link rel="stylesheet" href="styles.css">
+  <title>Module 5 · M5 Product-Prop Mapping · FinTechCard SDR Onboarding</title>
+  <meta name="description" content="Match every buyer pain to 1 of 4 product propositions in under 5 seconds.">
+  <link rel="stylesheet" href="../scorm-shell/styles/shell.css?v=20260519m">
+  <link rel="stylesheet" href="../scorm-shell/styles/apps.css?v=20260519m">
+  <link rel="stylesheet" href="./styles.css?v=20260519m">
 </head>
-<body>
+<body class="module module--m5">
   <a class="skip-link" href="#desktop">Skip to main content</a>
-  <a class="skip-link" href="#m5-stage">Skip to module stage</a>
-
-  <!-- Shell-mounted DOM (mini-OS window manager attaches here) -->
   <div id="mini-os-root">
-    <header id="topbar">
-      <span class="ftc-logo" aria-label="FinTechCard">FTC</span>
-      <span id="module-title">Module 5 · Product Prop Mapping</span>
-      <span id="module-progress" aria-live="polite" aria-atomic="true">0:00 / 10:00</span>
-      <button id="help-button" type="button" aria-label="Open help and pinned job aids">Help</button>
+    <header id="topbar" role="banner">
+      <a href="../../" class="topbar-back" aria-label="Back to engagement case study">&larr; Engagement</a>
+      <span class="ftc-logo" aria-hidden="true">FTC</span>
+      <span id="module-title" aria-live="polite">Module 5 · Product-Prop Mapping</span>
+      <div id="step-progress" class="step-progress" role="progressbar" aria-label="Module step progress" aria-valuemin="1" aria-valuemax="9" aria-valuenow="1">
+        <span class="step-progress__seg" data-step="1"></span><span class="step-progress__seg" data-step="2"></span><span class="step-progress__seg" data-step="3"></span>
+        <span class="step-progress__seg" data-step="4"></span><span class="step-progress__seg" data-step="5"></span><span class="step-progress__seg" data-step="6"></span>
+        <span class="step-progress__seg" data-step="7"></span><span class="step-progress__seg" data-step="8"></span><span class="step-progress__seg" data-step="9"></span>
+      </div>
+      <span id="module-progress" class="module-progress" aria-live="polite">0:00 / 10:00</span>
+      <button id="help-button" type="button" aria-label="Open job aids in Slack">Help</button>
     </header>
-    <main id="desktop"></main>
-    <nav id="taskbar" aria-label="Open applications"><ul id="taskbar-list"></ul></nav>
+    <main id="desktop" tabindex="-1"></main>
+    <aside id="narrative-overlay" class="narrative-overlay" role="region" aria-label="Module narrative · Gagné event" aria-live="polite">
+      <header class="narrative-overlay__head">
+        <span class="narrative-overlay__step" id="gagne-step">1 of 9</span>
+        <h2 class="narrative-overlay__title" id="narrative-title">Loading…</h2>
+      </header>
+      <div class="narrative-overlay__body" id="narrative-body"></div>
+      <footer class="narrative-overlay__foot">
+        <button type="button" class="narrative-icon-btn" id="narrative-redo" title="Redo this step" aria-label="Redo this step">↻</button>
+        <button type="button" class="narrative-icon-btn" id="narrative-skip" title="Skip ahead (preview)" aria-label="Skip to next step without completing">⤼</button>
+        <div class="narrative-overlay__foot-spacer"></div>
+        <button type="button" class="btn btn--ghost" id="narrative-back" hidden>Back</button>
+        <button type="button" class="btn btn--primary" id="narrative-next">Continue</button>
+      </footer>
+    </aside>
+    <nav id="taskbar" role="navigation" aria-label="Open apps"><ul id="taskbar-list"></ul></nav>
   </div>
-
-  <!-- Live region for shell announcements (window focus, app open/close) -->
   <div id="focus-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-  <!-- Assertive live region for the 2nd-stakeholder mid-call join event. -->
-  <div id="m5-stakeholder-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
-
-  <!-- Module-stage overlay layer: trigger, outcome, recall, worked example,
-       D5 prop-pain drill, solo, feedback, quiz, takeaway, L1 pulse. -->
-  <div id="m5-stage" aria-live="polite"></div>
-
-  <script type="module" src="./module.js"></script>
+  <script type="module" src="./module.js?v=20260519m"></script>
 </body>
 </html>
