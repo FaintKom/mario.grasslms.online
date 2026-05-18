@@ -417,68 +417,227 @@
 }
 
 /* =========================================================================
-   6 · Phone-dialler (dark)
+   6 · Phone-dialler (dark) — ringing → on-call → ended state machine
    ========================================================================= */
 .app--phone-dialler { background: var(--app-accent); color: var(--app-accent-text); }
 .app--phone-dialler .os-window-body {
-  background: var(--app-accent); color: var(--app-accent-text);
+  background: linear-gradient(180deg, #0f1419 0%, #1a2230 100%);
+  color: var(--app-accent-text);
 }
 .app--phone-dialler .os-window-titlebar { background: #0f1419; color: var(--ftc-paper); }
 .app--phone-dialler .os-window-title { color: var(--ftc-paper); }
-.app--phone-dialler .dialler-state { text-align: center; padding: var(--sp-4); }
-.app--phone-dialler .dialler-state .buyer-name {
-  font-size: 24px; font-weight: 600; color: var(--ftc-paper);
+
+.app--phone-dialler .dialler {
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: var(--sp-5) var(--sp-4) var(--sp-4);
+  text-align: center;
 }
-.app--phone-dialler .dialler-state .call-meta {
-  font-family: var(--ftc-font-mono); font-size: 12px;
-  color: var(--app-accent-text); opacity: 0.7;
+
+/* --- Avatar with pulsing rings ----------------------------------------- */
+.app--phone-dialler .dialler-screen {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%;
 }
-.app--phone-dialler .dialler-state .call-timer {
-  font-family: var(--ftc-font-mono); font-size: 36px;
-  font-variant-numeric: tabular-nums; margin: var(--sp-3) 0;
+.app--phone-dialler .dialler-avatar {
+  position: relative;
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0a8754, #06633d);
+  display: grid; place-items: center;
+  margin-bottom: var(--sp-3);
+  z-index: 1;
+}
+.app--phone-dialler .dialler-avatar__initials {
+  font-family: var(--ftc-font-sans);
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+}
+.app--phone-dialler .dialler-ring {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 2px solid rgba(10, 135, 84, 0.45);
+  opacity: 0;
+  pointer-events: none;
+}
+.app--phone-dialler .dialler[data-phase="ringing"] .dialler-ring {
+  animation: dialler-ring-pulse 1.8s ease-out infinite;
+}
+.app--phone-dialler .dialler[data-phase="ringing"] .dialler-ring--2 { animation-delay: 0.6s; }
+.app--phone-dialler .dialler[data-phase="ringing"] .dialler-ring--3 { animation-delay: 1.2s; }
+@keyframes dialler-ring-pulse {
+  0%   { transform: scale(0.85); opacity: 0.75; }
+  100% { transform: scale(1.6);  opacity: 0; }
+}
+
+/* --- Name + meta + timer ----------------------------------------------- */
+.app--phone-dialler .dialler-name {
+  font-family: var(--ftc-font-sans);
+  font-size: 22px; font-weight: 700;
   color: var(--ftc-paper);
+  margin-bottom: 4px;
 }
+.app--phone-dialler .dialler-meta {
+  font-family: var(--ftc-font-mono);
+  font-size: 11.5px;
+  color: rgba(230, 247, 240, 0.6);
+  margin-bottom: var(--sp-3);
+  min-height: 14px;
+}
+.app--phone-dialler .dialler-timer {
+  font-family: var(--ftc-font-mono);
+  font-size: 36px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ftc-paper);
+  margin: var(--sp-2) 0;
+  letter-spacing: 0.04em;
+}
+.app--phone-dialler .dialler[data-phase="idle"]    .dialler-timer { opacity: 0.35; }
+.app--phone-dialler .dialler[data-phase="ringing"] .dialler-timer { opacity: 0.35; }
+
+/* --- Waveform (animated bars during on-call) --------------------------- */
+.app--phone-dialler .dialler-waveform {
+  display: flex; align-items: flex-end; gap: 3px;
+  height: 28px;
+  margin: var(--sp-2) 0 var(--sp-3);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.app--phone-dialler .dialler-waveform span {
+  display: inline-block;
+  width: 3px;
+  height: 6px;
+  background: rgba(10, 135, 84, 0.85);
+  border-radius: 2px;
+  transform-origin: bottom;
+}
+.app--phone-dialler .dialler[data-phase="on-call"] .dialler-waveform { opacity: 1; }
+.app--phone-dialler .dialler[data-phase="on-call"] .dialler-waveform span {
+  animation: dialler-wave 0.95s ease-in-out infinite;
+}
+.app--phone-dialler .dialler-waveform span:nth-child(1)  { animation-delay:  0ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(2)  { animation-delay: 80ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(3)  { animation-delay:160ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(4)  { animation-delay:240ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(5)  { animation-delay:320ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(6)  { animation-delay:400ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(7)  { animation-delay:480ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(8)  { animation-delay:400ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(9)  { animation-delay:320ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(10) { animation-delay:240ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(11) { animation-delay:160ms; }
+.app--phone-dialler .dialler-waveform span:nth-child(12) { animation-delay: 80ms; }
+@keyframes dialler-wave {
+  0%, 100% { transform: scaleY(0.3); }
+  50%      { transform: scaleY(3.6); }
+}
+
+/* --- Move chips -------------------------------------------------------- */
 .app--phone-dialler .move-chips {
   display: flex; justify-content: center; gap: var(--sp-2);
-  margin: var(--sp-3) 0;
+  margin: var(--sp-2) 0 var(--sp-3);
 }
 .app--phone-dialler .move-chips .m-chip {
   background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.45);
   border-left-color: rgba(255,255,255,0.2);
+  font-family: var(--ftc-font-mono);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
 }
 .app--phone-dialler .move-chips .m-chip[data-active="true"] {
   background: var(--ftc-green-tint);
   color: var(--ftc-ink);
   border-left-color: var(--brand-green);
+  font-weight: 700;
 }
+
+/* --- Silence banner ---------------------------------------------------- */
 .app--phone-dialler .silence-banner {
-  background: var(--accent-warn); color: var(--ftc-paper);
-  padding: var(--sp-2); border-radius: var(--radius-sm);
-  font-family: var(--ftc-font-mono); font-size: 13px;
-  text-align: center; margin: var(--sp-3) 0;
+  background: rgba(245, 184, 0, 0.9);
+  color: #1a1a1a;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-family: var(--ftc-font-mono);
+  font-size: 12px;
+  text-align: center;
+  margin: var(--sp-2) 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 .app--phone-dialler .silence-banner[hidden] { display: none; }
-.app--phone-dialler .call-controls {
-  display: flex; justify-content: center; gap: var(--sp-3);
+
+/* --- Controls (4 buttons during call) ---------------------------------- */
+.app--phone-dialler .dialler-controls {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  width: 100%;
 }
-.app--phone-dialler .call-controls .dial-pad-btn,
-.app--phone-dialler .call-controls .hangup-btn {
-  border: 0; border-radius: 999px;
-  width: 56px; height: 56px;
-  font-size: 13px; font-weight: 600; color: var(--ftc-paper);
+.app--phone-dialler .dialler-ctrl {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(230, 247, 240, 0.95);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: var(--ftc-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s, transform 0.05s, border-color 0.12s;
 }
-.app--phone-dialler .call-controls .dial-pad-btn { background: var(--brand-green); }
-.app--phone-dialler .call-controls .hangup-btn   { background: var(--ftc-danger-muted); }
+.app--phone-dialler .dialler-ctrl:hover { background: rgba(255,255,255,0.15); }
+.app--phone-dialler .dialler-ctrl:active { transform: scale(0.97); }
+.app--phone-dialler .dialler-ctrl[aria-pressed="true"] {
+  background: rgba(245, 184, 0, 0.85);
+  color: #1a1a1a;
+  border-color: transparent;
+}
+.app--phone-dialler .dialler-ctrl--dial {
+  background: var(--brand-green); border-color: var(--brand-green);
+  color: #fff;
+  padding: 10px 22px;
+}
+.app--phone-dialler .dialler-ctrl--dial:hover { background: #07683f; }
+.app--phone-dialler .dialler-ctrl--hangup {
+  background: #c33d22; border-color: #c33d22; color: #fff;
+}
+.app--phone-dialler .dialler-ctrl--hangup:hover { background: #a3301b; }
+
+/* --- Disposition picker (ended state) ---------------------------------- */
 .app--phone-dialler .disposition {
-  margin-top: var(--sp-3); padding: var(--sp-3);
+  margin-top: var(--sp-3);
+  padding: var(--sp-3);
   background: rgba(255,255,255,0.04);
   border-radius: var(--radius-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+.app--phone-dialler .disposition label {
+  font-family: var(--ftc-font-mono);
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  display: block;
 }
 .app--phone-dialler .disposition select {
-  width: 100%; padding: var(--sp-2);
-  background: #ffffff; color: var(--ftc-ink);
-  border: 0; border-radius: var(--radius-sm);
+  width: 100%;
+  margin-top: 6px;
+  padding: var(--sp-2);
+  background: #ffffff;
+  color: var(--ftc-ink);
+  border: 0;
+  border-radius: var(--radius-sm);
+  font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--phone-dialler .dialler-ring,
+  .app--phone-dialler .dialler-waveform span { animation: none !important; }
+  .app--phone-dialler .dialler[data-phase="on-call"] .dialler-waveform { opacity: 0.6; }
 }
 
 /* =========================================================================

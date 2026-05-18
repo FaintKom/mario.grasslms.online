@@ -224,13 +224,14 @@ registerApp({
           slot_ids: selected.map(s => s.slot_id),
         },
       }));
+      selected.forEach(s => { s.label = `📨 Sent · ${(inviteeEmail.split("@")[0] || "buyer")}`; });
+      render();
+      // Apply success text AFTER render so it isn't overwritten by render's readout logic.
       const readout = container.querySelector("[data-region='readout']");
       if (readout) {
         readout.classList.add("is-success");
         readout.textContent = `✓ Invite sent to ${inviteeEmail} for ${selected.map(s => `${s.day} ${s.time}`).join(" or ")}`;
       }
-      selected.forEach(s => { s.label = `📨 Sent · ${(inviteeEmail.split("@")[0] || "buyer")}`; });
-      render();
     }
 
     bind();

@@ -1,12 +1,17 @@
 /**
- * phone-dialler.js · simulated phone-dialler.
+ * phone-dialler.js · simulated phone-dialler with state machine.
  *
- * Active-call panel with the M1/M2/M3 indicator chips (light up when the
- * move is detected) + a buyer-silence countdown after the rep asks a
- * diagnostic. Per ux-design-system §6.2 the silence signal is rendered as
- * text + visual countdown + aria-live (three cues, no audio).
+ * States: idle → ringing → on-call → ended
  *
- * Listens for `phone:dial` (from outreach.js) — auto-starts a call.
+ * Preserved API:
+ *   - registerApp({ id:"phone-dialler", ... })
+ *   - eventBus 'phone:dial'    → startCall(prospect)
+ *   - eventBus 'phone:move'    → activateMove(move)
+ *   - eventBus 'phone:silence' → start/clear silence banner
+ *   - returns: { startCall, endCall, activateMove, startSilence, clearSilence }
+ *
+ * New: 'phone:answer' event listener + state-machine phase exposed via the
+ * `.dialler[data-phase]` attribute so CSS can switch visuals.
  *
  * @see 02-design/ux-design-system.md §4.6 + §6.2
  */
@@ -14,7 +19,8 @@
 import { registerApp, icon } from "./registry.js";
 import { EVENT } from "../event-log.js";
 
-const SILENCE_THRESHOLD_MS = 4000; // LO-M1.3 — 4-second pause counts as "buyer thinking"
+const SILENCE_THRESHOLD_MS = 4000;
+const RING_TO_ANSWER_MS    = 1600;
 
 registerApp({
   id: "phone-dialler",
@@ -25,33 +31,55 @@ registerApp({
     const { container, eventBus, options = {} } = ctx;
 
     container.classList.add("app--phone-dialler");
-    /** @type {{prospect:any, started_at:number, ended_at:number|null, events:any[]} | null} */
+
+    /** @type {"idle"|"ringing"|"on-call"|"ended"} */
+    let phase = "idle";
+    /** @type {{prospect:any, started_at:number, ended_at:number|null} | null} */
     let call = null;
     let activeMoves = { M1: false, M2: false, M3: false };
-    let timerId = 0;
+    let toggles = { mute: false, hold: false };
+    let timerId        = 0;
+    let ringTimeoutId  = 0;
     let silenceStartedAt = 0;
     let silenceIntervalId = 0;
 
     container.innerHTML = renderShell();
+    setPhase("idle");
 
     function renderShell() {
       return `
-        <div class="dialler-state" data-region="state">
-          <div class="buyer-name" data-region="buyer">Idle</div>
-          <div class="call-meta" data-region="meta">Waiting for a dial…</div>
-          <div class="call-timer" data-region="timer" aria-live="off">00:00</div>
-          <div class="move-chips" role="status" aria-live="polite" aria-label="Move indicators">
-            <span class="m-chip" data-move="M1" data-active="false">${icon("eye","M1 diagnostic move")}[M1]</span>
-            <span class="m-chip" data-move="M2" data-active="false">${icon("refresh","M2 acknowledge move")}[M2]</span>
-            <span class="m-chip" data-move="M3" data-active="false">${icon("calendar","M3 calendar close move")}[M3]</span>
+        <div class="dialler" data-phase="idle">
+          <div class="dialler-screen">
+            <div class="dialler-avatar" data-region="avatar">
+              <span class="dialler-avatar__initials" data-region="initials">··</span>
+              <span class="dialler-ring dialler-ring--1" aria-hidden="true"></span>
+              <span class="dialler-ring dialler-ring--2" aria-hidden="true"></span>
+              <span class="dialler-ring dialler-ring--3" aria-hidden="true"></span>
+            </div>
+            <div class="dialler-name" data-region="buyer">Idle</div>
+            <div class="dialler-meta" data-region="meta">Waiting for a dial…</div>
+            <div class="dialler-timer" data-region="timer" aria-live="off">00:00</div>
+            <div class="dialler-waveform" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="silence-banner" data-region="silence" role="status" aria-live="polite" hidden>buyer is thinking · 0s</div>
+            <div class="move-chips" role="status" aria-live="polite" aria-label="Move indicators">
+              <span class="m-chip" data-move="M1" data-active="false">[M1]</span>
+              <span class="m-chip" data-move="M2" data-active="false">[M2]</span>
+              <span class="m-chip" data-move="M3" data-active="false">[M3]</span>
+            </div>
           </div>
-          <div class="silence-banner" data-region="silence" role="status" aria-live="polite" hidden>buyer is thinking · 0s</div>
-          <div class="call-controls">
-            <button type="button" class="dial-pad-btn" data-action="dial" aria-label="Dial">${icon("phone","Dial")}</button>
-            <button type="button" class="hangup-btn" data-action="hangup" aria-label="Hang up" disabled>${icon("x","Hang up")}</button>
+          <div class="dialler-controls" data-region="controls">
+            <button type="button" class="dialler-ctrl dialler-ctrl--dial"   data-action="dial"     aria-label="Dial">📞 Dial</button>
+            <button type="button" class="dialler-ctrl dialler-ctrl--toggle" data-action="mute"     aria-pressed="false" aria-label="Mute" hidden>🔇 Mute</button>
+            <button type="button" class="dialler-ctrl dialler-ctrl--toggle" data-action="hold"     aria-pressed="false" aria-label="Hold" hidden>⏸ Hold</button>
+            <button type="button" class="dialler-ctrl dialler-ctrl--toggle" data-action="transfer" aria-label="Transfer" hidden>↗ Transfer</button>
+            <button type="button" class="dialler-ctrl dialler-ctrl--hangup" data-action="hangup"   aria-label="Hang up" hidden>📵 Hang up</button>
           </div>
           <div class="disposition" data-region="disposition" hidden>
-            <label style="font-size:11px;color:rgba(255,255,255,0.7)">Post-call disposition
+            <label>Post-call disposition
               <select data-field="disposition">
                 <option value="">—</option>
                 <option value="connected">Connected · demo booked</option>
@@ -66,32 +94,78 @@ registerApp({
       `;
     }
 
+    function setPhase(p) {
+      phase = p;
+      container.querySelector(".dialler")?.setAttribute("data-phase", p);
+      const ctrls = {
+        dial:     container.querySelector('[data-action="dial"]'),
+        mute:     container.querySelector('[data-action="mute"]'),
+        hold:     container.querySelector('[data-action="hold"]'),
+        transfer: container.querySelector('[data-action="transfer"]'),
+        hangup:   container.querySelector('[data-action="hangup"]'),
+      };
+      const show = (el, on) => { if (el) el.hidden = !on; };
+      const disp = container.querySelector('[data-region="disposition"]');
+      if (p === "idle") {
+        show(ctrls.dial, true);
+        show(ctrls.mute, false); show(ctrls.hold, false); show(ctrls.transfer, false); show(ctrls.hangup, false);
+        show(disp, false);
+      } else if (p === "ringing") {
+        show(ctrls.dial, false);
+        show(ctrls.hangup, true);
+        show(ctrls.mute, false); show(ctrls.hold, false); show(ctrls.transfer, false);
+        show(disp, false);
+      } else if (p === "on-call") {
+        show(ctrls.dial, false);
+        show(ctrls.mute, true); show(ctrls.hold, true); show(ctrls.transfer, true);
+        show(ctrls.hangup, true);
+        show(disp, false);
+      } else if (p === "ended") {
+        show(ctrls.dial, true);
+        show(ctrls.mute, false); show(ctrls.hold, false); show(ctrls.transfer, false); show(ctrls.hangup, false);
+        show(disp, true);
+      }
+    }
+
+    function initialsOf(name = "") {
+      const parts = String(name).trim().split(/\s+/).slice(0, 2);
+      return parts.map(p => p[0]?.toUpperCase() ?? "").join("") || "··";
+    }
+
     function startCall(prospect) {
       if (call) endCall("interrupted");
-      call = {
-        prospect: prospect ?? options.prospect ?? { name: "Prospect", company: "—" },
-        started_at: Date.now(),
-        ended_at: null,
-        events: [],
-      };
+      const p = prospect ?? options.prospect ?? { name: "Prospect", company: "—" };
+      call = { prospect: p, started_at: Date.now(), ended_at: null };
       activeMoves = { M1: false, M2: false, M3: false };
+      toggles = { mute: false, hold: false };
       updateChips();
-      setText("buyer", `${call.prospect.name ?? "Prospect"}`);
-      setText("meta", `${call.prospect.company ?? ""} · ${call.prospect.archetype ?? ""}`);
+      setText("initials", initialsOf(p.name));
+      setText("buyer", p.name ?? "Prospect");
+      setText("meta",  `${p.company ?? ""}${p.archetype ? " · " + p.archetype : ""} · ringing…`);
+      setPhase("ringing");
+      container.querySelectorAll('[aria-pressed]').forEach(el => el.setAttribute("aria-pressed", "false"));
+      clearTimeout(ringTimeoutId);
+      ringTimeoutId = window.setTimeout(answerCall, RING_TO_ANSWER_MS);
+    }
+
+    function answerCall() {
+      if (!call || phase !== "ringing") return;
+      call.started_at = Date.now();
+      setText("meta", `${call.prospect.company ?? ""}${call.prospect.archetype ? " · " + call.prospect.archetype : ""}`);
+      setPhase("on-call");
       timerId = window.setInterval(tickTimer, 1000);
       tickTimer();
-      toggleControls(true);
-      container.querySelector("[data-region='disposition']")?.setAttribute("hidden", "");
     }
 
     function endCall(reason) {
       if (!call) return;
       call.ended_at = Date.now();
+      clearTimeout(ringTimeoutId);
       clearInterval(timerId);
       clearSilence();
-      toggleControls(false);
-      container.querySelector("[data-region='disposition']")?.removeAttribute("hidden");
-      setText("meta", `Call ended · ${reason ?? "hangup"} · pick disposition →`);
+      const r = reason ?? "hangup";
+      setText("meta", `Call ended · ${r} · pick disposition →`);
+      setPhase("ended");
       call = null;
     }
 
@@ -128,7 +202,6 @@ registerApp({
       activeMoves[move] = true;
       updateChips();
     }
-
     function updateChips() {
       container.querySelectorAll(".move-chips .m-chip").forEach(el => {
         const m = el.getAttribute("data-move");
@@ -136,13 +209,11 @@ registerApp({
       });
     }
 
-    function toggleControls(callActive) {
-      /** @type {HTMLButtonElement} */
-      const dial = container.querySelector("[data-action='dial']");
-      /** @type {HTMLButtonElement} */
-      const hang = container.querySelector("[data-action='hangup']");
-      if (dial) dial.disabled = callActive;
-      if (hang) hang.disabled = !callActive;
+    function toggleControl(name) {
+      if (!(name in toggles)) return;
+      toggles[name] = !toggles[name];
+      const btn = container.querySelector(`[data-action="${name}"]`);
+      btn?.setAttribute("aria-pressed", String(toggles[name]));
     }
 
     function setText(region, text) {
@@ -154,14 +225,18 @@ registerApp({
     container.addEventListener("click", e => {
       const t = e.target;
       if (!(t instanceof Element)) return;
-      if (t.closest("[data-action='dial']")) startCall();
-      else if (t.closest("[data-action='hangup']")) endCall("hangup");
+      if (t.closest('[data-action="dial"]'))         startCall();
+      else if (t.closest('[data-action="hangup"]'))  endCall("hangup");
+      else if (t.closest('[data-action="mute"]'))    toggleControl("mute");
+      else if (t.closest('[data-action="hold"]'))    toggleControl("hold");
+      // transfer is a no-op stub for v1
     });
 
-    const onDial = (/** @type {CustomEvent} */ ev) => startCall(ev.detail?.prospect);
+    const onDial   = (/** @type {CustomEvent} */ ev) => startCall(ev.detail?.prospect);
     eventBus.addEventListener("phone:dial", onDial);
-
-    const onMove = (ev) => activateMove(ev.detail?.move);
+    const onAnswer = () => answerCall();
+    eventBus.addEventListener("phone:answer", onAnswer);
+    const onMove   = (ev) => activateMove(ev.detail?.move);
     eventBus.addEventListener("phone:move", onMove);
     const onSilence = (ev) => {
       if (ev.detail?.start) startSilence();
@@ -173,9 +248,10 @@ registerApp({
       startCall, endCall, activateMove, startSilence, clearSilence,
       destroy() {
         eventBus.removeEventListener("phone:dial", onDial);
+        eventBus.removeEventListener("phone:answer", onAnswer);
         eventBus.removeEventListener("phone:move", onMove);
         eventBus.removeEventListener("phone:silence", onSilence);
-        clearInterval(timerId); clearSilence();
+        clearInterval(timerId); clearTimeout(ringTimeoutId); clearSilence();
       },
     };
   },
