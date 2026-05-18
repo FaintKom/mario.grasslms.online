@@ -2479,9 +2479,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ WORK GRID ============ -->
 <section class="wrap" id="work">
   <div class="section-head">
-    <span class="num">§ 05 / INDEX</span>
-    <h2>Index of work</h2>
-    <span class="count"><span id="countN">13</span> projects</span>
+    <span class="num">§ 05 / RECENT BUILDS</span>
+    <h2>4 most-recent<br>shipped builds</h2>
+    <span class="count"><span id="countN">4</span> projects · curated</span>
   </div>
 
   <div class="filters" id="filters">
@@ -3083,7 +3083,8 @@ function renderCards() {
       const numbered = state.cardStyle === "numbered";
       const sch = p.schematic ? schematicCard(p.schematic) : "";
       html += `
-        <article class="card ${span} ${p.schematic ? 'has-schematic' : ''}" data-id="${p.id}">
+        <article class="card ${span} ${p.schematic ? 'has-schematic' : ''}" data-id="${p.id}"
+                 role="button" tabindex="0" aria-label="Open ${title}">
           ${motif}
           ${sch}
           <div class="card-head">
@@ -3116,6 +3117,12 @@ function renderCards() {
   wrap.innerHTML = html;
   wrap.querySelectorAll(".card").forEach((c) => {
     c.addEventListener("click", () => openModal(c.dataset.id));
+    c.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openModal(c.dataset.id);
+      }
+    });
   });
 
   // Re-apply data-ru/data-en on new content
