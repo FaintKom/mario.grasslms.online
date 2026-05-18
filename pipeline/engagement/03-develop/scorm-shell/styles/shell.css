@@ -5,37 +5,37 @@
    ========================================================================= */
 
 :root {
-  /* --- Brand palette (canonical names from ux-design-system.md §1) --- */
-  --ftc-green-primary: #00b67a;
-  --ftc-green-dark:    #00875f;
-  --ftc-green-tint:    #e6f7f0;
-  --ftc-ink:           #0f1419;
-  --ftc-ink-2:         #475467;
+  /* --- Brand palette · harmonised with portfolio Lively design system --- */
+  --ftc-green-primary: #0a8754;
+  --ftc-green-dark:    #07683f;
+  --ftc-green-tint:    #ecf9e7;
+  --ftc-ink:           #0a1a10;
+  --ftc-ink-2:         #4d5a51;
   --ftc-paper:         #ffffff;
-  --ftc-surface:       #f6f8fa;
-  --ftc-border:        #d0d5dd;
-  --ftc-danger-muted:  #b42318;
+  --ftc-surface:       #fafbf6;
+  --ftc-border:        #e6e8e4;
+  --ftc-danger-muted:  #c33d22;
 
   /* --- Aliases (matches names in build brief) --- */
   --brand-green:       var(--ftc-green-primary);
   --brand-green-deep:  var(--ftc-green-dark);
-  --brand-mono:        #1a1a1a;
+  --brand-mono:        #0a1a10;
   --bg-base:           var(--ftc-surface);
   --bg-elevated:       var(--ftc-paper);
   --text-primary:      var(--ftc-ink);
-  --text-secondary:    #4a5a52;
-  --border-subtle:     #d9e2dc;
-  --accent-warn:       #d97706;
+  --text-secondary:    #6b7a70;
+  --border-subtle:     #e6e8e4;
+  --accent-warn:       #f5b800;
   --accent-fail:       var(--ftc-danger-muted);
 
-  /* --- Per-module cue colours (ux-design-system.md §6, plus brief) --- */
-  --m1-cue:            #2563eb; /* diagnostic */
-  --m2-cue:            #7c3aed; /* acknowledge */
-  --m3-cue:            #00b67a; /* close */
+  /* --- Per-module cue colours · recoloured into Lively palette --- */
+  --m1-cue:            #07683f; /* diagnostic — deep green */
+  --m2-cue:            #f5b800; /* acknowledge — sun-500 */
+  --m3-cue:            #0a8754; /* close — accent green */
 
-  /* --- Typography (system fonts only, no web-font payload) --- */
-  --ftc-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
-  --ftc-font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* --- Typography · Manrope + Geist Mono via index.html stylesheet --- */
+  --ftc-font-sans: "Manrope", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --ftc-font-mono: "Geist Mono", ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 
   --fs-body:    16px;
   --lh-body:    1.5;
