@@ -327,41 +327,72 @@ function stepRecallPrior(body) {
 // ===========================================================================
 
 function stepWorkedExample(body) {
-  const gc01 = state.transcripts.find(t => t.id === "GC-01") ?? state.transcripts[0];
-  const gc03 = state.transcripts.find(t => t.id === "GC-03") ?? state.transcripts[1];
-
+  // Narrative pane shrinks to a one-paragraph framing + cue. Work is in Gong.
   body.innerHTML = `
-    <p>Watch <strong>M.G.</strong> close <strong>Maria R.</strong> Calendar
-    sits in a second tab from the moment the call starts.</p>
-    <div class="worked-example" role="group" aria-label="Worked example side-by-side">
-      <section class="worked-example__pane" aria-labelledby="we-gong-h">
-        <h3 id="we-gong-h">Gong · ${gc01.id} · ${gc01.outcome}</h3>
-        ${gc01.turns.map(renderTranscriptLine).join("")}
-      </section>
-      <section class="worked-example__pane" aria-labelledby="we-cal-h">
-        <h3 id="we-cal-h">Calendar · second tab</h3>
-        <p style="font-size:13px;color:var(--ftc-ink-2);margin:0 0 8px">
-          M.G. has two free 20-min slots visible at all times. The invite
-          fires <em>during</em> the call — note the timestamp on the M3
-          line: invite sent at 12:32, before Maria's reply at 12:42.
-        </p>
-        <p style="font-size:13px;margin:8px 0 0">
-          <code>calendar_open_before_dial = true</code> · event-log entry
-          captured at dial-time.
-        </p>
-      </section>
-    </div>
-    <p style="margin-top:12px"><strong>L.D.'s variant</strong> on the same
-    move (${gc03.id}): <em>"${gc03.close_line}"</em> — same two-slot
-    pattern, faster pitch frame ("10-min product-fit").</p>
+    <p style="font-size:14px;">
+      Watch <strong>M.G.</strong> close <strong>Maria R.</strong> in real
+      time. Calendar sits in a second tab from the moment the call starts.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      Listen for the <strong>M3 [Close]</strong> tag — invite goes out
+      <em>during</em> the call, not after. The Gong window highlights it.
+    </p>
   `;
 
-  state.api.eventLog.record("worked_example_completed");
-  state.timeline.push({
-    label: "Watched M.G. + L.D. worked example",
-    detail: "GC-01 + GC-03 · two-slot close pattern observed",
-    ts: timestamp(),
-  });
+  // Open the Gong app on call GC-01 (M.G. + Maria). Default data file
+  // already covers GC-01 / GC-03 — no transcript pass-through needed here.
+  state.api.os.openApp("gong", { activeTranscriptId: "GC-01" });
+
+  // Then mount the task-banner inside Gong + a 'Watched it' button that
+  // advances. Auto-advance on M3 chip click too.
+  setTimeout(() => {
+    const gongBody = document.querySelector(".os-window.app--gong .os-window-body");
+    if (!gongBody) return;
+    mountTaskBanner(gongBody, {
+      id: "m3-s4-watch",
+      label: "Watch M.G.'s close — find the M3 [Close] tag in the transcript",
+      hint: "Click any M3 chip OR the 'Watched it' button below",
+      state: "active",
+    });
+
+    // Inject a small explicit-completion bar at the very bottom so the rep
+    // has a deliberate 'I got it' action when they're ready.
+    if (!gongBody.querySelector("[data-m3-s4-done]")) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
+      bar.innerHTML = `
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">
+          See the [M3] chip on M.G.'s "Tuesday 11 or Thursday 2" line?
+        </span>
+        <button type="button"
+                data-m3-s4-done
+                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+          ✓ Watched it
+        </button>
+      `;
+      gongBody.appendChild(bar);
+      const complete = () => {
+        if (state.step !== 3) return;
+        markTaskBannerDone("m3-s4-watch");
+        state.api.eventLog?.record?.("step4_worked_example_completed");
+        state.timeline.push({
+          label: "Watched M.G. worked example",
+          detail: "GC-01 · two-slot close pattern observed",
+          ts: timestamp(),
+        });
+        setTimeout(() => runStep(4), 450);
+      };
+      bar.querySelector("[data-m3-s4-done]").addEventListener("click", complete);
+
+      // Also: clicking any M3 chip in the transcript counts as completion.
+      const onChip = (e) => {
+        const chip = e.target.closest?.('.m-chip[data-move="M3"]');
+        if (!chip) return;
+        complete();
+      };
+      gongBody.addEventListener("click", onChip);
+    }
+  }, 200);
 }
 
 function renderTranscriptLine(turn) {
