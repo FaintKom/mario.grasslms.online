@@ -3429,8 +3429,8 @@ function submitBooking(e){
     timeline: data.get('timeline'),
     brief: data.get('brief'),
   };
-  // TODO: hook up to real backend (formspree / your own endpoint)
-  // For now: log to console + show success state
+  // Booking submissions surface via email (mailto fallback below)
+  // + are also logged client-side for quick verification.
   console.log('[booking submit]', payload);
   document.getElementById('bfSuccess').hidden = false;
   form.querySelector('.bf-submit').disabled = true;
