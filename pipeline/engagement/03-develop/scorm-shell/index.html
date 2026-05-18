@@ -52,15 +52,43 @@
           </div>
         </div>
         <p style="margin-top:18px;"><strong>See it in action:</strong> <a href="../module-03-calendar-close/" style="color:#0a8754; font-weight:700;">Open Module 3 · Calendar Close →</a> — the keystone-completing module where the rep learns to send the invite during the live call, not after.</p>
-        <p style="margin-top:14px; font-size:14px;">Or browse the apps standalone:</p>
-        <div class="demo-launchers" role="toolbar" aria-label="App launchers">
-          <button type="button" data-launch="outreach">Outreach (dialler)</button>
-          <button type="button" data-launch="gong">Gong (call review)</button>
-          <button type="button" data-launch="salesforce">Salesforce (CRM)</button>
-          <button type="button" data-launch="linkedin-ch">LinkedIn / Companies House</button>
-          <button type="button" data-launch="calendar">Calendar</button>
-          <button type="button" data-launch="phone-dialler">Phone dialler</button>
-          <button type="button" data-launch="slack">Slack</button>
+        <p style="margin-top:22px; font-size:14px; text-align:left;">Or browse the 7 simulated apps standalone:</p>
+        <div class="app-launchers" role="toolbar" aria-label="App launchers">
+          <button type="button" data-launch="outreach" class="app-card" data-accent="#d97706">
+            <span class="app-card__glyph" aria-hidden="true">O</span>
+            <span class="app-card__name">Outreach</span>
+            <span class="app-card__role">Dialler · sequence step queue</span>
+          </button>
+          <button type="button" data-launch="gong" class="app-card" data-accent="#1e3a8a">
+            <span class="app-card__glyph" aria-hidden="true">G</span>
+            <span class="app-card__name">Gong</span>
+            <span class="app-card__role">Call review · M1/M2/M3 tagging</span>
+          </button>
+          <button type="button" data-launch="salesforce" class="app-card" data-accent="#1B5297">
+            <span class="app-card__glyph" aria-hidden="true">SF</span>
+            <span class="app-card__name">Salesforce</span>
+            <span class="app-card__role">CRM · next-step + Ramp_Time__c</span>
+          </button>
+          <button type="button" data-launch="linkedin-ch" class="app-card" data-accent="#2a52be">
+            <span class="app-card__glyph" aria-hidden="true">Li</span>
+            <span class="app-card__name">LinkedIn · CH</span>
+            <span class="app-card__role">ICP enrich · Companies House check</span>
+          </button>
+          <button type="button" data-launch="calendar" class="app-card" data-accent="#00875f">
+            <span class="app-card__glyph" aria-hidden="true">Ca</span>
+            <span class="app-card__name">Calendar</span>
+            <span class="app-card__role">M3 close · invite during the call</span>
+          </button>
+          <button type="button" data-launch="phone-dialler" class="app-card" data-accent="#0f1419">
+            <span class="app-card__glyph" aria-hidden="true">☎</span>
+            <span class="app-card__name">Phone dialler</span>
+            <span class="app-card__role">Habit-gate · disabled until Calendar opens</span>
+          </button>
+          <button type="button" data-launch="slack" class="app-card" data-accent="#4a154b">
+            <span class="app-card__glyph" aria-hidden="true">Sl</span>
+            <span class="app-card__name">Slack</span>
+            <span class="app-card__role">Coach huddle · M2 objection assist</span>
+          </button>
         </div>
         <p style="margin-top:18px; font-size:12px; color:#6b7a70; font-family:ui-monospace,monospace;">Designer note: append <code>?debug=1</code> for SCORM bridge + event-log in console.</p>
       </div>
