@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Pipeline artefacts · template layer — Mario Becerra</title>
+<meta name="description" content="Reusable template artefacts that back the FinTechCard engagement. Each artefact is one tool I run on real engagements — printable, methodology-anchored, single-page."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="needs-assessment-template/style.css"/>
+<style>
+.artefact-list { display: grid; gap: 10px; margin: 16px 0; }
+.artefact {
+  border: 1px solid var(--ink-100);
+  border-left: 4px solid var(--green-600);
+  border-radius: 6px;
+  padding: 14px 18px;
+  background: var(--paper-2);
+}
+.artefact.scorm { border-left-color: var(--sun-500); background: var(--sun-50); }
+.artefact .head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.artefact .phase {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green-700);
+  padding: 2px 6px;
+  background: var(--green-50);
+  border-radius: 3px;
+}
+.artefact h3 { font-size: 15px; margin: 0; color: var(--ink-900); }
+.artefact h3 a { color: var(--ink-900); text-decoration: none; }
+.artefact h3 a:hover { color: var(--green-700); text-decoration: underline; }
+.artefact .desc { font-size: 12.5px; line-height: 1.5; color: var(--ink-700); margin: 4px 0 0; }
+.artefact .method {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+  margin-top: 6px;
+  display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">m</div>
+    <span>Pipeline · artefact templates</span>
+  </div>
+  <div class="actions">
+    <a class="btn secondary" href="../../">← Portfolio</a>
+    <a class="btn secondary" href="../">← Pipeline</a>
+    <a class="btn secondary" href="../engagement/">Worked engagement →</a>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <p class="eyebrow">Template layer · 9 reusable artefacts</p>
+  <h1 class="title">Pipeline <em>artefacts</em></h1>
+  <p class="subtitle">Single-page printable templates I run on real engagements. Each artefact names its methodology, sources, and the phase it sits in. The <a href="../engagement/" style="color:var(--green-700);">FinTechCard engagement</a> shows these templates filled end-to-end on one anonymised case.</p>
+
+  <div class="meta-strip">
+    <span><strong>Format:</strong> single-page HTML · print-to-PDF · WCAG 2.1 AA</span>
+    <span><strong>Design system:</strong> GrassLMS Lively · Manrope + Geist Mono · paper bg</span>
+    <span><strong>Methodologies named:</strong> ADDIE · 4C/ID · Robinson · Mager · Kirkpatrick · Christensen JTBD · Sandler · Challenger · MEDDIC</span>
+  </div>
+
+  <div class="artefact-list">
+
+    <div class="artefact">
+      <div class="head">
+        <span class="phase">Phase 1 · Discover</span>
+        <h3><a href="stakeholder-interview-script/">Stakeholder interview script ↗</a></h3>
+      </div>
+      <p class="desc">30–45 min kickoff-call talk-track. Robinson 4-needs ordering; Mager root-cause guard inside the performance section; You-say / Listen-for / If-you-hear branching rows; §09 SE-adaptation map (script sections → MEDDIC letters).</p>
+      <span class="method">Robinson 4-needs · Mager root-cause · Malamed scope discipline · MEDDIC</span>
+    </div>
+
+    <div class="artefact">
+      <div class="head">
+        <span class="phase">Phase 1 · Discover</span>
+        <h3><a href="needs-assessment-template/">Needs Assessment template ↗</a></h3>
+      </div>
+      <p class="desc">9-section single-sheet kickoff worksheet. Project context · business outcome · performance gap with Mager guard · audience persona · SME inputs · stakeholder hopes/fears · constraints · out-of-scope · Kirkpatrick L1–L4 seed.</p>
+      <span class="method">Robinson 4-needs · Mager · Malamed · Kirkpatrick L1–L4</span>
+    </div>
+
+    <div class="artefact">
+      <div class="head">
+        <span class="phase">Phase 1 · Discover</span>
+        <h3><a href="learner-persona-onepager/">Learner persona one-pager ↗</a></h3>
+      </div>
+      <p class="desc">JTBD-anchored (Christensen / Klement). Three behavioural scenarios (happy / pressure / stuck). Three named anti-patterns the program will NOT design for. Mandatory sources block — SME interviews + call recordings + shadowing dates.</p>
+      <span class="method">JTBD (Christensen / Klement) · anti-pattern naming</span>
+    </div>
+
+    <div class="artefact">
+      <div class="head">
+        <span class="phase">Phase 3 · Design</span>
+        <h3><a href="addie-case-yandex/">ADDIE case study · Yandex Practicum UX/UI program ↗</a></h3>
+      </div>
+      <p class="desc">ADDIE retrospective walk-through of the 2023–2024 Yandex Practicum UX/UI program engagement. 4C/ID architecture, multi-modal materials decision, Kirkpatrick L1–L4 plan layered in at the point each was applied.</p>
+      <span class="method">ADDIE · 4C/ID · multi-modal materials · Kirkpatrick L1–L4</span>
+    </div>
+
+    <div class="artefact scorm">
+      <div class="head">
+        <span class="phase">Phase 4 · Develop</span>
+        <h3><a href="scorm-card-onboarding/">FinTech B2B Card Onboarding · SCORM 1.2 module ↗</a></h3>
+      </div>
+      <p class="desc">7-screen SCORM 1.2 microlearning (10 min). Custom JS API wrapper from first principles + localStorage fallback. Drag-match objection drill (match-gate ≥3 of 4); 5-question check (mastery 80 %); Thalheimer Reaction Screen 7 with cmi.interactions emission. Standalone preview-able without an LMS.</p>
+      <span class="method">SCORM 1.2 · 4C/ID · Cathy Moore Action Mapping · Mayer multimedia · Thalheimer L1 · Kolb · 70-20-10 · Sandler · Challenger</span>
+    </div>
+
+    <div class="artefact">
+      <div class="head">
+        <span class="phase">Phase 4 · Develop</span>
+        <h3><a href="facilitator-guide-sales-kickoff/">Facilitator guide · Sales Kickoff session ↗</a></h3>
+      </div>
+      <p class="desc">90-min facilitator-led session blueprint. Agenda · timing · materials · facilitator script outline · observer rubric · pre-work gate · L3 tracking hand-off to manager 1:1s.</p>
+      <span class="method">Sandler · Challenger · Kolb experiential cycle · Thalheimer · Pike 90/20/10</span>
+    </div>
+
+    <div class="artefact">
+      <div class="head">
+        <span class="phase">Phase 4 · Develop</span>
+        <h3><a href="job-aid-objections/">Job aid · Top-7 SMB objections ↗</a></h3>
+      </div>
+      <p class="desc">A4 portrait sales-rep performance support. Per rebuttal: Buyer-says · They-actually-mean · Acknowledge · Respond (with Sandler/Challenger method tag) · Ask-back. Keep at desk · use during the call.</p>
+      <span class="method">Sandler (soften + proof anchor · pull-the-gatekeeper-in · pre-commit time frame · multi-stakeholder pull-in) · Challenger (reframe · teach-the-trade-off · insight + math)</span>
+    </div>
+
+    <div class="artefact">
+      <div class="head">
+        <span class="phase">Phase 6 · Measure</span>
+        <h3><a href="kirkpatrick-plan-fintech/">Kirkpatrick L1–L4 plan · regulated-domain ↗</a></h3>
+      </div>
+      <p class="desc">Filled L1–L4 measurement plan for a regulated-fintech context. Each level: target · instrument · dashboard source. Reverse-design from L4 (the business KPI), down to L1 (Thalheimer micro-pulse).</p>
+      <span class="method">Kirkpatrick + Phillips reverse-design · LTEM tier-3 (Thalheimer)</span>
+    </div>
+
+    <div class="artefact">
+      <div class="head">
+        <span class="phase">Phase 6 · Measure</span>
+        <h3><a href="lesson-review-toolkit/">Lesson Review Toolkit · Python intake pipeline ↗</a></h3>
+      </div>
+      <p class="desc">4-stage Python pipeline (Collect → Extract → Normalise → Apply) that turns scattered feedback (Slack threads, Notion comments, mentor rubrics, survey CSVs) into a normalised JSON issue DB. Stage 02 ships the OpenAI structured-outputs schema; Stage 03 shows canonical-issue shape post-dedup; Stage 04 emits a triage HTML page with fix / defer / dismiss buttons.</p>
+      <span class="method">Pipeline-architecture · LLM structured outputs · embedding clustering · Thalheimer feedback-loop discipline</span>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <span>Mario Becerra · template layer · <a href="../engagement/" style="color:var(--green-700);">see the worked FinTechCard engagement</a> for these templates filled end-to-end</span>
+    <span class="v">v1.0</span>
+  </div>
+
+</div>
+
+</body>
+</html>

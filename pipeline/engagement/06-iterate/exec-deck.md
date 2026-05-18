@@ -1,4 +1,6 @@
 > *Portfolio case study · FinTechCard is an anonymised composite · numbers projected from real-shape baselines, not measured outcomes from a shipped engagement.*
+>
+> *Written in K.M.'s voice (the sponsor presenting to the CRO). First-person "I" throughout = K.M., not Mario. Reconstructed from the engagement brief §10.1 (sponsor quotes) and the results table in §05; honest-confound disclosure preserved per D-008.*
 
 > Why this artefact: Brief §21 done-state lands 6 months after first cohort live. K.M. owes the CRO a review at that point. Per brief §8 K.M. committed the −25 % ramp compression publicly to the CRO; the deck must report honestly, including confound disclosure per D-008. Frameworks: Kirkpatrick L1–L4 reporting cascade + Phillips Phase-7 stakeholder reporting + LTEM tier-3 honest application-intent (per D-003). Format: one H2 = one slide, 10 slides total.
 

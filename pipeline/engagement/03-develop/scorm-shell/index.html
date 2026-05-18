@@ -27,18 +27,20 @@
 
     <main id="desktop" role="main" aria-label="Mini-OS desktop">
       <div id="desktop-empty-state" class="desktop-empty-state">
-        <h1>Mini-OS shell · preview</h1>
-        <p>This is the bare desktop. In a live SCORM module, <code>bootModule()</code> opens the apps the module needs.</p>
-        <p>Try the demo launchers below, or append <code>?debug=1</code> to see the SCORM bridge + event-log in the console.</p>
-        <div class="demo-launchers" role="toolbar" aria-label="Demo app launchers">
-          <button type="button" data-launch="outreach">Open Outreach</button>
-          <button type="button" data-launch="gong">Open Gong</button>
-          <button type="button" data-launch="salesforce">Open Salesforce</button>
-          <button type="button" data-launch="linkedin-ch">Open LinkedIn / Companies House</button>
-          <button type="button" data-launch="calendar">Open Calendar</button>
-          <button type="button" data-launch="phone-dialler">Open Phone Dialler</button>
-          <button type="button" data-launch="slack">Open Slack</button>
+        <h1>FinTechCard SDR mini-OS · live simulation</h1>
+        <p>This is the workspace a new SDR uses during the cohort: seven simulated apps the rep switches between on a real call (Outreach for the dialler, Gong for call review, Salesforce for the next-step, Calendar for the close, etc.). Each SCORM module boots the apps it needs and walks the learner through one scenario.</p>
+        <p style="margin-top:18px;"><strong>See it in action:</strong> <a href="../module-03-calendar-close/" style="color:#0a8754; font-weight:700;">Open Module 3 · Calendar Close →</a> — the keystone-completing module where the rep learns to send the invite during the live call, not after.</p>
+        <p style="margin-top:14px; font-size:14px;">Or browse the apps standalone:</p>
+        <div class="demo-launchers" role="toolbar" aria-label="App launchers">
+          <button type="button" data-launch="outreach">Outreach (dialler)</button>
+          <button type="button" data-launch="gong">Gong (call review)</button>
+          <button type="button" data-launch="salesforce">Salesforce (CRM)</button>
+          <button type="button" data-launch="linkedin-ch">LinkedIn / Companies House</button>
+          <button type="button" data-launch="calendar">Calendar</button>
+          <button type="button" data-launch="phone-dialler">Phone dialler</button>
+          <button type="button" data-launch="slack">Slack</button>
         </div>
+        <p style="margin-top:18px; font-size:12px; color:#6b7a70; font-family:ui-monospace,monospace;">Designer note: append <code>?debug=1</code> for SCORM bridge + event-log in console.</p>
       </div>
     </main>
 
