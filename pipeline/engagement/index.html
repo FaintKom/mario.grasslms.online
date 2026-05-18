@@ -486,6 +486,95 @@
     letter-spacing: 0.4em;
   }
 
+  /* Hero CTAs */
+  .hero-cta-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 24px;
+    background: var(--accent); color: var(--accent-ink);
+    border: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
+    font-family: var(--mono); font-weight: 700; font-size: 12px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    transition: background 0.15s, transform 0.1s;
+    border-radius: 4px;
+  }
+  .hero-cta-primary:hover { background: var(--ink); border-color: var(--ink); transform: translateY(-1px); }
+  .hero-cta-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 20px;
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong);
+    font-family: var(--mono); font-weight: 600; font-size: 11px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    transition: border-color 0.15s, color 0.15s;
+    border-radius: 4px;
+  }
+  .hero-cta-secondary:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* Snapshot strip */
+  .snapshot {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px 32px;
+    margin-top: 32px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 11px;
+  }
+  .snapshot > div { line-height: 1.5; }
+  .snapshot .k {
+    display: block; font-size: 9px;
+    color: var(--ink-faint); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+  .snapshot .v { color: var(--ink-dim); font-weight: 500; }
+  @media (max-width: 720px) {
+    .snapshot { grid-template-columns: 1fr; }
+  }
+
+  /* Mini-OS dark preview block */
+  .sim-preview {
+    background: var(--ink); color: var(--bg-2);
+    padding: 40px 32px; border-radius: 14px;
+    margin: 28px 0;
+  }
+  .sim-preview .kicker {
+    color: rgba(255,255,255,0.6);
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .sim-preview h3 {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: clamp(26px, 3vw, 36px);
+    color: var(--bg-2); margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .sim-preview p {
+    color: rgba(255,255,255,0.75); font-size: 14.5px;
+    line-height: 1.6; margin: 0 0 24px; max-width: 580px;
+  }
+  .sim-preview .cta-row { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .sim-preview .cta-row a.primary {
+    background: var(--accent); color: var(--accent-ink);
+    padding: 13px 24px; border-radius: 6px;
+    font-family: var(--mono); font-weight: 700; font-size: 12px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    border-bottom: none; transition: background 0.15s, transform 0.1s;
+  }
+  .sim-preview .cta-row a.primary:hover {
+    background: var(--bg-2); color: var(--ink);
+    transform: translateY(-1px); border-bottom: none;
+  }
+  .sim-preview .cta-row a.secondary {
+    color: rgba(255,255,255,0.85);
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.35);
+    padding-bottom: 2px;
+  }
+  .sim-preview .cta-row a.secondary:hover {
+    color: var(--bg-2); border-bottom-color: var(--bg-2);
+  }
+
   /* Anchor offset */
   section[id] { scroll-margin-top: 72px; }
 
@@ -567,6 +656,13 @@
         <div class="value">~&euro;90K / rep</div>
         <div class="sub">Per K.M. brief &sect;4</div>
       </div>
+    </div>
+
+    <!-- Hero CTAs -->
+    <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:28px;">
+      <a class="hero-cta-primary" href="03-develop/module-03-calendar-close/index.html">Try the mini-OS &rarr;</a>
+      <a class="hero-cta-secondary" href="#moves">See the 3 keystone moves</a>
+      <a class="hero-cta-secondary" href="#results">Jump to results</a>
     </div>
 
     <!-- Principles · the four moves stacked, dark opener -->
@@ -764,6 +860,21 @@
       Scale: <span class="num">118</span> files &middot; <span class="num">~19 000</span> lines across the whole repo &middot; Phase 3 alone =
       <span class="num">71</span> files &middot; <span class="num">~12 900</span> lines of code &middot; 6 phases of design docs.
     </p>
+
+    <!-- Mini-OS dark preview block -->
+    <div class="sim-preview" aria-labelledby="sim-h">
+      <div class="kicker">Live simulation &middot; runs in browser</div>
+      <h3 id="sim-h">The rep practises the close in a second tab, on a live call.</h3>
+      <p>
+        Custom mini-OS with seven simulated apps. Module 3 walks the learner through the M3 Calendar Close
+        habit-gate: the dialler stays disabled until Calendar opens in a second window. The invite goes
+        out <em>during</em> the call, not after.
+      </p>
+      <div class="cta-row">
+        <a class="primary" href="03-develop/module-03-calendar-close/index.html">Open Module 3 &middot; Calendar Close &rarr;</a>
+        <a class="secondary" href="03-develop/scorm-shell/index.html">Browse the 7 apps standalone</a>
+      </div>
+    </div>
   </section>
 
   <!-- 6. FRAMEWORKS -->
@@ -901,7 +1012,7 @@
   <section id="repo" aria-labelledby="repo-h">
     <h4>09 &middot; How to read this repository</h4>
     <h2 id="repo-h">Folder map</h2>
-<pre class="tree">F:\LXD task\
+<pre class="tree">pipeline/engagement/
 &#9500;&#9472;&#9472; <a href="case-study-tz.html">case-study-tz.md</a>                  Engagement brief (input)
 &#9500;&#9472;&#9472; <a href="README.html">README.md</a>                         Project master overview
 &#9500;&#9472;&#9472; <a href="PROJECT-INDEX.html">PROJECT-INDEX.md</a>                  Flat alphabetical index of every file
