@@ -15,6 +15,32 @@
 import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 
+// ---------------------------------------------------------------------------
+// Window-management helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Close every open mini-OS window whose appId is in the given list.
+ * Used to clean up prior-step apps so the rep isn't drowning in 5 windows
+ * by step 7+.
+ */
+function closeAppsByName(appIds) {
+  if (!state.api?.os?.listWindows) return;
+  const set = new Set(appIds);
+  for (const w of state.api.os.listWindows()) {
+    if (set.has(w.appId)) state.api.os.closeApp(w);
+  }
+}
+
+/** Close everything except the apps the next step needs. */
+function keepOnly(appIds) {
+  if (!state.api?.os?.listWindows) return;
+  const keep = new Set(appIds);
+  for (const w of state.api.os.listWindows()) {
+    if (!keep.has(w.appId)) state.api.os.closeApp(w);
+  }
+}
+
 // ===========================================================================
 // State
 // ===========================================================================
@@ -413,6 +439,9 @@ function renderTranscriptLine(turn) {
 // ===========================================================================
 
 function stepCompletionProblem(body) {
+  // Tom drawer lives in Outreach — close Gong (and any other heavy windows)
+  // so the rep's eye lands on Outreach without hunt-and-peck.
+  keepOnly(["outreach"]);
   // Narrative pane shrinks to single-line framing — drawer lives in Outreach.
   body.innerHTML = `
     <p style="font-size:14px;">
@@ -831,6 +860,9 @@ function openSalesforceModal(emma, endBtn, overlay) {
 // ===========================================================================
 
 function stepFeedback(body) {
+  // Clean up: feedback lives in Slack only — close everything else so the
+  // rep doesn't have a 5-window pile-up to navigate.
+  keepOnly(["slack"]);
   // Narrative pane shrinks; manager DM thread renders in Slack.
   body.innerHTML = `
     <p style="font-size:14px;">

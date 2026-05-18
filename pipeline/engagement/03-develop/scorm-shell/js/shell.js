@@ -20,13 +20,13 @@ import { appRegistry, icon } from "./apps/registry.js";
 // Eager-import every app so registerApp() side-effects populate the registry
 // before any consumer calls MiniOS.openApp(). Browsers cache by URL, so
 // re-imports inside individual modules are free.
-import "./apps/outreach.js?v=20260518v";
-import "./apps/gong.js?v=20260518v";
-import "./apps/salesforce.js?v=20260518v";
-import "./apps/linkedin-ch.js?v=20260518v";
-import "./apps/calendar.js?v=20260518v";
-import "./apps/phone-dialler.js?v=20260518v";
-import "./apps/slack.js?v=20260518v";
+import "./apps/outreach.js?v=20260519a";
+import "./apps/gong.js?v=20260519a";
+import "./apps/salesforce.js?v=20260519a";
+import "./apps/linkedin-ch.js?v=20260519a";
+import "./apps/calendar.js?v=20260519a";
+import "./apps/phone-dialler.js?v=20260519a";
+import "./apps/slack.js?v=20260519a";
 
 /** Shared inter-app + telemetry event bus. */
 export const eventBus = new EventTarget();

@@ -791,6 +791,7 @@
   margin-top: var(--sp-2);
   width: 100%;
 }
+.app--phone-dialler .dialler-ctrl[hidden] { display: none !important; }
 .app--phone-dialler .dialler-ctrl {
   display: inline-flex; align-items: center; gap: 5px;
   background: rgba(255,255,255,0.08);
