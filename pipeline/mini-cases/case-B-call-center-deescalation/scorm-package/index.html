@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First-30-Seconds - Call-Centre De-escalation</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="course-header" role="banner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">AT</span>
+      <span class="brand-name">Arc Telecom &middot; Customer Service Academy</span>
+    </div>
+    <div class="meter-wrap" aria-label="Customer escalation meter">
+      <span class="meter-label">Caller mood</span>
+      <div id="meter" class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+        <div class="meter-pip" data-lvl="0"></div>
+        <div class="meter-pip" data-lvl="1"></div>
+        <div class="meter-pip" data-lvl="2"></div>
+        <div class="meter-pip" data-lvl="3"></div>
+        <div class="meter-pip" data-lvl="4"></div>
+      </div>
+      <span id="meter-num" class="meter-num">0 / 5</span>
+    </div>
+  </header>
+
+  <main id="app-root" class="app-root" tabindex="-1"></main>
+
+  <div id="aria-live" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+  <footer class="course-footer">
+    <span>First-30-Seconds v1.0 &middot; &le;10 min &middot; SCORM 1.2</span>
+    <span id="scorm-status" class="scorm-status">SCORM: detecting&hellip;</span>
+  </footer>
+
+  <script src="js/scorm-api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

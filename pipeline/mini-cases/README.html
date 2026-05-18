@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio Mini-Cases · 3 SCORM Builds · Mario Becerra · LXD Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root { --bg:#fafbf6; --paper:#fff; --ink:#0a1a10; --ink-2:#4d5a51; --rule:#e6e8e4; --accent:#0a8754; --accent-deep:#07683f; --mono:"Geist Mono",ui-monospace,Menlo,monospace; --sans:"Manrope",ui-sans-serif,system-ui,sans-serif; }
+* { box-sizing:border-box; }
+html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+.topbar { background:var(--ink); color:#fff; padding:10px 24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-family:var(--mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; position:sticky; top:0; z-index:40; }
+.topbar a { color:#fff; text-decoration:none; opacity:0.8; }
+.topbar a:hover { opacity:1; }
+main { max-width:760px; margin:0 auto; padding:48px 24px 96px; }
+h1 { font-size:36px; line-height:1.2; margin:0 0 12px; letter-spacing:-0.015em; }
+h2 { font-size:22px; line-height:1.3; margin:36px 0 12px; color:var(--accent-deep); border-bottom:1px solid var(--rule); padding-bottom:6px; }
+h3 { font-size:17px; margin:22px 0 8px; }
+p, li { margin:8px 0; }
+blockquote { border-left:3px solid var(--accent); margin:14px 0; padding:10px 16px; background:#ecf9e7; border-radius:0 6px 6px 0; }
+blockquote p { margin:4px 0; font-size:14px; color:var(--ink-2); }
+table { border-collapse:collapse; width:100%; margin:14px 0; font-size:14px; }
+th, td { border:1px solid var(--rule); padding:8px 12px; text-align:left; vertical-align:top; }
+th { background:#f4f5f1; font-weight:600; font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-2); }
+code { font-family:var(--mono); font-size:13px; background:#f4f5f1; padding:1px 5px; border-radius:3px; color:var(--accent-deep); }
+pre { background:#f4f5f1; padding:14px; border-radius:6px; overflow-x:auto; font-family:var(--mono); font-size:13px; line-height:1.55; }
+pre code { background:none; padding:0; color:var(--ink); }
+hr { border:0; border-top:1px solid var(--rule); margin:32px 0; }
+a { color:var(--accent-deep); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a href="../">← Mini-cases</a>
+  <span>Mario Becerra · LXD Portfolio</span>
+</header>
+<main>
+<h1>Portfolio Mini-Cases · 3 SCORM Builds</h1>
+<p>Three short L&amp;D engagements built as <strong>portfolio bookends</strong> to the FinTechCard flagship case. Each one targets a different L&amp;D vertical, a different audience, a different keystone moment — and ships as a working <strong>SCORM 1.2 package</strong> ready for upload to any compliant LMS (tested on SCORM Cloud).</p>
+<p>The flagship case (<code>../</code>) shows depth: one engagement, six ADDIE phases, sixteen frameworks, six SCORMs. These three cases show <strong>range</strong>: how the same instructional-design discipline scales down to a tight, single-keystone deliverable.</p>
+<hr />
+<h2>The three cases</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Vertical</th>
+<th>Title</th>
+<th>Keystone moment</th>
+<th>Extras</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>Compliance / Security awareness onboarding</td>
+<td><a href="case-A-security-onboarding/">Phish-or-Pass · day-1 inbox triage</a></td>
+<td>Recognising 3 phishing patterns under time pressure inside a simulated inbox</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>B</strong></td>
+<td>Customer-facing soft skills</td>
+<td><a href="case-B-call-center-deescalation/">First-30-Seconds · call-centre de-escalation</a></td>
+<td>Choosing the LAER-aligned reply at 4 branching points of an angry-customer call</td>
+<td><a href="case-B-call-center-deescalation/storyboard.html">Visual storyboard</a> (SVG node-diagram + 6 wireframes + script-overlay)</td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td>New-tool rollout / process change</td>
+<td><a href="case-C-erp-procurement-rollout/">Route-the-PO · ERP procurement go-live</a></td>
+<td>Picking the correct approval routing for 3 purchase orders against business rules</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Each case ships with:</p>
+<pre><code>case-X-…/
+├── case-brief.md           One-page brief: context · audience · KPIs · keystone · scoring
+└── scorm-package/          Working SCORM 1.2 package (open index.html locally OR upload .zip to LMS)
+    ├── imsmanifest.xml     SCORM 1.2 schema-conformant manifest
+    ├── index.html          The course entry point
+    ├── js/
+    │   ├── scorm-api.js    SCORM 1.2 RTE wrapper (LMSInitialize / LMSSetValue / LMSCommit / LMSFinish)
+    │   └── app.js          Course logic + scoring
+    └── css/styles.css      WCAG 2.1 AA-aware styling
+</code></pre>
+<p>The <code>.zip</code> next to each <code>scorm-package/</code> is the LMS-uploadable artefact.</p>
+<hr />
+<h2>Why these three</h2>
+<p>These three verticals account for the vast majority of corporate L&amp;D demand in mid-market and enterprise (Brandon Hall 2024 · LinkedIn Workplace Learning 2025):</p>
+<ol>
+<li><strong>Compliance / security awareness</strong> — every company over ~100 FTE runs it; phishing is the #1 incident vector.</li>
+<li><strong>Customer-service soft skills</strong> — front-line revenue impact; CSAT and AHT live on the same dashboard.</li>
+<li><strong>New-tool / process rollout</strong> — every ERP / CRM / AI rollout fails the same way: people learn the UI but not the rules.</li>
+</ol>
+<p>Each case attacks the <strong>failure mode</strong> of typical training in that vertical — not the topic itself.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Typical training fails because…</th>
+<th>This build's counter-move</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>"Watch this 20-min video, click Next." Knowledge ≠ behaviour.</td>
+<td>Realistic inbox simulator; user must <em>act</em>, not <em>recognise</em>.</td>
+</tr>
+<tr>
+<td>B</td>
+<td>Scripts memorised then forgotten under pressure.</td>
+<td>Branching where every wrong choice escalates the customer audibly in the transcript.</td>
+</tr>
+<tr>
+<td>C</td>
+<td>UI-tour training; UI changes 4 months later, behaviour resets.</td>
+<td>Teach the <em>routing rules</em> (always true) using the UI as a vehicle.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Frameworks applied (compact)</h2>
+<p>Every case uses the same compact subset of the flagship's 16:</p>
+<ul>
+<li><strong>Action Mapping</strong> (Cathy Moore) — keystone = the one observable behaviour the business pays for</li>
+<li><strong>ABCD outcomes + Bloom Apply-level</strong> — outcomes are observable, not "understand"</li>
+<li><strong>Cognitive Load Theory + Mayer multimedia</strong> — ≤10-min budget, signalling over narration (no audio)</li>
+<li><strong>Worked-example → completion → problem-solving fading</strong> — each case starts with a modelled example, ends with cold practice</li>
+<li><strong>Kirkpatrick L1–L3</strong> — L2 = SCORM score on first attempt, L3 = on-the-job indicator listed in the brief</li>
+<li><strong>WCAG 2.1 AA</strong> — keyboard-navigable, ARIA live regions for feedback, no audio dependence</li>
+</ul>
+<hr />
+<h2>How to test locally</h2>
+<p>Each <code>scorm-package/index.html</code> runs standalone in a browser — the SCORM wrapper degrades gracefully when no LMS API is present (logs to console, scores still compute, completion is in-memory only).</p>
+<p>To test the full SCORM cycle:
+1. Zip the contents of <code>scorm-package/</code> (not the folder itself — the manifest at the zip root).
+2. Upload to <a href="https://cloud.scorm.com">SCORM Cloud</a> — free dispatch account works.
+3. Launch; complete; check the runtime report — <code>cmi.core.lesson_status</code> should flip to <code>passed</code> or <code>failed</code>, <code>cmi.core.score.raw</code> should match the in-course total.</p>
+<p>The pre-built <code>.zip</code> artefacts are committed next to each <code>scorm-package/</code> for convenience.</p>
+<hr />
+<p><em>Built May 2026 by Mario Becerra as portfolio bookends to the FinTechCard SDR Onboarding case study.</em></p>
+</main>
+</body>
+</html>

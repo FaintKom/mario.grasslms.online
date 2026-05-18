@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Range bookends · 3 SCORM mini-cases · Mario Becerra</title>
+<meta name="description" content="Three tight single-keystone SCORM 1.2 builds across compliance, customer-service, and tool-rollout — showing range alongside the FinTechCard depth case.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+  :root {
+    --bg: #fafbf6; --bg-2: #ffffff; --bg-3: #f4f5f1;
+    --ink: #0a1a10; --ink-dim: #4d5a51; --ink-faint: #6b7a70;
+    --rule: #e6e8e4; --rule-strong: #c9cec9;
+    --accent: #0a8754; --accent-ink: #ffffff;
+    --green-700: #07683f; --green-50: #ecf9e7;
+    --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+    --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    --serif: "Instrument Serif", "Times New Roman", serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: var(--green-700); text-decoration: none; border-bottom: 1px solid var(--rule); transition: color 0.15s, border-color 0.15s; }
+  a:hover { color: var(--accent); border-color: var(--accent); }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { position: fixed; left: 12px; top: 12px; background: var(--accent); color: #fff; padding: 8px 12px; border-radius: 4px; z-index: 100; border-bottom: 0; }
+
+  nav.toc {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250,251,246,0.96);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  nav.toc .inner {
+    max-width: 1100px; margin: 0 auto; padding: 12px 24px;
+    display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center;
+    font-family: var(--mono); font-size: 12px;
+  }
+  nav.toc a { color: var(--ink-dim); border-bottom: none; padding: 4px 8px; border-radius: 4px; }
+  nav.toc a:hover { color: var(--ink); background: var(--bg-3); }
+  nav.toc .brand { margin-right: auto; font-weight: 700; color: var(--ink); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 56px 24px 96px; }
+
+  .hero { margin-bottom: 48px; }
+  .hero .kicker {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 5vw, 56px); line-height: 1.1;
+    margin: 0 0 14px; letter-spacing: -0.015em; font-weight: 700;
+  }
+  .hero h1 .accent { color: var(--accent); font-family: var(--serif); font-style: italic; font-weight: 400; }
+  .hero .lede {
+    font-size: 17px; line-height: 1.55; color: var(--ink-dim);
+    max-width: 720px; margin: 0;
+  }
+
+  .bookend-note {
+    margin: 36px 0;
+    padding: 18px 22px;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-size: 14.5px;
+    color: var(--ink-dim);
+  }
+  .bookend-note strong { color: var(--ink); }
+
+  .cases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 36px;
+  }
+  .case {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex; flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .case:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -10px rgba(10,26,16,0.12);
+    border-color: var(--accent);
+  }
+  .case__vertical {
+    display: inline-block;
+    font-family: var(--mono); font-size: 10px;
+    color: var(--accent-ink); background: var(--accent);
+    padding: 3px 8px; border-radius: 999px;
+    letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700;
+    align-self: flex-start;
+    margin-bottom: 12px;
+  }
+  .case__title {
+    font-size: 22px; font-weight: 700; line-height: 1.25;
+    margin: 0 0 6px; letter-spacing: -0.01em; color: var(--ink);
+  }
+  .case__sub {
+    font-family: var(--mono); font-size: 11.5px;
+    color: var(--ink-faint); letter-spacing: 0.03em; margin-bottom: 16px;
+  }
+  .case__keystone {
+    font-size: 14px; line-height: 1.5; color: var(--ink-dim);
+    margin-bottom: 16px;
+  }
+  .case__keystone strong { color: var(--ink); font-weight: 600; }
+  .case__kpis {
+    display: grid; gap: 8px; margin-bottom: 18px;
+    padding: 12px 14px;
+    background: var(--bg-3);
+    border-radius: 6px;
+    font-family: var(--mono); font-size: 11.5px;
+    color: var(--ink-dim);
+  }
+  .case__kpis .kpi {
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .case__kpis .kpi-name { text-transform: uppercase; letter-spacing: 0.05em; font-size: 10px; color: var(--ink-faint); }
+  .case__kpis .kpi-val { color: var(--green-700); font-weight: 700; font-size: 13px; }
+  .case__actions {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto;
+    padding-top: 18px; border-top: 1px solid var(--rule);
+  }
+  .case__btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-family: var(--mono); font-size: 11px;
+    font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    text-decoration: none; border-bottom: 0;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .case__btn--primary { background: var(--accent); color: var(--accent-ink); }
+  .case__btn--primary:hover { background: var(--green-700); color: var(--accent-ink); border-bottom: 0; }
+  .case__btn--ghost {
+    background: transparent; color: var(--ink-dim);
+    border: 1px solid var(--rule-strong);
+  }
+  .case__btn--ghost:hover { color: var(--accent); border-color: var(--accent); background: var(--green-50); border-bottom: 1px solid var(--accent); }
+
+  .why { margin-top: 64px; }
+  .why h2 {
+    font-size: 26px; margin: 0 0 20px;
+    border-bottom: 1px solid var(--rule); padding-bottom: 8px;
+  }
+  .why table {
+    width: 100%; border-collapse: collapse;
+    font-size: 14px;
+  }
+  .why th, .why td {
+    border: 1px solid var(--rule);
+    padding: 12px 14px; text-align: left; vertical-align: top;
+  }
+  .why th {
+    background: var(--bg-3); font-family: var(--mono);
+    font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .why td:first-child { font-weight: 700; font-family: var(--mono); width: 60px; }
+
+  .flagship-link {
+    margin-top: 56px;
+    padding: 28px 32px;
+    background: var(--ink);
+    color: #ffffff;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 18px;
+  }
+  .flagship-link strong { font-size: 17px; }
+  .flagship-link p { margin: 4px 0 0; font-size: 14px; color: rgba(255,255,255,0.75); }
+  .flagship-link a {
+    background: var(--accent); color: #fff; padding: 11px 22px;
+    border-radius: 6px; font-family: var(--mono); font-weight: 700;
+    font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    border-bottom: 0;
+  }
+  .flagship-link a:hover { background: #fff; color: var(--ink); }
+
+  footer {
+    margin-top: 80px; padding: 32px 24px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 11px;
+    color: var(--ink-faint); letter-spacing: 0.04em;
+    text-align: center; text-transform: uppercase;
+  }
+
+  @media (max-width: 720px) {
+    main { padding: 32px 16px 64px; }
+    .cases { grid-template-columns: 1fr; }
+    .flagship-link { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="toc" aria-label="Section navigation">
+  <div class="inner">
+    <span class="brand">Mario Becerra · Range</span>
+    <a href="../../">Portfolio</a>
+    <a href="../">Pipeline</a>
+    <a href="../engagement/">Engagement flagship</a>
+  </div>
+</nav>
+
+<main id="main">
+  <header class="hero">
+    <div class="kicker">3 SCORM mini-cases &middot; range bookend</div>
+    <h1>Same discipline, <span class="accent">three verticals.</span></h1>
+    <p class="lede">
+      Three tight single-keystone SCORM 1.2 builds — compliance / phishing,
+      call-centre soft-skills, ERP rollout. Each one ships as a working
+      package ready for any SCORM 1.2 LMS. Built to show the same
+      instructional-design discipline scales down to a focused deliverable.
+    </p>
+  </header>
+
+  <div class="bookend-note">
+    <strong>The FinTechCard flagship case</strong> shows depth — one engagement,
+    six ADDIE phases, six SCORM modules, 16 frameworks. <strong>These three cases</strong>
+    show range — how the same discipline scales down to a single keystone
+    moment, picked because it's where the business actually loses money or
+    time today.
+  </div>
+
+  <section class="cases" aria-label="Three mini-cases">
+
+    <article class="case">
+      <span class="case__vertical">Compliance &middot; security</span>
+      <h2 class="case__title">Phish-or-Pass</h2>
+      <div class="case__sub">day-1 inbox triage &middot; new-hire onboarding</div>
+      <p class="case__keystone">
+        <strong>Keystone:</strong> triage a 4-message simulated inbox under
+        time pressure. One trick-positive teaches when <em>not</em> to escalate
+        — the part awareness training usually skips.
+      </p>
+      <div class="case__kpis">
+        <div class="kpi"><span class="kpi-name">L3 click-rate</span> <span class="kpi-val">18% &rarr; &le;5%</span></div>
+        <div class="kpi"><span class="kpi-name">L4 incidents (new hires)</span> <span class="kpi-val">2/q &rarr; &le;1/yr</span></div>
+        <div class="kpi"><span class="kpi-name">Cohort</span> <span class="kpi-val">8-15 / month</span></div>
+      </div>
+      <div class="case__actions">
+        <a class="case__btn case__btn--primary" href="case-A-security-onboarding/scorm-package/index.html">Try live &rarr;</a>
+        <a class="case__btn case__btn--ghost" href="case-A-security-onboarding/case-brief.html">Read brief</a>
+        <a class="case__btn case__btn--ghost" href="case-A-security-onboarding/case-A-phish-or-pass.zip" download>SCORM 1.2 zip</a>
+      </div>
+    </article>
+
+    <article class="case">
+      <span class="case__vertical">Customer service &middot; soft skills</span>
+      <h2 class="case__title">First-30-Seconds</h2>
+      <div class="case__sub">call-centre de-escalation &middot; 4-branch decision</div>
+      <p class="case__keystone">
+        <strong>Keystone:</strong> pick the LAER-aligned reply at 4 branching
+        points of an angry-customer call. Wrong choices escalate the customer
+        audibly in the transcript.
+      </p>
+      <div class="case__kpis">
+        <div class="kpi"><span class="kpi-name">L3 first-call resolution</span> <span class="kpi-val">+8 pp target</span></div>
+        <div class="kpi"><span class="kpi-name">L3 escalation rate</span> <span class="kpi-val">-30%</span></div>
+        <div class="kpi"><span class="kpi-name">Module score</span> <span class="kpi-val">&ge;3/4 branches</span></div>
+      </div>
+      <div class="case__actions">
+        <a class="case__btn case__btn--primary" href="case-B-call-center-deescalation/scorm-package/index.html">Try live &rarr;</a>
+        <a class="case__btn case__btn--ghost" href="case-B-call-center-deescalation/case-brief.html">Read brief</a>
+        <a class="case__btn case__btn--ghost" href="case-B-call-center-deescalation/storyboard.html">Storyboard</a>
+        <a class="case__btn case__btn--ghost" href="case-B-call-center-deescalation/case-B-first-30-seconds.zip" download>SCORM zip</a>
+      </div>
+    </article>
+
+    <article class="case">
+      <span class="case__vertical">Tool rollout &middot; ERP</span>
+      <h2 class="case__title">Route-the-PO</h2>
+      <div class="case__sub">procurement go-live &middot; rules over UI</div>
+      <p class="case__keystone">
+        <strong>Keystone:</strong> route 3 purchase orders against the actual
+        business rules — not the ERP UI. Teaches what's true across UI
+        refactors, not what's true this quarter.
+      </p>
+      <div class="case__kpis">
+        <div class="kpi"><span class="kpi-name">L3 misrouted POs</span> <span class="kpi-val">-50% in 6w</span></div>
+        <div class="kpi"><span class="kpi-name">L3 hand-edits at finance</span> <span class="kpi-val">-60%</span></div>
+        <div class="kpi"><span class="kpi-name">Module score</span> <span class="kpi-val">3/3 correct</span></div>
+      </div>
+      <div class="case__actions">
+        <a class="case__btn case__btn--primary" href="case-C-erp-procurement-rollout/scorm-package/index.html">Try live &rarr;</a>
+        <a class="case__btn case__btn--ghost" href="case-C-erp-procurement-rollout/case-brief.html">Read brief</a>
+        <a class="case__btn case__btn--ghost" href="case-C-erp-procurement-rollout/case-C-route-the-po.zip" download>SCORM zip</a>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="why">
+    <h2>Why these three verticals</h2>
+    <table>
+      <thead><tr><th>Case</th><th>Why typical training fails here</th><th>This build's counter-move</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>A</td>
+          <td>"Watch 20-min video, click Next." Knowledge ≠ behaviour.</td>
+          <td>Realistic inbox simulator — the user must <em>act</em>, not recognise.</td>
+        </tr>
+        <tr>
+          <td>B</td>
+          <td>Scripts memorised then forgotten under pressure.</td>
+          <td>Branching where every wrong choice escalates the customer in transcript.</td>
+        </tr>
+        <tr>
+          <td>C</td>
+          <td>UI-tour training; UI changes 4 months later, behaviour resets.</td>
+          <td>Teach the <em>routing rules</em> (always true) using the UI as vehicle.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <aside class="flagship-link">
+    <div>
+      <strong>Want depth instead of range?</strong>
+      <p>See the FinTechCard flagship — 16-week engagement, 6 ADDIE phases, 6 SCORMs, 16 frameworks.</p>
+    </div>
+    <a href="../engagement/">Open flagship case &rarr;</a>
+  </aside>
+</main>
+
+<footer>
+  Mario Becerra &middot; LXD Portfolio &middot; <a href="../../" style="color:inherit;">portfolio root</a>
+</footer>
+</body>
+</html>

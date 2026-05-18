@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case B Storyboard - First-30-Seconds (Arc Telecom)</title>
+  <meta name="description" content="Visual storyboard middle-layer for Case B (Arc Telecom call-centre de-escalation): branching tree SVG + 6 wireframes + script-overlay table with design rationale.">
+
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Case B Storyboard - First-30-Seconds (Arc Telecom)">
+  <meta property="og:description" content="LAER branching tree + 6 wireframes + script-overlay table. The visual middle-layer between brief and SCORM.">
+  <meta property="og:image" content="../../assets/og-card.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Case B Storyboard - First-30-Seconds">
+  <meta name="twitter:description" content="LAER branching tree + 6 wireframes + script-overlay table.">
+  <meta name="twitter:image" content="../../assets/og-card.svg">
+
+  <style>
+    :root {
+      --bg: #0e0a18;
+      --bg-elev: #18142a;
+      --bg-card: #221c3c;
+      --bg-input: #120e22;
+      --border: #322a52;
+      --border-strong: #443a72;
+      --text: #efeaff;
+      --text-muted: #b3a9d0;
+      --text-dim: #7a708f;
+      --accent: #c084fc;
+      --accent-strong: #d8b4fe;
+      --customer: #fb7185;
+      --agent: #60a5fa;
+      --good: #34d399;
+      --bad: #f87171;
+      --warning: #fbbf24;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --mono: ui-monospace, "SF Mono", Consolas, "Liberation Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.55; }
+    header {
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-elev);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    }
+    header h1 { margin: 0; font-size: 1.4rem; font-weight: 700; color: var(--accent-strong); }
+    header .sub { color: var(--text-muted); font-size: 0.92rem; }
+    main { max-width: 1180px; margin: 1.5rem auto; padding: 0 1.5rem 3rem; }
+
+    .section { margin: 2rem 0 2.5rem; }
+    .section h2 { font-size: 1.15rem; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 0.5rem; }
+    .section .lead { color: var(--text-muted); margin: 0 0 1rem; font-size: 0.95rem; max-width: 70ch; }
+
+    .diagram-wrap {
+      background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.25rem; overflow-x: auto;
+    }
+    svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+
+    .diagram-legend {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin-top: 1rem;
+      font-size: 0.85rem; color: var(--text-muted);
+    }
+    .diagram-legend .key { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+    .sw-good { background: var(--good); }
+    .sw-bad { background: var(--bad); }
+    .sw-warn { background: var(--warning); }
+
+    .wires {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+    @media (max-width: 820px) { .wires { grid-template-columns: 1fr; } }
+
+    .wire {
+      background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1rem 1.1rem;
+    }
+    .wire-title { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 0.75rem; }
+    .wire-title h3 { margin: 0; font-size: 1rem; color: var(--accent-strong); }
+    .wire-title .tag { font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim); }
+
+    .wire-canvas {
+      background: var(--bg-card); border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 0.8rem;
+      font-size: 0.82rem;
+      min-height: 320px;
+      display: flex; flex-direction: column; gap: 0.45rem;
+    }
+
+    .wf-bar { background: var(--bg-input); border: 1px dashed var(--border); border-radius: 4px; padding: 0.35rem 0.6rem; font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
+    .wf-meter { display: inline-flex; gap: 3px; }
+    .wf-meter span { width: 18px; height: 8px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 2px; }
+    .wf-meter span.lit { background: var(--warning); border-color: var(--warning); }
+
+    .wf-turn { padding: 0.45rem 0.6rem; border-radius: 6px; }
+    .wf-turn.cust { background: rgba(251, 113, 133, 0.12); border-left: 3px solid var(--customer); }
+    .wf-turn.agent { background: rgba(96, 165, 250, 0.12); border-left: 3px solid var(--agent); }
+    .wf-turn .who { font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .wf-turn.cust .who { color: var(--customer); }
+    .wf-turn.agent .who { color: var(--agent); }
+    .wf-turn .line { color: var(--text); margin-top: 2px; font-size: 0.8rem; }
+
+    .wf-choices { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.25rem; }
+    .wf-choice {
+      padding: 0.35rem 0.55rem; border: 1px solid var(--border-strong); background: var(--bg-input);
+      border-radius: 4px; font-size: 0.74rem;
+      display: flex; gap: 0.5rem; align-items: center;
+    }
+    .wf-choice .badge { font-family: var(--mono); font-size: 0.65rem; padding: 0.05rem 0.35rem; border-radius: 3px; font-weight: 700; }
+    .wf-choice.good { border-color: var(--good); }
+    .wf-choice.good .badge { background: var(--good); color: #042618; }
+    .wf-choice.bad .badge { background: var(--bad); color: #2a0808; }
+    .wf-choice.warn .badge { background: var(--warning); color: #2a1900; }
+
+    .wf-laer { display: flex; gap: 0.3rem; margin-top: 0.25rem; }
+    .wf-laer span {
+      flex: 1; text-align: center; padding: 0.3rem; font-family: var(--mono);
+      background: var(--bg-input); border: 1px solid var(--border-strong); border-radius: 4px;
+      font-size: 0.7rem; font-weight: 700;
+    }
+    .wf-laer span.hot { background: var(--accent); color: #1a0a2c; border-color: var(--accent); }
+
+    .wf-feedback {
+      margin-top: 0.4rem;
+      padding: 0.45rem 0.6rem;
+      background: var(--bg-input);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .design-notes {
+      margin-top: 0.85rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .design-notes strong { color: var(--accent-strong); font-weight: 600; }
+
+    .script-table {
+      width: 100%; border-collapse: collapse; margin-top: 0.75rem;
+      background: var(--bg-elev); border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .script-table th, .script-table td {
+      padding: 0.65rem 0.8rem; text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+      vertical-align: top;
+    }
+    .script-table th { background: var(--bg-card); color: var(--accent-strong); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.78rem; }
+    .script-table tr:last-child td { border-bottom: 0; }
+    .script-table td.mono { font-family: var(--mono); font-size: 0.82rem; color: var(--text-muted); }
+    .script-table .good { color: var(--good); font-weight: 600; }
+    .script-table .bad { color: var(--bad); font-weight: 600; }
+    .script-table .warn { color: var(--warning); font-weight: 600; }
+
+    footer { text-align: center; padding: 1.25rem; color: var(--text-dim); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+    a { color: var(--accent-strong); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Case B Storyboard - First-30-Seconds (Arc Telecom)</h1>
+    <span class="sub">LAER branching dialogue &middot; 4 turns &middot; the design middle-layer between brief and SCORM</span>
+  </header>
+
+  <main>
+
+    <section class="section">
+      <h2>1 &middot; Branching decision tree</h2>
+      <p class="lead">
+        Each of the 4 turns has 3 reply options. One is LAER-aligned (green); the other two are common wrong moves
+        (red = textbook bad, orange = wrong letter / wrong moment). Every choice shifts the caller-mood meter
+        (0 = calm, 5 = hostile). Lisa starts at 3.
+      </p>
+
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 1100 580" role="img" aria-labelledby="diagram-title">
+          <title id="diagram-title">LAER branching tree showing 4 turns, 12 reply options, and escalation-meter transitions</title>
+
+          <defs>
+            <marker id="arrowGood" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#34d399"/>
+            </marker>
+            <marker id="arrowBad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#f87171"/>
+            </marker>
+            <marker id="arrowWarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#fbbf24"/>
+            </marker>
+          </defs>
+
+          <text x="130" y="28" fill="#d8b4fe" font-family="ui-sans-serif" font-size="13" font-weight="700">T1 - LISTEN</text>
+          <text x="370" y="28" fill="#d8b4fe" font-family="ui-sans-serif" font-size="13" font-weight="700">T2 - ACKNOWLEDGE</text>
+          <text x="640" y="28" fill="#d8b4fe" font-family="ui-sans-serif" font-size="13" font-weight="700">T3 - EXPLORE</text>
+          <text x="900" y="28" fill="#d8b4fe" font-family="ui-sans-serif" font-size="13" font-weight="700">T4 - RESPOND</text>
+
+          <g>
+            <rect x="20" y="240" width="100" height="60" rx="8" fill="#221c3c" stroke="#fbbf24" stroke-width="2"/>
+            <text x="70" y="265" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle">START</text>
+            <text x="70" y="285" fill="#b3a9d0" font-size="10" text-anchor="middle">mood 3 / 5</text>
+          </g>
+
+          <g>
+            <rect x="170" y="90" width="180" height="80" rx="6" fill="#221c3c" stroke="#34d399" stroke-width="2"/>
+            <text x="260" y="112" fill="#34d399" font-size="11" font-weight="700" text-anchor="middle">[L] Paraphrase</text>
+            <text x="260" y="130" fill="#efeaff" font-size="10" text-anchor="middle">"I hear you. 4h offline..."</text>
+            <text x="260" y="150" fill="#9aa3c7" font-size="10" text-anchor="middle">mood -1 -> 2</text>
+            <text x="260" y="163" fill="#34d399" font-size="10" font-weight="700" text-anchor="middle">+25 pts</text>
+          </g>
+          <g>
+            <rect x="170" y="220" width="180" height="80" rx="6" fill="#221c3c" stroke="#fbbf24" stroke-width="2"/>
+            <text x="260" y="242" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle">[A] Apologise + redirect</text>
+            <text x="260" y="260" fill="#efeaff" font-size="10" text-anchor="middle">"Let's not worry about past..."</text>
+            <text x="260" y="280" fill="#9aa3c7" font-size="10" text-anchor="middle">mood +1 -> 4</text>
+            <text x="260" y="293" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">+0 pts (wrong letter)</text>
+          </g>
+          <g>
+            <rect x="170" y="350" width="180" height="80" rx="6" fill="#221c3c" stroke="#f87171" stroke-width="2"/>
+            <text x="260" y="372" fill="#f87171" font-size="11" font-weight="700" text-anchor="middle">[E] Jump to checklist</text>
+            <text x="260" y="390" fill="#efeaff" font-size="10" text-anchor="middle">"Modem light green or red?"</text>
+            <text x="260" y="410" fill="#9aa3c7" font-size="10" text-anchor="middle">mood +2 -> 5</text>
+            <text x="260" y="423" fill="#f87171" font-size="10" font-weight="700" text-anchor="middle">+0 pts (textbook wrong)</text>
+          </g>
+
+          <g>
+            <rect x="410" y="90" width="180" height="80" rx="6" fill="#221c3c" stroke="#fbbf24" stroke-width="2"/>
+            <text x="500" y="112" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle">[L] Paraphrase again</text>
+            <text x="500" y="130" fill="#efeaff" font-size="10" text-anchor="middle">"so 4h, 3 outages..."</text>
+            <text x="500" y="150" fill="#9aa3c7" font-size="10" text-anchor="middle">mood +1</text>
+            <text x="500" y="163" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">+5 pts (right letter, late)</text>
+          </g>
+          <g>
+            <rect x="410" y="220" width="180" height="80" rx="6" fill="#221c3c" stroke="#34d399" stroke-width="2"/>
+            <text x="500" y="242" fill="#34d399" font-size="11" font-weight="700" text-anchor="middle">[A] Name harm + own it</text>
+            <text x="500" y="260" fill="#efeaff" font-size="10" text-anchor="middle">"real business hit on a weekend"</text>
+            <text x="500" y="280" fill="#9aa3c7" font-size="10" text-anchor="middle">mood -1</text>
+            <text x="500" y="293" fill="#34d399" font-size="10" font-weight="700" text-anchor="middle">+25 pts</text>
+          </g>
+          <g>
+            <rect x="410" y="350" width="180" height="80" rx="6" fill="#221c3c" stroke="#fbbf24" stroke-width="2"/>
+            <text x="500" y="372" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle">[A] Apologise + cite policy</text>
+            <text x="500" y="390" fill="#efeaff" font-size="10" text-anchor="middle">"engineering within 24 hours"</text>
+            <text x="500" y="410" fill="#9aa3c7" font-size="10" text-anchor="middle">mood +1</text>
+            <text x="500" y="423" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">+5 pts (right letter, generic)</text>
+          </g>
+
+          <g>
+            <rect x="660" y="90" width="180" height="80" rx="6" fill="#221c3c" stroke="#fbbf24" stroke-width="2"/>
+            <text x="750" y="112" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle">[E] Standard script</text>
+            <text x="750" y="130" fill="#efeaff" font-size="10" text-anchor="middle">"green light or red?"</text>
+            <text x="750" y="150" fill="#9aa3c7" font-size="10" text-anchor="middle">mood +1</text>
+            <text x="750" y="163" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">+5 pts (right letter, closed)</text>
+          </g>
+          <g>
+            <rect x="660" y="220" width="180" height="80" rx="6" fill="#221c3c" stroke="#34d399" stroke-width="2"/>
+            <text x="750" y="242" fill="#34d399" font-size="11" font-weight="700" text-anchor="middle">[E] One open question</text>
+            <text x="750" y="260" fill="#efeaff" font-size="10" text-anchor="middle">"what would help in next hour?"</text>
+            <text x="750" y="280" fill="#9aa3c7" font-size="10" text-anchor="middle">mood -1</text>
+            <text x="750" y="293" fill="#34d399" font-size="10" font-weight="700" text-anchor="middle">+25 pts</text>
+          </g>
+          <g>
+            <rect x="660" y="350" width="180" height="80" rx="6" fill="#221c3c" stroke="#f87171" stroke-width="2"/>
+            <text x="750" y="372" fill="#f87171" font-size="11" font-weight="700" text-anchor="middle">[R] Offer a credit</text>
+            <text x="750" y="390" fill="#efeaff" font-size="10" text-anchor="middle">"I'll get you a bill credit"</text>
+            <text x="750" y="410" fill="#9aa3c7" font-size="10" text-anchor="middle">mood +2</text>
+            <text x="750" y="423" fill="#f87171" font-size="10" font-weight="700" text-anchor="middle">+0 pts (skipped E)</text>
+          </g>
+
+          <g>
+            <rect x="910" y="90" width="180" height="80" rx="6" fill="#221c3c" stroke="#34d399" stroke-width="2"/>
+            <text x="1000" y="112" fill="#34d399" font-size="11" font-weight="700" text-anchor="middle">[R] 2 specifics + time</text>
+            <text x="1000" y="130" fill="#efeaff" font-size="10" text-anchor="middle">"template + 4:30pm callback"</text>
+            <text x="1000" y="150" fill="#9aa3c7" font-size="10" text-anchor="middle">mood -1</text>
+            <text x="1000" y="163" fill="#34d399" font-size="10" font-weight="700" text-anchor="middle">+25 pts &middot; END mood 0</text>
+          </g>
+          <g>
+            <rect x="910" y="220" width="180" height="80" rx="6" fill="#221c3c" stroke="#fbbf24" stroke-width="2"/>
+            <text x="1000" y="242" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle">[R] Premature escalate</text>
+            <text x="1000" y="260" fill="#efeaff" font-size="10" text-anchor="middle">"tier-2 will be in touch"</text>
+            <text x="1000" y="280" fill="#9aa3c7" font-size="10" text-anchor="middle">mood +1</text>
+            <text x="1000" y="293" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">+5 pts (right letter, vague)</text>
+          </g>
+          <g>
+            <rect x="910" y="350" width="180" height="80" rx="6" fill="#221c3c" stroke="#f87171" stroke-width="2"/>
+            <text x="1000" y="372" fill="#f87171" font-size="11" font-weight="700" text-anchor="middle">[R] Upsell during call</text>
+            <text x="1000" y="390" fill="#efeaff" font-size="10" text-anchor="middle">"premium business package"</text>
+            <text x="1000" y="410" fill="#9aa3c7" font-size="10" text-anchor="middle">mood +2 -> 5</text>
+            <text x="1000" y="423" fill="#f87171" font-size="10" font-weight="700" text-anchor="middle">+5 pts &middot; instant QA escalate</text>
+          </g>
+
+          <line x1="120" y1="270" x2="170" y2="130" stroke="#34d399" stroke-width="1.6" marker-end="url(#arrowGood)"/>
+          <line x1="120" y1="270" x2="170" y2="260" stroke="#fbbf24" stroke-width="1.6" marker-end="url(#arrowWarn)"/>
+          <line x1="120" y1="270" x2="170" y2="390" stroke="#f87171" stroke-width="1.6" marker-end="url(#arrowBad)"/>
+
+          <line x1="350" y1="130" x2="410" y2="130" stroke="#34d399" stroke-width="1.4"/>
+          <line x1="350" y1="130" x2="410" y2="260" stroke="#34d399" stroke-width="0.9" stroke-dasharray="3,3" marker-end="url(#arrowGood)"/>
+          <line x1="350" y1="130" x2="410" y2="390" stroke="#34d399" stroke-width="0.9" stroke-dasharray="3,3" marker-end="url(#arrowGood)"/>
+
+          <line x1="590" y1="260" x2="660" y2="260" stroke="#34d399" stroke-width="1.4"/>
+          <line x1="590" y1="260" x2="660" y2="130" stroke="#34d399" stroke-width="0.9" stroke-dasharray="3,3" marker-end="url(#arrowGood)"/>
+          <line x1="590" y1="260" x2="660" y2="390" stroke="#34d399" stroke-width="0.9" stroke-dasharray="3,3" marker-end="url(#arrowGood)"/>
+
+          <line x1="840" y1="260" x2="910" y2="130" stroke="#34d399" stroke-width="1.4" marker-end="url(#arrowGood)"/>
+          <line x1="840" y1="260" x2="910" y2="260" stroke="#34d399" stroke-width="0.9" stroke-dasharray="3,3" marker-end="url(#arrowGood)"/>
+          <line x1="840" y1="260" x2="910" y2="390" stroke="#34d399" stroke-width="0.9" stroke-dasharray="3,3" marker-end="url(#arrowGood)"/>
+
+          <text x="550" y="510" fill="#9aa3c7" font-size="11" font-style="italic" text-anchor="middle">Solid arrows = optimal path. Dashed = alternate routes the system also handles.</text>
+          <text x="550" y="530" fill="#9aa3c7" font-size="11" font-style="italic" text-anchor="middle">Mood meter is the floor-coach signal that's normally absent on the floor.</text>
+        </svg>
+
+        <div class="diagram-legend">
+          <span class="key"><span class="swatch sw-good"></span> LAER-aligned (correct) - mood drops</span>
+          <span class="key"><span class="swatch sw-warn"></span> Right letter, wrong execution - partial credit</span>
+          <span class="key"><span class="swatch sw-bad"></span> Textbook wrong move - mood spikes, sometimes ends call</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2 &middot; Screen wireframes (6 of the SCORM)</h2>
+      <p class="lead">
+        Each wireframe is one state the learner sees. Annotations show the design intent behind each region -
+        which Mayer / CLT / WCAG principle drives the choice, and why a region is where it is, not where the
+        instinct would put it.
+      </p>
+
+      <div class="wires">
+
+        <div class="wire">
+          <div class="wire-title"><h3>WF-01 &middot; Intro screen</h3><span class="tag">renderIntro()</span></div>
+          <div class="wire-canvas">
+            <div class="wf-bar">[AT] Arc Telecom &middot; Customer Service Academy ........... Caller mood [0/5]</div>
+            <div style="padding:0.5rem 0.3rem;">
+              <strong>First-30-Seconds - Call-Centre De-escalation</strong>
+              <p style="margin:0.35rem 0 0; color:var(--text-muted); font-size:0.78rem;">
+                You're a tier-1 agent at Arc Telecom. Lisa Greene runs a florist. Her broadband has been
+                down 4 hours on Mother's Day weekend. The next 30 seconds decide the call.
+              </p>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-top:0.4rem;">
+              <div style="padding:0.4rem; background:var(--bg-input); border:1px solid var(--border); border-radius:4px;">
+                <strong style="font-size:0.72rem; color:var(--accent-strong);">LAER FRAMEWORK</strong>
+                <ul style="margin:0.2rem 0 0; padding-left:0.9rem; font-size:0.72rem;">
+                  <li>L - paraphrase</li><li>A - name impact</li><li>E - open Q</li><li>R - timestamped commit</li>
+                </ul>
+              </div>
+              <div style="padding:0.4rem; background:var(--bg-input); border:1px solid var(--border); border-radius:4px;">
+                <strong style="font-size:0.72rem; color:var(--accent-strong);">SCORING</strong>
+                <ul style="margin:0.2rem 0 0; padding-left:0.9rem; font-size:0.72rem;">
+                  <li>4 turns x 25 pts</li><li>20 reply + 5 letter</li><li>Pass 70 / 100</li>
+                </ul>
+              </div>
+            </div>
+            <div style="margin-top: auto; padding-top:0.6rem;">
+              <div class="wf-bar" style="background:var(--accent); color:#1a0a2c; text-align:center; font-weight:700;">[ Take the call ]</div>
+            </div>
+          </div>
+          <div class="design-notes">
+            <strong>Design intent:</strong> Mayer's <em>pre-training principle</em>. Learner gets LAER + scoring rules
+            BEFORE the simulator runs - so cognitive load during the call is reserved for selection, not framework recall.
+          </div>
+        </div>
+
+        <div class="wire">
+          <div class="wire-title"><h3>WF-02 &middot; T1 - Lisa's opening outburst</h3><span class="tag">renderCall(turnIdx=0)</span></div>
+          <div class="wire-canvas">
+            <div class="wf-bar">Ticket AT-2026-44012 &middot; Step 1 of 4 &middot; Outage 4h 12m
+              <span class="wf-meter" style="margin-left:0.4rem;"><span class="lit"></span><span class="lit"></span><span class="lit"></span><span></span><span></span></span></div>
+            <div class="wf-turn cust">
+              <div class="who">LISA &middot; 18s outburst</div>
+              <div class="line">"FINALLY a human. I've been on hold 11 minutes. Broadband DOWN 4 hours. Mother's Day weekend.
+                THIRD TIME in 6 weeks. Are you going to tell me to restart the router again?"</div>
+            </div>
+            <div style="font-size:0.74rem; color:var(--text-muted); font-style:italic; padding:0.3rem 0.6rem;">
+              T1 - Listen. The right move is the L in LAER. What do you say?
+            </div>
+            <div class="wf-choices">
+              <div class="wf-choice good"><span class="badge">L &middot; +25</span> Paraphrase + check-back</div>
+              <div class="wf-choice warn"><span class="badge">A &middot; +0</span> Apologise + redirect</div>
+              <div class="wf-choice bad"><span class="badge">E &middot; +0</span> Jump to script</div>
+            </div>
+            <div class="wf-laer">
+              <span class="hot">L</span><span>A</span><span>E</span><span>R</span>
+            </div>
+          </div>
+          <div class="design-notes">
+            <strong>Design intent:</strong> mood meter is the <em>floor-coach signal</em> - the immediate behavioural
+            feedback a missing manager would otherwise provide. CLT germane: rule formation = which signals predict
+            which verdict. The 18-second outburst length is verbatim from the brief (Verint analytics).
+          </div>
+        </div>
+
+        <div class="wire">
+          <div class="wire-title"><h3>WF-03 &middot; T1 correct - feedback shown</h3><span class="tag">submitTurn() -> renderFeedback()</span></div>
+          <div class="wire-canvas">
+            <div class="wf-bar">Step 1 of 4
+              <span class="wf-meter" style="margin-left:0.4rem;"><span class="lit"></span><span class="lit"></span><span></span><span></span><span></span></span>
+              <span style="color:var(--good);">2/5</span></div>
+            <div class="wf-turn agent">
+              <div class="who">YOU (locked)</div>
+              <div class="line">"I hear you. 4h offline on your busiest weekend, third outage in 6 weeks. Have I got that right?"</div>
+            </div>
+            <div class="wf-turn cust">
+              <div class="who">LISA (mood drops to 2)</div>
+              <div class="line">"You have it. That is exactly the picture."</div>
+            </div>
+            <div class="wf-feedback">
+              <strong style="color:var(--good);">Good move (+25 pts). Mood meter: 2 / 5.</strong><br>
+              - Paraphrased her own words back - strongest single move in first 30 sec.<br>
+              - Named impact (busiest weekend) + pattern (3rd in 6 wks) without minimising.<br>
+              - Check-back: she controls pace.
+            </div>
+            <div style="margin-top:auto; padding-top:0.4rem;">
+              <div class="wf-bar" style="background:var(--accent); color:#1a0a2c; text-align:center; font-weight:700;">[ Next turn -> ]</div>
+            </div>
+          </div>
+          <div class="design-notes">
+            <strong>Design intent:</strong> feedback is <em>immediate + specific + grounded in the exact words</em>.
+            Renkl worked-example principle: the system articulates WHY the move works, so the rule becomes portable
+            to future calls instead of memorised as a script.
+          </div>
+        </div>
+
+        <div class="wire">
+          <div class="wire-title"><h3>WF-04 &middot; Wrong move - audible escalation</h3><span class="tag">heat += 2</span></div>
+          <div class="wire-canvas">
+            <div class="wf-bar">Step 1 of 4
+              <span class="wf-meter" style="margin-left:0.4rem;"><span class="lit"></span><span class="lit"></span><span class="lit"></span><span class="lit"></span><span class="lit"></span></span>
+              <span style="color:var(--bad);">5/5</span></div>
+            <div class="wf-turn agent">
+              <div class="who">YOU</div>
+              <div class="line">"Okay, is the modem light green or red right now?"</div>
+            </div>
+            <div class="wf-turn cust" style="background:rgba(248,113,113,0.22); border-left-color:var(--bad);">
+              <div class="who">LISA (mood spikes to 5)</div>
+              <div class="line">"I DO NOT CARE about the light. The LIGHT is not the problem. The problem is your COMPANY. Are you even LISTENING?"</div>
+            </div>
+            <div class="wf-feedback" style="border-left-color:var(--bad);">
+              <strong style="color:var(--bad);">Wrong move (+0 pts). Mood meter: 5 / 5.</strong><br>
+              - She predicted this in her outburst: "if you tell me to restart the router I will lose my mind."<br>
+              - Skipping straight to troubleshooting = #1 cause of tier-2 escalations.<br>
+              - The diagnostic script is correct - but not yet. L comes before E.
+            </div>
+          </div>
+          <div class="design-notes">
+            <strong>Design intent:</strong> the customer's escalating language is the <em>narrative version</em> of the
+            mood meter - they agree. Caps + length increase proportional to escalation level. No-audio constraint
+            forces signalling through typography, not voice.
+          </div>
+        </div>
+
+        <div class="wire">
+          <div class="wire-title"><h3>WF-05 &middot; T3 - one-open-question gate</h3><span class="tag">renderCall(turnIdx=2)</span></div>
+          <div class="wire-canvas">
+            <div class="wf-bar">Step 3 of 4
+              <span class="wf-meter" style="margin-left:0.4rem;"><span class="lit"></span><span class="lit"></span><span></span><span></span><span></span></span></div>
+            <div class="wf-turn cust">
+              <div class="who">LISA (mood 2)</div>
+              <div class="line">"Okay. Thank you. Honestly, just hearing that helps."</div>
+            </div>
+            <div style="font-size:0.74rem; color:var(--text-muted); font-style:italic; padding:0.3rem 0.6rem;">
+              T3 - Explore. Frame has flipped to collaborative. One open question about what she actually needs.
+            </div>
+            <div class="wf-choices">
+              <div class="wf-choice warn"><span class="badge">E &middot; +5</span> "Modem light green or red?" (closed Q)</div>
+              <div class="wf-choice good"><span class="badge">E &middot; +25</span> "What would help in next hour - online today, guarantee tomorrow, or comms to your customers now?"</div>
+              <div class="wf-choice bad"><span class="badge">R &middot; +0</span> "I'll get you a bill credit." (skipped E)</div>
+            </div>
+            <div class="wf-laer">
+              <span>L</span><span>A</span><span class="hot">E</span><span>R</span>
+            </div>
+          </div>
+          <div class="design-notes">
+            <strong>Design intent:</strong> this turn is the <em>keystone-within-the-keystone</em>. Agents who pass T1 + T2
+            still fail T3 by reaching for the closed-Q script. The 3-option open Q embeds the answer-shape so the learner
+            internalises it ("HER timeline, not mine"). Variation theory: same letter, three different executions.
+          </div>
+        </div>
+
+        <div class="wire">
+          <div class="wire-title"><h3>WF-06 &middot; Result screen</h3><span class="tag">renderResult()</span></div>
+          <div class="wire-canvas">
+            <div class="wf-bar">Complete &middot;
+              <span class="wf-meter" style="margin-left:0.4rem;"><span></span><span></span><span></span><span></span><span></span></span>
+              <span style="color:var(--good);">0/5 final</span></div>
+            <div style="text-align:center; padding:0.5rem;">
+              <strong style="color:var(--good); font-size:1.1rem;">You held the call.</strong>
+              <div style="font-family:var(--mono); font-size:2.4rem; color:var(--good); margin-top:0.4rem;">95 / 100</div>
+              <span style="display:inline-block; padding:0.15rem 0.5rem; background:rgba(52,211,153,0.18); color:var(--good); border-radius:99px; font-size:0.7rem; font-weight:700; letter-spacing:0.06em;">PASS</span>
+            </div>
+            <div style="font-size:0.74rem; padding:0.3rem 0.5rem;">
+              <strong style="color:var(--accent-strong);">Per-turn breakdown:</strong>
+              <ul style="margin:0.2rem 0 0; padding-left:0.9rem;">
+                <li>OK Opener - Listen - 25/25 (mood 2)</li>
+                <li>OK Impact - Acknowledge - 25/25 (mood 1)</li>
+                <li>~ Diagnostic - Explore - 20/25 (mood 1)</li>
+                <li>OK Commitment - Respond - 25/25 (mood 0)</li>
+              </ul>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted); padding:0.3rem 0.5rem;">
+              The next 90 days are about reproducing this on real calls. Verint will pick up the empathy phrase in T1
+              and tag the call. Watch your QA scorecard.
+            </div>
+          </div>
+          <div class="design-notes">
+            <strong>Design intent:</strong> result anchors L2 score (SCORM) to L3 on-the-job signal (Verint tag) so the
+            learner sees the bridge between simulator and real-call feedback loop. Per-turn breakdown is the data
+            the agent's manager sees in their dashboard - same artefact, different audience.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3 &middot; Script-overlay sample (T1 full)</h2>
+      <p class="lead">
+        Every turn's reply options were drafted as <em>script + design rationale</em> before any code was written.
+        Below is the T1 sample. Same format exists for T2, T3, T4 in the source data.
+      </p>
+      <table class="script-table">
+        <thead>
+          <tr>
+            <th style="width:14%">Option</th>
+            <th style="width:34%">Verbatim line</th>
+            <th style="width:14%">LAER &middot; mood &middot; pts</th>
+            <th>Design rationale (why this option exists)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="good">CORRECT</td>
+            <td class="mono">"I hear you. Four hours offline on your busiest weekend, third outage in six weeks. Before anything else - I want to make sure I have that picture right. Have I got it?"</td>
+            <td class="mono good">L &middot; -1 &middot; +25</td>
+            <td>Models <em>active paraphrase</em>. Carries the impact + the pattern in the agent's own voice. Ends in a check-back that hands pacing to the customer. This is the empathy phrase Verint analytics tag in the first 30 seconds.</td>
+          </tr>
+          <tr>
+            <td class="warn">DISTRACTOR 1</td>
+            <td class="mono">"I'm really sorry about that, ma'am. Let's not worry about the past calls - let's just focus on getting you back online right now."</td>
+            <td class="mono warn">A &middot; +1 &middot; +0</td>
+            <td>The <em>politeness trap</em>. Most common wrong move from new agents because it FEELS empathetic. The phrase "let's not worry about the past" actually dismisses the pattern she just named. Forcing the learner to feel this distinction is the point.</td>
+          </tr>
+          <tr>
+            <td class="bad">DISTRACTOR 2</td>
+            <td class="mono">"Okay, I can see your account. Let's just check - is the modem light green or red right now?"</td>
+            <td class="mono bad">E &middot; +2 &middot; +0</td>
+            <td>The <em>script-jumper</em>. She literally predicted this move in her outburst ("if you tell me to restart the router I will lose my mind"). Learners who pick this find out, on the next line, that she was telling them not to.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <footer>
+    Storyboard v1.0 &middot; 18 May 2026 &middot; <a href="case-brief.md">case-brief.md</a> &middot; <a href="scorm-package/index.html">live SCORM preview</a>
+  </footer>
+</body>
+</html>
