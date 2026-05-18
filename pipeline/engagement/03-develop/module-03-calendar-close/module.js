@@ -589,6 +589,11 @@ function mountTomDrawer(options) {
       });
       btn.setAttribute("aria-checked", "true");
       btn.classList.add(opt.result === "correct" ? "is-correct" : "is-incorrect");
+      // On wrong pick, also reveal the correct answer so the rep sees the gap.
+      if (opt.result !== "correct") {
+        const correctBtn = drawer.querySelector('.tom-drawer__opt[data-result="correct"]');
+        correctBtn?.classList.add("is-reveal");
+      }
       fb.hidden = false;
       fb.textContent = opt.rationale;
       state.completionAnswer = opt.result;
@@ -1084,6 +1089,12 @@ function renderQuizItemInSlack(host) {
       });
       btn.setAttribute("aria-checked", "true");
       btn.classList.add(opt.correct ? "is-correct" : "is-incorrect");
+      // On wrong pick, also flash the correct option so the rep sees the gap.
+      if (!opt.correct) {
+        host.querySelectorAll(".tom-drawer__opt").forEach((b, j) => {
+          if (item.options[j]?.correct) b.classList.add("is-reveal");
+        });
+      }
       fb.hidden = false;
       fb.textContent = opt.rationale;
       if (opt.correct) state.quizScore += 1;

@@ -436,6 +436,31 @@
   background: #fde7e3; border-color: var(--coral-700, #c33d22);
 }
 .tom-drawer__opt.is-incorrect .tom-drawer__label { background: var(--coral-700, #c33d22); }
+/* On wrong pick the correct option flashes green so the rep sees the gap. */
+.tom-drawer__opt.is-reveal:not(.is-correct):not(.is-incorrect) {
+  background: #f0f7ee;
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 2px rgba(10, 135, 84, 0.35);
+  animation: tom-reveal-pulse 0.9s ease-out 2;
+}
+.tom-drawer__opt.is-reveal:not(.is-correct):not(.is-incorrect)::after {
+  content: " ← correct answer";
+  font-family: var(--ftc-font-mono, ui-monospace);
+  font-size: 10.5px;
+  color: var(--brand-green, #0a8754);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+@keyframes tom-reveal-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(10, 135, 84, 0.15); }
+  50%      { box-shadow: 0 0 0 6px rgba(10, 135, 84, 0.35); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tom-drawer__opt.is-reveal { animation: none; }
+}
 .tom-drawer__fb {
   margin-top: 10px;
   padding: 10px 12px;
