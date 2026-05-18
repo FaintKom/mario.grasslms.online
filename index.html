@@ -965,6 +965,110 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   transition: opacity .25s;
 }
 .service:hover .service-metric { opacity: 0.35; }
+
+/* ============ Lesson Review Toolkit pipeline demo (card 03) ============ */
+.lrt-demo {
+  grid-column: 2;
+  margin: 12px 0 14px;
+  padding: 14px 16px;
+  background: var(--bg-3, #f4f5f1);
+  border: 1px solid var(--ink-100, #e6e8e4);
+  border-left: 3px solid var(--accent, #0a8754);
+  border-radius: 4px;
+}
+.lrt-cap {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-500, #4d5a51);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 10px;
+}
+.lrt-flow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto 1fr;
+  gap: 8px;
+  align-items: center;
+  min-height: 92px;
+}
+.lrt-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid var(--ink-100, #e6e8e4);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-700, #1a2a1f);
+  line-height: 1.45;
+}
+.lrt-sources span { white-space: nowrap; }
+.lrt-processor {
+  border-color: var(--accent, #0a8754);
+  background: #ecf9e7;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--green-700, #07683f);
+  font-size: 11px;
+  padding: 12px 14px;
+}
+.lrt-sink {
+  border-color: var(--ink-900, #0a1a10);
+  background: var(--ink-900, #0a1a10);
+  color: #fff;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 12px 14px;
+}
+.lrt-arrow {
+  font-family: var(--mono);
+  font-size: 18px;
+  color: var(--ink-400, #6b7a70);
+  text-align: center;
+  user-select: none;
+}
+.lrt-dot {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent, #0a8754);
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+  box-shadow: 0 0 0 4px rgba(10, 135, 84, 0.18);
+  animation: lrt-dot-flow 4.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+.lrt-dot--2 {
+  animation-delay: 2.1s;
+}
+@keyframes lrt-dot-flow {
+  0%   { left: 4%;   opacity: 0; }
+  10%  { opacity: 1; }
+  45%  { left: 48%;  opacity: 1; }
+  55%  { left: 48%;  opacity: 1; }
+  90%  { left: 96%;  opacity: 1; }
+  100% { left: 96%;  opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lrt-dot { animation: none; opacity: 0; }
+}
+@media (max-width: 720px) {
+  .lrt-flow {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .lrt-arrow { transform: rotate(90deg); }
+  .lrt-dot { display: none; }
+}
 .service-metric .unit {
   font-family: var(--mono);
   font-size: 11px;
@@ -2107,12 +2211,36 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
       <h3>Tools for<br><em>instructional</em> teams</h3>
       <p class="service-desc">Userscript helpers, Tampermonkey automations, Telegram bots, HTML viewers, dashboards, prompt-engineering systems — cutting routine across EdTech teams.</p>
+
+      <!-- Inline Lesson Review Toolkit pipeline demo (animated · no deep-link) -->
+      <figure class="lrt-demo" aria-label="Lesson Review Toolkit pipeline demonstration">
+        <figcaption class="lrt-cap">Lesson Review Toolkit &middot; pipeline</figcaption>
+        <div class="lrt-flow">
+          <div class="lrt-col lrt-sources">
+            <span>Slack threads</span>
+            <span>Notion comments</span>
+            <span>Mentor rubric forms</span>
+            <span>Post-cohort survey CSVs</span>
+          </div>
+          <div class="lrt-arrow" aria-hidden="true">→</div>
+          <div class="lrt-col lrt-processor">
+            <span class="lrt-proc">Normalise<br>+ dedupe</span>
+          </div>
+          <div class="lrt-arrow" aria-hidden="true">→</div>
+          <div class="lrt-col lrt-sink">
+            <span class="lrt-out">Triage-ready<br>issue DB</span>
+          </div>
+          <span class="lrt-dot" aria-hidden="true"></span>
+          <span class="lrt-dot lrt-dot--2" aria-hidden="true"></span>
+        </div>
+      </figure>
+
       <div class="service-proof">
         <span class="pl">proof</span>
         <ul>
           <li>Teacher Education Autofill (~5h/wk ↓)</li>
           <li>Miro Board Creator</li>
-          <li>ScramSchool bot · Lesson Review viewers</li>
+          <li>Telegram homework bot · Lesson Review viewers</li>
           <li>Prompt engineering systems</li>
         </ul>
       </div>
@@ -2129,7 +2257,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <div class="service-proof">
         <span class="pl">proof</span>
         <ul>
-          <li>GrassLMS · 80+ features · 59 routes</li>
+          <li><a href="https://grasslms.online" target="_blank" rel="noopener" style="color:inherit; border-bottom:1px solid currentColor;">GrassLMS</a> · 80+ features · 59 routes</li>
           <li>Coolify on Hetzner · Docker</li>
           <li>Stripe B2B · JWT · fail2ban</li>
           <li>i18n EN / ES / RU / TR</li>
