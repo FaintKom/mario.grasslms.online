@@ -21,7 +21,7 @@
     --bg-3: #f4f5f1;
     --ink: #0a1a10;
     --ink-dim: #4d5a51;
-    --ink-faint: #6b7a70;
+    --ink-faint: #5c6b62;
     --rule: #e6e8e4;
     --rule-strong: #c9cec9;
     --accent: #0a8754;
@@ -625,7 +625,8 @@
 
   <!-- 1. HERO -->
   <section id="hero" class="hero" aria-labelledby="hero-h">
-    <div class="kicker">Case study &middot; LXD portfolio &middot; 2026</div>
+    <div class="kicker">Case study &middot; LXD portfolio &middot; <span id="kicker-year">2026</span></div>
+    <script>document.getElementById('kicker-year').textContent=new Date().getFullYear();</script>
     <h1 id="hero-h">FinTechCard &middot; SMB SDR Onboarding<br><span class="accent">95 &rarr; 71 days to first paid quota.</span></h1>
     <p class="lead">
       Compressed SDR ramp time from 95 days to 71 days by training the three
