@@ -117,7 +117,7 @@
   h3 { font-size: 17px; font-weight: 700; line-height: 1.3; letter-spacing: -0.005em; }
   h4 {
     font-family: var(--mono); font-size: 11px;
-    color: var(--accent); font-weight: 700;
+    color: var(--green-700); font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.08em;
     margin-bottom: 14px;
   }
@@ -273,7 +273,18 @@
     padding-top: 10px; border-top: 1px dashed var(--rule);
     font-variant-numeric: tabular-nums; letter-spacing: 0.04em;
   }
-  .move .stat strong { color: var(--accent); font-weight: 700; }
+  .move .stat strong { color: var(--green-700); font-weight: 700; }
+  .move-cta {
+    display: inline-flex; align-items: center; gap: 4px;
+    margin-top: 14px;
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--green-700); text-decoration: none;
+    border-bottom: 1px solid var(--green-700);
+    padding-bottom: 2px; align-self: flex-start;
+  }
+  .move { display: flex; flex-direction: column; }
+  .move-cta:hover { color: var(--accent); border-color: var(--accent); }
   @media (max-width: 720px) {
     .moves { grid-template-columns: 1fr; }
   }
@@ -779,7 +790,7 @@
     <h2 id="moves-h">Three moves, surfaced from 22 Gong calls</h2>
     <blockquote>
       <p>&ldquo;Three things stand out from Gong reviews. One &mdash; top reps spend the first 60 seconds of every cold call asking one diagnostic question that exposes which pain to pitch against. The rest of them launch into the pitch in the first 15 seconds. Two &mdash; when the buyer pushes back, top reps re-state the objection back in the buyer&rsquo;s own words before responding. The rest of them argue. Three &mdash; top reps end every call with a written next step booked in the calendar before they hang up. The rest say &lsquo;I&rsquo;ll follow up.&rsquo;&rdquo;</p>
-      <span class="cite">&mdash; A.S., Head of SDR &middot; brief &sect;9</span>
+      <cite class="cite">&mdash; A.S., Head of SDR &middot; brief &sect;9</cite>
     </blockquote>
     <div class="moves" aria-label="Three keystone moves">
       <div class="move">
@@ -790,6 +801,7 @@
           five-second silence &mdash; &ldquo;feels like an hour but it&rsquo;s where the deal happens.&rdquo;
         </p>
         <div class="stat">Top decile <strong>8 / 8</strong> &middot; Bottom <strong>0 / 4</strong></div>
+        <a class="move-cta" href="03-develop/module-01-diagnostic-opener/">Open M1 module &rarr;</a>
       </div>
       <div class="move">
         <div class="id">M2</div>
@@ -799,6 +811,7 @@
           &ge; 2 token overlap with what the buyer said. Then wait.
         </p>
         <div class="stat">Top decile <strong>7 / 7</strong> &middot; Bottom <strong>0 / 4</strong></div>
+        <a class="move-cta" href="03-develop/module-02-objection-acknowledge/">Open M2 module &rarr;</a>
       </div>
       <div class="move">
         <div class="id">M3</div>
@@ -808,6 +821,7 @@
           during the call. Never &ldquo;I&rsquo;ll follow up.&rdquo;
         </p>
         <div class="stat">Top decile <strong>7 / 8</strong> &middot; Bottom <strong>0 / 4</strong></div>
+        <a class="move-cta" href="03-develop/module-03-calendar-close/">Open M3 module &rarr;</a>
       </div>
     </div>
     <p class="data" style="font-size:13.5px;color:var(--muted);">
