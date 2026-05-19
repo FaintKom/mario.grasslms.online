@@ -290,6 +290,13 @@
   }
 
   /* Table */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0 20px; }
+  .table-wrap table { margin: 0; min-width: 480px; }
   table {
     width: 100%; border-collapse: collapse;
     margin: 16px 0 20px;
@@ -835,9 +842,11 @@
   <section id="built" aria-labelledby="built-h">
     <h4>05 &middot; What was built</h4>
     <h2 id="built-h">Six modules, one shell, three measurement instruments, one playbook</h2>
+    <div class="table-wrap">
     <table>
+      <caption class="sr-only">Artefacts shipped &mdash; six SCORM modules, mini-OS shell, manager rubric, measurement pipeline, iteration playbook, hand-off pack.</caption>
       <thead>
-        <tr><th>Artefact</th><th>What it is</th><th>Where</th></tr>
+        <tr><th scope="col">Artefact</th><th scope="col">What it is</th><th scope="col">Where</th></tr>
       </thead>
       <tbody>
         <tr>
@@ -872,6 +881,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
     <p class="data" style="font-size:13.5px;color:var(--muted);">
       Scale: <span class="num">118</span> files &middot; <span class="num">~19 000</span> lines across the whole repo &middot; Phase 3 alone =
       <span class="num">71</span> files &middot; <span class="num">~12 900</span> lines of code &middot; 6 phases of design docs.
