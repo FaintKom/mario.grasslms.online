@@ -211,27 +211,39 @@ function stepGainAttention(body) {
 function decorateOutreachForStep1() {
   const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
   if (!outreachBody) return;
-  mountTaskBanner(outreachBody, {
-    id: "m1-s1-pick-warm",
-    label: "Click your next warm lead (Maria) — she just opened your email",
-    hint: "We'll open her profile in the next step",
-    state: "active",
-  });
+  // UX 2026-05-20: Continue disabled until task complete
+  const nextBtn = document.getElementById("narrative-next");
+  if (nextBtn) {
+    nextBtn.disabled = true;
+    nextBtn.setAttribute("aria-disabled", "true");
+    nextBtn.textContent = "🔒 Click Maria to continue";
+  }
   let tries = 0;
   const tick = () => {
-    const mariaRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /Maria/i.test(r.textContent || ""));
+    const allLeads = [...outreachBody.querySelectorAll(".lead-row")];
+    const mariaRow = allLeads.find(r => /Maria/i.test(r.textContent || ""));
     if (!mariaRow) {
       if (++tries < 20) return setTimeout(tick, 100);
       return;
     }
+    // UX 2026-05-20: mark active/inactive for CSS dim
+    allLeads.forEach(row => {
+      row.dataset.taskTarget = row === mariaRow ? "active" : "inactive";
+    });
     if (mariaRow.dataset.m1Done === "true") return;
     mariaRow.classList.add("is-warm-highlight");
     mariaRow.dataset.m1Done = "true";
     mariaRow.addEventListener("click", e => {
       if (e.target.closest('[data-action="dial"]')) return;
       if (state.step !== 0) return;
-      markTaskBannerDone("m1-s1-pick-warm");
       state.api.eventLog?.record?.("step1_picked_warm_lead");
+      // Unlock Continue + auto-advance + clear task-target dim
+      if (nextBtn) {
+        nextBtn.disabled = false;
+        nextBtn.setAttribute("aria-disabled", "false");
+        nextBtn.textContent = "Continue →";
+      }
+      allLeads.forEach(row => { delete row.dataset.taskTarget; });
       setTimeout(() => runStep(1), 450);
     });
   };

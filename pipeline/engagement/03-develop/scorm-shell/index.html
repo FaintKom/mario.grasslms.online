@@ -9,8 +9,8 @@
   <meta name="description" content="FinTechCard SDR onboarding mini-OS shell — simulated workspace runtime for SCORM 1.2 modules M1–M6.">
   <meta name="color-scheme" content="light">
   <title>FinTechCard SDR Onboarding · Mini-OS Shell</title>
-  <link rel="stylesheet" href="styles/shell.css?v=20260519g">
-  <link rel="stylesheet" href="styles/apps.css?v=20260519g">
+  <link rel="stylesheet" href="styles/shell.css?v=20260520ux">
+  <link rel="stylesheet" href="styles/apps.css?v=20260520ux">
   <script type="module" src="js/shell.js?v=20260518d" defer></script>
 </head>
 <body>
@@ -24,7 +24,6 @@
         <span id="module-title" class="module-title">SDR Onboarding · Shell Preview</span>
       </div>
       <div class="topbar-right">
-        <span id="module-progress" class="module-progress" aria-live="polite">0%</span>
         <button type="button" id="help-button" class="help-button" aria-label="Open help and job aids">Help</button>
       </div>
     </header>
@@ -32,6 +31,9 @@
     <main id="desktop" role="main" aria-label="Mini-OS desktop">
       <div id="desktop-empty-state" class="desktop-empty-state">
         <h1>FinTechCard SDR mini-OS · live simulation</h1>
+        <div class="primary-cta-banner">
+          <strong>👉 Want the walkthrough?</strong> <a href="../module-03-calendar-close/">Open Module 3 · Calendar Close →</a> — the keystone-completing module showing the rep send the invite during a live call, not after.
+        </div>
         <p>This is the workspace a new SDR uses during the cohort: seven simulated apps the rep switches between on a real call (Outreach for the dialler, Gong for call review, Salesforce for the next-step, Calendar for the close, etc.). Each SCORM module boots the apps it needs and walks the learner through one scenario.</p>
 
         <p style="margin-top:18px; font-family:ui-monospace,monospace; font-size:11px; color:#5c6b62; letter-spacing:0.05em; text-transform:uppercase;">Built for a 16-week engagement targeting:</p>
@@ -52,8 +54,7 @@
             <div style="font-size:12px; color:#4d5a51; margin-top:4px;">120-rep org · UK+IE+NL+DE+ES+IT pods · 4-week cadence</div>
           </div>
         </div>
-        <p style="margin-top:18px;"><strong>See it in action:</strong> <a href="../module-03-calendar-close/" style="color:#0a8754; font-weight:700;">Open Module 3 · Calendar Close →</a> — the keystone-completing module where the rep learns to send the invite during the live call, not after.</p>
-        <p style="margin-top:22px; font-size:14px; text-align:left;">Or browse the 7 simulated apps standalone:</p>
+        <p style="margin-top:22px; font-size:14px; text-align:left;"><strong>Or browse the 7 simulated apps standalone</strong> — click any tile to launch it as a window:</p>
         <div class="app-launchers" role="toolbar" aria-label="App launchers">
           <button type="button" data-launch="outreach" class="app-card" data-accent="#d97706">
             <span class="app-card__glyph" aria-hidden="true">O</span>
@@ -91,7 +92,7 @@
             <span class="app-card__role">Coach huddle · M2 objection assist</span>
           </button>
         </div>
-        <p style="margin-top:18px; font-size:12px; color:#5c6b62; font-family:ui-monospace,monospace;">Designer note: append <code>?debug=1</code> for SCORM bridge + event-log in console.</p>
+        <p style="margin-top:18px; font-size:12px; color:#5c6b62;">Tip: each app opens in its own window — click the title bar to drag, or use Tab to navigate between windows. Apps are simulated (no real data).</p>
       </div>
     </main>
 

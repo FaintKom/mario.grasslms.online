@@ -85,7 +85,7 @@ body { display: flex; flex-direction: column; }
   outline: none;
 }
 
-.app-root:focus-visible { outline: 2px dashed var(--focus); outline-offset: 4px; }
+.app-root:focus { outline: none; }
 
 .screen {
   background: var(--bg-elev);

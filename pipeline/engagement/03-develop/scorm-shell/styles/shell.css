@@ -545,6 +545,39 @@ code, kbd, samp {
   border-color: var(--acc);
   border-left-color: var(--acc);
 }
+.app-card::after {
+  content: "Open →";
+  position: absolute;
+  right: var(--sp-3);
+  bottom: var(--sp-2);
+  font-family: var(--ftc-font-mono);
+  font-size: 10px;
+  color: var(--acc);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+.app-card:hover::after { opacity: 1; }
+
+/* Primary CTA banner on shell empty-state */
+.primary-cta-banner {
+  margin: var(--sp-3) 0 var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--ftc-green-tint, #e6f7f0);
+  border-left: 3px solid var(--ftc-green-primary, #00875f);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.primary-cta-banner a {
+  color: var(--ftc-green-primary, #00875f);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+.primary-cta-banner a:hover { color: var(--ftc-ink, #0f1419); }
 .app-card__glyph {
   grid-row: 1 / span 2;
   width: 36px; height: 36px;
@@ -677,4 +710,91 @@ code, kbd, samp {
 
 @media (prefers-reduced-motion: reduce) {
   .task-banner__dot { animation: none; }
+}
+
+/* =========================================================================
+   UX REDESIGN 2026-05-20 · max-clarity for student first-time UX
+   Overrides module-level narrative-overlay positioning + adds visible
+   Continue-button state + hides non-functional Outreach widgets in
+   training mode. Wins over module-specific styles via !important.
+   ========================================================================= */
+
+/* 1 · Narrative overlay = primary signal source · TOP-LEFT not bottom-right */
+body.module .narrative-overlay {
+  left: 24px !important;
+  top: 56px !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: min(500px, calc(100vw - 48px)) !important;
+  max-height: calc(100vh - 130px) !important;
+  border-left: 4px solid var(--ftc-green-primary, #00875f) !important;
+  box-shadow: 0 12px 32px -8px rgba(10, 26, 16, 0.18) !important;
+}
+
+/* 2 · Continue button — clearly disabled until task complete */
+body.module .narrative-overlay__foot #narrative-next:disabled {
+  background: var(--ftc-border, #d0d5dd) !important;
+  color: var(--ftc-ink-2, #475467) !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+body.module .narrative-overlay__foot #narrative-next:disabled::before {
+  content: "🔒 ";
+  margin-right: 4px;
+}
+body.module .narrative-overlay__foot #narrative-next:not(:disabled) {
+  position: relative;
+  animation: continue-pulse 2s ease-out infinite;
+}
+@keyframes continue-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(10, 135, 84, 0); }
+  50%      { box-shadow: 0 0 0 4px rgba(10, 135, 84, 0.18); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.module .narrative-overlay__foot #narrative-next:not(:disabled) { animation: none; }
+}
+
+/* 3 · Outreach in training mode — hide non-functional filters + sequence-step chips */
+body.module .app--outreach .dial-queue__filters { display: none !important; }
+body.module .app--outreach .lead-row .sequence-step { display: none !important; }
+
+/* 4 · Dim inactive leads when a specific lead is the task target */
+body.module .app--outreach .lead-row[data-task-target="active"] {
+  border-color: var(--app-accent) !important;
+  box-shadow: 0 0 0 3px var(--app-accent-tint);
+  position: relative;
+}
+body.module .app--outreach .lead-row[data-task-target="active"]::before {
+  content: "👈 your target";
+  position: absolute;
+  top: -10px; left: 12px;
+  background: var(--app-accent);
+  color: #ffffff;
+  font-family: var(--ftc-font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+body.module .app--outreach .lead-row[data-task-target="inactive"] {
+  opacity: 0.4;
+  filter: grayscale(0.4);
+  pointer-events: none;
+}
+body.module .app--outreach .lead-row[data-task-target="inactive"] .dial-btn {
+  background: var(--ftc-border) !important;
+  cursor: not-allowed !important;
+}
+
+/* 5 · Mobile narrative-overlay — full-width modal */
+@media (max-width: 720px) {
+  body.module .narrative-overlay {
+    left: 12px !important;
+    right: 12px !important;
+    top: auto !important;
+    bottom: 64px !important;
+    width: auto !important;
+    max-height: 60vh !important;
+  }
 }
