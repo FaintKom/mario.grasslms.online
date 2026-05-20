@@ -1,338 +1,701 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Range bookends · 3 SCORM mini-cases · Mario Becerra</title>
-<meta name="description" content="Three tight single-keystone SCORM 1.2 builds across compliance, customer-service, and tool-rollout — showing range alongside the FinTechCard depth case.">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Range bookends · 3 SCORM mini-cases · Mario Rafael Becerra Dueñas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #fafbf6; --bg-2: #ffffff; --bg-3: #f4f5f1;
-    --ink: #0a1a10; --ink-dim: #4d5a51; --ink-faint: #5c6b62;
-    --rule: #e6e8e4; --rule-strong: #c9cec9;
-    --accent: #0a8754; --accent-ink: #ffffff;
-    --green-700: #07683f; --green-50: #ecf9e7;
-    --mono: "Geist Mono", ui-monospace, Menlo, monospace;
-    --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-    --serif: "Instrument Serif", "Times New Roman", serif;
-  }
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-  a { color: var(--green-700); text-decoration: none; border-bottom: 1px solid var(--rule); transition: color 0.15s, border-color 0.15s; }
-  a:hover { color: var(--accent); border-color: var(--accent); }
-  .skip { position: absolute; left: -9999px; }
-  .skip:focus { position: fixed; left: 12px; top: 12px; background: var(--accent); color: #fff; padding: 8px 12px; border-radius: 4px; z-index: 100; border-bottom: 0; }
+    --bone: #F4F1EA;
+    --paper: #FAF8F3;
+    --ink: #0B0B0E;
+    --ink-2: #2A2A2F;
+    --ink-3: #5A5A60;
+    --rule: rgba(11, 11, 14, 0.12);
+    --rule-2: rgba(11, 11, 14, 0.06);
 
-  nav.toc {
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(250,251,246,0.96);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    /* Per-case accents */
+    --a-accent: #2563EB;  /* security */
+    --a-tint: #DFE9FF;
+    --b-accent: #C2410C;  /* call centre */
+    --b-tint: #FBE7D3;
+    --c-accent: #0F766E;  /* erp */
+    --c-tint: #D5EBE6;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bone);
+    color: var(--ink);
+    font-family: 'Geist', -apple-system, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .mono { font-family: 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.01em; }
+  .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+
+  /* ───────── Nav ───────── */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    background: rgba(244, 241, 234, 0.78);
+    border-bottom: 1px solid var(--rule-2);
+  }
+  .nav-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+  }
+  .nav-left { display: flex; gap: 28px; align-items: baseline; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+  .nav-logo-dot {
+    width: 8px; height: 8px; border-radius: 2px;
+    background: var(--ink);
+    transform: rotate(45deg);
+  }
+  .nav-eyebrow { color: var(--ink-3); }
+  .nav-right { display: flex; gap: 24px; color: var(--ink-3); }
+  .nav-right a { transition: color .2s; }
+  .nav-right a:hover { color: var(--ink); }
+
+  /* ───────── Hero ───────── */
+  .hero {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 120px 48px 80px;
+  }
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--ink-3);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+  .hero-eyebrow::before {
+    content: "";
+    width: 28px; height: 1px;
+    background: var(--ink);
+  }
+  .hero-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(56px, 9vw, 132px);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    margin: 0;
+    max-width: 14ch;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--ink-3);
+  }
+  .hero-sub {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .hero-sub-left {
+    font-size: 13px;
+    color: var(--ink-3);
+    line-height: 1.6;
+  }
+  .hero-sub-right {
+    font-size: 19px;
+    line-height: 1.45;
+    max-width: 56ch;
+    color: var(--ink-2);
+  }
+  .hero-sub-right strong { color: var(--ink); font-weight: 500; }
+
+  /* ───────── Cases section ───────── */
+  .section-head {
+    max-width: 1320px;
+    margin: 80px auto 0;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
     border-bottom: 1px solid var(--rule);
+    padding-bottom: 18px;
   }
-  nav.toc .inner {
-    max-width: 1100px; margin: 0 auto; padding: 12px 24px;
-    display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center;
-    font-family: var(--mono); font-size: 12px;
+  .section-head-label {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
   }
-  nav.toc a { color: var(--ink-dim); border-bottom: none; padding: 4px 8px; border-radius: 4px; }
-  nav.toc a:hover { color: var(--ink); background: var(--bg-3); }
-  nav.toc .brand { margin-right: auto; font-weight: 700; color: var(--ink); }
-
-  main { max-width: 1100px; margin: 0 auto; padding: 56px 24px 96px; }
-
-  .hero { margin-bottom: 48px; }
-  .hero .kicker {
-    font-family: var(--mono); font-size: 11px; color: var(--green-700);
-    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
-  }
-  .hero h1 {
-    font-size: clamp(36px, 5vw, 56px); line-height: 1.1;
-    margin: 0 0 14px; letter-spacing: -0.015em; font-weight: 700;
-  }
-  .hero h1 .accent { color: var(--accent); font-family: var(--serif); font-style: italic; font-weight: 400; }
-  .hero .lede {
-    font-size: 17px; line-height: 1.55; color: var(--ink-dim);
-    max-width: 720px; margin: 0;
-  }
-
-  .bookend-note {
-    margin: 36px 0;
-    padding: 18px 22px;
-    background: var(--bg-2);
-    border: 1px solid var(--rule);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 8px 8px 0;
-    font-size: 14.5px;
-    color: var(--ink-dim);
-  }
-  .bookend-note strong { color: var(--ink); }
+  .section-head-meta { font-size: 12px; color: var(--ink-3); display: flex; gap: 18px; }
 
   .cases {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 24px;
-    margin-top: 36px;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 48px 120px;
   }
   .case {
-    background: var(--bg-2);
-    border: 1px solid var(--rule);
-    border-radius: 12px;
-    padding: 24px;
-    display: flex; flex-direction: column;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    display: grid;
+    grid-template-columns: 80px 1fr 1.1fr;
+    gap: 48px;
+    align-items: start;
+    padding: 56px 0 64px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    cursor: pointer;
+    transition: padding 0.5s cubic-bezier(.2,.7,.2,1);
   }
-  .case:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px -10px rgba(10,26,16,0.12);
-    border-color: var(--accent);
+  .case::before {
+    content: "";
+    position: absolute;
+    left: -48px; right: -48px; top: 0; bottom: 0;
+    background: var(--accent-tint, transparent);
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    pointer-events: none;
+    z-index: -1;
   }
-  .case__vertical {
-    display: inline-block;
-    font-family: var(--mono); font-size: 10px;
-    color: var(--accent-ink); background: var(--green-700);
-    padding: 3px 8px; border-radius: 999px;
-    letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700;
-    align-self: flex-start;
-    margin-bottom: 12px;
+  .case:hover::before { opacity: 0.5; }
+
+  .case-num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--ink-3);
+    line-height: 1;
+    padding-top: 4px;
+    font-style: italic;
   }
-  .case__title {
-    font-size: 22px; font-weight: 700; line-height: 1.25;
-    margin: 0 0 6px; letter-spacing: -0.01em; color: var(--ink);
+
+  .case-body { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  .case-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    text-transform: uppercase;
   }
-  .case__sub {
-    font-family: var(--mono); font-size: 11.5px;
-    color: var(--ink-faint); letter-spacing: 0.03em; margin-bottom: 16px;
+  .case-eyebrow-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    transition: transform .4s ease;
   }
-  .case__keystone {
-    font-size: 14px; line-height: 1.5; color: var(--ink-dim);
-    margin-bottom: 16px;
+  .case:hover .case-eyebrow-dot { transform: scale(1.6); }
+  .case-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 400;
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--ink);
   }
-  .case__keystone strong { color: var(--ink); font-weight: 600; }
-  .case__kpis {
-    display: grid; gap: 8px; margin-bottom: 18px;
+  .case-blurb {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 44ch;
+  }
+  .case-keystone {
+    margin-top: 4px;
     padding: 12px 14px;
-    background: var(--bg-3);
-    border-radius: 6px;
-    font-family: var(--mono); font-size: 11.5px;
-    color: var(--ink-dim);
+    border-left: 2px solid var(--accent);
+    background: rgba(11,11,14,0.025);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 48ch;
   }
-  .case__kpis .kpi {
-    display: flex; justify-content: space-between; align-items: baseline;
+  .case-keystone b { color: var(--ink); font-weight: 500; }
+  .case-kpis {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
   }
-  .case__kpis .kpi-name { text-transform: uppercase; letter-spacing: 0.05em; font-size: 10px; color: var(--ink-faint); }
-  .case__kpis .kpi-val { color: var(--green-700); font-weight: 700; font-size: 13px; }
-  .case__actions {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto;
-    padding-top: 18px; border-top: 1px solid var(--rule);
-  }
-  .case__btn {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-family: var(--mono); font-size: 11px;
-    font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
-    text-decoration: none; border-bottom: 0;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-  }
-  .case__btn--primary { background: var(--green-700); color: var(--accent-ink); }
-  .case__btn--primary:hover { background: var(--accent); color: var(--accent-ink); border-bottom: 0; }
-  .case__btn--ghost {
-    background: transparent; color: var(--ink-dim);
-    border: 1px solid var(--rule-strong);
-  }
-  .case__btn--ghost:hover { color: var(--accent); border-color: var(--accent); background: var(--green-50); border-bottom: 1px solid var(--accent); }
-
-  .why { margin-top: 64px; }
-  .why h2 {
-    font-size: 26px; margin: 0 0 20px;
-    border-bottom: 1px solid var(--rule); padding-bottom: 8px;
-  }
-  .why table {
-    width: 100%; border-collapse: collapse;
-    font-size: 14px;
-  }
-  .why th, .why td {
+  .kpi {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
     border: 1px solid var(--rule);
-    padding: 12px 14px; text-align: left; vertical-align: top;
+    border-radius: 4px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-2);
+    background: rgba(255,255,255,0.4);
   }
-  .why th {
-    background: var(--bg-3); font-family: var(--mono);
-    font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--ink-dim);
+  .kpi-label { color: var(--ink-3); }
+  .case-actions {
+    display: flex;
+    gap: 22px;
+    margin-top: 14px;
+    align-items: center;
   }
-  .why td:first-child { font-weight: 700; font-family: var(--mono); width: 60px; }
-
-  .flagship-link {
-    margin-top: 56px;
-    padding: 28px 32px;
+  .case-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink);
+    padding: 10px 14px;
+    border-radius: 4px;
     background: var(--ink);
-    color: #ffffff;
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 18px;
+    color: var(--paper);
+    transition: transform .3s ease, background .25s ease;
   }
-  .flagship-link strong { font-size: 17px; }
-  .flagship-link p { margin: 4px 0 0; font-size: 14px; color: rgba(255,255,255,0.75); }
-  .flagship-link a {
-    background: var(--accent); color: #fff; padding: 11px 22px;
-    border-radius: 6px; font-family: var(--mono); font-weight: 700;
-    font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
-    border-bottom: 0;
+  .case-cta:hover {
+    background: var(--accent);
+    transform: translateX(2px);
   }
-  .flagship-link a:hover { background: #fff; color: var(--ink); }
+  .case-cta-arrow { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+  .case-cta:hover .case-cta-arrow { transform: translateX(4px); }
+  .case-secondary {
+    font-size: 12.5px;
+    color: var(--ink-3);
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
+    transition: color .2s, border-color .2s;
+  }
+  .case-secondary:hover { color: var(--ink); border-color: var(--ink); }
 
-  footer {
-    margin-top: 80px; padding: 32px 24px;
+  /* Preview panel */
+  .case-preview {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #fff 0%, #FAF8F3 100%);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 20px 40px -20px rgba(11,11,14,0.08);
+    transition: transform .55s cubic-bezier(.2,.7,.2,1), box-shadow .55s;
+  }
+  .case:hover .case-preview {
+    transform: translateY(-4px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 30px 60px -25px rgba(11,11,14,0.18);
+  }
+  .preview-corner {
+    position: absolute;
+    top: 12px; right: 14px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+  }
+
+  /* ─── Case A preview: inbox rows ─── */
+  .pv-a { padding: 38px 22px 22px; }
+  .pv-a-row {
+    display: grid;
+    grid-template-columns: 14px 1fr 60px;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--rule-2);
+    font-size: 11px;
+    color: var(--ink-2);
+    transition: transform .5s cubic-bezier(.2,.7,.2,1), opacity .4s;
+  }
+  .pv-a-row:nth-child(1) { transition-delay: 0s; }
+  .pv-a-row:nth-child(2) { transition-delay: .06s; }
+  .pv-a-row:nth-child(3) { transition-delay: .12s; }
+  .pv-a-row:nth-child(4) { transition-delay: .18s; }
+  .pv-a-flag { width: 10px; height: 10px; border-radius: 2px; background: var(--ink-3); }
+  .pv-a-flag.red { background: #DC2626; }
+  .pv-a-flag.amber { background: #D97706; }
+  .pv-a-flag.green { background: #16A34A; }
+  .pv-a-from { font-weight: 500; color: var(--ink); }
+  .pv-a-sub { color: var(--ink-3); font-size: 10.5px; margin-top: 2px; }
+  .pv-a-time { font-family: 'Geist Mono', monospace; font-size: 10px; color: var(--ink-3); text-align: right; }
+  .case:hover .pv-a-row { transform: translateX(4px); }
+  .case:hover .pv-a-row:nth-child(2) { background: var(--a-tint); border-radius: 4px; }
+
+  /* ─── Case B preview: waveform + transcript ─── */
+  .pv-b { padding: 38px 22px 22px; display: flex; flex-direction: column; gap: 14px; }
+  .pv-b-wave { display: flex; align-items: end; gap: 3px; height: 56px; }
+  .pv-b-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--b-accent), #F97316);
+    border-radius: 2px;
+    opacity: 0.85;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  .case:hover .pv-b-bar { animation-duration: 0.9s; }
+  @keyframes pulse {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+  }
+  .pv-b-bar:nth-child(1) { animation-delay: 0s; }
+  .pv-b-bar:nth-child(2) { animation-delay: 0.1s; }
+  .pv-b-bar:nth-child(3) { animation-delay: 0.05s; }
+  .pv-b-bar:nth-child(4) { animation-delay: 0.2s; }
+  .pv-b-bar:nth-child(5) { animation-delay: 0.15s; }
+  .pv-b-bar:nth-child(6) { animation-delay: 0.3s; }
+  .pv-b-bar:nth-child(7) { animation-delay: 0.05s; }
+  .pv-b-bar:nth-child(8) { animation-delay: 0.25s; }
+  .pv-b-bar:nth-child(9) { animation-delay: 0.1s; }
+  .pv-b-bar:nth-child(10) { animation-delay: 0.18s; }
+  .pv-b-bar:nth-child(11) { animation-delay: 0.32s; }
+  .pv-b-bar:nth-child(12) { animation-delay: 0.08s; }
+  .pv-b-bar:nth-child(13) { animation-delay: 0.22s; }
+  .pv-b-bar:nth-child(14) { animation-delay: 0.14s; }
+  .pv-b-bar:nth-child(15) { animation-delay: 0.27s; }
+  .pv-b-line {
+    display: flex; gap: 10px; align-items: start;
+    font-size: 11.5px; line-height: 1.4; color: var(--ink-2);
+  }
+  .pv-b-who {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    flex-shrink: 0;
+    width: 56px;
+    padding-top: 1px;
+  }
+  .pv-b-text { font-style: italic; font-family: 'Instrument Serif', serif; font-size: 14px; line-height: 1.3; color: var(--ink); }
+
+  /* ─── Case C preview: PO routing ─── */
+  .pv-c { padding: 38px 22px 22px; }
+  .pv-c-grid {
+    display: grid;
+    grid-template-columns: 1fr 14px 1fr;
+    gap: 6px;
+    align-items: center;
+    height: 100%;
+  }
+  .pv-c-card {
+    padding: 10px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: #fff;
+    font-size: 10px;
+  }
+  .pv-c-card-id { font-family: 'Geist Mono', monospace; color: var(--ink-3); font-size: 9.5px; }
+  .pv-c-card-name { font-weight: 500; margin-top: 4px; color: var(--ink); font-size: 11px; }
+  .pv-c-card-meta { color: var(--ink-3); font-size: 10px; margin-top: 4px; }
+  .pv-c-arrow {
+    color: var(--c-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .5s cubic-bezier(.2,.7,.2,1);
+  }
+  .case:hover .pv-c-arrow { transform: translateX(2px); }
+  .pv-c-dest {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pv-c-bucket {
+    padding: 8px 10px;
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+    font-size: 10px;
+    color: var(--ink-3);
+    background: rgba(255,255,255,0.4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .pv-c-bucket.active {
+    border-style: solid;
+    border-color: var(--c-accent);
+    background: var(--c-tint);
+    color: var(--ink);
+  }
+  .pv-c-bucket-count {
+    font-family: 'Geist Mono', monospace;
+    background: rgba(15,118,110,0.15);
+    color: var(--c-accent);
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 10px;
+  }
+
+  /* ───────── Footer ───────── */
+  .footer {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 60px 48px 80px;
     border-top: 1px solid var(--rule);
-    font-family: var(--mono); font-size: 11px;
-    color: var(--ink-faint); letter-spacing: 0.04em;
-    text-align: center; text-transform: uppercase;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    color: var(--ink-3);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .footer-note { max-width: 60ch; }
+  .footer-note b { color: var(--ink); font-weight: 500; }
+  .footer-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
   }
 
-  @media (max-width: 720px) {
-    main { padding: 32px 16px 64px; }
-    .cases { grid-template-columns: 1fr; }
-    .flagship-link { flex-direction: column; align-items: flex-start; }
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: reveal 0.9s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  @keyframes reveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal-1 { animation-delay: 0.05s; }
+  .reveal-2 { animation-delay: 0.18s; }
+  .reveal-3 { animation-delay: 0.28s; }
+  .reveal-4 { animation-delay: 0.42s; }
+  .reveal-5 { animation-delay: 0.5s; }
+  .reveal-6 { animation-delay: 0.6s; }
+  .reveal-7 { animation-delay: 0.7s; }
+
+  @media (max-width: 1000px) {
+    .nav-inner, .hero, .section-head, .cases, .footer { padding-left: 24px; padding-right: 24px; }
+    .hero-sub, .case { grid-template-columns: 1fr; gap: 24px; }
+    .case-num { font-size: 22px; padding: 0; }
+    .case-preview { aspect-ratio: 16/10; }
   }
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-<nav class="toc" aria-label="Section navigation">
-  <div class="inner">
-    <span class="brand">Mario Becerra · Range</span>
-    <a href="../../">Portfolio</a>
-    <a href="../">Pipeline</a>
-    <a href="../engagement/">Engagement flagship</a>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <div class="nav-logo"><span class="nav-logo-dot"></span>Mario Rafael Becerra Dueñas</div>
+      <div class="nav-eyebrow mono">LXD / SCORM 1.2</div>
+    </div>
+    <div class="nav-right mono">
+      <a href="#">Portfolio</a>
+      <a href="#">Pipeline</a>
+      <a href="#">Flagship</a>
+    </div>
   </div>
 </nav>
 
-<main id="main">
-  <header class="hero">
-    <div class="kicker">3 SCORM mini-cases &middot; range bookend</div>
-    <h1>Same discipline, <span class="accent">three verticals.</span></h1>
-    <p class="lede">
-      Three tight single-keystone SCORM 1.2 builds — compliance / phishing,
-      call-centre soft-skills, ERP rollout. Each one ships as a working
-      package ready for any SCORM 1.2 LMS. Built to show the same
-      instructional-design discipline scales down to a focused deliverable.
-    </p>
-  </header>
-
-  <div class="bookend-note">
-    <strong>The FinTechCard flagship case</strong> shows depth — one engagement,
-    seven phases (PM → Iterate), six SCORM modules, 20 frameworks. <strong>These three cases</strong>
-    show range — how the same discipline scales down to a single keystone
-    moment, picked because it's where the business actually loses money or
-    time today.
-  </div>
-
-  <section class="cases" aria-label="Three mini-cases">
-
-    <article class="case">
-      <span class="case__vertical">Compliance &middot; security</span>
-      <h2 class="case__title">Phish-or-Pass</h2>
-      <div class="case__sub">day-1 inbox triage &middot; new-hire onboarding</div>
-      <p class="case__keystone">
-        <strong>Keystone:</strong> triage a 4-message simulated inbox under
-        time pressure. One trick-positive teaches when <em>not</em> to escalate
-        — the part awareness training usually skips.
-      </p>
-      <div class="case__kpis">
-        <div class="kpi"><span class="kpi-name">L3 click-rate</span> <span class="kpi-val">18% &rarr; &le;5%</span></div>
-        <div class="kpi"><span class="kpi-name">L4 incidents (new hires)</span> <span class="kpi-val">2/q &rarr; &le;1/yr</span></div>
-        <div class="kpi"><span class="kpi-name">Cohort</span> <span class="kpi-val">8-15 / month</span></div>
-      </div>
-      <div class="case__actions">
-        <a class="case__btn case__btn--primary" href="case-A-security-onboarding/scorm-package/index.html">Try live &rarr;</a>
-        <a class="case__btn case__btn--ghost" href="case-A-security-onboarding/case-brief.html">Read brief</a>
-        <a class="case__btn case__btn--ghost" href="case-A-security-onboarding/case-A-phish-or-pass.zip" download>SCORM 1.2 zip</a>
-      </div>
-    </article>
-
-    <article class="case">
-      <span class="case__vertical">Customer service &middot; soft skills</span>
-      <h2 class="case__title">First-30-Seconds</h2>
-      <div class="case__sub">call-centre de-escalation &middot; 4-branch decision</div>
-      <p class="case__keystone">
-        <strong>Keystone:</strong> pick the LAER-aligned reply at 4 branching
-        points of an angry-customer call. Wrong choices escalate the customer
-        audibly in the transcript.
-      </p>
-      <div class="case__kpis">
-        <div class="kpi"><span class="kpi-name">L3 first-call resolution</span> <span class="kpi-val">+8 pp target</span></div>
-        <div class="kpi"><span class="kpi-name">L3 escalation rate</span> <span class="kpi-val">-30%</span></div>
-        <div class="kpi"><span class="kpi-name">Module score</span> <span class="kpi-val">&ge;3/4 branches</span></div>
-      </div>
-      <div class="case__actions">
-        <a class="case__btn case__btn--primary" href="case-B-call-center-deescalation/scorm-package/index.html">Try live &rarr;</a>
-        <a class="case__btn case__btn--ghost" href="case-B-call-center-deescalation/case-brief.html">Read brief</a>
-        <a class="case__btn case__btn--ghost" href="case-B-call-center-deescalation/storyboard.html">Storyboard</a>
-        <a class="case__btn case__btn--ghost" href="case-B-call-center-deescalation/case-B-first-30-seconds.zip" download>SCORM zip</a>
-      </div>
-    </article>
-
-    <article class="case">
-      <span class="case__vertical">Tool rollout &middot; ERP</span>
-      <h2 class="case__title">Route-the-PO</h2>
-      <div class="case__sub">procurement go-live &middot; rules over UI</div>
-      <p class="case__keystone">
-        <strong>Keystone:</strong> route 3 purchase orders against the actual
-        business rules — not the ERP UI. Teaches what's true across UI
-        refactors, not what's true this quarter.
-      </p>
-      <div class="case__kpis">
-        <div class="kpi"><span class="kpi-name">L3 misrouted POs</span> <span class="kpi-val">-50% in 6w</span></div>
-        <div class="kpi"><span class="kpi-name">L3 hand-edits at finance</span> <span class="kpi-val">-60%</span></div>
-        <div class="kpi"><span class="kpi-name">Module score</span> <span class="kpi-val">3/3 correct</span></div>
-      </div>
-      <div class="case__actions">
-        <a class="case__btn case__btn--primary" href="case-C-erp-procurement-rollout/scorm-package/index.html">Try live &rarr;</a>
-        <a class="case__btn case__btn--ghost" href="case-C-erp-procurement-rollout/case-brief.html">Read brief</a>
-        <a class="case__btn case__btn--ghost" href="case-C-erp-procurement-rollout/case-C-route-the-po.zip" download>SCORM zip</a>
-      </div>
-    </article>
-
-  </section>
-
-  <section class="why">
-    <h2>Why these three verticals</h2>
-    <table>
-      <thead><tr><th>Case</th><th>Why typical training fails here</th><th>This build's counter-move</th></tr></thead>
-      <tbody>
-        <tr>
-          <td>A</td>
-          <td>"Watch 20-min video, click Next." Knowledge ≠ behaviour.</td>
-          <td>Realistic inbox simulator — the user must <em>act</em>, not recognise.</td>
-        </tr>
-        <tr>
-          <td>B</td>
-          <td>Scripts memorised then forgotten under pressure.</td>
-          <td>Branching where every wrong choice escalates the customer in transcript.</td>
-        </tr>
-        <tr>
-          <td>C</td>
-          <td>UI-tour training; UI changes 4 months later, behaviour resets.</td>
-          <td>Teach the <em>routing rules</em> (always true) using the UI as vehicle.</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <aside class="flagship-link">
-    <div>
-      <strong>Want depth instead of range?</strong>
-      <p>See the FinTechCard flagship — 16-week build, 7 phases (PM → Iterate), 6 SCORMs, 20 frameworks.</p>
+<section class="hero">
+  <div class="hero-eyebrow mono reveal reveal-1">Range bookends · 3 SCORM mini-cases</div>
+  <h1 class="hero-title reveal reveal-2">
+    Same discipline,<br/><em>three verticals.</em>
+  </h1>
+  <div class="hero-sub">
+    <div class="hero-sub-left mono reveal reveal-3">
+      <div>v2026.05 · Range</div>
+      <div style="margin-top:6px;">3 builds · 3 industries</div>
+      <div style="margin-top:6px;">SCORM 1.2 compliant</div>
     </div>
-    <a href="../engagement/">Open flagship case &rarr;</a>
-  </aside>
-</main>
+    <div class="hero-sub-right reveal reveal-4">
+      Three tight single-keystone builds — <strong>compliance / phishing</strong>, <strong>call-centre soft-skills</strong>, <strong>ERP rollout</strong>. Each one a working interaction shipped against the moment where the business actually loses money or time today.
+    </div>
+  </div>
+</section>
 
-<footer>
-  Mario Becerra &middot; LXD Portfolio &middot; <a href="../../" style="color:inherit;">portfolio root</a>
+<div class="section-head reveal reveal-5">
+  <div class="section-head-label mono">Index — three cases</div>
+  <div class="section-head-meta mono">
+    <span>01 — 03</span>
+    <span>Updated · May 2026</span>
+  </div>
+</div>
+
+<section class="cases">
+
+  <!-- ─────────── CASE A ─────────── -->
+  <a class="case reveal reveal-6" href="case-a-phish-or-pass.html"
+     style="--accent: var(--a-accent); --accent-tint: var(--a-tint);">
+    <div class="case-num">01</div>
+    <div class="case-body">
+      <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Compliance · security · onboarding</div>
+      <h2 class="case-title">Phish-or-Pass</h2>
+      <p class="case-blurb">Day-1 inbox triage. New-hire onboarding deliverable for a 8–15 / month cohort.</p>
+      <div class="case-keystone">
+        <b>Keystone —</b> triage a four-message simulated inbox under soft time pressure. One <em>trick-positive</em> teaches when <em>not</em> to escalate — the part awareness training usually skips.
+      </div>
+      <div class="case-kpis">
+        <span class="kpi"><span class="kpi-label">L3</span> click-rate 18% → ≤5%</span>
+        <span class="kpi"><span class="kpi-label">L4</span> incidents 2/q → ≤1/yr</span>
+        <span class="kpi"><span class="kpi-label">Cohort</span> 8–15/mo</span>
+      </div>
+      <div class="case-actions">
+        <span class="case-cta">Open simulation <span class="case-cta-arrow">→</span></span>
+        <span class="case-secondary">Read brief</span>
+      </div>
+    </div>
+    <div class="case-preview">
+      <div class="preview-corner mono">INBOX — DAY 1</div>
+      <div class="pv-a">
+        <div class="pv-a-row">
+          <span class="pv-a-flag amber"></span>
+          <div>
+            <div class="pv-a-from">IT Helpdesk</div>
+            <div class="pv-a-sub">Password expires today — verify identity</div>
+          </div>
+          <div class="pv-a-time">09:14</div>
+        </div>
+        <div class="pv-a-row">
+          <span class="pv-a-flag green"></span>
+          <div>
+            <div class="pv-a-from">Sarah Chen, People Ops</div>
+            <div class="pv-a-sub">Welcome — your week-1 checklist</div>
+          </div>
+          <div class="pv-a-time">08:46</div>
+        </div>
+        <div class="pv-a-row">
+          <span class="pv-a-flag red"></span>
+          <div>
+            <div class="pv-a-from">CEO (external sender)</div>
+            <div class="pv-a-sub">Quick favour — are you at your desk?</div>
+          </div>
+          <div class="pv-a-time">08:22</div>
+        </div>
+        <div class="pv-a-row">
+          <span class="pv-a-flag"></span>
+          <div>
+            <div class="pv-a-from">DocuSign</div>
+            <div class="pv-a-sub">Contract awaiting your signature</div>
+          </div>
+          <div class="pv-a-time">07:58</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- ─────────── CASE B ─────────── -->
+  <a class="case reveal reveal-7" href="case-b-first-30-seconds.html"
+     style="--accent: var(--b-accent); --accent-tint: var(--b-tint);">
+    <div class="case-num">02</div>
+    <div class="case-body">
+      <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Customer service · soft skills · LAER</div>
+      <h2 class="case-title">First-30-Seconds</h2>
+      <p class="case-blurb">Call-centre de-escalation, four-branch decision. Every wrong reply escalates the customer audibly.</p>
+      <div class="case-keystone">
+        <b>Keystone —</b> pick the LAER-aligned reply at four branch points of an angry-customer call. Scripts memorised crack under pressure; the wrong choices show you exactly how.
+      </div>
+      <div class="case-kpis">
+        <span class="kpi"><span class="kpi-label">L3</span> FCR +8 pp target</span>
+        <span class="kpi"><span class="kpi-label">L3</span> escalation -30%</span>
+        <span class="kpi"><span class="kpi-label">Score</span> ≥ 3 / 4 branches</span>
+      </div>
+      <div class="case-actions">
+        <span class="case-cta">Open simulation <span class="case-cta-arrow">→</span></span>
+        <span class="case-secondary">Read brief</span>
+      </div>
+    </div>
+    <div class="case-preview">
+      <div class="preview-corner mono">LIVE CALL — 00:00:14</div>
+      <div class="pv-b">
+        <div class="pv-b-wave" aria-hidden="true">
+          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
+          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
+          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
+          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
+          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
+        </div>
+        <div class="pv-b-line">
+          <div class="pv-b-who">Caller</div>
+          <div class="pv-b-text">"This is the third time I've called about this."</div>
+        </div>
+        <div class="pv-b-line">
+          <div class="pv-b-who">You</div>
+          <div class="pv-b-text" style="color: var(--ink-3); font-style: normal; font-family: 'Geist Mono', monospace; font-size: 11px;">[choose your opener]</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- ─────────── CASE C ─────────── -->
+  <a class="case" href="case-c-route-the-po.html"
+     style="--accent: var(--c-accent); --accent-tint: var(--c-tint);">
+    <div class="case-num">03</div>
+    <div class="case-body">
+      <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Tool rollout · ERP · procurement</div>
+      <h2 class="case-title">Route-the-PO</h2>
+      <p class="case-blurb">Go-live training that survives the next UI refactor. Rules over screens.</p>
+      <div class="case-keystone">
+        <b>Keystone —</b> route three purchase orders against the actual business rules — not the ERP UI. Teaches what's true across UI refactors, not what's true this quarter.
+      </div>
+      <div class="case-kpis">
+        <span class="kpi"><span class="kpi-label">L3</span> misrouted POs -50% / 6w</span>
+        <span class="kpi"><span class="kpi-label">L3</span> hand-edits -60%</span>
+        <span class="kpi"><span class="kpi-label">Score</span> 3 / 3 correct</span>
+      </div>
+      <div class="case-actions">
+        <span class="case-cta">Open simulation <span class="case-cta-arrow">→</span></span>
+        <span class="case-secondary">Read brief</span>
+      </div>
+    </div>
+    <div class="case-preview">
+      <div class="preview-corner mono">PO-2026-0341 · ROUTE</div>
+      <div class="pv-c">
+        <div class="pv-c-grid">
+          <div class="pv-c-card">
+            <div class="pv-c-card-id">PO-2026-0341</div>
+            <div class="pv-c-card-name">Acme Industrial</div>
+            <div class="pv-c-card-meta">€ 12,480 · CapEx · Vendor T2</div>
+          </div>
+          <div class="pv-c-arrow">→</div>
+          <div class="pv-c-dest">
+            <div class="pv-c-bucket">Auto-approve <span class="pv-c-bucket-count">—</span></div>
+            <div class="pv-c-bucket active">Finance review <span class="pv-c-bucket-count">1</span></div>
+            <div class="pv-c-bucket">Hold for legal <span class="pv-c-bucket-count">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+</section>
+
+<footer class="footer">
+  <div class="footer-note">
+    <b>Why these three verticals?</b> Each one is where typical training breaks — watching a video, memorising a script, taking a UI tour. The mini-cases counter each failure with the specific behaviour the business actually needs at the keystone moment.
+  </div>
+  <a class="footer-link" href="#">Open flagship case <span>→</span></a>
 </footer>
+
+<script>
+  // Subtle parallax on case previews while scrolling — sets vibe without being noisy.
+  const previews = document.querySelectorAll('.case-preview');
+  let ticking = false;
+  function update() {
+    const vh = window.innerHeight;
+    previews.forEach(p => {
+      const r = p.getBoundingClientRect();
+      const center = r.top + r.height / 2;
+      const t = (center - vh / 2) / vh; // -ish range
+      p.style.setProperty('transform', `translateY(${Math.max(-8, Math.min(8, t * -8))}px)`);
+    });
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+  update();
+</script>
+
 </body>
 </html>
