@@ -775,11 +775,19 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .fm-v { font-family: var(--sans); font-size: 14px; line-height: 1.45; color: var(--ink); }
 
-#flagship .flag-cta {
-  display: flex; gap: 10px; flex-wrap: wrap;
-  padding-top: 12px;
-  border-top: 1px solid var(--rule);
-  margin-top: 0;
+/* Section-head with right-aligned CTA button (overrides default count slot) */
+.flag-head { align-items: end; }
+.flag-head .flag-head-cta {
+  justify-self: end;
+  align-self: end;
+  white-space: nowrap;
+  margin-bottom: 4px;
+}
+@media (max-width: 720px) {
+  .flag-head .flag-head-cta {
+    justify-self: start;
+    margin-top: 10px;
+  }
 }
 
 /* ---------- background · logos + services ---------- */
@@ -2783,10 +2791,13 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
 <!-- ============ FLAGSHIP ============ -->
 <section class="wrap" id="flagship">
-  <div class="section-head">
+  <div class="section-head flag-head">
     <span class="num">§ 03 / FLAGSHIP</span>
     <h2>GrassLMS<br>my own <em>LMS</em></h2>
-    <span class="count">production · <a href="https://grasslms.online" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid currentColor;">grasslms.online&nbsp;↗</a></span>
+    <a class="btn primary flag-head-cta" href="https://grasslms.online" target="_blank" rel="noopener">
+      <span>Open the live LMS</span>
+      <span class="arr">↗</span>
+    </a>
   </div>
 
   <div class="flag-intro">
@@ -2917,12 +2928,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     </div>
   </div>
 
-  <div class="flag-cta">
-    <a class="btn primary" href="https://grasslms.online" target="_blank" rel="noopener">
-      <span>Open the live LMS</span>
-      <span class="arr">↗</span>
-    </a>
-  </div>
 </section>
 
 <!-- ============ PORTFOLIO DEMOS ============ -->
