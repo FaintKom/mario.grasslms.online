@@ -2352,6 +2352,104 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   .foot-legal{ flex-direction: column; align-items: flex-start; }
 }
 
+/* ============ MINI-INDEX (§ 01 quick-jump) ============ */
+.case-jumper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: 14px 16px;
+  margin: 0 0 18px;
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+.case-jumper .cj-k {
+  color: var(--ink-faint);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin-right: 4px;
+}
+.case-jumper a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 2px 4px;
+  color: var(--ink);
+  border-bottom: 1px solid transparent;
+  transition: color .12s, border-color .12s;
+}
+.case-jumper a i {
+  font-style: normal;
+  color: var(--ink-dim);
+  font-weight: 400;
+}
+.case-jumper a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.case-jumper a:hover i { color: var(--accent); }
+.case-jumper a.cj-cur {
+  color: var(--accent);
+  font-weight: 600;
+}
+.case-jumper a.cj-cur i { color: var(--accent); }
+.case-jumper .cj-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 60%, transparent);
+  animation: pulse 2.4s infinite;
+  display: inline-block;
+  margin-left: 2px;
+  align-self: center;
+}
+.case-jumper .cj-sep { color: var(--rule-strong); user-select: none; }
+@media (max-width: 600px) {
+  .case-jumper { font-size: 10.5px; padding: 12px 14px; }
+  .case-jumper .cj-sep { display: none; }
+}
+
+/* ============ SERVICE proof line (§ 05) ============ */
+.bg-svc { grid-template-rows: auto auto 1fr auto; }
+.bg-svc-p {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+/* ============ DEMO card treatment (§ 04) ============ */
+.case-tag--demo {
+  background: var(--sun-300, #ffe066);
+  color: var(--ink, #0a1a10);
+  font-family: var(--mono);
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 2px;
+  letter-spacing: .06em;
+}
+.syn-pill {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--coral-700, #c33d22);
+  background: var(--coral-50, #fff0eb);
+  border: 1px solid color-mix(in oklab, var(--coral-700, #c33d22) 30%, transparent);
+  border-radius: 2px;
+  vertical-align: 2px;
+}
+.case--demo .case-employer { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+
 </style>
 </head>
 <body>
@@ -2366,7 +2464,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <nav>
       <a class="navlink" href="#cases">Cases</a>
       <a class="navlink" href="#services">Tools</a>
-      <a class="navlink" href="#flagship">Flagship</a>
+      <a class="navlink" href="#flagship">GrassLMS</a>
       <a class="navlink" href="#demos">Demos</a>
       <a class="navlink" href="#background">Services</a>
       <a class="navlink" href="#contact">Booking</a>
@@ -2391,9 +2489,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <b>Learning Experience Designer</b> with 10+ years in EdTech. End-to-end curricula at Yandex Practicum, TripleTen and BEAM Institute — plus the AI tooling that lets a content team ship faster: 4C/ID pipelines, internal automations, an LMS shipped solo.
     </p>
     <div class="hero-actions">
-      <div class="hero-actions-secondary hero-actions-secondary--large">
+      <a class="hero-pipeline-cta" href="pipeline/engagement/">Open the SCORM + mini-OS sandbox <span class="arrow">→</span></a>
+      <div class="hero-actions-secondary">
         <a class="hero-link" href="pipeline/mini-cases/">3 SCORM mini-cases <span class="arrow">→</span></a>
-        <a class="hero-link" href="pipeline/engagement/">SCORM + mini-OS sandbox <span class="arrow">→</span></a>
         <a class="hero-link" href="Mario_Becerra_CV.pdf" target="_blank" rel="noopener">CV (PDF) <span class="arrow">↓</span></a>
         <a class="hero-link" href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
         <a class="hero-link" href="mailto:mrbecerraduenias@gmail.com">Email</a>
@@ -2420,10 +2518,27 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ REAL CLIENT WORK ============ -->
 <section class="wrap" id="cases">
   <div class="section-head">
-    <span class="num">§ 01 / REAL CLIENT WORK</span>
+    <span class="num">§ 01 / CASES</span>
     <h2>Recent <em>programs</em></h2>
-    <span class="count">recent · selected · 50+ shipped total</span>
+    <span class="count">real client work · selected · 50+ shipped total</span>
   </div>
+
+  <!-- Mini-index · quick-jump within §01 -->
+  <nav class="case-jumper" aria-label="Jump to a case">
+    <span class="cj-k">Jump</span>
+    <a href="#c01">01 <i>UX/UI</i></a>
+    <a href="#c02">02 <i>Graphic</i></a>
+    <a href="#c03">03 <i>Marketing</i></a>
+    <span class="cj-sep">·</span>
+    <a href="#c04">04 <i>Mgmt</i></a>
+    <a href="#c05">05 <i>Backend</i></a>
+    <a href="#c06">06 <i>AI</i></a>
+    <span class="cj-sep">·</span>
+    <a href="#c07">07 <i>Data Gov</i></a>
+    <a href="#c08">08 <i>AI for PMs</i></a>
+    <span class="cj-sep">·</span>
+    <a href="#c09" class="cj-cur">09 <i>Algonova</i> <span class="cj-dot"></span></a>
+  </nav>
 
   <!-- Yandex Practicum band -->
   <div class="cases-band">
@@ -2432,7 +2547,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="cases">
 
-    <article class="case">
+    <article class="case" id="c01">
       <div class="case-head">
         <span class="case-num">— 01</span>
         <span class="case-tag">UX / UI · career-change + level-up</span>
@@ -2447,7 +2562,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <a class="case-cta" href="pipeline/artefacts/addie-case-yandex/" target="_blank">ADDIE walk-through <span class="arrow">→</span></a>
     </article>
 
-    <article class="case">
+    <article class="case" id="c02">
       <div class="case-head">
         <span class="case-num">— 02</span>
         <span class="case-tag">Graphic design · career-change</span>
@@ -2461,7 +2576,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
     </article>
 
-    <article class="case">
+    <article class="case" id="c03">
       <div class="case-head">
         <span class="case-num">— 03</span>
         <span class="case-tag">Marketing · career-change</span>
@@ -2484,7 +2599,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="cases">
 
-    <article class="case">
+    <article class="case" id="c04">
       <div class="case-head">
         <span class="case-num">— 04</span>
         <span class="case-tag">Management · B2B microcourses</span>
@@ -2498,7 +2613,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
     </article>
 
-    <article class="case">
+    <article class="case" id="c05">
       <div class="case-head">
         <span class="case-num">— 05</span>
         <span class="case-tag">Backend · B2B microcourses</span>
@@ -2512,7 +2627,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
     </article>
 
-    <article class="case">
+    <article class="case" id="c06">
       <div class="case-head">
         <span class="case-num">— 06</span>
         <span class="case-tag">AI · B2B microcourses</span>
@@ -2535,7 +2650,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="cases">
 
-    <article class="case">
+    <article class="case" id="c07">
       <div class="case-head">
         <span class="case-num">— 07</span>
         <span class="case-tag">Data Governance · from scratch</span>
@@ -2549,7 +2664,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
     </article>
 
-    <article class="case">
+    <article class="case" id="c08">
       <div class="case-head">
         <span class="case-num">— 08</span>
         <span class="case-tag">AI for PMs · from scratch</span>
@@ -2572,7 +2687,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="cases">
 
-    <article class="case">
+    <article class="case" id="c09">
       <div class="case-head">
         <span class="case-num">— 09</span>
         <span class="case-tag">Consulting · L&amp;D · current</span>
@@ -2918,32 +3033,32 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="cases">
 
-    <article class="case" data-demo="true">
+    <article class="case case--demo" data-demo="true">
       <div class="case-head">
         <span class="case-num">— D1</span>
-        <span class="case-tag" style="background:var(--sun-300,#ffe066);color:var(--ink,#0a1a10);">📐 SCORM + mini-OS sandbox</span>
+        <span class="case-tag case-tag--demo">DEMO · SCORM + mini-OS sandbox</span>
       </div>
-      <div class="case-employer">SDR onboarding <span style="color:var(--ink-faint);font-weight:400;font-size:0.85em;">(synthetic brief)</span></div>
+      <div class="case-employer">SDR onboarding <span class="syn-pill">synthetic brief</span></div>
       <h3>6 SCORM modules<br>inside a custom <em>mini-OS</em></h3>
       <p class="case-period">Self-contained sandbox · SCORM 1.2 · runs in any LMS or standalone</p>
       <p class="case-desc">6 SCORM 1.2 modules running inside a custom mini-OS that simulates the SDR's real workspace — Outreach, Gong, Salesforce, LinkedIn, Calendar, phone-dialler, Slack. Shows how scenario-based onboarding can drop the learner into a believable working environment instead of a slide deck.</p>
       <div class="case-tags">
-        <span>SCORM 1.2</span><span>mini-OS sim</span><span>scenario-based</span><span>6 modules</span><span style="background:var(--sun-50,#fffbe5);">illustrative</span>
+        <span>SCORM 1.2</span><span>mini-OS sim</span><span>scenario-based</span><span>6 modules</span>
       </div>
       <a class="case-cta" href="pipeline/engagement/" target="_blank">Open the sandbox <span class="arrow">→</span></a>
     </article>
 
-    <article class="case" data-demo="true">
+    <article class="case case--demo" data-demo="true">
       <div class="case-head">
         <span class="case-num">— D2</span>
-        <span class="case-tag" style="background:var(--sun-300,#ffe066);color:var(--ink,#0a1a10);">📐 SCORM mini-cases · illustrative</span>
+        <span class="case-tag case-tag--demo">DEMO · SCORM mini-cases</span>
       </div>
-      <div class="case-employer">Three mini-briefs <span style="color:var(--ink-faint);font-weight:400;font-size:0.85em;">(synthetic)</span></div>
+      <div class="case-employer">Three mini-briefs <span class="syn-pill">synthetic</span></div>
       <h3>Three small SCORM<br><em>shipped</em> end-to-end</h3>
       <p class="case-period">Built end-to-end as portfolio pieces · single-LXD</p>
       <p class="case-desc">Three tightly-scoped SCORM 1.2 packages built to show short-form delivery: security onboarding, call-centre de-escalation, ERP procurement rollout. Each: analysis brief → microlearning sequence → quizzes → SCORM package ready to drop into an LMS.</p>
       <div class="case-tags">
-        <span>SCORM 1.2</span><span>microlearning</span><span>quiz interactions</span><span style="background:var(--sun-50,#fffbe5);">illustrative</span>
+        <span>SCORM 1.2</span><span>microlearning</span><span>quiz interactions</span>
       </div>
       <a class="case-cta" href="pipeline/mini-cases/" target="_blank">See the demos <span class="arrow">→</span></a>
     </article>
@@ -2954,7 +3069,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ SERVICES I OFFER ============ -->
 <section class="wrap" id="background">
   <div class="section-head">
-    <span class="num">§ 05 / WHAT I OFFER</span>
+    <span class="num">§ 05 / SERVICES</span>
     <h2>What I <em>offer</em></h2>
     <span class="count">10+ years · EdTech</span>
   </div>
@@ -2966,31 +3081,37 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         <span class="bg-svc-n">01</span>
         <span class="bg-svc-t">AI content-generation pipelines</span>
         <span class="bg-svc-d">Brief → generate → judge → publish. LLM-as-judge eval loop, rubric scoring, retries, drift detection.</span>
+        <span class="bg-svc-p">60–85% content time ↓</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">02</span>
         <span class="bg-svc-t">Focused tools for ID teams</span>
         <span class="bg-svc-d">Userscripts, slide/board generators, autofill, Telegram bots — single-problem tools that save hours per week.</span>
+        <span class="bg-svc-p">~5h / wk per ID</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">03</span>
         <span class="bg-svc-t">Adaptive curriculum architecture</span>
         <span class="bg-svc-d">Skill graphs, observable objectives, BKT mastery models. The spine that makes adaptive lesson assembly possible.</span>
+        <span class="bg-svc-p">212 topics · ~200 skills</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">04</span>
         <span class="bg-svc-t">AI consulting &amp; L&amp;D for ID teams</span>
         <span class="bg-svc-d">Workshops, mentoring, prompt-engineering systems. Helping IDs use AI without losing craft.</span>
+        <span class="bg-svc-p">current at Algonova</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">05</span>
         <span class="bg-svc-t">End-to-end ID engagements</span>
         <span class="bg-svc-d">ADDIE / 4C/ID full cycle: analysis → design → build → eval. Solo or with SMEs.</span>
+        <span class="bg-svc-p">9 programs · Yandex / TripleTen / BEAM</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">06</span>
         <span class="bg-svc-t">Full-stack EdTech platforms</span>
         <span class="bg-svc-d">LMS / course platforms shipped solo — DB, backend, frontend, billing, deploy. <a href="https://grasslms.online" target="_blank" rel="noopener">GrassLMS</a> is the reference.</span>
+        <span class="bg-svc-p">80+ features · shipped solo</span>
       </div>
     </div>
   </div>
