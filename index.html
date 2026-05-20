@@ -2254,12 +2254,17 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   </div>
 </section>
 
-<!-- ============ SERVICES ============ -->
+<!-- ============ TOOLS ============ -->
 <section class="wrap" id="services">
   <div class="section-head">
-    <span class="num">§ 02 / SERVICES</span>
-    <h2>Four things<br>I build</h2>
-    <span class="count">across 10 yrs in EdTech</span>
+    <span class="num">§ 02 / TOOLS</span>
+    <h2>Tools I built<br>for <em>instructional</em> teams</h2>
+    <span class="count">focused · pipeline</span>
+  </div>
+
+  <!-- Focused tools band -->
+  <div class="cases-band">
+    <h3 class="band-head"><span class="band-k">Focused</span><span class="band-v">One problem · time saved · drop-in</span></h3>
   </div>
 
   <div class="services">
@@ -2267,48 +2272,145 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <article class="service">
       <span class="service-num">01</span>
       <div class="service-head">
-        <span class="service-tag">AI pipelines</span>
+        <span class="service-tag">Userscript · autofill</span>
       </div>
-      <h3>AI pipelines<br>for <em>content</em></h3>
-      <p class="service-desc">Course generation with 4C/ID, auto-deploy to LMS via REST API, lesson-review normalization, and slide/board generators for instructional designers.</p>
+      <h3>Teacher autofill<br><em>userscript</em></h3>
+      <p class="service-desc">Flask backend + Tampermonkey userscripts that fill matching, categorisation and fill-in-the-blank tests across teacher-training platforms. Cuts hours of routine clicking per week per instructional designer.</p>
       <div class="service-proof">
         <span class="pl">proof</span>
         <ul>
-          <li>4C/ID course generator (143kb)</li>
-          <li>seed_course.py → GrassLMS REST</li>
-          <li>Lesson Review Toolkit</li>
-          <li>Math Slides Add-on</li>
+          <li>Flask + Tampermonkey</li>
+          <li>Matching · categorisation · fill-in</li>
+          <li>~5h / wk saved per ID</li>
         </ul>
       </div>
-      <div class="service-metric">60–85%<span class="unit">content time ↓</span></div>
+      <div class="service-metric">~5<span class="unit">h/wk ↓</span></div>
     </article>
 
     <article class="service">
       <span class="service-num">02</span>
       <div class="service-head">
-        <span class="service-tag">Interactive</span>
+        <span class="service-tag">Telegram bot</span>
       </div>
-      <h3>Simulators &amp;<br><em>hands-on</em> practice</h3>
-      <p class="service-desc">Code sandboxes with autograding, 2D robot programming puzzles, 3D exploration worlds, Desmos-integrated math interactives, SAT Math widgets.</p>
+      <h3>Homework <em>bot</em><br>on Telegram</h3>
+      <p class="service-desc">Telegram bot that pushes homework prompts, collects submissions and surfaces them in a triage view for instructors. Replaces a chat-thread mess with structured tracking, without forcing learners onto a new platform.</p>
       <div class="service-proof">
         <span class="pl">proof</span>
         <ul>
-          <li>Code editor · 37 languages</li>
-          <li>9 lesson types · 11 exercise formats</li>
-          <li>SAT Math widgets (63kb)</li>
-          <li>Monaco + TipTap + R3F</li>
+          <li>Telegram Bot API</li>
+          <li>Submission triage view</li>
+          <li>No new platform for learners</li>
         </ul>
       </div>
-      <div class="service-metric">11<span class="unit">exercise types</span></div>
+      <div class="service-metric">↻<span class="unit">async</span></div>
     </article>
 
     <article class="service">
       <span class="service-num">03</span>
       <div class="service-head">
-        <span class="service-tag">Internal tooling</span>
+        <span class="service-tag">Google Slides add-on</span>
       </div>
-      <h3>Tools for<br><em>instructional</em> teams</h3>
-      <p class="service-desc">Userscript helpers, Tampermonkey automations, Telegram bots, HTML viewers, dashboards, prompt-engineering systems — cutting routine across EdTech teams.</p>
+      <h3>Math Slides<br><em>add-on</em></h3>
+      <p class="service-desc">Google Slides add-on with branded template, layout catalogue and custom math font. Drops the cost of producing a maths deck from ~2 hours to ~15 minutes per deck while keeping brand integrity.</p>
+      <div class="service-proof">
+        <span class="pl">proof</span>
+        <ul>
+          <li>Branded template + layouts</li>
+          <li>Custom math font</li>
+          <li>2h → 15 min per deck</li>
+        </ul>
+      </div>
+      <div class="service-metric">85%<span class="unit">time ↓</span></div>
+    </article>
+
+    <article class="service">
+      <span class="service-num">04</span>
+      <div class="service-head">
+        <span class="service-tag">JSON → slides</span>
+      </div>
+      <h3>Presentation <em>generator</em><br>from JSON</h3>
+      <p class="service-desc">Takes a lesson-plan JSON and emits a branded-template Google Slides deck. Used by instructional designers to skip the layout step entirely — the deck arrives ready for content polish.</p>
+      <div class="service-proof">
+        <span class="pl">proof</span>
+        <ul>
+          <li>JSON → branded deck</li>
+          <li>Layouts &amp; brand pre-applied</li>
+          <li>Pairs with lesson-plan output</li>
+        </ul>
+      </div>
+      <div class="service-metric">2h → 15m<span class="unit">per deck</span></div>
+    </article>
+
+    <article class="service">
+      <span class="service-num">05</span>
+      <div class="service-head">
+        <span class="service-tag">JSON → Miro / Figma</span>
+      </div>
+      <h3>Board <em>generator</em><br>for Miro &amp; Figma</h3>
+      <p class="service-desc">Python tool that takes structured input and generates branded Miro / Figma boards via API — for workshops, lesson canvases, retros. Brand config + layout templates baked in so output stays consistent across teams.</p>
+      <div class="service-proof">
+        <span class="pl">proof</span>
+        <ul>
+          <li>Python + Miro / Figma APIs</li>
+          <li>Brand config + layouts</li>
+          <li>Workshop / lesson canvases</li>
+        </ul>
+      </div>
+      <div class="service-metric">↻<span class="unit">automation</span></div>
+    </article>
+
+  </div>
+
+  <!-- Pipeline tools band -->
+  <div class="cases-band">
+    <h3 class="band-head"><span class="band-k">Pipeline</span><span class="band-v">Multi-step systems · data → decision → artefact</span></h3>
+  </div>
+
+  <div class="services">
+
+    <article class="service">
+      <span class="service-num">06</span>
+      <div class="service-head">
+        <span class="service-tag">Adaptive curriculum · knowledge graph</span>
+      </div>
+      <h3>Adaptive curriculum<br><em>knowledge graph</em></h3>
+      <p class="service-desc">Curriculum spine for an AI-personalised K-3 math platform. Knowledge graph of skills + observable action-level objectives drives diagnostic assessment, BKT mastery estimation and adaptive lesson assembly per learner.</p>
+      <div class="service-proof">
+        <span class="pl">proof</span>
+        <ul>
+          <li>45 modules · 212 topics</li>
+          <li>~200 skills (G1–G3)</li>
+          <li>BKT · lesson assembly</li>
+        </ul>
+      </div>
+      <div class="service-metric">K-3<span class="unit">math · live</span></div>
+    </article>
+
+    <article class="service">
+      <span class="service-num">07</span>
+      <div class="service-head">
+        <span class="service-tag">Methodist dashboard</span>
+      </div>
+      <h3>Methodist <em>dashboard</em><br>for Algorithmika</h3>
+      <p class="service-desc">Internal dashboard for a CS-curriculum team: catalogues lesson assets, tracks review state, surfaces methodology references, and exposes MCP-server endpoints so AI tools plug in directly to the same source of truth.</p>
+      <div class="service-proof">
+        <span class="pl">proof</span>
+        <ul>
+          <li>Lesson asset catalogue</li>
+          <li>Review-state pipeline</li>
+          <li>MCP endpoints for AI tools</li>
+        </ul>
+      </div>
+      <div class="service-metric">↻<span class="unit">internal</span></div>
+    </article>
+
+    <article class="service">
+      <span class="service-num">08</span>
+      <div class="service-head">
+        <span class="service-tag">Lesson QA · transcription pipeline</span>
+      </div>
+      <h3>Lesson QA<br><em>pipeline</em></h3>
+      <p class="service-desc">Multi-step pipeline that ingests Slack threads, Notion comments, mentor rubric forms and post-cohort survey CSVs, transcribes recorded lessons, then normalises everything into a triage-ready issue DB for the QA team.</p>
 
       <!-- Inline Lesson Review Toolkit pipeline demo (animated · no deep-link) -->
       <figure class="lrt-demo" aria-label="Lesson Review Toolkit pipeline demonstration">
@@ -2336,32 +2438,31 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <div class="service-proof">
         <span class="pl">proof</span>
         <ul>
-          <li>Teacher Education Autofill (~5h/wk ↓)</li>
-          <li>Miro Board Creator</li>
-          <li>Telegram homework bot · Lesson Review viewers</li>
-          <li>Prompt engineering systems</li>
+          <li>Sources → normalise → DB</li>
+          <li>Transcription of recorded lessons</li>
+          <li>Triage-ready for QA team</li>
         </ul>
       </div>
-      <div class="service-metric">↻<span class="unit">automation</span></div>
+      <div class="service-metric">↻<span class="unit">pipeline</span></div>
     </article>
 
     <article class="service">
-      <span class="service-num">04</span>
+      <span class="service-num">09</span>
       <div class="service-head">
-        <span class="service-tag">Full-stack LMS</span>
+        <span class="service-tag">Full-stack LMS · production</span>
       </div>
-      <h3>LMS &amp;<br><em>infrastructure</em></h3>
-      <p class="service-desc">Full EdTech platforms shipped solo — DB, backend, frontend, billing, i18n, Docker, deploy, backups.</p>
+      <h3>GrassLMS<br><em>platform</em></h3>
+      <p class="service-desc">Production LMS shipped solo — DB, backend, frontend, billing, i18n, Docker, deploy, backups. Detailed under <a href="#flagship" style="color:inherit;border-bottom:1px solid currentColor;">§ 04 / Flagship</a>.</p>
       <div class="service-proof">
         <span class="pl">proof</span>
         <ul>
-          <li><a href="https://grasslms.online" target="_blank" rel="noopener" style="color:inherit; border-bottom:1px solid currentColor;">GrassLMS</a> · 80+ features · 59 routes</li>
+          <li><a href="https://grasslms.online" target="_blank" rel="noopener" style="color:inherit; border-bottom:1px solid currentColor;">grasslms.online</a> · 80+ features · 59 routes</li>
           <li>Coolify on Hetzner · Docker</li>
           <li>Stripe B2B · JWT · fail2ban</li>
           <li>i18n EN / ES / RU / TR</li>
         </ul>
       </div>
-      <div class="service-metric">80+<span class="unit">own LMS features</span></div>
+      <div class="service-metric">80+<span class="unit">LMS features</span></div>
     </article>
 
   </div>
