@@ -15,7 +15,7 @@ SHELL = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>{title} — FinTechCard Engagement · Mario Becerra</title>
+<title>{title} — FinTechCard Engagement · Mario Rafael Becerra Dueñas</title>
 <meta name="description" content="{desc}"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -225,7 +225,7 @@ footer.foot a:hover {{ color: var(--accent); }}
 </main>
 
 <footer class="foot">
-  <span>Built by <strong style="color:var(--ink-dim);">Mario Becerra</strong> · pipeline/engagement/{breadcrumb}</span>
+  <span>Built by <strong style="color:var(--ink-dim);">Mario Rafael Becerra Dueñas</strong> · pipeline/engagement/{breadcrumb}</span>
   <span><a href="{root_rel}../../">mario.grasslms.online</a></span>
 </footer>
 
