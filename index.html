@@ -535,6 +535,291 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .btn .arr { transition: transform .2s; }
 .btn:hover .arr { transform: translateX(3px); }
 
+/* ---------- flagship · new (carousel + modes) ---------- */
+.flag-intro {
+  max-width: 720px;
+  margin: 0 0 32px;
+}
+.flag-intro p {
+  font-family: var(--sans); font-size: 19px; line-height: 1.45;
+  color: var(--ink); margin: 0;
+}
+.flag-intro em {
+  font-style: normal; font-weight: 700;
+  background: var(--sun-50, #fffbe5);
+  padding: 0 4px; border-radius: 3px;
+}
+
+.flag-carousel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+@media (max-width: 640px) {
+  .flag-carousel {
+    grid-template-columns: 1fr;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    grid-auto-flow: column;
+    grid-auto-columns: 85%;
+    padding-bottom: 12px;
+  }
+  .flag-carousel .flag-frame { scroll-snap-align: start; }
+}
+.flag-frame {
+  margin: 0;
+  background: var(--bg-2, #fff);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.flag-frame figcaption {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: .08em;
+  padding: 10px 14px;
+  border-top: 1px solid var(--rule);
+  background: var(--bg, #fafbf6);
+}
+.flag-screen {
+  flex: 1;
+  display: flex;
+  min-height: 220px;
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink);
+}
+
+/* Code screen */
+.flag-screen--code { display: grid; grid-template-columns: 110px 1fr; gap: 0; }
+.flag-screen--code .fs-side {
+  background: var(--ink-50, #f4f5f1);
+  padding: 10px 8px;
+  display: grid; gap: 4px; align-content: start;
+  border-right: 1px solid var(--rule);
+}
+.fs-side-row {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink-dim);
+  padding: 4px 6px; border-radius: 3px;
+  display: flex; gap: 6px;
+}
+.fs-side-row span { color: var(--ink-faint); }
+.fs-side-row.active {
+  background: var(--accent); color: #fff;
+}
+.fs-side-row.active span { color: rgba(255,255,255,.7); }
+.flag-screen--code .fs-main { padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
+.fs-task {
+  font-family: var(--sans); font-size: 12px; color: var(--ink);
+  font-weight: 500;
+}
+.fs-editor {
+  background: var(--ink-50, #f4f5f1);
+  border-left: 2px solid var(--accent);
+  padding: 8px 10px;
+  margin: 0; font-size: 11px;
+  white-space: pre;
+  color: var(--ink);
+  border-radius: 0 3px 3px 0;
+  overflow: hidden;
+}
+.fs-editor .kw { color: #c33d22; font-weight: 600; }
+.fs-editor .fn { color: var(--green-700, #07683f); }
+.fs-run {
+  font-family: var(--mono); font-size: 10px;
+  display: flex; gap: 8px; padding: 6px 10px;
+  background: var(--green-50, #ecf9e7);
+  border-radius: 3px;
+}
+.fs-run-k { color: var(--ink-faint); text-transform: uppercase; letter-spacing: .08em; }
+.fs-run-v { color: var(--green-700, #07683f); font-weight: 600; }
+
+/* Robot puzzle screen */
+.flag-screen--robot {
+  padding: 14px;
+  flex-direction: column; gap: 12px;
+  align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--bg, #fafbf6), var(--green-50, #ecf9e7));
+}
+.fs-robot-grid {
+  display: grid; grid-template-columns: repeat(3, 38px);
+  gap: 3px;
+}
+.fs-cell {
+  width: 38px; height: 38px;
+  background: var(--bg-2, #fff);
+  border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; border-radius: 3px;
+}
+.fs-cell--start { background: var(--green-50, #ecf9e7); color: var(--green-700, #07683f); font-weight: 700; }
+.fs-cell--wall { background: var(--ink-100, #e6e8e4); }
+.fs-cell--coin { color: var(--sun-500, #f5b800); }
+.fs-cell--goal { background: var(--sun-300, #ffe066); color: var(--ink); }
+.fs-cell--robot { background: var(--accent); color: #fff; }
+.fs-blocks { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+.fs-block {
+  font-family: var(--mono); font-size: 10px;
+  background: var(--accent); color: #fff;
+  padding: 4px 8px; border-radius: 14px;
+  font-weight: 500;
+}
+
+/* AI plan screen */
+.flag-screen--ai { padding: 14px; flex-direction: column; gap: 10px; }
+.fs-ai-head {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 10px; flex-wrap: wrap;
+  padding-bottom: 8px; border-bottom: 1px solid var(--rule);
+}
+.fs-ai-tag {
+  background: var(--accent); color: #fff;
+  padding: 3px 8px; border-radius: 2px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; font-weight: 700;
+}
+.fs-ai-stu { font-family: var(--mono); font-size: 10px; color: var(--ink-dim); }
+.fs-ai-plan { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.fs-ai-plan li {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--sans); font-size: 11px;
+  padding: 5px 8px; background: var(--ink-50, #f4f5f1);
+  border-radius: 3px;
+}
+.fs-ai-n {
+  background: var(--ink); color: #fff;
+  width: 18px; height: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-family: var(--mono); font-size: 10px;
+  font-weight: 700; flex-shrink: 0;
+}
+.fs-ai-ok { color: var(--green-700, #07683f); font-size: 10px; margin-left: auto; }
+.fs-ai-ai { color: var(--accent); font-size: 10px; margin-left: auto; font-style: italic; }
+.fs-ai-cta { display: flex; gap: 6px; margin-top: 6px; }
+.fs-ai-btn {
+  font-family: var(--mono); font-size: 10px;
+  padding: 5px 10px; border-radius: 3px;
+  background: var(--bg-2, #fff); border: 1px solid var(--rule);
+  color: var(--ink-dim);
+}
+.fs-ai-btn--p { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+
+/* Task library screen */
+.flag-screen--lib { padding: 14px; flex-direction: column; gap: 10px; }
+.fs-lib-head {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink-faint); text-transform: uppercase;
+  letter-spacing: .08em;
+  padding-bottom: 8px; border-bottom: 1px solid var(--rule);
+}
+.fs-lib-grid {
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+.fs-lib-chip {
+  font-family: var(--mono); font-size: 10px;
+  padding: 5px 9px; border-radius: 14px;
+  background: var(--bg-2, #fff);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+.fs-lib-chip:nth-child(3n) { background: var(--green-50, #ecf9e7); border-color: var(--accent); color: var(--green-700, #07683f); }
+.fs-lib-chip:nth-child(5n) { background: var(--sun-50, #fffbe5); }
+
+/* 3 modes block */
+.flag-modes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 0 0 24px;
+}
+.flag-mode {
+  background: var(--bg, #fafbf6);
+  padding: 18px 22px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.flag-mode--mid { background: var(--sun-50, #fffbe5); }
+.flag-mode--full { background: var(--green-50, #ecf9e7); }
+.fm-k {
+  font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--green-700, #07683f); font-weight: 700;
+}
+.fm-v { font-family: var(--sans); font-size: 14px; line-height: 1.45; color: var(--ink); }
+
+#flagship .flag-cta {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  margin-top: 0;
+}
+
+/* ---------- background · logos + services ---------- */
+.bg-logos {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 0 0 40px;
+}
+.bg-logo {
+  font-family: var(--mono); font-size: 12px;
+  padding: 8px 14px; border-radius: 4px;
+  background: var(--bg-2, #fff);
+  border: 1px solid var(--rule);
+  color: var(--ink); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: background .15s, border-color .15s, color .15s;
+  letter-spacing: .02em;
+}
+.bg-logo:hover {
+  background: var(--green-50, #ecf9e7);
+  border-color: var(--accent);
+  color: var(--green-700, #07683f);
+}
+.bg-logo--mute {
+  background: transparent; border-style: dashed;
+  color: var(--ink-faint); font-style: italic;
+  cursor: default;
+}
+.bg-logo--mute:hover { background: transparent; border-color: var(--rule); color: var(--ink-faint); }
+.bg-logo-arr { font-size: 10px; opacity: .6; }
+
+.bg-services-head {
+  font-family: var(--sans); font-weight: 800;
+  font-size: 22px; letter-spacing: -0.01em;
+  margin: 0 0 18px;
+}
+.bg-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.bg-svc {
+  background: var(--bg, #fafbf6);
+  padding: 20px 22px;
+  display: grid; gap: 8px;
+  grid-template-rows: auto auto 1fr;
+}
+.bg-svc-n {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .08em; color: var(--accent);
+  font-weight: 700;
+}
+.bg-svc-t {
+  font-family: var(--sans); font-weight: 800;
+  font-size: 16px; line-height: 1.25; color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.bg-svc-d {
+  font-family: var(--sans); font-size: 13.5px; line-height: 1.5;
+  color: var(--ink-dim);
+}
+.bg-svc-d a { color: var(--green-700, #07683f); border-bottom: 1px solid currentColor; text-decoration: none; }
+.bg-svc-d a:hover { color: var(--accent); }
+
 /* ---------- grid ---------- */
 .grid {
   display: grid;
@@ -799,6 +1084,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   font-weight: 700; letter-spacing: .1em;
 }
 .band-v { color: var(--ink-dim); font-weight: 500; text-transform: none; letter-spacing: .02em; font-size: 12px; }
+.band-v a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink-dim); font-weight: 700; transition: color .15s, border-color .15s; }
+.band-v a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.band-arr { font-size: 10px; opacity: .6; }
 
 .demos-lede,
 .cases-foot {
@@ -2044,11 +2332,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     </a>
     <nav>
       <a class="navlink" href="#cases">Cases</a>
-      <a class="navlink" href="#services">Services</a>
-      <a class="navlink" href="#engagement">Engagement</a>
+      <a class="navlink" href="#services">Tools</a>
       <a class="navlink" href="#flagship">Flagship</a>
       <a class="navlink" href="#demos">Demos</a>
-      <a class="navlink" href="#work">Work</a>
       <a class="navlink" href="#background">Background</a>
       <a class="navlink" href="#contact">Booking</a>
       <button class="theme-btn" id="themeBtn" title="Toggle theme">
@@ -2108,13 +2394,13 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <section class="wrap" id="cases">
   <div class="section-head">
     <span class="num">§ 01 / REAL CLIENT WORK</span>
-    <h2>Eight recent programs<br>for <em>three</em> clients</h2>
+    <h2>Recent programs<br>for <em>four</em> clients</h2>
     <span class="count">recent · selected · 50+ shipped total</span>
   </div>
 
   <!-- Yandex Practicum band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v">Yandex Practicum · career-change &amp; level-up programs</span></h3>
+    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://practicum.yandex.ru/" target="_blank" rel="noopener">Yandex Practicum&nbsp;<span class="band-arr">↗</span></a> · career-change &amp; level-up programs</span></h3>
   </div>
 
   <div class="cases">
@@ -2166,7 +2452,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <!-- TripleTen band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2B</span><span class="band-v">TripleTen (Nebius Group) · microcourses assembled per client</span></h3>
+    <h3 class="band-head"><span class="band-k">B2B</span><span class="band-v"><a href="https://tripleten.com/" target="_blank" rel="noopener">TripleTen (Nebius Group)&nbsp;<span class="band-arr">↗</span></a> · microcourses assembled per client</span></h3>
   </div>
 
   <div class="cases">
@@ -2218,7 +2504,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <!-- BEAM band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v">BEAM Institute · career-change tracks built from scratch with industry SMEs</span></h3>
+    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://beam.education/" target="_blank" rel="noopener">BEAM Institute&nbsp;<span class="band-arr">↗</span></a> · career-change tracks built from scratch with industry SMEs</span></h3>
   </div>
 
   <div class="cases">
@@ -2254,8 +2540,31 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   </div>
 
+  <!-- Algonova consulting band -->
+  <div class="cases-band">
+    <h3 class="band-head"><span class="band-k">Consulting · L&amp;D</span><span class="band-v"><a href="https://algonova.com/" target="_blank" rel="noopener">Algonova&nbsp;<span class="band-arr">↗</span></a> · current engagement</span></h3>
+  </div>
+
+  <div class="cases">
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 09</span>
+        <span class="case-tag">Consulting · L&amp;D · current NDA</span>
+      </div>
+      <div class="case-employer">Algonova <span style="color:var(--ink-faint);font-weight:400;font-size:0.85em;">(NDA)</span></div>
+      <h3>AI consulting &amp; L&amp;D<br>for an <em>EdTech</em> ID team</h3>
+      <p class="case-period">AI Consulting · L&amp;D · Internal Tooling · Freelance · current</p>
+      <p class="case-desc">Internal AI consulting and L&amp;D for the instructional-design team of an AI-personalised K-3 math platform: workshops on AI use in content design, mentoring on prompt engineering and review pipelines, plus a portfolio of internal tools — slide / board generators, autofill userscripts, lesson-review pipeline. See <a href="#services" style="color:inherit;border-bottom:1px solid currentColor;">§ 02 / Tools</a> for the artefacts.</p>
+      <div class="case-tags">
+        <span>AI consulting</span><span>L&amp;D for IDs</span><span>workshops</span><span>internal tooling</span>
+      </div>
+    </article>
+
+  </div>
+
   <p class="cases-foot">
-    Recent course work, selected — across 10+ years I've shipped 50+ courses for many more clients. Current freelance focus is tooling (see <a href="#engagement">§ 03 Algonova engagement</a> and <a href="#services">§ 02 Tools</a>), not new courses.
+    Recent work, selected — across 10+ years I've shipped 50+ courses for many more clients.
   </p>
 </section>
 
@@ -2282,7 +2591,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <h3>Teacher autofill<br><em>userscript</em></h3>
       <p class="service-desc">Flask backend + Tampermonkey userscripts that fill matching, categorisation and fill-in-the-blank tests across teacher-training platforms. Cuts hours of routine clicking per week per instructional designer.</p>
       <div class="service-proof">
-        <span class="pl">proof</span>
+        <span class="pl">highlights</span>
         <ul>
           <li>Flask + Tampermonkey</li>
           <li>Matching · categorisation · fill-in</li>
@@ -2300,7 +2609,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <h3>Homework <em>bot</em><br>on Telegram</h3>
       <p class="service-desc">Telegram bot that pushes homework prompts, collects submissions and surfaces them in a triage view for instructors. Replaces a chat-thread mess with structured tracking, without forcing learners onto a new platform.</p>
       <div class="service-proof">
-        <span class="pl">proof</span>
+        <span class="pl">highlights</span>
         <ul>
           <li>Telegram Bot API</li>
           <li>Submission triage view</li>
@@ -2318,7 +2627,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <h3>Math Slides<br><em>add-on</em></h3>
       <p class="service-desc">Google Slides add-on with branded template, layout catalogue and custom math font. Drops the cost of producing a maths deck from ~2 hours to ~15 minutes per deck while keeping brand integrity.</p>
       <div class="service-proof">
-        <span class="pl">proof</span>
+        <span class="pl">highlights</span>
         <ul>
           <li>Branded template + layouts</li>
           <li>Custom math font</li>
@@ -2336,7 +2645,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <h3>Presentation <em>generator</em><br>from JSON</h3>
       <p class="service-desc">Takes a lesson-plan JSON and emits a branded-template Google Slides deck. Used by instructional designers to skip the layout step entirely — the deck arrives ready for content polish.</p>
       <div class="service-proof">
-        <span class="pl">proof</span>
+        <span class="pl">highlights</span>
         <ul>
           <li>JSON → branded deck</li>
           <li>Layouts &amp; brand pre-applied</li>
@@ -2354,7 +2663,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <h3>Board <em>generator</em><br>for Miro &amp; Figma</h3>
       <p class="service-desc">Python tool that takes structured input and generates branded Miro / Figma boards via API — for workshops, lesson canvases, retros. Brand config + layout templates baked in so output stays consistent across teams.</p>
       <div class="service-proof">
-        <span class="pl">proof</span>
+        <span class="pl">highlights</span>
         <ul>
           <li>Python + Miro / Figma APIs</li>
           <li>Brand config + layouts</li>
@@ -2381,7 +2690,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <h3>Adaptive curriculum<br><em>knowledge graph</em></h3>
       <p class="service-desc">Curriculum spine for an AI-personalised K-3 math platform. Knowledge graph of skills + observable action-level objectives drives diagnostic assessment, BKT mastery estimation and adaptive lesson assembly per learner.</p>
       <div class="service-proof">
-        <span class="pl">proof</span>
+        <span class="pl">highlights</span>
         <ul>
           <li>45 modules · 212 topics</li>
           <li>~200 skills (G1–G3)</li>
@@ -2399,7 +2708,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <h3>Methodist <em>dashboard</em><br>for Algorithmika</h3>
       <p class="service-desc">Internal dashboard for a CS-curriculum team: catalogues lesson assets, tracks review state, surfaces methodology references, and exposes MCP-server endpoints so AI tools plug in directly to the same source of truth.</p>
       <div class="service-proof">
-        <span class="pl">proof</span>
+        <span class="pl">highlights</span>
         <ul>
           <li>Lesson asset catalogue</li>
           <li>Review-state pipeline</li>
@@ -2441,7 +2750,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </figure>
 
       <div class="service-proof">
-        <span class="pl">proof</span>
+        <span class="pl">highlights</span>
         <ul>
           <li>Sources → normalise → DB</li>
           <li>Transcription of recorded lessons</li>
@@ -2457,9 +2766,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         <span class="service-tag">Full-stack LMS · production</span>
       </div>
       <h3>GrassLMS<br><em>platform</em></h3>
-      <p class="service-desc">Production LMS shipped solo — DB, backend, frontend, billing, i18n, Docker, deploy, backups. Detailed under <a href="#flagship" style="color:inherit;border-bottom:1px solid currentColor;">§ 04 / Flagship</a>.</p>
+      <p class="service-desc">Production LMS shipped solo — DB, backend, frontend, billing, i18n, Docker, deploy, backups. Detailed under <a href="#flagship" style="color:inherit;border-bottom:1px solid currentColor;">§ 03 / Flagship</a>.</p>
       <div class="service-proof">
-        <span class="pl">proof</span>
+        <span class="pl">highlights</span>
         <ul>
           <li><a href="https://grasslms.online" target="_blank" rel="noopener" style="color:inherit; border-bottom:1px solid currentColor;">grasslms.online</a> · 80+ features · 59 routes</li>
           <li>Coolify on Hetzner · Docker</li>
@@ -2475,215 +2784,157 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
 
 
-<!-- ============ ENGAGEMENT ============ -->
-<section class="wrap" id="engagement">
-  <div class="section-head">
-    <span class="num">§ 03 / ENGAGEMENT</span>
-    <h2>Current work</h2>
-    <span class="count">freelance · current</span>
-  </div>
-
-  <article class="engagement">
-    <header class="eng-head">
-      <div class="eng-brand">
-        <div class="eng-mark">A</div>
-        <div>
-          <div class="eng-name">Algonova</div>
-          <div class="eng-kind">AI-personalised K-3 math platform · current engagement (NDA)</div>
-        </div>
-      </div>
-      <div class="eng-badges">
-        <span class="eng-badge current"><span class="d"></span> current</span>
-        <span class="eng-badge nda">◉ under NDA</span>
-        <span class="eng-badge year">2025 — present</span>
-      </div>
-    </header>
-
-    <div class="eng-body">
-      <div class="eng-role">
-        <span class="eng-role-k">Role</span>
-        <span class="eng-role-v">AI Automation &amp; Internal Tooling for the ID team</span>
-      </div>
-
-      <p class="eng-lede">
-        Current focus is <em>tooling for the instructional-design team</em> on an AI-personalised K-3 math platform — slide generators, autofill userscripts, Miro/Figma board generators, lesson-review pipeline, and the underlying knowledge architecture that makes adaptive lesson assembly possible. Cuts hours of routine work per ID per week.
-      </p>
-
-      <div class="eng-metrics">
-        <div class="eng-metric">
-          <div class="n">60<span class="u">%</span></div>
-          <div class="l">slide production time ↓<br>2h → 15min per deck</div>
-        </div>
-        <div class="eng-metric">
-          <div class="n">~5<span class="u">h</span></div>
-          <div class="l">per instructional designer / week<br>saved via autofill scripts</div>
-        </div>
-        <div class="eng-metric">
-          <div class="n">85<span class="u">%</span></div>
-          <div class="l">production-time cut<br>on specific content workflows</div>
-        </div>
-      </div>
-
-      <div class="eng-artefacts">
-        <div class="eng-artefacts-head">Public artefacts from the engagement</div>
-        <div class="eng-art-grid">
-          <button class="eng-art" data-open="math-slides">
-            <span class="eng-art-n">01</span>
-            <span class="eng-art-t">Math Slides Add-on</span>
-            <span class="eng-art-d">Google Slides Add-on · branded template · layout catalogue · custom font</span>
-          </button>
-          <button class="eng-art" data-open="presentation-generator">
-            <span class="eng-art-n">02</span>
-            <span class="eng-art-t">Presentation Generator</span>
-            <span class="eng-art-d">JSON → branded-template slide generator · 2h → 15min</span>
-          </button>
-          <button class="eng-art" data-open="miro-board-creator">
-            <span class="eng-art-n">03</span>
-            <span class="eng-art-t">Miro Board Creator</span>
-            <span class="eng-art-d">Python tool · AI-assisted Miro board generation with brand config</span>
-          </button>
-          <button class="eng-art" data-open="teacher-autofill">
-            <span class="eng-art-n">04</span>
-            <span class="eng-art-t">Teacher Education Autofill</span>
-            <span class="eng-art-d">Flask + Tampermonkey userscripts · matching · categorisation · fill-in-the-blanks</span>
-          </button>
-          <button class="eng-art" data-open="lesson-review">
-            <span class="eng-art-n">05</span>
-            <span class="eng-art-t">Lesson Review Toolkit</span>
-            <span class="eng-art-d">Python + HTML pipeline · collect → normalise → surface feedback</span>
-          </button>
-          <button class="eng-art" data-open="ai-course-for-ids">
-            <span class="eng-art-n">06</span>
-            <span class="eng-art-t">AI Course for Instructional Designers</span>
-            <span class="eng-art-d">4C/ID-designed course · auto-deploys to LMS via REST</span>
-          </button>
-          <button class="eng-art" data-open="minecraft">
-            <span class="eng-art-n">07</span>
-            <span class="eng-art-t">Minecraft Course + .mcworld Viewer</span>
-            <span class="eng-art-d">K-level Minecraft course + parser/viewer for Bedrock-format worlds</span>
-          </button>
-          <button class="eng-art" data-open="cs-course-9-11">
-            <span class="eng-art-n">08</span>
-            <span class="eng-art-t">36-lesson CS Curriculum (ages 9–11)</span>
-            <span class="eng-art-d">Original storyline · characters · program simulators · quest-based progression</span>
-          </button>
-        </div>
-      </div>
-
-      <footer class="eng-foot">
-        <span class="eng-foot-k">Not shown here</span>
-        <span class="eng-foot-v">Product name, internal stack, team composition, and architecture details are proprietary.</span>
-      </footer>
-    </div>
-  </article>
-</section>
-
 <!-- ============ FLAGSHIP ============ -->
 <section class="wrap" id="flagship">
   <div class="section-head">
-    <span class="num">§ 04 / FLAGSHIP</span>
-    <h2>Flagship</h2>
-    <span class="count">1 project · production</span>
+    <span class="num">§ 03 / FLAGSHIP</span>
+    <h2>GrassLMS<br>my own <em>LMS</em></h2>
+    <span class="count">production · <a href="https://grasslms.online" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid currentColor;">grasslms.online&nbsp;↗</a></span>
   </div>
 
-  <article class="flagship">
-    <!-- visual mock -->
-    <div class="flagship-visual">
+  <div class="flag-intro">
+    <p>
+      A teacher-first LMS built around <em>a huge library of task types</em> and <em>flexible content tools</em>. Teachers can author every screen by hand, or hand the wheel to AI — from a single intro lesson to a full personalised skill-practice set per student. Content always stays editable, so the teacher's craft is preserved.
+    </p>
+  </div>
+
+  <!-- Screen carousel -->
+  <div class="flag-carousel" aria-label="GrassLMS screen examples">
+
+    <figure class="flag-frame">
       <div class="flag-browser">
         <div class="dots"><span></span><span></span><span></span></div>
-        <span class="url">https://<b>grasslms.online</b> / gradebook</span>
-        <span class="status">LIVE</span>
+        <span class="url">grasslms.online / lesson / python-loops</span>
       </div>
-      <div class="flag-mock">
-        <div class="mock-head">
-          <div>
-            <h3>Gradebook — 7B</h3>
-            <div>Python · Fundamentals · 28 students</div>
+      <div class="flag-screen flag-screen--code">
+        <div class="fs-side">
+          <div class="fs-side-row"><span>1.</span>Loops · for &amp; while</div>
+          <div class="fs-side-row active"><span>2.</span>Practice · 8 tasks</div>
+          <div class="fs-side-row"><span>3.</span>Project · word counter</div>
+          <div class="fs-side-row"><span>4.</span>Quiz</div>
+        </div>
+        <div class="fs-main">
+          <div class="fs-task">Print numbers 1 → 10 that are divisible by 3.</div>
+          <pre class="fs-editor"><span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(1, 11):
+    <span class="kw">if</span> n % 3 == 0:
+        <span class="fn">print</span>(n)</pre>
+          <div class="fs-run">
+            <span class="fs-run-k">Output</span>
+            <span class="fs-run-v">3  6  9 ✓</span>
           </div>
-          <span class="badge">GrassLMS</span>
-        </div>
-        <div class="mock-grade">
-          <div class="cell hdr">Student</div>
-          <div class="cell hdr">L1</div>
-          <div class="cell hdr">L2</div>
-          <div class="cell hdr">L3</div>
-          <div class="cell hdr">Q1</div>
-          <div class="cell hdr">Σ</div>
-
-          <div class="cell lo">A. Ivanov</div>
-          <div class="cell pass">95</div>
-          <div class="cell pass">88</div>
-          <div class="cell hi">100</div>
-          <div class="cell pass">92</div>
-          <div class="cell hi">94</div>
-
-          <div class="cell lo">B. Petrov</div>
-          <div class="cell pass">72</div>
-          <div class="cell pass">81</div>
-          <div class="cell pass">77</div>
-          <div class="cell fail">58</div>
-          <div class="cell pass">72</div>
-
-          <div class="cell lo">C. Sidorova</div>
-          <div class="cell hi">100</div>
-          <div class="cell hi">100</div>
-          <div class="cell pass">94</div>
-          <div class="cell hi">100</div>
-          <div class="cell hi">98</div>
-
-          <div class="cell lo">D. Orlov</div>
-          <div class="cell pass">68</div>
-          <div class="cell fail">42</div>
-          <div class="cell pass">71</div>
-          <div class="cell pass">80</div>
-          <div class="cell pass">65</div>
-
-          <div class="cell lo">E. Morozova</div>
-          <div class="cell pass">89</div>
-          <div class="cell pass">93</div>
-          <div class="cell pass">85</div>
-          <div class="cell pass">88</div>
-          <div class="cell pass">88</div>
-        </div>
-        <div class="mock-foot">
-          <div class="stat"><div class="n">83.4</div><div class="l">Avg Σ</div></div>
-          <div class="stat"><div class="n">92%</div><div class="l">Submitted</div></div>
-          <div class="stat"><div class="n">14</div><div class="l">To review</div></div>
         </div>
       </div>
-    </div>
+      <figcaption>Code lesson · 37-language sandbox + autograder</figcaption>
+    </figure>
 
-    <!-- body -->
-    <div class="flagship-body">
-      <span class="flag-tag">Full-stack · Production</span>
-      <h2>GrassLMS <em>LMS</em></h2>
-      <div class="flag-role">Solo developer · Backend + Frontend + Infra + Deploy</div>
-      <p class="flag-desc">
-        A production-grade LMS built end-to-end by one person. 80+ features, 29 backend modules, 59 frontend routes, 9 lesson types, 11 interactive exercise formats — deployed via Coolify on Hetzner.
-      </p>
-      <dl class="flag-stack">
-        <div><dt>Backend</dt><dd>FastAPI async · SQLAlchemy 2 · Alembic · Pydantic v2 · Python 3.12 · <b>117 files / 12k+ LOC across 29 modules</b></dd></div>
-        <div><dt>Frontend</dt><dd>Next.js 16 · React 19 · TS strict · Tailwind 4 · Zustand · TanStack Query · Monaco + TipTap · <b>152 files / 37k+ LOC · 59 routes</b></dd></div>
-        <div><dt>Interactives</dt><dd>Multi-language code editor (<b>37 languages</b>) · Desmos-integrated math · 2D robot programming puzzles · 3D exploration worlds</dd></div>
-        <div><dt>Infra</dt><dd>Coolify on Hetzner · Docker · nginx · Let's Encrypt · <b>Stripe B2B subscriptions</b> · pg_dump cron · fail2ban</dd></div>
-      </dl>
-      <div class="flag-cta">
-        <a class="btn primary" href="https://grasslms.online" target="_blank" rel="noopener">
-          <span>Open demo</span>
-          <span class="arr">→</span>
-        </a>
-        <button class="btn" onclick="openModal('grasslms')">
-          <span>Read more</span>
-        </button>
+    <figure class="flag-frame">
+      <div class="flag-browser">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">grasslms.online / lesson / robot-grid</span>
       </div>
+      <div class="flag-screen flag-screen--robot">
+        <div class="fs-robot-grid">
+          <div class="fs-cell fs-cell--start">▶</div>
+          <div class="fs-cell"></div>
+          <div class="fs-cell fs-cell--wall"></div>
+          <div class="fs-cell fs-cell--coin">●</div>
+          <div class="fs-cell"></div>
+          <div class="fs-cell fs-cell--robot">🤖</div>
+          <div class="fs-cell"></div>
+          <div class="fs-cell fs-cell--wall"></div>
+          <div class="fs-cell fs-cell--goal">★</div>
+        </div>
+        <div class="fs-blocks">
+          <span class="fs-block">move →</span>
+          <span class="fs-block">turn ↻</span>
+          <span class="fs-block">repeat 3</span>
+          <span class="fs-block">if coin</span>
+        </div>
+      </div>
+      <figcaption>2D robot puzzle · block + text programming</figcaption>
+    </figure>
+
+    <figure class="flag-frame">
+      <div class="flag-browser">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">grasslms.online / studio / ai-plan</span>
+      </div>
+      <div class="flag-screen flag-screen--ai">
+        <div class="fs-ai-head">
+          <span class="fs-ai-tag">AI · personalised plan</span>
+          <span class="fs-ai-stu">Student: A. Ivanov · gap: loops</span>
+        </div>
+        <ul class="fs-ai-plan">
+          <li><span class="fs-ai-n">1</span>Intro · what a loop is <span class="fs-ai-ok">teacher-reviewed ✓</span></li>
+          <li><span class="fs-ai-n">2</span>Practice · 6 graded tasks <span class="fs-ai-ai">AI-drafted</span></li>
+          <li><span class="fs-ai-n">3</span>Project · word counter <span class="fs-ai-ai">AI-drafted</span></li>
+          <li><span class="fs-ai-n">4</span>Quiz · 8 questions <span class="fs-ai-ai">AI-drafted</span></li>
+        </ul>
+        <div class="fs-ai-cta">
+          <span class="fs-ai-btn">Edit any step</span>
+          <span class="fs-ai-btn fs-ai-btn--p">Assign to A. Ivanov</span>
+        </div>
+      </div>
+      <figcaption>AI lesson-set · personalised, fully editable</figcaption>
+    </figure>
+
+    <figure class="flag-frame">
+      <div class="flag-browser">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">grasslms.online / studio / task-library</span>
+      </div>
+      <div class="flag-screen flag-screen--lib">
+        <div class="fs-lib-head">Task types · drop into any lesson</div>
+        <div class="fs-lib-grid">
+          <span class="fs-lib-chip">Code · 37 langs</span>
+          <span class="fs-lib-chip">Math · Desmos</span>
+          <span class="fs-lib-chip">2D robot</span>
+          <span class="fs-lib-chip">3D world</span>
+          <span class="fs-lib-chip">Quiz · MCQ</span>
+          <span class="fs-lib-chip">Fill-in</span>
+          <span class="fs-lib-chip">Matching</span>
+          <span class="fs-lib-chip">Drag-order</span>
+          <span class="fs-lib-chip">Free-text</span>
+          <span class="fs-lib-chip">File upload</span>
+          <span class="fs-lib-chip">Peer review</span>
+          <span class="fs-lib-chip">Project</span>
+        </div>
+      </div>
+      <figcaption>Task library · 11+ interaction types, mix &amp; match</figcaption>
+    </figure>
+
+  </div>
+
+  <div class="flag-modes">
+    <div class="flag-mode">
+      <span class="fm-k">Manual</span>
+      <span class="fm-v">Author every screen yourself. Pick task types, write the brief, drop in your own assets. Full control.</span>
     </div>
-  </article>
+    <div class="flag-mode flag-mode--mid">
+      <span class="fm-k">AI · partial</span>
+      <span class="fm-v">Hand AI a topic. Get one intro lesson back, fully editable. Use it as a starting point and polish.</span>
+    </div>
+    <div class="flag-mode flag-mode--full">
+      <span class="fm-k">AI · full personalisation</span>
+      <span class="fm-v">Hand AI a skill gap per student. Get a complete practice set — intro · drills · project · quiz — adapted to the learner's level.</span>
+    </div>
+  </div>
+
+  <div class="flag-cta">
+    <a class="btn primary" href="https://grasslms.online" target="_blank" rel="noopener">
+      <span>Open the live LMS</span>
+      <span class="arr">↗</span>
+    </a>
+    <button class="btn" onclick="openModal('grasslms')">
+      <span>Stack &amp; details</span>
+    </button>
+  </div>
 </section>
 
 <!-- ============ PORTFOLIO DEMOS ============ -->
 <section class="wrap" id="demos">
   <div class="section-head">
-    <span class="num">§ 05 / PORTFOLIO DEMOS</span>
+    <span class="num">§ 04 / PORTFOLIO DEMOS</span>
     <h2>End-to-end <em>demos</em><br>built as portfolio pieces</h2>
     <span class="count">illustrative · synthetic clients</span>
   </div>
@@ -2727,158 +2978,59 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   </div>
 </section>
 
-<!-- ============ WORK GRID ============ -->
-<section class="wrap" id="work">
-  <div class="section-head">
-    <span class="num">§ 06 / RECENT BUILDS</span>
-    <h2>4 most-recent<br>shipped builds</h2>
-    <span class="count"><span id="countN">4</span> projects · curated</span>
-  </div>
-
-  <div class="filters" id="filters">
-    <!-- populated by JS -->
-    <div class="search">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
-      <input id="searchInput" type="text" placeholder="search projects…" autocomplete="off"/>
-    </div>
-  </div>
-
-  <div id="cardGrid"></div>
-</section>
-
 <!-- ============ BACKGROUND ============ -->
 <section class="wrap" id="background">
   <div class="section-head">
-    <span class="num">§ 07 / BACKGROUND</span>
-    <h2>Where I've worked</h2>
+    <span class="num">§ 05 / BACKGROUND</span>
+    <h2>Where I've worked<br>&amp; what I <em>offer</em></h2>
     <span class="count">10+ years · EdTech</span>
   </div>
 
-  <!-- Logo strip — case-tied employers + a counter for the rest. -->
-  <div class="logo-strip" aria-label="Companies I've worked with">
-    <div class="logo-strip-track">
-      <div class="logo-cell" data-co="algonova"><span class="logo-wm">Algonova (NDA)</span></div>
-      <div class="logo-cell" data-co="nebius"><span class="logo-wm">Nebius / TripleTen</span></div>
-      <div class="logo-cell" data-co="yandex"><span class="logo-wm">Yandex Practicum</span></div>
-      <div class="logo-cell" data-co="beam"><span class="logo-wm">BEAM Institute</span></div>
-      <div class="logo-cell" data-co="more"><span class="logo-wm" style="font-style:italic; opacity:.7;">+ 6 earlier EdTech employers</span></div>
-    </div>
+  <div class="bg-logos" aria-label="Companies I've worked with">
+    <a class="bg-logo" href="https://algonova.com/" target="_blank" rel="noopener">Algonova <span class="bg-logo-arr">↗</span></a>
+    <a class="bg-logo" href="https://tripleten.com/" target="_blank" rel="noopener">TripleTen (Nebius) <span class="bg-logo-arr">↗</span></a>
+    <a class="bg-logo" href="https://practicum.yandex.ru/" target="_blank" rel="noopener">Yandex Practicum <span class="bg-logo-arr">↗</span></a>
+    <a class="bg-logo" href="https://beam.education/" target="_blank" rel="noopener">BEAM Institute <span class="bg-logo-arr">↗</span></a>
+    <a class="bg-logo" href="https://beezo.io/" target="_blank" rel="noopener">Beezo <span class="bg-logo-arr">↗</span></a>
+    <a class="bg-logo" href="https://foxford.ru/" target="_blank" rel="noopener">Foxford <span class="bg-logo-arr">↗</span></a>
+    <a class="bg-logo" href="https://algorithmics.lv/" target="_blank" rel="noopener">Algorithmics <span class="bg-logo-arr">↗</span></a>
+    <span class="bg-logo bg-logo--mute">+ 4 earlier EdTech employers</span>
   </div>
 
-  <div class="bg-grid">
-    <div class="bg-col">
-      <h3>Recent engagements</h3>
-      <ul class="timeline">
-        <li class="tl-row cur">
-          <span class="tl-yr">2025 — now</span>
-          <div class="tl-body">
-            <div class="co">Algonova <span style="color:var(--ink-faint);font-weight:400;">(current · NDA)</span></div>
-            <div class="role">LX Designer + AI Automation · Freelance</div>
-            <div class="note">Instructional Designer on an AI-powered personalised math platform for grades 1–3. Built 5+ shipped artefacts — slides add-on, autofill scripts, AI course for instructional designers, Minecraft course + viewer.</div>
-          </div>
-        </li>
-        <li class="tl-row">
-          <span class="tl-yr">2024 — 2026</span>
-          <div class="tl-body">
-            <div class="co">Beezo</div>
-            <div class="role">LX Designer · Freelance</div>
-            <div class="note">Solo-designed 4 multi-tier course lines on cryptocurrency and NFT fundamentals: video lessons, long-form articles, and practical assignments.</div>
-          </div>
-        </li>
-        <li class="tl-row">
-          <span class="tl-yr">2024 — 2026</span>
-          <div class="tl-body">
-            <div class="co">BEAM Institute of Technology</div>
-            <div class="role">LX Designer · Freelance</div>
-            <div class="note">Built a Data Governance course from scratch with subject matter experts from Billigence. Full instructional design cycle from needs analysis to quality review.</div>
-          </div>
-        </li>
-        <li class="tl-row">
-          <span class="tl-yr">Jan 2024 — Oct 2024</span>
-          <div class="tl-body">
-            <div class="co">Nebius Group (TripleTen)</div>
-            <div class="role">LX Designer</div>
-            <div class="note">Localised 15+ B2B tech courses for the Latin American market. Designed AI avatar-based learning content (HeyGen). Implemented a cross-functional status tracking system.</div>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="bg-col">
-      <h3>Earlier career</h3>
-      <ul class="timeline">
-        <li class="tl-row">
-          <span class="tl-yr">2023 — 2024</span>
-          <div class="tl-body">
-            <div class="co">Yandex Practicum</div>
-            <div class="role">LX Designer</div>
-            <div class="note">Designed end-to-end curricula for Web Design, UX/UI, and Graphic Design programs aligned with industry hiring requirements.</div>
-          </div>
-        </li>
-        <li class="tl-row">
-          <span class="tl-yr">2021 — 2023</span>
-          <div class="tl-body">
-            <div class="co">Foxford</div>
-            <div class="role">Senior Instructional Designer · Python + CS programs</div>
-            <div class="note">Led a team of IDs. Automated a code evaluation system for Python courses, cutting manual grading effort by 40 %.</div>
-          </div>
-        </li>
-        <li class="tl-row">
-          <span class="tl-yr">2019 — 2021</span>
-          <div class="tl-body">
-            <div class="co">SIT Programming School</div>
-            <div class="role">LX Designer &amp; Team Lead · B2B + B2C</div>
-            <div class="note">Built multi-course progression paths that raised student LTV. Led teams across B2B corporate training and B2C consumer courses.</div>
-          </div>
-        </li>
-        <li class="tl-row">
-          <span class="tl-yr">2016 — 2019</span>
-          <div class="tl-body">
-            <div class="co">RobolabKids · AEFE · Algorithmics</div>
-            <div class="role">Teacher &amp; curriculum designer · CS · robotics · K-12</div>
-            <div class="note">Seven years of hands-on teaching across multiple schools in parallel — the foundation for everything that came after.</div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="edu-grid">
-    <div class="edu-cell">
-      <span class="edu-k">Education</span>
-      <span class="edu-t">Master's · Biomedical Engineering</span>
-    </div>
-    <div class="edu-cell">
-      <span class="edu-k">Education</span>
-      <span class="edu-t">Bachelor's · Manufacturing Automation</span>
-    </div>
-    <div class="edu-cell">
-      <span class="edu-k">Certificate</span>
-      <span class="edu-t">UX/UI Designer</span>
-    </div>
-    <div class="edu-cell">
-      <span class="edu-k">Certificate</span>
-      <span class="edu-t">Education as a Product</span>
-    </div>
-    <div class="edu-cell">
-      <span class="edu-k">Framework</span>
-      <span class="edu-t">4C/ID Model</span>
-    </div>
-    <div class="edu-cell">
-      <span class="edu-k">Framework</span>
-      <span class="edu-t">JTBD</span>
-    </div>
-    <div class="edu-cell">
-      <span class="edu-k">Certificate</span>
-      <span class="edu-t">LXD · Theories &amp; Frameworks</span>
-    </div>
-    <div class="edu-cell">
-      <span class="edu-k">Certificate</span>
-      <span class="edu-t">LXD · Development &amp; Evaluation</span>
-    </div>
-    <div class="edu-cell">
-      <span class="edu-k">Certificate</span>
-      <span class="edu-t">Game Design</span>
+  <!-- Services I currently ship -->
+  <div class="bg-services">
+    <h3 class="bg-services-head">Services I currently ship</h3>
+    <div class="bg-services-grid">
+      <div class="bg-svc">
+        <span class="bg-svc-n">01</span>
+        <span class="bg-svc-t">AI content-generation pipelines</span>
+        <span class="bg-svc-d">Brief → generate → judge → publish. LLM-as-judge eval loop, rubric scoring, retries, drift detection.</span>
+      </div>
+      <div class="bg-svc">
+        <span class="bg-svc-n">02</span>
+        <span class="bg-svc-t">Focused tools for ID teams</span>
+        <span class="bg-svc-d">Userscripts, slide/board generators, autofill, Telegram bots — single-problem tools that save hours per week.</span>
+      </div>
+      <div class="bg-svc">
+        <span class="bg-svc-n">03</span>
+        <span class="bg-svc-t">Adaptive curriculum architecture</span>
+        <span class="bg-svc-d">Skill graphs, observable objectives, BKT mastery models. The spine that makes adaptive lesson assembly possible.</span>
+      </div>
+      <div class="bg-svc">
+        <span class="bg-svc-n">04</span>
+        <span class="bg-svc-t">AI consulting &amp; L&amp;D for ID teams</span>
+        <span class="bg-svc-d">Workshops, mentoring, prompt-engineering systems. Helping IDs use AI without losing craft.</span>
+      </div>
+      <div class="bg-svc">
+        <span class="bg-svc-n">05</span>
+        <span class="bg-svc-t">End-to-end ID engagements</span>
+        <span class="bg-svc-d">ADDIE / 4C/ID full cycle: analysis → design → build → eval. Solo or with SMEs.</span>
+      </div>
+      <div class="bg-svc">
+        <span class="bg-svc-n">06</span>
+        <span class="bg-svc-t">Full-stack EdTech platforms</span>
+        <span class="bg-svc-d">LMS / course platforms shipped solo — DB, backend, frontend, billing, deploy. <a href="https://grasslms.online" target="_blank" rel="noopener">GrassLMS</a> is the reference.</span>
+      </div>
     </div>
   </div>
 
@@ -2887,7 +3039,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ CONSULTATION FORM ============ -->
 <section class="wrap booking" id="contact">
   <div class="section-head">
-    <span class="sec-n">§ 08</span>
+    <span class="sec-n">§ 06</span>
     <h2>Book a<br><em>consultation.</em></h2>
     <span class="sec-meta">free · 30 min · zoom / google meet</span>
   </div>
@@ -3248,6 +3400,7 @@ function renderTicker() {
 // ============ FILTERS ============
 function renderFilters() {
   const el = document.getElementById("filters");
+  if (!el) return; // Recent Builds section removed
   const search = el.querySelector(".search");
   const chips = window.CATEGORIES.map((c) => {
     const n = c.id === "all"
@@ -3298,9 +3451,11 @@ function matches(p) {
 
 function renderCards() {
   const wrap = document.getElementById("cardGrid");
+  if (!wrap) return; // Recent Builds section removed — short-circuit
   const projects = window.PROJECTS.filter((p) => !p.flagship);
   const shown = projects.filter(matches);
-  document.getElementById("countN").textContent = shown.length;
+  const countEl = document.getElementById("countN");
+  if (countEl) countEl.textContent = shown.length;
 
   // Group by category
   const cats = activeCat === "all"
