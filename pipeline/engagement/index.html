@@ -3,1128 +3,310 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FinTechCard · SMB SDR Onboarding · Case Study</title>
-<meta name="description" content="Compressed SDR ramp time from 95 to 73 days by training the three behavioural moves top reps share, inside a mini-OS simulation of the rep's actual workspace.">
+<title>03-develop · SCORM modules + mini-OS shell</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* ====================================================================
-     Engagement landing · GrassLMS Lively design system
-     Tokens + patterns mirror mario.grasslms.online main portfolio.
-     Class names preserved from prior build so HTML body works unchanged.
-     ==================================================================== */
   :root {
-    /* Lively palette */
-    --bg: #fafbf6;
-    --bg-2: #ffffff;
-    --bg-3: #f4f5f1;
     --ink: #0a1a10;
-    --ink-dim: #4d5a51;
-    --ink-faint: #5c6b62;
-    --rule: #e6e8e4;
-    --rule-strong: #c9cec9;
-    --accent: #0a8754;
-    --accent-ink: #ffffff;
-    --green-700: #07683f;
-    --green-50: #ecf9e7;
-    --sun-300: #ffe066;
-    --sun-500: #f5b800;
-    --coral-50: #fff0eb;
-    --coral-500: #ff7a5c;
-    --coral-700: #c33d22;
-
-    /* Legacy aliases — kept so existing HTML classes work */
-    --brand-green: var(--accent);
-    --brand-green-700: var(--green-700);
-    --brand-green-50: var(--green-50);
-    --ink-2: var(--ink-dim);
-    --muted: var(--ink-faint);
-    --line: var(--rule);
-    --paper: var(--bg);
-    --paper-2: var(--bg-2);
-
-    --mono: "Geist Mono", ui-monospace, Menlo, monospace;
-    --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-    --serif: "Manrope", ui-sans-serif, system-ui, sans-serif; /* legacy alias → sans */
+    --ink-2: #4d5a51;
+    --paper: #ffffff;
+    --bg: #FAFBF6;
+    --rule: #E6E8E4;
+    --green: #0A8754;
+    --green-deep: #07683F;
+    --tint: #ECF9E7;
   }
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; height: 100%; }
   body {
-    margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font-family: var(--sans);
+    font-family: "Manrope", -apple-system, system-ui, sans-serif;
     font-size: 15px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
   }
-  a { color: var(--green-700); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s, color 0.15s; }
-  a:hover { color: var(--accent); border-bottom-color: var(--accent); }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
-  code, kbd, .mono { font-family: var(--mono); font-size: 0.92em; color: var(--ink); background: var(--bg-3); padding: 1px 6px; border-radius: 3px; }
-  .data, td.num, td .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
-
-  /* Skip link */
-  .skip { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
-  .skip:focus { position: fixed; left: 12px; top: 12px; width: auto; height: auto; background: var(--accent); color: #fff; padding: 8px 12px; border-radius: 4px; z-index: 1000; }
-
-  /* Sticky top nav — Lively topbar style */
-  nav.toc {
-    position: sticky; top: 0; z-index: 50;
-    background: color-mix(in oklab, var(--bg) 92%, transparent);
-    backdrop-filter: blur(14px) saturate(1.2);
-    border-bottom: 1px solid var(--rule);
-  }
-  nav.toc .inner {
-    max-width: 1280px; margin: 0 auto;
-    padding: 12px 32px;
-    display: flex; flex-wrap: wrap; gap: 4px 18px;
-    align-items: center;
-    font-family: var(--mono); font-size: 11px;
-    letter-spacing: 0.06em; text-transform: uppercase;
-  }
-  nav.toc a {
-    color: var(--ink-dim); border-bottom: none;
-    padding: 6px 10px; border-radius: 999px;
-    transition: color 0.15s, background 0.15s;
-  }
-  nav.toc a:hover { color: var(--ink); background: var(--bg-3); border-bottom: none; }
-  nav.toc .brand {
-    color: var(--accent); font-weight: 700; padding: 6px 14px 6px 0;
-    border-right: 1px solid var(--rule); margin-right: 8px;
-    border-bottom: none;
-  }
-
-  main { max-width: 920px; margin: 0 auto; padding: 32px 32px 96px; }
-  section { padding: 64px 0 16px; border-top: 1px solid var(--rule); }
-  section:first-of-type { border-top: 0; padding-top: 24px; }
-
-  /* Headings · Manrope 800 H1/H2 like main portfolio */
-  h1, h2, h3, h4 { margin: 0 0 16px; color: var(--ink); }
-  h1 {
-    font-family: var(--sans); font-weight: 800;
-    font-size: clamp(40px, 5vw, 64px);
-    line-height: 1.05; letter-spacing: -0.02em;
-  }
-  h2 {
-    font-family: var(--sans); font-weight: 400;
-    font-size: clamp(28px, 3vw, 40px);
-    line-height: 1.1; letter-spacing: -0.01em;
-  }
-  h2 em { font-style: normal; color: var(--accent); font-weight: 700; }
-  h3 { font-size: 17px; font-weight: 700; line-height: 1.3; letter-spacing: -0.005em; }
-  h4 {
-    font-family: var(--mono); font-size: 11px;
-    color: var(--green-700); font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.08em;
-    margin-bottom: 14px;
-  }
-
-  p { margin: 0 0 16px; color: var(--ink); }
-  ul, ol { margin: 0 0 16px; padding-left: 22px; }
-  li { margin-bottom: 6px; }
-  em { font-style: italic; color: var(--ink); }
-  strong { font-weight: 700; color: var(--ink); }
-
-  /* Hero */
-  .hero {
-    padding: 56px 0 36px;
-    border-top: 0;
-  }
-  .hero .kicker {
-    font-family: var(--mono); font-size: 11px;
-    color: var(--ink-faint); letter-spacing: 0.08em;
-    text-transform: uppercase; margin-bottom: 24px;
-  }
-  .hero h1 {
-    margin-bottom: 24px;
-    font-size: clamp(40px, 6vw, 72px);
-  }
-  .hero h1 .accent {
-    font-style: normal;
-    background: var(--sun-300, #ffe066);
-    padding: 2px 12px;
-    border-radius: 8px;
-    display: inline;
-    color: var(--ink);
-    font-size: clamp(28px, 3.5vw, 42px);
-    font-weight: 800;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-    line-height: 1.5;
-  }
-  .hero h1 br {
-    margin-bottom: 14px;
-  }
-  .hero .lead {
-    font-family: var(--sans); font-size: 18px; line-height: 1.55;
-    color: var(--ink); max-width: 680px;
-    font-weight: 400;
-  }
-  .hero .lead + .lead { font-size: 15px; color: var(--ink-dim); margin-top: 6px; }
-  .hero .meta {
-    font-family: var(--mono); font-size: 11px;
-    color: var(--ink-faint); margin-top: 28px;
-    display: grid; grid-template-columns: repeat(2, 1fr);
-    gap: 12px 32px;
-    border-top: 1px solid var(--rule); padding-top: 18px;
-  }
-  .hero .meta span { line-height: 1.5; }
-  .hero .meta strong {
-    color: var(--ink-dim); font-weight: 600;
-    display: block; font-size: 9px;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    margin-bottom: 2px;
-  }
-
-  /* KPI strip · matches main portfolio hero-stats */
-  .kpis {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1px; background: var(--rule);
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    margin: 28px 0 8px;
-  }
-  .kpi { background: var(--bg); padding: 18px 20px; }
-  .kpi .label {
-    font-family: var(--mono); font-size: 10px;
-    color: var(--ink-faint); letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .kpi .value {
-    font-family: var(--sans); font-weight: 800;
-    font-size: 36px; line-height: 1;
-    color: var(--ink); letter-spacing: -0.02em;
-    margin-top: 6px;
-  }
-  .kpi .sub { font-size: 12px; color: var(--ink-dim); margin-top: 6px; line-height: 1.4; }
-  @media (max-width: 720px) {
-    .kpis { grid-template-columns: 1fr; }
-  }
-
-  /* Quote block */
-  blockquote {
-    margin: 20px 0 24px;
-    padding: 16px 22px;
-    border-left: 3px solid var(--accent);
-    background: var(--bg-2);
-    color: var(--ink);
-    font-style: normal;
-    border-radius: 0 4px 4px 0;
-  }
-  blockquote p { margin: 0 0 10px; font-family: var(--sans); font-size: 18px; line-height: 1.45; color: var(--ink); font-style: italic; }
-  blockquote p:last-child { margin: 0; }
-  blockquote .cite {
-    display: block; font-family: var(--mono); font-size: 11px;
-    color: var(--ink-faint); letter-spacing: 0.04em;
-    margin-top: 12px; font-style: normal;
-  }
-
-  /* Card grid · main portfolio .case style */
-  .cards {
-    display: grid; grid-template-columns: repeat(2, 1fr);
-    gap: 1px; background: var(--rule);
-    border: 1px solid var(--rule);
-    margin: 24px 0 8px;
-  }
-  .card {
-    background: var(--bg);
-    padding: 24px 26px;
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
-    gap: 10px;
-    transition: background 0.2s;
-  }
-  .card:hover { background: var(--bg-2); }
-  .card .tag {
-    font-family: var(--mono); font-size: 10px;
-    color: var(--accent); letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .card h3 {
-    color: var(--ink); margin-bottom: 0;
-    font-family: var(--sans);
-  font-weight: 800;
-    font-size: clamp(22px, 2.2vw, 28px);
-    line-height: 1.1; letter-spacing: -0.01em;
-  }
-  .card p { font-size: 14px; line-height: 1.55; margin-bottom: 0; color: var(--ink-dim); }
-  .card .link {
-    font-family: var(--mono); font-size: 11px;
-    border-top: 1px dashed var(--rule);
-    padding-top: 12px; margin-top: 4px;
-    letter-spacing: 0.04em;
-  }
-  .card .link a { color: var(--accent); border-bottom: none; }
-  .card .link a:hover { border-bottom: 1px solid var(--accent); }
-  @media (max-width: 720px) {
-    .cards { grid-template-columns: 1fr; }
-  }
-
-  /* Three keystone moves · main-portfolio chip-card style */
-  .moves {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1px; background: var(--rule);
-    border: 1px solid var(--rule);
-    margin: 24px 0 14px;
-  }
-  .move { background: var(--bg); padding: 22px 24px; }
-  .move .id {
-    font-family: var(--sans);
-    color: var(--accent); font-size: 26px; font-weight: 800;
-    line-height: 1; margin-bottom: 8px;
-    letter-spacing: -0.02em;
-  }
-  .move h3 {
-    font-family: var(--sans); font-weight: 400;
-    font-size: 22px; line-height: 1.1;
-    margin: 4px 0 10px; color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-  .move .stat {
-    font-family: var(--mono); font-size: 11px;
-    color: var(--ink-dim); margin-top: 14px;
-    padding-top: 10px; border-top: 1px dashed var(--rule);
-    font-variant-numeric: tabular-nums; letter-spacing: 0.04em;
-  }
-  .move .stat strong { color: var(--green-700); font-weight: 700; }
-  .move-cta {
-    display: inline-flex; align-items: center; gap: 4px;
-    margin-top: 14px;
-    font-family: var(--mono); font-size: 11px; font-weight: 600;
-    letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--green-700); text-decoration: none;
-    border-bottom: 1px solid var(--green-700);
-    padding-bottom: 2px; align-self: flex-start;
-  }
-  .move { display: flex; flex-direction: column; }
-  .move-cta:hover { color: var(--accent); border-color: var(--accent); }
-  @media (max-width: 720px) {
-    .moves { grid-template-columns: 1fr; }
-  }
-
-  /* Table */
-  .sr-only {
-    position: absolute; width: 1px; height: 1px;
-    padding: 0; margin: -1px; overflow: hidden;
-    clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
-  }
-  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0 20px; }
-  .table-wrap table { margin: 0; min-width: 480px; }
-  table {
-    width: 100%; border-collapse: collapse;
-    margin: 16px 0 20px;
-    font-size: 14px;
-    border-top: 1px solid var(--rule);
-  }
-  th, td {
-    text-align: left; padding: 12px 14px;
-    border-bottom: 1px solid var(--rule);
-    vertical-align: top; line-height: 1.5;
-  }
-  th {
-    font-family: var(--mono); font-size: 10px;
-    color: var(--ink-faint); font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    background: var(--bg-3);
-  }
-
-  /* Folder tree */
-  pre.tree {
-    background: var(--bg-2); border: 1px solid var(--rule);
-    border-left: 3px solid var(--accent);
-    padding: 16px 20px; font-family: var(--mono);
-    font-size: 12px; line-height: 1.55;
-    overflow-x: auto; color: var(--ink-dim);
-    border-radius: 0 4px 4px 0; margin: 14px 0;
-  }
-
-  /* Details (collapsible frameworks list) */
-  details {
-    border: 1px solid var(--rule); border-radius: 4px;
-    padding: 0; margin: 10px 0;
-    background: var(--bg-2);
-  }
-  details summary {
-    cursor: pointer; padding: 14px 18px;
-    font-family: var(--mono); font-size: 11px;
-    color: var(--green-700); letter-spacing: 0.06em;
-    text-transform: uppercase; font-weight: 700;
-    list-style: none;
-  }
-  details summary::-webkit-details-marker { display: none; }
-  details summary::before {
-    content: "▸"; display: inline-block;
-    margin-right: 10px;
-    transition: transform 120ms ease;
-    color: var(--accent);
-  }
-  details[open] summary::before { transform: rotate(90deg); }
-  details summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  details .body { padding: 4px 18px 16px; }
-  details .body table { margin-top: 6px; }
-
-  /* Footer */
-  footer {
-    border-top: 1px solid var(--rule);
-    margin: 48px auto 0;
-    padding: 24px 32px 48px;
-    max-width: 920px;
-    font-family: var(--mono); font-size: 10px;
-    color: var(--ink-faint); letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  footer a { color: var(--green-700); }
-
-  /* ====================================================================
-     Pipeline-grade premium patterns
-     ==================================================================== */
-
-  /* Principles block · dark ink hero opener (matches /pipeline/) */
-  .principles {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    background: var(--ink);
-    color: var(--bg-2);
-    border-radius: 18px;
-    overflow: hidden;
-    margin: 32px 0 48px;
-  }
-  @media (max-width: 900px) { .principles { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 540px) { .principles { grid-template-columns: 1fr; } }
-  .principle {
-    padding: 32px 28px;
-    border-right: 1px solid rgba(255,255,255,0.08);
-  }
-  .principle:last-child { border-right: none; }
-  @media (max-width: 900px) {
-    .principle:nth-child(2) { border-right: none; }
-    .principle:nth-child(1), .principle:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,0.08); }
-  }
-  @media (max-width: 540px) {
-    .principle { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .principle:last-child { border-bottom: none; }
-  }
-  .principle .num {
-    font-family: var(--mono);
+  a { color: var(--green-deep); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 56px 32px 96px; }
+  .eyebrow {
+    font-family: "Geist Mono", ui-monospace, monospace;
     font-size: 11px;
-    color: #8fd770;
-    letter-spacing: 0.1em;
+    color: var(--ink-2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     margin-bottom: 16px;
-    text-transform: uppercase;
   }
-  .principle h4 {
-    font-family: var(--sans);
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--bg-2);
-    margin: 0 0 8px;
-    line-height: 1.3;
-    text-transform: none;
-    letter-spacing: -0.005em;
-  }
-  .principle p {
-    font-size: 13.5px;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.55;
-    margin: 0;
-  }
-  .principle em,
-  .sim-preview em { color: #8fd770; font-style: normal; font-weight: 700; }
-
-  /* Alert callouts · pipeline-page style */
-  .alert {
-    display: grid;
-    grid-template-columns: 32px 1fr;
-    gap: 14px;
-    padding: 16px 18px;
-    border-radius: 8px;
-    align-items: start;
-    margin: 16px 0;
-  }
-  .alert .icon {
-    width: 32px; height: 32px;
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    color: #fff;
+  h1 {
+    font-family: "Manrope", sans-serif;
+    font-size: clamp(34px, 4.5vw, 52px);
     font-weight: 800;
-    font-size: 14px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0 0 14px;
   }
-  .alert h5 {
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 700;
-    margin: 0 0 4px;
-    color: var(--ink);
-    text-transform: none;
-    letter-spacing: -0.005em;
+  h1 em {
+    font-style: normal;
+    background: #FFE066;
+    padding: 0 8px;
+    border-radius: 8px;
+    display: inline-block;
+    transform: rotate(-0.5deg);
   }
-  .alert p {
-    font-size: 13.5px;
-    margin: 4px 0 0;
-    color: var(--ink-dim);
-    line-height: 1.55;
+  .lead {
+    font-size: 17px;
+    color: var(--ink-2);
+    margin: 0 0 36px;
+    max-width: 64ch;
   }
-  .alert-success { background: var(--green-50); }
-  .alert-success .icon { background: var(--accent); }
-  .alert-info    { background: #e6f2ff; }
-  .alert-info    .icon { background: #2563eb; }
-  .alert-warn    { background: #fff8e0; }
-  .alert-warn    .icon { background: var(--sun-500); }
-  .alert-coral   { background: var(--coral-50); }
-  .alert-coral   .icon { background: var(--coral-500); }
+  .lead strong { color: var(--ink); font-weight: 600; }
 
-  /* Chip pills · pipeline-page style */
-  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
-  .chip {
-    font-family: var(--sans);
-    font-weight: 700;
-    font-size: 11px;
-    padding: 5px 11px;
-    border-radius: 999px;
+  .cta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 36px 0 48px;
+  }
+  .cta {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    border-bottom: none;
+    gap: 8px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .cta:hover { background: var(--tint); border-color: var(--green); color: var(--green-deep); text-decoration: none; }
+  .cta--primary {
+    background: var(--green);
+    color: #ffffff;
+    border-color: var(--green);
+  }
+  .cta--primary:hover {
+    background: var(--green-deep);
+    border-color: var(--green-deep);
+    color: #ffffff;
+  }
+
+  h2 {
+    font-family: "Manrope", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 48px 0 18px;
+    letter-spacing: -0.005em;
+  }
+  h2::before {
+    content: "";
+    display: inline-block;
+    width: 24px; height: 2px;
+    background: var(--green);
+    margin-right: 12px;
+    vertical-align: middle;
+    transform: translateY(-4px);
+  }
+
+  .modules {
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .mod {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 18px;
+    padding: 18px 22px;
+    background: var(--paper);
+    align-items: center;
     text-decoration: none;
+    color: inherit;
+    transition: background 0.12s;
   }
-  .chip-green { background: #d4f1c4; color: #054d2f; }
-  .chip-sun   { background: #fff2b3; color: #7a5500; }
-  .chip-coral { background: var(--coral-50); color: var(--coral-700); }
-  .chip-ink   { background: var(--bg-3); color: var(--ink-dim); }
-
-  /* Card elevated · lift on hover */
-  .card.card-elevated,
-  .move {
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-  }
-  .card.card-elevated:hover,
-  .move:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 32px -10px rgba(10,26,16,0.14);
-    z-index: 1;
-    position: relative;
-  }
-  .card.card-elevated {
-    box-shadow: 0 4px 16px -8px rgba(10,26,16,0.08);
-  }
-
-  /* Section ✦ divider · pipeline page motif */
-  .divider {
-    text-align: center;
-    color: var(--rule-strong);
-    font-size: 18px;
-    margin: 32px 0;
-    letter-spacing: 0.4em;
-  }
-
-  /* Hero CTAs */
-  .hero-cta-primary {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 24px;
-    background: var(--accent); color: var(--accent-ink);
-    border: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
-    font-family: var(--mono); font-weight: 700; font-size: 12px;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    transition: background 0.15s, transform 0.1s;
-    border-radius: 4px;
-  }
-  .hero-cta-primary:hover { background: var(--ink); border-color: var(--ink); transform: translateY(-1px); }
-  .hero-cta-secondary {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 13px 20px;
-    background: transparent; color: var(--ink);
-    border: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong);
-    font-family: var(--mono); font-weight: 600; font-size: 11px;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    transition: border-color 0.15s, color 0.15s;
-    border-radius: 4px;
-  }
-  .hero-cta-secondary:hover { color: var(--accent); border-color: var(--accent); }
-
-  /* Snapshot strip */
-  .snapshot {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 12px 32px;
-    margin-top: 32px;
-    padding-top: 22px;
-    border-top: 1px solid var(--rule);
-    font-family: var(--mono); font-size: 11px;
-  }
-  .snapshot > div { line-height: 1.5; }
-  .snapshot .k {
-    display: block; font-size: 9px;
-    color: var(--ink-faint); letter-spacing: 0.08em;
-    text-transform: uppercase; margin-bottom: 4px;
-  }
-  .snapshot .v { color: var(--ink-dim); font-weight: 500; }
-  @media (max-width: 720px) {
-    .snapshot { grid-template-columns: 1fr; }
-  }
-
-  /* Mini-OS dark preview block */
-  .sim-preview {
-    background: var(--ink); color: var(--bg-2);
-    padding: 40px 32px; border-radius: 14px;
-    margin: 28px 0;
-  }
-  .sim-preview .kicker {
-    color: rgba(255,255,255,0.6);
-    font-family: var(--mono); font-size: 10px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-  .sim-preview h3 {
-    font-family: var(--sans); font-weight: 800;
-    font-size: clamp(26px, 3vw, 36px);
-    color: var(--bg-2); margin: 0 0 10px;
+  .mod:hover { background: var(--tint); text-decoration: none; }
+  .mod__num {
+    font-family: "Geist Mono", ui-monospace, monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green-deep);
     letter-spacing: -0.01em;
   }
-  .sim-preview p {
-    color: rgba(255,255,255,0.75); font-size: 14.5px;
-    line-height: 1.6; margin: 0 0 24px; max-width: 580px;
+  .mod__body { min-width: 0; }
+  .mod__title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
   }
-  .sim-preview .cta-row { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-  .sim-preview .cta-row a.primary {
-    background: var(--accent); color: var(--accent-ink);
-    padding: 13px 24px; border-radius: 6px;
-    font-family: var(--mono); font-weight: 700; font-size: 12px;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    border-bottom: none; transition: background 0.15s, transform 0.1s;
+  .mod__sub {
+    font-size: 13.5px;
+    color: var(--ink-2);
+    margin-top: 4px;
+    line-height: 1.4;
   }
-  .sim-preview .cta-row a.primary:hover {
-    background: var(--bg-2); color: var(--ink);
-    transform: translateY(-1px); border-bottom: none;
+  .mod__apps {
+    font-family: "Geist Mono", monospace;
+    font-size: 10.5px;
+    color: var(--ink-2);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
-  .sim-preview .cta-row a.secondary {
-    color: rgba(255,255,255,0.85);
-    font-family: var(--mono); font-size: 11px;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    border-bottom: 1px solid rgba(255,255,255,0.35);
-    padding-bottom: 2px;
-  }
-  .sim-preview .cta-row a.secondary:hover {
-    color: var(--bg-2); border-bottom-color: var(--bg-2);
-  }
-
-  /* Anchor offset */
-  section[id] { scroll-margin-top: 72px; }
-
-  /* Responsive */
-  @media (max-width: 720px) {
-    main { padding: 18px 18px 64px; }
-    section { padding-top: 40px; }
-    .hero { padding-top: 36px; }
-    .hero .meta { grid-template-columns: 1fr; }
-    nav.toc .inner { padding: 10px 16px; gap: 2px 10px; }
+  .mod__arrow {
+    color: var(--green-deep);
+    font-size: 18px;
+    font-weight: 700;
   }
 
-  /* Print */
-  @media print {
-    nav.toc, .skip { display: none; }
-    body { background: #fff; color: #000; }
-    h1, h2, h3, h4 { color: #0a1a10; }
-    section[id] { page-break-inside: avoid; scroll-margin-top: 0; }
-    a { color: #000; text-decoration: none; border-bottom: none; }
-    .kpi, .card, .move, blockquote, pre.tree, details { break-inside: avoid; }
-    main { max-width: 100%; padding: 12px; }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    padding: 18px 22px;
+    background: #ffffff;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-2);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .meta-row strong {
+    color: var(--ink);
+    font-weight: 700;
+    font-family: "Manrope", sans-serif;
+    text-transform: none;
+    letter-spacing: -0.005em;
+    margin-right: 6px;
+  }
+
+  .footnote {
+    margin-top: 40px;
+    padding: 18px 22px;
+    background: #FAFAF3;
+    border-left: 3px solid var(--green);
+    border-radius: 4px;
+    font-size: 13.5px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  .footnote strong { color: var(--ink); font-weight: 600; }
+  .footnote code {
+    font-family: "Geist Mono", monospace;
+    background: #ffffff;
+    padding: 1px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--rule);
+    font-size: 12.5px;
   }
 </style>
 </head>
 <body>
+<main class="wrap">
+  <div class="eyebrow">FinTechCard · SDR Onboarding · ADDIE Phase 3 · Develop</div>
+  <h1>Mini-OS shell + <em>6 SCORM modules</em>.</h1>
+  <p class="lead">
+    A custom-built workspace simulator the new SDR uses through the cohort. Seven simulated apps
+    — <strong>Outreach</strong>, <strong>Gong</strong>, <strong>Salesforce</strong>,
+    <strong>LinkedIn / Companies House</strong>, <strong>Calendar</strong>,
+    <strong>Phone-dialler</strong>, <strong>Slack</strong> — render in their own draggable
+    windows on a desktop. Each module boots the apps it needs and walks the rep through
+    one keystone scenario.
+  </p>
 
-<a class="skip" href="#main">Skip to content</a>
-
-<nav class="toc" aria-label="Section navigation">
-  <div class="inner">
-    <a href="../../" style="font-weight:600;">&larr; Portfolio</a>
-    <a href="../">&larr; Pipeline</a>
-    <span class="brand">FinTechCard / SDR Onboarding</span>
-    <a href="#hero">01 Hero</a>
-    <a href="#problem">02 Problem</a>
-    <a href="#approach">03 Approach</a>
-    <a href="#moves">04 Moves</a>
-    <a href="#built">05 Built</a>
-    <a href="#frameworks">06 Frameworks</a>
-    <a href="#results">07 Results</a>
-    <a href="#critic">08 Critic loop</a>
-    <a href="#repo">09 Repo</a>
-    <a href="#footer">10 Footer</a>
+  <div class="cta-bar">
+    <a class="cta cta--primary" href="scorm-shell/index.html">Open the shell preview →</a>
+    <a class="cta" href="module-03-calendar-close/index.html">Try Module 3 · Calendar Close</a>
   </div>
-</nav>
 
-<main id="main">
+  <div class="meta-row">
+    <div><strong>164</strong> files imported</div>
+    <div><strong>6</strong> modules · SCORM 1.2</div>
+    <div><strong>7</strong> simulated apps</div>
+    <div><strong>~10 min</strong> per module</div>
+  </div>
 
-  <!-- 1. HERO -->
-  <section id="hero" class="hero" aria-labelledby="hero-h">
-    <div class="kicker">Case study &middot; LXD portfolio &middot; <span id="kicker-year">2026</span></div>
-    <script>document.getElementById('kicker-year').textContent=new Date().getFullYear();</script>
-    <h1 id="hero-h">FinTechCard &middot; SMB SDR Onboarding<br><span class="accent">95 &rarr; 73 days to first paid quota.</span></h1>
-    <p class="lead">
-      Compressed SDR ramp time from 95 days to 73 days by training the three
-      behavioural moves top reps share &mdash; in the rep&rsquo;s actual workspace.
-    </p>
-    <p class="lead" style="font-size:15px; color:#3a4a43; margin-top:8px;">
-      This is the <a href="../" style="color:#008f5f;">7-phase pipeline</a> applied to one engagement, with the decisions log, framework citations, and confound disclosures visible.
-    </p>
-    <div class="meta" role="contentinfo">
-      <span><strong>Client:</strong> FinTechCard Ltd. · Series-B EU fintech <em style="font-style:italic;color:#5c6b62;">(illustrative)</em></span>
-      <span><strong>Role:</strong> Mario Becerra &middot; Lead LXD &middot; solo + 2 SMEs + 1 LMS admin</span>
-      <span><strong>Window:</strong> 16 weeks kickoff &rarr; first cohort live &middot; 6-month engagement</span>
-      <span><strong>Budget:</strong> &euro;58 000 fixed-fee &middot; 25 / 50 / 25 phased</span>
-    </div>
-    <p class="lead" style="font-size:13.5px; color:#5c6b62; margin-top:14px; padding:10px 14px; border-left:3px solid var(--accent); background:rgba(10,135,84,0.04);">
-      <strong>Note:</strong> FinTechCard is an illustrative portfolio engagement. Brief, artefacts, and all 6 SCORM modules built by Mario; numbers synthetic but cross-checked. Real client work (Yandex Practicum, TripleTen, BEAM, current AI Math EdTech under NDA) appears at résumé-summary level only — names without detail, for confidentiality.
-    </p>
-    <div class="kpis" aria-label="Headline outcomes">
-      <div class="kpi">
-        <div class="label">Mean ramp</div>
-        <div class="value">95 d &rarr; 73 d</div>
-        <div class="sub">&minus;23 % actual &middot; target &minus;25 %</div>
+  <h2>Modules</h2>
+  <div class="modules">
+    <a class="mod" href="module-01-diagnostic-opener/index.html">
+      <span class="mod__num">M1</span>
+      <div class="mod__body">
+        <div class="mod__title">Diagnostic Opener</div>
+        <div class="mod__sub">Earn the next 90 seconds with a sharp diagnostic question — not a pitch.</div>
+        <div class="mod__apps">Outreach · LinkedIn / CH · Phone-dialler · Gong</div>
       </div>
-      <div class="kpi">
-        <div class="label">Day-120 retention</div>
-        <div class="value">83 % &rarr; 93 %</div>
-        <div class="sub">Target &ge; 92 % &middot; bottom-quartile churn floor</div>
+      <span class="mod__arrow">→</span>
+    </a>
+    <a class="mod" href="module-02-objection-acknowledge/index.html">
+      <span class="mod__num">M2</span>
+      <div class="mod__body">
+        <div class="mod__title">Objection Acknowledge</div>
+        <div class="mod__sub">Hold the line on price/competitor/timing pushback — acknowledge before reframing.</div>
+        <div class="mod__apps">Phone-dialler · Slack · Gong</div>
       </div>
-      <div class="kpi">
-        <div class="label">Cost-of-churn avoided</div>
-        <div class="value">~&euro;90K / rep</div>
-        <div class="sub">Per K.M. brief &sect;4</div>
+      <span class="mod__arrow">→</span>
+    </a>
+    <a class="mod" href="module-03-calendar-close/index.html">
+      <span class="mod__num">M3</span>
+      <div class="mod__body">
+        <div class="mod__title">Calendar Close <span style="color: var(--green-deep); font-weight: 600; font-size: 11px; background: var(--tint); padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle;">RECOMMENDED DEMO</span></div>
+        <div class="mod__sub">Send the invite during the call. Two slots. Sent before you hang up.</div>
+        <div class="mod__apps">Outreach · Calendar · Phone-dialler · Salesforce</div>
       </div>
-    </div>
+      <span class="mod__arrow">→</span>
+    </a>
+    <a class="mod" href="module-04-icp-buyer-fit/index.html">
+      <span class="mod__num">M4</span>
+      <div class="mod__body">
+        <div class="mod__title">ICP &amp; Buyer Fit</div>
+        <div class="mod__sub">Map prospect signals to one of four archetypes before dialling.</div>
+        <div class="mod__apps">LinkedIn / CH · Outreach · Salesforce</div>
+      </div>
+      <span class="mod__arrow">→</span>
+    </a>
+    <a class="mod" href="module-05-product-prop-mapping/index.html">
+      <span class="mod__num">M5</span>
+      <div class="mod__body">
+        <div class="mod__title">Product-Prop Mapping</div>
+        <div class="mod__sub">Pain → Prop quick-reference: pick the right value-prop in &lt; 8 seconds.</div>
+        <div class="mod__apps">Slack · Phone-dialler</div>
+      </div>
+      <span class="mod__arrow">→</span>
+    </a>
+    <a class="mod" href="module-06-regulatory-deflection/index.html">
+      <span class="mod__num">M6</span>
+      <div class="mod__body">
+        <div class="mod__title">Regulatory Deflection</div>
+        <div class="mod__sub">KYC · AML · SCA · PSD2 · GDPR — if it's not in the table → escalate.</div>
+        <div class="mod__apps">Slack · Phone-dialler</div>
+      </div>
+      <span class="mod__arrow">→</span>
+    </a>
+  </div>
 
-    <!-- Hero CTAs -->
-    <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:28px;">
-      <a class="hero-cta-primary" href="03-develop/module-03-calendar-close/index.html">Try the mini-OS &rarr;</a>
-      <a class="hero-cta-secondary" href="#moves">See the 3 keystone moves</a>
-      <a class="hero-cta-secondary" href="#results">Jump to results</a>
-    </div>
-
-    <!-- Principles · the four moves stacked, dark opener -->
-    <div class="principles" aria-label="Four design principles">
-      <div class="principle">
-        <div class="num">Principle 01</div>
-        <h4>ADDIE phase spine</h4>
-        <p>Seven-phase structure (PM &rarr; Iterate) gated by the sponsor&rsquo;s 25 / 50 / 25 payment contract. Every gate is auditable.</p>
-      </div>
-      <div class="principle">
-        <div class="num">Principle 02</div>
-        <h4>4C/ID whole-task curriculum</h4>
-        <p>Top reps "sound nothing alike but those three moves are always there." Configural mastery, not additive.</p>
-      </div>
-      <div class="principle">
-        <div class="num">Principle 03</div>
-        <h4>Kirkpatrick L1&ndash;L4 cascade</h4>
-        <p>Reverse-engineered from K.M.'s public L4 commitment. Wired through Salesforce, Gong, HRIS, Sana. No new tooling.</p>
-      </div>
-      <div class="principle">
-        <div class="num">Principle 04</div>
-        <h4>Mini-OS workspace sim</h4>
-        <p>The rep practises moves <em>in the place</em> they perform them. Seven simulated apps. Six SCORMs run inside.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. PROBLEM -->
-  <section id="problem" aria-labelledby="problem-h">
-    <h4>02 &middot; The problem</h4>
-    <h2 id="problem-h">Two KPIs on one dashboard, and a sponsor allergic to slide-decks</h2>
-    <p>
-      K.M., VP Sales Enablement, opened kickoff with two paragraphs that
-      framed the entire engagement. They are reproduced verbatim because every
-      design choice downstream answers to them.
-    </p>
-    <blockquote>
-      <p>&ldquo;Ramp time for new SDRs is sitting at ~95 days to first paid quota attainment. Top decile hits it in ~52. Bottom quartile churns out before day 120 without ever paying for themselves. We need to compress mean ramp by 25 % and stop the bottom-quartile churn &mdash; losing two reps before they pay back costs us ~&euro;90K each in unrecovered onboarding.&rdquo;</p>
-      <p>&ldquo;I&rsquo;ve committed &minus;25 % ramp compression to the CRO. That&rsquo;s the public number. If we hit it, we hit it together. If we miss it, I need to know whether the cause was training or lead quality or comp, because the conversation with the CRO is honest either way.&rdquo;</p>
-      <cite class="cite">&mdash; K.M., VP Sales Enablement &middot; brief &sect;4 + &sect;8</cite>
-    </blockquote>
-    <p>
-      The audit verdict from Phase 1: the existing 6-week program teaches
-      <em>product</em> and <em>tools</em> correctly, but does not teach the three keystone
-      behavioural moves explicitly. Reps either pick them up by osmosis from
-      top performers (slow, uneven) or never pick them up (churn). The
-      bottom quartile loses signal after week 4, when manager 1:1 cadence
-      variance kicks in.
-    </p>
-    <p class="data" style="color:var(--ink-2);font-size:14px;">
-      Baseline: 95 d mean ramp &middot; 52 d top decile &middot; &gt;120 d bottom quartile &middot; 83 % day-120
-      retention &middot; ~17 % bottom-quartile churn pre-payback &middot; ~&euro;90K
-      unrecovered onboarding per lost rep.
-    </p>
-  </section>
-
-  <!-- 3. APPROACH -->
-  <section id="approach" aria-labelledby="approach-h">
-    <h4>03 &middot; The approach</h4>
-    <h2 id="approach-h">Four moves stacked on each other</h2>
-    <p>
-      No single framework solves this. The build stacks four &mdash; each picked
-      against a specific failure mode of the existing program.
-    </p>
-    <div class="cards">
-      <div class="card">
-        <div class="tag">Process spine</div>
-        <h3>ADDIE phase backbone</h3>
-        <p>
-          Seven-phase structure (Project-management scaffold &rarr; Iterate) aligned to the sponsor&rsquo;s
-          25 / 50 / 25 phased-payment contract. Phase-gates make decisions auditable.
-        </p>
-        <div class="link"><a href="00-project-management/master-plan.html">&rarr; master-plan.md</a></div>
-      </div>
-      <div class="card">
-        <div class="tag">Curriculum architecture</div>
-        <h3>4C/ID whole-task curriculum</h3>
-        <p>
-          Top reps &ldquo;sound nothing alike but those three moves are always there.&rdquo;
-          Mastery is configural, not additive &mdash; Van Merri&euml;nboer&rsquo;s whole-task
-          progression with worked-example &rarr; completion &rarr; solo fading.
-        </p>
-        <div class="link"><a href="02-design/4cid-blueprint.html">&rarr; 4cid-blueprint.md</a></div>
-      </div>
-      <div class="card">
-        <div class="tag">Measurement plumbing</div>
-        <h3>Kirkpatrick L1&ndash;L4 cascade</h3>
-        <p>
-          Reverse-engineered from K.M.&rsquo;s public L4 commitments. Wired
-          through Salesforce, Gong, HRIS, and Sana &mdash; no new tooling.
-          L1 reframed as LTEM tier-3 application-intent, not a smile-sheet.
-        </p>
-        <div class="link"><a href="05-evaluate/kirkpatrick-measurement-plan.html">&rarr; kirkpatrick-measurement-plan.md</a></div>
-      </div>
-      <div class="card">
-        <div class="tag">Delivery surface</div>
-        <h3>Mini-OS workspace simulation</h3>
-        <p>
-          The rep practises the moves <em>in the place</em> they perform them &mdash; a
-          custom window manager with seven simulated apps (Outreach, Gong,
-          Salesforce, LinkedIn / Companies House, Calendar, Phone-dialler,
-          Slack). Six SCORMs run inside it.
-        </p>
-        <div class="link"><a href="03-develop/scorm-shell/index.html">&rarr; scorm-shell live preview</a></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. KEYSTONE MOVES -->
-  <section id="moves" aria-labelledby="moves-h">
-    <h4>04 &middot; The keystone moves</h4>
-    <h2 id="moves-h">Three moves, surfaced from 22 Gong calls</h2>
-    <blockquote>
-      <p>&ldquo;Three things stand out from Gong reviews. One &mdash; top reps spend the first 60 seconds of every cold call asking one diagnostic question that exposes which pain to pitch against. The rest of them launch into the pitch in the first 15 seconds. Two &mdash; when the buyer pushes back, top reps re-state the objection back in the buyer&rsquo;s own words before responding. The rest of them argue. Three &mdash; top reps end every call with a written next step booked in the calendar before they hang up. The rest say &lsquo;I&rsquo;ll follow up.&rsquo;&rdquo;</p>
-      <cite class="cite">&mdash; A.S., Head of SDR &middot; brief &sect;9</cite>
-    </blockquote>
-    <div class="moves" aria-label="Three keystone moves">
-      <div class="move">
-        <div class="id">M1</div>
-        <h3>Diagnostic Opener</h3>
-        <p style="font-size:14px;color:var(--ink-2);margin:0;">
-          One observation + one question in the first 60 seconds. Then a
-          five-second silence &mdash; &ldquo;feels like an hour but it&rsquo;s where the deal happens.&rdquo;
-        </p>
-        <div class="stat">Top decile <strong>8 / 8</strong> &middot; Bottom <strong>0 / 4</strong></div>
-        <a class="move-cta" href="03-develop/module-01-diagnostic-opener/">Open M1 module &rarr;</a>
-      </div>
-      <div class="move">
-        <div class="id">M2</div>
-        <h3>Objection Acknowledge</h3>
-        <p style="font-size:14px;color:var(--ink-2);margin:0;">
-          Re-state the objection in the buyer&rsquo;s own words before responding.
-          &ge; 2 token overlap with what the buyer said. Then wait.
-        </p>
-        <div class="stat">Top decile <strong>7 / 7</strong> &middot; Bottom <strong>0 / 4</strong></div>
-        <a class="move-cta" href="03-develop/module-02-objection-acknowledge/">Open M2 module &rarr;</a>
-      </div>
-      <div class="move">
-        <div class="id">M3</div>
-        <h3>Calendar Close</h3>
-        <p style="font-size:14px;color:var(--ink-2);margin:0;">
-          Calendar open in a second tab. Two slots read aloud, invite sent
-          during the call. Never &ldquo;I&rsquo;ll follow up.&rdquo;
-        </p>
-        <div class="stat">Top decile <strong>7 / 8</strong> &middot; Bottom <strong>0 / 4</strong></div>
-        <a class="move-cta" href="03-develop/module-03-calendar-close/">Open M3 module &rarr;</a>
-      </div>
-    </div>
-    <p class="data" style="font-size:13.5px;color:var(--muted);">
-      Average call duration &middot; top decile <span class="num">8:42</span>
-      &middot; mid <span class="num">4:11</span>
-      &middot; bottom <span class="num">0:31</span>. Source: brief &sect;11 Gong aggregate (n=22).
-    </p>
-  </section>
-
-  <!-- 5. WHAT WAS BUILT -->
-  <section id="built" aria-labelledby="built-h">
-    <h4>05 &middot; What was built</h4>
-    <h2 id="built-h">Six modules, one shell, three measurement instruments, one playbook</h2>
-    <div class="table-wrap">
-    <table>
-      <caption class="sr-only">Artefacts shipped &mdash; six SCORM modules, mini-OS shell, manager rubric, measurement pipeline, iteration playbook, hand-off pack.</caption>
-      <thead>
-        <tr><th scope="col">Artefact</th><th scope="col">What it is</th><th scope="col">Where</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>6 SCORM 1.2 modules</td>
-          <td>Custom-built (vanilla HTML/JS, not Articulate per D-005). &le; 10 min each. Worked-example &rarr; completion &rarr; solo fading in each.</td>
-          <td><a href="03-develop/">03-develop/module-01 &hellip; 06</a></td>
-        </tr>
-        <tr>
-          <td>Mini-OS shell &middot; 7 simulated apps</td>
-          <td>Window manager + taskbar + Outreach, Gong, Salesforce, LinkedIn / Companies House, Calendar, Phone-dialler, Slack. Reused across all 6 modules.</td>
-          <td><a href="03-develop/scorm-shell/index.html">scorm-shell/index.html</a></td>
-        </tr>
-        <tr>
-          <td>Manager rubric &middot; 3 rows &times; 5 anchors</td>
-          <td>One A4 page. M1 / M2 / M3, each 1&ndash;5 with three behavioural anchors. Designed jointly with J.T. (UK Pod 1) and M.K. (DE Pod 1).</td>
-          <td><a href="02-design/rubric-design.html">02-design/rubric-design.md</a></td>
-        </tr>
-        <tr>
-          <td>L1&ndash;L4 measurement pipeline</td>
-          <td>L1 LTEM tier-3 pulse &middot; L2 SCORM quiz + day-7 retrieval &middot; L3 Gong-tagged rubric &rarr; <span class="mono">Call_Review__c</span> &middot; L4 Salesforce <span class="mono">Ramp_Time__c</span> + HRIS day-120.</td>
-          <td><a href="05-evaluate/">05-evaluate/</a></td>
-        </tr>
-        <tr>
-          <td>Iteration playbook</td>
-          <td>10 decision rules: IF [L1&ndash;L4 signal] THEN [4-week refresh sprint], named owner, falsifiable done-criterion.</td>
-          <td><a href="06-iterate/iteration-playbook.html">iteration-playbook.md</a></td>
-        </tr>
-        <tr>
-          <td>Hand-off pack</td>
-          <td>Runnable cold by an in-house designer with no prior context. Survives K.M. departure (brief &sect;20 risk row 5).</td>
-          <td><a href="06-iterate/handoff-pack.html">handoff-pack.md</a></td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-    <p class="data" style="font-size:13.5px;color:var(--muted);">
-      Scale: <span class="num">~270</span> files &middot; <span class="num">~80 000</span> lines across the whole repo &middot; Phase 3 alone =
-      <span class="num">~165</span> files &middot; <span class="num">~48 000</span> lines of code &middot; 7 phases of design docs.
-    </p>
-
-    <!-- Mini-OS dark preview block -->
-    <div class="sim-preview" aria-labelledby="sim-h">
-      <div class="kicker">Live simulation &middot; runs in browser</div>
-      <h3 id="sim-h">The rep practises the close in a second tab, on a live call.</h3>
-      <p>
-        Custom mini-OS with seven simulated apps. Module 3 walks the learner through the M3 Calendar Close
-        habit-gate: the dialler stays disabled until Calendar opens in a second window. The invite goes
-        out <em>during</em> the call, not after.
-      </p>
-      <div class="cta-row">
-        <a class="primary" href="03-develop/module-03-calendar-close/index.html">Open Module 3 &middot; Calendar Close &rarr;</a>
-        <a class="secondary" href="03-develop/scorm-shell/index.html">Browse the 7 apps standalone</a>
-        <a class="secondary" href="artefacts/FTC-SDR-Onboarding-M1-M6-scorm12.zip" download
-           title="SCORM 1.2 package · 6 modules · upload to Moodle / SCORM Cloud / Sana">
-          ⤓ Download SCORM 1.2 zip · 6 modules (292 KB)
-        </a>
-        <a class="secondary" href="../mini-cases/"
-           title="3 single-keystone SCORM builds across compliance / call-centre / ERP">
-          ▦ See 3 mini-cases · range bookend &rarr;
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. FRAMEWORKS -->
-  <section id="frameworks" aria-labelledby="frameworks-h">
-    <h4>06 &middot; Frameworks applied</h4>
-    <h2 id="frameworks-h">20 frameworks, each pinned to brief evidence</h2>
-    <p>
-      Every framework below was triggered by a specific quote, number, or
-      constraint in the brief. The full citation pack with rejected
-      alternatives lives in
-      <a href="00-project-management/frameworks-applied.html">frameworks-applied.md</a>.
-    </p>
-    <details>
-      <summary>Open the 20-framework table</summary>
-      <div class="body">
-        <div class="table-wrap">
-        <table>
-          <caption class="sr-only">20 instructional-design frameworks applied to this engagement, each tied to brief evidence.</caption>
-          <thead><tr><th scope="col" style="width:32%">Framework</th><th scope="col">Brief evidence that triggered it</th></tr></thead>
-          <tbody>
-            <tr><td>ADDIE (Branson 1975 / Molenda 2003)</td><td>&sect;3 &ldquo;Full instructional-design cycle &middot; Discover &rarr; Iterate.&rdquo; 25 / 50 / 25 payment keyed to phase gates.</td></tr>
-            <tr><td>4C/ID (Van Merri&euml;nboer 1997 / 2018)</td><td>&sect;9 A.S.: &ldquo;Top reps sound nothing alike. But those three moves are always there.&rdquo; Mastery is configural.</td></tr>
-            <tr><td>Kirkpatrick L1&ndash;L4 (+ Phillips)</td><td>&sect;5 success-measures table is already Kirkpatrick-shaped; CRO commitment is L4-anchored.</td></tr>
-            <tr><td>ABCD outcomes (Mager / Heinich)</td><td>&sect;5 supplies the Degree column for every measurable outcome.</td></tr>
-            <tr><td>Bloom revised (Anderson &amp; Krathwohl 2001)</td><td>&sect;10.1 M.G.: &ldquo;Stop trying to sound smart.&rdquo; Apply / Analyse &mdash; never Remember-only.</td></tr>
-            <tr><td>Action Mapping (Moore 2017)</td><td>&sect;8 K.M.: surface comp-plan and lead-quality issues <em>separate</em> from training.</td></tr>
-            <tr><td>Backwards Design (Wiggins &amp; McTighe 2005)</td><td>Pairs with the L1&ndash;L4 requirement so outcomes and assessments cannot drift apart.</td></tr>
-            <tr><td>Cognitive Load Theory (Sweller 1988 / 2011)</td><td>&sect;7 &ldquo;&le; 10 min per module&rdquo; is a hard germane-load budget. &sect;10.3 H.K.: &ldquo;I forget them under pressure.&rdquo;</td></tr>
-            <tr><td>Multimedia learning (Mayer 2014)</td><td>&sect;7 no-audio constraint forces signalling + segmenting + pre-training to compensate.</td></tr>
-            <tr><td>Worked-example &rarr; completion &rarr; solo (Renkl &amp; Atkinson 2003)</td><td>&sect;20 top-rep articulation gap &mdash; the <em>system</em> does the fading, not a human mentor.</td></tr>
-            <tr><td>Spaced retrieval (Roediger &amp; Karpicke 2006)</td><td>&sect;5 L2 explicit: &ldquo;Spaced retrieval at +7 d &ge; 70 %.&rdquo;</td></tr>
-            <tr><td>LTEM tier-3 (Thalheimer 2018)</td><td>&sect;8 K.M.: &ldquo;Another Articulate slide-deck no one finishes.&rdquo; L1 is not a smile-sheet.</td></tr>
-            <tr><td>Dirksen 5-dim gap model (2015)</td><td>&sect;10.3 H.K.: &ldquo;I know the three moves but I forget them under pressure&rdquo; &mdash; skill + environment, not knowledge.</td></tr>
-            <tr><td>Merrill First Principles (2002)</td><td>&sect;18.2 brand voice: &ldquo;Show the move, then name the move.&rdquo; Demonstration before naming.</td></tr>
-            <tr><td>Gagn&eacute;'s Nine Events (1985)</td><td>10-minute module micro-structure; without it modules skip the retention step.</td></tr>
-            <tr><td>UDL + WCAG 2.1 AA (CAST 2018 / W3C 2018)</td><td>&sect;7 contractual constraint &ldquo;WCAG 2.1 AA.&rdquo;</td></tr>
-            <tr><td>Situated cognition (Lave &amp; Wenger 1991)</td><td>&sect;14 audit verdict: &ldquo;Tools learned in isolation, not in workflow.&rdquo; Mini-OS is the fix.</td></tr>
-            <tr><td>Self-determination theory (Ryan &amp; Deci 2000)</td><td>&sect;10.5 exit interview: &ldquo;Every Monday I was bottom 3 and everyone could see it.&rdquo; No leaderboards in v1.</td></tr>
-            <tr><td>Threshold concepts (Meyer &amp; Land 2005)</td><td>&sect;10.1 M.G.: &ldquo;Five seconds feels like an hour but it&rsquo;s where the deal happens.&rdquo; The silence is the threshold.</td></tr>
-            <tr><td>Job-aid theory (Rossett &amp; Schafer 2007)</td><td>&sect;10.4 P.B.: &ldquo;I want to know the move before I&rsquo;m on the call.&rdquo; Point-of-use beats classroom recall.</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <p style="font-size:13px;color:var(--muted);margin-top:14px;">
-          Frameworks considered and <strong>explicitly rejected</strong> (8): Kemp, Dick &amp; Carey, ASSURE, 70-20-10,
-          Bloom 1956, SOLO, HPT (ISPI), Biggs constructive alignment. Reasoning logged in
-          <a href="00-project-management/frameworks-applied.html">frameworks-applied.md</a>.
-        </p>
-      </div>
-    </details>
-  </section>
-
-  <!-- 7. RESULTS -->
-  <section id="results" aria-labelledby="results-h">
-    <h4>07 &middot; Results (honest read)</h4>
-    <h2 id="results-h">Two of two KPIs at or near target &mdash; one with a named confound</h2>
-    <div class="table-wrap">
-    <table aria-label="Six-month results table">
-      <caption class="sr-only">Six-month results &mdash; metric vs baseline vs target vs actual, with honest-read column.</caption>
-      <thead>
-        <tr><th scope="col">Metric</th><th scope="col">Baseline</th><th scope="col">6-month target</th><th scope="col">6-month actual</th><th scope="col">Read</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Mean ramp (trailing-4)</td>
-          <td class="num">95 d</td>
-          <td class="num">&le; 71 d</td>
-          <td class="num">73 d</td>
-          <td>2 d above target. Confound below.</td>
-        </tr>
-        <tr>
-          <td>Day-120 retention</td>
-          <td class="num">~83 %</td>
-          <td class="num">&ge; 92 %</td>
-          <td class="num">93 %</td>
-          <td>On target.</td>
-        </tr>
-        <tr>
-          <td>L3 talk-track adherence (W4&ndash;8)</td>
-          <td class="num">~52 %</td>
-          <td class="num">&ge; 80 %</td>
-          <td class="num">79 %</td>
-          <td>7 of 9 pods at floor; Belfast 64 % + Barcelona 68 % below trigger.</td>
-        </tr>
-        <tr>
-          <td>L3 objection-handling rubric (W4)</td>
-          <td class="num">~2.4 / 5</td>
-          <td class="num">&ge; 3.5 / 5</td>
-          <td class="num">3.7 / 5</td>
-          <td>Manager-scored; IRR 0.74 after Phase 6 calibration.</td>
-        </tr>
-        <tr>
-          <td>L2 SCORM mastery (first attempt)</td>
-          <td>&mdash;</td>
-          <td class="num">&ge; 80 %</td>
-          <td class="num">86 %</td>
-          <td>M2 hardest (81 %); M5 easiest (92 %).</td>
-        </tr>
-        <tr>
-          <td>L2 spaced retrieval (+7 d)</td>
-          <td>&mdash;</td>
-          <td class="num">&ge; 70 %</td>
-          <td class="num">74 %</td>
-          <td>Day-7 mini-quiz · adherence drops on M6 (regulatory).</td>
-        </tr>
-        <tr>
-          <td>L1 &ldquo;use on a call today&rdquo;</td>
-          <td>&mdash;</td>
-          <td class="num">&ge; 4.0 / 5</td>
-          <td class="num">4.3 / 5</td>
-          <td>Module 1 highest (4.6); Module 6 at floor (4.0).</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-    <p>
-      <strong>Confound disclosure</strong> (per <a href="00-project-management/decisions-log.html">D-008</a> and K.M.&rsquo;s &sect;8 commitment):
-      the marketing lead-quality index drifted <span class="num">&minus;1.8 pp</span> over the cohort window per the RevOps
-      dashboard line 3. This is documented as an associative factor, not subtracted from the
-      headline result. The comp-plan SPIF distortion (&sect;17) is unchanged; J.V.&rsquo;s redesign is on the
-      Q3 roadmap. Manager 1:1 cadence variance narrowed &mdash; rubric adopted in 8 of 9 pods.
-    </p>
-    <blockquote>
-      <p>&ldquo;If we miss it, I need to know whether the cause was training or lead quality or comp, because the conversation with the CRO is <strong>honest either way</strong>.&rdquo;</p>
-      <span class="cite">&mdash; K.M., brief &sect;8 &middot; the closing line of the exec deck</span>
-    </blockquote>
-  </section>
-
-  <!-- 8. CRITIC LOOP -->
-  <section id="critic" aria-labelledby="critic-h">
-    <h4>08 &middot; Critic loop</h4>
-    <h2 id="critic-h">Agentic self-critique &mdash; each phase walked through a cold reader</h2>
-    <p>
-      Every phase artefact bundle was reviewed by a separate critic agent before
-      sign-off. The critic ran as a fresh subagent with no access to the
-      drafting context &mdash; it saw only the brief, the artefacts, and the phase-gate
-      criteria. Its job: ask whether the artefacts held up to a cold reader.
-      Verify every quantitative claim back to brief or decision-log. Surface
-      the three issues a sponsor like K.M. would raise on first read.
-    </p>
-    <p>
-      Up to three critic passes per phase; the phase only advanced after a <code>PASS</code>
-      verdict. Pass 1 for Phase 4 surfaced three date-arithmetic and citation-hygiene
-      issues; the follow-up rework closed all three and the verdict was re-affirmed.
-      Pass 1 for Phase 6 caught a slide-4 cohort-count contradiction with brief &sect;21
-      and a sandbagging-flirt closing line on slide 5; both rewritten in a single revision
-      pass. Phase 3 (Develop) returned a <code>CONDITIONAL PASS</code> &mdash; three fixes (M2
-      manifest under-declaration, event-log spec drift, SCORM Cloud preview log) &mdash; all
-      closed in one rework. The full audit trail is in
-      <a href="00-project-management/critic-log.html">critic-log.md</a>.
-    </p>
-    <p style="font-size:14px;color:var(--ink-2);">
-      The critic loop is the structural answer to the kickoff instruction:
-      <em>work iteratively like in agile, but also run yourself as a critic to fix
-      what you produced.</em> Phase-gates are the agile sprint review;
-      the critic agent is the cold-reader stand-in for K.M.
-    </p>
-  </section>
-
-  <!-- 9. REPOSITORY MAP -->
-  <section id="repo" aria-labelledby="repo-h">
-    <h4>09 &middot; How to read this repository</h4>
-    <h2 id="repo-h">Folder map</h2>
-<pre class="tree">pipeline/engagement/
-&#9500;&#9472;&#9472; <a href="case-study-tz.html">case-study-tz.md</a>                  Engagement brief (input)
-&#9500;&#9472;&#9472; <a href="README.html">README.md</a>                         Project master overview
-&#9500;&#9472;&#9472; <a href="PROJECT-INDEX.html">PROJECT-INDEX.md</a>                  Flat alphabetical index of every file
-&#9500;&#9472;&#9472; <a href="BUILD-MANIFEST.html">BUILD-MANIFEST.md</a>                 Phase-by-phase counts + critic verdicts
-&#9500;&#9472;&#9472; 00-project-management/            Master plan &middot; frameworks &middot; decisions &middot; critic log
-&#9500;&#9472;&#9472; 01-analyze/                       Phase 1 &middot; business goal, personas, gap analysis
-&#9500;&#9472;&#9472; 02-design/                        Phase 2 &middot; curriculum, outcomes, storyboards, UX system
-&#9500;&#9472;&#9472; <a href="03-develop/">03-develop/</a>                       Phase 3 &middot; 6 SCORMs + mini-OS shell (~165 files)
-&#9500;&#9472;&#9472; 04-implement/                     Phase 4 &middot; launch runbook, comms, calibration
-&#9500;&#9472;&#9472; 05-evaluate/                      Phase 5 &middot; L1&ndash;L4 measurement instruments
-&#9492;&#9472;&#9472; 06-iterate/                       Phase 6 &middot; iteration playbook, hand-off, exec deck</pre>
-    <p style="font-size:14px;color:var(--ink-2);">
-      Every folder has its own <code>README.md</code> with the phase intent, gate criteria, and forward
-      links. Every artefact carries a <code>Why this artefact</code> header citing the specific brief
-      &sect; and the framework lens that triggered the work.
-    </p>
-    <p style="font-size:14px;">
-      <strong>To preview the mini-OS:</strong> open
-      <a href="03-develop/scorm-shell/index.html">03-develop/scorm-shell/index.html</a>
-      directly in a browser.
-      <strong>To try a module:</strong>
-      <a href="03-develop/module-03-calendar-close/index.html">Module 3 &middot; Calendar Close</a> shows the habit-gate UX
-      most clearly.
-    </p>
-  </section>
-
+  <h2>What changed</h2>
+  <div class="footnote">
+    <strong>2026-05-20 · UX overhaul.</strong> The seven simulated apps are now full pixel-clones
+    of the real products: <strong>Outreach</strong> with its black sidebar + red brand,
+    <strong>Gong</strong> with the purple icon rail + transcript moments,
+    <strong>Salesforce Lightning</strong> with the dark-blue global nav + object tabs +
+    record-page layout, <strong>LinkedIn</strong> with the white topbar + blue brand + CH
+    side-panel, <strong>Google Calendar</strong> with the multi-colour icon + Today / week
+    view chrome, <strong>Aircall-style dialler</strong> with dark theme + green CTA, and
+    <strong>Slack</strong> with the aubergine workspace sidebar + channel list. The mini-OS
+    shell is now a Windows-11-style desktop with a centred frosted taskbar.
+    See <code>scorm-shell/styles/apps/*.css</code> for the per-app sheets.
+  </div>
 </main>
-
-<footer id="footer">
-  Built by <strong>Mario Becerra</strong>. 16-week build window + 6-month measurement window (March 2026 &ndash; December 2026).
-  &nbsp;&middot;&nbsp; <a href="#hero">Back to top</a>
-</footer>
-
 </body>
 </html>

@@ -1,0 +1,251 @@
+/* =========================================================================
+   apps/gong.css · Gong call-intelligence clone
+   --------------------------------------------------------------------------
+   Layout: purple icon rail + 3-column workspace (calls list | transcript |
+   moments). Transcript turns get a speaker stripe + M-move chips.
+   ========================================================================= */
+
+.app--gong { --gg-purple: #6F2CFF; --gg-purple-deep: #4D1BBF; --gg-ink: #0B0F19; }
+.app--gong .brand-app {
+  grid-template-columns: 52px 1fr;
+  grid-template-rows: 1fr;
+  background: #F7F8FA;
+}
+
+/* --- Rail --- */
+.app--gong .gg-rail {
+  background: linear-gradient(180deg, #2A0E5F 0%, #1B0640 100%);
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  gap: 4px;
+}
+.app--gong .gg-rail__logo {
+  width: 30px; height: 30px;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #8B5CF6, var(--gg-purple-deep));
+  border-radius: 8px;
+  display: grid; place-items: center;
+  position: relative;
+}
+.app--gong .gg-rail__logo svg { color: #ffffff; }
+.app--gong .gg-rail__item {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  position: relative;
+}
+.app--gong .gg-rail__item:hover { background: rgba(255,255,255,0.08); color: #ffffff; }
+.app--gong .gg-rail__item[aria-pressed="true"] {
+  background: rgba(139,92,246,0.30);
+  color: #ffffff;
+}
+.app--gong .gg-rail__item svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.75; }
+.app--gong .gg-rail__spacer { flex: 1; }
+
+/* --- Workspace --- */
+.app--gong .gg-workspace {
+  display: grid;
+  grid-template-rows: 48px 1fr;
+  overflow: hidden;
+}
+.app--gong .gg-topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 18px;
+  background: #ffffff;
+  border-bottom: 1px solid #E5E7EB;
+}
+.app--gong .gg-topbar__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gg-ink);
+}
+.app--gong .gg-topbar__search {
+  flex: 0 1 320px;
+  display: flex; align-items: center; gap: 8px;
+  height: 30px;
+  padding: 0 10px;
+  background: #F3F4F6;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+.app--gong .gg-topbar__search::before {
+  content: ""; width: 14px; height: 14px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>") no-repeat center / contain;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>") no-repeat center / contain;
+}
+.app--gong .gg-topbar__spacer { flex: 1; }
+.app--gong .gg-topbar__avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+  color: #ffffff;
+  display: grid; place-items: center;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+/* --- Body (calls list + transcript) --- */
+.app--gong .gong-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100%;
+  overflow: hidden;
+  background: #FFFFFF;
+  gap: 0;
+}
+.app--gong .call-list {
+  border-right: 1px solid #E5E7EB;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow: auto;
+  background: #FAFBFC;
+}
+.app--gong .call-list li {
+  display: block;
+  padding: 12px 16px;
+  border-bottom: 1px solid #F0F1F4;
+  font-family: var(--ftc-font-sans);
+  font-size: 12.5px;
+  color: #374151;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.12s;
+}
+.app--gong .call-list li:hover { background: #F4F5F7; }
+.app--gong .call-list li[aria-current="true"] {
+  background: #ffffff;
+  color: var(--gg-ink);
+  font-weight: 500;
+}
+.app--gong .call-list li[aria-current="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 8px; bottom: 8px;
+  width: 3px;
+  background: var(--gg-purple);
+  border-radius: 0 2px 2px 0;
+}
+.app--gong .call-list li strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gg-ink);
+  margin-bottom: 2px;
+  font-family: var(--ftc-font-mono);
+  letter-spacing: -0.005em;
+}
+.app--gong .call-list .outcome {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: #FEF3C7;
+  color: #92400E;
+  font-family: var(--ftc-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.app--gong .call-list li.empty {
+  color: #9ca3af;
+  font-style: italic;
+  background: transparent;
+  cursor: default;
+}
+.app--gong .call-list li.empty:hover { background: transparent; }
+
+/* Transcript pane */
+.app--gong .gong-layout > div:last-child {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.app--gong .transcript {
+  overflow: auto;
+  padding: 18px 22px;
+  font-family: var(--ftc-font-sans);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.app--gong .transcript .empty {
+  padding: 32px;
+  text-align: center;
+  color: #9ca3af;
+  font-style: italic;
+}
+.app--gong .transcript .turn {
+  display: grid;
+  grid-template-columns: 50px 90px 1fr;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 2px;
+}
+.app--gong .transcript .turn .ts {
+  color: #9ca3af;
+  font-family: var(--ftc-font-mono);
+  font-size: 11px;
+  align-self: start;
+  padding-top: 2px;
+}
+.app--gong .transcript .turn .speaker {
+  font-weight: 700;
+  font-size: 11.5px;
+  color: var(--gg-ink);
+  text-transform: capitalize;
+  align-self: start;
+  padding-top: 2px;
+}
+.app--gong .transcript .turn .text {
+  color: #1f2937;
+  font-size: 13px;
+}
+.app--gong .transcript .turn[data-m] {
+  background: rgba(111,44,255,0.04);
+  border-left: 3px solid var(--gg-purple);
+  padding-left: 12px;
+}
+.app--gong .transcript .turn[data-m="M1"] { border-left-color: #07683f; }
+.app--gong .transcript .turn[data-m="M2"] { border-left-color: #f5b800; }
+.app--gong .transcript .turn[data-m="M3"] { border-left-color: #0a8754; }
+.app--gong .transcript .turn[data-fail="true"] {
+  background: #FEF2F2;
+  border-left: 3px solid #DC2626;
+}
+
+/* Rubric panel */
+.app--gong .rubric-panel {
+  margin: 12px 22px 18px;
+  padding: 14px 16px;
+  background: #FAFBFC;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+}
+.app--gong .rubric-panel h3 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gg-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.app--gong .rubric-row {
+  display: grid;
+  grid-template-columns: 90px 50px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #F0F1F4;
+  font-size: 12px;
+}
+.app--gong .rubric-row:last-child { border-bottom: none; }
+.app--gong .rubric-q { color: #6b7280; }
+.app--gong .rubric-q strong { color: var(--gg-ink); font-weight: 700; }

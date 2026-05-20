@@ -1,0 +1,320 @@
+/* =========================================================================
+   apps/outreach.css · Outreach sequencer + dial queue clone
+   --------------------------------------------------------------------------
+   Layout: dark vertical rail (left, ~52px) + white workspace (right) with
+   pinned tab bar, secondary filter row, and the lead-queue list.
+   ========================================================================= */
+
+.app--outreach { --oa-red: #FF4757; --oa-red-deep: #C41E3A; --oa-ink: #0F1115; }
+.app--outreach .brand-app {
+  grid-template-columns: 52px 1fr;
+  grid-template-rows: 1fr;
+}
+
+/* --- Left vertical rail (Outreach product nav) --- */
+.app--outreach .oa-rail {
+  background: #0F1115;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 4px;
+}
+.app--outreach .oa-rail__logo {
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg, var(--oa-red), var(--oa-red-deep));
+  border-radius: 8px;
+  position: relative;
+}
+.app--outreach .oa-rail__logo::before {
+  content: "";
+  width: 14px; height: 14px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+}
+.app--outreach .oa-rail__item {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  position: relative;
+}
+.app--outreach .oa-rail__item:hover { background: rgba(255,255,255,0.06); color: #ffffff; }
+.app--outreach .oa-rail__item[aria-pressed="true"] {
+  background: rgba(255,255,255,0.10);
+  color: #ffffff;
+}
+.app--outreach .oa-rail__item[aria-pressed="true"]::before {
+  content: "";
+  position: absolute;
+  left: -10px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 22px;
+  background: var(--oa-red);
+  border-radius: 0 2px 2px 0;
+}
+.app--outreach .oa-rail__item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.75; }
+.app--outreach .oa-rail__spacer { flex: 1; }
+.app--outreach .oa-rail__avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5b8def, #1d4ed8);
+  color: #ffffff;
+  display: grid; place-items: center;
+  font-weight: 700;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+/* --- Workspace (right) --- */
+.app--outreach .oa-workspace {
+  display: grid;
+  grid-template-rows: 56px 44px 1fr;
+  overflow: hidden;
+  background: #F4F6F8;
+}
+
+/* Page header */
+.app--outreach .oa-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #E5E7EB;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.app--outreach .oa-header__btn {
+  white-space: nowrap;
+}
+.app--outreach .oa-header h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--oa-ink);
+  letter-spacing: -0.01em;
+}
+.app--outreach .oa-header__count {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  background: var(--oa-red);
+  color: #ffffff;
+  border-radius: 11px;
+  font-family: var(--ftc-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.app--outreach .oa-header__spacer { flex: 1; }
+.app--outreach .oa-header__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 6px;
+  background: var(--oa-red);
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: filter 0.12s;
+}
+.app--outreach .oa-header__btn:hover { filter: brightness(0.94); }
+.app--outreach .oa-header__btn--ghost {
+  background: transparent;
+  color: var(--oa-ink);
+  border: 1px solid #E5E7EB;
+}
+.app--outreach .oa-header__btn--ghost:hover {
+  background: #F3F4F6;
+  filter: none;
+}
+
+/* Filter strip */
+.app--outreach .oa-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #E5E7EB;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+.app--outreach .dial-queue__filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.app--outreach .dial-queue__filters select {
+  height: 28px;
+  padding: 0 26px 0 10px;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #111827;
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 5l3 3 3-3' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>") no-repeat right 8px center,
+    #ffffff;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.app--outreach .dial-queue__filters select:focus {
+  outline: none;
+  border-color: var(--oa-red);
+  box-shadow: 0 0 0 2px rgba(255,71,87,0.18);
+}
+.app--outreach .oa-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 13px;
+  background: #F3F4F6;
+  color: #374151;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+.app--outreach .oa-filter-chip--active {
+  background: rgba(255,71,87,0.10);
+  color: var(--oa-red-deep);
+  border-color: rgba(255,71,87,0.25);
+}
+
+/* Queue body */
+.app--outreach .oa-queue {
+  overflow: auto;
+  padding: 16px 20px;
+}
+
+/* Lead row — overrides legacy structure */
+.app--outreach .dial-queue {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(15,17,21,0.04);
+  overflow: hidden;
+}
+.app--outreach .lead-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #F0F1F4;
+  border-radius: 0;
+  transition: background 0.12s;
+}
+.app--outreach .lead-row:last-child { border-bottom: none; }
+.app--outreach .lead-row:hover { background: #FAFBFC; }
+.app--outreach .lead-row > div:first-child { display: grid; gap: 4px; min-width: 0; }
+.app--outreach .lead-row > div:first-child > div { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.app--outreach .lead-row svg {
+  width: 28px; height: 28px;
+  padding: 5px;
+  background: linear-gradient(135deg, #fde2e2, #fbd5d5);
+  border-radius: 6px;
+  color: var(--oa-red-deep);
+  stroke-width: 1.6;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+.app--outreach .lead-row .name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--oa-ink);
+}
+.app--outreach .lead-row .meta {
+  color: #6b7280;
+  font-size: 11.5px;
+  font-family: var(--ftc-font-sans);
+  margin-top: 0;
+}
+.app--outreach .lead-row .sequence-step {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 8px;
+  background: #FEF3C7;
+  color: #92400E;
+  border: none;
+  border-radius: 9px;
+  font-family: var(--ftc-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  margin-left: 0;
+  text-transform: lowercase;
+}
+
+/* Dial button — primary CTA */
+.app--outreach .dial-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 14px;
+  background: var(--oa-red);
+  color: #ffffff;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: filter 0.12s, transform 0.06s;
+}
+.app--outreach .dial-btn::before {
+  content: "";
+  width: 14px; height: 14px;
+  display: inline-block;
+  background: #ffffff;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z'/></svg>") no-repeat center / contain;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z'/></svg>") no-repeat center / contain;
+  flex-shrink: 0;
+}
+.app--outreach .dial-btn:hover { filter: brightness(0.94); }
+.app--outreach .dial-btn:active { transform: scale(0.97); }
+.app--outreach .dial-btn:disabled {
+  background: #E5E7EB; color: #9ca3af; cursor: not-allowed; filter: none;
+}
+.app--outreach .dial-btn:disabled::before { background: currentColor; }
+.app--outreach .dial-btn-hint {
+  font-size: 11px;
+  color: #B45309;
+  margin-top: 4px;
+  font-family: var(--ftc-font-mono);
+}
+
+/* Empty state */
+.app--outreach .empty {
+  padding: 32px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* Task target highlighting (module mode — see shell.css) */
+.app--outreach .lead-row[data-task-target="active"] {
+  --app-accent: var(--oa-red);
+  background: linear-gradient(180deg, rgba(255,71,87,0.06), transparent);
+}

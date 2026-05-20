@@ -1,0 +1,508 @@
+/* =========================================================================
+   apps/salesforce.css · Salesforce Lightning Experience clone
+   --------------------------------------------------------------------------
+   Layout: dark-blue Lightning top nav + light-blue secondary tab bar +
+   record-page (breadcrumb, record header, details/activity tabs).
+   Brand: Salesforce blue (#032D60 nav · #0176D3 brand · #FAFAF9 paper).
+   ========================================================================= */
+
+.app--salesforce {
+  --sf-blue-deep: #032D60;
+  --sf-blue: #0176D3;
+  --sf-blue-light: #1B96FF;
+  --sf-blue-tint: #EAF5FE;
+  --sf-ink: #181818;
+  --sf-ink-2: #444444;
+  --sf-ink-3: #747474;
+  --sf-rule: #E5E5E5;
+  --sf-rule-2: #C9C9C9;
+  --sf-paper: #FAFAF9;
+}
+.app--salesforce .brand-app {
+  grid-template-rows: 44px 40px 1fr;
+  grid-template-columns: 1fr;
+  background: var(--sf-paper);
+}
+
+/* --- Lightning top nav (deep blue) --- */
+.app--salesforce .sf-globalnav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background: linear-gradient(180deg, var(--sf-blue-deep) 0%, #032047 100%);
+  color: #ffffff;
+}
+.app--salesforce .sf-globalnav__launcher {
+  display: grid;
+  grid-template-columns: repeat(3, 4px);
+  grid-template-rows: repeat(3, 4px);
+  gap: 3px;
+  padding: 7px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.app--salesforce .sf-globalnav__launcher span {
+  display: block;
+  width: 4px; height: 4px;
+  background: #ffffff;
+  border-radius: 0.5px;
+}
+.app--salesforce .sf-globalnav__launcher:hover { background: rgba(255,255,255,0.12); }
+.app--salesforce .sf-globalnav__app {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 32px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.10);
+  border-radius: 4px;
+}
+.app--salesforce .sf-globalnav__app::after {
+  content: "";
+  width: 8px; height: 8px;
+  border-right: 1.5px solid rgba(255,255,255,0.6);
+  border-bottom: 1.5px solid rgba(255,255,255,0.6);
+  transform: rotate(45deg);
+  margin-top: -3px;
+  margin-left: 2px;
+}
+.app--salesforce .sf-globalnav__search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 16px;
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.85);
+}
+.app--salesforce .sf-globalnav__search::before {
+  content: ""; width: 14px; height: 14px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>") no-repeat center / contain;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>") no-repeat center / contain;
+}
+.app--salesforce .sf-globalnav__icons {
+  display: flex; align-items: center; gap: 4px;
+}
+.app--salesforce .sf-globalnav__icon {
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  cursor: pointer;
+}
+.app--salesforce .sf-globalnav__icon:hover { background: rgba(255,255,255,0.10); }
+.app--salesforce .sf-globalnav__icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.app--salesforce .sf-globalnav__avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FBA133, #C73D2C);
+  color: #ffffff;
+  display: grid; place-items: center;
+  font-weight: 700;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+/* --- Object tab bar (light blue ribbon) --- */
+.app--salesforce .sf-tabbar {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 0 12px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--sf-rule);
+}
+.app--salesforce .sf-tabbar__home {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+  height: 100%;
+  border-right: 1px solid var(--sf-rule);
+}
+.app--salesforce .sf-tabbar__home svg {
+  width: 18px; height: 18px;
+  color: var(--sf-blue);
+  fill: currentColor;
+}
+.app--salesforce .sf-tabbar__items {
+  display: flex; align-items: stretch; flex: 1;
+}
+.app--salesforce .sf-tabbar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--sf-rule);
+  color: var(--sf-ink-2);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.app--salesforce .sf-tabbar__item:hover { background: var(--sf-blue-tint); color: var(--sf-blue); }
+.app--salesforce .sf-tabbar__item[aria-current="page"] {
+  background: var(--sf-blue-tint);
+  color: var(--sf-blue);
+  font-weight: 600;
+  position: relative;
+}
+.app--salesforce .sf-tabbar__item[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 3px;
+  background: var(--sf-blue);
+}
+.app--salesforce .sf-tabbar__item--record { color: var(--sf-blue); font-weight: 600; }
+.app--salesforce .sf-tabbar__close {
+  background: transparent;
+  border: none;
+  color: var(--sf-ink-3);
+  font-size: 12px;
+  padding: 2px;
+  border-radius: 2px;
+  line-height: 1;
+}
+.app--salesforce .sf-tabbar__close:hover { background: var(--sf-rule); color: var(--sf-ink); }
+
+/* --- Record page area --- */
+.app--salesforce .sf-record {
+  overflow: auto;
+  padding: 14px 20px 22px;
+}
+
+.app--salesforce .sf-breadcrumb {
+  font-size: 11.5px;
+  color: var(--sf-ink-3);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.app--salesforce .sf-bc-sep { color: var(--sf-rule-2); }
+.app--salesforce .sf-bc-current { color: var(--sf-blue); font-weight: 600; }
+
+/* Record header card */
+.app--salesforce .sf-record-head {
+  background: #ffffff;
+  border: 1px solid var(--sf-rule);
+  border-radius: 4px;
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  gap: 14px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+.app--salesforce .sf-record-head__icon {
+  width: 32px; height: 32px;
+  background: #B85F03;
+  color: #ffffff;
+  border-radius: 4px;
+  display: grid; place-items: center;
+}
+.app--salesforce .sf-record-head__icon svg { width: 18px; height: 18px; fill: currentColor; }
+.app--salesforce .sf-record-head__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.app--salesforce .sf-record-head__kicker {
+  font-size: 11px;
+  color: var(--sf-ink-3);
+  text-transform: capitalize;
+  letter-spacing: 0;
+  margin: 0;
+}
+.app--salesforce .sf-record-head__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sf-ink);
+  margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+.app--salesforce .sf-record-head__meta {
+  font-size: 11.5px;
+  color: var(--sf-ink-3);
+  margin-top: 2px;
+}
+.app--salesforce .sf-record-head__actions {
+  display: flex; align-items: center; gap: 8px;
+}
+.app--salesforce .sf-stage-picker {
+  display: inline-flex; flex-direction: column; gap: 2px;
+}
+.app--salesforce .sf-stage-picker .sf-stage-label {
+  font-size: 10px;
+  color: var(--sf-ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.app--salesforce .sf-stage-picker select {
+  height: 30px;
+  padding: 0 24px 0 10px;
+  border: 1px solid var(--sf-rule-2);
+  border-radius: 4px;
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 5l3 3 3-3' stroke='%23444' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>") no-repeat right 8px center,
+    #ffffff;
+  -webkit-appearance: none; appearance: none;
+  font: inherit; font-weight: 600; color: var(--sf-blue);
+  cursor: pointer;
+}
+.app--salesforce .sf-stage-picker select:focus {
+  outline: none;
+  border-color: var(--sf-blue);
+  box-shadow: 0 0 0 2px var(--sf-blue-tint);
+}
+.app--salesforce .sf-save-btn {
+  background: var(--sf-blue);
+  color: #ffffff;
+  border: 0;
+  border-radius: 4px;
+  padding: 0 14px;
+  height: 30px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  align-self: end;
+}
+.app--salesforce .sf-save-btn:hover { background: #0162B0; }
+.app--salesforce .sf-save-btn:active { transform: translateY(1px); }
+
+/* Tabs inside record */
+.app--salesforce .sf-tabs {
+  display: flex;
+  gap: 0;
+  background: #ffffff;
+  border: 1px solid var(--sf-rule);
+  border-radius: 4px 4px 0 0;
+  padding: 0 10px;
+  margin-bottom: 0;
+}
+.app--salesforce .sf-tabs button {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 14px;
+  background: transparent;
+  border: none;
+  color: var(--sf-ink-2);
+  font-size: 12.5px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+.app--salesforce .sf-tabs button:hover { color: var(--sf-blue); }
+.app--salesforce .sf-tabs button[aria-selected="true"] {
+  color: var(--sf-blue);
+  border-bottom-color: var(--sf-blue);
+  font-weight: 600;
+}
+
+/* Body panel */
+.app--salesforce .sf-body {
+  background: #ffffff;
+  border: 1px solid var(--sf-rule);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  padding: 18px 20px;
+  min-height: 220px;
+}
+
+/* Details — 2 column dl */
+.app--salesforce .sf-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+@media (max-width: 720px) {
+  .app--salesforce .sf-details { grid-template-columns: 1fr; }
+}
+.app--salesforce .sf-details__heading {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--sf-ink);
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--sf-rule);
+}
+.app--salesforce .sf-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+.app--salesforce .sf-field {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--sf-rule);
+  padding-bottom: 10px;
+}
+.app--salesforce .sf-field dt {
+  font-size: 11px;
+  color: var(--sf-ink-3);
+  font-weight: 400;
+  margin: 0;
+  font-family: var(--ftc-font-sans);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.app--salesforce .sf-field dd {
+  font-size: 13px;
+  color: var(--sf-blue);
+  margin: 0;
+  font-weight: 400;
+  cursor: text;
+  font-family: var(--ftc-font-sans);
+}
+.app--salesforce .sf-field[data-readonly="true"] dd {
+  color: var(--sf-ink-2);
+  cursor: default;
+  font-family: var(--ftc-font-sans);
+  font-size: 13px;
+  font-weight: 400;
+}
+.app--salesforce .sf-field input[type="text"] {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--sf-rule-2);
+  border-radius: 3px;
+  background: #ffffff;
+  font: inherit;
+  color: var(--sf-blue);
+  font-size: 13px;
+}
+.app--salesforce .sf-field input[type="text"]:focus {
+  outline: none;
+  border-color: var(--sf-blue);
+  box-shadow: 0 0 0 1px var(--sf-blue);
+}
+.app--salesforce .sf-tag {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 4px;
+  background: var(--sf-rule);
+  color: var(--sf-ink-3);
+  border-radius: 2px;
+  font-family: var(--ftc-font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+.app--salesforce .sf-flag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--ftc-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.app--salesforce .sf-flag--off {
+  background: #FBE5E2;
+  color: #BA1B1B;
+}
+.app--salesforce .sf-flag--on {
+  background: #E4F8E5;
+  color: #194E18;
+  animation: sf-flag-flip 0.6s ease-out;
+}
+@keyframes sf-flag-flip {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* Activity timeline */
+.app--salesforce .sf-activity {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.app--salesforce .sf-activity__row {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--sf-rule);
+  align-items: start;
+}
+.app--salesforce .sf-activity__row:last-child { border-bottom: none; }
+.app--salesforce .sf-activity__icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--sf-blue-tint);
+  color: var(--sf-blue);
+  display: grid; place-items: center;
+  font-size: 14px;
+}
+.app--salesforce .sf-activity__main { display: flex; flex-direction: column; gap: 2px; }
+.app--salesforce .sf-activity__ts {
+  font-size: 11px;
+  color: var(--sf-ink-3);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.app--salesforce .sf-activity__text {
+  font-size: 13px;
+  color: var(--sf-ink);
+  line-height: 1.45;
+}
+
+/* Toast */
+.app--salesforce .sf-toast {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #04844B;
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  animation: sf-toast-in 0.2s ease-out;
+}
+.app--salesforce .sf-toast[hidden] { display: none; }
+@keyframes sf-toast-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.app--salesforce .sf-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--sf-ink-3);
+  font-size: 13px;
+}
+
+/* Cap long record-tab labels */
+.app--salesforce .sf-tabbar__item {
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app--salesforce .sf-breadcrumb {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

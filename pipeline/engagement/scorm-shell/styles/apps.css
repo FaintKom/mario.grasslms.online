@@ -1,0 +1,29 @@
+/* =========================================================================
+   apps.css · pixel-clone brand chrome for all 7 simulated apps
+   --------------------------------------------------------------------------
+   Each app block targets `.app--<id>` inside `.os-window-body` and renders
+   the real product's chrome (header / sidebar / nav / colour). Per-app
+   sections live in styles/apps/<id>.css and are loaded into this aggregate.
+
+   Layered files imported below:
+     apps/_shared.css      shared primitives (brand-app frame, density)
+     apps/outreach.css     Outreach (red)
+     apps/gong.css         Gong (purple)
+     apps/salesforce.css   Salesforce Lightning (blue)
+     apps/linkedin-ch.css  LinkedIn + Companies House (blue + slate)
+     apps/calendar.css     Google Calendar (white + multi)
+     apps/phone-dialler.css  Aircall-style dialler (dark + green)
+     apps/slack.css        Slack (aubergine)
+
+   apps.css is kept as the single entry-point so module index.html files
+   keep their existing <link> reference.
+   ========================================================================= */
+
+@import "apps/_shared.css?v=20260520ux3";
+@import "apps/outreach.css?v=20260520ux3";
+@import "apps/gong.css?v=20260520ux3";
+@import "apps/salesforce.css?v=20260520ux3";
+@import "apps/linkedin-ch.css?v=20260520ux3";
+@import "apps/calendar.css?v=20260520ux3";
+@import "apps/phone-dialler.css?v=20260520ux3";
+@import "apps/slack.css?v=20260520ux3";

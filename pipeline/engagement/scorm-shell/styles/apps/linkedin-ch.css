@@ -1,0 +1,248 @@
+/* =========================================================================
+   apps/linkedin-ch.css · LinkedIn + Companies House combined clone
+   --------------------------------------------------------------------------
+   Layout: LinkedIn-blue top nav + split body (LinkedIn snapshot |
+   Companies House filings). LinkedIn nav uses the real product's white
+   topbar + blue brand. CH side uses UK gov.uk style (slate + green).
+   ========================================================================= */
+
+.app--linkedin-ch {
+  --li-blue: #0A66C2;
+  --li-blue-deep: #004182;
+  --li-ink: #000000;
+  --li-ink-2: #00000099;
+  --li-bg: #F4F2EE;
+  --li-rule: rgba(0,0,0,0.08);
+  --ch-green: #00703C;       /* gov.uk green */
+  --ch-blue: #1D70B8;        /* gov.uk link blue */
+  --ch-ink: #0B0C0C;
+}
+.app--linkedin-ch .brand-app {
+  grid-template-rows: 52px 1fr;
+  grid-template-columns: 1fr;
+  background: var(--li-bg);
+}
+
+/* --- Top nav --- */
+.app--linkedin-ch .li-topnav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--li-rule);
+  box-shadow: 0 0 0 1px var(--li-rule);
+}
+.app--linkedin-ch .li-topnav__logo {
+  width: 34px; height: 34px;
+  background: var(--li-blue);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: "Source Sans 3", var(--ftc-font-sans);
+  font-weight: 900;
+  font-size: 17px;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  padding-bottom: 2px;
+}
+.app--linkedin-ch .li-topnav__logo::after {
+  content: "in";
+  font-style: normal;
+}
+.app--linkedin-ch .li-topnav__search {
+  flex: 0 1 280px;
+  display: flex; align-items: center; gap: 8px;
+  height: 34px;
+  padding: 0 10px;
+  background: #EEF3F8;
+  border-radius: 4px;
+  color: #00000099;
+  font-size: 12.5px;
+}
+.app--linkedin-ch .li-topnav__search::before {
+  content: ""; width: 14px; height: 14px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>") no-repeat center / contain;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>") no-repeat center / contain;
+}
+.app--linkedin-ch .li-topnav__items {
+  display: flex; align-items: center; gap: 0; margin-left: auto;
+  height: 100%;
+}
+.app--linkedin-ch .li-topnav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 100%;
+  padding: 0 12px;
+  background: transparent;
+  border: none;
+  color: var(--li-ink-2);
+  font-size: 10px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.app--linkedin-ch .li-topnav__item:hover { color: var(--li-ink); }
+.app--linkedin-ch .li-topnav__item[aria-current="page"] {
+  color: var(--li-ink);
+  border-bottom-color: var(--li-ink);
+  font-weight: 600;
+}
+.app--linkedin-ch .li-topnav__item svg { width: 20px; height: 20px; fill: currentColor; stroke: none; }
+
+/* --- Workspace --- */
+.app--linkedin-ch .li-workspace {
+  overflow: auto;
+  padding: 16px 20px 22px;
+}
+
+/* Search bar */
+.app--linkedin-ch .lch-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  padding: 10px 14px;
+  border: 1px solid var(--li-rule);
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+.app--linkedin-ch .lch-search input {
+  flex: 1;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--li-rule);
+  border-radius: 4px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--li-ink);
+}
+.app--linkedin-ch .lch-search input:focus {
+  outline: none;
+  border-color: var(--li-blue);
+  box-shadow: 0 0 0 1px var(--li-blue);
+}
+.app--linkedin-ch .lch-search button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  background: var(--li-blue);
+  color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.app--linkedin-ch .lch-search button:hover { background: var(--li-blue-deep); }
+.app--linkedin-ch .lch-search button svg {
+  width: 16px; height: 16px;
+  fill: none; stroke: currentColor; stroke-width: 2;
+}
+
+/* Result grid: LinkedIn panel + CH panel */
+.app--linkedin-ch .lch-result {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 760px) {
+  .app--linkedin-ch .lch-result { grid-template-columns: 1fr; }
+}
+.app--linkedin-ch .lch-panel {
+  background: #ffffff;
+  border: 1px solid var(--li-rule);
+  border-radius: 8px;
+  padding: 16px 18px;
+  position: relative;
+}
+.app--linkedin-ch .lch-panel.linkedin {
+  border-top: 4px solid var(--li-blue);
+  padding-top: 14px;
+}
+.app--linkedin-ch .lch-panel.ch {
+  border-top: 4px solid var(--ch-green);
+  padding-top: 14px;
+}
+.app--linkedin-ch .lch-panel h3 {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--li-ink);
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+.app--linkedin-ch .lch-panel h3 svg {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor; stroke-width: 2;
+}
+.app--linkedin-ch .lch-panel.linkedin h3 svg { color: var(--li-blue); }
+.app--linkedin-ch .lch-panel.ch h3 svg { color: var(--ch-green); }
+.app--linkedin-ch .lch-panel .meta {
+  font-size: 12px;
+  color: var(--li-ink-2);
+  margin-bottom: 12px;
+}
+.app--linkedin-ch .lch-panel.ch .meta {
+  font-family: var(--ftc-font-mono);
+  font-size: 11.5px;
+}
+
+/* Signal cards */
+.app--linkedin-ch .signal {
+  display: block;
+  padding: 10px 12px;
+  background: #FAFBFC;
+  border: 1px solid var(--li-rule);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.app--linkedin-ch .lch-panel.linkedin .signal {
+  border-left: 3px solid var(--li-blue);
+}
+.app--linkedin-ch .lch-panel.ch .signal {
+  border-left: 3px solid var(--ch-green);
+  background: #F8FBF6;
+}
+.app--linkedin-ch .signal .src {
+  display: block;
+  font-family: var(--ftc-font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--li-ink-2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.app--linkedin-ch .lch-panel.linkedin .signal .src { color: var(--li-blue); }
+.app--linkedin-ch .lch-panel.ch .signal .src { color: var(--ch-green); }
+
+.app--linkedin-ch .empty {
+  padding: 24px 14px;
+  text-align: center;
+  color: var(--li-ink-2);
+  font-style: italic;
+  font-size: 12.5px;
+}
+
+/* Footer pain summary */
+.app--linkedin-ch .lch-summary {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 1px solid var(--li-rule);
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--li-ink-2);
+}
+.app--linkedin-ch .lch-summary strong { color: var(--li-ink); font-weight: 600; }
