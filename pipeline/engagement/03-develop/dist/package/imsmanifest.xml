@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FinTechCard SDR Onboarding · combined SCORM 1.2 package
+  Built: 2026-05-18T21:07:08Z
+  Source: pipeline/engagement/03-develop/_build-scorm-package.py
+
+  Contains all 3 keystone-move modules (M1 Diagnostic Opener · M2 Objection
+  Acknowledge · M3 Calendar Close) plus the shared scorm-shell. Any LMS
+  (Moodle, SCORM Cloud, Sana, etc.) can launch any module as a separate SCO.
+
+  Schema: ADL SCORM 1.2 (CAM 1.3 compatible)
+-->
+<manifest identifier="FTC.SDR.Onboarding.combined.v1"
+          version="1.0"
+          xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+                              http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd
+                              http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+
+  <organizations default="FTC-SDR-M3-ORG">
+    <organization identifier="FTC-SDR-M1-ORG">
+      <title>Module 1 · M1 Diagnostic Opener</title>
+    <item identifier="FTC-SDR-M1-ITEM" identifierref="FTC-SDR-M1-RES" isvisible="true">
+      <title>Module 1 · M1 Diagnostic Opener</title>
+      <adlcp:masteryscore>67</adlcp:masteryscore>
+      <adlcp:maxtimeallowed>PT0H10M0S</adlcp:maxtimeallowed>
+    </item>
+    </organization>
+    <organization identifier="FTC-SDR-M2-ORG">
+      <title>Module 2 · M2 Objection Acknowledge</title>
+    <item identifier="FTC-SDR-M2-ITEM" identifierref="FTC-SDR-M2-RES" isvisible="true">
+      <title>Module 2 · M2 Objection Acknowledge</title>
+      <adlcp:masteryscore>67</adlcp:masteryscore>
+      <adlcp:maxtimeallowed>PT0H10M0S</adlcp:maxtimeallowed>
+    </item>
+    </organization>
+    <organization identifier="FTC-SDR-M3-ORG">
+      <title>Module 3 · M3 Calendar Close</title>
+    <item identifier="FTC-SDR-M3-ITEM" identifierref="FTC-SDR-M3-RES" isvisible="true">
+      <title>Module 3 · M3 Calendar Close</title>
+      <adlcp:masteryscore>67</adlcp:masteryscore>
+      <adlcp:maxtimeallowed>PT0H10M0S</adlcp:maxtimeallowed>
+    </item>
+    </organization>
+    <organization identifier="FTC-SDR-M4-ORG">
+      <title>Module 4 · M4 ICP Buyer Fit</title>
+    <item identifier="FTC-SDR-M4-ITEM" identifierref="FTC-SDR-M4-RES" isvisible="true">
+      <title>Module 4 · M4 ICP Buyer Fit</title>
+      <adlcp:masteryscore>67</adlcp:masteryscore>
+      <adlcp:maxtimeallowed>PT0H10M0S</adlcp:maxtimeallowed>
+    </item>
+    </organization>
+    <organization identifier="FTC-SDR-M5-ORG">
+      <title>Module 5 · M5 Product-Prop Mapping</title>
+    <item identifier="FTC-SDR-M5-ITEM" identifierref="FTC-SDR-M5-RES" isvisible="true">
+      <title>Module 5 · M5 Product-Prop Mapping</title>
+      <adlcp:masteryscore>67</adlcp:masteryscore>
+      <adlcp:maxtimeallowed>PT0H10M0S</adlcp:maxtimeallowed>
+    </item>
+    </organization>
+    <organization identifier="FTC-SDR-M6-ORG">
+      <title>Module 6 · M6 Regulatory Deflection</title>
+    <item identifier="FTC-SDR-M6-ITEM" identifierref="FTC-SDR-M6-RES" isvisible="true">
+      <title>Module 6 · M6 Regulatory Deflection</title>
+      <adlcp:masteryscore>67</adlcp:masteryscore>
+      <adlcp:maxtimeallowed>PT0H10M0S</adlcp:maxtimeallowed>
+    </item>
+    </organization>
+  </organizations>
+
+  <resources>
+    <resource identifier="FTC-SDR-M1-RES" type="webcontent" adlcp:scormtype="sco" href="module-01-diagnostic-opener/index.html">
+      <file href="module-01-diagnostic-opener/data/prospects.json"/>
+      <file href="module-01-diagnostic-opener/data/quiz.json"/>
+      <file href="module-01-diagnostic-opener/data/transcripts.json"/>
+      <file href="module-01-diagnostic-opener/design-log.html"/>
+      <file href="module-01-diagnostic-opener/design-log.md"/>
+      <file href="module-01-diagnostic-opener/imsmanifest.xml"/>
+      <file href="module-01-diagnostic-opener/index.html"/>
+      <file href="module-01-diagnostic-opener/module.js"/>
+      <file href="module-01-diagnostic-opener/styles.css"/>
+      <file href="scorm-shell/README.html"/>
+      <file href="scorm-shell/README.md"/>
+      <file href="scorm-shell/a11y-audit.html"/>
+      <file href="scorm-shell/a11y-audit.md"/>
+      <file href="scorm-shell/data/sample-gong-transcripts.json"/>
+      <file href="scorm-shell/data/sample-profiles.json"/>
+      <file href="scorm-shell/event-log-spec.html"/>
+      <file href="scorm-shell/event-log-spec.md"/>
+      <file href="scorm-shell/index.html"/>
+      <file href="scorm-shell/js/apps/calendar.js"/>
+      <file href="scorm-shell/js/apps/gong.js"/>
+      <file href="scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="scorm-shell/js/apps/outreach.js"/>
+      <file href="scorm-shell/js/apps/phone-dialler.js"/>
+      <file href="scorm-shell/js/apps/registry.js"/>
+      <file href="scorm-shell/js/apps/salesforce.js"/>
+      <file href="scorm-shell/js/apps/slack.js"/>
+      <file href="scorm-shell/js/coach-marks.js"/>
+      <file href="scorm-shell/js/event-log.js"/>
+      <file href="scorm-shell/js/scorm-bridge.js"/>
+      <file href="scorm-shell/js/shell.js"/>
+      <file href="scorm-shell/js/task-banner.js"/>
+      <file href="scorm-shell/styles/apps.css"/>
+      <file href="scorm-shell/styles/shell.css"/>
+    </resource>
+    <resource identifier="FTC-SDR-M2-RES" type="webcontent" adlcp:scormtype="sco" href="module-02-objection-acknowledge/index.html">
+      <file href="module-02-objection-acknowledge/data/objection-bank.json"/>
+      <file href="module-02-objection-acknowledge/data/prospects.json"/>
+      <file href="module-02-objection-acknowledge/data/quiz.json"/>
+      <file href="module-02-objection-acknowledge/data/transcripts.json"/>
+      <file href="module-02-objection-acknowledge/design-log.html"/>
+      <file href="module-02-objection-acknowledge/design-log.md"/>
+      <file href="module-02-objection-acknowledge/imsmanifest.xml"/>
+      <file href="module-02-objection-acknowledge/index.html"/>
+      <file href="module-02-objection-acknowledge/module.js"/>
+      <file href="module-02-objection-acknowledge/styles.css"/>
+      <file href="scorm-shell/README.html"/>
+      <file href="scorm-shell/README.md"/>
+      <file href="scorm-shell/a11y-audit.html"/>
+      <file href="scorm-shell/a11y-audit.md"/>
+      <file href="scorm-shell/data/sample-gong-transcripts.json"/>
+      <file href="scorm-shell/data/sample-profiles.json"/>
+      <file href="scorm-shell/event-log-spec.html"/>
+      <file href="scorm-shell/event-log-spec.md"/>
+      <file href="scorm-shell/index.html"/>
+      <file href="scorm-shell/js/apps/calendar.js"/>
+      <file href="scorm-shell/js/apps/gong.js"/>
+      <file href="scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="scorm-shell/js/apps/outreach.js"/>
+      <file href="scorm-shell/js/apps/phone-dialler.js"/>
+      <file href="scorm-shell/js/apps/registry.js"/>
+      <file href="scorm-shell/js/apps/salesforce.js"/>
+      <file href="scorm-shell/js/apps/slack.js"/>
+      <file href="scorm-shell/js/coach-marks.js"/>
+      <file href="scorm-shell/js/event-log.js"/>
+      <file href="scorm-shell/js/scorm-bridge.js"/>
+      <file href="scorm-shell/js/shell.js"/>
+      <file href="scorm-shell/js/task-banner.js"/>
+      <file href="scorm-shell/styles/apps.css"/>
+      <file href="scorm-shell/styles/shell.css"/>
+    </resource>
+    <resource identifier="FTC-SDR-M3-RES" type="webcontent" adlcp:scormtype="sco" href="module-03-calendar-close/index.html">
+      <file href="module-03-calendar-close/data/prospects.json"/>
+      <file href="module-03-calendar-close/data/quiz.json"/>
+      <file href="module-03-calendar-close/data/transcripts.json"/>
+      <file href="module-03-calendar-close/design-log.html"/>
+      <file href="module-03-calendar-close/design-log.md"/>
+      <file href="module-03-calendar-close/imsmanifest.xml"/>
+      <file href="module-03-calendar-close/index.html"/>
+      <file href="module-03-calendar-close/module.js"/>
+      <file href="module-03-calendar-close/styles.css"/>
+      <file href="scorm-shell/README.html"/>
+      <file href="scorm-shell/README.md"/>
+      <file href="scorm-shell/a11y-audit.html"/>
+      <file href="scorm-shell/a11y-audit.md"/>
+      <file href="scorm-shell/data/sample-gong-transcripts.json"/>
+      <file href="scorm-shell/data/sample-profiles.json"/>
+      <file href="scorm-shell/event-log-spec.html"/>
+      <file href="scorm-shell/event-log-spec.md"/>
+      <file href="scorm-shell/index.html"/>
+      <file href="scorm-shell/js/apps/calendar.js"/>
+      <file href="scorm-shell/js/apps/gong.js"/>
+      <file href="scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="scorm-shell/js/apps/outreach.js"/>
+      <file href="scorm-shell/js/apps/phone-dialler.js"/>
+      <file href="scorm-shell/js/apps/registry.js"/>
+      <file href="scorm-shell/js/apps/salesforce.js"/>
+      <file href="scorm-shell/js/apps/slack.js"/>
+      <file href="scorm-shell/js/coach-marks.js"/>
+      <file href="scorm-shell/js/event-log.js"/>
+      <file href="scorm-shell/js/scorm-bridge.js"/>
+      <file href="scorm-shell/js/shell.js"/>
+      <file href="scorm-shell/js/task-banner.js"/>
+      <file href="scorm-shell/styles/apps.css"/>
+      <file href="scorm-shell/styles/shell.css"/>
+    </resource>
+    <resource identifier="FTC-SDR-M4-RES" type="webcontent" adlcp:scormtype="sco" href="module-04-icp-buyer-fit/index.html">
+      <file href="module-04-icp-buyer-fit/data/prospects.json"/>
+      <file href="module-04-icp-buyer-fit/data/quiz.json"/>
+      <file href="module-04-icp-buyer-fit/data/transcripts.json"/>
+      <file href="module-04-icp-buyer-fit/design-log.html"/>
+      <file href="module-04-icp-buyer-fit/design-log.md"/>
+      <file href="module-04-icp-buyer-fit/imsmanifest.xml"/>
+      <file href="module-04-icp-buyer-fit/index.html"/>
+      <file href="module-04-icp-buyer-fit/module.js"/>
+      <file href="module-04-icp-buyer-fit/styles.css"/>
+      <file href="scorm-shell/README.html"/>
+      <file href="scorm-shell/README.md"/>
+      <file href="scorm-shell/a11y-audit.html"/>
+      <file href="scorm-shell/a11y-audit.md"/>
+      <file href="scorm-shell/data/sample-gong-transcripts.json"/>
+      <file href="scorm-shell/data/sample-profiles.json"/>
+      <file href="scorm-shell/event-log-spec.html"/>
+      <file href="scorm-shell/event-log-spec.md"/>
+      <file href="scorm-shell/index.html"/>
+      <file href="scorm-shell/js/apps/calendar.js"/>
+      <file href="scorm-shell/js/apps/gong.js"/>
+      <file href="scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="scorm-shell/js/apps/outreach.js"/>
+      <file href="scorm-shell/js/apps/phone-dialler.js"/>
+      <file href="scorm-shell/js/apps/registry.js"/>
+      <file href="scorm-shell/js/apps/salesforce.js"/>
+      <file href="scorm-shell/js/apps/slack.js"/>
+      <file href="scorm-shell/js/coach-marks.js"/>
+      <file href="scorm-shell/js/event-log.js"/>
+      <file href="scorm-shell/js/scorm-bridge.js"/>
+      <file href="scorm-shell/js/shell.js"/>
+      <file href="scorm-shell/js/task-banner.js"/>
+      <file href="scorm-shell/styles/apps.css"/>
+      <file href="scorm-shell/styles/shell.css"/>
+    </resource>
+    <resource identifier="FTC-SDR-M5-RES" type="webcontent" adlcp:scormtype="sco" href="module-05-product-prop-mapping/index.html">
+      <file href="module-05-product-prop-mapping/data/prop-pain-bank.json"/>
+      <file href="module-05-product-prop-mapping/data/prospects.json"/>
+      <file href="module-05-product-prop-mapping/data/quiz.json"/>
+      <file href="module-05-product-prop-mapping/data/transcripts.json"/>
+      <file href="module-05-product-prop-mapping/design-log.html"/>
+      <file href="module-05-product-prop-mapping/design-log.md"/>
+      <file href="module-05-product-prop-mapping/imsmanifest.xml"/>
+      <file href="module-05-product-prop-mapping/index.html"/>
+      <file href="module-05-product-prop-mapping/module.js"/>
+      <file href="module-05-product-prop-mapping/styles.css"/>
+      <file href="scorm-shell/README.html"/>
+      <file href="scorm-shell/README.md"/>
+      <file href="scorm-shell/a11y-audit.html"/>
+      <file href="scorm-shell/a11y-audit.md"/>
+      <file href="scorm-shell/data/sample-gong-transcripts.json"/>
+      <file href="scorm-shell/data/sample-profiles.json"/>
+      <file href="scorm-shell/event-log-spec.html"/>
+      <file href="scorm-shell/event-log-spec.md"/>
+      <file href="scorm-shell/index.html"/>
+      <file href="scorm-shell/js/apps/calendar.js"/>
+      <file href="scorm-shell/js/apps/gong.js"/>
+      <file href="scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="scorm-shell/js/apps/outreach.js"/>
+      <file href="scorm-shell/js/apps/phone-dialler.js"/>
+      <file href="scorm-shell/js/apps/registry.js"/>
+      <file href="scorm-shell/js/apps/salesforce.js"/>
+      <file href="scorm-shell/js/apps/slack.js"/>
+      <file href="scorm-shell/js/coach-marks.js"/>
+      <file href="scorm-shell/js/event-log.js"/>
+      <file href="scorm-shell/js/scorm-bridge.js"/>
+      <file href="scorm-shell/js/shell.js"/>
+      <file href="scorm-shell/js/task-banner.js"/>
+      <file href="scorm-shell/styles/apps.css"/>
+      <file href="scorm-shell/styles/shell.css"/>
+    </resource>
+    <resource identifier="FTC-SDR-M6-RES" type="webcontent" adlcp:scormtype="sco" href="module-06-regulatory-deflection/index.html">
+      <file href="module-06-regulatory-deflection/data/prospects.json"/>
+      <file href="module-06-regulatory-deflection/data/quiz.json"/>
+      <file href="module-06-regulatory-deflection/data/reg-job-aid.json"/>
+      <file href="module-06-regulatory-deflection/data/transcripts.json"/>
+      <file href="module-06-regulatory-deflection/design-log.html"/>
+      <file href="module-06-regulatory-deflection/design-log.md"/>
+      <file href="module-06-regulatory-deflection/imsmanifest.xml"/>
+      <file href="module-06-regulatory-deflection/index.html"/>
+      <file href="module-06-regulatory-deflection/module.js"/>
+      <file href="module-06-regulatory-deflection/styles.css"/>
+      <file href="scorm-shell/README.html"/>
+      <file href="scorm-shell/README.md"/>
+      <file href="scorm-shell/a11y-audit.html"/>
+      <file href="scorm-shell/a11y-audit.md"/>
+      <file href="scorm-shell/data/sample-gong-transcripts.json"/>
+      <file href="scorm-shell/data/sample-profiles.json"/>
+      <file href="scorm-shell/event-log-spec.html"/>
+      <file href="scorm-shell/event-log-spec.md"/>
+      <file href="scorm-shell/index.html"/>
+      <file href="scorm-shell/js/apps/calendar.js"/>
+      <file href="scorm-shell/js/apps/gong.js"/>
+      <file href="scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="scorm-shell/js/apps/outreach.js"/>
+      <file href="scorm-shell/js/apps/phone-dialler.js"/>
+      <file href="scorm-shell/js/apps/registry.js"/>
+      <file href="scorm-shell/js/apps/salesforce.js"/>
+      <file href="scorm-shell/js/apps/slack.js"/>
+      <file href="scorm-shell/js/coach-marks.js"/>
+      <file href="scorm-shell/js/event-log.js"/>
+      <file href="scorm-shell/js/scorm-bridge.js"/>
+      <file href="scorm-shell/js/shell.js"/>
+      <file href="scorm-shell/js/task-banner.js"/>
+      <file href="scorm-shell/styles/apps.css"/>
+      <file href="scorm-shell/styles/shell.css"/>
+    </resource>
+  </resources>
+</manifest>

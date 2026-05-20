@@ -1,0 +1,98 @@
+[
+  {
+    "lead_id": "L-001",
+    "name": "Maria",
+    "company": "Two Pines Apparel",
+    "archetype": "storefront",
+    "industry": "Multi-location retail SMB",
+    "fte": 35,
+    "monthly_spend": 18000,
+    "stage": "Owner-operator · 2 stores",
+    "registered_office": "Unit 4, Northern Way, Manchester M1 3AA",
+    "last_touch_at": "2026-04-30T09:00:00Z",
+    "sequence_step": 3,
+    "disposition": "",
+    "top_pain": "Reconciling card spend across two stores burns 6h/week of bookkeeper time.",
+    "top_objection": "We already use a high-street bank card — why switch?",
+    "ideal_opener": "I noticed Two Pines opened a second location on Deansgate in January — congrats. How are you splitting card spend between the two right now?",
+    "best_pitch_prop": "Per-store virtual cards with auto-reconciled receipts.",
+    "closing_move": "Two 20-minute slots: Tue 10:00 or Wed 10:30 — which works to walk through it with your bookkeeper?",
+    "signals": [
+      { "type": "new_location", "source": "companieshouse", "content": "Filed change-of-registered-office to add second Deansgate site (Jan 2026)." },
+      { "type": "hiring",       "source": "linkedin",       "content": "Posted: 'Hiring an assistant bookkeeper, Manchester — 3 days/week.'" },
+      { "type": "post",         "source": "linkedin",       "content": "Owner shared a photo of new shopfront opening." }
+    ]
+  },
+  {
+    "lead_id": "L-002",
+    "name": "Tom",
+    "company": "Northwind Telemetry",
+    "archetype": "rocket",
+    "industry": "Series-B SaaS",
+    "fte": 22,
+    "monthly_spend": 42000,
+    "stage": "Series-B · founder-CEO",
+    "registered_office": "20 St Andrew's Square, Edinburgh EH2 1AF",
+    "last_touch_at": "2026-05-02T14:00:00Z",
+    "sequence_step": 2,
+    "disposition": "",
+    "top_pain": "Engineering AWS bill is consuming the corporate AmEx limit mid-month — finance can't see categorised spend until 30 days later.",
+    "top_objection": "We're already on Brex — why would we switch?",
+    "ideal_opener": "Saw your Series-B announcement last month — congrats. How are you handling AWS spend visibility now that engineering has more autonomy?",
+    "best_pitch_prop": "Real-time per-team budgets with hard limits and SSO category controls.",
+    "closing_move": "I have Thursday 16:00 or Friday 09:30 — happy to walk you and your head of finance through a side-by-side with your current Brex setup.",
+    "signals": [
+      { "type": "funding",      "source": "linkedin",       "content": "Announced $18M Series B led by Northzone (Apr 2026)." },
+      { "type": "hiring",       "source": "linkedin",       "content": "Hiring 6 engineers + Head of Finance." },
+      { "type": "filing",       "source": "companieshouse", "content": "Filed allotment of shares — Series B confirmation (Apr 2026)." }
+    ]
+  },
+  {
+    "lead_id": "L-003",
+    "name": "Emma",
+    "company": "Brightline Components Ltd",
+    "archetype": "factory",
+    "industry": "Manufacturing — precision components",
+    "fte": 78,
+    "monthly_spend": 95000,
+    "stage": "Family-owned · operations head decision-maker",
+    "registered_office": "Brightline House, Sheffield S9 1XU",
+    "last_touch_at": "2026-04-28T11:00:00Z",
+    "sequence_step": 4,
+    "disposition": "voicemail",
+    "top_pain": "Procurement card spend across 3 shifts can't be matched to job-numbers — finance manually tags 400+ transactions per month.",
+    "top_objection": "We need it to integrate with Sage — last vendor said they could but it broke.",
+    "ideal_opener": "I saw Brightline's latest filing — looks like you've grown headcount 18% this year. How is procurement handling card-tagging at that scale?",
+    "best_pitch_prop": "Per-job-number cards with Sage-line-level export and supervisor approval workflow.",
+    "closing_move": "Could I get 20 minutes with you and your Sage admin Tuesday at 14:00, or Thursday at 11:30?",
+    "signals": [
+      { "type": "filing",       "source": "companieshouse", "content": "Filed annual accounts — turnover up 22% YoY (Mar 2026)." },
+      { "type": "hiring",       "source": "linkedin",       "content": "Hiring shift supervisor + procurement manager." },
+      { "type": "post",         "source": "linkedin",       "content": "Operations head shared 'lean manufacturing tools we use' carousel." }
+    ]
+  },
+  {
+    "lead_id": "L-004",
+    "name": "Lukas",
+    "company": "Tafelrunde Gruppe",
+    "archetype": "forkKnife",
+    "industry": "Restaurant group (DE)",
+    "fte": 52,
+    "monthly_spend": 38000,
+    "stage": "4 locations · founder-operator",
+    "registered_office": "Karlstrasse 12, München 80333",
+    "last_touch_at": "2026-05-05T08:30:00Z",
+    "sequence_step": 5,
+    "disposition": "",
+    "top_pain": "Each restaurant manager runs their own bank card; supplier spend is invisible to the central kitchen until invoices land.",
+    "top_objection": "GDPR — we don't want a UK-based fintech holding our staff data.",
+    "ideal_opener": "Tafelrunde added a fourth location in Schwabing last quarter — wie regelt ihr Kartenausgaben über die Standorte hinweg im Moment?",
+    "best_pitch_prop": "Per-location cards · EU-only data residency · receipt-capture in the buyer's own language.",
+    "closing_move": "20 Minuten mit dir und deinem zentralen Buchhalter — Donnerstag 10:00 oder Freitag 09:30?",
+    "signals": [
+      { "type": "new_location", "source": "linkedin",       "content": "Announced Schwabing opening on Instagram + LinkedIn (Mar 2026)." },
+      { "type": "press",        "source": "linkedin",       "content": "Featured in Süddeutsche Zeitung — 'four locations, one menu'." },
+      { "type": "filing",       "source": "companieshouse", "content": "Filed Handelsregister-Eintrag for 4th location (Feb 2026)." }
+    ]
+  }
+]

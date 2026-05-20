@@ -1,0 +1,86 @@
+{
+  "$schema_note": "M5 multi-stakeholder profiles. Primary pair: Tom (§12.2) + synthetic finance lead S.K.; secondary pair (§12.3 archetype): Emma + bookkeeper A.B. Anonymised initials. No PII.",
+  "profiles": [
+    {
+      "id": "TM-tom",
+      "short_name": "Tom (founder)",
+      "archetype": "tom-series-b-founder",
+      "summary": "Series-B SaaS · 22 FTE · €18K/mo card spend on AWS + SaaS · just raised €15M · top objection 'we already use Brex'. Brief §12.2.",
+      "signals": [
+        "Series-B closed last quarter (Crunchbase signal)",
+        "12 new engineering hires in last 90 days (LinkedIn growth)",
+        "Heavy AWS + Anthropic + OpenAI spend (vendor-stack scan)"
+      ],
+      "ideal_opener": "I saw you closed Series-B last quarter — how are you handling per-employee card issuance for your new hires?",
+      "best_pitch_props": [2, 3],
+      "top_objection": "We already use Brex",
+      "stakeholder_role": "primary",
+      "email_synthetic": "tom@startup.example"
+    },
+    {
+      "id": "SK-sarah",
+      "short_name": "S.K. (finance)",
+      "archetype": "finance-director-cfo-peer",
+      "summary": "Synthetic finance lead (Phase 5 cohort-1 will validate — see Evidence note). Owns FX exposure tracking + NetSuite reconciliation. Reports to Tom. Joins his discovery calls when finance topics surface.",
+      "signals": [
+        "NetSuite admin in company directory",
+        "Posts on FX hedging in finance Slack communities",
+        "Owns monthly supplier-payments report"
+      ],
+      "ideal_opener": "What does your monthly EUR-USD volume on supplier payments look like?",
+      "best_pitch_props": [3, 4],
+      "top_objection": "Our finance stack is fine — we don't need another tool",
+      "stakeholder_role": "secondary",
+      "joins_at": "founder_call_minute_2",
+      "email_synthetic": "sarah@startup.example"
+    },
+    {
+      "id": "EW-emma",
+      "short_name": "Emma (ops head)",
+      "archetype": "emma-manufacturing-ops-head",
+      "summary": "Industrial manufacturing · 78 FTE · €42K/mo card spend · brief §12.3. Top pain: bookkeeping drudgery — supplier receipts arrive late, accountant re-keys.",
+      "signals": [
+        "3 sites across UK · supplier-heavy",
+        "Xero customer (public testimonial)",
+        "Job posting for 'AP clerk · receipt processing' last week"
+      ],
+      "ideal_opener": "How much time does your bookkeeping team spend re-keying supplier receipts every month?",
+      "best_pitch_props": [4],
+      "top_objection": "Our accountant won't deal with another tool",
+      "stakeholder_role": "primary",
+      "email_synthetic": "emma@manufacturing.example"
+    },
+    {
+      "id": "AB-bookkeeper",
+      "short_name": "A.B. (bookkeeper)",
+      "archetype": "external-bookkeeper-accountant",
+      "summary": "Emma's external bookkeeper (per §12.3 archetype). Owns Xero data entry + month-end close. Decision veto: if she says no, Emma walks. Joins discovery calls when accounting-stack topics come up.",
+      "signals": [
+        "10 SMB clients on Xero (LinkedIn)",
+        "Posts about month-end pain in bookkeeper Slack"
+      ],
+      "ideal_opener": "When supplier receipts arrive on paper or email, what's your current workflow to get them into Xero?",
+      "best_pitch_props": [4],
+      "top_objection": "I don't want another tool to log into",
+      "stakeholder_role": "secondary",
+      "joins_at": "owner_call_minute_2",
+      "email_synthetic": "anya@bookkeeping.example"
+    }
+  ],
+  "pairings": [
+    {
+      "id": "PAIR-TM-SK",
+      "primary": "TM-tom",
+      "secondary": "SK-sarah",
+      "use_case": "Solo problem · default",
+      "switch_via": "slack_ping_and_phone_dialler_chip"
+    },
+    {
+      "id": "PAIR-EW-AB",
+      "primary": "EW-emma",
+      "secondary": "AB-bookkeeper",
+      "use_case": "Solo problem · variant (per §12.3 archetype)",
+      "switch_via": "phone_dialler_chip_only"
+    }
+  ]
+}

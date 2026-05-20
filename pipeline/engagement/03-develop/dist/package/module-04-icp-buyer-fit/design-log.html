@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Module 4 · ICP Buyer Fit · design-log — FinTechCard Engagement · Mario Becerra</title>
+<meta name="description" content="Why this artefact: documents the Phase 3 development decisions specific to
+Module 4. Pairs with 02-design/module-storyboards/M4-icp-buyer-fit.md
+(the storyboard) and 02-design/4cid-blueprint.md §3.3 ("/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink: #0a1a10; --ink-dim: #4d5a51; --ink-faint: #5c6b62;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --rule: #e6e8e4;
+  --accent: #0a8754; --green-700: #07683f; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --serif: "Instrument Serif", "Times New Roman", serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cream topbar (Mario portfolio style — NOT dark navy) */
+.topbar {
+  background: var(--bg); color: var(--ink);
+  padding: 12px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+  border-bottom: 1px solid var(--rule);
+}
+.topbar .brand { display: flex; align-items: center; gap: 12px; color: var(--ink-dim); }
+.topbar .brand .mark {
+  font-family: var(--mono); font-weight: 700; color: var(--accent); font-size: 12px;
+}
+.topbar .brand .crumb { color: var(--ink-faint); }
+.topbar .actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.topbar .nav-link {
+  background: transparent; color: var(--ink-dim);
+  border: none; text-decoration: none;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+}
+.topbar .nav-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+main.sheet {
+  max-width: 820px; margin: 40px auto 24px; padding: 0 32px;
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 24px auto; padding: 0 18px; }
+}
+
+/* Portfolio signature: Instrument Serif italic for H1 */
+main.sheet h1 {
+  font-family: var(--serif);
+  font-weight: 400; font-style: italic;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+main.sheet h1::after {
+  content: "";
+  display: block;
+  width: 64px; height: 2px;
+  background: var(--accent);
+  margin-top: 18px;
+}
+
+/* H2 with mono section-kicker via ::before counter */
+main.sheet { counter-reset: h2-section; }
+main.sheet h2 {
+  counter-increment: h2-section;
+  font-family: var(--sans); color: var(--ink);
+  font-weight: 700; letter-spacing: -0.005em;
+  font-size: 26px; line-height: 1.2;
+  margin: 56px 0 14px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+main.sheet h2::before {
+  content: counter(h2-section, decimal-leading-zero) " · ";
+  font-family: var(--mono); font-size: 12px;
+  color: var(--accent); font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  display: block; margin-bottom: 6px;
+}
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; margin-top: 36px; }
+
+main.sheet h3 {
+  font-family: var(--sans); color: var(--ink);
+  font-weight: 700; font-size: 17px; line-height: 1.3;
+  margin: 28px 0 8px; letter-spacing: -0.005em;
+}
+main.sheet h4 {
+  font-family: var(--mono); color: var(--green-700);
+  font-weight: 700; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin: 24px 0 8px;
+}
+main.sheet h5 {
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--ink-faint); margin: 20px 0 6px;
+}
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a {
+  color: var(--green-700); text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+main.sheet a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+main.sheet strong { color: var(--ink); font-weight: 700; }
+main.sheet em { color: var(--ink-dim); }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr {
+  border: none; border-top: 1px solid var(--rule);
+  margin: 40px 0;
+}
+
+main.sheet blockquote {
+  margin: 1.2em 0; padding: 14px 20px;
+  background: var(--green-50); border-left: 3px solid var(--accent);
+  border-radius: 0;
+  color: var(--ink-dim);
+  font-family: var(--serif); font-style: italic; font-size: 18px; line-height: 1.5;
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+main.sheet blockquote cite {
+  display: block;
+  font-family: var(--mono); font-style: normal;
+  font-size: 11px; color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-top: 10px;
+}
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--green-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 16px 20px;
+  border-left: 3px solid var(--accent);
+  overflow-x: auto; font-size: 12.5px; line-height: 1.55;
+  margin: 1.2em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1.2em 0;
+  font-size: 13.5px;
+  border-top: 1px solid var(--rule);
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-dim);
+  text-align: left; padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;
+}
+main.sheet tbody td {
+  padding: 12px 14px; border-bottom: 1px solid var(--rule);
+  vertical-align: top; line-height: 1.5;
+}
+
+footer.foot {
+  max-width: 820px; margin: 32px auto 48px; padding: 24px 32px 0;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+  color: var(--ink-faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  border-top: 1px solid var(--rule);
+  text-transform: uppercase;
+}
+footer.foot a { color: var(--green-700); text-decoration: none; border-bottom: 1px solid currentColor; }
+footer.foot a:hover { color: var(--accent); }
+@media (max-width: 720px) {
+  footer.foot { padding: 24px 18px 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="mark">M·</span>
+    <span class="crumb">03-develop\dist\package\module-04-icp-buyer-fit/design-log.md</span>
+  </div>
+  <div class="actions">
+    <a class="nav-link" href="../../../../../../">← Portfolio</a>
+    <a class="nav-link" href="../../../../../">← Pipeline</a>
+    <a class="nav-link" href="../../../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="module-4-icp-buyer-fit-design-log">Module 4 · ICP Buyer Fit · design-log</h1>
+<blockquote>
+<p>Why this artefact: documents the Phase 3 development decisions specific to
+Module 4. Pairs with <code>02-design/module-storyboards/M4-icp-buyer-fit.md</code>
+(the storyboard) and <code>02-design/4cid-blueprint.md</code> §3.3 (variability of
+practice rationale). Reviewed by Mario at every build gate.</p>
+</blockquote>
+<h2 id="1-packaging">1 · Packaging</h2>
+<p>The module ships as a single SCORM 1.2 SCO (<code>FTC.SDR.M4.icp-buyer-fit.v1</code>). The
+manifest references the shell at <code>../scorm-shell/</code> relatively; the packaging
+script (<code>scripts/package.sh</code> in the launch comms plan) copies <code>/scorm-shell/</code>
+alongside the module folder before zip. Same pattern as Module 1 — kept
+identical for consistency across the 6 modules.</p>
+<p><code>adlcp:masteryscore=80</code> — same threshold across all modules per
+<code>02-design/learning-outcomes-abcd-bloom.md</code> §5 + brief §5 L2 target.</p>
+<h2 id="2-the-3-vs-2-interleaved-calls-decision-phase-2-critic-finding">2 · The 3-vs-2-interleaved-calls decision (Phase 2 critic finding)</h2>
+<p>The storyboard prescribes <strong>3 interleaved calls</strong> in the Solo block (5:30–8:30).
+The Phase 2 critic surfaced a risk: if a real dry-run overruns the ≤10 min
+cohort tolerance (brief §7), the module must degrade gracefully.</p>
+<p><strong>Decision:</strong> ship with <code>INTERLEAVED_CALLS = 3</code> (module.js line 35) as the
+default. Fallback is a single-constant change to <code>2</code>, which:</p>
+<ul>
+<li>drops Solo block from ~3 min to ~2 min;</li>
+<li>preserves variability (2 archetypes interleaved is still non-blocked per
+  Van Merriënboer Ch. 5);</li>
+<li>keeps LO-ICP.3 (run M1+M2+M3 × 3+ archetypes) <strong>partially</strong> met — D4 drill
+  already validates LO-ICP.1 across all 4 archetypes, so Solo is the only
+  step that drops.</li>
+</ul>
+<p><strong>Dry-run protocol.</strong> Phase 5 cohort-1 first cohort runs the 3-call default.
+If 2+ reps in the cohort exceed 10:30 module-time (instrumented via
+<code>time_in_module_ms</code>), Phase 6 iteration drops to 2 calls. Threshold
+chosen at 2 reps (not 1) to avoid one-off slow learner skewing the rollout.</p>
+<p><strong>Final cut for v1 shipped build: 3 interleaved calls</strong> (per storyboard).</p>
+<h2 id="3-randomisation-seed-strategy-manager-calibration-replay">3 · Randomisation seed strategy (manager-calibration replay)</h2>
+<p>Phase 5 manager calibration requires the ability to replay a learner's run
+exactly — same archetype order, same drill shuffle, same call permutation.</p>
+<p><strong>Implementation:</strong> mulberry32 PRNG (<code>makeRng</code>) seeded from
+<code>URLSearchParams.seed</code> or <code>DEFAULT_SEED = 20260517</code> (= 2026-05-17 build date).</p>
+<ul>
+<li>Drill D4 card order ← <code>shuffle(real, rng)</code>.</li>
+<li>Solo block call order ← <code>shuffle(allArche, rng).slice(0, INTERLEAVED_CALLS)</code>.</li>
+<li>Take-away card surfaces the seed and the replay URL pattern:
+  <code>?seed=&lt;int&gt;</code>.</li>
+</ul>
+<p>This keeps the run deterministic without rebuilding. Manager rubric
+calibration in week 6 (per brief §8 K.M. weekly cadence) uses this for the
+"score the same 3 sample calls" exercise.</p>
+<h2 id="4-distractor-design-dataprospectsjson-near-misses">4 · Distractor design (data/prospects.json near-misses)</h2>
+<p>Four CH near-miss distractors (M4-D-001..M4-D-004), one per archetype slot.
+Each shares <strong>one</strong> strong surface signal with a real archetype but flips on a
+<strong>load-bearing axis</strong> that requires reading the second-or-third field:</p>
+<table>
+<thead>
+<tr>
+<th>Distractor</th>
+<th>Mimics</th>
+<th>Surface match</th>
+<th>Load-bearing miss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pine Mills</td>
+<td>Emma</td>
+<td>"Mill", food-adj</td>
+<td>1 site, 38 FTE, owner runs Sage himself</td>
+</tr>
+<tr>
+<td>Helio Rivers</td>
+<td>Tom</td>
+<td>Recent funding</td>
+<td>Series-C, 180 FTE — out of SMB ICP</td>
+</tr>
+<tr>
+<td>OakRow Bakery</td>
+<td>Lukas</td>
+<td>Hospitality</td>
+<td>1 location, UK not DE, €6K spend &lt; €10K floor</td>
+</tr>
+<tr>
+<td>TwoPins Studios</td>
+<td>Maria</td>
+<td>"2 locations"</td>
+<td>Studios are client sites, not retail stores</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why this design:</strong> §12 archetypes can be pattern-matched on the surface
+signal alone in a fast drill. Distractors force the rep to read the FTE,
+spend, and stage fields — which is exactly the disambiguation A.S. asks for
+in brief §9 (<em>"top reps pick off one specific observable signal"</em> — but only
+after triangulating).</p>
+<p>Distractors don't appear in the D4 drill (which is timed and accuracy-graded);
+they appear in the Solo block's pre-call LinkedIn-CH preview to teach
+disambiguation under cognitive load. (Phase 6 iteration backlog: add
+distractor cards to D4 once base archetype-match accuracy clears 90% across
+2 cohorts — expertise-reversal-aware, per Kalyuga 2007.)</p>
+<h2 id="5-dry-run-timing-budget-target-vs-measured">5 · Dry-run timing budget (target vs measured)</h2>
+<p>Target budget per Gagné event (per storyboard):</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Target</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0:00–0:30 Gain attention</td>
+<td>30 s</td>
+<td>4-card lineup, hover only</td>
+</tr>
+<tr>
+<td>0:30–1:00 State outcome</td>
+<td>30 s</td>
+<td>Single CTA</td>
+</tr>
+<tr>
+<td>1:00–1:30 Recall</td>
+<td>30 s</td>
+<td>Two short lists</td>
+</tr>
+<tr>
+<td>1:30–3:00 Worked example</td>
+<td>90 s</td>
+<td>2 archetypes side-by-side</td>
+</tr>
+<tr>
+<td>3:00–5:30 Drill D4</td>
+<td>150 s</td>
+<td>4 cards × ≤ 5 s flash + transitions</td>
+</tr>
+<tr>
+<td>5:30–8:30 Solo</td>
+<td>180 s</td>
+<td>3 × 60 s mini-calls</td>
+</tr>
+<tr>
+<td>8:30–9:00 Feedback matrix</td>
+<td>30 s</td>
+<td>3×3 self-score</td>
+</tr>
+<tr>
+<td>9:00–9:30 Quiz</td>
+<td>30 s</td>
+<td>3 items</td>
+</tr>
+<tr>
+<td>9:30–10:00 Take-away</td>
+<td>30 s</td>
+<td>Key line + spaced retrieval hook</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>600 s</strong></td>
+<td>= 10:00</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Measured (Mario solo dry-run, 2026-05-17, debug=1):</strong> 8:48 first attempt,
+9:22 second attempt (after pausing on worked example to read both cards).
+Within budget with ~30 s headroom. Phase 5 cohort-1 confirms before cohort-2
+cuts.</p>
+<h2 id="6-accessibility-wcag-21-aa-module-specific-notes">6 · Accessibility (WCAG 2.1 AA) — module-specific notes</h2>
+<p>Inherits the shell's a11y baseline (per <code>03-develop/scorm-shell/a11y-audit.md</code>).
+Module-specific items:</p>
+<ul>
+<li><strong>Drill cards keyboard-navigable.</strong> Cards mount with <code>tabindex="0"</code> and
+  auto-focus on render so screen readers announce. Number keys <code>1</code>–<code>4</code> map
+  to archetype picks (Maria/Tom/Emma/Lukas) with visible <code>&lt;kbd&gt;</code> glyphs.
+  Buttons remain clickable; keyboard is in addition, not in place of.</li>
+<li><strong>Timer is announced.</strong> Drill timer is wrapped in <code>aria-live="polite"</code> so
+  remaining seconds reach screen readers. <code>.urgent</code> class adds colour at ≤ 2 s
+  (colour + text, never colour alone — per WCAG 1.4.1).</li>
+<li><strong>Solo block side-rail.</strong> The Solo panel is <code>role="region"</code> with an
+  <code>aria-label="Call N of M"</code> boundary announcement at each call switch — per
+  storyboard a11y checklist line 5.</li>
+<li><strong>Extended-time mode.</strong> Reps requiring extended time can append
+  <code>?ext-time=1.5</code> to the URL — Phase 6 backlog (not yet wired; flagged on the
+  iteration playbook). For v1, learners with extended-time accommodations
+  use the manager-led "pause and resume" pattern via SCORM <code>suspend_data</code>.</li>
+<li><strong>Reduced-motion honoured.</strong> All <code>m4-fade</code> and <code>m4-pulse</code> animations are
+  suppressed via <code>prefers-reduced-motion: reduce</code> (styles.css line 458).</li>
+<li><strong>3×3 fit matrix.</strong> Each cell is a <code>role="radiogroup"</code> with <code>aria-label</code>
+  combining row (M1/M2/M3) and call (archetype name) — labelled axes per
+  storyboard a11y checklist line 6.</li>
+<li><strong>Distractor reads.</strong> Distractor <code>signals[]</code> entries include a
+  parenthetical "(Disambiguation: …)" prose hint in the <code>ideal_opener</code> field
+  that's hidden from real drill cards but read aloud in the Solo pre-dial
+  preview for any rep who Tabs through the LinkedIn-CH window — supports
+  cognitive accessibility (CAST UDL Guideline 3).</li>
+</ul>
+<h2 id="7-ux-ui-quality-bar-what-means-here">7 · UX-UI quality bar — what "максимально приятный" means here</h2>
+<p>Per the user's verbatim instruction. Three concrete design moves carry it:</p>
+<ol>
+<li>
+<p><strong>Mayer signalling stays loud but coherent.</strong> Each archetype gets its own
+   colour cue (Maria #d97706, Tom #7c3aed, Emma #2563eb, Lukas #00875f) but
+   the <strong>M1 label</strong> stays brand-green across both worked-example cards — so
+   the <em>cue colour for the move</em> is constant, and only the <em>frame colour for
+   the buyer</em> varies. Same principle in the call-strip pills at the top of
+   the Solo block.</p>
+</li>
+<li>
+<p><strong>No modal traps in the drill loop.</strong> Drill cards transition card → flash
+   → next via 420 ms timeout. No "continue" button between cards. The rep is
+   in flow for the entire 150 s.</p>
+</li>
+<li>
+<p><strong>The side-rail Solo panel is non-blocking.</strong> Mini-OS windows (LinkedIn-CH
+   etc.) host the workspace; the side-rail panel only holds the step
+   coach + call-strip. Real workspace, real flow — not a slideware overlay
+   covering it.</p>
+</li>
+</ol>
+<h2 id="8-references">8 · References</h2>
+<ul>
+<li>Brief §§7, 12.1–12.4, 13.1, 18.2, 18.3.</li>
+<li><code>02-design/module-storyboards/M4-icp-buyer-fit.md</code>.</li>
+<li><code>02-design/4cid-blueprint.md</code> §3.3 + §6.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code> §4.4.</li>
+<li><code>02-design/ux-design-system.md</code> §6 signalling + §9 a11y.</li>
+<li><code>03-develop/scorm-shell/README.md</code> + <code>event-log-spec.md</code>.</li>
+<li>Van Merriënboer &amp; Kirschner (2018) Ch. 5 (variability) + Ch. 10 (part-task).</li>
+<li>Kalyuga (2007) — expertise reversal note for distractor schedule.</li>
+<li>Mayer (2014) Ch. 6 (signalling) + Ch. 11 (redundancy).</li>
+<li>Decisions <code>D-005</code> (custom SCORM), <code>D-006</code> (no audio), <code>D-007</code> (mini-OS).</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Built by <strong style="color:var(--ink-dim);">Mario Becerra</strong> · pipeline/engagement/03-develop\dist\package\module-04-icp-buyer-fit/design-log.md</span>
+  <span><a href="../../../../../../">mario.grasslms.online</a></span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+[
+  {
+    "lead_id": "L-002",
+    "name": "Tom",
+    "archetype": "rocket",
+    "industry": "Series-B SaaS",
+    "fte": 22,
+    "monthly_spend": 18000,
+    "stage": "Series-B · founder-CEO · €15M raised last quarter",
+    "top_pain": "FX on international SaaS · per-employee card issuance speed",
+    "top_objection": "We already use Brex.",
+    "decision_criteria": ["Speed to issue", "API for engineering", "FX rate"],
+    "best_pitch_prop": "Prop 2 (multi-user cards) + Prop 3 (auto-FX)",
+    "ideal_opener": "I saw you closed your Series-B last quarter — how are you handling per-employee card issuance for your new hires?",
+    "signals": [
+      { "type": "funding",  "source": "linkedin",       "content": "Announced €15M Series-B last quarter." },
+      { "type": "hiring",   "source": "linkedin",       "content": "Hiring 6 engineers + Head of Finance." },
+      { "type": "filing",   "source": "companieshouse", "content": "Allotment of shares — Series-B confirmation." }
+    ]
+  },
+  {
+    "lead_id": "L-005",
+    "name": "Sven",
+    "archetype": "factory",
+    "industry": "Industrial wholesale · DE",
+    "fte": 64,
+    "monthly_spend": 27000,
+    "stage": "Family-owned · operations head decision-maker",
+    "top_pain": "Supplier receipts arrive late; bookkeeper re-keys.",
+    "top_objection": "Our accountant won't deal with another tool.",
+    "decision_criteria": ["Sage/Xero sync", "Multi-site visibility"],
+    "best_pitch_prop": "Prop 4 (receipt capture + accounting sync)",
+    "ideal_opener": "How much time does your bookkeeping team spend re-keying supplier receipts every month?",
+    "signals": [
+      { "type": "filing",   "source": "companieshouse", "content": "Annual accounts filed — 18% YoY growth." },
+      { "type": "hiring",   "source": "linkedin",       "content": "Hiring procurement assistant." }
+    ]
+  }
+]

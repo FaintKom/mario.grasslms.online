@@ -1,0 +1,37 @@
+{
+  "_doc": "Module 6 prospect profiles. Primary: Lukas, brief §12.4 verbatim (DE hospitality, 4-location restaurant group, low trust on new fintechs). Secondary: a synthetic trust-driven prospect for variability of practice (4cid-blueprint.md §3.3). Anonymised first names only; no PII per brief §7.",
+  "prospects": [
+    {
+      "id": "lukas",
+      "display_name": "Lukas",
+      "archetype": "lukas",
+      "context": "DE hospitality · 4-location restaurant group",
+      "fte": 52,
+      "monthly_card_spend_eur": 31000,
+      "tenure_years": 12,
+      "top_pain": "Expense fraud (fired someone last year) + multi-currency on Italian supplier",
+      "decision_criteria": ["per-card limits", "real-time alerts", "auto-FX"],
+      "top_objection": "I don't trust new fintechs with my money",
+      "trigger_line": "I don't trust new fintechs with my money. What happens to my money if you go under?",
+      "low_trust": true,
+      "evidence_source": "brief §12.4",
+      "module_role": "primary trigger + solo problem buyer · all 3 reg questions come from Lukas"
+    },
+    {
+      "id": "priya",
+      "display_name": "Priya",
+      "archetype": "trust-driven-saas",
+      "context": "UK SaaS · regulated-industry vertical · CTO/co-founder",
+      "fte": 38,
+      "monthly_card_spend_eur": 19500,
+      "tenure_years": 5,
+      "top_pain": "Previous payments vendor lost a SOC2 audit mid-renewal; nervous about repeating that",
+      "decision_criteria": ["regulator clarity", "auditor-friendly DPA", "incident history"],
+      "top_objection": "Show me your regulator first; we'll discuss product second.",
+      "trigger_line": "Before we talk product — who actually holds the licence, and which national regulator audits you?",
+      "low_trust": true,
+      "evidence_source": "synthetic composite · trust-driven variability per 4cid §3.3",
+      "module_role": "secondary variability prospect · referenced in v2 backlog cards (not in v1 timeline)"
+    }
+  ]
+}

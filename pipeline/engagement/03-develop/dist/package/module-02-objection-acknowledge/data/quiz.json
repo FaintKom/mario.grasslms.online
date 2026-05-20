@@ -1,0 +1,41 @@
+[
+  {
+    "id": "Q1",
+    "lo": "LO-M2.1 · classify objection family ≤ 3 s",
+    "stem": "Tom (Series-B SaaS founder): 'We already use Brex — why would we switch?' Which family?",
+    "options": [
+      { "id": "A", "text": "bank_visa" },
+      { "id": "B", "text": "competitor_brex" },
+      { "id": "C", "text": "accountant_friction" },
+      { "id": "D", "text": "trust_fintech" }
+    ],
+    "correct": "B",
+    "feedback": "competitor_brex is the §12.2 Tom archetype's top objection (GC-06, L.D. verbatim, §10.2)."
+  },
+  {
+    "id": "Q2",
+    "lo": "LO-M2.2 · restate in buyer's own words",
+    "stem": "Emma (manufacturing ops head): 'Our accountant won't deal with another tool.' Which response best restates in her own words without rebutting?",
+    "options": [
+      { "id": "A", "text": "Our Xero sync is automated — your accountant won't add work." },
+      { "id": "B", "text": "So you're protecting your accountant's bandwidth." },
+      { "id": "C", "text": "Most accountants love us once they see the integration." },
+      { "id": "D", "text": "Have you tried showing your accountant our integration page?" }
+    ],
+    "correct": "B",
+    "feedback": "B uses Emma's noun (accountant) and reframes her concern (bandwidth-protection) with no rebuttal — pattern from M.G. §10.1. A argues; C dismisses; D deflects (GC-12)."
+  },
+  {
+    "id": "Q3",
+    "lo": "LO-M2.3 · ask the broken-thing follow-up",
+    "stem": "Lukas just told you he doesn't trust fintechs after a payroll provider went sideways. You restated cleanly. What's the follow-up question?",
+    "options": [
+      { "id": "A", "text": "Have you considered our regulatory backing with a tier-1 partner bank?" },
+      { "id": "B", "text": "What specifically went sideways with that payroll provider?" },
+      { "id": "C", "text": "Are you open to a quick demo if I send our DPA?" },
+      { "id": "D", "text": "Most operators feel that way before they try us — fair to share what changed for them?" }
+    ],
+    "correct": "B",
+    "feedback": "B surfaces the actual broken thing (LO-M2.3, M.G. §10.1). A is M6 regulatory deflection (wrong module). C closes prematurely. D is third-party-proof, not buyer-specific."
+  }
+]
