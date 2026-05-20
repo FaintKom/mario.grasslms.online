@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../_shared/system.css"/>
 <link rel="stylesheet" href="style.css"/>
 <style>
 /* Script-specific overlay on the needs-assessment-template base */
@@ -19,19 +20,19 @@
   align-items: start;
 }
 .script-row .t {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-400);
   padding-top: 3px;
 }
 .script-row .body {
   font-size: 14px;
   line-height: 1.55;
-  color: var(--ink);
+  color: var(--ink-900);
 }
-.script-row .body strong { color: var(--ink); }
+.script-row .body strong { color: var(--ink-900); }
 .script-row.you .body {
   border-left: 3px solid var(--green-600);
   padding: 8px 12px 8px 14px;
@@ -44,7 +45,7 @@
   background: var(--sun-50);
   border-radius: 0 6px 6px 0;
   font-style: italic;
-  color: var(--ink-dim);
+  color: var(--ink-500);
 }
 .script-row.dig .body {
   border-left: 3px solid var(--coral-500);
@@ -58,23 +59,23 @@
   gap: 10px;
   margin: 18px 0 22px;
   padding: 14px 18px;
-  background: var(--bg-3);
+  background: var(--ink-50);
   border-radius: 8px;
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.05em;
-  color: var(--ink-dim);
+  color: var(--ink-500);
   text-transform: uppercase;
 }
 .timing-strip strong { color: var(--green-700); }
-.timing-strip .sep { color: var(--rule-strong); }
+.timing-strip .sep { color: var(--ink-200); }
 .legend {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--ink-faint);
+  color: var(--ink-400);
   margin-bottom: 14px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -85,7 +86,7 @@
   gap: 6px;
   padding: 3px 8px;
   border-radius: 3px;
-  border: 1px solid var(--rule-strong);
+  border: 1px solid var(--ink-200);
 }
 .legend .chip.you { border-color: var(--green-600); color: var(--green-700); background: var(--green-50); }
 .legend .chip.listen { border-color: var(--sun-500); color: var(--sun-700); background: var(--sun-50); font-style: italic; }

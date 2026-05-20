@@ -7,19 +7,18 @@
 <meta name="description" content="Why this artefact: Low-fidelity UI prototypes for the mini-OS shell. Implements the ux-design-system.md paradigm in ASCII-art form for cold-readability without binary asset dependency. Drives Phase 3 "/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
   --bg: #fafbf6; --paper: #ffffff;
-  --ink: #0a1a10; --ink-dim: #4d5a51; --ink-faint: #5c6b62;
+  --ink: #0a1a10; --ink-dim: #4d5a51; --ink-faint: #6b7a70;
   --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
   --rule: #e6e8e4;
   --accent: #0a8754; --green-700: #07683f; --green-300: #8fd770; --green-50: #ecf9e7;
-  --sun-500: #f5b800; --sun-50: #fffbe5;
+  --sun-300: #ffe066; --sun-500: #f5b800; --sun-50: #fffbe5;
   --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
   --mono: "Geist Mono", ui-monospace, Menlo, monospace;
   --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --serif: "Instrument Serif", "Times New Roman", serif;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: var(--bg); }
@@ -61,15 +60,24 @@ main.sheet {
   main.sheet { margin: 24px auto; padding: 0 18px; }
 }
 
-/* Portfolio signature: Instrument Serif italic for H1 */
+/* Lively signature: Manrope 800 H1 with rotated sun-300 highlight */
 main.sheet h1 {
-  font-family: var(--serif);
-  font-weight: 400; font-style: italic;
-  font-size: clamp(36px, 5vw, 56px);
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(34px, 5.2vw, 52px);
   line-height: 1.05;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   color: var(--ink);
   margin: 0 0 8px;
+}
+main.sheet h1 em {
+  font-style: normal;
+  background: var(--sun-300);
+  padding: 0 10px;
+  border-radius: 8px;
+  display: inline-block;
+  transform: rotate(-1deg);
+  color: var(--ink);
 }
 main.sheet h1::after {
   content: "";
@@ -82,7 +90,7 @@ main.sheet h1::after {
 /* H2 (manual section numbers preserved from author's markdown) */
 main.sheet h2 {
   font-family: var(--sans); color: var(--ink);
-  font-weight: 700; letter-spacing: -0.005em;
+  font-weight: 800; letter-spacing: -0.015em;
   font-size: 26px; line-height: 1.2;
   margin: 56px 0 14px;
   padding-top: 28px;
@@ -92,8 +100,8 @@ main.sheet h2:first-of-type { border-top: none; padding-top: 0; margin-top: 36px
 
 main.sheet h3 {
   font-family: var(--sans); color: var(--ink);
-  font-weight: 700; font-size: 17px; line-height: 1.3;
-  margin: 28px 0 8px; letter-spacing: -0.005em;
+  font-weight: 800; font-size: 17px; line-height: 1.3;
+  margin: 28px 0 8px; letter-spacing: -0.01em;
 }
 main.sheet h4 {
   font-family: var(--mono); color: var(--green-700);
@@ -114,7 +122,7 @@ main.sheet a {
 }
 main.sheet a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 main.sheet strong { color: var(--ink); font-weight: 700; }
-main.sheet em { color: var(--ink-dim); }
+main.sheet em { color: var(--ink-dim); font-style: italic; }
 
 main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
 main.sheet li { margin: 0.3em 0; }
@@ -129,8 +137,7 @@ main.sheet blockquote {
   margin: 1.2em 0; padding: 14px 20px;
   background: var(--green-50); border-left: 3px solid var(--accent);
   border-radius: 0;
-  color: var(--ink-dim);
-  font-family: var(--serif); font-style: italic; font-size: 18px; line-height: 1.5;
+  color: var(--ink-700); font-size: 15px; line-height: 1.55;
 }
 main.sheet blockquote p { margin: 0.4em 0; }
 main.sheet blockquote cite {

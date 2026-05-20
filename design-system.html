@@ -1,0 +1,2024 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>GrassLMS Lively · Design System + Audit + Migration · Mario Becerra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+/* ============================================================
+   GrassLMS Lively — Design System v1.0
+   This document IS the system. Built using only its own tokens.
+   ============================================================ */
+:root {
+  --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
+  --green-300:#8fd770; --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754;
+  --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
+  --sun-50:#fffbe5; --sun-100:#fff2b3; --sun-300:#ffe066; --sun-400:#ffd84d;
+  --sun-500:#f5b800; --sun-700:#7a5500;
+  --coral-50:#fff0eb; --coral-300:#ffae9a; --coral-500:#ff7a5c; --coral-700:#c33d22;
+  --ink-50:#f4f5f1; --ink-100:#e6e8e4; --ink-200:#c9cec9; --ink-300:#9aa39d;
+  --ink-400:#6b7a70; --ink-500:#4d5a51; --ink-700:#1a2a1f; --ink-900:#0a1a10;
+  --paper:#fafbf6; --paper-2:#ffffff;
+
+  --shadow-xs:0 1px 2px rgba(10,26,16,.05);
+  --shadow-sm:0 2px 6px -1px rgba(10,26,16,.07);
+  --shadow-md:0 8px 24px -8px rgba(10,26,16,.12);
+  --shadow-lg:0 18px 50px -20px rgba(10,26,16,.18);
+  --shadow-pop:0 4px 0 0 var(--green-700);
+  --shadow-pop-sm:0 2px 0 0 var(--green-700);
+  --shadow-pop-ink:0 4px 0 0 var(--ink-100);
+
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:24px; --r-pill:999px;
+
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px; --s-8:32px;
+  --s-10:40px; --s-12:48px; --s-16:64px; --s-20:80px;
+
+  --font-sans:'Manrope',system-ui,-apple-system,sans-serif;
+  --font-mono:'Geist Mono',ui-monospace,SFMono-Regular,monospace;
+
+  --maxw:1280px;
+  --gutter:clamp(16px,3vw,32px);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink-900);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: var(--green-700); text-decoration: none; }
+a:hover { color: var(--green-900); text-decoration: underline; }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+.mono { font-family: var(--font-mono); }
+
+/* ---------- topbar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(250,251,246,.92);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--ink-100);
+}
+.topbar-inner {
+  display: flex; align-items: center; gap: 18px;
+  padding: 14px var(--gutter);
+  max-width: var(--maxw); margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  width: 32px; height: 32px;
+  background: var(--green-600); color: white;
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-weight: 700; font-size: 14px;
+  position: relative;
+}
+.brand-mark::after {
+  content: ""; position: absolute;
+  width: 7px; height: 7px; background: var(--sun-400);
+  border-radius: 50%;
+  bottom: -1px; right: -1px;
+}
+.brand-name { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-name b { font-weight: 800; font-size: 14px; letter-spacing: -.01em; }
+.brand-name span {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .06em;
+  color: var(--ink-400);
+}
+.topbar nav { margin-left: auto; display: flex; gap: 2px; align-items: center; flex-wrap: wrap; }
+.navlink {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 8px 12px; border-radius: var(--r-pill);
+  color: var(--ink-500); transition: all 150ms;
+}
+.navlink:hover { color: var(--green-700); background: var(--green-50); text-decoration: none; }
+.navlink.cur { color: var(--green-700); background: var(--green-50); }
+
+/* ---------- hero ---------- */
+.hero { padding: var(--s-12) 0 var(--s-8); }
+.eyebrow {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400); font-weight: 600;
+  margin: 0 0 var(--s-3);
+}
+.eyebrow b { color: var(--green-700); font-weight: 700; }
+.hero h1 {
+  font-family: var(--font-sans); font-weight: 800;
+  font-size: clamp(34px, 5.6vw, 60px);
+  line-height: 1.05; letter-spacing: -.02em;
+  margin: 0 0 var(--s-5); max-width: 22ch;
+}
+.hero h1 em {
+  font-style: normal;
+  background: var(--sun-300);
+  padding: 0 10px; border-radius: 8px;
+  display: inline-block;
+  transform: rotate(-1deg);
+}
+.hero .lede {
+  font-size: 18px; line-height: 1.55;
+  color: var(--ink-500); font-weight: 500;
+  max-width: 60ch; margin: 0;
+}
+.hero .lede b { font-weight: 700; color: var(--ink-900); background: var(--green-50); padding: 0 4px; border-radius: var(--r-xs); }
+
+.hero-meta {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-4);
+  margin-top: var(--s-8); padding-top: var(--s-6);
+  border-top: 1px solid var(--ink-100);
+}
+.hero-meta .cell { display: flex; flex-direction: column; gap: 2px; }
+.hero-meta .k {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400);
+}
+.hero-meta .v { font-size: 14px; font-weight: 700; color: var(--ink-900); }
+.hero-meta .v.ok { color: var(--green-700); }
+.hero-meta .v.warn { color: var(--coral-700); }
+
+/* ---------- section ---------- */
+.section {
+  padding: var(--s-12) 0;
+  border-top: 1px solid var(--ink-100);
+}
+.section-head {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: var(--s-6);
+  align-items: baseline;
+  margin-bottom: var(--s-8);
+}
+.section-num {
+  font-family: var(--font-mono); font-size: 12px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--green-700); font-weight: 700;
+}
+.section-head h2 {
+  font-family: var(--font-sans); font-weight: 800;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.05; letter-spacing: -.02em;
+  margin: 0; max-width: 22ch;
+}
+.section-head h2 em {
+  font-style: normal;
+  background: var(--sun-300);
+  padding: 0 8px; border-radius: 8px;
+  display: inline-block;
+  transform: rotate(-1deg);
+}
+.section-meta {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em;
+}
+.section-intro {
+  grid-column: 2 / 3;
+  font-size: 16px; line-height: 1.55;
+  color: var(--ink-500); max-width: 56ch;
+  margin: var(--s-3) 0 0;
+}
+
+/* ---------- block (the basic card-on-paper) ---------- */
+.block {
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  margin-bottom: var(--s-4);
+}
+.block h3 {
+  margin: 0 0 var(--s-3);
+  font-size: 18px; font-weight: 800; letter-spacing: -.01em;
+}
+.block h3 .mono-id {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-400); font-weight: 500;
+  margin-left: 8px;
+}
+.block p { margin: 0 0 var(--s-3); color: var(--ink-700); }
+.block p:last-child { margin-bottom: 0; }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+  padding: 12px 20px; border-radius: var(--r-md);
+  border: none; cursor: pointer;
+  transition: transform 120ms, box-shadow 120ms;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.btn:hover { text-decoration: none; }
+.btn.primary {
+  background: var(--green-600); color: white;
+  box-shadow: var(--shadow-pop);
+}
+.btn.primary:hover { transform: translateY(2px); box-shadow: var(--shadow-pop-sm); color: white; }
+.btn.primary:active { transform: translateY(4px); box-shadow: 0 0 0 0 var(--green-700); }
+.btn.secondary {
+  background: var(--paper-2); color: var(--ink-900);
+  box-shadow: var(--shadow-pop-ink);
+}
+.btn.secondary:hover { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--ink-100); color: var(--ink-900); }
+.btn.ghost { background: transparent; color: var(--ink-700); padding: 10px 14px; }
+.btn.ghost:hover { background: var(--ink-50); color: var(--ink-900); }
+.btn.sm { font-size: 12px; padding: 8px 14px; border-radius: var(--r-sm); }
+
+/* ---------- TL;DR diagnosis ---------- */
+.diag {
+  display: grid; gap: var(--s-4);
+}
+.diag-row {
+  display: grid;
+  grid-template-columns: 88px 1fr 1fr;
+  gap: var(--s-5);
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+}
+.diag-num {
+  font-family: var(--font-sans); font-weight: 800;
+  font-size: 56px; line-height: 1;
+  color: var(--green-600);
+  letter-spacing: -.04em;
+}
+.diag-issue {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.diag-issue .lbl {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--coral-700); font-weight: 700;
+}
+.diag-issue h3 { font-size: 17px; font-weight: 800; margin: 0; letter-spacing: -.01em; line-height: 1.25; }
+.diag-issue p { font-size: 13.5px; color: var(--ink-500); margin: 0; line-height: 1.5; }
+.diag-fix {
+  display: flex; flex-direction: column; gap: 6px;
+  background: var(--green-50);
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+  border-left: 3px solid var(--green-600);
+}
+.diag-fix .lbl {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--green-700); font-weight: 700;
+}
+.diag-fix p {
+  font-size: 13.5px; color: var(--ink-700); margin: 0; line-height: 1.5;
+}
+@media (max-width: 800px) {
+  .diag-row { grid-template-columns: 1fr; }
+  .diag-num { font-size: 36px; }
+}
+
+/* ---------- audit table ---------- */
+.audit { display: grid; gap: var(--s-3); }
+.audit-row {
+  display: grid;
+  grid-template-columns: 1fr 110px 1fr;
+  gap: var(--s-4); align-items: start;
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: var(--s-4) var(--s-5);
+}
+.audit-file {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.audit-file .path {
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--ink-900); font-weight: 600;
+  word-break: break-all;
+}
+.audit-file .meta {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em;
+}
+.audit-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  align-self: start;
+  font-family: var(--font-mono); font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  border: 1.5px solid currentColor;
+}
+.audit-status.canon { color: var(--green-700); background: var(--green-50); border-color: var(--green-400); }
+.audit-status.partial { color: var(--sun-700); background: var(--sun-50); border-color: var(--sun-500); }
+.audit-status.drift { color: var(--coral-700); background: var(--coral-50); border-color: var(--coral-500); }
+.audit-status.legacy { color: var(--ink-400); background: var(--ink-50); border-color: var(--ink-200); }
+.audit-status::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+}
+.audit-issues { font-size: 13px; color: var(--ink-700); line-height: 1.5; }
+.audit-issues ul { margin: 0; padding-left: 16px; }
+.audit-issues li { margin-bottom: 3px; }
+.audit-issues li b { color: var(--ink-900); font-weight: 700; }
+@media (max-width: 800px) {
+  .audit-row { grid-template-columns: 1fr; }
+}
+
+/* ---------- swatches ---------- */
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--s-2);
+}
+.sw-row { margin-bottom: var(--s-6); }
+.sw-row > h4 {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400); font-weight: 700;
+  margin: 0 0 var(--s-3);
+}
+.sw-row > h4 b { color: var(--ink-900); }
+.sw {
+  border-radius: var(--r-md);
+  height: 88px;
+  padding: 10px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  position: relative;
+  border: 1px solid var(--ink-100);
+}
+.sw .nm {
+  font-family: var(--font-mono); font-size: 10px;
+  font-weight: 700; letter-spacing: .04em;
+}
+.sw .hex {
+  font-family: var(--font-mono); font-size: 9.5px;
+  opacity: .8;
+}
+.sw.role {
+  height: auto; min-height: 88px;
+  background: var(--paper-2); border: 1px solid var(--ink-100);
+  padding: var(--s-3);
+}
+.sw.role .preview {
+  width: 100%; height: 32px; border-radius: var(--r-sm);
+  margin-bottom: 8px;
+}
+.sw.role .role-name { font-size: 12px; font-weight: 800; color: var(--ink-900); }
+.sw.role .role-usage { font-family: var(--font-mono); font-size: 10px; color: var(--ink-500); margin-top: 2px; line-height: 1.4; }
+
+/* ---------- type scale ---------- */
+.type-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--s-5);
+  padding: var(--s-5) 0;
+  border-bottom: 1px dashed var(--ink-100);
+  align-items: baseline;
+}
+.type-row:last-child { border-bottom: none; }
+.type-spec {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-400); line-height: 1.6;
+}
+.type-spec b { color: var(--green-700); font-weight: 700; display: block; font-size: 12px; margin-bottom: 4px; }
+.type-spec span { display: block; }
+.type-sample { color: var(--ink-900); }
+.type-display { font-size: 48px; font-weight: 800; letter-spacing: -.02em; line-height: 1.05; }
+.type-display em {
+  font-style: normal; background: var(--sun-300);
+  padding: 0 8px; border-radius: 8px;
+  display: inline-block; transform: rotate(-1deg);
+}
+.type-h2 { font-size: 30px; font-weight: 800; letter-spacing: -.015em; line-height: 1.1; }
+.type-h3 { font-size: 20px; font-weight: 800; letter-spacing: -.01em; line-height: 1.2; }
+.type-lede { font-size: 18px; font-weight: 500; color: var(--ink-500); line-height: 1.55; }
+.type-body { font-size: 15px; line-height: 1.55; color: var(--ink-700); }
+.type-small { font-size: 13px; line-height: 1.55; color: var(--ink-500); }
+.type-eyebrow {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400); font-weight: 600;
+}
+.type-eyebrow b { color: var(--green-700); }
+.type-mono { font-family: var(--font-mono); font-size: 13px; color: var(--ink-900); }
+.type-meta { font-family: var(--font-mono); font-size: 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em; }
+.type-tag {
+  font-family: var(--font-mono); font-size: 10px;
+  background: var(--ink-50); color: var(--ink-700);
+  padding: 3px 7px; border-radius: var(--r-xs);
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* ---------- component demos ---------- */
+.comp {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--s-5);
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  margin-bottom: var(--s-4);
+}
+.comp-demo {
+  background: var(--paper);
+  border: 1px dashed var(--ink-200);
+  border-radius: var(--r-md);
+  padding: var(--s-5);
+  display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center;
+  min-height: 96px;
+}
+.comp-demo.col { flex-direction: column; align-items: stretch; }
+.comp-spec h4 {
+  font-size: 15px; font-weight: 800; margin: 0 0 6px; letter-spacing: -.01em;
+}
+.comp-spec .mono-id {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--green-700); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  margin: 0 0 var(--s-3);
+}
+.comp-spec p { font-size: 13px; color: var(--ink-700); margin: 0 0 var(--s-2); line-height: 1.5; }
+.comp-spec ul { font-size: 12px; color: var(--ink-500); margin: var(--s-2) 0 0; padding-left: 16px; }
+.comp-spec ul li { margin-bottom: 3px; }
+.comp-spec code {
+  font-family: var(--font-mono); font-size: 11px;
+  background: var(--ink-50); padding: 1px 5px; border-radius: var(--r-xs);
+  color: var(--ink-900);
+}
+@media (max-width: 800px) {
+  .comp { grid-template-columns: 1fr; }
+}
+
+/* ---------- example: stepper ---------- */
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--s-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+.step {
+  background: var(--paper-2);
+  border: 1.5px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: var(--s-3);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.step.current { border-color: var(--green-600); background: var(--green-50); box-shadow: 0 0 0 3px var(--green-100); }
+.step.done { border-color: var(--green-500); background: var(--green-25); }
+.step .row { display: flex; align-items: center; gap: var(--s-2); }
+.step .num {
+  width: 22px; height: 22px;
+  background: var(--ink-100); color: var(--ink-700);
+  border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+  flex-shrink: 0;
+}
+.step.current .num { background: var(--green-600); color: white; }
+.step.done .num { background: var(--green-500); color: white; }
+.step .title { font-size: 12px; font-weight: 700; color: var(--ink-900); }
+
+/* ---------- example: gates ---------- */
+.gates { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); width: 100%; }
+.gate {
+  background: var(--paper-2);
+  border: 1.5px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: var(--s-3) var(--s-4);
+  display: flex; align-items: center; gap: var(--s-3);
+}
+.gate.pass { border-color: var(--green-400); background: var(--green-25); }
+.gate.warn { border-color: var(--sun-500); background: var(--sun-50); }
+.gate .ico {
+  width: 28px; height: 28px; border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  background: var(--ink-100); color: var(--ink-500);
+  font-family: var(--font-mono); font-weight: 700; font-size: 12px;
+  flex-shrink: 0;
+}
+.gate.pass .ico { background: var(--green-600); color: white; }
+.gate.warn .ico { background: var(--sun-500); color: white; }
+.gate .name { font-size: 13px; font-weight: 700; color: var(--ink-900); }
+.gate .det { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-500); }
+.gate.pass .det { color: var(--green-700); }
+
+/* ---------- example: pills/tags/chips ---------- */
+.chips-demo .pill {
+  background: var(--paper-2); border: 1px solid var(--green-300);
+  padding: 5px 10px; border-radius: var(--r-pill);
+  font-size: 12px; font-weight: 600; color: var(--green-800);
+}
+.chips-demo .chip {
+  background: var(--paper); border: 1.5px solid var(--ink-100);
+  padding: 8px 14px; border-radius: var(--r-pill);
+  font-size: 13px; font-weight: 600; color: var(--ink-700);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.chips-demo .chip.ok { background: var(--green-50); border-color: var(--green-400); color: var(--green-800); }
+.chips-demo .chip.gap { background: var(--coral-50); border-color: var(--coral-300); color: var(--coral-700); }
+.chips-demo .chip .ico {
+  width: 16px; height: 16px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 10px; font-weight: 800;
+  background: var(--ink-100); color: var(--ink-500);
+}
+.chips-demo .chip.ok .ico { background: var(--green-500); color: white; }
+.chips-demo .chip.gap .ico { background: var(--coral-500); color: white; }
+.chips-demo .tag {
+  font-family: var(--font-mono); font-size: 10px;
+  background: var(--ink-50); color: var(--ink-700);
+  padding: 3px 7px; border-radius: var(--r-xs);
+  font-weight: 600;
+}
+.chips-demo .term {
+  background: var(--green-50); color: var(--green-800);
+  border: 1px solid var(--green-200);
+  padding: 3px 8px; border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+}
+
+/* meta-strip */
+.meta-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--green-50);
+  border-radius: var(--r-md);
+  border-left: 3px solid var(--green-600);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+  width: 100%;
+}
+.meta-strip strong { color: var(--green-700); font-weight: 700; }
+
+/* sidebar mini */
+.sidebar-demo {
+  width: 100%;
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+}
+.sidebar-demo .label {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-400); font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 var(--s-2);
+}
+.sidebar-demo .label .num-badge {
+  background: var(--green-600); color: white;
+  width: 18px; height: 18px;
+  border-radius: var(--r-xs);
+  display: grid; place-items: center;
+  font-size: 10px; font-weight: 800;
+}
+.sidebar-demo h4 { font-size: 18px; font-weight: 800; letter-spacing: -.01em; margin: 0 0 var(--s-4); }
+.sidebar-demo .ww { margin-bottom: var(--s-3); padding-bottom: var(--s-3); border-bottom: 1px dashed var(--ink-200); }
+.sidebar-demo .ww:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.sidebar-demo .ww .lbl {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  font-weight: 700;
+  margin: 0 0 6px;
+  display: inline-block;
+  padding: 3px 8px; border-radius: var(--r-sm);
+}
+.sidebar-demo .ww.what .lbl { background: var(--green-100); color: var(--green-800); }
+.sidebar-demo .ww.why .lbl { background: var(--sun-100); color: var(--sun-700); }
+.sidebar-demo .ww p { font-size: 13px; line-height: 1.5; color: var(--ink-700); margin: 0; }
+
+/* ---------- migration plan ---------- */
+.mig-grid {
+  display: grid; gap: var(--s-4);
+}
+.mig-card {
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-left: 4px solid var(--green-600);
+  border-radius: var(--r-md);
+  padding: var(--s-5);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+}
+.mig-card.p1 { border-left-color: var(--coral-500); }
+.mig-card.p2 { border-left-color: var(--sun-500); }
+.mig-card.p3 { border-left-color: var(--green-600); }
+.mig-card.p4 { border-left-color: var(--ink-300); }
+.mig-head {
+  display: flex; gap: var(--s-3); align-items: baseline; flex-wrap: wrap;
+}
+.mig-prio {
+  font-family: var(--font-mono); font-size: 10px;
+  font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  padding: 4px 8px; border-radius: var(--r-xs);
+  background: var(--ink-50); color: var(--ink-700);
+}
+.mig-card.p1 .mig-prio { background: var(--coral-50); color: var(--coral-700); }
+.mig-card.p2 .mig-prio { background: var(--sun-50); color: var(--sun-700); }
+.mig-card.p3 .mig-prio { background: var(--green-50); color: var(--green-700); }
+.mig-head h3 { font-size: 16px; font-weight: 800; margin: 0; letter-spacing: -.01em; }
+.mig-head .path {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--ink-400); margin-left: auto;
+}
+.mig-rationale { font-size: 13.5px; color: var(--ink-700); margin: 0; line-height: 1.5; }
+.mig-rationale b { color: var(--ink-900); font-weight: 700; }
+.mig-check {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 4px;
+  padding-top: var(--s-3);
+  border-top: 1px dashed var(--ink-200);
+}
+.mig-check li {
+  font-size: 13px; color: var(--ink-700);
+  padding-left: 26px;
+  position: relative;
+  line-height: 1.5;
+}
+.mig-check li::before {
+  content: "☐"; color: var(--ink-300);
+  font-family: var(--font-mono); font-size: 14px;
+  line-height: 1.5;
+  position: absolute;
+  left: 4px; top: 0;
+}
+.mig-check li.done::before { content: "✓"; color: var(--green-600); font-weight: 700; }
+.mig-check li code {
+  font-family: var(--font-mono); font-size: 11px;
+  background: var(--ink-50); padding: 1px 5px;
+  border-radius: var(--r-xs); color: var(--ink-900);
+}
+
+/* ---------- do/don't ---------- */
+.rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-4);
+}
+@media (max-width: 800px) {
+  .rules { grid-template-columns: 1fr; }
+}
+.rule {
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: var(--s-5);
+}
+.rule.do { border-left: 4px solid var(--green-500); }
+.rule.dont { border-left: 4px solid var(--coral-500); }
+.rule .lbl {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em;
+  font-weight: 700;
+  margin-bottom: var(--s-3);
+  display: inline-block;
+  padding: 4px 10px; border-radius: var(--r-pill);
+}
+.rule.do .lbl { background: var(--green-100); color: var(--green-800); }
+.rule.dont .lbl { background: var(--coral-50); color: var(--coral-700); }
+.rule p { margin: 0; font-size: 14px; color: var(--ink-700); line-height: 1.55; }
+.rule p b { color: var(--ink-900); font-weight: 700; }
+.rule code {
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--ink-50); padding: 1px 6px; border-radius: var(--r-xs);
+  color: var(--ink-900);
+}
+
+/* ---------- code block ---------- */
+.code {
+  background: var(--ink-900); color: var(--paper);
+  padding: var(--s-4) var(--s-5);
+  border-radius: var(--r-md);
+  font-family: var(--font-mono); font-size: 12px;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: var(--s-3) 0;
+}
+.code .com { color: var(--ink-300); }
+.code .kw { color: var(--green-300); }
+.code .str { color: var(--sun-300); }
+.code .num { color: var(--coral-300); }
+
+/* ---------- footer ---------- */
+.foot {
+  border-top: 1px solid var(--ink-100);
+  padding: var(--s-8) 0;
+  margin-top: var(--s-8);
+}
+.foot-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-400); text-transform: uppercase; letter-spacing: .06em;
+  flex-wrap: wrap; gap: 12px;
+}
+.foot a { color: var(--green-700); }
+
+@media (max-width: 720px) {
+  .hero-meta { grid-template-columns: repeat(2, 1fr); }
+  .section-head { grid-template-columns: 1fr; gap: 4px; }
+  .section-intro { grid-column: 1; }
+  .stepper { grid-template-columns: repeat(3, 1fr); }
+  .gates { grid-template-columns: 1fr; }
+  .meta-strip { grid-template-columns: 1fr; }
+  .type-row { grid-template-columns: 1fr; gap: var(--s-3); }
+  .type-display { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top">
+      <div class="brand-mark">m</div>
+      <div class="brand-name">
+        <b>GrassLMS Lively</b>
+        <span>Design System · v1.0</span>
+      </div>
+    </a>
+    <nav>
+      <a class="navlink" href="#diagnosis">Diagnosis</a>
+      <a class="navlink" href="#audit">Audit</a>
+      <a class="navlink" href="#tokens">Tokens</a>
+      <a class="navlink" href="#type">Type</a>
+      <a class="navlink" href="#components">Components</a>
+      <a class="navlink" href="#migration">Migration</a>
+      <a class="navlink" href="#generated">Long-form</a>
+      <a class="navlink" href="#rules">Rules</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <p class="eyebrow"><b>DESIGN SYSTEM</b> · v1.0 · audit + reference + migration</p>
+    <h1>One system, <em>one feeling.</em></h1>
+    <p class="lede">
+      Your portfolio runs two parallel languages today — an <b>editorial dark</b> hero on the
+      main page and a <b>warm light Lively</b> system across the block demos and pipeline
+      artefacts. This document picks the Lively system as canonical, names every drift, and
+      gives a per-file checklist to bring everything onto one paper.
+    </p>
+    <div class="hero-meta">
+      <div class="cell"><span class="k">Canonical system</span><span class="v ok">GrassLMS Lively</span></div>
+      <div class="cell"><span class="k">Reference files</span><span class="v">block-a · artefacts</span></div>
+      <div class="cell"><span class="k">Files to migrate</span><span class="v warn">3 of 17</span></div>
+      <div class="cell"><span class="k">Estimated effort</span><span class="v">~6 hrs focused</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       § 00 — DIAGNOSIS
+       ============================================================ -->
+  <section class="section" id="diagnosis">
+    <div class="section-head">
+      <span class="section-num">§ 00</span>
+      <h2>What's <em>actually</em> off.</h2>
+      <span class="section-meta">3 problems · ranked</span>
+    </div>
+    <p class="section-intro" style="margin-bottom: var(--s-6)">
+      Not "two systems randomly mixed". The pattern is sharper: the main <code class="mono">index.html</code>
+      is mid-migration — palette was switched to Lively, typography wasn't. Everything else either
+      already follows Lively or is a legacy file that pre-dates the migration.
+    </p>
+
+    <div class="diag">
+
+      <div class="diag-row">
+        <div class="diag-num">01</div>
+        <div class="diag-issue">
+          <span class="lbl">The big one · typography</span>
+          <h3>Main page still loads Instrument Serif and uses it for every headline.</h3>
+          <p>
+            <code class="mono">index.html</code> imports
+            <code class="mono">Manrope + Geist Mono + Instrument Serif</code>, then sets
+            <code class="mono">--serif: 'Instrument Serif'</code> and applies it to
+            <code class="mono">.hero h1</code>, <code class="mono">.section-head h2</code>,
+            <code class="mono">.modal-head h2</code>, <code class="mono">.foot h2</code>,
+            <code class="mono">.eng-name</code>, <code class="mono">.edu-t</code>,
+            <code class="mono">.flagship h2</code>, <code class="mono">.flag-desc</code>,
+            <code class="mono">.mock-foot .stat .n</code>, and many more.
+            Italic serif <code class="mono">&lt;em&gt;</code> is the dominant accent gesture.
+          </p>
+          <p>
+            Block A–E and every pipeline artefact use <b>Manrope 800</b> only, with a
+            <b>rotated sun-300 highlight</b> as the accent gesture. <b>Zero serif anywhere.</b>
+          </p>
+        </div>
+        <div class="diag-fix">
+          <span class="lbl">→ fix</span>
+          <p>
+            Remove Instrument Serif from the font import. Replace every
+            <code class="mono">font-family: var(--serif)</code> with
+            <code class="mono">font-family: var(--sans)</code> +
+            <code class="mono">font-weight: 800</code>. Replace every
+            <code class="mono">&lt;em&gt;</code> italic-green pattern with the
+            <code class="mono">.hl</code> rotated sun-300 highlight.
+          </p>
+        </div>
+      </div>
+
+      <div class="diag-row">
+        <div class="diag-num">02</div>
+        <div class="diag-issue">
+          <span class="lbl">Component vocabulary mismatch</span>
+          <h3>Buttons, shadows, and radii speak two different dialects.</h3>
+          <p>
+            Main page <code class="mono">.btn</code>: 1px outlined pill, <code class="mono">border-radius: 999</code>,
+            mono uppercase 12px. Block-A <code class="mono">.btn.primary</code>:
+            filled green block, <code class="mono">border-radius: 14px</code>, sans bold 13px,
+            with the <b>pop-shadow</b> <code class="mono">0 4px 0 0 green-700</code> press effect.
+          </p>
+          <p>
+            Cards on the main page use <code class="mono">border-radius: 4</code> with hard
+            ruled borders. Lively cards use <code class="mono">r-md (14px)</code> to
+            <code class="mono">r-lg (18px)</code> with soft <code class="mono">shadow-sm</code>.
+            The two card languages don't blend — they look like two products.
+          </p>
+        </div>
+        <div class="diag-fix">
+          <span class="lbl">→ fix</span>
+          <p>
+            Use the canonical <code class="mono">.btn / .btn.primary / .btn.secondary / .btn.ghost</code>
+            from block-A everywhere. Replace card borders with the Lively
+            <code class="mono">.block</code> pattern: <code class="mono">paper-2</code> bg,
+            <code class="mono">1px ink-100</code> border, <code class="mono">r-lg</code>, optional
+            <code class="mono">shadow-sm</code>.
+          </p>
+        </div>
+      </div>
+
+      <div class="diag-row">
+        <div class="diag-num">03</div>
+        <div class="diag-issue">
+          <span class="lbl">Dark-mode leftovers in a paper system</span>
+          <h3>Modal scrim, sticky-CTA, and modal-schematic still target dark backgrounds.</h3>
+          <p>
+            <code class="mono">.scrim</code> uses
+            <code class="mono">color-mix(in oklab, var(--bg) 85%, black)</code> — on dark this read
+            as a deeper black; on paper it goes muddy beige.
+            <code class="mono">.modal-schematic</code> is hardcoded
+            <code class="mono">background: #0a0a08</code>. <code class="mono">.tweaks</code> panel
+            uses <code class="mono">box-shadow: 0 20px 60px rgba(0,0,0,.4)</code> — too heavy for
+            light. The film-grain overlay was already correctly removed.
+          </p>
+          <p>
+            <code class="mono">linkedin-banners.html</code> is the only file untouched by the
+            migration — full editorial dark, no Lively at all.
+          </p>
+        </div>
+        <div class="diag-fix">
+          <span class="lbl">→ fix</span>
+          <p>
+            Scrim → <code class="mono">rgba(10,26,16,.55)</code>. Modal-schematic → drop the
+            black, use <code class="mono">paper</code> with a dotted-grid pattern in
+            <code class="mono">ink-100</code>. Tweaks panel → use
+            <code class="mono">shadow-md</code>. Banners → full rebuild on paper.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       § 01 — AUDIT
+       ============================================================ -->
+  <section class="section" id="audit">
+    <div class="section-head">
+      <span class="section-num">§ 01</span>
+      <h2>File audit · what's <em>where.</em></h2>
+      <span class="section-meta">17 files reviewed</span>
+    </div>
+    <p class="section-intro" style="margin-bottom: var(--s-6)">
+      Verdict per file. <b>Canonical</b> = already on the system (treat as reference).
+      <b>Partial</b> = mid-migration, fixable in place. <b>Drift</b> = pre-migration, needs full pass.
+      <b>Legacy</b> = old version, archive or delete.
+    </p>
+
+    <div class="audit">
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">index.html</span>
+          <span class="meta">main portfolio · 137 KB · 3,500 lines</span>
+        </div>
+        <div><span class="audit-status partial">Partial</span></div>
+        <div class="audit-issues">
+          <ul>
+            <li><b>Typography drift</b> — uses Instrument Serif for all display headings; should be Manrope 800.</li>
+            <li><b>Accent gesture mismatch</b> — italic-green em; canon is rotated sun-300 highlight.</li>
+            <li><b>Dark leftovers</b> — modal-schematic <code>#0a0a08</code>, sticky-CTA shadow, scrim opacity.</li>
+            <li><b>Button system</b> — outlined pills; canon is filled with pop-shadow.</li>
+            <li>Tokens, fonts (Manrope/Geist), colors → already correct ✓.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">linkedin-banners.html</span>
+          <span class="meta">local file · LinkedIn banner mocks</span>
+        </div>
+        <div><span class="audit-status drift">Drift</span></div>
+        <div class="audit-issues">
+          <ul>
+            <li><b>Full editorial dark</b> — Instrument Serif + Space Grotesk + JetBrains Mono on <code>#0b0b09</code>.</li>
+            <li>Migration never touched this file. Needs a full rebuild on the Lively system, or — since LinkedIn banners are typically high-contrast — a sanctioned dark variant (see § 04 Components).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">index.v1.html</span>
+          <span class="meta">previous index version</span>
+        </div>
+        <div><span class="audit-status legacy">Legacy</span></div>
+        <div class="audit-issues">
+          <ul>
+            <li>Old draft. Either delete or rename to <code>archive/index-v1-2024.html</code> outside the public tree. Don't migrate.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">block-a-lesson-generation.html</span>
+          <span class="meta">capability demo · 6-stage pipeline</span>
+        </div>
+        <div><span class="audit-status canon">Canon</span></div>
+        <div class="audit-issues">
+          <ul>
+            <li>Reference implementation. Treat as the source of truth for: stepper, gates, stage cards, sidebar, hero with sun-300 highlight, button pop-shadow, eyebrow, meta-strip.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">block-b-lesson-review.html</span>
+          <span class="meta">capability demo · QA pipeline</span>
+        </div>
+        <div><span class="audit-status canon">Canon</span></div>
+        <div class="audit-issues">
+          <ul>
+            <li>On-system. Verify it shares the same tokens as block-A (it should — confirm by diffing the <code>:root</code> block).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">block-c-interactive-exercises.html</span>
+          <span class="meta">capability demo · interactive formats</span>
+        </div>
+        <div><span class="audit-status canon">Canon</span></div>
+        <div class="audit-issues"><ul><li>On-system.</li></ul></div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">block-d-content-tools.html</span>
+          <span class="meta">capability demo · ID tooling</span>
+        </div>
+        <div><span class="audit-status canon">Canon</span></div>
+        <div class="audit-issues"><ul><li>On-system.</li></ul></div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">block-e-knowledge-rag.html</span>
+          <span class="meta">capability demo · RAG prototype</span>
+        </div>
+        <div><span class="audit-status canon">Canon</span></div>
+        <div class="audit-issues"><ul><li>On-system.</li></ul></div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">pipeline/artefacts/*/index.html</span>
+          <span class="meta">9 single-page artefacts · A4 print</span>
+        </div>
+        <div><span class="audit-status canon">Canon</span></div>
+        <div class="audit-issues">
+          <ul>
+            <li>All 9 artefacts share the same <code>:root</code> block (paper, green, sun, coral, ink scales).</li>
+            <li>Reference for: print-ready <code>.sheet</code> A4 layout, <code>.meta-strip</code> with green left-border, <code>.section</code> bordered card, eyebrow → title → subtitle hero pattern, foot row.</li>
+            <li><b>Verify</b>: <code>style.css</code> is duplicated inside each artefact folder. Move to a single shared <code>pipeline/artefacts/_shared.css</code> to prevent future drift.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-file">
+          <span class="path">pipeline/engagement/*/index.html</span>
+          <span class="meta">FinTechCard engagement walkthrough</span>
+        </div>
+        <div><span class="audit-status partial">Partial</span></div>
+        <div class="audit-issues">
+          <ul>
+            <li>Not inspected in detail here. Spot-check needed: confirm same <code>:root</code> tokens, no orphaned <code>.scorm</code> styles bleeding through.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       § 02 — TOKENS
+       ============================================================ -->
+  <section class="section" id="tokens">
+    <div class="section-head">
+      <span class="section-num">§ 02</span>
+      <h2>Tokens · the <em>vocabulary.</em></h2>
+      <span class="section-meta">colors · shadows · radii · spacing</span>
+    </div>
+    <p class="section-intro" style="margin-bottom: var(--s-6)">
+      Every value below already exists as a CSS variable in block-A and the artefacts.
+      Don't invent new colors — pick from the green / sun / coral / ink scales.
+    </p>
+
+    <!-- color scales -->
+    <div class="block">
+      <h3>Greens <span class="mono-id">primary brand · success · CTA</span></h3>
+      <div class="swatch-grid">
+        <div class="sw" style="background:#f4fbef;color:var(--ink-700)"><div class="nm">green-25</div><div class="hex">#f4fbef</div></div>
+        <div class="sw" style="background:#ecf9e7;color:var(--ink-700)"><div class="nm">green-50</div><div class="hex">#ecf9e7</div></div>
+        <div class="sw" style="background:#d4f1c4;color:var(--ink-700)"><div class="nm">green-100</div><div class="hex">#d4f1c4</div></div>
+        <div class="sw" style="background:#b6e69e;color:var(--ink-700)"><div class="nm">green-200</div><div class="hex">#b6e69e</div></div>
+        <div class="sw" style="background:#8fd770;color:var(--ink-900)"><div class="nm">green-300</div><div class="hex">#8fd770</div></div>
+        <div class="sw" style="background:#6bc44d;color:#fff"><div class="nm">green-400</div><div class="hex">#6bc44d</div></div>
+        <div class="sw" style="background:#3fb04b;color:#fff"><div class="nm">green-500</div><div class="hex">#3fb04b</div></div>
+        <div class="sw" style="background:#0a8754;color:#fff"><div class="nm">green-600 ★</div><div class="hex">#0a8754</div></div>
+        <div class="sw" style="background:#07683f;color:#fff"><div class="nm">green-700</div><div class="hex">#07683f</div></div>
+        <div class="sw" style="background:#054d2f;color:#fff"><div class="nm">green-800</div><div class="hex">#054d2f</div></div>
+      </div>
+      <p style="margin-top:var(--s-3); font-size:13px; color:var(--ink-500);">
+        <b>★ green-600 is the brand anchor.</b> Use for primary CTA, brand-mark, accent strokes, link color.
+        Use green-700 for hover and the pop-shadow press base. Greens 25–100 are the safe
+        "tinted paper" backgrounds for callout cards and success states.
+      </p>
+    </div>
+
+    <div class="block">
+      <h3>Sun <span class="mono-id">moments of joy · highlight</span></h3>
+      <div class="swatch-grid">
+        <div class="sw" style="background:#fffbe5;color:var(--ink-700)"><div class="nm">sun-50</div><div class="hex">#fffbe5</div></div>
+        <div class="sw" style="background:#fff2b3;color:var(--ink-700)"><div class="nm">sun-100</div><div class="hex">#fff2b3</div></div>
+        <div class="sw" style="background:#ffe066;color:var(--ink-700)"><div class="nm">sun-300 ★</div><div class="hex">#ffe066</div></div>
+        <div class="sw" style="background:#ffd84d;color:var(--ink-700)"><div class="nm">sun-400</div><div class="hex">#ffd84d</div></div>
+        <div class="sw" style="background:#f5b800;color:var(--ink-900)"><div class="nm">sun-500</div><div class="hex">#f5b800</div></div>
+        <div class="sw" style="background:#7a5500;color:#fff"><div class="nm">sun-700</div><div class="hex">#7a5500</div></div>
+      </div>
+      <p style="margin-top:var(--s-3); font-size:13px; color:var(--ink-500);">
+        <b>★ sun-300 powers the rotated highlight</b> — the one accent gesture on every hero h1.
+        sun-500/700 = warning state. sun-100 + sun-700 = "why it matters" callout pair.
+      </p>
+    </div>
+
+    <div class="block">
+      <h3>Coral <span class="mono-id">errors · gaps · attention</span></h3>
+      <div class="swatch-grid">
+        <div class="sw" style="background:#fff0eb;color:var(--ink-700)"><div class="nm">coral-50</div><div class="hex">#fff0eb</div></div>
+        <div class="sw" style="background:#ffae9a;color:var(--ink-900)"><div class="nm">coral-300</div><div class="hex">#ffae9a</div></div>
+        <div class="sw" style="background:#ff7a5c;color:#fff"><div class="nm">coral-500 ★</div><div class="hex">#ff7a5c</div></div>
+        <div class="sw" style="background:#c33d22;color:#fff"><div class="nm">coral-700</div><div class="hex">#c33d22</div></div>
+      </div>
+      <p style="margin-top:var(--s-3); font-size:13px; color:var(--ink-500);">
+        Use sparingly — only for genuine error / gap / warning states, never decorative.
+      </p>
+    </div>
+
+    <div class="block">
+      <h3>Ink &amp; paper <span class="mono-id">text · borders · bg</span></h3>
+      <div class="swatch-grid">
+        <div class="sw" style="background:#fafbf6;color:var(--ink-700);border:1px solid var(--ink-100)"><div class="nm">paper</div><div class="hex">#fafbf6</div></div>
+        <div class="sw" style="background:#ffffff;color:var(--ink-700);border:1px solid var(--ink-100)"><div class="nm">paper-2</div><div class="hex">#ffffff</div></div>
+        <div class="sw" style="background:#f4f5f1;color:var(--ink-700)"><div class="nm">ink-50</div><div class="hex">#f4f5f1</div></div>
+        <div class="sw" style="background:#e6e8e4;color:var(--ink-700)"><div class="nm">ink-100</div><div class="hex">#e6e8e4</div></div>
+        <div class="sw" style="background:#c9cec9;color:var(--ink-900)"><div class="nm">ink-200</div><div class="hex">#c9cec9</div></div>
+        <div class="sw" style="background:#9aa39d;color:#fff"><div class="nm">ink-300</div><div class="hex">#9aa39d</div></div>
+        <div class="sw" style="background:#6b7a70;color:#fff"><div class="nm">ink-400</div><div class="hex">#6b7a70</div></div>
+        <div class="sw" style="background:#4d5a51;color:#fff"><div class="nm">ink-500</div><div class="hex">#4d5a51</div></div>
+        <div class="sw" style="background:#1a2a1f;color:#fff"><div class="nm">ink-700</div><div class="hex">#1a2a1f</div></div>
+        <div class="sw" style="background:#0a1a10;color:#fff"><div class="nm">ink-900 ★</div><div class="hex">#0a1a10</div></div>
+      </div>
+      <p style="margin-top:var(--s-3); font-size:13px; color:var(--ink-500);">
+        <b>Note the green tint</b> — these aren't neutral grays. ink-900 has a 10° green hue
+        so it sits naturally next to the green-600 brand without going cold. Don't substitute
+        pure <code>#000</code> or <code>#1a1a1a</code>.
+      </p>
+    </div>
+
+    <!-- role tokens -->
+    <div class="block">
+      <h3>Role tokens <span class="mono-id">semantic mapping</span></h3>
+      <div class="swatch-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
+        <div class="sw role">
+          <div class="preview" style="background:var(--paper)"></div>
+          <div class="role-name">--paper</div>
+          <div class="role-usage">main bg<br>= #fafbf6</div>
+        </div>
+        <div class="sw role">
+          <div class="preview" style="background:var(--paper-2)"></div>
+          <div class="role-name">--paper-2</div>
+          <div class="role-usage">card bg<br>= #ffffff</div>
+        </div>
+        <div class="sw role">
+          <div class="preview" style="background:var(--green-600)"></div>
+          <div class="role-name">--green-600</div>
+          <div class="role-usage">brand · CTA · link<br>accent stroke</div>
+        </div>
+        <div class="sw role">
+          <div class="preview" style="background:var(--sun-300)"></div>
+          <div class="role-name">--sun-300</div>
+          <div class="role-usage">hero highlight<br>moment of joy</div>
+        </div>
+        <div class="sw role">
+          <div class="preview" style="background:var(--ink-900)"></div>
+          <div class="role-name">--ink-900</div>
+          <div class="role-usage">heading text<br>topbar (artefact)</div>
+        </div>
+        <div class="sw role">
+          <div class="preview" style="background:var(--ink-100)"></div>
+          <div class="role-name">--ink-100</div>
+          <div class="role-usage">all borders<br>1px solid</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- shadows / radii / spacing -->
+    <div class="block">
+      <h3>Shadow, radius, spacing scales</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap: var(--s-4);">
+        <div>
+          <h4 style="font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-400); margin: 0 0 var(--s-3);">Shadows</h4>
+          <div style="display:flex; flex-direction:column; gap:var(--s-3);">
+            <div style="background:var(--paper-2); border:1px solid var(--ink-100); border-radius:var(--r-md); padding:14px; box-shadow:var(--shadow-xs); font-family:var(--font-mono); font-size:11px;">--shadow-xs</div>
+            <div style="background:var(--paper-2); border:1px solid var(--ink-100); border-radius:var(--r-md); padding:14px; box-shadow:var(--shadow-sm); font-family:var(--font-mono); font-size:11px;">--shadow-sm</div>
+            <div style="background:var(--paper-2); border:1px solid var(--ink-100); border-radius:var(--r-md); padding:14px; box-shadow:var(--shadow-md); font-family:var(--font-mono); font-size:11px;">--shadow-md</div>
+            <div style="background:var(--paper-2); border:1px solid var(--ink-100); border-radius:var(--r-md); padding:14px; box-shadow:var(--shadow-lg); font-family:var(--font-mono); font-size:11px;">--shadow-lg</div>
+            <div style="background:var(--green-600); color:white; border-radius:var(--r-md); padding:14px; box-shadow:var(--shadow-pop); font-family:var(--font-mono); font-size:11px; font-weight:700;">--shadow-pop · button only</div>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-400); margin: 0 0 var(--s-3);">Radii</h4>
+          <div style="display:flex; flex-wrap:wrap; gap:var(--s-3);">
+            <div style="width:80px;height:80px;background:var(--ink-50);border-radius:var(--r-xs);display:grid;place-items:end center;padding:6px;font-family:var(--font-mono);font-size:10px;color:var(--ink-500);">xs · 6</div>
+            <div style="width:80px;height:80px;background:var(--ink-50);border-radius:var(--r-sm);display:grid;place-items:end center;padding:6px;font-family:var(--font-mono);font-size:10px;color:var(--ink-500);">sm · 10</div>
+            <div style="width:80px;height:80px;background:var(--ink-50);border-radius:var(--r-md);display:grid;place-items:end center;padding:6px;font-family:var(--font-mono);font-size:10px;color:var(--ink-500);">md · 14</div>
+            <div style="width:80px;height:80px;background:var(--ink-50);border-radius:var(--r-lg);display:grid;place-items:end center;padding:6px;font-family:var(--font-mono);font-size:10px;color:var(--ink-500);">lg · 18</div>
+            <div style="width:80px;height:80px;background:var(--ink-50);border-radius:var(--r-xl);display:grid;place-items:end center;padding:6px;font-family:var(--font-mono);font-size:10px;color:var(--ink-500);">xl · 24</div>
+            <div style="width:80px;height:80px;background:var(--ink-50);border-radius:var(--r-pill);display:grid;place-items:center;padding:6px;font-family:var(--font-mono);font-size:10px;color:var(--ink-500);">pill</div>
+          </div>
+          <h4 style="font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-400); margin: var(--s-5) 0 var(--s-3);">Spacing · s-1 to s-20</h4>
+          <p style="font-size:13px; color:var(--ink-500); margin:0; line-height:1.5;">
+            4-based scale: <code class="mono">s-1 (4) · s-2 (8) · s-3 (12) · s-4 (16) · s-5 (20) · s-6 (24) · s-8 (32) · s-10 (40) · s-12 (48) · s-16 (64) · s-20 (80)</code>.
+            Stay on the scale.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       § 03 — TYPOGRAPHY
+       ============================================================ -->
+  <section class="section" id="type">
+    <div class="section-head">
+      <span class="section-num">§ 03</span>
+      <h2>Type · two fonts, <em>five jobs.</em></h2>
+      <span class="section-meta">Manrope · Geist Mono</span>
+    </div>
+    <p class="section-intro" style="margin-bottom: var(--s-6)">
+      <b>Manrope</b> does headings (800), body (400/500), and accent (700). <b>Geist Mono</b>
+      does only eyebrows, labels, tags, and code. Nothing else, anywhere. No serif.
+    </p>
+
+    <div class="block">
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Display H1</b>
+          <span>Manrope 800</span>
+          <span>clamp(34px, 5.6vw, 60px)</span>
+          <span>line-height 1.05</span>
+          <span>letter-spacing -.02em</span>
+          <span>max-width 22ch</span>
+        </div>
+        <div class="type-sample">
+          <div class="type-display">One headline, <em>one highlight.</em></div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Section H2</b>
+          <span>Manrope 800</span>
+          <span>clamp(28px, 4vw, 42px)</span>
+          <span>line-height 1.1</span>
+          <span>letter-spacing -.015em</span>
+        </div>
+        <div class="type-sample">
+          <div class="type-h2">Section heading goes here.</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Card H3</b>
+          <span>Manrope 800</span>
+          <span>18–22px</span>
+          <span>line-height 1.2</span>
+          <span>letter-spacing -.01em</span>
+        </div>
+        <div class="type-sample">
+          <div class="type-h3">Card or block title.</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Lede</b>
+          <span>Manrope 500</span>
+          <span>18px / 1.55</span>
+          <span>color ink-500</span>
+          <span>max-width 56ch</span>
+        </div>
+        <div class="type-sample">
+          <div class="type-lede">A larger paragraph that sets up a section. Sits under the H1 or section heading.</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Body</b>
+          <span>Manrope 400</span>
+          <span>15px / 1.55</span>
+          <span>color ink-700</span>
+          <span>text-wrap: pretty</span>
+        </div>
+        <div class="type-sample">
+          <div class="type-body">Default paragraph. Use ink-700 for primary body and ink-500 for secondary.</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Body small</b>
+          <span>Manrope 400</span>
+          <span>13px / 1.55</span>
+          <span>color ink-500</span>
+        </div>
+        <div class="type-sample">
+          <div class="type-small">Smaller body text for card descriptions and supporting copy.</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Eyebrow</b>
+          <span>Geist Mono 600</span>
+          <span>11px UPPER</span>
+          <span>letter-spacing .08em</span>
+          <span>color ink-400 / b green-700</span>
+        </div>
+        <div class="type-sample">
+          <div class="type-eyebrow"><b>BLOCK A</b> · LESSON GENERATION PIPELINE</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Meta / label</b>
+          <span>Geist Mono 500</span>
+          <span>10px UPPER</span>
+          <span>letter-spacing .08em</span>
+          <span>color ink-400</span>
+        </div>
+        <div class="type-sample">
+          <div class="type-meta">Updated · 2 min ago · v1.0</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Mono / data</b>
+          <span>Geist Mono 500</span>
+          <span>13px</span>
+          <span>line-height 1.6</span>
+          <span>color ink-900</span>
+        </div>
+        <div class="type-sample">
+          <div class="type-mono">brief_python_loops.json · 2.1 KB</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <b>Tag chip</b>
+          <span>Geist Mono 600</span>
+          <span>10px</span>
+          <span>bg ink-50</span>
+          <span>r-xs · 3px 7px</span>
+        </div>
+        <div class="type-sample">
+          <div style="display:flex; gap:6px;">
+            <span class="type-tag">Pydantic v2</span>
+            <span class="type-tag">FastAPI</span>
+            <span class="type-tag">JSON Schema</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       § 04 — COMPONENTS
+       ============================================================ -->
+  <section class="section" id="components">
+    <div class="section-head">
+      <span class="section-num">§ 04</span>
+      <h2>Components · the <em>building blocks.</em></h2>
+      <span class="section-meta">8 essentials</span>
+    </div>
+    <p class="section-intro" style="margin-bottom: var(--s-6)">
+      Each component below already exists in <code>block-a-lesson-generation.html</code> and most
+      of the artefacts. Copy from there — don't reinvent.
+    </p>
+
+    <!-- Buttons -->
+    <div class="comp">
+      <div class="comp-demo">
+        <button class="btn primary">▶ Run pipeline</button>
+        <button class="btn primary sm">Export SCORM</button>
+        <button class="btn secondary">Reset</button>
+        <button class="btn secondary sm">Export PDF</button>
+        <button class="btn ghost">Cancel</button>
+        <button class="btn ghost sm">Skip</button>
+      </div>
+      <div class="comp-spec">
+        <h4>Buttons</h4>
+        <div class="mono-id">.btn .primary | .secondary | .ghost · +.sm</div>
+        <p>Filled green block with the pop-shadow press effect. Primary press = <code>translateY(2px)</code> + half shadow. Never use outlined pills.</p>
+        <ul>
+          <li>Primary: filled <code>green-600</code> · <code>shadow-pop</code> · <code>r-md</code></li>
+          <li>Secondary: <code>paper-2</code> · <code>shadow-pop-ink</code></li>
+          <li>Ghost: transparent · <code>ink-700</code> · no shadow</li>
+          <li>Sm modifier: 12px / 8px 14px / <code>r-sm</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Brand-mark -->
+    <div class="comp">
+      <div class="comp-demo">
+        <a class="brand" href="#" style="text-decoration:none;">
+          <div class="brand-mark">m</div>
+          <div class="brand-name">
+            <b>Mario Becerra</b>
+            <span>LX Designer · AI Pipelines</span>
+          </div>
+        </a>
+      </div>
+      <div class="comp-spec">
+        <h4>Brand-mark + name</h4>
+        <div class="mono-id">.brand · .brand-mark · .brand-name</div>
+        <p>32px green-600 square with the sun-400 dot in the corner. The dot is the system's signature — keep it.</p>
+        <ul>
+          <li><code>r-md</code> mark</li>
+          <li>Sub-line: <code>Geist Mono 10px UPPER</code></li>
+          <li>Use as anchor link in the topbar</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Eyebrow + H1 + highlight -->
+    <div class="comp">
+      <div class="comp-demo col">
+        <p class="eyebrow"><b>BLOCK A</b> · LESSON GENERATION PIPELINE</p>
+        <h1 class="hero h1" style="font-family:var(--font-sans); font-weight:800; font-size:42px; line-height:1.05; letter-spacing:-.02em; margin:0;">A teach-ready lesson, <em style="font-style:normal;background:var(--sun-300);padding:0 10px;border-radius:8px;display:inline-block;transform:rotate(-1deg);">assembled</em> from a brief.</h1>
+      </div>
+      <div class="comp-spec">
+        <h4>Hero — eyebrow + H1 + highlight</h4>
+        <div class="mono-id">.eyebrow · h1 + em</div>
+        <p>The <code>&lt;em&gt;</code> wraps the <b>one</b> word or phrase that carries the page's promise. Renders as a rotated sun-300 highlight pill, never italic.</p>
+        <ul>
+          <li><code>background: var(--sun-300)</code></li>
+          <li><code>padding: 0 10px</code> · <code>border-radius: 8px</code></li>
+          <li><code>transform: rotate(-1deg)</code> · display inline-block</li>
+          <li><b>One per page</b> — that's the rule</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Meta strip -->
+    <div class="comp">
+      <div class="comp-demo">
+        <div class="meta-strip">
+          <span><strong>Format:</strong> single-page HTML · print-to-PDF</span>
+          <span><strong>Methodology:</strong> 4C/ID · Kirkpatrick L1–L4</span>
+          <span><strong>WCAG:</strong> 2.1 AA</span>
+        </div>
+      </div>
+      <div class="comp-spec">
+        <h4>Meta strip</h4>
+        <div class="mono-id">.meta-strip</div>
+        <p>3-column callout under the lede. Mono caps, green-50 bg, green left-border. Use for fact rows: methodology, format, language.</p>
+        <ul>
+          <li>Border-left: 3px <code>green-600</code></li>
+          <li>Padding: <code>10px 12px</code> · <code>r-md</code></li>
+          <li>Text: Geist Mono 10.5px UPPER ink-500, strong = green-700</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Stepper -->
+    <div class="comp">
+      <div class="comp-demo">
+        <ol class="stepper">
+          <li class="step done"><div class="row"><span class="num">1</span></div><div class="title">Brief</div></li>
+          <li class="step done"><div class="row"><span class="num">2</span></div><div class="title">Prereqs</div></li>
+          <li class="step current"><div class="row"><span class="num">3</span></div><div class="title">Outline</div></li>
+          <li class="step"><div class="row"><span class="num">4</span></div><div class="title">Content</div></li>
+          <li class="step"><div class="row"><span class="num">5</span></div><div class="title">Validate</div></li>
+          <li class="step"><div class="row"><span class="num">6</span></div><div class="title">Lesson</div></li>
+        </ol>
+      </div>
+      <div class="comp-spec">
+        <h4>Stepper</h4>
+        <div class="mono-id">.stepper · .step .done .current</div>
+        <p>Pipeline visualization. Three states: idle (ink-100), done (green-25 + green-500 num), current (green-50 + green-600 num + 3px green-100 ring).</p>
+        <ul>
+          <li>Use for any sequential pipeline (lesson, review, validation flow)</li>
+          <li>Cards are clickable to inspect each stage</li>
+          <li>6 columns desktop, 3 on mobile</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Gates -->
+    <div class="comp">
+      <div class="comp-demo">
+        <div class="gates">
+          <div class="gate pass"><div class="ico">✓</div><div><div class="name">Bloom alignment</div><div class="det">objectives ↔ exercises match</div></div></div>
+          <div class="gate warn"><div class="ico">!</div><div><div class="name">Curriculum prereqs</div><div class="det">1 gap re-introduced inline</div></div></div>
+          <div class="gate pass"><div class="ico">✓</div><div><div class="name">Length within budget</div><div class="det">44 of 45 min</div></div></div>
+          <div class="gate"><div class="ico">…</div><div><div class="name">Accessibility</div><div class="det">checking…</div></div></div>
+        </div>
+      </div>
+      <div class="comp-spec">
+        <h4>Quality gates</h4>
+        <div class="mono-id">.gate .pass .warn</div>
+        <p>Four states: idle, checking (spinner), pass (green-25 + green-600 ico), warn (sun-50 + sun-500 ico). Use for any binary validation row.</p>
+        <ul>
+          <li>2-column grid · <code>r-md</code></li>
+          <li>Icon box: 28×28 · <code>r-sm</code></li>
+          <li>Name in Manrope 700, det in Geist Mono</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pills, chips, tags -->
+    <div class="comp">
+      <div class="comp-demo chips-demo col">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <span class="pill">Trace a while loop</span>
+          <span class="pill">Identify off-by-one</span>
+          <span class="pill">Refactor for→while</span>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <span class="chip ok"><span class="ico">✓</span>Variables</span>
+          <span class="chip ok"><span class="ico">✓</span>If/else</span>
+          <span class="chip gap"><span class="ico">!</span>Boolean negation</span>
+          <span class="chip">For-loop syntax</span>
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="tag">Pydantic v2</span>
+          <span class="tag">FastAPI</span>
+          <span class="tag">SCORM 1.2</span>
+          <span class="term">condition</span>
+          <span class="term">infinite loop</span>
+        </div>
+      </div>
+      <div class="comp-spec">
+        <h4>Pill · chip · tag · term</h4>
+        <div class="mono-id">.pill | .chip [.ok .gap] | .tag | .term</div>
+        <p>Four distinct uses:</p>
+        <ul>
+          <li><b>Pill</b> — learning objectives, list items in a row</li>
+          <li><b>Chip</b> — interactive state (prereq check, filter)</li>
+          <li><b>Tag</b> — stack labels (mono, smallest)</li>
+          <li><b>Term</b> — vocabulary callout inside lesson content</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="comp">
+      <div class="comp-demo" style="background:transparent; border:none; padding:0;">
+        <div class="sidebar-demo">
+          <div class="label"><span class="num-badge">3</span><span>Currently viewing</span></div>
+          <h4>Outline generation</h4>
+          <div class="ww what">
+            <p class="lbl">What happens</p>
+            <p>First LLM call produces section-by-section structure with a <b>time budget per section</b>.</p>
+          </div>
+          <div class="ww why">
+            <p class="lbl">Why it matters</p>
+            <p>Outline-first locks pacing as a contract. Edit cheaply before the expensive content pass burns tokens.</p>
+          </div>
+        </div>
+      </div>
+      <div class="comp-spec">
+        <h4>What / Why sidebar</h4>
+        <div class="mono-id">.sidebar · .ww.what · .ww.why</div>
+        <p>Used on every block-X page to explain "what happens" + "why it matters" beside the live demo. Pairs green (what) and sun (why) for visual rhythm.</p>
+        <ul>
+          <li>Sticky on desktop, static on mobile</li>
+          <li>Num-badge: 18×18 green-600 square</li>
+          <li>Dashed divider between ww blocks</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Block / card -->
+    <div class="comp">
+      <div class="comp-demo">
+        <article class="block" style="margin: 0; flex: 1;">
+          <h3>Block · the base card <span class="mono-id">.block</span></h3>
+          <p>The default content container. Paper-2 background, 1px ink-100 border, r-lg radius, s-6 padding. Use for any framed content.</p>
+        </article>
+      </div>
+      <div class="comp-spec">
+        <h4>Block</h4>
+        <div class="mono-id">.block (the universal container)</div>
+        <p>The base unit of layout. If something needs a frame, it's a block. Don't add shadows by default.</p>
+        <ul>
+          <li><code>background: paper-2</code></li>
+          <li><code>border: 1px solid ink-100</code></li>
+          <li><code>border-radius: r-lg (18px)</code></li>
+          <li><code>padding: s-6 (24px)</code></li>
+          <li>Add <code>shadow-sm</code> only when elevation is needed (sidebar, sticky)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Code block -->
+    <div class="comp">
+      <div class="comp-demo col">
+        <pre class="code" style="margin:0;"><span class="com"># Three pieces of every while loop</span>
+<span class="kw">while</span> condition:    <span class="com"># piece 1: the test</span>
+    do_thing()       <span class="com"># piece 2: the body</span>
+    update_state()   <span class="com"># piece 3: the update</span>
+        </pre>
+      </div>
+      <div class="comp-spec">
+        <h4>Code block</h4>
+        <div class="mono-id">.code · .com .kw .str .num</div>
+        <p>Dark <code>ink-900</code> code blocks on the paper page. Single accent: green-300 for keywords, sun-300 for strings, coral-300 for numbers, ink-300 for comments.</p>
+        <ul>
+          <li><code>r-md</code> radius</li>
+          <li>Geist Mono 12px · line-height 1.6</li>
+          <li>Same syntax palette in lesson content + docs</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================================
+       § 05 — PATTERNS
+       ============================================================ -->
+  <section class="section" id="patterns">
+    <div class="section-head">
+      <span class="section-num">§ 05</span>
+      <h2>Patterns · the <em>recipes.</em></h2>
+      <span class="section-meta">how components combine</span>
+    </div>
+    <p class="section-intro" style="margin-bottom: var(--s-6)">
+      Three repeating recipes that hold the whole portfolio together.
+      Use them, don't fork them.
+    </p>
+
+    <div class="block">
+      <h3>① Page hero <span class="mono-id">eyebrow → H1 → lede → meta</span></h3>
+      <p style="font-size:13.5px; color:var(--ink-500);">
+        Every page opens the same way. Eyebrow positions the page in the system
+        (<code>BLOCK A · LESSON GENERATION</code>). H1 carries the promise with one
+        sun-300 highlight word. Lede expands the promise in 1–2 sentences with
+        <code>&lt;b&gt;</code> tags doing emphasis via green-50 underline.
+        Hero-meta closes with 3–4 fact cells under a top border.
+      </p>
+      <pre class="code" style="margin-top:var(--s-3);">&lt;p class=<span class="str">"eyebrow"</span>&gt;&lt;b&gt;BLOCK A&lt;/b&gt; · LESSON GENERATION&lt;/p&gt;
+&lt;h1&gt;A teach-ready lesson, &lt;em&gt;assembled&lt;/em&gt; from a brief.&lt;/h1&gt;
+&lt;p class=<span class="str">"lede"</span>&gt;Pipelines I built take a fifty-line brief and ship a
+&lt;b&gt;scaffolded lesson&lt;/b&gt; through six validators in under five minutes.&lt;/p&gt;
+&lt;div class=<span class="str">"hero-meta"</span>&gt; … &lt;/div&gt;</pre>
+    </div>
+
+    <div class="block">
+      <h3>② The "moment of joy" <span class="mono-id">one per page, never more</span></h3>
+      <p style="font-size:13.5px; color:var(--ink-500);">
+        The rotated sun-300 highlight is the system's one piece of personality —
+        it's what makes Lively <i>lively</i>. The rule: <b>one per page</b>, on the page-level H1.
+        Section heads inside the page should NOT use it (otherwise it becomes noise).
+        Body emphasis uses <code>&lt;b&gt;</code> with green-50 underline / green-50 bg padding,
+        not the highlight.
+      </p>
+    </div>
+
+    <div class="block">
+      <h3>③ The What/Why pairing <span class="mono-id">always together</span></h3>
+      <p style="font-size:13.5px; color:var(--ink-500);">
+        Every demo on every block page is explained in a sidebar with two blocks:
+        <b>What happens</b> (green-100 label) and <b>Why it matters</b> (sun-100 label).
+        Never use one without the other — the pairing is the whole point. "What" is the
+        mechanic, "why" is the design argument. This is what makes the portfolio read
+        as instructional design, not just dev demos.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       § 06 — MIGRATION PLAN
+       ============================================================ -->
+  <section class="section" id="migration">
+    <div class="section-head">
+      <span class="section-num">§ 06</span>
+      <h2>Migration plan · file by <em>file.</em></h2>
+      <span class="section-meta">3 files · prioritized</span>
+    </div>
+    <p class="section-intro" style="margin-bottom: var(--s-6)">
+      Priority is by user-facing impact. P1 lands you on a consistent main page; P2 fixes
+      shadow assets; P3 cleans up structure for future-proofing.
+    </p>
+
+    <div class="mig-grid">
+
+      <article class="mig-card p1">
+        <div class="mig-head">
+          <span class="mig-prio">P1 · do first</span>
+          <h3>Main portfolio · finish the migration</h3>
+          <span class="path">index.html</span>
+        </div>
+        <p class="mig-rationale">
+          The 137 KB main page. Tokens are already Lively but every display heading still
+          reaches for Instrument Serif italic-green. This is the single biggest source of the
+          "two different systems" feeling. ~3 hours of focused find-and-replace.
+        </p>
+        <ul class="mig-check">
+          <li>Remove <code>&amp;family=Instrument+Serif:ital@0;1</code> from the Google Fonts URL — leaves Manrope + Geist Mono only.</li>
+          <li>Delete the <code>--serif: "Instrument Serif"</code> variable. Search-and-destroy every <code>font-family: var(--serif)</code>.</li>
+          <li>Replace each former-serif heading with <code>font-family: var(--sans); font-weight: 800;</code> + tighten letter-spacing to <code>-.02em</code>.</li>
+          <li>Replace every <code>&lt;em&gt;</code>-as-italic-green with the rotated sun-300 highlight pattern (max one per section, only on H1).</li>
+          <li>Replace <code>.btn</code> outlined pills with the filled <code>.btn.primary</code> / <code>.btn.secondary</code> / <code>.btn.ghost</code> from <code>block-a-lesson-generation.html</code>.</li>
+          <li>Bump card border-radius from <code>4px</code> to <code>var(--r-lg)</code> (18px). Drop the hard ruled grid; use s-2 to s-3 gaps.</li>
+          <li>Fix scrim: <code>background: rgba(10,26,16,.55)</code> + <code>backdrop-filter: blur(8px)</code>.</li>
+          <li>Replace <code>.modal-schematic { background: #0a0a08 }</code> with <code>background: var(--paper)</code> + a dotted-ink-100 grid pattern.</li>
+          <li>Tweaks panel <code>box-shadow</code>: swap heavy black for <code>var(--shadow-md)</code>. Drop the dark-only theme buttons.</li>
+          <li>Drop the film-grain pseudo-element (already noted as removed in the migration comment, double-check it's gone).</li>
+          <li>Verify the schematic SVG colors all reference <code>var(--accent)</code> (green-600), not hardcoded.</li>
+        </ul>
+      </article>
+
+      <article class="mig-card p2">
+        <div class="mig-head">
+          <span class="mig-prio">P2 · next</span>
+          <h3>LinkedIn banners · rebuild on paper</h3>
+          <span class="path">linkedin-banners.html</span>
+        </div>
+        <p class="mig-rationale">
+          Banner social cards are still full editorial dark. <b>However</b> — banners are
+          designed to be eye-grabbing in a feed, so the call here is whether to: (a) rebuild
+          fully on paper bg, or (b) sanction a "dark Lively" variant that swaps paper for
+          ink-900 but keeps Manrope/Geist Mono, green-400, and sun-300. Option (b) gives
+          dramatic feed presence while staying on-system. Decide first, then build.
+        </p>
+        <ul class="mig-check">
+          <li>Decide: paper variant OR sanctioned dark-Lively variant (recommended for banners).</li>
+          <li>If dark-Lively: define <code>--bg: var(--ink-900)</code>, <code>--ink: var(--paper)</code>, brand-mark green-400 instead of green-600 (for contrast on ink-900).</li>
+          <li>Switch fonts to Manrope + Geist Mono. Drop Space Grotesk and Instrument Serif imports.</li>
+          <li>Apply the rotated sun-300 highlight gesture to the headline word — works beautifully on dark too.</li>
+          <li>Use the same brand-mark + name pattern as the topbar (32px green square + sun dot).</li>
+          <li>Document the dark variant in this design system as <code>§ 04 · dark surface</code> if you sanction it.</li>
+        </ul>
+      </article>
+
+      <article class="mig-card p3">
+        <div class="mig-head">
+          <span class="mig-prio">P3 · cleanup</span>
+          <h3>Pipeline artefacts · de-duplicate the CSS</h3>
+          <span class="path">pipeline/artefacts/*/style.css</span>
+        </div>
+        <p class="mig-rationale">
+          Every one of the 9 artefacts has its own copy of the same <code>:root</code> tokens
+          and base styles in its own <code>style.css</code>. Right now they all match — but the
+          moment you tweak one and forget the others, the system drifts. Hoist into one shared
+          stylesheet.
+        </p>
+        <ul class="mig-check">
+          <li>Create <code>pipeline/artefacts/_shared/system.css</code> with the canonical <code>:root</code>, base type styles, <code>.sheet</code>, <code>.eyebrow</code>, <code>.meta-strip</code>, <code>.section</code>, <code>.foot</code>.</li>
+          <li>Link from each artefact: <code>&lt;link rel="stylesheet" href="../_shared/system.css"&gt;</code>.</li>
+          <li>Keep per-artefact <code>style.css</code> only for genuinely artefact-specific styles (e.g. the SCORM card's interactions).</li>
+          <li>Same move for the block pages: hoist the shared <code>:root</code> + topbar + footer + button system into a single <code>blocks/_shared.css</code>.</li>
+        </ul>
+      </article>
+
+      <article class="mig-card p4">
+        <div class="mig-head">
+          <span class="mig-prio">P4 · housekeeping</span>
+          <h3>Legacy archive</h3>
+          <span class="path">index.v1.html</span>
+        </div>
+        <p class="mig-rationale">
+          Old version sitting alongside the current one. Either delete or move to
+          <code>archive/</code> so it doesn't show up in search results and can't be confused with
+          the live site.
+        </p>
+        <ul class="mig-check">
+          <li>Move to <code>archive/index-v1-2024.html</code> or delete entirely.</li>
+          <li>Same call for any <code>app.jsx</code> / <code>banners.jsx</code> / <code>data.js</code> in the project root that aren't referenced from the live <code>index.html</code>.</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       § 07 — RULES (DO/DON'T)
+       ============================================================ -->
+  <section class="section" id="rules">
+    <div class="section-head">
+      <span class="section-num">§ 07</span>
+      <h2>Rules · what to do, <em>and not.</em></h2>
+      <span class="section-meta">10 decisions, pre-made</span>
+    </div>
+
+    <div class="rules">
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>One highlight per page.</b> The rotated sun-300 pill goes on the page H1, on one word. That's it. Section heads use plain Manrope 800.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't sprinkle highlights through the page.</b> Two highlights = no highlight. It stops being a moment of joy and starts being decoration.</p>
+      </div>
+
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>Use <code>&lt;b&gt;</code> for body emphasis</b>, styled as <code>ink-900</code> + <code>green-50</code> background or a 2px green-600 bottom border. Calm and consistent.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't reach for italic anywhere.</b> No <code>&lt;em&gt;</code>-as-italic, no serif italic display, no italic system. The system is upright Manrope.</p>
+      </div>
+
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>Pick from the existing color scales.</b> Greens, sun, coral, ink. Each scale has a clear semantic — green = primary/success, sun = highlight/warning, coral = error/gap, ink = text/borders.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't introduce new hues</b> (purple, blue, teal). If you need a fifth semantic, name it first in this document and add a full 5-step scale. Drive-by colors create the drift you just fixed.</p>
+      </div>
+
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>Always pair what + why.</b> Every demo gets a sidebar with green-100-labeled "What happens" and sun-100-labeled "Why it matters". That pairing is the portfolio's instructional-design tell.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't ship a demo without "why".</b> A demo with only "what" reads as a dev portfolio. The pairing is what positions you as a methodologist.</p>
+      </div>
+
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>Filled buttons with pop-shadow.</b> Primary CTAs are green-600 filled, <code>r-md</code>, with the <code>0 4px 0 0 green-700</code> press shadow. Tactile. Specific.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't use outlined pill buttons</b> (the editorial pattern from the old main page). They read as a different product.</p>
+      </div>
+
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>Geist Mono is for labels and code only.</b> Eyebrows, tags, meta rows, file paths, code blocks. Body and headings stay in Manrope.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't set body copy in mono.</b> Tempting on a "developer-looking" demo page, but it kills readability past two paragraphs.</p>
+      </div>
+
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>Borders are 1px <code>ink-100</code>.</b> Card borders, dividers, section rules. One thickness, one color, everywhere.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't use heavy borders or dark rules.</b> The system reads as paper. Heavy rules push it back toward editorial / brutalist.</p>
+      </div>
+
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>Stay on the 4-based spacing scale.</b> <code>s-1 (4) → s-20 (80)</code>. Pad and gap come from these tokens, not arbitrary px values.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't write <code>padding: 17px 23px</code>.</b> If you need a value between scale steps, the scale is right and the design is wrong.</p>
+      </div>
+
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>Code blocks use the 4-color palette.</b> ink-300 for comments, green-300 for keywords, sun-300 for strings, coral-300 for numbers. On <code>ink-900</code> bg, <code>r-md</code>.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't ship a code snippet with default browser styling.</b> Code is a first-class component in this portfolio. Style it.</p>
+      </div>
+
+      <div class="rule do">
+        <span class="lbl">Do</span>
+        <p><b>Sun-300 highlight + brand-mark green dot</b> are the system's signatures. Keep both on every page where you can — they carry the brand without a logo.</p>
+      </div>
+      <div class="rule dont">
+        <span class="lbl">Don't</span>
+        <p><b>Don't add a wordmark or extra logo system.</b> The brand-mark + name in the topbar is the entire identity layer.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       § 08 — GENERATED LONG-FORM CONTENT (Markdown → HTML)
+       ============================================================ -->
+  <section class="section" id="generated">
+    <div class="section-head">
+      <span class="section-num">§ 08</span>
+      <h2>Long-form rules · <em>markdown → HTML.</em></h2>
+      <span class="section-meta">for the engagement build script</span>
+    </div>
+    <p class="section-intro" style="margin-bottom: var(--s-6)">
+      The engagement section (<code class="mono">pipeline/engagement/*</code>) is generated
+      from Markdown by <code class="mono">_build-md-to-html.py</code>. Long documents need
+      different typographic rules than UI screens — narrower max-width, looser line-height,
+      semantic H1→H4 cascade. These are the rules the SHELL template must follow.
+    </p>
+
+    <div class="block">
+      <h3>Container width &amp; rhythm <span class="mono-id">long-form readability</span></h3>
+      <ul style="font-size: 13.5px; color: var(--ink-700); line-height: 1.6; padding-left: 18px; margin: 0;">
+        <li><code class="mono">main.sheet</code> — <code class="mono">max-width: 820px</code> (60ch reading optimum at 15px Manrope).</li>
+        <li>Body <code class="mono">line-height: 1.65</code>. Reading copy needs more air than UI copy (1.55).</li>
+        <li><code class="mono">font-size: 15px</code> base. No smaller for body — these are reference docs.</li>
+        <li>Paragraph <code class="mono">margin: 0.8em 0</code>. Vertical rhythm tied to font-size, not fixed px.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>Heading cascade <span class="mono-id">H1 once · H2 sections · H3 inside · H4 = eyebrow</span></h3>
+      <ul style="font-size: 13.5px; color: var(--ink-700); line-height: 1.6; padding-left: 18px; margin: 0;">
+        <li><b>H1</b> — Manrope 800, <code class="mono">clamp(34px, 5.2vw, 52px)</code>, letter-spacing <code class="mono">-.02em</code>. <b>One per document.</b> Followed by a 64×2px green-accent underline (the document's signature).</li>
+        <li><b>H1 <code class="mono">&lt;em&gt;</code></b> — rotated sun-300 highlight pill. One word per document, ideally the page's promise. Authored in markdown as <code class="mono">*highlight*</code>.</li>
+        <li><b>H2</b> — Manrope 800, 26px, top border <code class="mono">1px ink-100</code>, <code class="mono">margin: 56px 0 14px</code>. Sections of the document.</li>
+        <li><b>H3</b> — Manrope 800, 17px. Subsections inside an H2.</li>
+        <li><b>H4</b> — Geist Mono UPPER, 11px, green-700 — functions as an eyebrow within content, not a heading per se. Use for labels like "context", "why it matters", "open questions".</li>
+        <li><b>H5</b> — Geist Mono UPPER, 11px, ink-faint — the smallest label level.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>Blockquote · the "verbatim source" pattern <span class="mono-id">used for client quotes</span></h3>
+      <p style="font-size: 13.5px; color: var(--ink-700); line-height: 1.55; margin: 0 0 var(--s-2);">
+        Long-form engagement docs cite stakeholder quotes verbatim. The blockquote is the
+        visual signature for those moments — it's how a methodologist's voice survives the
+        round-trip from interview to artefact.
+      </p>
+      <ul style="font-size: 13.5px; color: var(--ink-700); line-height: 1.6; padding-left: 18px; margin: var(--s-2) 0 0;">
+        <li>Background <code class="mono">green-50</code>, left border <code class="mono">3px solid accent</code>.</li>
+        <li>Italic body copy is acceptable here (blockquote is a conventional italic context). Do NOT use serif.</li>
+        <li>Attribution: <code class="mono">&lt;cite&gt;</code> in Geist Mono UPPER 11px ink-faint, with a leading em-dash.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>Code blocks &amp; inline code <span class="mono-id">monospace data inside paragraphs</span></h3>
+      <ul style="font-size: 13.5px; color: var(--ink-700); line-height: 1.6; padding-left: 18px; margin: 0;">
+        <li><b>Inline <code class="mono">&lt;code&gt;</code></b> — Geist Mono 0.88em, <code class="mono">ink-50</code> bg, <code class="mono">green-700</code> color, 3px radius, 1px 6px padding.</li>
+        <li><b>Block <code class="mono">&lt;pre&gt;</code></b> — <code class="mono">ink-50</code> bg, 3px <code class="mono">accent</code> left border, 12.5px Geist Mono, no syntax-highlighting in long-form docs (keeps the system simple; if needed, use the block-A code block dark style for product demos only).</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>Tables <span class="mono-id">data rows in markdown</span></h3>
+      <ul style="font-size: 13.5px; color: var(--ink-700); line-height: 1.6; padding-left: 18px; margin: 0;">
+        <li><b>Thead</b> — <code class="mono">ink-50</code> bg, Geist Mono UPPER 10px, <code class="mono">ink-dim</code>, letter-spacing <code class="mono">.08em</code>.</li>
+        <li><b>Tbody td</b> — 13.5px Manrope, line-height 1.5, <code class="mono">1px solid ink-100</code> row borders, vertical-align top.</li>
+        <li><b>No zebra striping.</b> The clean row borders carry the rhythm.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>Topbar &amp; foot <span class="mono-id">document navigation</span></h3>
+      <ul style="font-size: 13.5px; color: var(--ink-700); line-height: 1.6; padding-left: 18px; margin: 0;">
+        <li><b>Topbar</b> — paper bg (NOT dark navy), sticky, 11px Geist Mono UPPER nav-links. Three back-arrows: ← Portfolio / ← Pipeline / ← Engagement. Each up one level. Breadcrumb shows current path.</li>
+        <li><b>Foot</b> — Geist Mono UPPER 10px, ink-faint, 1px top border. Left: author + breadcrumb. Right: link back to site root.</li>
+        <li><b>Brand mark</b> — In topbar use simplified <code class="mono">M·</code> in green-600 (not the full square logo). The square logo is reserved for the main portfolio + LinkedIn banners.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>What NOT to do in the generator <span class="mono-id">common drift sources</span></h3>
+      <ul style="font-size: 13.5px; color: var(--ink-700); line-height: 1.6; padding-left: 18px; margin: 0;">
+        <li><b>Don't load Instrument Serif.</b> Manrope + Geist Mono only.</li>
+        <li><b>Don't use italic for display headings.</b> H1–H3 are always Manrope 800 upright.</li>
+        <li><b>Don't use the dark navy topbar.</b> The dark topbar is for printable artefacts (A4 sheets). Long-form docs use paper bg topbar.</li>
+        <li><b>Don't inline-style overrides in the body.</b> If a one-off needs special treatment, add a class to the SHELL template; don't sprinkle inline styles in generated HTML.</li>
+        <li><b>Don't redefine <code class="mono">:root</code> per file.</b> The SHELL template is the single source of truth for tokens used across engagement docs.</li>
+      </ul>
+    </div>
+
+    <p style="margin-top: var(--s-6); font-size: 14px; color: var(--ink-500); line-height: 1.55; max-width: 60ch;">
+      The Python script <code class="mono">pipeline/engagement/_build-md-to-html.py</code>
+      encodes all of the above. To change the rules, edit the SHELL template constant in that
+      script, then re-run <code class="mono">python _build-md-to-html.py</code> to regenerate
+      every engagement HTML in one pass.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       § 09 — WHAT THIS PORTFOLIO SHOULD SAY
+       ============================================================ -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">§ 09</span>
+      <h2>The portfolio's <em>three claims.</em></h2>
+      <span class="section-meta">positioning · for content decisions</span>
+    </div>
+    <p class="section-intro" style="margin-bottom: var(--s-6)">
+      You told me you want the portfolio to show three things: quality courses, AI tooling, and
+      interactive lessons (SCORM and beyond). The visual system already maps cleanly to those
+      three. Use this as a layout decision: every page should foreground one of the three.
+    </p>
+
+    <div class="rules" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="rule do" style="border-left-color: var(--green-600);">
+        <span class="lbl" style="background: var(--green-100); color: var(--green-800);">Claim 01</span>
+        <p style="font-size:16px; font-weight:700; color:var(--ink-900); margin-bottom: 8px; line-height:1.3;">Quality courses.</p>
+        <p style="font-size:13.5px;">Backed by <b>9 artefact templates</b> (needs assessment, persona, ADDIE case, Kirkpatrick plan, facilitator guide…) — the methodology layer. Every artefact names its source: 4C/ID, Robinson, Mager, Kirkpatrick, JTBD.</p>
+      </div>
+      <div class="rule do" style="border-left-color: var(--sun-500);">
+        <span class="lbl" style="background: var(--sun-100); color: var(--sun-700);">Claim 02</span>
+        <p style="font-size:16px; font-weight:700; color:var(--ink-900); margin-bottom: 8px; line-height:1.3;">AI tooling &amp; pipelines.</p>
+        <p style="font-size:13.5px;">Backed by <b>Block A (lesson generation)</b>, <b>Block B (review)</b>, <b>Block D (content tools)</b>, <b>Block E (RAG)</b>, and the GrassLMS LMS. Each one shows a real pipeline you built, not a slide about pipelines.</p>
+      </div>
+      <div class="rule do" style="border-left-color: var(--coral-500);">
+        <span class="lbl" style="background: var(--coral-50); color: var(--coral-700);">Claim 03</span>
+        <p style="font-size:16px; font-weight:700; color:var(--ink-900); margin-bottom: 8px; line-height:1.3;">Interactive lessons — SCORM &amp; beyond.</p>
+        <p style="font-size:13.5px;">Backed by <b>Block C (interactive exercise formats)</b>, the <b>SCORM card onboarding</b> artefact, and the <b>SAT Math Pro</b> widget generator. The Block C demo + the SCORM module preview-in-iframe are your two strongest "open this and play" surfaces.</p>
+      </div>
+    </div>
+
+    <p style="margin-top: var(--s-6); font-size: 14px; color: var(--ink-500); line-height: 1.55; max-width: 60ch;">
+      Once the visual system is unified, the main <code class="mono">index.html</code> should
+      <b>lead with these three claims</b> as its primary navigation — three large cards above
+      the project index — and let the existing block pages and artefacts be the proof. That's
+      the structural move that turns this from "a list of projects" into "a portfolio with a thesis".
+    </p>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span>GrassLMS Lively · Design System v1.0 · 2026</span>
+    <span><a href="#top">Back to top ↑</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

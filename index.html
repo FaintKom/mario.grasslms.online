@@ -6,7 +6,7 @@
 <title>Mario Becerra — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
 <style>
 /* ---------- tokens · GrassLMS Lively (unified with /pipeline/) ---------- */
 :root {
@@ -34,7 +34,7 @@
   --shadow-md:0 8px 24px -8px rgba(10,26,16,0.12);
 
   --mono: "Geist Mono", ui-monospace, Menlo, monospace;
-  --serif: "Instrument Serif", "Times New Roman", serif;
+  --serif: "Manrope", ui-sans-serif, system-ui, sans-serif; /* legacy alias → sans, do not use */
   --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
 
   --maxw: 1360px;
@@ -152,8 +152,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .hero-meta .v { color: var(--ink); font-weight: 500; }
 
 .hero h1 {
-  font-family: var(--serif);
-  font-weight: 400;
+  font-family: var(--sans); font-weight: 800;
   font-size: clamp(48px, 7vw, 96px);
   line-height: .92;
   letter-spacing: -0.02em;
@@ -161,10 +160,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--ink);
   font-style: normal;
 }
-.hero h1 em {
-  font-style: italic;
-  color: var(--accent);
-}
+.hero h1 em { font-style: normal; background: var(--sun-300, #ffe066); padding: 0 10px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); color: var(--ink); }
 .hero-sub {
   display: grid; grid-template-columns: 1fr;
   gap: 24px;
@@ -202,7 +198,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   padding: 14px 16px;
 }
 .hero-stats .n {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 30px;
   line-height: 1;
   font-style: italic;
@@ -246,8 +242,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   transform: translateY(-1px);
 }
 .hero-pipeline-cta .arrow {
-  font-family: var(--serif);
-  font-style: italic;
+  font-family: var(--sans); font-weight: 800;
   font-size: 16px;
   text-transform: none;
 }
@@ -285,8 +280,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   background: transparent;
 }
 .hero-link .arrow {
-  font-family: var(--serif);
-  font-style: italic;
+  font-family: var(--sans); font-weight: 800;
   font-size: 13px;
   text-transform: none;
   color: var(--accent);
@@ -328,9 +322,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   letter-spacing: .08em;
 }
 .section-head h2 {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
+  font-family: var(--sans); font-weight: 800;
   font-size: clamp(32px, 5vw, 56px);
   line-height: 1;
   letter-spacing: -.01em;
@@ -394,7 +386,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .flagship-visual {
   background: var(--bg-2);
   border: 1px solid var(--rule);
-  border-radius: 4px;
+  border-radius: 14px;
   overflow: hidden;
   position: relative;
   min-height: 520px;
@@ -431,8 +423,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
 }
 .mock-head h3 {
-  font-family: var(--serif); font-style: italic; font-weight: 400;
-  font-size: 28px; line-height: 1; margin: 0 0 6px; color: var(--ink);
+  font-family: var(--sans); font-weight: 800; font-size: 28px; line-height: 1; margin: 0 0 6px; color: var(--ink);
 }
 .mock-head .badge {
   font-family: var(--mono); font-size: 10px; text-transform: uppercase;
@@ -464,7 +455,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   border-top: 1px solid var(--rule);
   padding-top: 10px;
 }
-.mock-foot .stat .n { font-family: var(--serif); font-style: italic; font-size: 28px; line-height: 1; }
+.mock-foot .stat .n { font-family: var(--sans); font-weight: 800; font-size: 28px; line-height: 1; }
 .mock-foot .stat .l { font-family: var(--mono); font-size: 10px; color: var(--ink-dim); text-transform: uppercase; margin-top: 3px; }
 
 .flagship-body {
@@ -478,19 +469,18 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .flag-tag::before { content:""; width: 20px; height: 1px; background: var(--accent); }
 .flagship h2 {
-  font-family: var(--serif); font-weight: 400;
+  font-family: var(--sans); font-weight: 800;
   font-size: clamp(40px, 5vw, 72px); line-height: .95;
   margin: 16px 0 8px; letter-spacing: -.015em;
 }
-.flagship h2 em { font-style: italic; color: var(--accent); }
+.flagship h2 em { font-style: normal; background: var(--sun-300, #ffe066); padding: 0 8px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); color: var(--ink); }
 .flag-role {
   font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
   text-transform: uppercase; letter-spacing: .06em;
   margin-bottom: 24px;
 }
 .flag-desc {
-  font-family: var(--serif);
-  font-size: 22px; line-height: 1.35;
+  font-family: var(--sans); font-weight: 500; font-size: 22px; line-height: 1.35;
   color: var(--ink);
   margin: 0 0 24px;
   max-width: 36ch;
@@ -510,21 +500,38 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   display: flex; gap: 10px; flex-wrap: wrap;
 }
 .btn {
-  font-family: var(--mono); font-size: 12px;
-  text-transform: uppercase; letter-spacing: .06em;
-  padding: 11px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--rule-strong);
-  color: var(--ink);
-  display: inline-flex; gap: 8px; align-items: center;
-  transition: all .15s;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 12px 20px;
+  border-radius: 14px;
+  border: none;
+  background: white;
+  color: var(--ink, #0a1a10);
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  box-shadow: 0 4px 0 0 var(--ink-100, #e6e8e4);
+  transition: transform 120ms, box-shadow 120ms;
 }
-.btn:hover { border-color: var(--ink); }
+.btn:hover { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--ink-100, #e6e8e4); }
 .btn.primary {
-  background: var(--accent); color: var(--accent-ink);
-  border-color: var(--accent);
+  background: var(--green-600, #0a8754);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: 0 4px 0 0 var(--green-700, #07683f);
+  transition: transform 120ms, box-shadow 120ms;
 }
-.btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.btn.primary:hover { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--green-700, #07683f); background: var(--green-600); color: white; }
 .btn .arr { transition: transform .2s; }
 .btn:hover .arr { transform: translateX(3px); }
 
@@ -579,14 +586,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 
 .card h3 {
-  font-family: var(--serif); font-weight: 400;
+  font-family: var(--sans); font-weight: 800;
   font-size: clamp(28px, 3vw, 40px);
   line-height: .98;
   margin: 0 0 10px;
   letter-spacing: -.01em;
   color: var(--ink);
 }
-.card h3 em { font-style: italic; color: var(--accent); }
+.card h3 em { font-style: normal; color: var(--accent); font-weight: 800; }
 .card .role {
   font-family: var(--mono); font-size: 10px;
   color: var(--ink-dim); text-transform: uppercase; letter-spacing: .06em;
@@ -633,8 +640,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 /* little visual motif */
 .card .motif {
   position: absolute; top: 18px; right: 22px;
-  font-family: var(--serif);
-  font-style: italic;
+  font-family: var(--sans); font-weight: 800;
   font-size: 56px;
   line-height: 1;
   color: var(--accent);
@@ -645,7 +651,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 /* ---------- modal ---------- */
 .scrim {
   position: fixed; inset: 0;
-  background: color-mix(in oklab, var(--bg) 85%, black);
+  background: rgba(10, 26, 16, 0.55);
   backdrop-filter: blur(8px);
   z-index: 100;
   display: none;
@@ -660,7 +666,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   background: var(--bg);
   border: 1px solid var(--rule-strong);
   max-width: 920px; width: 100%;
-  border-radius: 6px;
+  border-radius: 18px;
   overflow: hidden;
   transform: translateY(10px);
   transition: transform .25s cubic-bezier(.2,.8,.2,1);
@@ -678,11 +684,11 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
 }
 .modal-head h2 {
-  font-family: var(--serif); font-weight: 400;
+  font-family: var(--sans); font-weight: 800;
   font-size: 56px; line-height: .95; letter-spacing: -.01em;
   margin: 0;
 }
-.modal-head h2 em { font-style: italic; color: var(--accent); }
+.modal-head h2 em { font-style: normal; background: var(--sun-300, #ffe066); padding: 0 8px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); color: var(--ink); }
 .modal-close {
   font-family: var(--mono); font-size: 11px;
   border: 1px solid var(--rule-strong);
@@ -694,7 +700,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .modal-close:hover { color: var(--ink); border-color: var(--ink); }
 .modal-body { padding: 24px 32px 32px; }
 .modal-body .lede {
-  font-family: var(--serif); font-size: 22px; line-height: 1.35;
+  font-family: var(--sans); font-size: 22px; line-height: 1.35;
   color: var(--ink);
   margin: 0 0 24px;
   max-width: 52ch;
@@ -728,11 +734,11 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   margin-top: calc(60px * var(--density));
 }
 .foot h2 {
-  font-family: var(--serif); font-weight: 400;
+  font-family: var(--sans); font-weight: 800;
   font-size: clamp(48px, 8vw, 128px); line-height: .9;
   letter-spacing: -.02em; margin: 0 0 32px;
 }
-.foot h2 em { font-style: italic; color: var(--accent); }
+.foot h2 em { font-style: normal; background: var(--sun-300, #ffe066); padding: 0 8px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); color: var(--ink); }
 .foot-grid {
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 2px;
@@ -752,7 +758,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--ink-faint); letter-spacing: .08em;
 }
 .foot-grid .v {
-  font-family: var(--serif); font-style: italic; font-size: 22px;
+  font-family: var(--sans); font-weight: 800; font-size: 22px;
 }
 .foot-legal {
   display: flex; justify-content: space-between; align-items: center;
@@ -808,17 +814,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   border-radius: 2px;
 }
 .case h3 {
-  font-family: var(--serif);
-  font-size: clamp(24px, 2.4vw, 32px);
+  font-family: var(--sans); font-weight: 800; font-size: clamp(24px, 2.4vw, 32px);
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--ink);
   text-wrap: balance;
   margin: 0;
 }
-.case h3 em {
-  font-style: italic; color: var(--accent);
-}
+.case h3 em { font-style: normal; color: var(--accent); font-weight: 800; }
 .case-period {
   font-family: var(--mono);
   font-size: 11px;
@@ -892,8 +895,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .service-num {
   grid-column: 1;
   grid-row: 1 / 4;
-  font-family: var(--serif);
-  font-style: italic;
+  font-family: var(--sans); font-weight: 800;
   font-size: 44px;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -909,16 +911,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   text-transform: uppercase;
 }
 .service h3 {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: clamp(28px, 3vw, 40px);
   line-height: 1;
   letter-spacing: -0.01em;
   color: var(--ink);
   text-wrap: balance;
 }
-.service h3 em {
-  font-style: italic; color: var(--accent);
-}
+.service h3 em { font-style: normal; color: var(--accent); font-weight: 800; }
 .service-desc {
   font-size: 15px; line-height: 1.5;
   color: var(--ink-dim);
@@ -955,13 +955,12 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .service-metric {
   position: absolute;
   top: calc(28px * var(--density)); right: calc(28px * var(--density));
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 52px;
   line-height: 0.9;
   color: var(--ink);
   opacity: 0.12;
   pointer-events: none;
-  font-style: italic;
   transition: opacity .25s;
 }
 .service:hover .service-metric { opacity: 0.35; }
@@ -1090,7 +1089,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   font-family: var(--mono); font-size: 11px;
   min-width: 240px;
   display: none;
-  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  box-shadow: var(--shadow-md, 0 8px 24px -8px rgba(10,26,16,0.12));
 }
 .tweaks.on { display: block; }
 .tweaks h5 {
@@ -1138,7 +1137,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   .flagship-visual { min-height: 360px; }
   .section-head { grid-template-columns: 1fr; gap: 6px; }
   .card, .card.span-4, .card.span-8 { grid-column: span 12; min-height: 240px; }
-  .modal-head h2 { font-size: 40px; }
+  .modal-head h2 {font-weight: 800;  font-size: 40px; }
   .modal-head { padding: 22px 22px 16px; }
   .modal-body { padding: 20px 22px 28px; }
   .foot-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1149,7 +1148,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .engagement {
   border: 1px solid var(--rule);
   background: var(--bg-2);
-  border-radius: 4px;
+  border-radius: 14px;
   overflow: hidden;
   position: relative;
 }
@@ -1175,11 +1174,11 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   background: var(--accent);
   color: var(--accent-ink);
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--serif); font-style: italic; font-size: 28px;
+  font-family: var(--sans); font-weight: 800; font-size: 28px;
   line-height: 1;
   font-weight: 400;
 }
-.eng-name { font-family: var(--serif); font-size: 26px; font-style: italic; letter-spacing: -.01em; color: var(--ink); line-height: 1; }
+.eng-name { font-family: var(--sans); font-weight: 800; font-size: 26px; letter-spacing: -.01em; color: var(--ink); line-height: 1; }
 .eng-kind { font-family: var(--mono); font-size: 11px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: .06em; margin-top: 5px; }
 .eng-badges { display: flex; gap: 6px; flex-wrap: wrap; }
 .eng-badge {
@@ -1206,15 +1205,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .eng-role-v { font-family: var(--mono); font-size: 12px; color: var(--ink); text-transform: uppercase; letter-spacing: .06em; }
 
 .eng-lede {
-  font-family: var(--serif);
-  font-size: clamp(22px, 2.2vw, 30px);
+  font-family: var(--sans); font-weight: 500; font-size: clamp(22px, 2.2vw, 30px);
   line-height: 1.3;
   color: var(--ink);
   max-width: 46ch;
   margin: 0 0 28px;
   text-wrap: pretty;
 }
-.eng-lede em { font-style: italic; color: var(--accent); }
+.eng-lede em { font-style: normal; color: var(--accent); font-weight: 700; }
 
 .eng-metrics {
   display: grid; grid-template-columns: repeat(3, 1fr);
@@ -1224,13 +1222,13 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .eng-metric { background: var(--bg); padding: 20px 20px 22px; }
 .eng-metric .n {
-  font-family: var(--serif); font-style: italic;
+  font-family: var(--sans); font-weight: 800;
   font-size: 68px; line-height: 1;
   letter-spacing: -.02em; color: var(--ink);
 }
 .eng-metric .n .u {
   font-size: 26px; color: var(--accent); font-style: normal; margin-left: 2px;
-  font-family: var(--serif);
+  font-family: var(--sans);
 }
 .eng-metric .l {
   font-family: var(--mono); font-size: 11px;
@@ -1264,15 +1262,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   position: relative;
 }
 .eng-art:hover { background: var(--bg-2); }
-.eng-art:hover .eng-art-t { color: var(--accent); }
+.eng-art:hover .eng-art-t {font-weight: 700;  color: var(--accent); }
 .eng-art-n {
   font-family: var(--mono); font-size: 10px;
   color: var(--ink-faint); letter-spacing: .1em;
 }
 .eng-art-t {
-  font-family: var(--serif); font-size: 18px; line-height: 1.15;
-  color: var(--ink); font-style: italic;
-  letter-spacing: -.005em;
+  font-family: var(--sans); font-weight: 700; font-size: 18px; line-height: 1.15;
+  color: var(--ink); letter-spacing: -.005em;
   transition: color .15s;
 }
 .eng-art-d {
@@ -1323,9 +1320,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   letter-spacing: .04em;
 }
 .tl-body .co {
-  font-family: var(--serif); font-size: 20px;
-  color: var(--ink); font-style: italic;
-  line-height: 1.1;
+  font-family: var(--sans); font-weight: 800; font-size: 20px;
+  color: var(--ink); line-height: 1.1;
   letter-spacing: -.005em;
 }
 .tl-body .role {
@@ -1365,9 +1361,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   letter-spacing: .08em;
 }
 .edu-t {
-  font-family: var(--serif); font-size: 18px; line-height: 1.15;
-  color: var(--ink); font-style: italic;
-  letter-spacing: -.005em;
+  font-family: var(--sans); font-weight: 800; font-size: 18px; line-height: 1.15;
+  color: var(--ink); letter-spacing: -.005em;
 }
 .edu-v {
   font-family: var(--sans); font-size: 13px;
@@ -1406,12 +1401,12 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   display: flex; justify-content: space-between; align-items: baseline;
   gap: 10px;
 }
-.lang-l { font-family: var(--serif); font-size: 20px; font-style: italic; color: var(--ink); letter-spacing: -.005em; }
+.lang-l { font-family: var(--sans); font-weight: 800; font-size: 20px; color: var(--ink); letter-spacing: -.005em; }
 .lang-v { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
 
 @media (max-width: 900px) {
   .eng-metrics { grid-template-columns: 1fr; }
-  .eng-metric .n { font-size: 54px; }
+  .eng-metric .n {font-weight: 800;  font-size: 54px; }
   .eng-art-grid { grid-template-columns: 1fr 1fr; }
   .bg-grid { grid-template-columns: 1fr; gap: 32px; }
   .edu-grid { grid-template-columns: 1fr 1fr; }
@@ -1536,7 +1531,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   width: 100%;
   height: 220px;
   margin: 0 0 24px;
-  background: #0a0a08;
+  background: var(--bg-3, #f4f5f1);
   border: 1px solid var(--rule);
   border-radius: 4px;
   overflow: hidden;
@@ -1638,8 +1633,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   letter-spacing: .06em;
 }
 .sticky-cta-label em{
-  font-family: var(--serif);
-  font-style: italic;
+  font-family: var(--sans); font-weight: 800;
   font-size: 11.5px;
   letter-spacing: 0;
   opacity: .82;
@@ -1757,7 +1751,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   margin-bottom: calc(20px * var(--density));
 }
 .why-h{
-  font-family: var(--serif); font-size: clamp(22px, 2.2vw, 30px);
+  font-family: var(--sans); font-size: clamp(22px, 2.2vw, 30px);
   font-weight: 400; line-height: 1.15;
   color: var(--ink-dim);
   letter-spacing: -.01em;
@@ -1983,8 +1977,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   line-height: 1.5;
 }
 .bf-success strong{
-  font-family: var(--serif);
-  font-style: italic;
+  font-family: var(--sans); font-weight: 800;
   font-size: 17px;
   color: var(--accent);
   display: block;
@@ -2750,7 +2743,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <footer class="foot-legal">
     <span>© 2026 · Mario Rafael Becerra Dueñas</span>
-    <span>Hand-built in HTML, CSS, JS · Instrument Serif + Geist Mono</span>
+    <span>Hand-built in HTML, CSS, JS · Manrope + Geist Mono</span>
   </footer>
 </section>
 
@@ -3109,7 +3102,7 @@ function renderCards() {
 
   if (!shown.length) {
     html = `<div style="padding: 80px 0; text-align: center; color: var(--ink-faint); font-family: var(--mono); font-size: 12px;">
-      <div style="font-family: var(--serif); font-style: italic; font-size: 48px; color: var(--ink-dim); margin-bottom: 8px;">∅</div>
+      <div style="font-family: var(--sans); font-weight: 800; font-size: 48px; color: var(--ink-dim); margin-bottom: 8px;">∅</div>
       <div>"nothing found"</div>
     </div>`;
   }

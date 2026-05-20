@@ -8,51 +8,52 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../_shared/system.css"/>
 <link rel="stylesheet" href="style.css"/>
 <style>
 .pipeline-diagram {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
+  background: var(--ink-100);
+  border: 1px solid var(--ink-100);
   margin: 18px 0 22px;
 }
 @media (max-width: 760px) {
   .pipeline-diagram { grid-template-columns: 1fr 1fr; }
 }
 .pipe-step {
-  background: var(--bg-2);
+  background: var(--paper-2);
   padding: 16px 14px;
   display: grid;
   gap: 6px;
   position: relative;
 }
 .pipe-step .num {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 10px;
   color: var(--green-700);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .pipe-step .h {
-  font-family: var(--serif);
+  font-family: var(--font-sans);
   font-size: 19px;
   line-height: 1.15;
-  color: var(--ink);
+  color: var(--ink-900);
   font-style: italic;
 }
 .pipe-step .d {
   font-size: 12.5px;
   line-height: 1.45;
-  color: var(--ink-dim);
+  color: var(--ink-500);
 }
 .pipe-step .script {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 11px;
   color: var(--green-700);
   padding-top: 4px;
-  border-top: 1px dashed var(--rule);
+  border-top: 1px dashed var(--ink-100);
   margin-top: 4px;
 }
 .pipe-step::after {
@@ -61,12 +62,12 @@
   right: -10px;
   top: 50%;
   transform: translateY(-50%);
-  font-family: var(--serif);
+  font-family: var(--font-sans);
   font-style: italic;
   font-size: 24px;
   color: var(--green-600);
   z-index: 2;
-  background: var(--bg);
+  background: var(--paper);
   padding: 0 2px;
 }
 .pipe-step:last-child::after { content: ""; }
@@ -74,22 +75,22 @@
   .pipe-step:nth-child(2)::after { content: ""; }
 }
 .code {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.5;
-  background: var(--bg-3);
-  border: 1px solid var(--rule);
+  background: var(--ink-50);
+  border: 1px solid var(--ink-100);
   border-left: 3px solid var(--green-600);
   border-radius: 0 6px 6px 0;
   padding: 12px 14px;
   margin: 10px 0 14px;
   white-space: pre;
   overflow-x: auto;
-  color: var(--ink);
+  color: var(--ink-900);
 }
 .code .k { color: var(--green-700); }
 .code .s { color: var(--coral-700); }
-.code .c { color: var(--ink-faint); font-style: italic; }
+.code .c { color: var(--ink-400); font-style: italic; }
 .code .n { color: var(--sun-700); }
 .stat-row {
   display: grid;
@@ -101,13 +102,13 @@
   .stat-row { grid-template-columns: 1fr 1fr; }
 }
 .stat {
-  background: var(--bg-2);
-  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  border: 1px solid var(--ink-100);
   padding: 12px 14px;
   border-radius: 6px;
 }
 .stat .v {
-  font-family: var(--serif);
+  font-family: var(--font-sans);
   font-size: 28px;
   font-style: italic;
   color: var(--green-700);
@@ -115,9 +116,9 @@
   margin-bottom: 4px;
 }
 .stat .l {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--ink-faint);
+  color: var(--ink-400);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
