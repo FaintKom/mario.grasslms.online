@@ -2370,10 +2370,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <a class="navlink" href="#demos">Demos</a>
       <a class="navlink" href="#background">Services</a>
       <a class="navlink" href="#contact">Booking</a>
-      <button class="theme-btn" id="themeBtn" title="Toggle theme">
-        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="3.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M3 13l1.5-1.5M11.5 4.5L13 3"/></svg>
-        <span id="themeLbl">DARK</span>
-      </button>
     </nav>
   </div>
 </header>
@@ -3329,7 +3325,8 @@ function applyLang() {
 // ============ THEME / ACCENT / DENSITY ============
 function applyTheme() {
   document.documentElement.setAttribute("data-theme", state.theme);
-  document.getElementById("themeLbl").textContent = state.theme.toUpperCase();
+  const lbl = document.getElementById("themeLbl");
+  if (lbl) lbl.textContent = state.theme.toUpperCase();
   document.querySelectorAll("#segTheme button").forEach((b) => {
     b.classList.toggle("on", b.dataset.theme === state.theme);
   });
@@ -3885,14 +3882,7 @@ function bindTweaks() {
 
 // ============ TOP CONTROLS ============
 function bindTopControls() {
-  // Theme button cycles dark→paper→light
-  document.getElementById("themeBtn").addEventListener("click", () => {
-    const order = ["dark", "paper", "light"];
-    state.theme = order[(order.indexOf(state.theme) + 1) % order.length];
-    applyTheme();
-    persistEdit({ theme: state.theme });
-  });
-  // langBtn removed — EN only
+  // Theme button removed — Lively is single-light by design (kept applyTheme as a no-op shim for legacy persisted state)
 }
 
 // ============ INIT ============
