@@ -719,16 +719,24 @@ code, kbd, samp {
    training mode. Wins over module-specific styles via !important.
    ========================================================================= */
 
-/* 1 · Narrative overlay = primary signal source · TOP-LEFT not bottom-right */
+/* 1 · Narrative overlay = primary signal source · TOP-RIGHT
+   (TOP = primary reading position, not bottom · RIGHT = leaves app on LEFT
+   where action targets sit, prevents overlay covering interactive elements) */
 body.module .narrative-overlay {
-  left: 24px !important;
+  right: 24px !important;
   top: 56px !important;
-  right: auto !important;
+  left: auto !important;
   bottom: auto !important;
-  width: min(500px, calc(100vw - 48px)) !important;
+  width: min(440px, calc(100vw - 48px)) !important;
   max-height: calc(100vh - 130px) !important;
   border-left: 4px solid var(--ftc-green-primary, #00875f) !important;
   box-shadow: 0 12px 32px -8px rgba(10, 26, 16, 0.18) !important;
+}
+
+/* Push apps left so they don't render under the overlay */
+body.module #desktop { padding-right: 480px; }
+@media (max-width: 900px) {
+  body.module #desktop { padding-right: 0; }
 }
 
 /* 2 · Continue button — clearly disabled until task complete */
@@ -797,4 +805,5 @@ body.module .app--outreach .lead-row[data-task-target="inactive"] .dial-btn {
     width: auto !important;
     max-height: 60vh !important;
   }
+  body.module #desktop { padding-right: 0; }
 }
