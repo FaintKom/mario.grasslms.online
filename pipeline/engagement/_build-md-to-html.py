@@ -91,23 +91,14 @@ main.sheet h1::after {{
   margin-top: 18px;
 }}
 
-/* H2 with mono section-kicker via ::before counter */
-main.sheet {{ counter-reset: h2-section; }}
+/* H2 (manual section numbers preserved from author's markdown) */
 main.sheet h2 {{
-  counter-increment: h2-section;
   font-family: var(--sans); color: var(--ink);
   font-weight: 700; letter-spacing: -0.005em;
   font-size: 26px; line-height: 1.2;
   margin: 56px 0 14px;
   padding-top: 28px;
   border-top: 1px solid var(--rule);
-}}
-main.sheet h2::before {{
-  content: counter(h2-section, decimal-leading-zero) " · ";
-  font-family: var(--mono); font-size: 12px;
-  color: var(--accent); font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  display: block; margin-bottom: 6px;
 }}
 main.sheet h2:first-of-type {{ border-top: none; padding-top: 0; margin-top: 36px; }}
 
