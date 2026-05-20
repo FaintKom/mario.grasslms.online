@@ -800,12 +800,19 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .band-v { color: var(--ink-dim); font-weight: 500; text-transform: none; letter-spacing: .02em; font-size: 12px; }
 
-.demos-lede {
+.demos-lede,
+.cases-foot {
   max-width: 640px;
   margin: 0 0 24px;
   color: var(--ink-dim); font-size: 14.5px; line-height: 1.55;
 }
-.demos-lede a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+.cases-foot {
+  margin: 24px 0 0;
+  font-style: italic;
+  color: var(--ink-faint);
+}
+.demos-lede a,
+.cases-foot a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; font-style: normal; }
 .case {
   background: var(--bg);
   padding: calc(32px * var(--density)) calc(28px * var(--density));
@@ -2101,8 +2108,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <section class="wrap" id="cases">
   <div class="section-head">
     <span class="num">§ 01 / REAL CLIENT WORK</span>
-    <h2>Nine real programs<br>for <em>four</em> clients</h2>
-    <span class="count">B2C · B2B · B2G</span>
+    <h2>Eight recent programs<br>for <em>three</em> clients</h2>
+    <span class="count">recent · selected · 50+ shipped total</span>
   </div>
 
   <!-- Yandex Practicum band -->
@@ -2211,7 +2218,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <!-- BEAM band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2G + B2C</span><span class="band-v">BEAM Institute · career-change tracks built from scratch with industry SMEs</span></h3>
+    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v">BEAM Institute · career-change tracks built from scratch with industry SMEs</span></h3>
   </div>
 
   <div class="cases">
@@ -2247,29 +2254,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   </div>
 
-  <!-- Algonova band -->
-  <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2G + B2C</span><span class="band-v">Algonova · current engagement</span></h3>
-  </div>
-
-  <div class="cases">
-
-    <article class="case">
-      <div class="case-head">
-        <span class="case-num">— 09</span>
-        <span class="case-tag">K-3 math · current NDA</span>
-      </div>
-      <div class="case-employer">Algonova <span style="color:var(--ink-faint);font-weight:400;font-size:0.85em;">(NDA)</span></div>
-      <h3>Knowledge architecture<br>for an <em>AI-personalised</em> math platform</h3>
-      <p class="case-period">Instructional Design &amp; AI Automation · Freelance · current</p>
-      <p class="case-desc">Instructional Designer on an AI-powered personalised math platform for grades 1–3. Owning the knowledge architecture — taxonomy of skills and observable action-level objectives that drives diagnostic assessment, adaptive lesson generation and individualised trajectories.</p>
-      <div class="case-tags">
-        <span>knowledge graph</span><span>BKT</span><span>K-3 math</span><span>adaptive</span>
-      </div>
-      <a class="case-cta" href="#engagement">Engagement detail <span class="arrow">↓</span></a>
-    </article>
-
-  </div>
+  <p class="cases-foot">
+    Recent course work, selected — across 10+ years I've shipped 50+ courses for many more clients. Current freelance focus is tooling (see <a href="#engagement">§ 03 Algonova engagement</a> and <a href="#services">§ 02 Tools</a>), not new courses.
+  </p>
 </section>
 
 <!-- ============ TOOLS ============ -->
@@ -2515,11 +2502,11 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <div class="eng-body">
       <div class="eng-role">
         <span class="eng-role-k">Role</span>
-        <span class="eng-role-v">Instructional Design &amp; AI Automation</span>
+        <span class="eng-role-v">AI Automation &amp; Internal Tooling for the ID team</span>
       </div>
 
       <p class="eng-lede">
-        Instructional Designer on an <em>AI-powered personalised math learning platform for grades 1–3</em>. Working on the knowledge architecture — the taxonomy of skills and observable action-level learning objectives that drives diagnostic assessment, adaptive lesson generation, and individualised learning trajectories.
+        Current focus is <em>tooling for the instructional-design team</em> on an AI-personalised K-3 math platform — slide generators, autofill userscripts, Miro/Figma board generators, lesson-review pipeline, and the underlying knowledge architecture that makes adaptive lesson assembly possible. Cuts hours of routine work per ID per week.
       </p>
 
       <div class="eng-metrics">
