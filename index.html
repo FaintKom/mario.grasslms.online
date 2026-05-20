@@ -774,11 +774,38 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   gap: 1px;
   background: var(--rule);
   border: 1px solid var(--rule);
-  margin-bottom: 48px;
+  margin-bottom: 28px;
 }
 @media (max-width: 640px) {
   .cases { grid-template-columns: 1fr; }
 }
+/* B2C / B2B band heads between case grids */
+.cases-band {
+  margin: 24px 0 12px;
+}
+.cases-band:first-of-type { margin-top: 0; }
+.band-head {
+  display: flex; align-items: baseline; gap: 14px;
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0; padding: 6px 0 8px;
+  border-bottom: 1px solid var(--rule);
+  font-weight: 500;
+}
+.band-k {
+  background: var(--accent); color: #fff;
+  padding: 3px 8px; border-radius: 2px;
+  font-weight: 700; letter-spacing: .1em;
+}
+.band-v { color: var(--ink-dim); font-weight: 500; text-transform: none; letter-spacing: .02em; font-size: 12px; }
+
+.demos-lede {
+  max-width: 640px;
+  margin: 0 0 24px;
+  color: var(--ink-dim); font-size: 14.5px; line-height: 1.55;
+}
+.demos-lede a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
 .case {
   background: var(--bg);
   padding: calc(32px * var(--density)) calc(28px * var(--density));
@@ -2013,6 +2040,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <a class="navlink" href="#services">Services</a>
       <a class="navlink" href="#engagement">Engagement</a>
       <a class="navlink" href="#flagship">Flagship</a>
+      <a class="navlink" href="#demos">Demos</a>
       <a class="navlink" href="#work">Work</a>
       <a class="navlink" href="#background">Background</a>
       <a class="navlink" href="#contact">Booking</a>
@@ -2069,12 +2097,17 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
 </main>
 
-<!-- ============ CASE STUDIES ============ -->
+<!-- ============ REAL CLIENT WORK ============ -->
 <section class="wrap" id="cases">
   <div class="section-head">
-    <span class="num">§ 01 / CASES</span>
-    <h2>Four programs<br>I shipped<em>.</em></h2>
-    <span class="count">end-to-end ID</span>
+    <span class="num">§ 01 / REAL CLIENT WORK</span>
+    <h2>Nine real programs<br>for <em>seven</em> clients</h2>
+    <span class="count">B2C · B2B · NDA</span>
+  </div>
+
+  <!-- B2C band -->
+  <div class="cases-band">
+    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v">Yandex Practicum · career-change &amp; level-up programs</span></h3>
   </div>
 
   <div class="cases">
@@ -2082,14 +2115,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <article class="case">
       <div class="case-head">
         <span class="case-num">— 01</span>
-        <span class="case-tag">UX / UI program</span>
+        <span class="case-tag">UX / UI · career-change + level-up</span>
       </div>
       <div class="case-employer">Yandex Practicum</div>
-      <h3>Career-switcher curriculum,<br><em>reverse-designed</em> from hiring requirements</h3>
+      <h3>UX/UI design curriculum,<br><em>reverse-designed</em> from hiring requirements</h3>
       <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">End-to-end curricula for Web Design, UX/UI and Graphic Design programs aligned with industry hiring requirements. Cross-functional pipeline: designers, developers, reviewers; on-time cohort launches every 4–6 weeks.</p>
+      <p class="case-desc">End-to-end UX/UI curriculum — full career-change track and a shorter level-up track for working designers. Cohorts launched on schedule every 4–6 weeks via a cross-functional pipeline of designers, developers and reviewers. Outcomes aligned to current industry hiring criteria.</p>
       <div class="case-tags">
-        <span>4C/ID</span><span>multi-modal</span><span>Kirkpatrick L1–L4</span><span>cross-functional</span>
+        <span>4C/ID</span><span>career-change</span><span>level-up</span><span>cross-functional</span>
       </div>
       <a class="case-cta" href="pipeline/artefacts/addie-case-yandex/" target="_blank">ADDIE walk-through <span class="arrow">→</span></a>
     </article>
@@ -2097,46 +2130,125 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <article class="case">
       <div class="case-head">
         <span class="case-num">— 02</span>
-        <span class="case-tag">B2B localisation</span>
+        <span class="case-tag">Graphic design · career-change</span>
+      </div>
+      <div class="case-employer">Yandex Practicum</div>
+      <h3>Graphic design,<br><em>portfolio-first</em> career switch</h3>
+      <p class="case-period">Learning Experience Designer</p>
+      <p class="case-desc">Career-switcher graphic-design curriculum sequenced around portfolio-worthy deliverables: brand identity, editorial layout, packaging, social. Weekly critique rituals, SME-led reviews, and an end-of-track portfolio defence built around target hiring criteria.</p>
+      <div class="case-tags">
+        <span>portfolio-led</span><span>critique cycles</span><span>SME reviews</span><span>career-change</span>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 03</span>
+        <span class="case-tag">Marketing · career-change</span>
+      </div>
+      <div class="case-employer">Yandex Practicum</div>
+      <h3>Digital marketing,<br><em>brief-driven</em> practice</h3>
+      <p class="case-period">Learning Experience Designer</p>
+      <p class="case-desc">Career-switcher marketing curriculum built around real client briefs: performance, content, lifecycle, analytics. Practice tied to measurable funnel outcomes; assessments mirrored junior-marketing tasks from partner companies.</p>
+      <div class="case-tags">
+        <span>brief-driven</span><span>funnel metrics</span><span>partner companies</span><span>career-change</span>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- B2B band -->
+  <div class="cases-band">
+    <h3 class="band-head"><span class="band-k">B2B</span><span class="band-v">TripleTen · BEAM Institute · AI Math EdTech</span></h3>
+  </div>
+
+  <div class="cases">
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 04</span>
+        <span class="case-tag">Management · B2B microcourses</span>
       </div>
       <div class="case-employer">TripleTen (Nebius Group)</div>
-      <h3>15+ B2B courses<br><em>localised</em> for Latin America</h3>
+      <h3>Management microcourses,<br><em>assembled</em> per client</h3>
       <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Localised 15+ B2B courses for the LatAm market — cultural + professional context adaptation. Cross-functional status-tracking system that improved team visibility and cut handoff delays. HeyGen AI-avatar scripts and presentations for video-based learning.</p>
+      <p class="case-desc">Short B2B management courses assembled from the master TripleTen management curriculum and adapted to each client's role-profile and business context. Localised for LatAm markets where relevant; HeyGen AI-avatar scripts for video segments.</p>
       <div class="case-tags">
-        <span>localisation</span><span>HeyGen scripts</span><span>SME collab</span><span>status pipeline</span>
+        <span>microcourses</span><span>assembled-from-base</span><span>HeyGen scripts</span><span>B2B</span>
       </div>
       <a class="case-cta" href="pipeline/artefacts/facilitator-guide-sales-kickoff/" target="_blank">B2B production sample <span class="arrow">→</span></a>
     </article>
 
     <article class="case">
       <div class="case-head">
-        <span class="case-num">— 03</span>
-        <span class="case-tag">Data Governance · from-scratch</span>
+        <span class="case-num">— 05</span>
+        <span class="case-tag">Backend · B2B microcourses</span>
+      </div>
+      <div class="case-employer">TripleTen (Nebius Group)</div>
+      <h3>Backend microcourses,<br><em>scoped</em> to engineering teams</h3>
+      <p class="case-period">Learning Experience Designer</p>
+      <p class="case-desc">Backend-development microcourses adapted from TripleTen's long-form backend program for B2B engineering audiences. Scoped per client around the specific stack and seniority profile; assessments built around real codebases where possible.</p>
+      <div class="case-tags">
+        <span>microcourses</span><span>stack-scoped</span><span>code assessments</span><span>B2B</span>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 06</span>
+        <span class="case-tag">AI · B2B microcourses</span>
+      </div>
+      <div class="case-employer">TripleTen (Nebius Group)</div>
+      <h3>AI microcourses,<br><em>practice-led</em> for non-tech roles</h3>
+      <p class="case-period">Learning Experience Designer</p>
+      <p class="case-desc">Generative-AI microcourses for B2B clients — prompt engineering, role-specific AI workflows, responsible-use guardrails. Adapted from TripleTen's AI curriculum and tuned to each client's tooling and policies.</p>
+      <div class="case-tags">
+        <span>prompt eng</span><span>role-specific</span><span>responsible AI</span><span>B2B</span>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 07</span>
+        <span class="case-tag">Data Governance · from scratch</span>
       </div>
       <div class="case-employer">BEAM Institute of Technology</div>
       <h3>Data Governance course built<br>with <em>Billigence</em> SMEs</h3>
       <p class="case-period">Learning Experience Designer · Freelance · project-based</p>
-      <p class="case-desc">Full instructional design cycle from scratch at BEAM Institute, with subject-matter experts from Billigence (data governance consultancy): needs analysis, curriculum architecture, content development, QA. Coordinated with industry practitioners to keep real-world relevance and up-to-date regulatory content.</p>
+      <p class="case-desc">Full instructional-design cycle from scratch at BEAM with subject-matter experts from Billigence (data-governance consultancy): needs analysis, curriculum architecture, content development, QA. Coordinated with industry practitioners to keep regulatory content current.</p>
       <div class="case-tags">
-        <span>regulated content</span><span>SME-driven</span><span>full ID cycle</span><span>industry practitioners</span>
+        <span>regulated content</span><span>SME-driven</span><span>full ID cycle</span><span>career-change</span>
       </div>
       <a class="case-cta" href="pipeline/artefacts/kirkpatrick-plan-fintech/" target="_blank">Regulated-domain L1–L4 plan <span class="arrow">→</span></a>
     </article>
 
-    <article class="case" data-demo="true">
+    <article class="case">
       <div class="case-head">
-        <span class="case-num">— 04</span>
-        <span class="case-tag" style="background:var(--sun-300,#ffe066);color:var(--ink,#0a1a10);">📐 Portfolio demo · illustrative</span>
+        <span class="case-num">— 08</span>
+        <span class="case-tag">AI for PMs · from scratch</span>
       </div>
-      <div class="case-employer">FinTechCard Ltd. <span style="color:var(--ink-faint);font-weight:400;font-size:0.85em;">(synthetic client)</span></div>
-      <h3>SDR ramp <em>compressed</em><br>95 → 73 days · three keystone moves</h3>
-      <p class="case-period">Built end-to-end as portfolio piece · Lead LXD · 16-week engagement frame</p>
-      <p class="case-desc"><strong>Synthetic engagement built as portfolio demo.</strong> End-to-end ADDIE (Analyse → Iterate). 6 SCORM 1.2 modules running in custom mini-OS simulating the SDR's workspace — Outreach, Gong, Salesforce, LinkedIn, Calendar, phone-dialler, Slack. 3-row manager call-review rubric; Kirkpatrick L1–L4 wired to existing dashboards. 20 LXD frameworks named + cited; critic-loop QA gate per phase. Real client work appears at résumé-summary level only — see Yandex / TripleTen / BEAM / current NDA above.</p>
+      <div class="case-employer">BEAM Institute of Technology</div>
+      <h3>AI for Project Managers,<br><em>built</em> with practitioner SMEs</h3>
+      <p class="case-period">Learning Experience Designer · Freelance · project-based</p>
+      <p class="case-desc">Career-change track teaching practising PMs to integrate AI into discovery, planning and delivery. Built from scratch with industry SMEs; practice tasks mirror real PM artefacts (briefs, roadmaps, retros) augmented with AI workflows.</p>
       <div class="case-tags">
-        <span>4C/ID</span><span>mini-OS sim</span><span>M1/M2/M3</span><span>Kirkpatrick L4</span><span>SCORM 1.2</span><span style="background:var(--sun-50,#fffbe5);">illustrative</span>
+        <span>career-change</span><span>SME-driven</span><span>PM workflows</span><span>full ID cycle</span>
       </div>
-      <a class="case-cta" href="pipeline/engagement/" target="_blank">See the demo <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case">
+      <div class="case-head">
+        <span class="case-num">— 09</span>
+        <span class="case-tag">K-3 math · current NDA</span>
+      </div>
+      <div class="case-employer">AI Math EdTech <span style="color:var(--ink-faint);font-weight:400;font-size:0.85em;">(NDA)</span></div>
+      <h3>Knowledge architecture<br>for an <em>AI-personalised</em> math platform</h3>
+      <p class="case-period">Instructional Design &amp; AI Automation · Freelance · current</p>
+      <p class="case-desc">Instructional Designer on an AI-powered personalised math platform for grades 1–3. Owning the knowledge architecture — taxonomy of skills and observable action-level objectives that drives diagnostic assessment, adaptive lesson generation and individualised trajectories.</p>
+      <div class="case-tags">
+        <span>knowledge graph</span><span>BKT</span><span>K-3 math</span><span>adaptive</span>
+      </div>
+      <a class="case-cta" href="#engagement">Engagement detail <span class="arrow">↓</span></a>
     </article>
 
   </div>
@@ -2462,10 +2574,57 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   </article>
 </section>
 
+<!-- ============ PORTFOLIO DEMOS ============ -->
+<section class="wrap" id="demos">
+  <div class="section-head">
+    <span class="num">§ 05 / PORTFOLIO DEMOS</span>
+    <h2>End-to-end <em>demos</em><br>built as portfolio pieces</h2>
+    <span class="count">illustrative · synthetic clients</span>
+  </div>
+
+  <p class="demos-lede">
+    Built end-to-end on synthetic briefs so the full pipeline is visible — analysis, design, build, eval. Useful for showing how I think; not real client work. Real client programs are in <a href="#cases">§ 01</a>.
+  </p>
+
+  <div class="cases">
+
+    <article class="case" data-demo="true">
+      <div class="case-head">
+        <span class="case-num">— D1</span>
+        <span class="case-tag" style="background:var(--sun-300,#ffe066);color:var(--ink,#0a1a10);">📐 Portfolio demo · illustrative</span>
+      </div>
+      <div class="case-employer">FinTechCard Ltd. <span style="color:var(--ink-faint);font-weight:400;font-size:0.85em;">(synthetic client)</span></div>
+      <h3>SDR ramp <em>compressed</em><br>95 → 73 days · three keystone moves</h3>
+      <p class="case-period">Built end-to-end as portfolio piece · Lead LXD · 16-week engagement frame</p>
+      <p class="case-desc"><strong>Synthetic engagement built as portfolio demo.</strong> End-to-end ADDIE (Analyse → Iterate). 6 SCORM 1.2 modules running in custom mini-OS simulating the SDR's workspace — Outreach, Gong, Salesforce, LinkedIn, Calendar, phone-dialler, Slack. 3-row manager call-review rubric; Kirkpatrick L1–L4 wired to existing dashboards. 20 LXD frameworks named + cited; critic-loop QA gate per phase.</p>
+      <div class="case-tags">
+        <span>4C/ID</span><span>mini-OS sim</span><span>M1/M2/M3</span><span>Kirkpatrick L4</span><span>SCORM 1.2</span><span style="background:var(--sun-50,#fffbe5);">illustrative</span>
+      </div>
+      <a class="case-cta" href="pipeline/engagement/" target="_blank">See the demo <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case" data-demo="true">
+      <div class="case-head">
+        <span class="case-num">— D2</span>
+        <span class="case-tag" style="background:var(--sun-300,#ffe066);color:var(--ink,#0a1a10);">📐 SCORM mini-cases · illustrative</span>
+      </div>
+      <div class="case-employer">Three mini-briefs <span style="color:var(--ink-faint);font-weight:400;font-size:0.85em;">(synthetic)</span></div>
+      <h3>Three small SCORM<br><em>shipped</em> end-to-end</h3>
+      <p class="case-period">Built end-to-end as portfolio pieces · single-LXD</p>
+      <p class="case-desc">Three tightly-scoped SCORM 1.2 packages built to show short-form delivery: security onboarding, call-centre de-escalation, ERP procurement rollout. Each: analysis brief → microlearning sequence → quizzes → SCORM package ready to drop into an LMS.</p>
+      <div class="case-tags">
+        <span>SCORM 1.2</span><span>microlearning</span><span>quiz interactions</span><span style="background:var(--sun-50,#fffbe5);">illustrative</span>
+      </div>
+      <a class="case-cta" href="pipeline/mini-cases/" target="_blank">See the demos <span class="arrow">→</span></a>
+    </article>
+
+  </div>
+</section>
+
 <!-- ============ WORK GRID ============ -->
 <section class="wrap" id="work">
   <div class="section-head">
-    <span class="num">§ 05 / RECENT BUILDS</span>
+    <span class="num">§ 06 / RECENT BUILDS</span>
     <h2>4 most-recent<br>shipped builds</h2>
     <span class="count"><span id="countN">4</span> projects · curated</span>
   </div>
@@ -2484,7 +2643,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ BACKGROUND ============ -->
 <section class="wrap" id="background">
   <div class="section-head">
-    <span class="num">§ 06 / BACKGROUND</span>
+    <span class="num">§ 07 / BACKGROUND</span>
     <h2>Where I've worked</h2>
     <span class="count">10+ years · EdTech</span>
   </div>
@@ -2622,7 +2781,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ CONSULTATION FORM ============ -->
 <section class="wrap booking" id="contact">
   <div class="section-head">
-    <span class="sec-n">§ 07</span>
+    <span class="sec-n">§ 08</span>
     <h2>Book a<br><em>consultation.</em></h2>
     <span class="sec-meta">free · 30 min · zoom / google meet</span>
   </div>
@@ -3050,7 +3209,7 @@ function renderCards() {
       const num = String(ci + 3).padStart(2, "0");
       html += `
         <div class="section-head" style="padding-top:${ci === 0 ? "24px" : "48px"}">
-          <span class="num">§ 05.${String(ci + 1).padStart(2, "0")} / ${cat.label[state.language].toUpperCase()}</span>
+          <span class="num">§ 06.${String(ci + 1).padStart(2, "0")} / ${cat.label[state.language].toUpperCase()}</span>
           <h2 style="font-size: clamp(24px, 3.2vw, 40px);">${cat.label[state.language]}</h2>
           <span class="count">${inCat.length}</span>
         </div>`;
