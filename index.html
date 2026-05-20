@@ -285,6 +285,31 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   text-transform: none;
   color: var(--accent);
 }
+/* Larger variant — used when the green CTA above is removed and these become primary actions */
+.hero-actions-secondary--large {
+  gap: 28px;
+  margin-top: 4px;
+}
+.hero-actions-secondary--large .hero-link {
+  font-size: 15px;
+  letter-spacing: .02em;
+  gap: 7px;
+  padding: 4px 0;
+  color: var(--ink);
+  font-weight: 500;
+  border-bottom: 1px solid var(--rule);
+}
+.hero-actions-secondary--large .hero-link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.hero-actions-secondary--large .hero-link .arrow {
+  font-size: 16px;
+}
+@media (max-width: 640px) {
+  .hero-actions-secondary--large { gap: 16px; }
+  .hero-actions-secondary--large .hero-link { font-size: 14px; }
+}
 
 /* ticker */
 .ticker {
@@ -2363,8 +2388,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <b>Learning Experience Designer</b> with 10+ years in EdTech. End-to-end curricula at Yandex Practicum, TripleTen and BEAM Institute — plus the AI tooling that lets a content team ship faster: 4C/ID pipelines, internal automations, an LMS shipped solo.
     </p>
     <div class="hero-actions">
-      <a class="hero-pipeline-cta" href="pipeline/engagement/">See the worked engagement <span class="arrow">→</span></a>
-      <div class="hero-actions-secondary">
+      <div class="hero-actions-secondary hero-actions-secondary--large">
         <a class="hero-link" href="pipeline/">Course-design pipeline <span class="arrow">→</span></a>
         <a class="hero-link" href="pipeline/mini-cases/">3 SCORM mini-cases <span class="arrow">→</span></a>
         <a class="hero-link" href="Mario_Becerra_CV.pdf" target="_blank" rel="noopener">CV (PDF) <span class="arrow">↓</span></a>
@@ -2394,7 +2418,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <section class="wrap" id="cases">
   <div class="section-head">
     <span class="num">§ 01 / REAL CLIENT WORK</span>
-    <h2>Recent programs<br>for <em>four</em> clients</h2>
+    <h2>Recent <em>programs</em></h2>
     <span class="count">recent · selected · 50+ shipped total</span>
   </div>
 
