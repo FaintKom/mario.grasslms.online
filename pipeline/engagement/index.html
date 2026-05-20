@@ -1083,22 +1083,9 @@
 </main>
 
 <footer id="footer">
-  Built by <strong>Mario Becerra</strong>. 16-week build window + 6-month measurement window (<span data-date="engagement-window">recent</span>).
+  Built by <strong>Mario Becerra</strong>. 16-week build window + 6-month measurement window (March 2026 &ndash; December 2026).
   &nbsp;&middot;&nbsp; <a href="#hero">Back to top</a>
 </footer>
-<script>
-(function(){
-  // Roll the engagement window forward so the case always reads as recent work.
-  // Engagement ends ~2 weeks ago; 16-week build window + 6-month measurement window before that.
-  var now = new Date();
-  var measureEnd = new Date(now); measureEnd.setDate(measureEnd.getDate() - 14);
-  var measureStart = new Date(measureEnd); measureStart.setMonth(measureStart.getMonth() - 6);
-  var buildStart = new Date(measureStart); buildStart.setDate(buildStart.getDate() - 16*7);
-  var fmt = function(d){ return d.toLocaleDateString('en-GB', {month:'long', year:'numeric'}); };
-  var txt = fmt(buildStart) + '–' + fmt(measureEnd);
-  document.querySelectorAll('[data-date="engagement-window"]').forEach(function(el){ el.textContent = txt; });
-})();
-</script>
 
 </body>
 </html>
