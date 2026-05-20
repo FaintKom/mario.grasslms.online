@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Module 1 · Design log — FinTechCard Engagement · Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="Decisions, sources, and trade-offs for the M1 Diagnostic Opener build.
+Audience: Phase 4 reviewer (K.M. + A.S.) + Phase 5 SCORM-Cloud QA pass.
+Inputs: brief §§5/7/9/10.1/10.4/11/12.1/12.3/18 · storybo"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink: #0a1a10; --ink-dim: #4d5a51; --ink-faint: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --rule: #e6e8e4;
+  --accent: #0a8754; --green-700: #07683f; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-300: #ffe066; --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cream topbar (Mario portfolio style — NOT dark navy) */
+.topbar {
+  background: var(--bg); color: var(--ink);
+  padding: 12px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+  border-bottom: 1px solid var(--rule);
+}
+.topbar .brand { display: flex; align-items: center; gap: 12px; color: var(--ink-dim); }
+.topbar .brand .mark {
+  font-family: var(--mono); font-weight: 700; color: var(--accent); font-size: 12px;
+}
+.topbar .brand .crumb { color: var(--ink-faint); }
+.topbar .actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.topbar .nav-link {
+  background: transparent; color: var(--ink-dim);
+  border: none; text-decoration: none;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+}
+.topbar .nav-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+main.sheet {
+  max-width: 820px; margin: 40px auto 24px; padding: 0 32px;
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 24px auto; padding: 0 18px; }
+}
+
+/* Lively signature: Manrope 800 H1 with rotated sun-300 highlight */
+main.sheet h1 {
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(34px, 5.2vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+main.sheet h1 em {
+  font-style: normal;
+  background: var(--sun-300);
+  padding: 0 10px;
+  border-radius: 8px;
+  display: inline-block;
+  transform: rotate(-1deg);
+  color: var(--ink);
+}
+main.sheet h1::after {
+  content: "";
+  display: block;
+  width: 64px; height: 2px;
+  background: var(--accent);
+  margin-top: 18px;
+}
+
+/* H2 (manual section numbers preserved from author's markdown) */
+main.sheet h2 {
+  font-family: var(--sans); color: var(--ink);
+  font-weight: 800; letter-spacing: -0.015em;
+  font-size: 26px; line-height: 1.2;
+  margin: 56px 0 14px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; margin-top: 36px; }
+
+main.sheet h3 {
+  font-family: var(--sans); color: var(--ink);
+  font-weight: 800; font-size: 17px; line-height: 1.3;
+  margin: 28px 0 8px; letter-spacing: -0.01em;
+}
+main.sheet h4 {
+  font-family: var(--mono); color: var(--green-700);
+  font-weight: 700; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin: 24px 0 8px;
+}
+main.sheet h5 {
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--ink-faint); margin: 20px 0 6px;
+}
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a {
+  color: var(--green-700); text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+main.sheet a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+main.sheet strong { color: var(--ink); font-weight: 700; }
+main.sheet em { color: var(--ink-dim); font-style: italic; }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr {
+  border: none; border-top: 1px solid var(--rule);
+  margin: 40px 0;
+}
+
+main.sheet blockquote {
+  margin: 1.2em 0; padding: 14px 20px;
+  background: var(--green-50); border-left: 3px solid var(--accent);
+  border-radius: 0;
+  color: var(--ink-700); font-size: 15px; line-height: 1.55;
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+main.sheet blockquote cite {
+  display: block;
+  font-family: var(--mono); font-style: normal;
+  font-size: 11px; color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-top: 10px;
+}
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--green-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 16px 20px;
+  border-left: 3px solid var(--accent);
+  overflow-x: auto; font-size: 12.5px; line-height: 1.55;
+  margin: 1.2em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1.2em 0;
+  font-size: 13.5px;
+  border-top: 1px solid var(--rule);
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-dim);
+  text-align: left; padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;
+}
+main.sheet tbody td {
+  padding: 12px 14px; border-bottom: 1px solid var(--rule);
+  vertical-align: top; line-height: 1.5;
+}
+
+footer.foot {
+  max-width: 820px; margin: 32px auto 48px; padding: 24px 32px 0;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+  color: var(--ink-faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  border-top: 1px solid var(--rule);
+  text-transform: uppercase;
+}
+footer.foot a { color: var(--green-700); text-decoration: none; border-bottom: 1px solid currentColor; }
+footer.foot a:hover { color: var(--accent); }
+@media (max-width: 720px) {
+  footer.foot { padding: 24px 18px 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="mark">M·</span>
+    <span class="crumb">03-develop\module-01-diagnostic-opener/design-log.md</span>
+  </div>
+  <div class="actions">
+    <a class="nav-link" href="../../../../">← Portfolio</a>
+    <a class="nav-link" href="../../../">← Pipeline</a>
+    <a class="nav-link" href="../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="module-1-design-log">Module 1 · Design log</h1>
+<blockquote>
+<p>Decisions, sources, and trade-offs for the M1 Diagnostic Opener build.
+Audience: Phase 4 reviewer (K.M. + A.S.) + Phase 5 SCORM-Cloud QA pass.
+Inputs: brief §§5/7/9/10.1/10.4/11/12.1/12.3/18 · storyboard
+<code>02-design/module-storyboards/M1-diagnostic-opener.md</code> · UX system
+<code>02-design/ux-design-system.md</code> · shell <code>03-develop/scorm-shell/</code>.</p>
+</blockquote>
+<h2 id="1-packaging-note-manifest-dependency">1 · Packaging note (manifest dependency)</h2>
+<p><code>imsmanifest.xml</code> declares two resources: <code>RES-M1</code> (this module) and <code>RES-SHELL</code>
+(referenced relatively at <code>../scorm-shell/</code>). SCORM 1.2 LMSes resolve resource
+paths inside the zip, so the <strong>packaging script must copy <code>/scorm-shell/</code> into
+the zip as a sibling of the module folder</strong> before upload. The
+<code>scripts/package.sh</code> referenced in the shell <code>README.md</code> §8 already does this;
+this module ships with no override.</p>
+<p>Local-preview path: serve <code>03-develop/</code> over <code>python -m http.server</code> and open
+<code>/module-01-diagnostic-opener/index.html</code>. Shell-relative <code>../scorm-shell/</code>
+resolves correctly because the two folders are siblings on disk.</p>
+<h2 id="2-101-quote-sources-used-verbatim-on-screen-text">2 · §10.1 quote sources used (verbatim → on-screen text)</h2>
+<table>
+<thead>
+<tr>
+<th>Storyboard slot</th>
+<th>Verbatim source (brief)</th>
+<th>Where it lands</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>State-outcome quote</td>
+<td>§10.1 M.G.: <em>"5 seconds feels like an hour but it's where the deal happens."</em></td>
+<td><code>module.js</code> · <code>eventStateOutcome()</code> · blockquote</td>
+</tr>
+<tr>
+<td>Worked-example opener (rep line)</td>
+<td>§10.1 M.G.: <em>"I noticed you've opened a second location in the last 6 months — who's approving expense reports across both stores now?"</em></td>
+<td><code>data/transcripts.json</code> · <code>GC-01</code> lines[1]</td>
+</tr>
+<tr>
+<td>Worked-example buyer reply</td>
+<td>§10.1 M.G. (<em>"her bookkeeper was overwhelmed"</em>) re-voiced as Maria's first-person line</td>
+<td><code>data/transcripts.json</code> · <code>GC-01</code> lines[2]</td>
+</tr>
+<tr>
+<td>Trigger-scenario rep line</td>
+<td>§10.4 P.B.: <em>"hi, this is P. calling from FinTechCard, do you have a moment to talk about your corporate spending?"</em></td>
+<td><code>data/transcripts.json</code> · <code>GC-19</code> lines[0]</td>
+</tr>
+<tr>
+<td>Key-takeaway card</td>
+<td>§10.1 M.G.: <em>"Ask one good question and then shut up for 5 seconds. Five seconds feels like an hour but it's where the deal happens."</em> (compressed to ≤ 30 words)</td>
+<td><code>module.js</code> · <code>eventRetention()</code> · <code>.m1-takeaway</code></td>
+</tr>
+</tbody>
+</table>
+<p>All initials anonymised (M.G., P.B.) per brief §7 GDPR constraint. Buyer
+first-names follow §12 archetype labels (Maria, Emma). No PII present.</p>
+<h2 id="3-gc-01-selection-rationale">3 · GC-01 selection rationale</h2>
+<p>Six top-decile calls in §11 carry an M1 tag (GC-01..08). GC-01 chosen because:</p>
+<ol>
+<li><strong>Maria archetype match.</strong> §12.1 Maria's "second-location" signal is the
+   exact signal M.G. cites in §10.1. The worked example aligns one SME
+   verbatim + one ICP archetype on the same canonical move — minimising
+   cognitive load (Sweller 2011) by removing the buyer-pattern-match step the
+   rep has not yet been trained on.</li>
+<li><strong>Mid-length call (8:42).</strong> Short enough to reference inside the 10-min
+   module without disrupting pacing; long enough to plant the M2 + M3 seed
+   for Modules 2 and 3.</li>
+<li><strong>Clean M1+M2+M3 chain.</strong> All three keystone moves present and successful,
+   so the worked-example screen can foreshadow Module 2 (M2-preview line at
+   <code>[0:38]</code>) without breaking the M1-only training focus.</li>
+</ol>
+<p>GC-19 (P.B. hangup) selected as contrast for the trigger scenario because it
+fires inside 8 seconds — matches the "third hang-up this morning" §10.4 voice.</p>
+<h2 id="4-distractor-sourcing-completion-problem-quiz">4 · Distractor sourcing (completion problem + quiz)</h2>
+<p>Each distractor cites a specific §11 Gong row or §10.4 P.B. anti-pattern:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Distractor</th>
+<th>Source</th>
+<th>Why it's wrong</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Completion · A</td>
+<td>"Do you have a moment to talk about your corporate spending?"</td>
+<td>§11 GC-19 / §10.4 P.B. opener</td>
+<td>No signal, no diagnostic — hung up at 0:08</td>
+</tr>
+<tr>
+<td>Completion · C</td>
+<td>"Our card is cheaper than your bank's…"</td>
+<td>§11 GC-20 / §10.4 P.B. fees-argument</td>
+<td>Pitches features, no diagnostic — hung up at 0:24</td>
+</tr>
+<tr>
+<td>Completion · D</td>
+<td>"We help SMB owners get real-time visibility…"</td>
+<td>§11 GC-17 mid-band pitch-launch</td>
+<td>Pitches benefits, no signal — hung up at 0:22</td>
+</tr>
+<tr>
+<td>Quiz Q1 · A/C/D</td>
+<td>Same triad as completion problem</td>
+<td>Same</td>
+<td>Reinforces pattern recognition</td>
+</tr>
+<tr>
+<td>Quiz Q2 · A</td>
+<td>"Congratulations on the Series B…" (long compliment)</td>
+<td>Anti-pattern of LO-M1.2 (≤ 15 words)</td>
+<td>Length + missing who-Q</td>
+</tr>
+<tr>
+<td>Quiz Q2 · C</td>
+<td>"We help fast-growing SaaS teams…"</td>
+<td>§11 GC-17 pitch-launch</td>
+<td>Same anti-pattern transferred to Tom archetype</td>
+</tr>
+<tr>
+<td>Quiz Q2 · D</td>
+<td>"Are you using Brex?"</td>
+<td>§10.2 L.D. anti-pattern (closed-ended)</td>
+<td>No signal; sets up M2 with nothing to acknowledge</td>
+</tr>
+<tr>
+<td>Quiz Q3 · A/B/D</td>
+<td>"Rephrase / fill / 'still there?'"</td>
+<td>§10.4 P.B. silence-intolerance reflex</td>
+<td>All three break the 5-s threshold</td>
+</tr>
+</tbody>
+</table>
+<p>Every distractor's feedback string names the GC-XX or §10.x source verbatim,
+so the rep learns not just the keyed answer but <em>why each wrong answer fails</em>
+(Mayer 2014 ch. 12 · feedback-with-explanation).</p>
+<h2 id="5-accessibility-wcag-21-aa-notes">5 · Accessibility (WCAG 2.1 AA) notes</h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keyboard reach</td>
+<td>Every interactive element is a <code>&lt;button&gt;</code> or <code>&lt;textarea&gt;</code> with native focus; <code>tabindex</code> not overridden</td>
+</tr>
+<tr>
+<td>Focus visible</td>
+<td><code>.m1-btn</code>, <code>.m1-choice</code>, <code>.m1-signal</code>, <code>.m1-rubric__score button</code>, <code>.m1-draft</code> all set a 3 px green outline at ≥ 3:1 contrast via <code>:focus-visible</code></td>
+</tr>
+<tr>
+<td>Modal semantics</td>
+<td><code>role="dialog" aria-modal="true" aria-labelledby="m1-modal-title"</code> on every overlay; first focusable element receives focus on render via <code>queueMicrotask</code></td>
+</tr>
+<tr>
+<td>Live regions</td>
+<td><code>#m1-stage[aria-live="polite"]</code> for stage updates; <code>.m1-silence[aria-live="polite"]</code> for countdown</td>
+</tr>
+<tr>
+<td>ARIA radio groups</td>
+<td>Completion + quiz choice lists use <code>role="radiogroup"</code> + <code>role="radio"</code> + <code>aria-checked</code></td>
+</tr>
+<tr>
+<td>3-cue signalling</td>
+<td>M1 transcript line: (1) green chip background + 3 px left border, (2) <code>👁</code> glyph, (3) <code>[M1]</code> text label with <code>aria-label="M1 diagnostic move"</code></td>
+</tr>
+<tr>
+<td>Reduced motion</td>
+<td>All keyframe animations gated by <code>@media (prefers-reduced-motion: reduce) { ... animation: none }</code></td>
+</tr>
+<tr>
+<td>Colour contrast</td>
+<td>Primary green <code>#00b67a</code> on white = 4.55:1 (AA pass) per UX system §1</td>
+</tr>
+<tr>
+<td>Skip link</td>
+<td><code>.skip-link</code> jumps to <code>#desktop</code> (inherited from shell)</td>
+</tr>
+<tr>
+<td>No-audio compensation</td>
+<td>Silence threshold communicated via text (<code>[silence 0:04]</code>), visual ring countdown, and <code>aria-live</code> announcement (3-cue redundancy per <code>D-006</code>)</td>
+</tr>
+<tr>
+<td>Language attribute</td>
+<td><code>&lt;html lang="en"&gt;</code> on <code>index.html</code></td>
+</tr>
+</tbody>
+</table>
+<p>Outstanding pre-launch: NVDA + JAWS sweep on SCORM-Cloud preview build
+(scheduled in Phase 5 sprint 5.1 per <code>scorm-shell/a11y-audit.md</code>).</p>
+<h2 id="6-dry-run-timing-estimate-vs-10-min-budget">6 · Dry-run timing estimate vs ≤ 10-min budget</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Storyboard target</th>
+<th>Built duration (estimate)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gain attention</td>
+<td>0:00–0:30</td>
+<td>~25 s</td>
+<td>One paragraph + 3-line transcript + 1 button click</td>
+</tr>
+<tr>
+<td>State outcome</td>
+<td>0:30–1:00</td>
+<td>~25 s</td>
+<td>Single quote modal</td>
+</tr>
+<tr>
+<td>Recall prior</td>
+<td>1:00–1:30</td>
+<td>~25 s</td>
+<td>2-bullet list</td>
+</tr>
+<tr>
+<td>Worked example</td>
+<td>1:30–3:00</td>
+<td>~1:15</td>
+<td>4-turn transcript + silence line + callout · ~ 95 words on screen</td>
+</tr>
+<tr>
+<td>Completion problem</td>
+<td>3:00–5:00</td>
+<td>~1:30 (45 s read + 30 s pick + 15 s feedback)</td>
+<td>4-option MCQ; single-attempt</td>
+</tr>
+<tr>
+<td>Solo problem</td>
+<td>5:00–8:00</td>
+<td>~3:00 (90 s signal-pick + 60 s draft + 5 s silence + 25 s reveal read)</td>
+<td>3 sub-screens; hint affordance optional</td>
+</tr>
+<tr>
+<td>Feedback (rubric)</td>
+<td>8:00–9:00</td>
+<td>~45 s</td>
+<td>Single-row interactive; M2/M3 rows disabled</td>
+</tr>
+<tr>
+<td>Quiz (3 items)</td>
+<td>9:00–9:30</td>
+<td>~1:15 (25 s each)</td>
+<td>One scenario stem per LO</td>
+</tr>
+<tr>
+<td>Retention card</td>
+<td>9:30–10:00</td>
+<td>~25 s</td>
+<td>Read + click</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>≤ 10:00</strong></td>
+<td><strong>≈ 9:00–9:45</strong></td>
+<td>Within budget; 15–30 s headroom for slow readers</td>
+</tr>
+</tbody>
+</table>
+<p>Timing assumes 200 wpm reading + no hint use. Hint use in solo adds ≤ 10 s.
+Reduced-motion users save ~ 1 s of animation across the run.</p>
+<h2 id="7-engineering-trade-offs">7 · Engineering trade-offs</h2>
+<ol>
+<li><strong>Stage-overlay over shell-window approach.</strong> The Gagné modals live in
+   <code>#m1-stage</code> (a module-owned overlay layer) rather than as additional
+   mini-OS windows. Rationale: storyboard-defined dialogs are linear
+   teaching artefacts, not workspace tools — they shouldn't be draggable
+   or close-able. The mini-OS apps (Gong, LinkedIn-CH, Outreach, Phone)
+   open <em>behind</em> the modal and are visible/explorable between steps.</li>
+<li><strong>Phone-dialler silence simulation.</strong> The shell's phone-dialler app
+   already provides a silence-counter; we duplicated the countdown into the
+   module modal so the moment is <em>front and centre</em>, not buried in a
+   background window. <code>eventLog.record("silence_observed")</code> is emitted once
+   from the modal tick handler to avoid double-counting.</li>
+<li><strong>Specificity scoring is heuristic.</strong> The <code>signal + who-Q + length</code>
+   triple-gate is a coarse 0–3 scale. Phase 5 cohort-1 telemetry will
+   calibrate; for v1 it drives only the rubric anchor hint (not the SCORM
+   score, which comes from the 3-item quiz).</li>
+<li><strong>Top-bar progress clock.</strong> Added a <code>#module-progress</code> element to
+   <code>index.html</code> and a 1 Hz updater in <code>module.js</code>. Honest pacing signal to
+   the rep, no surveillance — the value never leaves the page.</li>
+</ol>
+<h2 id="8-outstanding-issues-phase-4-backlog">8 · Outstanding issues / Phase 4 backlog</h2>
+<ul>
+<li>Calendar app intentionally not opened in M1 (M3 territory per storyboard);
+  shell taskbar shows only Phone, Gong, LinkedIn-CH, Outreach.</li>
+<li>The hint affordance currently auto-fills the draft textarea; an alternative
+  pattern would be a pop-up of M.G.'s exemplar without auto-fill. Held to
+  Phase 4 K.M. review — peer-to-peer voice (§18.2) favours
+  showing-then-letting-rep-edit.</li>
+<li>L1 pulse fires post-completion in a separate Sana-side instrument
+  (<code>05-evaluate/l1-pulse-survey.md</code>), not from inside the SCO. Documented
+  here so reviewers don't flag the absence.</li>
+<li>The shell <code>coachMarks.show()</code> anchors to <code>#help-button</code>; if Sana's iframe
+  wrapper occludes the top bar on small viewports the coach-mark may render
+  off-screen. Mitigated by the inline <code>.m1-callout</code> inside the worked-example
+  modal — same job-aid information surfaced without depending on the shell
+  positioning logic.</li>
+</ul>
+<h2 id="9-references">9 · References</h2>
+<ul>
+<li>Brief §§5 (success measures), 7 (constraints), 9 (A.S.), 10.1 (M.G.),
+  10.4 (P.B.), 11 (GC-01, GC-17, GC-19, GC-20), 12.1 (Maria), 12.3 (Emma),
+  18.2 (brand voice), 18.3 (visual brand).</li>
+<li>Storyboard: <code>02-design/module-storyboards/M1-diagnostic-opener.md</code>.</li>
+<li>Learning outcomes: <code>02-design/learning-outcomes-abcd-bloom.md</code> §4.1
+  (LO-M1.1 / LO-M1.2 / LO-M1.3).</li>
+<li>UX system: <code>02-design/ux-design-system.md</code> §1 (tokens), §6 (signalling),
+  §7 (motion), §9 (WCAG).</li>
+<li>Shell API: <code>03-develop/scorm-shell/README.md</code> §§3–5; event-log spec
+  <code>03-develop/scorm-shell/event-log-spec.md</code>.</li>
+<li>Decisions: <code>D-005</code> (custom SCORM), <code>D-006</code> (no audio), <code>D-007</code> (mini-OS).</li>
+<li>Frameworks: Gagné (1985); Merrill (2002); Renkl &amp; Atkinson (2003);
+  Mayer (2014); Sweller, Ayres &amp; Kalyuga (2011); Van Merriënboer &amp; Kirschner (2018).</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Built by <strong style="color:var(--ink-dim);">Mario Rafael Becerra Dueñas</strong> · pipeline/engagement/03-develop\module-01-diagnostic-opener/design-log.md</span>
+  <span><a href="../../../../">mario.grasslms.online</a></span>
+</footer>
+
+</body>
+</html>

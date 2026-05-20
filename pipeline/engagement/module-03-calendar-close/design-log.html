@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Module 3 · M3 Calendar Close · design log — FinTechCard Engagement · Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="Implementation-side decisions made during Phase 3 build. Read alongside the
+storyboard (02-design/module-storyboards/M3-calendar-close.md) and the
+shell docs (03-develop/scorm-shell/README.md)."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fafbf6; --paper: #ffffff;
+  --ink: #0a1a10; --ink-dim: #4d5a51; --ink-faint: #6b7a70;
+  --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
+  --rule: #e6e8e4;
+  --accent: #0a8754; --green-700: #07683f; --green-300: #8fd770; --green-50: #ecf9e7;
+  --sun-300: #ffe066; --sun-500: #f5b800; --sun-50: #fffbe5;
+  --coral-700: #c33d22; --coral-500: #ff7a5c; --coral-50: #fff0eb;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cream topbar (Mario portfolio style — NOT dark navy) */
+.topbar {
+  background: var(--bg); color: var(--ink);
+  padding: 12px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  position: sticky; top: 0; z-index: 40;
+  border-bottom: 1px solid var(--rule);
+}
+.topbar .brand { display: flex; align-items: center; gap: 12px; color: var(--ink-dim); }
+.topbar .brand .mark {
+  font-family: var(--mono); font-weight: 700; color: var(--accent); font-size: 12px;
+}
+.topbar .brand .crumb { color: var(--ink-faint); }
+.topbar .actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.topbar .nav-link {
+  background: transparent; color: var(--ink-dim);
+  border: none; text-decoration: none;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+}
+.topbar .nav-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+main.sheet {
+  max-width: 820px; margin: 40px auto 24px; padding: 0 32px;
+}
+@media (max-width: 720px) {
+  main.sheet { margin: 24px auto; padding: 0 18px; }
+}
+
+/* Lively signature: Manrope 800 H1 with rotated sun-300 highlight */
+main.sheet h1 {
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(34px, 5.2vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+main.sheet h1 em {
+  font-style: normal;
+  background: var(--sun-300);
+  padding: 0 10px;
+  border-radius: 8px;
+  display: inline-block;
+  transform: rotate(-1deg);
+  color: var(--ink);
+}
+main.sheet h1::after {
+  content: "";
+  display: block;
+  width: 64px; height: 2px;
+  background: var(--accent);
+  margin-top: 18px;
+}
+
+/* H2 (manual section numbers preserved from author's markdown) */
+main.sheet h2 {
+  font-family: var(--sans); color: var(--ink);
+  font-weight: 800; letter-spacing: -0.015em;
+  font-size: 26px; line-height: 1.2;
+  margin: 56px 0 14px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+main.sheet h2:first-of-type { border-top: none; padding-top: 0; margin-top: 36px; }
+
+main.sheet h3 {
+  font-family: var(--sans); color: var(--ink);
+  font-weight: 800; font-size: 17px; line-height: 1.3;
+  margin: 28px 0 8px; letter-spacing: -0.01em;
+}
+main.sheet h4 {
+  font-family: var(--mono); color: var(--green-700);
+  font-weight: 700; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin: 24px 0 8px;
+}
+main.sheet h5 {
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--ink-faint); margin: 20px 0 6px;
+}
+
+main.sheet p { margin: 0.8em 0; }
+main.sheet a {
+  color: var(--green-700); text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+main.sheet a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+main.sheet strong { color: var(--ink); font-weight: 700; }
+main.sheet em { color: var(--ink-dim); font-style: italic; }
+
+main.sheet ul, main.sheet ol { margin: 0.6em 0; padding-left: 24px; }
+main.sheet li { margin: 0.3em 0; }
+main.sheet li > p { margin: 0.3em 0; }
+
+main.sheet hr {
+  border: none; border-top: 1px solid var(--rule);
+  margin: 40px 0;
+}
+
+main.sheet blockquote {
+  margin: 1.2em 0; padding: 14px 20px;
+  background: var(--green-50); border-left: 3px solid var(--accent);
+  border-radius: 0;
+  color: var(--ink-700); font-size: 15px; line-height: 1.55;
+}
+main.sheet blockquote p { margin: 0.4em 0; }
+main.sheet blockquote cite {
+  display: block;
+  font-family: var(--mono); font-style: normal;
+  font-size: 11px; color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-top: 10px;
+}
+
+main.sheet code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+  color: var(--green-700);
+}
+main.sheet pre {
+  background: var(--ink-50); padding: 16px 20px;
+  border-left: 3px solid var(--accent);
+  overflow-x: auto; font-size: 12.5px; line-height: 1.55;
+  margin: 1.2em 0;
+}
+main.sheet pre code {
+  background: none; padding: 0; color: var(--ink);
+}
+
+main.sheet table {
+  width: 100%; border-collapse: collapse; margin: 1.2em 0;
+  font-size: 13.5px;
+  border-top: 1px solid var(--rule);
+}
+main.sheet thead th {
+  background: var(--ink-50); color: var(--ink-dim);
+  text-align: left; padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;
+}
+main.sheet tbody td {
+  padding: 12px 14px; border-bottom: 1px solid var(--rule);
+  vertical-align: top; line-height: 1.5;
+}
+
+footer.foot {
+  max-width: 820px; margin: 32px auto 48px; padding: 24px 32px 0;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+  color: var(--ink-faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  border-top: 1px solid var(--rule);
+  text-transform: uppercase;
+}
+footer.foot a { color: var(--green-700); text-decoration: none; border-bottom: 1px solid currentColor; }
+footer.foot a:hover { color: var(--accent); }
+@media (max-width: 720px) {
+  footer.foot { padding: 24px 18px 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="mark">M·</span>
+    <span class="crumb">03-develop\module-03-calendar-close/design-log.md</span>
+  </div>
+  <div class="actions">
+    <a class="nav-link" href="../../../../">← Portfolio</a>
+    <a class="nav-link" href="../../../">← Pipeline</a>
+    <a class="nav-link" href="../../">← Engagement</a>
+  </div>
+</div>
+
+<main class="sheet">
+<h1 id="module-3-m3-calendar-close-design-log">Module 3 · M3 Calendar Close · design log</h1>
+<blockquote>
+<p>Implementation-side decisions made during Phase 3 build. Read alongside the
+storyboard (<code>02-design/module-storyboards/M3-calendar-close.md</code>) and the
+shell docs (<code>03-develop/scorm-shell/README.md</code>).</p>
+</blockquote>
+<h2 id="d-m3-01-habit-gate-ui-disabled-button-vs-warning-toast">D-M3-01 · Habit gate UI: disabled button vs warning toast</h2>
+<p><strong>Decision.</strong> The Dial button is rendered in a <strong>disabled-but-focusable</strong>
+state until the Calendar app opens. We deliberately did <em>not</em> use a
+transient warning toast.</p>
+<p><strong>Why disabled-button wins for habit formation.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Affordance</th>
+<th>What it teaches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Disabled-button (chosen)</strong></td>
+<td>The habit is the <em>precondition</em>. There is no path to dial without Calendar open. Friction is felt up-front, every time, which is exactly how a habit installs (Wood &amp; Rünger 2016 on cue-contingent automaticity).</td>
+</tr>
+<tr>
+<td>Warning toast on dial-without-calendar</td>
+<td>Teaches the rep that the system tolerates the slip but disapproves. The rep can dismiss the toast and continue. Habit never installs because the cue (Calendar) and the response (dial) are not coupled.</td>
+</tr>
+<tr>
+<td>Hard-error modal</td>
+<td>Punitive · breaks Mayer coherence · violates §10.5 anti-public-shaming signal.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>A11y mechanics of the disabled state</strong> (per <code>ux-design-system.md</code> §9 +
+WCAG 2.1 SC 1.3.1 / 4.1.2):</p>
+<ul>
+<li>The button uses <strong><code>aria-disabled="true"</code></strong>, <em>not</em> the <code>disabled</code> HTML
+  attribute. This keeps the element <strong>in the Tab order</strong>.</li>
+<li>It carries <strong><code>aria-describedby="dial-gate-hint"</code></strong>, pointing to a visually
+  hidden <code>&lt;div id="dial-gate-hint"&gt;</code> in <code>index.html</code>. Screen readers (NVDA,
+  JAWS, VoiceOver) announce the reason text every time the button receives
+  focus: <em>"Open the Calendar app before dialling. Calendar must be in a
+  second window — that is the habit. The Dial button enables the moment
+  Calendar opens."</em></li>
+<li>A <code>click</code> handler is bound but no-ops when <code>aria-disabled === "true"</code>,
+  and re-announces the rule into <code>#focus-announcer</code> (the
+  <code>aria-live="polite"</code> region) so a sighted keyboard rep also hears why
+  nothing happened.</li>
+<li>Visual state uses a diagonal-stripe overlay + a "Calendar required" mono
+  pill in muted red. Focus-ring is <em>never</em> removed — keyboard users see
+  the focus indicator even on the gated state (WCAG 2.4.7).</li>
+<li>Once Calendar opens, <code>aria-disabled</code> flips to <code>"false"</code>, the stripe is
+  removed, and the gate coach-mark dismisses itself.</li>
+</ul>
+<p>This pattern is the same one the W3C ARIA Authoring Practices Guide
+recommends for "input-blocked-pending-precondition" actions.</p>
+<h2 id="d-m3-02-lo-m31-is-event-log-only-not-quizzed">D-M3-02 · LO-M3.1 is event-log only, not quizzed</h2>
+<p><strong>Decision.</strong> The quiz has <strong>3 items</strong> covering <strong>LO-M3.2</strong> (state two
+slots + send during call) and <strong>LO-M3.3</strong> (recognise the cost of
+delayed-invite anti-patterns). <strong>LO-M3.1</strong> (open Calendar pre-dial · habit)
+is <em>not</em> on the quiz.</p>
+<p><strong>Why.</strong></p>
+<ul>
+<li><strong>A quiz cannot evidence a habit.</strong> A multiple-choice item asking
+  "should you open Calendar before dialling?" has only one defensible
+  answer and produces no signal. Every rep will tick yes; the item
+  discriminates nothing (<code>l2-quiz-blueprint.md</code> discrimination floor).</li>
+<li><strong>The solo problem already evidences it.</strong> The mini-OS dial button is
+  hard-gated on <code>calendar_opened</code> firing. The KPI
+  <code>calendar_open_before_dial</code> flips boolean <em>in the event log</em> the moment
+  the rep dials. That is the assessment — and it is behavioural, not
+  declarative.</li>
+<li><strong>Mager ABCD compliance.</strong> LO-M3.1's <code>D</code> (degree) is "100 % of dial
+  sequences start with Calendar already open" — instrumented, not
+  multiple-choice (see <code>learning-outcomes-abcd-bloom.md</code> §4.3).</li>
+<li><strong>Cohort-time budget.</strong> With three items at ~30 s each, the quiz fits
+  in the 0:30 slot at 9:00–9:30. Adding a fourth nominal item to "cover"
+  LO-M3.1 would steal time from the more diagnostic LO-M3.2/LO-M3.3 items.</li>
+</ul>
+<p>The L3 manager rubric <em>does</em> score the habit (rubric row M3, anchor 4-5
+prerequisite). That is the right place — manager observation captures
+"did you actually open Calendar?" without the rep gaming the answer.</p>
+<h2 id="d-m3-03-dry-run-timing-budget">D-M3-03 · Dry-run timing budget</h2>
+<table>
+<thead>
+<tr>
+<th>Slice</th>
+<th>Budget</th>
+<th>Actual (dry-run pacing)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0:00–0:30 Gain attention</td>
+<td>0:30</td>
+<td>~0:25</td>
+<td>Outreach ping + M.G. quote; quick.</td>
+</tr>
+<tr>
+<td>0:30–1:00 State outcome</td>
+<td>0:30</td>
+<td>~0:30</td>
+<td>Two bullets + key line.</td>
+</tr>
+<tr>
+<td>1:00–1:30 Recall prior</td>
+<td>0:30</td>
+<td>~0:25</td>
+<td>3-row M1/M2/M3 recap.</td>
+</tr>
+<tr>
+<td>1:30–3:00 Worked example</td>
+<td>1:30</td>
+<td>~1:45</td>
+<td>Reading the transcript is the long pole; transcript trimmed to 9 turns to stay close to budget.</td>
+</tr>
+<tr>
+<td>3:00–5:00 Completion problem</td>
+<td>2:00</td>
+<td>~1:30</td>
+<td>4 options × ~10 s read + 30 s feedback.</td>
+</tr>
+<tr>
+<td>5:00–8:00 Solo problem</td>
+<td>3:00</td>
+<td>~2:45</td>
+<td>Habit-gate ~10 s · slot picker ~20 s · Salesforce modal ~15 s.</td>
+</tr>
+<tr>
+<td>8:00–9:00 Feedback timeline</td>
+<td>1:00</td>
+<td>~0:45</td>
+<td>4–6 timeline entries.</td>
+</tr>
+<tr>
+<td>9:00–9:30 Quiz (3 items)</td>
+<td>0:30</td>
+<td>~1:00</td>
+<td>Honest: 3 items × ~20 s is slightly over; acceptable slip — quiz is the assessment.</td>
+</tr>
+<tr>
+<td>9:30–10:00 Key takeaway + L1</td>
+<td>0:30</td>
+<td>~0:25</td>
+<td>One quote card + retention card.</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>10:00</strong></td>
+<td><strong>~9:50</strong></td>
+<td>Within the brief §7 ≤10-min cohort tolerance.</td>
+</tr>
+</tbody>
+</table>
+<p>Acknowledged slip: the quiz slot is ~30 s over budget; the worked-example
+slot is ~15 s over. Both are recoverable by trimming the GC-01 transcript
+turns 2–3 in Phase 4 cohort-1 review if pacing data shows median rep
+exceeds 10:00.</p>
+<h2 id="d-m3-04-a11y-note-on-the-disabled-dial-button">D-M3-04 · A11y note on the disabled-dial-button</h2>
+<p>Repeated here for the Phase 3 a11y audit checklist
+(<code>scorm-shell/a11y-audit.md</code>):</p>
+<ul>
+<li><strong>Keyboard reachable.</strong> Yes — <code>aria-disabled="true"</code> is used instead of
+  <code>disabled</code>. Verified Tab order in <code>index.html</code> reaches the button after
+  the Outreach lead-list and before the "Open Calendar" sibling button.</li>
+<li><strong>Announces reason on focus.</strong> Yes — <code>aria-describedby="dial-gate-hint"</code>
+  points to a <code>.sr-only</code> <code>&lt;div&gt;</code> containing the rule text. NVDA + JAWS
+  both read it on focus.</li>
+<li><strong>Announces reason on attempted click.</strong> Yes — the click handler writes
+  the rule into <code>#focus-announcer</code> (<code>aria-live="polite"</code>) on gated clicks.</li>
+<li><strong>Visual state has 3:1 minimum contrast.</strong> Yes — stripe pattern uses
+  rgba(180,35,24, 0.16) over <code>--ftc-surface</code> <code>#f6f8fa</code> and the
+  "Calendar required" pill uses <code>--ftc-danger-muted</code> <code>#b42318</code> on
+  rgba(180,35,24,0.12), measured ≥ 5.1:1.</li>
+<li><strong>Focus indicator never suppressed.</strong> Yes — <code>.dial-button:focus-visible</code>
+  applies a 3 px <code>--ftc-green-dark</code> outline at <code>outline-offset: 3px</code> in
+  every state, including <code>aria-disabled="true"</code>.</li>
+<li><strong>Reduced motion honoured.</strong> Yes — the gate coach-mark has no motion;
+  the diagonal stripe is a static gradient.</li>
+</ul>
+<h2 id="d-m3-05-event-ordering-invariant">D-M3-05 · Event ordering invariant</h2>
+<p>The runtime enforces the following partial order on the solo-problem
+event log; analytics in Phase 5 read this ordering as a correctness check.</p>
+<pre><code>calendar_opened
+    └── phone_dial_attempt { calendar_open_before_dial: true }
+            └── slots_stated  (×2)
+                    └── invite_sent
+                            └── next_step_booked_set
+                                    └── solo_problem_completed
+</code></pre>
+<p>If <code>phone_dial_attempt</code> precedes <code>calendar_opened</code>, the gate is broken and
+LO-M3.1 fails — but in the current build the disabled-button gate makes
+that path unreachable in normal use. A separate "broken gate" smoke test
+sits in the Phase 3 a11y audit pack and forces the failure path by JS-
+toggling <code>aria-disabled</code> to verify telemetry still records it accurately.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>Brief §§10.1, 10.5, 11 (GC-01/03/10/11/19/22), 15.1, 18.2, 18.3.</li>
+<li><code>02-design/module-storyboards/M3-calendar-close.md</code>.</li>
+<li><code>02-design/learning-outcomes-abcd-bloom.md</code> §4.3 (LO-M3.1 + LO-M3.2).</li>
+<li><code>02-design/ux-design-system.md</code> §§1, 6, 9.</li>
+<li><code>03-develop/scorm-shell/event-log-spec.md</code>.</li>
+<li>W3C ARIA Authoring Practices Guide — "disabled-but-focusable" pattern.</li>
+<li>Wood, W., &amp; Rünger, D. (2016). "Psychology of habit." <em>Annual Review of
+  Psychology</em>, 67, 289–314.</li>
+<li>Decisions inherited: <code>D-005</code> custom SCORM · <code>D-006</code> no audio ·
+  <code>D-007</code> mini-OS.</li>
+</ul>
+</main>
+
+<footer class="foot">
+  <span>Built by <strong style="color:var(--ink-dim);">Mario Rafael Becerra Dueñas</strong> · pipeline/engagement/03-develop\module-03-calendar-close/design-log.md</span>
+  <span><a href="../../../../">mario.grasslms.online</a></span>
+</footer>
+
+</body>
+</html>
