@@ -1306,19 +1306,12 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .timeline { list-style: none; padding: 0; margin: 0; }
 .tl-row {
-  display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 16px;
+  display: block;
   padding: 14px 0;
   border-bottom: 1px dashed var(--rule);
-  align-items: baseline;
 }
 .tl-row:last-child { border-bottom: none; }
-.tl-yr {
-  font-family: var(--mono); font-size: 11px;
-  color: var(--ink-faint);
-  letter-spacing: .04em;
-}
+.tl-yr { display: none; } /* Mario rule 2026-05-20: roles + companies only, no years */
 .tl-body .co {
   font-family: var(--sans); font-weight: 800; font-size: 20px;
   color: var(--ink); line-height: 1.1;
@@ -2081,7 +2074,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   <div class="section-head">
     <span class="num">§ 01 / CASES</span>
     <h2>Four programs<br>I shipped<em>.</em></h2>
-    <span class="count">end-to-end ID · 2023 — 2026</span>
+    <span class="count">end-to-end ID</span>
   </div>
 
   <div class="cases">
@@ -2093,7 +2086,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
       <div class="case-employer">Yandex Practicum</div>
       <h3>Career-switcher curriculum,<br><em>reverse-designed</em> from hiring requirements</h3>
-      <p class="case-period">Jan 2023 — Jan 2024 · Learning Experience Designer</p>
+      <p class="case-period">Learning Experience Designer</p>
       <p class="case-desc">End-to-end curricula for Web Design, UX/UI and Graphic Design programs aligned with industry hiring requirements. Cross-functional pipeline: designers, developers, reviewers; on-time cohort launches every 4–6 weeks.</p>
       <div class="case-tags">
         <span>4C/ID</span><span>multi-modal</span><span>Kirkpatrick L1–L4</span><span>cross-functional</span>
@@ -2108,7 +2101,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
       <div class="case-employer">TripleTen (Nebius Group)</div>
       <h3>15+ B2B courses<br><em>localised</em> for Latin America</h3>
-      <p class="case-period">Jan 2024 — Oct 2024 · Learning Experience Designer</p>
+      <p class="case-period">Learning Experience Designer</p>
       <p class="case-desc">Localised 15+ B2B courses for the LatAm market — cultural + professional context adaptation. Cross-functional status-tracking system that improved team visibility and cut handoff delays. HeyGen AI-avatar scripts and presentations for video-based learning.</p>
       <div class="case-tags">
         <span>localisation</span><span>HeyGen scripts</span><span>SME collab</span><span>status pipeline</span>
@@ -2123,7 +2116,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
       <div class="case-employer">BEAM Institute of Technology</div>
       <h3>Data Governance course built<br>with <em>Billigence</em> SMEs</h3>
-      <p class="case-period">2024 — 2026 · Learning Experience Designer · Freelance · project-based</p>
+      <p class="case-period">Learning Experience Designer · Freelance · project-based</p>
       <p class="case-desc">Full instructional design cycle from scratch at BEAM Institute, with subject-matter experts from Billigence (data governance consultancy): needs analysis, curriculum architecture, content development, QA. Coordinated with industry practitioners to keep real-world relevance and up-to-date regulatory content.</p>
       <div class="case-tags">
         <span>regulated content</span><span>SME-driven</span><span>full ID cycle</span><span>industry practitioners</span>
@@ -2138,7 +2131,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
       <div class="case-employer">FinTechCard Ltd.</div>
       <h3>SDR ramp <em>compressed</em><br>95 → 71 days · three keystone moves</h3>
-      <p class="case-period">2026 · Lead LXD · 16-week engagement · 6-month measurement window</p>
+      <p class="case-period">Lead LXD · 16-week engagement · 6-month measurement window</p>
       <p class="case-desc">End-to-end ADDIE engagement (Analyse → Iterate). 6 SCORM 1.2 modules running in a custom mini-OS that simulates the SDR's actual workspace — Outreach, Gong, Salesforce, LinkedIn, Calendar, phone-dialler, Slack. 3-row manager call-review rubric; Kirkpatrick L1–L4 wired to existing dashboards. 20 LXD frameworks named + cited; critic-loop QA gate per phase.</p>
       <div class="case-tags">
         <span>4C/ID</span><span>mini-OS sim</span><span>M1/M2/M3</span><span>Kirkpatrick L4</span><span>SCORM 1.2</span>
@@ -2269,7 +2262,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   <div class="section-head">
     <span class="num">§ 03 / ENGAGEMENT</span>
     <h2>Current work</h2>
-    <span class="count">2025 — present · freelance</span>
+    <span class="count">freelance · current</span>
   </div>
 
   <article class="engagement">
