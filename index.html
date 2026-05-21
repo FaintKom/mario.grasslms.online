@@ -140,13 +140,19 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   position: relative;
 }
 .hero-meta {
-  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 8px;
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 8px 16px;
   font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
   color: var(--ink-dim);
   padding-bottom: 20px;
   border-bottom: 1px dashed var(--rule);
   margin-bottom: 28px;
+}
+@media (max-width: 900px) {
+  .hero-meta { grid-template-columns: 1fr 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .hero-meta { grid-template-columns: 1fr 1fr; }
 }
 .hero-meta .k { color: var(--ink-faint); display: block; font-size: 10px; margin-bottom: 2px; }
 .hero-meta .v { color: var(--ink); font-weight: 500; }
@@ -2467,7 +2473,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       <a class="navlink" href="#flagship">GrassLMS</a>
       <a class="navlink" href="#demos">Demos</a>
       <a class="navlink" href="#background">Services</a>
-      <a class="navlink" href="#contact">Booking</a>
     </nav>
   </div>
 </header>
@@ -2478,8 +2483,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <section class="hero">
   <div class="hero-meta">
     <div><span class="k">Location</span><span class="v">Türkiye · ready to relocate to Spain · Remote EU</span></div>
-    <div><span class="k">Role</span><span class="v">LXD · AI EdTech Engineer</span></div>
     <div><span class="k">Phone</span><span class="v"><a href="tel:+905059412268" style="color:inherit; text-decoration:none;">+90 505 941 22 68</a></span></div>
+    <div><span class="k">LinkedIn</span><span class="v"><a href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">in/mario-rafael-id-lxd ↗</a></span></div>
+    <div><span class="k">Email</span><span class="v"><a href="mailto:mrbecerraduenias@gmail.com" style="color:inherit; text-decoration:none;">mrbecerraduenias@gmail.com</a></span></div>
+    <div><span class="k">CV</span><span class="v"><a href="Mario_Becerra_CV.pdf" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">Mario_Becerra_CV.pdf ↓</a></span></div>
   </div>
 
   <h1>Mario Rafael<br>Becerra Dueñas<em>.</em></h1>
@@ -2488,15 +2495,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <p class="hero-lede">
       <b>Learning Experience Designer</b> with 10+ years in EdTech. End-to-end curricula at Yandex Practicum, TripleTen and BEAM Institute — plus the AI tooling that lets a content team ship faster: 4C/ID pipelines, internal automations, an LMS shipped solo.
     </p>
-    <div class="hero-actions">
-      <a class="hero-pipeline-cta" href="pipeline/engagement/">Open the SCORM + mini-OS sandbox <span class="arrow">→</span></a>
-      <div class="hero-actions-secondary">
-        <a class="hero-link" href="pipeline/mini-cases/">3 SCORM mini-cases <span class="arrow">→</span></a>
-        <a class="hero-link" href="Mario_Becerra_CV.pdf" target="_blank" rel="noopener">CV (PDF) <span class="arrow">↓</span></a>
-        <a class="hero-link" href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
-        <a class="hero-link" href="mailto:mrbecerraduenias@gmail.com">Email</a>
-      </div>
-    </div>
     <div class="hero-stats">
       <div><div class="n">10+</div><div class="l">yrs in EdTech</div></div>
       <div><div class="n">50+</div><div class="l">courses designed</div></div>
@@ -3119,140 +3117,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 </section>
 
 <!-- ============ CONSULTATION FORM ============ -->
-<section class="wrap booking" id="contact">
-  <div class="section-head">
-    <span class="sec-n">§ 06</span>
-    <h2>Book a<br><em>consultation.</em></h2>
-    <span class="sec-meta">free · 30 min · zoom / google meet</span>
-  </div>
-
-  <div class="booking-grid">
-    <aside class="booking-side">
-      <div class="booking-side-block">
-        <span class="bs-k">What we'll cover</span>
-        <ul class="bs-list">
-          <li>Your current bottleneck — onboarding ramp time, content production speed, or measurement gap</li>
-          <li>Where ID craft pays off vs. where AI tooling pays off (and the order to apply them)</li>
-          <li>A 2–4 week scoped plan if it makes sense to keep going</li>
-        </ul>
-      </div>
-      <div class="booking-side-block">
-        <span class="bs-k">Who it's for</span>
-        <ul class="bs-list">
-          <li>Sales Enablement, L&amp;D, and Revenue Operations leaders</li>
-          <li>EdTech content teams of 10+ shipping at cohort cadence</li>
-          <li>Founders building their own LMS or internal training tooling</li>
-        </ul>
-      </div>
-      <div class="booking-side-block">
-        <span class="bs-k">What you'll get</span>
-        <ul class="bs-list">
-          <li>A written summary with prioritised recommendations</li>
-          <li>A cost + timeline estimate if we move forward</li>
-        </ul>
-      </div>
-      <div class="booking-side-block alt">
-        <span class="bs-k">Direct contact</span>
-        <a href="mailto:mrbecerraduenias@gmail.com" class="bs-direct">mrbecerraduenias@gmail.com</a>
-        <a href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener" class="bs-direct">LinkedIn →</a>
-      </div>
-    </aside>
-
-    <form class="booking-form" id="bookingForm" onsubmit="submitBooking(event)" novalidate>
-      <div class="bf-row">
-        <label class="bf-field">
-          <span class="bf-k"><i>01</i> Name</span>
-          <input type="text" name="name" required placeholder="What should I call you?"/>
-        </label>
-        <label class="bf-field">
-          <span class="bf-k"><i>02</i> Company / project <em>optional</em></span>
-          <input type="text" name="company" placeholder="Where you work"/>
-        </label>
-      </div>
-
-      <div class="bf-row">
-        <label class="bf-field">
-          <span class="bf-k"><i>03</i> Email</span>
-          <input type="email" name="email" required placeholder="you@company.com"/>
-        </label>
-        <label class="bf-field">
-          <span class="bf-k"><i>04</i> Telegram / WhatsApp <em>optional</em></span>
-          <input type="text" name="messenger" placeholder="@username"/>
-        </label>
-      </div>
-
-      <fieldset class="bf-field bf-choice">
-        <legend class="bf-k"><i>05</i> What you need help with</legend>
-        <div class="bf-chips">
-          <label class="bf-chip"><input type="checkbox" name="topic" value="ai-pipeline"/><span>AI content pipelines</span></label>
-          <label class="bf-chip"><input type="checkbox" name="topic" value="trainers"/><span>Interactive trainers</span></label>
-          <label class="bf-chip"><input type="checkbox" name="topic" value="tools"/><span>Internal tools</span></label>
-          <label class="bf-chip"><input type="checkbox" name="topic" value="lms"/><span>LMS / platform</span></label>
-          <label class="bf-chip"><input type="checkbox" name="topic" value="audit"/><span>Process audit</span></label>
-          <label class="bf-chip"><input type="checkbox" name="topic" value="other"/><span>Something else</span></label>
-        </div>
-      </fieldset>
-
-      <fieldset class="bf-field bf-choice">
-        <legend class="bf-k"><i>06</i> Project budget <em>rough</em></legend>
-        <div class="bf-radios">
-          <label class="bf-radio"><input type="radio" name="budget" value="lt-3k"/><span>&lt; $3,000</span></label>
-          <label class="bf-radio"><input type="radio" name="budget" value="3-10k"/><span>$3 — 10,000</span></label>
-          <label class="bf-radio"><input type="radio" name="budget" value="10-30k"/><span>$10 — 30,000</span></label>
-          <label class="bf-radio"><input type="radio" name="budget" value="30k+"/><span>&gt; $30,000</span></label>
-          <label class="bf-radio"><input type="radio" name="budget" value="tbd" checked/><span>Not sure yet</span></label>
-        </div>
-      </fieldset>
-
-      <fieldset class="bf-field bf-choice">
-        <legend class="bf-k"><i>07</i> When you want to start</legend>
-        <div class="bf-radios">
-          <label class="bf-radio"><input type="radio" name="timeline" value="now"/><span>Urgent — this week</span></label>
-          <label class="bf-radio"><input type="radio" name="timeline" value="month" checked/><span>Within a month</span></label>
-          <label class="bf-radio"><input type="radio" name="timeline" value="quarter"/><span>This quarter</span></label>
-          <label class="bf-radio"><input type="radio" name="timeline" value="explore"/><span>Just exploring</span></label>
-        </div>
-      </fieldset>
-
-      <label class="bf-field">
-        <span class="bf-k"><i>08</i> Describe the task</span>
-        <textarea name="brief" rows="5" placeholder="What hurts? What have you tried? What would a good outcome look like?"></textarea>
-      </label>
-
-      <div class="bf-foot">
-        <button type="submit" class="bf-submit">
-          <span>Send request</span>
-          <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 5h12M9 1l4 4-4 4"/></svg>
-        </button>
-        <span class="bf-note">I'll reply within 24 hours · your data stays with me</span>
-      </div>
-
-      <div class="bf-success" id="bfSuccess" hidden>
-        <strong>Request sent.</strong> I'll reply to your email within 24 hours with time slots for a call.
-      </div>
-    </form>
-  </div>
-
-  <footer class="foot-legal">
-    <span>© 2026 · Mario Rafael Becerra Dueñas</span>
-    <span>Hand-built in HTML, CSS, JS · Manrope + Geist Mono</span>
-  </footer>
-</section>
-
-<!-- ============ STICKY CTA ============
-     Floating CTA in the bottom-right. Hides when the booking form (#contact)
-     enters the viewport — so it never overlaps.
-============================================== -->
-<a class="sticky-cta" href="#contact" id="stickyCta" aria-label="Book a consultation">
-  <span class="sticky-cta-pulse" aria-hidden="true"></span>
-  <span class="sticky-cta-label">
-    <b>Book a call</b>
-    <em>30-min consultation</em>
-  </span>
-  <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-    <path d="M1 5h12M9 1l4 4-4 4"/>
-  </svg>
-</a>
+<footer class="wrap foot-legal">
+  <span>© 2026 · Mario Rafael Becerra Dueñas</span>
+  <span>Hand-built in HTML, CSS, JS · Manrope + Geist Mono</span>
+</footer>
 
 <!-- ============ MODAL ============ -->
 <div class="scrim" id="scrim" onclick="if(event.target===this)closeModal()">
@@ -4029,91 +3897,6 @@ init();
 </script>
 
 
-<script>
-function submitBooking(e){
-  e.preventDefault();
-  const form = e.target;
-  const data = new FormData(form);
-  // collect topics
-  const topics = [...form.querySelectorAll('input[name="topic"]:checked')].map(i=>i.value);
-  const payload = {
-    name: data.get('name'),
-    company: data.get('company'),
-    email: data.get('email'),
-    messenger: data.get('messenger'),
-    topics,
-    budget: data.get('budget'),
-    timeline: data.get('timeline'),
-    brief: data.get('brief'),
-  };
-  // Booking submissions reach Mario via mailto handoff — opens the
-  // visitor's mail client with payload pre-filled to mrbecerraduenias@gmail.com.
-  // Client-side log kept for quick verification.
-  console.log('[booking submit]', payload);
-  const subject = `Booking · ${payload.name || 'website visitor'}${payload.company ? ' (' + payload.company + ')' : ''}`;
-  const lines = [
-    `Name: ${payload.name || ''}`,
-    payload.company ? `Company: ${payload.company}` : null,
-    `Email: ${payload.email || ''}`,
-    payload.messenger ? `Messenger: ${payload.messenger}` : null,
-    payload.topics?.length ? `Topics: ${payload.topics.join(', ')}` : null,
-    payload.budget ? `Budget: ${payload.budget}` : null,
-    payload.timeline ? `Timeline: ${payload.timeline}` : null,
-    '',
-    'Brief:',
-    payload.brief || '(none)',
-    '',
-    '--- Sent from mario.grasslms.online booking form ---',
-  ].filter(Boolean);
-  const body = encodeURIComponent(lines.join('\n'));
-  const mailto = `mailto:mrbecerraduenias@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
-  // Open mail client in a new window — avoids replacing the portfolio page.
-  window.open(mailto, '_blank');
-  document.getElementById('bfSuccess').hidden = false;
-  form.querySelector('.bf-submit').disabled = true;
-  form.querySelector('.bf-submit span').textContent = 'Sent ✓';
-}
-window.submitBooking = submitBooking;
-
-// ============ STICKY CTA visibility ============
-// Скрывает кнопку когда: (а) пользователь в hero (первый экран — рано звать)
-// и (б) когда форма записи уже в viewport (не нужно дублировать).
-(function(){
-  const cta = document.getElementById('stickyCta');
-  if (!cta) return;
-  // start hidden, fade in after scrolling past hero
-  cta.classList.add('deferred');
-  const hero = document.querySelector('.hero');
-  const contact = document.getElementById('contact');
-
-  if ('IntersectionObserver' in window){
-    const heroObs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting && e.intersectionRatio > 0.4){
-          cta.classList.add('deferred');
-        } else {
-          cta.classList.remove('deferred');
-        }
-      });
-    }, { threshold: [0, 0.4, 1] });
-    if (hero) heroObs.observe(hero);
-
-    const contactObs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting){
-          cta.classList.add('hidden');
-        } else {
-          cta.classList.remove('hidden');
-        }
-      });
-    }, { threshold: 0.15 });
-    if (contact) contactObs.observe(contact);
-  } else {
-    // no IO support — just show always
-    cta.classList.remove('deferred');
-  }
-})();
-</script>
 
 </body>
 </html>
