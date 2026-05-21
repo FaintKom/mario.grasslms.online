@@ -34,44 +34,41 @@
           <div class="eyebrow">FinTechCard · SDR Onboarding · Live Simulation</div>
           <h1>FinTechCard SDR mini-OS</h1>
           <p>A custom mini-OS that simulates the workspace a new SDR uses on a real call: seven apps the rep switches between — Outreach for the dialler, Gong for call review, Salesforce for the next-step, Calendar for the close, LinkedIn for research, Phone for live conversation, Slack for team comms.</p>
-          <p style="margin-top: 12px; color: rgba(255,255,255,0.72); font-size: 14px;">Synthetic brief · illustrative SCORM 1.2 example · runs in any LMS or standalone.</p>
-        </div>
-
-        <div>
-          <p style="color: rgba(255,255,255,0.92); font-weight: 600; margin-bottom: 12px;">Or browse the 7 simulated apps standalone — click any icon to launch it as a window:</p>
-          <div class="app-launchers" role="toolbar" aria-label="App launchers">
-            <button type="button" data-launch="outreach" class="app-card">
-              <span class="app-card__glyph"><span data-brand-icon="outreach" data-brand-icon-size="52"></span></span>
-              <span class="app-card__name">Outreach</span>
-            </button>
-            <button type="button" data-launch="gong" class="app-card">
-              <span class="app-card__glyph"><span data-brand-icon="gong" data-brand-icon-size="52"></span></span>
-              <span class="app-card__name">Gong</span>
-            </button>
-            <button type="button" data-launch="salesforce" class="app-card">
-              <span class="app-card__glyph"><span data-brand-icon="salesforce" data-brand-icon-size="52"></span></span>
-              <span class="app-card__name">Salesforce</span>
-            </button>
-            <button type="button" data-launch="linkedin-ch" class="app-card">
-              <span class="app-card__glyph"><span data-brand-icon="linkedin-ch" data-brand-icon-size="52"></span></span>
-              <span class="app-card__name">LinkedIn · CH</span>
-            </button>
-            <button type="button" data-launch="calendar" class="app-card">
-              <span class="app-card__glyph"><span data-brand-icon="calendar" data-brand-icon-size="52"></span></span>
-              <span class="app-card__name">Calendar</span>
-            </button>
-            <button type="button" data-launch="phone-dialler" class="app-card">
-              <span class="app-card__glyph"><span data-brand-icon="phone-dialler" data-brand-icon-size="52"></span></span>
-              <span class="app-card__name">Phone</span>
-            </button>
-            <button type="button" data-launch="slack" class="app-card">
-              <span class="app-card__glyph"><span data-brand-icon="slack" data-brand-icon-size="52"></span></span>
-              <span class="app-card__name">Slack</span>
-            </button>
-          </div>
-          <p style="margin-top: 16px; font-size: 12px; color: rgba(255,255,255,0.75);">Tip: each app opens in its own window — drag titlebars to rearrange. Apps are simulated (no real data).</p>
+          <p style="margin-top: 12px; color: rgba(255,255,255,0.72); font-size: 14px;">Synthetic brief · illustrative SCORM 1.2 example · runs in any LMS or standalone. Click any icon on the right to launch.</p>
         </div>
       </div>
+
+      <!-- Desktop icons · always visible, even when windows open -->
+      <aside id="desktop-icons" class="desktop-icons" role="toolbar" aria-label="App launchers">
+        <button type="button" data-launch="outreach" class="app-card">
+          <span class="app-card__glyph"><span data-brand-icon="outreach" data-brand-icon-size="52"></span></span>
+          <span class="app-card__name">Outreach</span>
+        </button>
+        <button type="button" data-launch="gong" class="app-card">
+          <span class="app-card__glyph"><span data-brand-icon="gong" data-brand-icon-size="52"></span></span>
+          <span class="app-card__name">Gong</span>
+        </button>
+        <button type="button" data-launch="salesforce" class="app-card">
+          <span class="app-card__glyph"><span data-brand-icon="salesforce" data-brand-icon-size="52"></span></span>
+          <span class="app-card__name">Salesforce</span>
+        </button>
+        <button type="button" data-launch="linkedin-ch" class="app-card">
+          <span class="app-card__glyph"><span data-brand-icon="linkedin-ch" data-brand-icon-size="52"></span></span>
+          <span class="app-card__name">LinkedIn · CH</span>
+        </button>
+        <button type="button" data-launch="calendar" class="app-card">
+          <span class="app-card__glyph"><span data-brand-icon="calendar" data-brand-icon-size="52"></span></span>
+          <span class="app-card__name">Calendar</span>
+        </button>
+        <button type="button" data-launch="phone-dialler" class="app-card">
+          <span class="app-card__glyph"><span data-brand-icon="phone-dialler" data-brand-icon-size="52"></span></span>
+          <span class="app-card__name">Phone</span>
+        </button>
+        <button type="button" data-launch="slack" class="app-card">
+          <span class="app-card__glyph"><span data-brand-icon="slack" data-brand-icon-size="52"></span></span>
+          <span class="app-card__name">Slack</span>
+        </button>
+      </aside>
     </main>
 
     <nav id="taskbar" role="toolbar" aria-label="Mini-OS taskbar — open apps">
