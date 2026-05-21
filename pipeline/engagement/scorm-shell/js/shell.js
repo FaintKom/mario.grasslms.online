@@ -216,9 +216,10 @@ export class MiniOS {
       <div class="os-window-body"></div>
       <div class="os-window-resize" data-action="resize" aria-hidden="true"></div>
     `;
-    el.addEventListener("mousedown", () => this._focusWindow(winId), true);
+    el.addEventListener("mousedown", () => { if (el.dataset.minimized !== "true") this._focusWindow(winId); }, true);
     el.querySelector("[data-action='close']")?.addEventListener("click", () => this.closeApp(winId));
     el.querySelector("[data-action='maximize']")?.addEventListener("click", () => this._toggleMaximize(winId));
+    el.querySelector("[data-action='minimize']")?.addEventListener("click", (e) => { e.stopPropagation(); this._toggleMinimize(winId); });
     this._makeDraggable(el);
     this._makeResizable(el);
     return el;
@@ -324,6 +325,32 @@ export class MiniOS {
     this._focusWindow(winId);
   }
 
+  _toggleMinimize(winId) {
+    const handle = this.windows.get(winId);
+    if (!handle?.el) return;
+    const el = handle.el;
+    const next = el.dataset.minimized === "true" ? "false" : "true";
+    el.dataset.minimized = next;
+    if (next === "true") {
+      // If focused window was minimized, hand focus to topmost remaining visible window.
+      if (this.focusedId === winId) {
+        const remaining = [...this.windows.entries()]
+          .filter(([id, h]) => id !== winId && h.el.dataset.minimized !== "true");
+        if (remaining.length) {
+          remaining.sort((a, b) => parseInt(b[1].el.style.zIndex || 0) - parseInt(a[1].el.style.zIndex || 0));
+          this._focusWindow(remaining[0][0]);
+        } else {
+          this.focusedId = null;
+          this._updateTaskbarPressed(null);
+        }
+      }
+      this._announce(`${handle.def?.name || "Window"} minimised`);
+    } else {
+      this._focusWindow(winId);
+      this._announce(`${handle.def?.name || "Window"} restored`);
+    }
+  }
+
   _makeDraggable(el) {
     const handle = el.querySelector("[data-region='titlebar']");
     if (!handle) return;
@@ -380,7 +407,21 @@ export class MiniOS {
         <span class="dot"></span>
       </button>
     `;
-    li.querySelector("button")?.addEventListener("click", () => this._focusWindow(winId));
+    li.querySelector("button")?.addEventListener("click", () => {
+      const handle = this.windows.get(winId);
+      if (!handle) return;
+      const el = handle.el;
+      if (el.dataset.minimized === "true") {
+        // Restore minimized window
+        this._toggleMinimize(winId);
+      } else if (this.focusedId === winId) {
+        // Already focused → minimize on second click
+        this._toggleMinimize(winId);
+      } else {
+        // Visible but unfocused → bring to front
+        this._focusWindow(winId);
+      }
+    });
     this.taskbarList.appendChild(li);
   }
   _removeTaskbarEntry(winId) {
