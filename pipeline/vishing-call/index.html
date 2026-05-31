@@ -307,8 +307,7 @@
   let state, cur, locked, curId, hintScenes, flags;
   // which (node_choice) demonstrates which learning objective
   const OBJ_OOB={start_3:1, callback_1:1, verify_3:1, pressure_3:1};   // verify out-of-band
-  const OBJ_REC={start_2:1, verify_1:1, ask_1:1, ask_3:1, pressure_1:1}; // recognise manipulation / refuse
-  const OBJ_LEAK={verify_2:1, ask_2:1, pressure_2:1};                   // disclosed a secret
+  const OBJ_LEAK={verify_2:1, ask_2:1, pressure_2:1};                  // disclosed a secret
 
   // ---- TTS (Web Speech fallback); prefers audio/<key>.mp3 (e.g. ElevenLabs). Voice = the caller. ----
   const TTS = ('speechSynthesis' in window);
@@ -379,7 +378,7 @@
     applyEff(c.eff);
     const tag=curId+"_"+c.k;
     if(OBJ_OOB[tag]) flags.oob=true;
-    if(OBJ_REC[tag]) flags.recognize=true;
+    if(c.good) flags.recognize=true;   // any defensive move (verify / refuse / report) = treated it as an attack
     if(OBJ_LEAK[tag]) flags.leaked=true;
     syncMeters();
     stopAudio();  // attacker stops once you respond; feedback is on-screen text only
