@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RiskDesk — payments fraud-review console (e-learning sim) · Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="Interactive HTML5 e-learning sample modelled on a real payments fraud-review case manager (Stripe Radar / Sift style): review queue, risk score, rules triggered, approve / decline / escalate." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  /* GrassLMS Lively — canonical: Manrope + Geist Mono, green-600 brand. Console layout, Stripe-Radar-style. */
+  :root{
+    --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
+    --green-300:#8fd770; --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754;
+    --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
+    --sun-50:#fffbe5; --sun-100:#fff2b3; --sun-300:#ffe066; --sun-400:#ffd84d; --sun-500:#f5b800; --sun-700:#7a5500;
+    --coral-50:#fff0eb; --coral-300:#ffae9a; --coral-500:#ff7a5c; --coral-700:#c33d22;
+    --ink-900:#0a1a10; --ink-700:#1a2a1f; --ink-500:#4d5a51; --ink-400:#6b7a70;
+    --ink-300:#9aa39d; --ink-200:#c9cec9; --ink-100:#e6e8e4; --ink-50:#f4f5f1;
+    --paper:#fafbf6; --paper-2:#ffffff;
+    --shadow-sm:0 2px 6px -1px rgba(10,26,16,.07);
+    --shadow-md:0 8px 24px -8px rgba(10,26,16,.12);
+    --shadow-lg:0 18px 50px -20px rgba(10,26,16,.18);
+    --shadow-pop:0 3px 0 0 var(--green-700);
+    --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:22px; --r-pill:999px;
+    --font-sans:'Manrope',system-ui,-apple-system,sans-serif;
+    --font-mono:'Geist Mono',ui-monospace,SFMono-Regular,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:var(--font-sans); background:var(--ink-50); color:var(--ink-900);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; line-height:1.45;
+  }
+  a{color:var(--green-700);text-decoration:none;}
+  button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
+  .mono{font-family:var(--font-mono);}
+
+  /* ===== App shell ===== */
+  .app{display:grid;grid-template-columns:56px 1fr;height:100vh;min-height:560px;}
+  /* rail */
+  .rail{background:var(--ink-900);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:6px;}
+  .rail .logo{width:34px;height:34px;border-radius:9px;background:var(--green-600);display:grid;place-items:center;
+    font-weight:800;color:#fff;font-size:16px;margin-bottom:10px;}
+  .rail .nav{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:rgba(255,255,255,.45);font-size:17px;}
+  .rail .nav.active{background:rgba(255,255,255,.10);color:#fff;}
+  .rail .nav:hover{color:#fff;}
+  .rail .spacer{margin-top:auto;}
+
+  .main{display:flex;flex-direction:column;min-width:0;height:100vh;}
+
+  /* topbar */
+  .top{display:flex;align-items:center;gap:14px;padding:0 18px;height:54px;background:var(--paper-2);
+    border-bottom:1px solid var(--ink-100);flex-shrink:0;}
+  .top .crumb{font-weight:800;font-size:15px;letter-spacing:-.01em;}
+  .top .crumb span{color:var(--ink-400);font-weight:600;}
+  .top .pill{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;
+    padding:3px 9px;border-radius:var(--r-pill);background:var(--green-50);color:var(--green-700);border:1px solid var(--green-100);}
+  .top .spacer{margin-left:auto;}
+  .top .who{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--ink-500);}
+  .top .who .av{width:28px;height:28px;border-radius:50%;background:var(--green-600);color:#fff;display:grid;place-items:center;font-weight:800;font-size:12px;}
+  .top .back{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);}
+  .top .back:hover{color:var(--green-700);}
+
+  /* ===== Work area: queue | case | kpi ===== */
+  .work{display:grid;grid-template-columns:286px 1fr 244px;flex:1;min-height:0;}
+
+  /* queue */
+  .queue{border-right:1px solid var(--ink-100);background:var(--paper);display:flex;flex-direction:column;min-height:0;}
+  .queue-head{padding:13px 16px;border-bottom:1px solid var(--ink-100);display:flex;align-items:center;justify-content:space-between;}
+  .queue-head h2{font-size:13px;font-weight:800;margin:0;letter-spacing:-.01em;}
+  .queue-head .cnt{font-family:var(--font-mono);font-size:11px;color:var(--ink-400);}
+  .queue-list{overflow-y:auto;flex:1;}
+  .qrow{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center;padding:11px 16px;
+    border-bottom:1px solid var(--ink-100);cursor:default;position:relative;}
+  .qrow .dot{width:9px;height:9px;border-radius:50%;background:var(--ink-300);}
+  .qrow .dot.low{background:var(--green-500);} .qrow .dot.mid{background:var(--sun-500);} .qrow .dot.high{background:var(--coral-500);}
+  .qrow .qid{font-family:var(--font-mono);font-size:11px;color:var(--ink-400);}
+  .qrow .qmer{font-size:12.5px;font-weight:600;color:var(--ink-900);margin-top:1px;}
+  .qrow .qamt{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--ink-700);text-align:right;}
+  .qrow.cur{background:var(--green-25);}
+  .qrow.cur::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green-600);}
+  .qrow.done{opacity:.62;}
+  .qtag{font-family:var(--font-mono);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+    padding:2px 6px;border-radius:var(--r-pill);}
+  .qtag.approve{background:var(--green-100);color:var(--green-800);}
+  .qtag.decline{background:var(--coral-50);color:var(--coral-700);}
+  .qtag.review{background:var(--sun-100);color:var(--sun-700);}
+  .qrow .ok{font-size:11px;}
+
+  /* case detail */
+  .case{overflow-y:auto;padding:22px 26px;min-width:0;}
+  .case-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px;}
+  .case-hd .cid{font-family:var(--font-mono);font-size:11px;color:var(--ink-400);letter-spacing:.05em;margin-bottom:6px;}
+  .case-hd .amt{font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1;}
+  .case-hd .amt .cur{font-size:18px;color:var(--ink-400);font-weight:700;margin-right:3px;}
+  .case-hd .mer{font-size:13.5px;color:var(--ink-500);font-weight:600;margin-top:6px;}
+  .case-hd .mer b{color:var(--ink-700);}
+
+  /* risk gauge */
+  .gauge{min-width:150px;text-align:right;}
+  .gauge .glabel{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin-bottom:6px;}
+  .gauge .grow{display:flex;align-items:center;gap:10px;justify-content:flex-end;}
+  .gauge .gnum{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1;width:54px;text-align:center;}
+  .gauge .gnum.low{color:var(--green-600);} .gauge .gnum.mid{color:var(--sun-500);} .gauge .gnum.high{color:var(--coral-500);}
+  .gauge .gtrack{width:120px;height:8px;border-radius:var(--r-pill);overflow:hidden;position:relative;
+    background:linear-gradient(90deg,var(--green-400) 0%,var(--sun-400) 55%,var(--coral-500) 100%);opacity:.28;}
+  .gauge .gwrap{position:relative;width:120px;}
+  .gauge .gmark{position:absolute;top:-3px;width:3px;height:14px;border-radius:2px;background:var(--ink-900);transition:left .5s cubic-bezier(.2,.7,.2,1);}
+  .gauge .gscale{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:8.5px;color:var(--ink-300);margin-top:3px;width:120px;}
+
+  /* panels */
+  .panel{border:1px solid var(--ink-100);border-radius:var(--r-md);background:var(--paper-2);margin-bottom:14px;overflow:hidden;}
+  .panel-h{padding:9px 14px;border-bottom:1px solid var(--ink-100);font-family:var(--font-mono);font-size:10px;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);background:var(--paper);}
+  .panel-b{padding:12px 14px;}
+  .kv{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px;}
+  .kv .k{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin-bottom:2px;}
+  .kv .v{font-size:13px;font-weight:600;color:var(--ink-900);}
+  .kv .v small{font-family:var(--font-mono);font-weight:500;color:var(--ink-400);font-size:11px;}
+
+  /* rules triggered */
+  .rules-list{display:flex;flex-direction:column;}
+  .rule-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--ink-100);}
+  .rule-row:last-child{border-bottom:none;}
+  .rule-row .sev{width:8px;height:8px;border-radius:50%;}
+  .sev.good{background:var(--green-500);} .sev.warn{background:var(--sun-500);} .sev.bad{background:var(--coral-500);}
+  .rule-row .code{font-family:var(--font-mono);font-size:10.5px;font-weight:500;color:var(--ink-500);}
+  .rule-row .txt{font-size:12.5px;color:var(--ink-900);}
+  .rule-row .pts{font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:var(--r-pill);}
+  .pts.good{background:var(--green-50);color:var(--green-700);} .pts.warn{background:var(--sun-50);color:var(--sun-700);} .pts.bad{background:var(--coral-50);color:var(--coral-700);}
+
+  /* action bar */
+  .actbar{position:sticky;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0 4px;
+    background:linear-gradient(180deg,rgba(244,245,241,0),var(--ink-50) 32%);}
+  .act{padding:13px 10px;border-radius:var(--r-md);font-weight:800;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:3px;
+    transition:transform .12s,box-shadow .12s,background .2s;}
+  .act .key{font-family:var(--font-mono);font-size:10px;font-weight:500;opacity:.72;}
+  .act.approve{background:var(--green-600);color:#fff;box-shadow:var(--shadow-pop);}
+  .act.approve:hover{background:var(--green-700);}
+  .act.decline{background:var(--coral-500);color:#fff;box-shadow:0 3px 0 0 var(--coral-700);}
+  .act.decline:hover{background:var(--coral-700);}
+  .act.review{background:var(--sun-300);color:var(--ink-900);box-shadow:0 3px 0 0 var(--sun-500);}
+  .act.review:hover{background:var(--sun-400);}
+  .act:active{transform:translateY(3px);box-shadow:none;}
+  .act:focus-visible{outline:3px solid var(--ink-900);outline-offset:2px;}
+  .act[disabled]{opacity:.42;cursor:not-allowed;}
+
+  /* decision feedback (inline) */
+  .fb{margin-top:12px;border-radius:var(--r-md);padding:13px 15px;border:1px solid;display:none;}
+  .fb.show{display:block;animation:rise .3s cubic-bezier(.2,.7,.2,1);}
+  @keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .fb.right{background:var(--green-50);border-color:var(--green-200);}
+  .fb.wrong{background:var(--coral-50);border-color:var(--coral-300);}
+  .fb-h{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13.5px;margin-bottom:4px;}
+  .fb-h .badge{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:var(--r-pill);}
+  .fb.right .badge{background:var(--green-200);color:var(--green-900);}
+  .fb.wrong .badge{background:var(--coral-300);color:var(--coral-700);}
+  .fb-why{font-size:12.5px;color:var(--ink-700);}
+  .fb-money{font-family:var(--font-mono);font-size:11.5px;margin-top:7px;color:var(--ink-500);}
+  .fb-money b{font-weight:700;} .fb-money .pos{color:var(--green-700);} .fb-money .neg{color:var(--coral-700);}
+  .fb .next{margin-top:11px;display:flex;justify-content:flex-end;}
+  .btn-next{background:var(--ink-900);color:#fff;padding:9px 17px;border-radius:var(--r-sm);font-weight:700;font-size:12.5px;}
+  .btn-next:hover{background:var(--ink-700);}
+  .btn-next:focus-visible{outline:3px solid var(--green-600);outline-offset:2px;}
+
+  /* KPI sidebar */
+  .kpi{border-left:1px solid var(--ink-100);background:var(--paper);padding:16px 16px;overflow-y:auto;}
+  .kpi h3{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin:0 0 12px;}
+  .kstat{margin-bottom:14px;}
+  .kstat .n{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}
+  .kstat .l{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-top:3px;}
+  .kstat .n .small{font-size:14px;color:var(--ink-300);}
+  .streak{display:inline-flex;align-items:center;gap:5px;}
+  .streak .flame{filter:grayscale(1);opacity:.35;transition:.3s;}
+  .streak.on .flame{filter:none;opacity:1;}
+  .kxp{height:7px;background:var(--ink-100);border-radius:var(--r-pill);overflow:hidden;margin-top:4px;}
+  .kxp > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green-400),var(--green-600));transition:width .5s cubic-bezier(.2,.7,.2,1);}
+
+  /* ===== Results overlay ===== */
+  .results{position:fixed;inset:0;background:rgba(10,26,16,.42);display:none;align-items:center;justify-content:center;padding:20px;z-index:80;}
+  .results.show{display:flex;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;}to{opacity:1;}}
+  .res-card{background:var(--paper-2);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);max-width:560px;width:100%;
+    max-height:92vh;overflow-y:auto;padding:26px 26px 24px;}
+  .res-card h2{font-size:23px;font-weight:800;letter-spacing:-.025em;margin:0 0 2px;}
+  .res-card .sub{font-size:13px;color:var(--ink-500);margin:0 0 16px;}
+  .grade{display:inline-flex;align-items:center;gap:12px;margin:2px 0 18px;}
+  .grade .g{font-size:40px;font-weight:800;line-height:1;width:66px;height:66px;border-radius:var(--r-lg);display:grid;place-items:center;color:#fff;background:var(--green-600);}
+  .grade .g.b{background:var(--green-500);} .grade .g.c{background:var(--sun-500);color:var(--ink-900);} .grade .g.d{background:var(--coral-500);}
+  .grade .gl{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);}
+  .grade .gl b{display:block;font-family:var(--font-sans);font-size:16px;color:var(--ink-900);margin-top:3px;text-transform:none;letter-spacing:0;}
+  .matrix{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 0 14px;}
+  .cell{padding:11px 13px;border-radius:var(--r-md);border:1px solid var(--ink-100);background:var(--paper);}
+  .cell.good{background:var(--green-50);border-color:var(--green-100);} .cell.bad{background:var(--coral-50);border-color:var(--coral-300);}
+  .cell .n{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1;}
+  .cell .l{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin-top:5px;}
+  .netbar{display:flex;justify-content:space-between;align-items:baseline;padding:13px 15px;border-radius:var(--r-md);background:var(--ink-900);color:#fff;margin-bottom:16px;}
+  .netbar .nl{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);}
+  .netbar .nv{font-size:22px;font-weight:800;letter-spacing:-.02em;} .netbar .nv.pos{color:var(--green-300);} .netbar .nv.neg{color:var(--coral-300);}
+  .debrief{border:1px solid var(--ink-100);border-left:3px solid var(--green-600);border-radius:var(--r-md);background:var(--green-25);padding:13px 15px;margin-bottom:16px;}
+  .debrief h3{font-size:13.5px;font-weight:800;margin:0 0 7px;}
+  .debrief ul{margin:0;padding-left:17px;font-size:12.5px;color:var(--ink-700);} .debrief li{margin-bottom:6px;} .debrief li b{color:var(--ink-900);}
+  .res-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn-primary{background:var(--green-600);color:#fff;padding:11px 20px;border-radius:var(--r-sm);font-weight:700;font-size:13.5px;box-shadow:var(--shadow-pop);}
+  .btn-primary:hover{background:var(--green-700);} .btn-primary:active{transform:translateY(3px);box-shadow:none;}
+  .btn-ghost{padding:11px 17px;border-radius:var(--r-sm);font-weight:700;font-size:13.5px;border:1px solid var(--ink-200);color:var(--ink-700);}
+  .btn-ghost:hover{border-color:var(--ink-400);}
+
+  /* intro overlay */
+  .intro{position:fixed;inset:0;background:rgba(10,26,16,.42);display:flex;align-items:center;justify-content:center;padding:20px;z-index:90;}
+  .intro.hide{display:none;}
+  .intro-card{background:var(--paper-2);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);max-width:520px;width:100%;padding:26px;}
+  .intro-card .eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green-700);font-weight:600;margin:0 0 6px;}
+  .intro-card h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px;}
+  .intro-card h1 em{font-style:normal;background:var(--sun-300);padding:0 7px;border-radius:7px;display:inline-block;transform:rotate(-1.5deg);}
+  .intro-card p{font-size:13.5px;color:var(--ink-700);margin:0 0 14px;}
+  .rules-mini{display:grid;gap:7px;margin-bottom:16px;}
+  .rmini{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;font-size:12.5px;padding:9px 11px;border:1px solid var(--ink-100);border-radius:var(--r-md);background:var(--paper);}
+  .rmini .tag{font-family:var(--font-mono);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:var(--r-pill);white-space:nowrap;}
+  .tag.approve{background:var(--green-100);color:var(--green-800);} .tag.decline{background:var(--coral-50);color:var(--coral-700);} .tag.review{background:var(--sun-100);color:var(--sun-700);}
+
+  .hide{display:none !important;}
+
+  /* responsive: collapse to single column */
+  @media (max-width:1080px){
+    .work{grid-template-columns:1fr;}
+    .queue{display:none;}
+    .kpi{border-left:none;border-top:1px solid var(--ink-100);display:flex;gap:18px;flex-wrap:wrap;align-items:center;}
+    .kpi h3{width:100%;margin-bottom:4px;} .kstat{margin-bottom:0;}
+    .kxp{display:none;}
+  }
+  @media (max-width:560px){
+    .app{grid-template-columns:1fr;} .rail{flex-direction:row;height:48px;padding:0 10px;gap:8px;}
+    .rail .logo{margin-bottom:0;} .rail .spacer{margin:0;} .rail .nav{width:32px;height:32px;}
+    .case{padding:16px 14px;} .actbar{grid-template-columns:1fr;}
+    .case-hd{flex-direction:column;} .gauge{text-align:left;} .gauge .grow,.gauge .gscale,.gauge .gwrap{margin-left:0;}
+  }
+  @media (prefers-reduced-motion:reduce){ *{animation:none !important;transition:none !important;} }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- left rail -->
+  <nav class="rail" aria-label="primary">
+    <div class="logo">R</div>
+    <div class="nav active" title="Review queue">▤</div>
+    <div class="nav" title="Cases">◳</div>
+    <div class="nav" title="Rules">⚙</div>
+    <div class="nav" title="Analytics">◔</div>
+    <div class="spacer"></div>
+    <div class="nav" title="Help">?</div>
+  </nav>
+
+  <div class="main">
+    <!-- topbar -->
+    <header class="top">
+      <div class="crumb">RiskDesk <span>· Review queue</span></div>
+      <span class="pill">Manual review</span>
+      <div class="spacer"></div>
+      <div class="who"><span>Risk analyst — your shift</span><span class="av">M</span></div>
+      <a class="back" href="../mini-cases/">↩ samples</a>
+    </header>
+
+    <!-- work area -->
+    <div class="work">
+
+      <!-- QUEUE -->
+      <aside class="queue" aria-label="review queue">
+        <div class="queue-head"><h2>Pending review</h2><span class="cnt" id="qCount">0</span></div>
+        <div class="queue-list" id="qList"></div>
+      </aside>
+
+      <!-- CASE DETAIL -->
+      <section class="case" aria-live="polite">
+        <div class="case-hd">
+          <div>
+            <div class="cid mono" id="cId">TXN-0000</div>
+            <div class="amt"><span class="cur" id="cCur">€</span><span id="cAmt">0</span></div>
+            <div class="mer" id="cMer"></div>
+          </div>
+          <div class="gauge">
+            <div class="glabel">Risk score</div>
+            <div class="grow">
+              <span class="gnum low" id="cScoreNum">0</span>
+              <div>
+                <div class="gwrap"><div class="gtrack"></div><span class="gmark" id="cMark" style="left:0%"></span></div>
+                <div class="gscale"><span>0</span><span>50</span><span>100</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h">Payment</div>
+          <div class="panel-b"><div class="kv" id="cPay"></div></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h">Customer · device · network</div>
+          <div class="panel-b"><div class="kv" id="cDev"></div></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h">Rules triggered</div>
+          <div class="panel-b"><div class="rules-list" id="cRules"></div></div>
+        </div>
+
+        <!-- inline feedback -->
+        <div class="fb" id="cFb" role="status">
+          <div class="fb-h"><span class="badge" id="fbBadge"></span><span id="fbTitle"></span></div>
+          <div class="fb-why" id="fbWhy"></div>
+          <div class="fb-money" id="fbMoney"></div>
+          <div class="next"><button class="btn-next" id="btnNext">Next case →</button></div>
+        </div>
+
+        <!-- action bar -->
+        <div class="actbar" id="actbar">
+          <button class="act approve" data-act="approve">Approve <span class="key">[A]</span></button>
+          <button class="act decline" data-act="decline">Decline <span class="key">[D]</span></button>
+          <button class="act review"  data-act="review">Escalate <span class="key">[E]</span></button>
+        </div>
+      </section>
+
+      <!-- KPI sidebar -->
+      <aside class="kpi" aria-label="shift performance">
+        <h3>Shift performance</h3>
+        <div class="kstat"><div class="n" id="kScore">0</div><div class="l">Score</div>
+          <div class="kxp" title="Shift progress"><i id="kXp"></i></div></div>
+        <div class="kstat"><div class="n streak" id="kStreakWrap"><span class="flame">🔥</span><span id="kStreak">0</span></div><div class="l">Streak</div></div>
+        <div class="kstat"><div class="n" id="kAcc">—</div><div class="l">Accuracy</div></div>
+        <div class="kstat"><div class="n" id="kDone">0<span class="small">/8</span></div><div class="l">Cases reviewed</div></div>
+        <div class="kstat"><div class="n" id="kNet" style="font-size:20px">€0</div><div class="l">Net impact</div></div>
+      </aside>
+
+    </div>
+  </div>
+</div>
+
+<!-- intro -->
+<div class="intro" id="intro">
+  <div class="intro-card">
+    <p class="eyebrow">Interactive HTML5 · simulation · gamified · fintech</p>
+    <h1>You're on the <em>payments risk desk</em></h1>
+    <p>Flagged transactions are waiting in your review queue. Open each case, read the rules that fired, and clear it — fast. Over-blocking good customers costs the business as much as letting fraud through.</p>
+    <p style="font-size:12.5px;color:var(--ink-500);margin-top:-4px;">The model <b style="color:var(--ink-700)">risk score is a hint, not the answer</b> — on some cases it points the wrong way, and reading the signals is the job. Every shift is freshly generated, so you can keep training.</p>
+    <div class="rules-mini">
+      <div class="rmini"><span class="tag approve">Approve</span><span>Signals look clean. Release the payment.</span></div>
+      <div class="rmini"><span class="tag decline">Decline</span><span>Clear fraud pattern. Block before it settles.</span></div>
+      <div class="rmini"><span class="tag review">Escalate</span><span>Signals conflict — send to a senior analyst, don't guess.</span></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-500)"><b style="color:var(--ink-700)">Keyboard:</b> <span class="mono">A</span> approve · <span class="mono">D</span> decline · <span class="mono">E</span> escalate.</p>
+    <div style="display:flex;justify-content:flex-end;"><button class="btn-primary" id="btnStart">Start shift →</button></div>
+  </div>
+</div>
+
+<!-- results -->
+<div class="results" id="results">
+  <div class="res-card">
+    <h2>Shift complete.</h2>
+    <p class="sub" id="rSub">Cases cleared. Here's how your decisions landed.</p>
+    <div class="grade">
+      <span class="g" id="rGrade">A</span>
+      <span class="gl">Decision grade<b id="rGradeLabel">Senior-ready</b></span>
+    </div>
+    <div class="matrix">
+      <div class="cell good"><div class="n" id="rApproveGood">0</div><div class="l">Good payments approved</div></div>
+      <div class="cell good"><div class="n" id="rFraudCaught">0</div><div class="l">Fraud caught / escalated</div></div>
+      <div class="cell bad"><div class="n" id="rFraudLeaked">0</div><div class="l">Fraud let through</div></div>
+      <div class="cell bad"><div class="n" id="rGoodBlocked">0</div><div class="l">Good customers over-blocked</div></div>
+    </div>
+    <div class="netbar"><span class="nl">Net impact to the business</span><span class="nv" id="rNet">€0</span></div>
+    <p id="rNote" style="font-size:12.5px;color:var(--ink-700);background:var(--sun-50);border:1px solid var(--sun-300);border-radius:var(--r-md);padding:11px 13px;margin:0 0 16px;"></p>
+    <div class="debrief">
+      <h3>What a senior analyst reads first</h3>
+      <ul>
+        <li><b>Velocity beats amount.</b> A tiny charge after five declines in two minutes is card-testing — block it, cheap as it is.</li>
+        <li><b>Mismatch &gt; single red flag.</b> One foreign IP isn't fraud. IP, BIN country and address all disagreeing is.</li>
+        <li><b>Ambiguous ≠ decline.</b> When good and bad signals tie, <em>Escalate</em> is correct. Snapping to Decline quietly bleeds real revenue.</li>
+      </ul>
+    </div>
+    <div class="res-actions">
+      <button class="btn-primary" id="btnReplay">Run another shift</button>
+      <a class="btn-ghost" href="../mini-cases/">See more formats →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ============================================================
+  //  Procedural case generator. The correct action comes from the
+  //  archetype's ground truth — NOT from the model risk score. Two
+  //  archetypes are deliberately MISALIGNED (score disagrees with the
+  //  right call) so the learner must read signals, not chase the number.
+  //  All data synthetic. signals: [severity, RULE_CODE, label].
+  // ============================================================
+  const R = {
+    pick:a=>a[Math.floor(Math.random()*a.length)],
+    int:(lo,hi)=>Math.floor(Math.random()*(hi-lo+1))+lo,
+    amt:(lo,hi)=>Math.round((Math.random()*(hi-lo)+lo)*100)/100,
+    last4:()=>String(R.int(1000,9999)),
+    method:()=>R.pick(["Visa credit","Visa debit","Mastercard credit","Mastercard debit"])
+  };
+  const P = {
+    es:["Valencia, ES","Madrid, ES","Barcelona, ES","Sevilla, ES","Málaga, ES"],
+    eu:["Berlin, DE","Paris, FR","Lisbon, PT","Milan, IT","Warsaw, PL","Amsterdam, NL"],
+    far:["Manila, PH","Lagos, NG","Jakarta, ID","Karachi, PK","Nairobi, KE","São Paulo, BR"],
+    esBin:["Spain","Germany","France","Italy","Portugal"],
+    sub:["StreamPass","CloudNote Pro","FitFlow+","NewsLine Daily","MailRoom Pro","TuneVault"],
+    game:["PixelForge Games","NovaArcade","QuestRealm","BitByte Games","HyperLoot"],
+    resale:["LuxWatchHub","GadgetVault","SneakerPit","PhoneMart XL","CameraKing"],
+    gift:["GiftCardVault","PrepaidPlus","TopUpNow","VoucherBay","CashCard Hub"],
+    travel:["TripFare Air","SkyHop","RailEuropa","StayNest","FerryGo"],
+    wallet:["BetLine Wallet","SpinCity","AcePlay","LuckyDraw Wallet","RollHigh"]
+  };
+
+  const ARCHS = [
+    { key:"cleanSub", weight:3, build(){
+        const amt=R.amt(6,60), loc=R.pick(P.es), visits=R.int(8,30), prior=R.int(9,40), bin=R.pick(P.esBin), y=R.int(1,4), m=R.int(0,11);
+        return { arch:"cleanSub", merchant:R.pick(P.sub), cat:"Subscription renewal", amount:amt, score:R.int(4,16), best:"approve",
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Subscription"]],
+          dev:[["IP location",loc],["Device","Recognised — "+visits+"th visit"],["Account age",y+" yr "+m+" mo"],["Velocity","Normal"]],
+          signals:[["good","HISTORY_CLEAN",prior+" prior good charges, same card"],["good","GEO_MATCH","IP = billing country"],["good","DEVICE_KNOWN","Returning trusted device"]],
+          fb:{ approve:{ok:true, why:"Known device, matching geography, "+prior+" clean prior charges. Textbook good customer — approve and keep revenue flowing.", money:+amt},
+               decline:{ok:false, why:"You blocked a loyal subscriber over nothing — churn and lost revenue, the silent cost of a trigger-happy desk.", money:-amt},
+               review:{ok:false, why:"Escalating a clean, low-value renewal just burns analyst time. Approve it.", money:-8} } };
+      } },
+
+    { key:"cleanGaming", weight:2, build(){
+        const amt=R.amt(5,45), loc=R.pick(P.eu), visits=R.int(3,18), bin=R.pick(P.esBin);
+        return { arch:"cleanGaming", merchant:R.pick(P.game), cat:"In-app top-up", amount:amt, score:R.int(6,18), best:"approve",
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Gaming top-up"]],
+          dev:[["IP location",loc],["Device","Recognised — "+visits+"th visit"],["Account age",R.int(2,18)+" mo"],["Velocity","Normal"]],
+          signals:[["good","GEO_MATCH","Device + geo match"],["good","AMOUNT_LOW","Low amount, low-risk category"],["good","CARD_SEEN","Card used here before"]],
+          fb:{ approve:{ok:true, why:"Clean and low-risk: known device, matching country, small top-up. Approve and move on.", money:+amt},
+               decline:{ok:false, why:"Nothing here is suspicious. Declining low-value traffic frustrates good players and inflates your false-positive rate.", money:-amt},
+               review:{ok:false, why:"No conflict to resolve — a clear approve. Escalating just adds cost.", money:-8} } };
+      } },
+
+    { key:"cardTesting", weight:2, build(){
+        const amt=R.amt(0.4,3), n=R.int(4,9), secs=R.int(60,150);
+        return { arch:"cardTesting", merchant:"Unknown gateway", cat:"Card verification", amount:amt, score:R.int(84,97), best:"decline",
+          pay:[["Method","Mixed cards"],["Card","•••• rotating"],["BIN country",R.pick(["Brazil","Indonesia","Nigeria","Vietnam"])],["Category","Verification"]],
+          dev:[["IP location","Datacenter, "+R.pick(["NL","DE","US"])],["Device","New — first seen"],["Account age","minutes"],["Velocity",n+" attempts / "+secs+"s"]],
+          signals:[["bad","VELOCITY_TEST",n+" declined cards in "+secs+" seconds"],["bad","IP_DATACENTER","Datacenter / proxy IP"],["warn","AMOUNT_MICRO","Tiny 'test' amount"]],
+          fb:{ approve:{ok:false, why:"Card testing — a bot validating stolen cards with micro-charges before the real hit. Approving funds the next attack.", money:-amt},
+               decline:{ok:true, why:"Correct. The low amount is the trap; the tell is velocity — "+n+" cards in "+secs+" seconds from a datacenter IP. Block it.", money:0},
+               review:{ok:false, why:"Escalation is too slow for a live automated attack. The pattern is unambiguous — decline now.", money:-amt} } };
+      } },
+
+    { key:"giftCashout", weight:1, build(){
+        const amt=R.amt(800,3000), orders=R.int(2,4), loc=R.pick(P.far);
+        return { arch:"giftCashout", merchant:R.pick(P.gift), cat:"Prepaid gift cards", amount:amt, score:R.int(90,99), best:"decline",
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",R.pick(["United States","United Kingdom"])],["Category","Prepaid / cash-out"]],
+          dev:[["IP location",loc+" — VPN"],["Device","New — VPN detected"],["Account age",R.int(1,9)+" hr"],["Velocity",orders+(orders>1?"rd":"st")+" large order today"]],
+          signals:[["bad","CASHOUT_GIFTCARD","Untraceable prepaid gift cards"],["bad","IP_VPN_MISMATCH","VPN + IP ≠ BIN country"],["bad","VELOCITY_HIGH",orders+" large orders in one day"],["bad","DEVICE_NEW","Brand-new device"]],
+          fb:{ approve:{ok:false, why:"Every signal is red: untraceable gift cards, masked location, escalating order size. Approving is a direct loss plus chargeback fees.", money:-amt},
+               decline:{ok:true, why:"Correct and decisive. Gift-card cash-out + VPN + geo mismatch + velocity is fraud with no benign reading. Block it.", money:0},
+               review:{ok:false, why:"Escalation wastes time on an open-and-shut case and risks it settling first. Decline outright.", money:-amt} } };
+      } },
+
+    { key:"highValueMismatch", weight:2, build(){
+        const amt=R.amt(400,1200), loc=R.pick(P.far.concat(P.eu)), bin=R.pick(["United Kingdom","United States","Germany"]);
+        return { arch:"highValueMismatch", merchant:R.pick(P.resale), cat:"Electronics / high-resale", amount:amt, score:R.int(55,72), best:"review",
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","High-resale"]],
+          dev:[["IP location",loc],["Device","New — first seen"],["Account age",R.int(1,4)+" day"],["Velocity","Normal"]],
+          signals:[["bad","GEO_MISMATCH","IP country ≠ BIN country"],["warn","CATEGORY_RESALE","High-resale goods"],["warn","DEVICE_NEW","First-time device"],["good","AVS_PASS","Address verification passed"]],
+          fb:{ approve:{ok:false, why:"Geo mismatch + high-resale goods + new device is a classic stolen-card profile. AVS passed though — could be a real traveller. Too risky to wave through.", money:-amt},
+               decline:{ok:false, why:"Plausible fraud — but AVS passed and people travel. A hard decline may block a genuine high-value sale. Don't guess on a mixed signal.", money:-amt},
+               review:{ok:true, why:"Right call. Signals genuinely conflict on a high-value order — escalate for a step-up check (3DS / call-back) instead of guessing.", money:0} } };
+      } },
+
+    { key:"atoGrey", weight:1, build(){
+        const amt=R.amt(30,150), loc=R.pick(P.far.concat(P.eu)), yrs=R.int(2,4);
+        return { arch:"atoGrey", merchant:R.pick(P.wallet), cat:"iGaming deposit", amount:amt, score:R.int(46,64), best:"review",
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",R.pick(["Poland","Spain","Germany"])],["Category","Gaming wallet"]],
+          dev:[["IP location",loc],["Device","New device, returning account"],["Account age",yrs+" yr (clean)"],["Velocity","Normal"]],
+          signals:[["warn","DEVICE_NEW_ACCT","New device on an existing account"],["warn","GEO_MISMATCH","IP ≠ BIN country"],["good","ACCOUNT_AGED",yrs+"-year clean account"],["good","AMOUNT_TYPICAL","Deposit in normal range"]],
+          fb:{ approve:{ok:false, why:"Could be the real owner on a new phone abroad — or an account takeover. On a gaming wallet a wrong approve funds a cash-out. Don't wave it through.", money:-amt},
+               decline:{ok:false, why:"A "+yrs+"-year clean account deserves better than a hard block on two soft flags. You may have frozen a real player. Verify first.", money:-amt},
+               review:{ok:true, why:"Right. New device + geo shift on an established account is the account-takeover grey zone — trigger step-up verification, don't guess.", money:0} } };
+      } },
+
+    // ---- MISALIGNED: model score ELEVATED but the right call is APPROVE ----
+    { key:"travelerOverride", weight:2, build(){
+        const amt=R.amt(120,600), loc=R.pick(P.eu), visits=R.int(6,20), yrs=R.int(2,5);
+        return { arch:"travelerOverride", merchant:R.pick(P.travel), cat:"Travel booking", amount:amt, score:R.int(52,68), best:"approve",
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country","Spain"],["Category","Travel"]],
+          dev:[["IP location",loc+" (roaming)"],["Device","Recognised — "+visits+"th visit"],["Account age",yrs+" yr"],["Velocity","Normal"]],
+          signals:[["warn","GEO_SOFT","IP country ≠ billing (roaming)"],["good","DEVICE_KNOWN","Known device, long history"],["good","TRAVEL_CONSISTENT","Purchase matches roaming pattern"]],
+          fb:{ approve:{ok:true, why:"The model flagged the geo 'mismatch', but it's just a Spanish customer booking travel from "+loc.split(",")[0]+" — known device and "+yrs+"-year history confirm it. Read past the score: approve.", money:+amt},
+               decline:{ok:false, why:"You trusted a mid-high score and blocked a real customer mid-trip. Device and history clearly say it's them — a costly false positive.", money:-amt},
+               review:{ok:false, why:"The known device + travel-consistent roaming resolve the only flag. This is an approve — escalating just delays a good customer.", money:-8} } };
+      } },
+
+    // ---- MISALIGNED: model score LOW but the right call is DECLINE ----
+    { key:"subtleFraud", weight:2, build(){
+        const amt=R.amt(60,260), loc=R.pick(P.eu), bin=R.pick(["Germany","France","Italy"]);
+        return { arch:"subtleFraud", merchant:R.pick(P.resale.concat(P.game)), cat:"Electronics", amount:amt, score:R.int(14,29), best:"decline",
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","General retail"]],
+          dev:[["IP location",loc],["Device","New — first seen"],["Account age",R.int(1,6)+" hr"],["Velocity","Normal"]],
+          signals:[["warn","ACCOUNT_FRESH","Account created hours ago"],["warn","SHIP_BILL_DIFF","Shipping ≠ billing address"],["warn","DEVICE_NEW","First-time device"],["warn","EMAIL_DISPOSABLE","Disposable email domain"]],
+          fb:{ approve:{ok:false, why:"The model scored this low — but the combination tells the story: hours-old account, disposable email, shipping ≠ billing, new device. That's a fresh fraud ring the model under-weights. Approving is a loss.", money:-amt},
+               decline:{ok:true, why:"Correct — you read past a low score. No single flag is damning, but a brand-new account + disposable email + address mismatch together is a setup. Block it.", money:0},
+               review:{ok:true, why:"Defensible — escalating a low-score case that smells wrong beats approving it. Decline is cleaner here, but you didn't trust the number, which is the point.", money:0} } };
+      } }
+  ];
+
+  const SHIFT_LEN = 10;
+  const byKey = k => ARCHS.find(a=>a.key===k);
+
+  function genDeck(n){
+    const pool=[]; ARCHS.forEach(a=>{ for(let w=0;w<a.weight;w++) pool.push(a); });
+    const deck=[]; for(let k=0;k<n;k++) deck.push(R.pick(pool).build());
+    const cleanIdx=()=>deck.findIndex(c=>c.arch==="cleanSub"||c.arch==="cleanGaming");
+    const inject=key=>{ const idx=cleanIdx(); if(idx!==-1) deck[idx]=byKey(key).build(); };
+    if(!deck.some(c=>c.arch==="travelerOverride")) inject("travelerOverride");
+    if(!deck.some(c=>c.arch==="subtleFraud"))      inject("subtleFraud");
+    if(!deck.some(c=>c.best==="review"))           inject("highValueMismatch");
+    if(!deck.some(c=>c.best==="decline"))          inject("cardTesting");
+    deck.forEach(c=>{ c.id="TXN-"+R.int(1000,9999); c.cur="€"; });
+    for(let k=deck.length-1;k>0;k--){ const j=R.int(0,k); const tmp=deck[k]; deck[k]=deck[j]; deck[j]=tmp; }
+    return deck;
+  }
+
+  const STREAK_BONUS = 20, BASE = 100, REVIEW_OK = 100;
+  const ACT_LABEL = {approve:"Approved", decline:"Declined", review:"Escalated"};
+  const TOTAL = SHIFT_LEN;
+
+  let DECK = genDeck(SHIFT_LEN);
+  let i=0, score=0, streak=0, locked=false, netMoney=0, reviewed=0;
+  let tally={approveGood:0, fraudCaught:0, fraudLeaked:0, goodBlocked:0};
+  let decisions = new Array(TOTAL).fill(null); // {act, ok}
+
+  // cumulative training counter (persists across shifts)
+  function trainedTotal(){ try{ return parseInt(localStorage.getItem("riskdesk_trained")||"0",10)||0; }catch(e){ return 0; } }
+  function addTrained(n){ try{ localStorage.setItem("riskdesk_trained", String(trainedTotal()+n)); }catch(e){} }
+
+  const $ = id => document.getElementById(id);
+
+  function band(s){ return s<30?"low":s<70?"mid":"high"; }
+  function money(v){
+    const sign = v>0?"+":v<0?"−":"";
+    return sign+"€"+Math.abs(v).toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});
+  }
+  function kv(rows){ return rows.map(r=>'<div><div class="k">'+r[0]+'</div><div class="v">'+r[1]+'</div></div>').join(""); }
+
+  function buildQueue(){
+    $("qList").innerHTML = DECK.map((t,idx)=>{
+      const d=decisions[idx];
+      const tag = d ? '<span class="qtag '+d.act+'">'+ACT_LABEL[d.act]+'</span>' : '';
+      const okmark = d ? '<span class="ok">'+(d.ok?'✅':'⚠️')+'</span>' : '<span class="qamt mono">'+t.cur+t.amount.toFixed(2)+'</span>';
+      return '<div class="qrow'+(idx===i?' cur':'')+(d?' done':'')+'" data-idx="'+idx+'">'+
+        '<span class="dot"></span>'+
+        '<div><div class="qid mono">'+t.id+'</div><div class="qmer">'+t.merchant+'</div></div>'+
+        (tag||okmark)+
+        '</div>';
+    }).join("");
+  }
+
+  function renderQueue(){
+    $("qCount").textContent = (TOTAL-reviewed)+" open";
+    buildQueue();
+  }
+
+  function syncKpi(){
+    $("kScore").textContent = score;
+    $("kStreak").textContent = streak;
+    $("kStreakWrap").classList.toggle("on", streak>0);
+    $("kDone").innerHTML = reviewed+'<span class="small">/'+TOTAL+'</span>';
+    $("kXp").style.width = Math.round((reviewed/TOTAL)*100)+"%";
+    const acc = reviewed? Math.round(((tally.approveGood+tally.fraudCaught)/reviewed)*100) : null;
+    $("kAcc").textContent = acc===null? "—" : acc+"%";
+    const netEl=$("kNet"); netEl.textContent = money(netMoney).replace("−","-");
+    netEl.style.color = netMoney>=0? "var(--green-700)" : "var(--coral-700)";
+  }
+
+  function render(){
+    const t = DECK[i];
+    $("cId").textContent = t.id;
+    $("cCur").textContent = t.cur;
+    $("cAmt").textContent = t.amount.toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});
+    $("cMer").innerHTML = '<b>'+t.merchant+'</b> · '+t.cat;
+    const b=band(t.score);
+    $("cScoreNum").textContent = t.score; $("cScoreNum").className="gnum "+b;
+    $("cMark").style.left = t.score+"%";
+    $("cPay").innerHTML = kv(t.pay);
+    $("cDev").innerHTML = kv(t.dev);
+    $("cRules").innerHTML = t.signals.map(s=>{
+      const lab = s[0]==="good"?"clears":s[0]==="warn"?"watch":"risk";
+      return '<div class="rule-row"><span class="sev '+s[0]+'"></span>'+
+        '<div><div class="txt">'+s[2]+'</div><div class="code mono">'+s[1]+'</div></div>'+
+        '<span class="pts '+s[0]+'">'+lab+'</span></div>';
+    }).join("");
+    $("cFb").className="fb";
+    $("actbar").classList.remove("hide");
+    document.querySelectorAll(".act").forEach(btn=>btn.disabled=false);
+    locked=false;
+    renderQueue();
+    syncKpi();
+  }
+
+  function decide(act){
+    if(locked) return;
+    locked=true;
+    const t=DECK[i], r=t.fb[act], correct=r.ok;
+    let gained=0;
+    if(correct){ gained=(t.best==="review"?REVIEW_OK:BASE)+streak*STREAK_BONUS; score+=gained; streak+=1; }
+    else { streak=0; }
+    netMoney+=r.money; reviewed+=1;
+    decisions[i]={act, ok:correct};
+
+    if(t.best==="approve"){ act==="approve"?tally.approveGood++:tally.goodBlocked++; }
+    else if(t.best==="decline"){ act==="approve"?tally.fraudLeaked++:tally.fraudCaught++; }
+    else { act==="review"?tally.fraudCaught++ : act==="decline"?tally.goodBlocked++ : tally.fraudLeaked++; }
+
+    const fb=$("cFb");
+    fb.className="fb show "+(correct?"right":"wrong");
+    $("fbBadge").textContent = correct?"correct":"cost incurred";
+    $("fbTitle").textContent = correct ? (t.best==="review"?"Good escalation":"Good call") : "Not the strongest call";
+    $("fbWhy").textContent = r.why;
+    const cls=r.money>0?"pos":r.money<0?"neg":"";
+    $("fbMoney").innerHTML = "Business impact: <b class='"+cls+"'>"+money(r.money)+"</b>"+(correct?"  ·  +"+gained+" pts":"  ·  streak reset");
+    $("btnNext").textContent = (i+1>=TOTAL)?"End shift →":"Next case →";
+    document.querySelectorAll(".act").forEach(btn=>btn.disabled=true);
+    $("actbar").classList.add("hide");
+    renderQueue(); syncKpi();
+    $("btnNext").focus();
+  }
+
+  function next(){
+    // advance to next not-yet-decided case (sequential here)
+    i+=1;
+    if(i>=TOTAL){ showResults(); return; }
+    render();
+    document.querySelector(".case").scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function grade(){
+    const correct=tally.approveGood+tally.fraudCaught, pct=correct/TOTAL;
+    if(pct>=0.875) return {g:"A",cls:"",label:"Senior-ready"};
+    if(pct>=0.625) return {g:"B",cls:"b",label:"Solid — refine the grey zone"};
+    if(pct>=0.5)   return {g:"C",cls:"c",label:"Over-snapping the calls"};
+    return {g:"D",cls:"d",label:"Re-read the signals"};
+  }
+
+  function showResults(){
+    $("rApproveGood").textContent=tally.approveGood;
+    $("rFraudCaught").textContent=tally.fraudCaught;
+    $("rFraudLeaked").textContent=tally.fraudLeaked;
+    $("rGoodBlocked").textContent=tally.goodBlocked;
+    const netEl=$("rNet"); netEl.textContent=money(netMoney).replace("−","-");
+    netEl.className="nv "+(netMoney>=0?"pos":"neg");
+    const g=grade(); $("rGrade").textContent=g.g; $("rGrade").className="g "+g.cls; $("rGradeLabel").textContent=g.label;
+
+    // model-was-wrong cases (misaligned score) and how many the learner read past
+    const misIdx = DECK.map((c,idx)=>({c,idx})).filter(o=>o.c.arch==="travelerOverride"||o.c.arch==="subtleFraud");
+    const misTotal = misIdx.length;
+    const misRight = misIdx.filter(o=>decisions[o.idx] && decisions[o.idx].ok).length;
+    addTrained(reviewed);
+    $("rSub").textContent = TOTAL+" cases cleared · "+trainedTotal()+" reviewed in training so far.";
+    $("rNote").innerHTML = misTotal
+      ? "On <b>"+misTotal+"</b> case"+(misTotal>1?"s":"")+" the model risk score pointed the wrong way — you read past it on <b>"+misRight+"/"+misTotal+"</b>. That override judgement is the actual job."
+      : "";
+
+    $("results").classList.add("show");
+    $("btnReplay").focus();
+  }
+
+  function reset(){
+    DECK = genDeck(SHIFT_LEN);
+    decisions = new Array(TOTAL).fill(null);
+    i=0;score=0;streak=0;locked=false;netMoney=0;reviewed=0;
+    tally={approveGood:0,fraudCaught:0,fraudLeaked:0,goodBlocked:0};
+    $("results").classList.remove("show");
+    render();
+  }
+
+  // wire
+  $("btnStart").addEventListener("click",()=>{ $("intro").classList.add("hide"); render(); });
+  document.querySelectorAll(".act").forEach(b=>b.addEventListener("click",()=>decide(b.dataset.act)));
+  $("btnNext").addEventListener("click",next);
+  $("btnReplay").addEventListener("click",reset);
+
+  document.addEventListener("keydown",e=>{
+    const playing = $("intro").classList.contains("hide") && !$("results").classList.contains("show");
+    if(playing && !locked){
+      const k=e.key.toLowerCase();
+      if(k==="a"){e.preventDefault();decide("approve");}
+      else if(k==="d"){e.preventDefault();decide("decline");}
+      else if(k==="e"){e.preventDefault();decide("review");}
+    }
+  });
+
+  renderQueue(); syncKpi();
+})();
+</script>
+</body>
+</html>
