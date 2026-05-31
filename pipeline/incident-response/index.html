@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Night Shift — fraud-attack incident response (branching scenario) · Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="Interactive HTML5 branching-scenario e-learning sample: respond to a live card-testing attack. Your choices change what the attacker does and how the night ends — multiple branches and endings." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  /* GrassLMS Lively — Manrope + Geist Mono, green-600 brand. Branching-scenario "war room" layout. */
+  :root{
+    --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
+    --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754; --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
+    --sun-50:#fffbe5; --sun-100:#fff2b3; --sun-300:#ffe066; --sun-400:#ffd84d; --sun-500:#f5b800; --sun-700:#7a5500;
+    --coral-50:#fff0eb; --coral-300:#ffae9a; --coral-500:#ff7a5c; --coral-700:#c33d22;
+    --ink-900:#0a1a10; --ink-700:#1a2a1f; --ink-500:#4d5a51; --ink-400:#6b7a70;
+    --ink-300:#9aa39d; --ink-200:#c9cec9; --ink-100:#e6e8e4; --ink-50:#f4f5f1;
+    --paper:#fafbf6; --paper-2:#ffffff;
+    --shadow-sm:0 2px 6px -1px rgba(10,26,16,.07); --shadow-md:0 8px 24px -8px rgba(10,26,16,.12); --shadow-lg:0 18px 50px -20px rgba(10,26,16,.18);
+    --shadow-pop:0 3px 0 0 var(--green-700);
+    --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:22px; --r-pill:999px;
+    --font-sans:'Manrope',system-ui,-apple-system,sans-serif; --font-mono:'Geist Mono',ui-monospace,SFMono-Regular,monospace;
+  }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{font-family:var(--font-sans);background:var(--ink-50);color:var(--ink-900);-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh;}
+  a{color:var(--green-700);text-decoration:none;} button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
+  .mono{font-family:var(--font-mono);}
+
+  .topbar{background:var(--ink-900);color:var(--paper);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;}
+  .topbar .brand{display:flex;align-items:center;gap:10px;}
+  .topbar .mark{width:22px;height:22px;border-radius:6px;background:var(--green-600);display:grid;place-items:center;font-family:var(--font-sans);font-weight:800;font-size:12px;color:#fff;}
+  .topbar a{color:rgba(255,255,255,.6);} .topbar a:hover{color:#fff;}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:22px 16px 60px;}
+
+  /* incident header */
+  .ihead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap;}
+  .ihead .eyebrow{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral-700);font-weight:600;margin:0 0 6px;display:flex;align-items:center;gap:8px;}
+  .ihead .eyebrow .live{width:8px;height:8px;border-radius:50%;background:var(--coral-500);animation:blink 1.2s infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+  .ihead h1{font-size:clamp(24px,4vw,32px);font-weight:800;letter-spacing:-.025em;line-height:1.08;margin:0;}
+  .clock{font-family:var(--font-mono);text-align:right;}
+  .clock .t{font-size:26px;font-weight:800;color:var(--ink-900);letter-spacing:-.02em;}
+  .clock .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);}
+
+  /* meters */
+  .meters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .meter{background:var(--paper-2);border:1px solid var(--ink-100);border-radius:var(--r-md);padding:11px 14px;}
+  .meter .l{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin-bottom:5px;}
+  .meter .v{font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1;}
+  .meter .bar{height:7px;background:var(--ink-100);border-radius:var(--r-pill);overflow:hidden;margin-top:8px;}
+  .meter .bar > i{display:block;height:100%;width:0;border-radius:var(--r-pill);transition:width .5s cubic-bezier(.2,.7,.2,1);}
+  .bar > i.green{background:linear-gradient(90deg,var(--green-400),var(--green-600));}
+  .bar > i.coral{background:linear-gradient(90deg,var(--sun-400),var(--coral-500));}
+
+  /* main grid */
+  .grid{display:grid;grid-template-columns:300px 1fr;gap:16px;}
+  /* timeline */
+  .timeline{background:var(--paper);border:1px solid var(--ink-100);border-radius:var(--r-lg);padding:14px 14px;max-height:560px;overflow-y:auto;}
+  .timeline h2{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin:0 0 12px;}
+  .log{position:relative;padding-left:16px;}
+  .log::before{content:"";position:absolute;left:4px;top:4px;bottom:4px;width:2px;background:var(--ink-100);}
+  .ev{position:relative;margin-bottom:13px;font-size:12px;}
+  .ev::before{content:"";position:absolute;left:-15px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--ink-300);border:2px solid var(--paper);}
+  .ev.bad::before{background:var(--coral-500);} .ev.good::before{background:var(--green-500);} .ev.you::before{background:var(--sun-500);}
+  .ev .t{font-family:var(--font-mono);font-size:9.5px;color:var(--ink-400);letter-spacing:.04em;}
+  .ev .x{color:var(--ink-700);margin-top:1px;}
+  .ev.you .x{font-weight:700;color:var(--ink-900);}
+
+  /* scene */
+  .scene{background:var(--paper-2);border:1px solid var(--ink-100);border-radius:var(--r-lg);box-shadow:var(--shadow-md);padding:20px 22px;min-width:0;}
+  .scene .tag{display:inline-block;font-family:var(--font-mono);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+    padding:3px 9px;border-radius:var(--r-pill);background:var(--ink-50);color:var(--ink-500);border:1px solid var(--ink-100);margin-bottom:12px;}
+  .scene .body{font-size:15px;color:var(--ink-900);line-height:1.6;margin-bottom:18px;}
+  .scene .body b{font-weight:700;} .scene .body .mono{font-size:13px;background:var(--ink-50);padding:1px 5px;border-radius:5px;}
+
+  /* narration / TTS controls + transcript hint */
+  .narration{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+  .vo-btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:11px;font-weight:500;
+    padding:7px 13px;border-radius:var(--r-pill);border:1px solid var(--ink-200);background:var(--paper-2);color:var(--ink-700);transition:border-color .15s,color .15s,background .15s;}
+  .vo-btn:hover{border-color:var(--green-400);color:var(--green-700);}
+  .vo-btn:focus-visible{outline:3px solid var(--green-600);outline-offset:2px;}
+  .vo-btn.ghost{color:var(--ink-400);}
+  .vo-btn.speaking{border-color:var(--green-500);color:var(--green-700);background:var(--green-25);}
+  .vo-btn.speaking .vo-ico{animation:pulse 1s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+  .transcript{font-size:13.5px;color:var(--ink-500);line-height:1.6;margin-bottom:18px;padding:12px 14px;background:var(--paper);border:1px dashed var(--ink-200);border-radius:var(--r-md);}
+  .transcript[hidden]{display:none;}
+  .transcript b{color:var(--ink-700);font-weight:700;} .transcript .mono{font-size:12.5px;background:var(--ink-50);padding:1px 5px;border-radius:5px;}
+
+  .choices{display:grid;gap:9px;}
+  .choice{text-align:left;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;
+    padding:13px 15px;border:1.5px solid var(--ink-100);border-radius:var(--r-md);background:var(--paper);transition:border-color .15s,background .15s,transform .1s;}
+  .choice:hover{border-color:var(--green-400);background:var(--green-25);}
+  .choice:focus-visible{outline:3px solid var(--green-600);outline-offset:2px;}
+  .choice:active{transform:translateY(1px);}
+  .choice .k{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--green-700);background:var(--green-50);
+    width:22px;height:22px;border-radius:6px;display:grid;place-items:center;border:1px solid var(--green-100);}
+  .choice .lab{font-size:13.5px;font-weight:600;color:var(--ink-900);line-height:1.4;}
+  .choice[disabled]{opacity:.5;cursor:not-allowed;}
+
+  /* consequence */
+  .conseq{margin-top:6px;border-radius:var(--r-md);padding:14px 16px;border:1px solid var(--ink-100);background:var(--paper);display:none;}
+  .conseq.show{display:block;animation:rise .3s cubic-bezier(.2,.7,.2,1);}
+  @keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .conseq .note{font-size:13.5px;color:var(--ink-700);line-height:1.55;}
+  .conseq .deltas{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .delta{font-family:var(--font-mono);font-size:11px;padding:3px 9px;border-radius:var(--r-pill);}
+  .delta.up{background:var(--coral-50);color:var(--coral-700);} .delta.down{background:var(--green-50);color:var(--green-700);} .delta.flat{background:var(--ink-50);color:var(--ink-500);}
+  .conseq .go{margin-top:14px;display:flex;justify-content:flex-end;}
+  .btn-next{background:var(--ink-900);color:#fff;padding:10px 18px;border-radius:var(--r-sm);font-weight:700;font-size:13px;}
+  .btn-next:hover{background:var(--ink-700);} .btn-next:focus-visible{outline:3px solid var(--green-600);outline-offset:2px;}
+
+  /* overlays */
+  .overlay{position:fixed;inset:0;background:rgba(10,26,16,.42);display:flex;align-items:center;justify-content:center;padding:20px;z-index:80;}
+  .overlay.hide{display:none;}
+  .ov-card{background:var(--paper-2);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);max-width:560px;width:100%;max-height:92vh;overflow-y:auto;padding:26px;}
+  .ov-card .eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green-700);font-weight:600;margin:0 0 6px;}
+  .ov-card h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px;}
+  .ov-card h1 em{font-style:normal;background:var(--sun-300);padding:0 7px;border-radius:7px;display:inline-block;transform:rotate(-1.5deg);}
+  .ov-card p{font-size:13.5px;color:var(--ink-700);margin:0 0 14px;}
+  .ov-rules{display:grid;gap:7px;margin-bottom:16px;}
+  .ov-r{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;font-size:12.5px;padding:9px 11px;border:1px solid var(--ink-100);border-radius:var(--r-md);background:var(--paper);}
+  .ov-r .tg{font-family:var(--font-mono);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:var(--r-pill);background:var(--green-100);color:var(--green-800);white-space:nowrap;}
+  .btn-primary{background:var(--green-600);color:#fff;padding:11px 20px;border-radius:var(--r-sm);font-weight:700;font-size:13.5px;box-shadow:var(--shadow-pop);}
+  .btn-primary:hover{background:var(--green-700);} .btn-primary:active{transform:translateY(3px);box-shadow:none;}
+  .btn-ghost{padding:11px 17px;border-radius:var(--r-sm);font-weight:700;font-size:13.5px;border:1px solid var(--ink-200);color:var(--ink-700);}
+  .btn-ghost:hover{border-color:var(--ink-400);}
+
+  /* ending */
+  .grade{display:inline-flex;align-items:center;gap:12px;margin:2px 0 16px;}
+  .grade .g{font-size:38px;font-weight:800;line-height:1;width:64px;height:64px;border-radius:var(--r-lg);display:grid;place-items:center;color:#fff;background:var(--green-600);}
+  .grade .g.b{background:var(--green-500);} .grade .g.c{background:var(--sun-500);color:var(--ink-900);} .grade .g.d{background:var(--coral-500);}
+  .grade .gl{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);}
+  .grade .gl b{display:block;font-family:var(--font-sans);font-size:15px;color:var(--ink-900);margin-top:3px;text-transform:none;letter-spacing:0;}
+  .end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px;}
+  .es{padding:10px 12px;border-radius:var(--r-md);border:1px solid var(--ink-100);background:var(--paper);}
+  .es .n{font-size:17px;font-weight:800;letter-spacing:-.02em;} .es .l{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-top:4px;}
+  .debrief{border:1px solid var(--ink-100);border-left:3px solid var(--green-600);border-radius:var(--r-md);background:var(--green-25);padding:13px 15px;margin-bottom:16px;}
+  .debrief h3{font-size:13.5px;font-weight:800;margin:0 0 7px;} .debrief ul{margin:0;padding-left:17px;font-size:12.5px;color:var(--ink-700);} .debrief li{margin-bottom:6px;} .debrief li b{color:var(--ink-900);}
+  .res-actions{display:flex;gap:10px;flex-wrap:wrap;}
+
+  .note-foot{margin-top:20px;font-size:12px;color:var(--ink-400);line-height:1.6;} .note-foot b{color:var(--ink-700);}
+  .foot{margin-top:16px;padding-top:14px;border-top:1px solid var(--ink-100);font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;color:var(--ink-400);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .foot a{color:var(--green-700);}
+
+  @media (max-width:820px){ .grid{grid-template-columns:1fr;} .timeline{max-height:200px;order:2;} .meters{grid-template-columns:1fr;} }
+  @media (prefers-reduced-motion:reduce){ *{animation:none !important;transition:none !important;} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="mark">M</span><span>Mario Rafael Becerra Dueñas — e-learning sample</span></div>
+  <a href="../mini-cases/">← more samples</a>
+</div>
+
+<div class="wrap">
+  <div class="ihead">
+    <div>
+      <p class="eyebrow"><span class="live"></span> Branching scenario · live incident · fintech</p>
+      <h1 id="incTitle">Night Shift: card-testing attack</h1>
+    </div>
+    <div class="clock"><div class="t" id="clock">T+00:00</div><div class="l">incident clock</div></div>
+  </div>
+
+  <div class="meters">
+    <div class="meter"><div class="l">Fraud losses</div><div class="v" id="mLoss" style="color:var(--coral-700)">€0</div></div>
+    <div class="meter"><div class="l">Customer impact</div><div class="v" id="mImpactL">None</div><div class="bar"><i class="coral" id="mImpact"></i></div></div>
+    <div class="meter"><div class="l">Leadership trust</div><div class="v" id="mTrustL">Neutral</div><div class="bar"><i class="green" id="mTrust" style="width:50%"></i></div></div>
+  </div>
+
+  <div class="grid">
+    <aside class="timeline"><h2>Incident timeline</h2><div class="log" id="log"></div></aside>
+
+    <section class="scene" aria-live="polite">
+      <span class="tag" id="sTag">DETECTION</span>
+      <div class="narration">
+        <button class="vo-btn" id="voBtn" type="button" aria-label="Replay narration"><span class="vo-ico" aria-hidden="true">🔊</span> <span>Replay</span></button>
+        <button class="vo-btn ghost" id="muteBtn" type="button" aria-pressed="false">Sound: on</button>
+        <button class="vo-btn ghost" id="txtBtn" type="button" aria-expanded="false">Show transcript</button>
+      </div>
+      <div class="transcript" id="sBody" hidden></div>
+      <div class="choices" id="sChoices"></div>
+      <div class="conseq" id="conseq">
+        <div class="note" id="cNote"></div>
+        <div class="deltas" id="cDeltas"></div>
+        <div class="go"><button class="btn-next" id="btnNext">Continue →</button></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="note-foot"><b>Non-linear scenario</b> — your choices change the path and the ending.</div>
+</div>
+
+<!-- intro -->
+<div class="overlay" id="intro">
+  <div class="ov-card">
+    <p class="eyebrow">Branching scenario · interactive HTML5</p>
+    <h1>It's 02:14. You're <em>on call.</em></h1>
+    <p>A card-testing attack just lit up the payments dashboard. You're the on-call risk analyst — the only one awake. What you do in the next twenty minutes decides how much money walks, how many real customers get hurt, and what your lead thinks of you in the morning.</p>
+    <div class="ov-rules">
+      <div class="ov-r"><span class="tg">Read</span><span>Diagnose the attack before you swing — the right control matches the pattern.</span></div>
+      <div class="ov-r"><span class="tg">Balance</span><span>Over-blocking kills real revenue. Under-reacting bleeds fraud. Both cost you.</span></div>
+      <div class="ov-r"><span class="tg">Communicate</span><span>Contain first, then escalate with data. Silence and noise both burn trust.</span></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-500)">The attacker adapts to your moves. Six possible endings. Keys <span class="mono">1</span>/<span class="mono">2</span>/<span class="mono">3</span>.</p>
+    <div style="display:flex;justify-content:flex-end;"><button class="btn-primary" id="btnStart">Take the call →</button></div>
+  </div>
+</div>
+
+<!-- ending -->
+<div class="overlay hide" id="ending">
+  <div class="ov-card">
+    <p class="eyebrow" id="eTag">Incident closed</p>
+    <h1 id="eTitle">Resolved</h1>
+    <div class="grade"><span class="g" id="eGrade">A</span><span class="gl">Incident grade<b id="eGradeLabel">—</b></span></div>
+    <p id="eVerdict"></p>
+    <p id="eHints" style="font-size:12px;color:var(--ink-400);margin:-6px 0 14px;"></p>
+    <div class="end-stats">
+      <div class="es"><div class="n" id="eLoss" style="color:var(--coral-700)">€0</div><div class="l">Fraud lost</div></div>
+      <div class="es"><div class="n" id="eImpact">Low</div><div class="l">Customer impact</div></div>
+      <div class="es"><div class="n" id="eTrust">Neutral</div><div class="l">Leadership trust</div></div>
+    </div>
+    <div class="debrief">
+      <h3>How a strong responder runs this</h3>
+      <ul>
+        <li><b>Diagnose, then act.</b> The signature (micro-auths, one BIN range, datacenter ASNs, velocity) tells you the control: rate-limit + block that BIN + those ASNs. Panic-blocking everything trades a fraud loss for a bigger revenue loss.</li>
+        <li><b>Don't chase IPs.</b> A bot rotates IPs in seconds. Target the durable signals — BIN range and velocity — or you fall behind the attack.</li>
+        <li><b>Contain, then communicate.</b> A crisp incident note — what happened, what you did, what you recommend — earns trust. Going silent blindsides leadership; mass-paging everyone is crying wolf.</li>
+      </ul>
+    </div>
+    <div class="res-actions">
+      <button class="btn-primary" id="btnReplay">Run the night again</button>
+      <a class="btn-ghost" href="../../#demos">See more formats →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- Branching graph. onEnter applies narrative state; each choice applies eff and routes to `to`. All synthetic.
+  const NODES = {
+    start:{ clock:"T+00:00", tag:"DETECTION",
+      log:[{t:"02:14", x:"ALERT — decline_rate_spike, 6× baseline", s:"bad"}],
+      body:"<b>02:14.</b> PagerDuty wakes you. The card-payment decline rate just jumped <b>6× in four minutes</b>. Most of the failed attempts are tiny — sub-€2 authorisations. The detail view is still loading. The floor is empty; you're the only analyst on call.",
+      choices:[
+        {k:1, lab:"Pull the transaction detail and find the pattern before touching any controls.", eff:{trust:+5}, note:"Measured. Thirty seconds of diagnosis now saves you from swinging at the wrong target.", to:"investigate"},
+        {k:2, lab:"Don't wait — block all non-domestic cards right now.", eff:{impact:+55, loss:+300, trust:-5}, note:"You stop the bot instantly — and a wall of legitimate foreign customers with it. Checkout errors spike.", to:"overblock"},
+        {k:3, lab:"Decline spikes happen. Acknowledge the page and watch for ten minutes.", eff:{}, note:"You go back to your coffee. The graph keeps climbing while you wait.", to:"ignore"}
+      ] },
+
+    investigate:{ clock:"T+03:10", tag:"DIAGNOSIS",
+      onEnter:{loss:+1900},
+      log:[{t:"02:17", x:"YOU — opened transaction detail", s:"you"},{t:"02:17", x:"Pattern: micro-auths · 1 BIN range · 2 datacenter ASNs", s:"bad"}],
+      body:"The detail loads and the picture is clear: hundreds of <b>€0.50–€2 auth attempts</b>, all hitting one <span class='mono'>5xxxxx</span> BIN range, brand-new device fingerprints, from <b>two datacenter ASNs</b>. It's a bot validating stolen cards. About <b>€1,900</b> in network fees already burned.",
+      choices:[
+        {k:1, lab:"Apply a targeted control: velocity rate-limit + block that BIN range + the two datacenter ASNs.", eff:{loss:+600, impact:+3, trust:+6}, note:"Surgical. You hit exactly what the attack depends on and leave legitimate traffic untouched.", to:"contain"},
+        {k:2, lab:"Hit the kill switch — pause all card payments site-wide until it's over.", eff:{impact:+80, trust:-4}, note:"The bot dies — so does every real checkout on the site. You've turned an attack into an outage.", to:"end_shutdown"},
+        {k:3, lab:"Block just the IP addresses currently hitting you.", eff:{}, note:"You block what you can see right now. It works… for about two minutes.", to:"narrow"}
+      ] },
+
+    ignore:{ clock:"T+15:00", tag:"ESCALATING",
+      onEnter:{loss:+13000, trust:-8},
+      log:[{t:"02:29", x:"Losses climbing — ~€14k in fees & exposure", s:"bad"},{t:"02:29", x:"Finance on-call pings: 'what's going on?'", s:"bad"}],
+      body:"Eleven minutes later it's not noise. The attack scaled — tens of thousands of attempts, <b>~€14k</b> burned, and a few stolen cards are now clearing real purchases. Finance's on-call just messaged you directly. You can't sit on this anymore.",
+      choices:[
+        {k:1, lab:"Dig in now — find the pattern and apply a targeted control.", eff:{trust:-2}, note:"Late, but right. You finally read the signature and move on the BIN range and ASNs.", to:"contain"},
+        {k:2, lab:"Still probably transient. Keep watching a bit longer.", eff:{}, note:"You hesitate again. The graph goes vertical.", to:"losing"}
+      ] },
+
+    overblock:{ clock:"T+05:30", tag:"OVER-CORRECTION",
+      log:[{t:"02:19", x:"YOU — blocked all non-domestic cards", s:"you"},{t:"02:20", x:"Checkout error rate 22% · support queue flooding", s:"bad"}],
+      body:"The fraud auths flatline immediately. But so does legitimate business: checkout error rate hits <b>22%</b>, real customers abroad can't pay, and the support queue is filling with furious tickets. You stopped the bleeding with a tourniquet around the whole arm.",
+      choices:[
+        {k:1, lab:"Refine it — replace the blanket block with targeted BIN / velocity / ASN rules and restore legit flow.", eff:{impact:-12, trust:+4}, note:"You narrow the net to the actual attack and let real customers back through. Damage already done, but recovering.", to:"contain"},
+        {k:2, lab:"Leave it. Better to over-block than under-block on my shift.", eff:{impact:+15, trust:-3}, note:"You hold the blanket block 'to be safe'. Revenue keeps draining all night.", to:"end_overblock_hold"}
+      ] },
+
+    narrow:{ clock:"T+08:00", tag:"FALLING BEHIND",
+      onEnter:{loss:+5000},
+      log:[{t:"02:22", x:"YOU — blocked live attacker IPs", s:"you"},{t:"02:24", x:"Attack resumed from a fresh ASN — bot rotated", s:"bad"}],
+      body:"You block the IPs that are live. Two minutes later the attack resumes from a <b>completely new ASN</b> — the bot just rotated its infrastructure. Losses tick past <b>€5k</b>. You're playing whack-a-mole and losing.",
+      choices:[
+        {k:1, lab:"Stop chasing IPs — go after the durable signals: the BIN range + velocity.", eff:{trust:+3}, note:"Right adjustment. You target what the bot can't rotate away, and the attack curve finally bends.", to:"contain"},
+        {k:2, lab:"Block the new ASN's IPs too and keep up.", eff:{}, note:"You chase the new IPs. It rotates again. And again.", to:"losing"}
+      ] },
+
+    losing:{ clock:"T+20:00", tag:"CRISIS",
+      onEnter:{loss:+17000, trust:-12},
+      log:[{t:"02:34", x:"Losses ~€22k · threshold auto-paged the lead", s:"bad"},{t:"02:34", x:"Lead joins, finds the incident still uncontained", s:"bad"}],
+      body:"The attack outpaces you. Losses are around <b>€22k</b> and climbing, and the automated threshold has now paged your lead — who joins to find the incident <b>still uncontained</b> and you reacting one step behind. This is the worst way for them to find out.",
+      choices:[
+        {k:1, lab:"Escalate properly and apply the BIN / velocity rules the lead expects.", eff:{trust:+2}, note:"You finally do the right thing, with your lead watching. Contained — but the bill is steep.", to:"contain"},
+        {k:2, lab:"Defer to the lead entirely and step back.", eff:{trust:-4}, note:"You hand it off mid-crisis. It gets contained without you.", to:"end_costly"}
+      ] },
+
+    contain:{ clock:"T+10:40", tag:"CONTAINMENT",
+      log:[{t:"02:25", x:"YOU — velocity limit + BIN block + ASN block live", s:"you"},{t:"02:26", x:"Attack curve flattening — auths from those ASNs ≈ 0", s:"good"}],
+      body:"Within a minute the attack curve flattens — auth attempts from those ASNs and that BIN range drop to near zero, and legitimate traffic is unaffected. <b>Containment holds.</b> The immediate fire is out. Now the question is who needs to know, and how.",
+      choices:[
+        {k:1, lab:"Post an incident note in #risk-oncall with the data and actions taken, page the lead, recommend holding the rules 24h.", eff:{trust:+12}, note:"Exactly right. Clear, factual, actionable. Your lead wakes up to a handled incident, not a mystery.", to:"end_textbook"},
+        {k:2, lab:"You handled it. No need to wake anyone — you'll write it up tomorrow.", eff:{trust:-12}, note:"You close your laptop. By morning, finance and your lead piece it together from the dip — without you in the story.", to:"end_quiet"},
+        {k:3, lab:"Mass-alert: page the lead, the CTO, and post in #general that the company is under attack.", eff:{trust:-5}, note:"You broadcast a contained, routine attack to the whole company at 2am. The CTO is not amused.", to:"end_overcomms"}
+      ] },
+
+    // ---- endings ----
+    end_textbook:{ end:true, etag:"Incident closed · clean", title:"Textbook response.",
+      verdict:"You diagnosed before you swung, hit the attack where it lived, kept real customers paying, and handed leadership a clean, data-backed incident note. This is exactly how the night is supposed to go — and the version your lead will quote to the next hire." },
+    end_quiet:{ end:true, etag:"Incident closed · comms gap", title:"Contained — but you vanished from the story.",
+      verdict:"You stopped the attack well. Then you went silent. Leadership reconstructed the night from a revenue dip and a chargeback report instead of from you — and 'I handled it quietly' reads, from the outside, like 'something happened and nobody told us.' Containment was the easy half. The note was the half that builds trust." },
+    end_overcomms:{ end:true, etag:"Incident closed · noisy", title:"Contained — and you cried wolf.",
+      verdict:"The attack was handled, but paging the CTO and blasting #general over a routine, already-contained card-testing wave taught the org to tune you out. Next time you raise a flag, it lands softer. Calibrate the alarm to the fire." },
+    end_overblock_hold:{ end:true, etag:"Incident closed · revenue bruised", title:"You stopped the fraud and most of the revenue.",
+      verdict:"The blanket block held all night. Fraud losses were small — but you turned away a wall of legitimate customers, spiked support load, and the revenue hole dwarfs what the bot would ever have taken. Over-blocking isn't 'safe'; it just moves the loss somewhere finance notices later." },
+    end_shutdown:{ end:true, etag:"Incident closed · self-inflicted outage", title:"You turned an attack into an outage.",
+      verdict:"Pausing all card payments killed the bot — and every real sale on the platform. The post-mortem won't be about the attacker; it'll be about the decision to take the whole funnel down over a targeted card-testing wave. The kill switch is a last resort, not a first move." },
+    end_costly:{ end:true, etag:"Incident closed · costly", title:"A costly lesson, learned the hard way.",
+      verdict:"By the time the attack was contained, the losses were heavy and your lead had to step in mid-crisis. The fix was always the same handful of rules — the cost was the fifteen minutes you spent not reading the signature. Speed of diagnosis is the whole game here." }
+  };
+
+  // ---- engine ----
+  const $ = id=>document.getElementById(id);
+  let state, cur, locked, curId, hintScenes;
+
+  // ---- TTS voiceover (Web Speech API; on-device, no files). Text becomes a transcript hint. ----
+  const TTS = ('speechSynthesis' in window);
+  let muted=false, ttsVoice=null, lastSpoken="", lastKey="", curAudio=null;
+  function pickVoice(){
+    if(!TTS) return;
+    const vs=speechSynthesis.getVoices();
+    ttsVoice = vs.find(v=>/^en-GB/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || vs[0] || null;
+  }
+  if(TTS){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+  function stripHtml(h){ const d=document.createElement('div'); d.innerHTML=h; return d.textContent.replace(/\s+/g,' ').trim(); }
+  function narrate(text){
+    lastSpoken=text||"";
+    if(!TTS||muted||!text) return;
+    try{
+      speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(text);
+      if(ttsVoice) u.voice=ttsVoice;
+      u.rate=1.0; u.pitch=1.0;
+      const btn=$("voBtn");
+      u.onstart=()=>{ if(btn) btn.classList.add("speaking"); };
+      u.onend=()=>{ if(btn) btn.classList.remove("speaking"); };
+      speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  // Prefer a pre-rendered clip (audio/<key>.mp3, e.g. ElevenLabs); fall back to on-device TTS if absent.
+  function speak(key, text){
+    lastKey=key||""; lastSpoken=text||"";
+    if(muted) return;
+    if(TTS) speechSynthesis.cancel();
+    if(curAudio){ curAudio.pause(); curAudio=null; }
+    if(!key){ narrate(text); return; }
+    const btn=$("voBtn");
+    const a=new Audio("audio/"+key+".mp3"); curAudio=a;
+    let fellBack=false;
+    const fb=()=>{ if(fellBack) return; fellBack=true; if(curAudio===a) curAudio=null; narrate(text); };
+    a.onplaying=()=>{ if(btn) btn.classList.add("speaking"); };
+    a.onended=()=>{ if(btn) btn.classList.remove("speaking"); };
+    a.onerror=fb;                       // 404 / missing clip -> system TTS
+    a.play().catch(fb);                 // autoplay/decoding failure -> system TTS
+  }
+
+  function init(){
+    state={loss:0, impact:0, trust:50};
+    hintScenes=new Set();
+    $("log").innerHTML="";
+    go("start");
+  }
+
+  function clampPct(v){ return Math.max(0,Math.min(100,v)); }
+
+  function applyEff(e){
+    if(!e) return;
+    if(e.loss)   state.loss  += e.loss;
+    if(e.impact) state.impact = clampPct(state.impact + e.impact);
+    if(e.trust)  state.trust  = clampPct(state.trust + e.trust);
+  }
+
+  function impactLabel(v){ return v<12?"None":v<35?"Low":v<60?"Moderate":v<80?"High":"Severe"; }
+  function trustLabel(v){ return v<25?"Damaged":v<45?"Shaken":v<60?"Neutral":v<80?"Solid":"Strong"; }
+  function eur(v){ return "€"+Math.round(v).toLocaleString("en-GB"); }
+
+  function syncMeters(){
+    $("mLoss").textContent = eur(state.loss);
+    $("mImpact").style.width = state.impact+"%";
+    $("mImpactL").textContent = impactLabel(state.impact);
+    $("mTrust").style.width = state.trust+"%";
+    $("mTrustL").textContent = trustLabel(state.trust);
+  }
+
+  function addLog(entries){
+    if(!entries) return;
+    const wrap=$("log");
+    entries.forEach(ev=>{
+      const d=document.createElement("div");
+      d.className="ev "+(ev.s||"");
+      d.innerHTML='<div class="t mono">'+ev.t+'</div><div class="x">'+ev.x+'</div>';
+      wrap.appendChild(d);
+    });
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+
+  function go(id){
+    cur = NODES[id]; curId = id;
+    applyEff(cur.onEnter);
+    addLog(cur.log);
+    syncMeters();
+    if(cur.end){ showEnding(cur); return; }
+    $("clock").textContent = cur.clock;
+    $("sTag").textContent = cur.tag;
+    $("sBody").innerHTML = cur.body;
+    $("sBody").hidden = true;
+    $("txtBtn").setAttribute("aria-expanded","false"); $("txtBtn").textContent="Show transcript";
+    speak(curId, stripHtml(cur.body));
+    $("conseq").className="conseq";
+    const ch=$("sChoices"); ch.innerHTML=""; ch.style.display="grid";
+    cur.choices.forEach(c=>{
+      const b=document.createElement("button");
+      b.className="choice"; b.setAttribute("data-k",c.k);
+      b.innerHTML='<span class="k mono">'+c.k+'</span><span class="lab">'+c.lab+'</span>';
+      b.addEventListener("click",()=>pick(c));
+      ch.appendChild(b);
+    });
+    locked=false;
+  }
+
+  function pick(c){
+    if(locked) return;
+    locked=true;
+    const before={loss:state.loss, impact:state.impact, trust:state.trust};
+    applyEff(c.eff);
+    addLog([{t:cur.clock.replace("T+",""), x:"YOU — "+c.lab, s:"you"}]);
+    syncMeters();
+    // consequence
+    $("sChoices").style.display="none";
+    $("cNote").textContent = c.note;
+    speak(curId+"_"+c.k, c.note);
+    const d=[];
+    const dLoss=state.loss-before.loss, dImp=state.impact-before.impact, dTr=state.trust-before.trust;
+    if(dLoss>0) d.push('<span class="delta up">+'+eur(dLoss)+' losses</span>');
+    if(dImp>0)  d.push('<span class="delta up">customer impact ↑</span>');
+    if(dImp<0)  d.push('<span class="delta down">customer impact ↓</span>');
+    if(dTr>0)   d.push('<span class="delta down">trust +'+dTr+'</span>');
+    if(dTr<0)   d.push('<span class="delta up">trust '+dTr+'</span>');
+    if(!d.length) d.push('<span class="delta flat">no immediate change</span>');
+    $("cDeltas").innerHTML=d.join("");
+    $("conseq").className="conseq show";
+    $("btnNext").textContent = NODES[c.to] && NODES[c.to].end ? "See outcome →" : "Continue →";
+    $("btnNext").onclick=()=>go(c.to);
+    $("btnNext").focus();
+  }
+
+  function grade(){
+    // composite 0-100: trust dominates the human side; losses + impact the operational side
+    const lossPen = Math.min(state.loss/500, 45);   // up to -45 for heavy losses
+    const impPen  = state.impact*0.45;               // up to -45
+    const hintPen = Math.min(hintScenes.size*4, 16); // reading the transcript is a crutch — no transcript on a real desk
+    const q = clampPct((state.trust-50) + 70 - lossPen - impPen - hintPen);
+    if(q>=75) return {g:"A",cls:"",label:"Senior-ready response"};
+    if(q>=55) return {g:"B",cls:"b",label:"Solid — tighten the reflexes"};
+    if(q>=40) return {g:"C",cls:"c",label:"Contained, but costly"};
+    return {g:"D",cls:"d",label:"Re-run the playbook"};
+  }
+
+  function showEnding(node){
+    $("eTag").textContent = node.etag||"Incident closed";
+    $("eTitle").textContent = node.title;
+    $("eVerdict").textContent = node.verdict;
+    speak(curId, node.title+". "+node.verdict);
+    $("eLoss").textContent = eur(state.loss);
+    $("eImpact").textContent = impactLabel(state.impact);
+    $("eTrust").textContent = trustLabel(state.trust);
+    const g=grade(); $("eGrade").textContent=g.g; $("eGrade").className="g "+g.cls; $("eGradeLabel").textContent=g.label;
+    const hp=Math.min(hintScenes.size*4,16);
+    $("eHints").textContent = hintScenes.size ? ("Transcript opened on "+hintScenes.size+" scene"+(hintScenes.size>1?"s":"")+" · −"+hp+" pts (a real desk has no transcript — train your ear).") : "Ran the whole incident on the voiceover — no transcript crutch.";
+    $("ending").classList.remove("hide");
+    $("btnReplay").focus();
+  }
+
+  // wire
+  function stopAudio(){ if(TTS) speechSynthesis.cancel(); if(curAudio){ curAudio.pause(); curAudio=null; } }
+  $("voBtn").addEventListener("click",()=>speak(lastKey, lastSpoken));
+  $("muteBtn").addEventListener("click",()=>{
+    muted=!muted;
+    if(muted) stopAudio();
+    $("muteBtn").textContent="Sound: "+(muted?"off":"on");
+    $("muteBtn").setAttribute("aria-pressed",String(muted));
+  });
+  $("txtBtn").addEventListener("click",()=>{
+    const b=$("sBody"); b.hidden=!b.hidden;
+    if(!b.hidden && curId) hintScenes.add(curId);   // counts as using a hint
+    $("txtBtn").setAttribute("aria-expanded",String(!b.hidden));
+    $("txtBtn").textContent=(b.hidden?"Show":"Hide")+" transcript";
+  });
+
+  $("btnStart").addEventListener("click",()=>{ $("intro").classList.add("hide"); init(); });
+  $("btnReplay").addEventListener("click",()=>{ stopAudio(); $("ending").classList.add("hide"); init(); });
+  document.addEventListener("keydown",e=>{
+    const playing = $("intro").classList.contains("hide") && $("ending").classList.contains("hide");
+    if(!playing) return;
+    if(!locked && cur && cur.choices){
+      const c = cur.choices.find(x=>String(x.k)===e.key);
+      if(c){ e.preventDefault(); pick(c); }
+    }
+  });
+})();
+</script>
+</body>
+</html>
