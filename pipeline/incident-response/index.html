@@ -178,12 +178,7 @@
 
     <section class="scene" aria-live="polite">
       <span class="tag" id="sTag">DETECTION</span>
-      <div class="narration">
-        <button class="vo-btn" id="voBtn" type="button" aria-label="Replay narration"><span class="vo-ico" aria-hidden="true">🔊</span> <span>Replay</span></button>
-        <button class="vo-btn ghost" id="muteBtn" type="button" aria-pressed="false">Sound: on</button>
-        <button class="vo-btn ghost" id="txtBtn" type="button" aria-expanded="false">Show transcript</button>
-      </div>
-      <div class="transcript" id="sBody" hidden></div>
+      <div class="body" id="sBody"></div>
       <div class="choices" id="sChoices"></div>
       <div class="conseq" id="conseq">
         <div class="note" id="cNote"></div>
@@ -418,9 +413,6 @@
     $("clock").textContent = cur.clock;
     $("sTag").textContent = cur.tag;
     $("sBody").innerHTML = cur.body;
-    $("sBody").hidden = true;
-    $("txtBtn").setAttribute("aria-expanded","false"); $("txtBtn").textContent="Show transcript";
-    speak(curId, stripHtml(cur.body));
     $("conseq").className="conseq";
     const ch=$("sChoices"); ch.innerHTML=""; ch.style.display="grid";
     cur.choices.forEach(c=>{
@@ -443,7 +435,6 @@
     // consequence
     $("sChoices").style.display="none";
     $("cNote").textContent = c.note;
-    speak(curId+"_"+c.k, c.note);
     const d=[];
     const dLoss=state.loss-before.loss, dImp=state.impact-before.impact, dTr=state.trust-before.trust;
     if(dLoss>0) d.push('<span class="delta up">+'+eur(dLoss)+' losses</span>');
@@ -463,8 +454,7 @@
     // composite 0-100: trust dominates the human side; losses + impact the operational side
     const lossPen = Math.min(state.loss/500, 45);   // up to -45 for heavy losses
     const impPen  = state.impact*0.45;               // up to -45
-    const hintPen = Math.min(hintScenes.size*4, 16); // reading the transcript is a crutch — no transcript on a real desk
-    const q = clampPct((state.trust-50) + 70 - lossPen - impPen - hintPen);
+    const q = clampPct((state.trust-50) + 70 - lossPen - impPen);
     if(q>=75) return {g:"A",cls:"",label:"Senior-ready response"};
     if(q>=55) return {g:"B",cls:"b",label:"Solid — tighten the reflexes"};
     if(q>=40) return {g:"C",cls:"c",label:"Contained, but costly"};
@@ -475,35 +465,17 @@
     $("eTag").textContent = node.etag||"Incident closed";
     $("eTitle").textContent = node.title;
     $("eVerdict").textContent = node.verdict;
-    speak(curId, node.title+". "+node.verdict);
     $("eLoss").textContent = eur(state.loss);
     $("eImpact").textContent = impactLabel(state.impact);
     $("eTrust").textContent = trustLabel(state.trust);
     const g=grade(); $("eGrade").textContent=g.g; $("eGrade").className="g "+g.cls; $("eGradeLabel").textContent=g.label;
-    const hp=Math.min(hintScenes.size*4,16);
-    $("eHints").textContent = hintScenes.size ? ("Transcript opened on "+hintScenes.size+" scene"+(hintScenes.size>1?"s":"")+" · −"+hp+" pts (a real desk has no transcript — train your ear).") : "Ran the whole incident on the voiceover — no transcript crutch.";
     $("ending").classList.remove("hide");
     $("btnReplay").focus();
   }
 
   // wire
-  function stopAudio(){ if(TTS) speechSynthesis.cancel(); if(curAudio){ curAudio.pause(); curAudio=null; } }
-  $("voBtn").addEventListener("click",()=>speak(lastKey, lastSpoken));
-  $("muteBtn").addEventListener("click",()=>{
-    muted=!muted;
-    if(muted) stopAudio();
-    $("muteBtn").textContent="Sound: "+(muted?"off":"on");
-    $("muteBtn").setAttribute("aria-pressed",String(muted));
-  });
-  $("txtBtn").addEventListener("click",()=>{
-    const b=$("sBody"); b.hidden=!b.hidden;
-    if(!b.hidden && curId) hintScenes.add(curId);   // counts as using a hint
-    $("txtBtn").setAttribute("aria-expanded",String(!b.hidden));
-    $("txtBtn").textContent=(b.hidden?"Show":"Hide")+" transcript";
-  });
-
   $("btnStart").addEventListener("click",()=>{ $("intro").classList.add("hide"); init(); });
-  $("btnReplay").addEventListener("click",()=>{ stopAudio(); $("ending").classList.add("hide"); init(); });
+  $("btnReplay").addEventListener("click",()=>{ $("ending").classList.add("hide"); init(); });
   document.addEventListener("keydown",e=>{
     const playing = $("intro").classList.contains("hide") && $("ending").classList.contains("hide");
     if(!playing) return;
