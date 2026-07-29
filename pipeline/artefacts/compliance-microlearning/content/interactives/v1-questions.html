@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 1 — Would you click? · questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0E1116; --panel:rgba(21,27,36,.72); --txt:#EAF2F9; --dim:#8A93A0;
+    --blue:#35B6FF; --lime:#C6F221; --green:#3DDC84; --red:#FF3B4A;
+    --sans:'Archivo','IBM Plex Sans',system-ui,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  /* Plain dark background — dot grid removed (feedback item 6). */
+  body { background: var(--bg); color: var(--txt); font: 400 16px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 30px 20px 90px; }
+  h1 { font: 700 clamp(24px, 6.5vw, 34px)/1.1 var(--sans); letter-spacing: -.01em; margin-bottom: 8px; }
+  .lead { color: var(--dim); font-size: 15px; margin-bottom: 8px; max-width: 620px; }
+  .score { position: sticky; top: 0; z-index: 10; font: 600 13px var(--mono); color: var(--dim);
+    margin: 0 -20px 26px; padding: 14px 20px 12px; background: rgba(14,17,22,.85); backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(53,182,255,.15); }
+  .score b { color: var(--lime); }
+
+  .card { border: 1px solid rgba(53,182,255,.25); border-radius: 18px; background: var(--panel);
+    box-shadow: 0 0 0 1px rgba(53,182,255,.05), 0 14px 40px rgba(0,0,0,.35); padding: 20px 22px; margin-bottom: 20px; }
+  .eyebrow { font: 500 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+
+  /* mail-styled scenario — rendered as a realistic Gmail message so the skill
+     transfers to what real mail actually looks like (feedback item 21). Only
+     this block goes light; everything else in the card stays dark-neon. */
+  .mail { border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; margin-bottom: 16px; background: #fff; }
+  .mail-subj { font: 500 19px/1.35 'Google Sans', Roboto, Arial, sans-serif; color: #202124; padding: 16px 20px 2px; }
+  .mail-h { display: flex; gap: 12px; align-items: flex-start; padding: 6px 20px 14px; border-bottom: 1px solid #f1f3f4; }
+  .mail-h .av { width: 36px; height: 36px; border-radius: 50%; flex: none; display: flex; align-items: center;
+    justify-content: center; color: #fff; font: 500 15px 'Google Sans', Roboto, Arial, sans-serif; }
+  .mail-meta { flex: 1; min-width: 0; padding-top: 2px; }
+  .mail-fromrow { font-size: 14px; color: #202124; line-height: 1.4; }
+  .mail-name { font-weight: 700; }
+  .mail-addr { font: 12.5px Roboto, Arial, sans-serif; color: #5f6368; margin-left: 4px; }
+  .mail-to { font: 12px Roboto, Arial, sans-serif; color: #5f6368; margin-top: 2px; }
+  .mail-time { font: 12px Roboto, Arial, sans-serif; color: #5f6368; white-space: nowrap; flex: none; padding-top: 4px; }
+  .mail-body { padding: 14px 20px 20px; font: 14px/1.6 Roboto, Arial, sans-serif; color: #202124; background: #fff; }
+  .mail-body .mono { font: 500 13px var(--mono); color: #1a73e8; }
+  .mail-link { color: #1a73e8; font-weight: 500; }
+  .attach-chip { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 7px 12px 7px 8px;
+    background: #f1f3f4; border-radius: 8px; font: 12.5px Roboto, Arial, sans-serif; color: #202124; }
+  .attach-chip svg { flex: none; }
+  .redch { color: #d93025; font-weight: 700; }
+  .qtext { font-size: 17px; font-weight: 600; margin-bottom: 16px; }
+
+  .opts { display: flex; flex-direction: column; gap: 9px; }
+  .opt { text-align: left; font: 500 14.5px var(--body); color: var(--txt); background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.12); border-radius: 11px; padding: 12px 15px; cursor: pointer; transition: .15s; }
+  .opt:hover:not(:disabled) { border-color: var(--blue); background: rgba(53,182,255,.08); }
+  .opt:disabled { cursor: default; }
+  .opt.correct { border-color: var(--green); background: rgba(61,220,132,.12); box-shadow: 0 0 14px rgba(61,220,132,.25); color: #fff; }
+  .opt.wrong { border-color: var(--red); background: rgba(255,59,74,.1); box-shadow: 0 0 14px rgba(255,59,74,.22); }
+  .opt .mark { float: right; font-weight: 700; }
+
+  .fb { margin-top: 14px; border-left: 3px solid var(--blue); padding: 10px 14px; border-radius: 0 10px 10px 0;
+    background: rgba(53,182,255,.06); font-size: 14px; line-height: 1.55; display: none; }
+  .fb.show { display: block; animation: pop .4s cubic-bezier(.2,1.2,.4,1); }
+  .fb.ok { border-left-color: var(--green); background: rgba(61,220,132,.08); }
+  .fb.no { border-left-color: var(--red); background: rgba(255,59,74,.07); }
+  .fb .ref { display: block; margin-top: 6px; font: 500 11.5px var(--mono); letter-spacing: .06em; color: var(--dim); }
+  @keyframes pop { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Would you click?</h1>
+  <p class="lead">Pick an answer on each card to see why it's right or wrong.</p>
+  <div id="deck"></div>
+  <button id="retry" style="display:none;margin-top:6px;font-size:13px;font-weight:600;color:#fff;background:rgba(53,182,255,.15);border:1px solid #35B6FF;border-radius:10px;padding:9px 16px;cursor:pointer">Try again</button>
+</div>
+
+<script>
+const C = { blue:'#35B6FF', red:'#FF3B4A', green:'#3DDC84', lime:'#C6F221', dim:'#8A93A0' };
+// mail scenario: {from, subj, body(html)} · or plain {q} question
+const ITEMS = [
+  { id:'u1-probe-1', tag:'cold probe · Trust / Report',
+    mail:{ from:'Comms Team &lt;newsletter@yourcompany.com&gt;', subj:'March town hall — recording and slides', time:'Mon 08:47',
+      body:'Hi all, the recording from Tuesday\'s town hall is now on the intranet. Slides attached.' },
+    opts:[
+      { t:'Trust', ok:true,  fb:'Right. Expected sender, internal address, no pressure, no ask. Most mail is fine; the skill is spotting the exceptions.' },
+      { t:'Report', ok:false, fb:'Cautious, but this one\'s clean: known sender, real internal address, nothing urgent, nothing requested. Reporting everything drowns the signal.' },
+    ], ref:'27002 §6.3' },
+
+  { id:'u1-probe-2', tag:'cold probe · Trust / Report',
+    mail:{ from:'IT Support &lt;it-helpdesk@yourcompany-<span class="redch">security.net</span>&gt;', subj:'ACTION REQUIRED: password expires in 2 hours', time:'Mon 08:58',
+      body:'Your network password expires today at 17:00. To avoid losing access, confirm your current password here: <span class="mono">[Verify now]</span>' },
+    opts:[
+      { t:'Report', ok:true, fb:'Correct. This one fools about 4 out of 10 people. Three tells: an urgent deadline out of nowhere, a look-alike domain (yourcompany-security.net isn\'t your company), and it asks for your password. IT never asks you to confirm a password by email.' },
+      { t:'Trust', ok:false, fb:'This is the one that gets people. No shame, it\'s built to. A 2-hour deadline you never heard about, a domain that almost matches, and a request for your password. Urgent + mismatch + credentials = stop.' },
+    ], ref:'27002 §8.7, §5.17' },
+
+  { id:'u1-probe-3', tag:'cold probe · Trust / Report',
+    mail:{ from:'Accounts &lt;billing@supplier-invoices.com&gt;', subj:'Overdue invoice #48213 — final notice', time:'Mon 09:14',
+      body:'Please find attached the outstanding invoice. Settle within 24 hours to avoid escalation. <span class="mono">[invoice_48213.zip]</span>' },
+    opts:[
+      { t:'Report', ok:true, fb:'Right. Unexpected + urgent + a zip attachment from a domain you don\'t recognise. Zip attachments in surprise invoices are the classic malware delivery. If it might be real, verify with finance through a channel you choose.' },
+      { t:'Trust', ok:false, fb:'Check the tells: did you expect this invoice? Is supplier-invoices.com a supplier you know? Why a zip file, why 24 hours? Unexpected + urgent + attachment is the standard malware pattern.' },
+    ], ref:'27002 §8.7' },
+
+  { id:'u1-check-1', tag:'check · cue recognition',
+    q:'A message you never expected gives you two hours to act. Which cue family is that?',
+    opts:[
+      { t:'Look-alike domain', ok:false, fb:'This one is about timing, not content: you didn\'t expect it, and it pushes you to hurry. That combination is cue one: manufactured pressure.' },
+      { t:'Unexpected + urgent', ok:true, fb:'Yes. Pressure out of nowhere exists to make you skip thinking. The pause costs three seconds; nothing legitimate breaks because you verified first.' },
+      { t:'Crown jewels', ok:false, fb:'Not quite. Nothing has been asked for yet. The tell here is timing: unexpected and urgent at once. That is cue one.' },
+      { t:'Link mismatch', ok:false, fb:'No link in play yet. The tell is that it\'s unexpected and pushes you to hurry: cue one, manufactured pressure.' },
+    ], ref:'27002 §8.7' },
+
+  { id:'u1-check-2', tag:'check · the rule',
+    q:'How many cues do you need before you slow down and report?',
+    opts:[
+      { t:'One is enough: any single tell means stop and check', ok:true, fb:'Right. You never need a second cue. One tell, unexpected timing, a mismatched domain, a request for credentials, is already the reason to stop and report. You don\'t need to be sure it\'s fake; that\'s the security team\'s job.' },
+      { t:'At least two', ok:false, fb:'That\'s too high a bar. Waiting for a second cue lets the first one do its work on you. One tell is already enough to stop and report.' },
+      { t:'All four', ok:false, fb:'Waiting for every tell to line up is how phish win. One cue, on its own, is enough to stop and report.' },
+      { t:'Only when IT confirms', ok:false, fb:'That\'s backwards: you report so IT can confirm. One tell on your side is already enough to send it in.' },
+    ], ref:'27002 §8.7, §6.8' },
+
+  { id:'u1-check-3', tag:'check · crown jewels',
+    q:'An email from "IT Support" asks you to confirm your current password. What does that tell you?',
+    opts:[
+      { t:'Routine security practice — comply', ok:false, fb:'No legitimate system asks you to confirm your password by email; IT resets passwords, it doesn\'t collect them.' },
+      { t:'Fine if the sender domain matches', ok:false, fb:'The domain isn\'t the point. A credentials ask by email is a tell on its own, matching domain or not.' },
+      { t:'A phish tell on its own: IT never needs your password', ok:true, fb:'Exactly. IT has admin access; they never need your password. A credentials ask is a full-stop tell even when everything else looks clean.' },
+      { t:'Reply and ask if the request is real', ok:false, fb:'Never verify through the message itself; use a channel you choose. And the ask is already the tell.' },
+    ], ref:'27002 §5.17, §8.7' },
+
+  { id:'u1-check-4', tag:'check · the safe move',
+    q:'Why report a phish instead of just deleting it?',
+    opts:[
+      { t:'Deleting is fine, the threat is gone', ok:false, fb:'The same phish landed in other inboxes. Deleting yours does nothing for your colleagues.' },
+      { t:'Reporting warns security while the campaign is still running', ok:true, fb:'Right. Delete protects one inbox for one morning. Report lets security warn everyone else who got the same message, before they click.' },
+      { t:'Reporting punishes the sender', ok:false, fb:'It\'s not about the sender. Reporting gives security a live sample so they can protect everyone else.' },
+      { t:'Deleting breaks the reply chain', ok:false, fb:'The reason to report is coverage: security warns the next person. Deleting just removes your copy.' },
+    ], ref:'27002 §6.8, §8.7' },
+
+  { id:'u1-perf-1', tag:'harder · authority pressure',
+    mail:{ from:'Daniel Reeve &lt;ceo.office.mail@gmail.com&gt;', subj:'Quick favour — are you at your desk?', time:'Mon 09:32',
+      body:'I\'m heading into a board meeting and can\'t talk. I need you to buy 4 × €100 gift cards for a client thank-you. Send me the codes here. Keep it between us for now.' },
+    opts:[
+      { t:'Report', ok:true, fb:'Correct. Authority + urgency + secrecy + gift cards: the full CEO-fraud pattern, from a personal address. Real executives don\'t buy gift cards by email, and "keep it between us" exists to stop you verifying.' },
+      { t:'Trust', ok:false, fb:'The name is real. That\'s what makes it work. Look at the address: gmail, not your company. And the ask: gift-card codes, urgently, in secret. "Don\'t tell anyone" is itself the tell.' },
+    ], ref:'27002 §8.7, §6.3' },
+
+  { id:'u1-perf-2', tag:'harder · plausible notification',
+    mail:{ from:'SharePoint &lt;no-reply@sharepointonline.com&gt;', subj:'Priya Nair shared "Q3-planning.xlsx" with you', time:'Mon 09:45',
+      body:'"Open document" → hover shows <span class="mono" style="color:#d93025">http://docs-share-view.ru/a8f2</span>' },
+    opts:[
+      { t:'Report', ok:true, fb:'Right. The only visible tell is the link. The sender looks plausible, the colleague is real, sharing files is normal. But hover shows the destination is a random domain, not your document platform.' },
+      { t:'Trust', ok:false, fb:'Everything looks routine, except where the link actually goes. Hover: docs-share-view.ru is not your document platform. One tell can be the only tell. Unsure? Ask the colleague in chat, not by replying.' },
+    ], ref:'27002 §8.7' },
+];
+
+const deck = document.getElementById('deck');
+const PASS = 7;                          // proceed at 7 of 9 correct — no need to ace it
+let answered = 0, correct = 0, passed = false;
+
+function updateScore() {
+  // The score lives in the lesson shell's sticky bar (this iframe doesn't
+  // scroll), mirrored via postMessage. No in-page score row.
+  try { window.parent && window.parent.postMessage({ type: 'u1-quiz-score', answered, correct, total: ITEMS.length, pass: PASS, passed }, '*'); } catch (e) {}
+  // Retry only matters as a rescue: all answered, still short of the bar.
+  document.getElementById('retry').style.display =
+    (answered === ITEMS.length && !passed) ? 'inline-block' : 'none';
+}
+
+function markPassed() {
+  passed = true;
+  // Tell the SCORM shell this step is cleared.
+  try { window.parent && window.parent.postMessage({ type: 'u1-progress', id: 'questions' }, '*'); } catch (e) {}
+}
+
+// --- Gmail-look rendering helpers for mail-styled items (feedback item 21) ---
+// `from` strings mix literal &lt;/&gt; entities around the address with real
+// embedded tags (the .redch look-alike-domain highlight). Split on the
+// entity-escaped brackets only, so the redch span keeps working untouched.
+function parseFrom(raw) {
+  const m = raw.match(/^(.*?)&lt;(.*)&gt;\s*$/);
+  return m ? { name: m[1].trim(), addr: m[2].trim() } : { name: raw.trim(), addr: '' };
+}
+const AVATAR_COLORS = ['#1a73e8', '#d93025', '#188038', '#f9ab00', '#9334e6', '#12b5cb', '#e8710a'];
+function avatarColor(name) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function avatarInitial(name) {
+  const letters = name.replace(/[^A-Za-z]/g, '');
+  return (letters[0] || '?').toUpperCase();
+}
+const ATTACH_ICON = '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="#8f9296"/><path d="M14 2v6h6z" fill="#c7c9cc"/></svg>';
+// Existing bodies mark placeholders with a `.mono` span. Filename-looking
+// ones (probe-3's zip) become a Gmail-style attachment chip; the rest (link
+// call-to-actions like "[Verify now]") become believable blue link text.
+// Data itself is untouched, this only reshapes the rendered HTML.
+function renderMailBody(html) {
+  html = html.replace(/<span class="mono">\[([^\]]+\.(?:zip|pdf|docx?|xlsx?|pptx?))\]<\/span>/gi,
+    (m, fname) => `<br><span class="attach-chip">${ATTACH_ICON}${fname}</span>`);
+  html = html.replace(/<span class="mono">\[([^\]]+)\]<\/span>/g,
+    (m, text) => `<span class="mail-link">${text}</span>`);
+  return html;
+}
+function renderMailScenario(mail) {
+  const { name, addr } = parseFrom(mail.from);
+  const initial = avatarInitial(name);
+  const addrHtml = addr ? ` <span class="mail-addr">&lt;${addr}&gt;</span>` : '';
+  return `<div class="mail">` +
+    `<div class="mail-subj">${mail.subj}</div>` +
+    `<div class="mail-h">` +
+      `<div class="av" style="background:${avatarColor(name)}">${initial}</div>` +
+      `<div class="mail-meta">` +
+        `<div class="mail-fromrow"><span class="mail-name">${name}</span>${addrHtml}</div>` +
+        `<div class="mail-to">to me</div>` +
+      `</div>` +
+      `<div class="mail-time">${mail.time}</div>` +
+    `</div>` +
+    `<div class="mail-body">${renderMailBody(mail.body)}</div>` +
+  `</div>`;
+}
+
+function buildDeck() {
+  deck.innerHTML = '';
+  ITEMS.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    const scenario = item.mail
+      ? renderMailScenario(item.mail)
+      : `<div class="qtext">${item.q}</div>`;
+    card.innerHTML = `<div class="eyebrow">Question ${idx + 1} of ${ITEMS.length}</div>${scenario}<div class="opts"></div><div class="fb"></div>`;
+    const optsBox = card.querySelector('.opts');
+    const fb = card.querySelector('.fb');
+    item.opts.forEach(o => {
+      const b = document.createElement('button');
+      b.className = 'opt';
+      b.innerHTML = o.t;
+      b.onclick = () => {
+        if (card.dataset.done) return;
+        card.dataset.done = '1'; answered++;
+        if (o.ok) correct++;
+        optsBox.querySelectorAll('.opt').forEach(x => x.disabled = true);
+        b.classList.add(o.ok ? 'correct' : 'wrong');
+        const mk = document.createElement('span'); mk.className = 'mark'; mk.textContent = o.ok ? '✓' : '✕';
+        mk.style.color = o.ok ? C.green : C.red; b.appendChild(mk);
+        if (!o.ok) optsBox.querySelectorAll('.opt').forEach((x, i) => { if (item.opts[i].ok) x.classList.add('correct'); });
+        fb.className = 'fb show ' + (o.ok ? 'ok' : 'no');
+        fb.innerHTML = o.fb + `<span class="ref">${item.ref}</span>`;
+        if (!passed && correct >= PASS) markPassed();   // unlock as soon as the bar is met
+        updateScore();
+      };
+      optsBox.appendChild(b);
+    });
+    deck.appendChild(card);
+  });
+}
+
+// Rescue path: fell short across all 9 → wipe answers and try again (passed can't be true here).
+function retry() { answered = 0; correct = 0; buildDeck(); updateScore(); window.scrollTo(0, 0); }
+document.getElementById('retry').onclick = retry;
+
+buildDeck();
+updateScore();
+</script>
+</body>
+</html>

@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Would you click? — neon cut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<style>/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/d4439590-95ea-4c18-9cd0-d49b2a3dea01.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/96445f1e-6745-4ca7-8c4d-9c5d25906dc3.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/392109c1-d6b2-4b96-aee2-4ce35a2891ec.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/d4439590-95ea-4c18-9cd0-d49b2a3dea01.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/96445f1e-6745-4ca7-8c4d-9c5d25906dc3.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/392109c1-d6b2-4b96-aee2-4ce35a2891ec.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/d4439590-95ea-4c18-9cd0-d49b2a3dea01.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/96445f1e-6745-4ca7-8c4d-9c5d25906dc3.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/392109c1-d6b2-4b96-aee2-4ce35a2891ec.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/2504a445-7835-44a3-b35d-4c3129dc1bc9.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/d9e70a27-5dc5-44fd-aef7-1df529f145d5.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/2bf25c3f-3d8c-4f66-99d2-c0a849ceb03e.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/ddfff961-058e-4287-8bcb-1da2f65f935d.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/9affe88b-275d-48f9-ab2c-e491ac310c9e.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/7aac9a57-42b6-4b43-b1b3-7680e00d34e9.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/f1473c58-427a-4f28-bb02-53926ff3c98d.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/3d690c19-7909-4e8a-8627-06c7767740f5.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/732eeb1a-ba34-42fb-9bb0-f33f9a314b04.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/411c3e07-de99-4c85-95f6-6d4d975b2c29.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/821dd8ac-60e0-4fa6-aa35-3330dbe8634c.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/5d648066-a118-409f-8990-23c2b5765fa5.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/635bc2f5-8474-40aa-82a8-b10461f4991c.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/c7374ee2-fecf-4702-a39c-37180c0bff7e.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/4b067a7d-f6c2-4c74-b8d8-447541f036b5.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/f5b8c8fe-df18-486e-8885-3910bac89d42.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/72188aeb-cbc2-42b6-85e8-5f3ded251c47.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/1ee57621-93cc-4bb0-9bb8-173dbd9d8abf.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/ff476aac-3842-4ace-b21f-9cde82caded7.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/63165e67-bb31-4b86-aea2-d834230b5079.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/f1483edc-7e67-4fd6-9bda-3cf2a514bd42.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/f5b8c8fe-df18-486e-8885-3910bac89d42.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/72188aeb-cbc2-42b6-85e8-5f3ded251c47.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/1ee57621-93cc-4bb0-9bb8-173dbd9d8abf.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/ff476aac-3842-4ace-b21f-9cde82caded7.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/63165e67-bb31-4b86-aea2-d834230b5079.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/f1483edc-7e67-4fd6-9bda-3cf2a514bd42.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/f5b8c8fe-df18-486e-8885-3910bac89d42.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/72188aeb-cbc2-42b6-85e8-5f3ded251c47.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/1ee57621-93cc-4bb0-9bb8-173dbd9d8abf.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/ff476aac-3842-4ace-b21f-9cde82caded7.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/63165e67-bb31-4b86-aea2-d834230b5079.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/f1483edc-7e67-4fd6-9bda-3cf2a514bd42.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/f5b8c8fe-df18-486e-8885-3910bac89d42.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/72188aeb-cbc2-42b6-85e8-5f3ded251c47.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/1ee57621-93cc-4bb0-9bb8-173dbd9d8abf.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/ff476aac-3842-4ace-b21f-9cde82caded7.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/63165e67-bb31-4b86-aea2-d834230b5079.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/f1483edc-7e67-4fd6-9bda-3cf2a514bd42.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<script src="js/react.js"></script>
+<script src="js/react-dom.js"></script>
+<script src="js/babel.js"></script>
+<style>
+html,body{margin:0;height:100%;background:#0E1116;overflow:hidden}
+#root{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+<audio id="vo" preload="auto"></audio>
+<script>
+/* Load VO as a blob so it seeks regardless of server Range support
+   (python http.server sends no Range; blob/data URLs seek everywhere, incl. file://). */
+// Prefer edited vo.wav (from the VO editor) if present, else the original vo.mp3.
+fetch('audio/vo.wav').then(r=>r.ok?r:fetch('audio/vo.mp3')).then(r=>r.blob())
+  .then(b=>{ document.getElementById('vo').src=URL.createObjectURL(b); }).catch(()=>{});
+</script>
+<script type="text/babel">
+// @ds-adherence-ignore -- omelette starter scaffold (raw elements/hex/px by design)
+
+/* BEGIN USAGE */
+// animations.jsx — timeline engine. Exports (on window): Stage, Sprite,
+//   TextSprite, ImageSprite, RectSprite, VideoSprite, PlaybackBar,
+//   useTime, useTimeline, useSprite, Easing, interpolate, animate, clamp.
+//
+//   <Stage width={1280} height={720} duration={10} background="#f6f4ef">
+//     <Sprite start={0} end={3}>
+//       <TextSprite text="Hello" x={100} y={300} size={72} color="#111" />
+//     </Sprite>
+//     <Sprite start={2} end={8}>
+//       <ImageSprite src="hero.png" x={200} y={120} width={640} height={360} kenBurns />
+//     </Sprite>
+//   </Stage>
+//
+// Stage({width,height,duration,background,fps,loop,autoplay}) — auto-scales to
+//   viewport; scrubber + play/pause + ←/→ seek + space + 0-reset; persists
+//   playhead. The canvas is an <svg><foreignObject>, export-ready: Share →
+//   Export → Video (or the PlaybackBar's download button) renders it to .mp4.
+//   Screenshot tools DOM-rerender (not pixel-capture) and unwrap this wrapper
+//   so captures should work — but if one comes back black, that's a capture
+//   artifact, not a render bug; trust the live preview.
+// Sprite({start,end,keepMounted}) — mounts children only while playhead is in
+//   [start,end]. Children read {localTime, progress, duration} via useSprite().
+// useTime() → seconds; useTimeline() → {time,duration,playing,setTime,setPlaying}.
+// TextSprite({text,x,y,size,color,font,weight,align,entryDur,exitDur}) — fades/scales in+out.
+// ImageSprite({src,x,y,width,height,fit,radius,kenBurns,placeholder}) — same, with optional ken-burns.
+// RectSprite({x,y,width,height,color,radius}) — solid box with entry/exit.
+// VideoSprite({src,start,end,speed,style}) — looped <video> clip synced to the
+//   timeline; its audio is mixed into the exported video.
+// Easing.{linear,easeIn/Out/InOut Quad/Cubic/Quart/Quint/Expo/Back, …}
+// interpolate([t0,t1,…],[v0,v1,…],ease?) → (t)=>v  — piecewise tween.
+// animate({from,to,start,end,ease}) → (t)=>v  — single tween.
+//
+// Build scenes by composing Sprites inside Stage. Absolutely-position elements.
+//
+// In a .dc.html project, put your scene in a sibling my-scene.jsx (reading
+// {Stage, Sprite, useTime, Easing, …} from window is safe) and mount BOTH:
+//   <x-import component-from-global-scope="MyScene"
+//             from="./animations.jsx ./my-scene.jsx"></x-import>
+// The two files in from= load in order, so my-scene.jsx can use the globals
+// animations.jsx set.
+/* END USAGE */
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Easing functions (hand-rolled, Popmotion-style) ─────────────────────────
+// All easings take t ∈ [0,1] and return eased t ∈ [0,1] (may overshoot for back/elastic).
+const Easing = {
+  linear: (t) => t,
+
+  // Quad
+  easeInQuad:    (t) => t * t,
+  easeOutQuad:   (t) => t * (2 - t),
+  easeInOutQuad: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
+
+  // Cubic
+  easeInCubic:    (t) => t * t * t,
+  easeOutCubic:   (t) => (--t) * t * t + 1,
+  easeInOutCubic: (t) => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1),
+
+  // Quart
+  easeInQuart:    (t) => t * t * t * t,
+  easeOutQuart:   (t) => 1 - (--t) * t * t * t,
+  easeInOutQuart: (t) => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t),
+
+  // Expo
+  easeInExpo:  (t) => (t === 0 ? 0 : Math.pow(2, 10 * (t - 1))),
+  easeOutExpo: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
+  easeInOutExpo: (t) => {
+    if (t === 0) return 0;
+    if (t === 1) return 1;
+    if (t < 0.5) return 0.5 * Math.pow(2, 20 * t - 10);
+    return 1 - 0.5 * Math.pow(2, -20 * t + 10);
+  },
+
+  // Sine
+  easeInSine:    (t) => 1 - Math.cos((t * Math.PI) / 2),
+  easeOutSine:   (t) => Math.sin((t * Math.PI) / 2),
+  easeInOutSine: (t) => -(Math.cos(Math.PI * t) - 1) / 2,
+
+  // Back (overshoot)
+  easeOutBack: (t) => {
+    const c1 = 1.70158, c3 = c1 + 1;
+    return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  },
+  easeInBack: (t) => {
+    const c1 = 1.70158, c3 = c1 + 1;
+    return c3 * t * t * t - c1 * t * t;
+  },
+  easeInOutBack: (t) => {
+    const c1 = 1.70158, c2 = c1 * 1.525;
+    return t < 0.5
+      ? (Math.pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
+      : (Math.pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
+  },
+
+  // Elastic
+  easeOutElastic: (t) => {
+    const c4 = (2 * Math.PI) / 3;
+    if (t === 0) return 0;
+    if (t === 1) return 1;
+    return Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+  },
+};
+
+// ── Core interpolation helpers ──────────────────────────────────────────────
+
+// Clamp a value to [min, max]
+const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+// interpolate([0, 0.5, 1], [0, 100, 50], ease?) -> fn(t)
+// Popmotion-style: linearly maps t across input keyframes to output values,
+// with optional easing per segment (single fn or array of fns).
+function interpolate(input, output, ease = Easing.linear) {
+  return (t) => {
+    if (t <= input[0]) return output[0];
+    if (t >= input[input.length - 1]) return output[output.length - 1];
+    for (let i = 0; i < input.length - 1; i++) {
+      if (t >= input[i] && t <= input[i + 1]) {
+        const span = input[i + 1] - input[i];
+        const local = span === 0 ? 0 : (t - input[i]) / span;
+        const easeFn = Array.isArray(ease) ? (ease[i] || Easing.linear) : ease;
+        const eased = easeFn(local);
+        return output[i] + (output[i + 1] - output[i]) * eased;
+      }
+    }
+    return output[output.length - 1];
+  };
+}
+
+// animate({from, to, start, end, ease})(t) — simpler single-segment tween.
+// Returns `from` before `start`, `to` after `end`.
+function animate({ from = 0, to = 1, start = 0, end = 1, ease = Easing.easeInOutCubic }) {
+  return (t) => {
+    if (t <= start) return from;
+    if (t >= end) return to;
+    const local = (t - start) / (end - start);
+    return from + (to - from) * ease(local);
+  };
+}
+
+// ── Timeline context ────────────────────────────────────────────────────────
+
+const TimelineContext = React.createContext({ time: 0, duration: 10, playing: false });
+
+const useTime = () => React.useContext(TimelineContext).time;
+const useTimeline = () => React.useContext(TimelineContext);
+
+// ── Sprite ──────────────────────────────────────────────────────────────────
+// Renders children only when the playhead is inside [start, end]. Provides
+// a sub-context with `localTime` (seconds since start) and `progress` (0..1).
+//
+//   <Sprite start={2} end={5}>
+//     {({ localTime, progress }) => <Thing x={progress * 100} />}
+//   </Sprite>
+//
+// Or as a plain wrapper — children can call useSprite() themselves.
+
+const SpriteContext = React.createContext({ localTime: 0, progress: 0, duration: 0 });
+const useSprite = () => React.useContext(SpriteContext);
+
+function Sprite({ start = 0, end = Infinity, children, keepMounted = false }) {
+  const { time } = useTimeline();
+  const visible = time >= start && time <= end;
+  if (!visible && !keepMounted) return null;
+
+  const duration = end - start;
+  const localTime = Math.max(0, time - start);
+  const progress = duration > 0 && isFinite(duration)
+    ? clamp(localTime / duration, 0, 1)
+    : 0;
+
+  const value = { localTime, progress, duration, visible };
+
+  return (
+    <SpriteContext.Provider value={value}>
+      {typeof children === 'function' ? children(value) : children}
+    </SpriteContext.Provider>
+  );
+}
+
+// ── Sample sprite components ────────────────────────────────────────────────
+
+// TextSprite: fades/slides text in on entry, holds, then fades out on exit.
+// Props: text, x, y, size, color, font, entryDur, exitDur, align
+function TextSprite({
+  text,
+  x = 0, y = 0,
+  size = 48,
+  color = '#111',
+  font = 'Inter, system-ui, sans-serif',
+  weight = 600,
+  entryDur = 0.45,
+  exitDur = 0.35,
+  entryEase = Easing.easeOutBack,
+  exitEase = Easing.easeInCubic,
+  align = 'left',
+  letterSpacing = '-0.01em',
+}) {
+  const { localTime, duration } = useSprite();
+  const exitStart = Math.max(0, duration - exitDur);
+
+  let opacity = 1;
+  let ty = 0;
+
+  if (localTime < entryDur) {
+    const t = entryEase(clamp(localTime / entryDur, 0, 1));
+    opacity = t;
+    ty = (1 - t) * 16;
+  } else if (localTime > exitStart) {
+    const t = exitEase(clamp((localTime - exitStart) / exitDur, 0, 1));
+    opacity = 1 - t;
+    ty = -t * 8;
+  }
+
+  const translateX = align === 'center' ? '-50%' : align === 'right' ? '-100%' : '0';
+
+  return (
+    <div style={{
+      position: 'absolute',
+      left: x, top: y,
+      transform: `translate(${translateX}, ${ty}px)`,
+      opacity,
+      fontFamily: font,
+      fontSize: size,
+      fontWeight: weight,
+      color,
+      letterSpacing,
+      whiteSpace: 'pre',
+      lineHeight: 1.1,
+      willChange: 'transform, opacity',
+    }}>
+      {text}
+    </div>
+  );
+}
+
+// ImageSprite: scales + fades in; optional Ken Burns drift during hold.
+function ImageSprite({
+  src,
+  x = 0, y = 0,
+  width = 400, height = 300,
+  entryDur = 0.6,
+  exitDur = 0.4,
+  kenBurns = false,
+  kenBurnsScale = 1.08,
+  radius = 12,
+  fit = 'cover',
+  placeholder = null, // {label: string} for striped placeholder
+}) {
+  const { localTime, duration } = useSprite();
+  const exitStart = Math.max(0, duration - exitDur);
+
+  let opacity = 1;
+  let scale = 1;
+
+  if (localTime < entryDur) {
+    const t = Easing.easeOutCubic(clamp(localTime / entryDur, 0, 1));
+    opacity = t;
+    scale = 0.96 + 0.04 * t;
+  } else if (localTime > exitStart) {
+    const t = Easing.easeInCubic(clamp((localTime - exitStart) / exitDur, 0, 1));
+    opacity = 1 - t;
+    scale = (kenBurns ? kenBurnsScale : 1) + 0.02 * t;
+  } else if (kenBurns) {
+    const holdSpan = exitStart - entryDur;
+    const holdT = holdSpan > 0 ? (localTime - entryDur) / holdSpan : 0;
+    scale = 1 + (kenBurnsScale - 1) * holdT;
+  }
+
+  const content = placeholder ? (
+    <div style={{
+      width: '100%', height: '100%',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: 'repeating-linear-gradient(135deg, #e9e6df 0 10px, #dcd8cf 10px 20px)',
+      color: '#6b6458',
+      fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+      fontSize: 13,
+      letterSpacing: '0.04em',
+      textTransform: 'uppercase',
+    }}>
+      {placeholder.label || 'image'}
+    </div>
+  ) : (
+    <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: fit, display: 'block' }} />
+  );
+
+  return (
+    <div style={{
+      position: 'absolute',
+      left: x, top: y,
+      width, height,
+      opacity,
+      transform: `scale(${scale})`,
+      transformOrigin: 'center',
+      borderRadius: radius,
+      overflow: 'hidden',
+      willChange: 'transform, opacity',
+    }}>
+      {content}
+    </div>
+  );
+}
+
+// RectSprite: simple rectangle that animates position/size/color via props.
+// Useful demo primitive — takes a `render` fn for per-frame customization.
+function RectSprite({
+  x = 0, y = 0,
+  width = 100, height = 100,
+  color = '#111',
+  radius = 8,
+  entryDur = 0.4,
+  exitDur = 0.3,
+  render, // optional: (ctx) => style overrides
+}) {
+  const spriteCtx = useSprite();
+  const { localTime, duration } = spriteCtx;
+  const exitStart = Math.max(0, duration - exitDur);
+
+  let opacity = 1;
+  let scale = 1;
+
+  if (localTime < entryDur) {
+    const t = Easing.easeOutBack(clamp(localTime / entryDur, 0, 1));
+    opacity = clamp(localTime / entryDur, 0, 1);
+    scale = 0.4 + 0.6 * t;
+  } else if (localTime > exitStart) {
+    const t = Easing.easeInQuad(clamp((localTime - exitStart) / exitDur, 0, 1));
+    opacity = 1 - t;
+    scale = 1 - 0.15 * t;
+  }
+
+  const overrides = render ? render(spriteCtx) : {};
+
+  return (
+    <div style={{
+      position: 'absolute',
+      left: x, top: y,
+      width, height,
+      background: color,
+      borderRadius: radius,
+      opacity,
+      transform: `scale(${scale})`,
+      transformOrigin: 'center',
+      willChange: 'transform, opacity',
+      ...overrides,
+    }} />
+  );
+}
+
+
+// ── Font inlining ───────────────────────────────────────────────────────────
+// Copy every @font-face rule from the page into a <style> inside the svg's
+// foreignObject, with font URLs rewritten to data: URLs. Makes the svg
+// self-describing so serializing it alone (video export fast path) still
+// renders with the right fonts. Sets data-om-fonts-inlined on the svg when
+// done so the exporter can wait for it.
+
+function useInlineFontsInto(svgRef) {
+  React.useEffect(() => {
+    const svg = svgRef.current;
+    const host = svg && svg.querySelector('foreignObject > div');
+    if (!svg || !host) return;
+    let cancelled = false;
+    (async () => {
+      const rules = [];
+      for (const ss of document.styleSheets) {
+        let cssRules;
+        try { cssRules = ss.cssRules; } catch {
+          // Cross-origin sheet without crossorigin attr (e.g. the standard
+          // fonts.googleapis.com <link>) — fetch the CSS text directly and
+          // regex-extract the @font-face blocks.
+          if (ss.href) {
+            try {
+              const txt = await fetch(ss.href).then(r => { if (!r.ok) throw 0; return r.text(); });
+              for (const ff of (txt.match(/@font-face\s*{[^}]*}/g) || []))
+                rules.push({ css: ff, base: ss.href });
+            } catch {}
+          }
+          continue;
+        }
+        if (!cssRules) continue;
+        for (const r of cssRules) {
+          if (r.type === CSSRule.FONT_FACE_RULE) {
+            rules.push({ css: r.cssText, base: ss.href || location.href });
+          }
+        }
+      }
+      const toDataURL = (url) => fetch(url)
+        .then(r => { if (!r.ok) throw 0; return r.blob(); })
+        .then(b => new Promise(res => {
+          const fr = new FileReader();
+          fr.onload = () => res(fr.result);
+          fr.onerror = () => res(url);
+          fr.readAsDataURL(b);
+        }))
+        .catch(() => url);
+      const parts = await Promise.all(rules.map(async ({ css, base }) => {
+        const re = /url\((['"]?)([^'")]+)\1\)/g;
+        let out = css, m;
+        while ((m = re.exec(css))) {
+          const u = m[2];
+          if (u.startsWith('data:')) continue;
+          let abs; try { abs = new URL(u, base).href; } catch { continue; }
+          out = out.split(m[0]).join(`url("${await toDataURL(abs)}")`);
+        }
+        return out;
+      }));
+      if (cancelled || !parts.length) {
+        svg.setAttribute('data-om-fonts-inlined', 'true');
+        return;
+      }
+      const style = document.createElement('style');
+      style.textContent = parts.join('\n');
+      host.insertBefore(style, host.firstChild);
+      svg.setAttribute('data-om-fonts-inlined', 'true');
+    })();
+    return () => { cancelled = true; };
+  }, []);
+}
+
+
+function Stage({
+  width = 1280,
+  height = 720,
+  duration = 10,
+  background = '#f6f4ef',
+  fps = 60,
+  loop = true,
+  autoplay = true,
+  persistKey = 'animstage',
+  children,
+}) {
+  // Props arrive as strings when Stage is mounted via <x-import> (DC
+  // projects) — coerce so style={{width}} gets a number React can px-ify.
+  width = +width || 1280; height = +height || 720;
+  duration = +duration || 10; fps = +fps || 60;
+  if (typeof loop === 'string') loop = loop !== 'false';
+  if (typeof autoplay === 'string') autoplay = autoplay !== 'false';
+
+  const [time, setTime] = React.useState(() => {
+    try {
+      const v = parseFloat(localStorage.getItem(persistKey + ':t') || '0');
+      return isFinite(v) ? clamp(v, 0, duration) : 0;
+    } catch { return 0; }
+  });
+  const [playing, setPlaying] = React.useState(autoplay);
+  const [scale, setScale] = React.useState(1);
+  const [rate, setRate] = React.useState(1);       // playback speed — drives clock, audio, subs together
+  const [subsOn, setSubsOn] = React.useState(true);
+  const rateRef = React.useRef(1); rateRef.current = rate;  // read in the rAF loop without restarting it
+
+  const stageRef = React.useRef(null);
+  const canvasRef = React.useRef(null);
+  const rafRef = React.useRef(null);
+  const lastTsRef = React.useRef(null);
+
+  // Persist playhead
+  React.useEffect(() => {
+    try { localStorage.setItem(persistKey + ':t', String(time)); } catch {}
+  }, [time, persistKey]);
+
+  // Auto-scale to fit viewport
+  React.useEffect(() => {
+    if (!stageRef.current) return;
+    const el = stageRef.current;
+    const measure = () => {
+      const barH = 44; // playback bar height
+      const s = Math.min(
+        el.clientWidth / width,
+        (el.clientHeight - barH) / height
+      );
+      setScale(Math.max(0.05, s));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [width, height]);
+
+  // Animation loop
+  React.useEffect(() => {
+    if (!playing) {
+      lastTsRef.current = null;
+      return;
+    }
+    const step = (ts) => {
+      if (lastTsRef.current == null) lastTsRef.current = ts;
+      const dt = (ts - lastTsRef.current) / 1000;
+      lastTsRef.current = ts;
+      // The voiceover is the master clock while it is actually playing: follow
+      // audio.currentTime so its own pauses play out and there is no seek-jitter
+      // from two clocks fighting (rAF vs audio). Fall back to integrating dt only
+      // when there is no audio, or it is paused/buffering. audio.playbackRate
+      // already carries the speed setting, so this stays correct at any rate.
+      const a = document.getElementById('vo');
+      const audioClock = a && !a.paused && !a.ended && a.readyState >= 2;
+      setTime((t) => {
+        let next = audioClock ? a.currentTime : t + dt * rateRef.current;
+        if (next >= duration) {
+          if (loop) { if (audioClock) { try { a.currentTime = 0; } catch (e) {} } next = audioClock ? 0 : next % duration; }
+          else { next = duration; setPlaying(false); }
+        }
+        return next;
+      });
+      rafRef.current = requestAnimationFrame(step);
+    };
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      lastTsRef.current = null;
+    };
+  }, [playing, duration, loop]);
+
+  // Keyboard (video-player conventions):
+  //   space / k → play-pause (restarts when finished)
+  //   ← →       → 5s   (shift = 1s fine step)
+  //   j / l     → 10s
+  //   m         → mute   ·   0 / Home → start
+  React.useEffect(() => {
+    const onKey = (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      if (e.code === 'Space' || e.code === 'KeyK') {
+        e.preventDefault();
+        toggleRef.current();
+      } else if (e.code === 'ArrowLeft') {
+        setTime(t => clamp(t - (e.shiftKey ? 1 : 5), 0, duration));
+      } else if (e.code === 'ArrowRight') {
+        setTime(t => clamp(t + (e.shiftKey ? 1 : 5), 0, duration));
+      } else if (e.code === 'KeyJ') {
+        setTime(t => clamp(t - 10, 0, duration));
+      } else if (e.code === 'KeyL') {
+        setTime(t => clamp(t + 10, 0, duration));
+      } else if (e.code === 'KeyM') {
+        setMuted(m => !m);
+      } else if (e.code === 'KeyC') {
+        setSubsOn(s => !s);
+      } else if (e.code === 'KeyF') {
+        toggleFullscreen();
+      } else if (e.key === '0' || e.code === 'Home') {
+        setTime(0);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [duration]);
+
+  // Video-export protocol: the exporter dispatches this event per frame;
+  // pause + sync the playhead so the capture sees exactly that timestamp.
+  React.useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const onSeek = (e) => {
+      setPlaying(false);
+      setTime(clamp(e.detail.time, 0, duration));
+    };
+    el.addEventListener('data-om-seek-to-time-frame', onSeek);
+    return () => el.removeEventListener('data-om-seek-to-time-frame', onSeek);
+  }, [duration]);
+
+  // Inline @font-face rules into the svg's foreignObject so the svg is
+  // self-describing — serializing it alone (for video export) then renders
+  // with the right fonts. Sets data-om-fonts-inlined once done.
+  useInlineFontsInto(canvasRef);
+
+  // Programmatic timeline holds pause playback without it being a user pause,
+  // so the big Play overlay must stay hidden while holding.
+  const [holding, setHolding] = React.useState(false);
+
+  // Mute the VO track (kept in Stage so overlay + bar share one source of truth).
+  const [muted, setMuted] = React.useState(false);
+  React.useEffect(() => {
+    const a = document.getElementById('vo');
+    if (a) a.muted = muted;
+  }, [muted]);
+
+  // "Toggle play" that also restarts a finished, non-looping clip. Reads the
+  // live playhead through a ref so the keyboard handler never goes stale.
+  const timeRef = React.useRef(0); timeRef.current = time;
+  const handleToggle = React.useCallback(() => {
+    if (!loop && timeRef.current >= duration - 0.05) { setTime(0); setPlaying(true); }
+    else setPlaying(p => !p);
+  }, [loop, duration]);
+  const toggleRef = React.useRef(handleToggle); toggleRef.current = handleToggle;
+
+  // Finished + paused at the very end (nothing left to resume) → show Replay.
+  const ended = !loop && !playing && time >= duration - 0.05;
+
+  const ctxValue = React.useMemo(
+    () => ({ time, duration, playing, setTime, setPlaying, setHolding, rate, subsOn }),
+    [time, duration, playing, rate, subsOn]
+  );
+
+  return (
+    <div
+      ref={stageRef}
+      style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center',
+        background: '#0a0a0a',
+        fontFamily: 'Inter, system-ui, sans-serif',
+      }}
+    >
+      {/* Canvas area — vertically centered in remaining space.
+          Standard video UX: while PLAYING, a click anywhere on the stage
+          pauses (the big Resume overlay then makes the state obvious, so a
+          learner who clicked the email graphic understands what happened).
+          While paused, the overlay below is the click target for resume. */}
+      <div
+        onClick={playing ? handleToggle : undefined}
+        style={{
+          flex: 1,
+          width: '100%',
+          position: 'relative',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          overflow: 'hidden',
+          minHeight: 0,
+          cursor: playing ? 'pointer' : 'default',
+        }}>
+        <svg
+          ref={canvasRef}
+          width={width} height={height}
+          data-om-exportable-video-with-duration-secs={duration}
+          style={{
+            transform: `scale(${scale})`,
+            transformOrigin: 'center',
+            flexShrink: 0,
+            boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+            display: 'block',
+          }}
+        >
+          <foreignObject x="0" y="0" width="100%" height="100%">
+            <div
+              xmlns="http://www.w3.org/1999/xhtml"
+              style={{
+                width, height,
+                background,
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <TimelineContext.Provider value={ctxValue}>
+                {children}
+              </TimelineContext.Provider>
+            </div>
+          </foreignObject>
+        </svg>
+
+        {/* Big play / replay affordance — only while paused by the user (not
+            during an automatic scene hold). This is the dedicated overlay
+            play button: it IS clickable (unlike scene content) so the learner
+            can resume/replay from here. Marked as chrome so it never lands in
+            a video export (export logic keys off data-omelette-chrome, not
+            pointer-events — see the playback bar below for precedent). */}
+        {!playing && !holding && (
+          <div data-omelette-chrome onClick={handleToggle} style={{
+            position: 'absolute', inset: 0,
+            display: 'flex', flexDirection: 'column', gap: 14,
+            alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer',
+            background: ended ? 'rgba(14,17,22,0.55)' : 'rgba(14,17,22,0.25)',
+            transition: 'background 160ms',
+          }}>
+            <div style={{
+              width: 88, height: 88, borderRadius: '50%',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(53,182,255,0.16)',
+              border: '1.5px solid rgba(53,182,255,0.65)',
+              boxShadow: '0 0 34px rgba(53,182,255,0.4)',
+              color: '#EAF2F9',
+            }}>
+              {ended ? (
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 12a8 8 0 1 1 2.3 5.6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
+                  <path d="M4 5v4h4" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              ) : (
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" style={{ marginLeft: 4 }}>
+                  <path d="M6 4l14 8-14 8V4z" fill="currentColor"/>
+                </svg>
+              )}
+            </div>
+            <div style={{
+              fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+              fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase',
+              color: 'rgba(234,242,249,0.82)',
+            }}>
+              {ended ? 'Replay' : (time > 0.05 ? 'Resume' : 'Play')}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Playback bar — stacked below canvas, never overlapping */}
+      <PlaybackBar
+        time={time}
+        duration={duration}
+        playing={playing}
+        muted={muted}
+        onMute={() => setMuted(m => !m)}
+        onPlayPause={handleToggle}
+        onReset={() => { setTime(0); }}
+        onSeek={(t) => setTime(t)}
+        rate={rate}
+        onCycleRate={() => setRate(r => { const R=[0.5,0.75,1,1.25,1.5,2]; return R[(R.indexOf(r)+1)%R.length] ?? 1; })}
+        hasSubs={!!(TIMING.subs && (TIMING.subs.en || Object.values(TIMING.subs)[0] || []).length)}
+        subsOn={subsOn}
+        onToggleSubs={() => setSubsOn(s => !s)}
+      />
+    </div>
+  );
+}
+
+// ── Playback bar ────────────────────────────────────────────────────────────
+// Play/pause, return-to-begin, scrub track, time display.
+// Uses fixed-width time fields so layout doesn't thrash.
+
+// Author-only controls (e.g. the video export/download button) are hidden from
+// learners by default. Append ?author=1 to the URL to reveal them.
+function isAuthorMode() {
+  try { return new URLSearchParams(location.search).get('author') === '1'; } catch (e) { return false; }
+}
+
+function PlaybackBar({ time, duration, playing, muted, onMute, onPlayPause, onReset, onSeek, rate, onCycleRate, hasSubs, subsOn, onToggleSubs }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  const [hoverX, setHoverX] = React.useState(null); // px offset for the time bubble
+  const [fullscreen, setFullscreen] = React.useState(false);
+
+  React.useEffect(() => {
+    const onFs = () => setFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFs);
+    return () => document.removeEventListener('fullscreenchange', onFs);
+  }, []);
+
+  const timeFromEvent = React.useCallback((e) => {
+    const rect = trackRef.current.getBoundingClientRect();
+    const x = clamp((e.clientX - rect.left) / rect.width, 0, 1);
+    return x * duration;
+  }, [duration]);
+
+  const onTrackMove = (e) => {
+    if (!trackRef.current) return;
+    const rect = trackRef.current.getBoundingClientRect();
+    setHoverX(clamp(e.clientX - rect.left, 0, rect.width));
+    if (dragging) onSeek(timeFromEvent(e));
+  };
+
+  const onTrackLeave = () => {
+    setHoverX(null);
+  };
+
+  const onTrackDown = (e) => {
+    setDragging(true);
+    onSeek(timeFromEvent(e));
+  };
+
+  React.useEffect(() => {
+    if (!dragging) return;
+    const onUp = () => setDragging(false);
+    const onMove = (e) => {
+      if (!trackRef.current) return;
+      const t = timeFromEvent(e);
+      onSeek(t);
+    };
+    window.addEventListener('mouseup', onUp);
+    window.addEventListener('mousemove', onMove);
+    return () => {
+      window.removeEventListener('mouseup', onUp);
+      window.removeEventListener('mousemove', onMove);
+    };
+  }, [dragging, timeFromEvent, onSeek]);
+
+  const pct = duration > 0 ? (time / duration) * 100 : 0;
+  // Learner-facing clock: plain m:ss, no centiseconds.
+  const fmt = (t) => {
+    const total = Math.max(0, Math.round(t));
+    const m = Math.floor(total / 60);
+    const s = total % 60;
+    return `${m}:${String(s).padStart(2, '0')}`;
+  };
+
+  const mono = 'JetBrains Mono, ui-monospace, SFMono-Regular, monospace';
+  const hoverT = hoverX != null && trackRef.current
+    ? (hoverX / trackRef.current.getBoundingClientRect().width) * duration
+    : null;
+
+  return (
+    <div data-omelette-chrome style={{
+      display: 'flex', alignItems: 'center', gap: 'clamp(6px, 2vw, 12px)',
+      padding: '8px clamp(10px, 3vw, 16px)',
+      background: 'rgba(20,20,20,0.92)',
+      borderTop: '1px solid rgba(255,255,255,0.08)',
+      width: '100%',
+      maxWidth: 680,
+      alignSelf: 'center',
+
+      borderRadius: 8,
+      color: '#f6f4ef',
+      fontFamily: 'Inter, system-ui, sans-serif',
+      userSelect: 'none',
+      flexShrink: 0,
+    }}>
+      <IconButton onClick={onReset} title="Return to start (0)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M3 2v10M12 2L5 7l7 5V2z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round"/>
+        </svg>
+      </IconButton>
+      <IconButton onClick={onPlayPause} title="Play/pause (space)">
+        {playing ? (
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="3" y="2" width="3" height="10" fill="currentColor"/>
+            <rect x="8" y="2" width="3" height="10" fill="currentColor"/>
+          </svg>
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 2l9 5-9 5V2z" fill="currentColor"/>
+          </svg>
+        )}
+      </IconButton>
+
+      {/* Current time: fixed width so it doesn't thrash */}
+      <div style={{
+        fontFamily: mono,
+        fontSize: 12,
+        fontVariantNumeric: 'tabular-nums',
+        width: 40, textAlign: 'right',
+        color: '#f6f4ef',
+      }}>
+        {fmt(time)}
+      </div>
+
+      {/* Scrub track — tall hit area, thicker rail, hover time bubble */}
+      <div
+        ref={trackRef}
+        onMouseMove={onTrackMove}
+        onMouseLeave={onTrackLeave}
+        onMouseDown={onTrackDown}
+        style={{
+          flex: 1,
+          height: 26,
+          position: 'relative',
+          cursor: 'pointer',
+          display: 'flex', alignItems: 'center',
+        }}
+      >
+        <div style={{
+          position: 'absolute',
+          left: 0, right: 0, height: 6,
+          background: 'rgba(255,255,255,0.14)',
+          borderRadius: 3,
+        }}/>
+        <div style={{
+          position: 'absolute',
+          left: 0, width: `${pct}%`, height: 6,
+          background: '#35B6FF',
+          boxShadow: '0 0 10px rgba(53,182,255,0.55)',
+          borderRadius: 3,
+        }}/>
+        <div style={{
+          position: 'absolute',
+          left: `${pct}%`, top: '50%',
+          width: dragging ? 16 : 13, height: dragging ? 16 : 13,
+          marginLeft: dragging ? -8 : -6.5, marginTop: dragging ? -8 : -6.5,
+          background: '#fff',
+          borderRadius: '50%',
+          boxShadow: '0 0 0 4px rgba(53,182,255,0.25), 0 2px 4px rgba(0,0,0,0.4)',
+          transition: 'width 90ms, height 90ms, margin 90ms',
+        }}/>
+        {hoverT != null && !dragging && (
+          <div style={{
+            position: 'absolute',
+            left: hoverX, bottom: 22, transform: 'translateX(-50%)',
+            pointerEvents: 'none',
+            fontFamily: mono, fontSize: 11, fontVariantNumeric: 'tabular-nums',
+            color: '#EAF2F9', background: 'rgba(14,17,22,0.95)',
+            border: '1px solid rgba(53,182,255,0.4)',
+            padding: '3px 7px', borderRadius: 6, whiteSpace: 'nowrap',
+          }}>
+            {fmt(hoverT)}
+          </div>
+        )}
+      </div>
+
+      {/* Duration: fixed width */}
+      <div style={{
+        fontFamily: mono,
+        fontSize: 12,
+        fontVariantNumeric: 'tabular-nums',
+        width: 40, textAlign: 'left',
+        color: 'rgba(246,244,239,0.55)',
+      }}>
+        {fmt(duration)}
+      </div>
+
+      {/* Playback speed — one button cycling 0.5×…2×; drives clock, audio and subtitles together */}
+      <button onClick={onCycleRate} title="Playback speed"
+        style={{ height: 28, minWidth: 40, padding: '0 7px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: rate !== 1 ? 'rgba(53,182,255,0.18)' : 'rgba(255,255,255,0.04)',
+          border: '1px solid ' + (rate !== 1 ? 'rgba(53,182,255,0.5)' : 'rgba(255,255,255,0.1)'),
+          borderRadius: 6, color: '#f6f4ef', cursor: 'pointer',
+          fontFamily: mono, fontSize: 11, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+        {rate}×
+      </button>
+
+      {/* Subtitles on/off — only when the timing.json carries cues */}
+      {hasSubs && (
+        <button onClick={onToggleSubs} title={subsOn ? 'Subtitles off (c)' : 'Subtitles on (c)'}
+          style={{ height: 28, minWidth: 30, padding: '0 6px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: subsOn ? 'rgba(53,182,255,0.18)' : 'rgba(255,255,255,0.04)',
+            border: '1px solid ' + (subsOn ? 'rgba(53,182,255,0.5)' : 'rgba(255,255,255,0.1)'),
+            borderRadius: 6, color: '#f6f4ef', cursor: 'pointer',
+            fontFamily: mono, fontSize: 10, fontWeight: 700, letterSpacing: '0.06em' }}>
+          CC
+        </button>
+      )}
+
+      {/* Mute the voiceover */}
+      <IconButton onClick={onMute} title={muted ? 'Unmute (m)' : 'Mute (m)'}>
+        {muted ? (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 6v4h2.5L8 13V3L4.5 6H2z" fill="currentColor"/>
+            <path d="M11 6l3 3M14 6l-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        ) : (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 6v4h2.5L8 13V3L4.5 6H2z" fill="currentColor"/>
+            <path d="M10.5 5.5a3.5 3.5 0 0 1 0 5M12.5 3.8a6 6 0 0 1 0 8.4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+          </svg>
+        )}
+      </IconButton>
+
+      {/* Fullscreen */}
+      <IconButton onClick={toggleFullscreen} title={fullscreen ? 'Exit fullscreen (f)' : 'Fullscreen (f)'}>
+        {fullscreen ? (
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <path d="M6 2v4H2M14 6h-4V2M2 10h4v4M10 14v-4h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        ) : (
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        )}
+      </IconButton>
+
+      {typeof VideoEncoder !== 'undefined' && isAuthorMode() && (
+        <IconButton
+          title="Export video (author mode)"
+          onClick={() => window.parent.postMessage({ type: 'omelette:request-video-export' }, '*')}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 2v7m0 0L4 6m3 3l3-3M2 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </IconButton>
+      )}
+    </div>
+  );
+}
+
+// Fullscreen the whole player. Targets the document element so both the
+// canvas and the playback bar go fullscreen together. Inside an iframe this
+// needs allow="fullscreen" on the host <iframe>.
+function toggleFullscreen() {
+  try {
+    if (document.fullscreenElement) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      const el = document.documentElement;
+      const req = el.requestFullscreen || el.webkitRequestFullscreen;
+      const p = req && req.call(el);
+      if (p && p.catch) p.catch(() => {});
+    }
+  } catch (e) {}
+}
+
+function IconButton({ children, onClick, title }) {
+  const [hover, setHover] = React.useState(false);
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        width: 28, height: 28,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: hover ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.04)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: 6,
+        color: '#f6f4ef',
+        cursor: 'pointer',
+        padding: 0,
+        transition: 'background 120ms',
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+
+// ── VideoSprite ─────────────────────────────────────────────────────────────
+// Renders a <video> that loops within [start,end] of its source at `speed`,
+// kept in sync with the Stage's playhead. Carries the
+// data-om-exportable-video-play-* attrs so video export can mix its audio.
+//
+//   <VideoSprite src="clip.mp4" start={2} end={5} speed={1}
+//     style={{ width: 640, height: 360 }} />
+
+function VideoSprite({ src, start = 0, end, speed = 1, style, ...rest }) {
+  start = +start || 0; speed = +speed || 1;
+  if (end != null) end = +end || undefined;
+  const t = useTime();
+  const ref = React.useRef(null);
+  const span = Math.max(0.001, ((end ?? start + 1) - start));
+  React.useEffect(() => {
+    const v = ref.current;
+    if (!v || v.readyState < 1) return;
+    const target = start + ((t * speed) % span);
+    if (Math.abs(v.currentTime - target) > 0.05) v.currentTime = target;
+  }, [t, start, span, speed]);
+  return (
+    <video
+      ref={ref}
+      src={src}
+      muted playsInline preload="auto"
+      data-om-exportable-video-play-start={start}
+      data-om-exportable-video-play-end={end ?? start + span}
+      data-om-exportable-video-play-speed={speed}
+      style={{ display: 'block', objectFit: 'cover', ...style }}
+      {...rest}
+    />
+  );
+}
+
+
+Object.assign(window, {
+  Easing, interpolate, animate, clamp,
+  TimelineContext, useTime, useTimeline,
+  Sprite, SpriteContext, useSprite,
+  TextSprite, ImageSprite, RectSprite, VideoSprite,
+  Stage, PlaybackBar,
+});
+
+
+</script>
+<script type="text/babel">// Video 1 — "Would you click?" · neon cyber version · 16:9 · free pacing (~140 s)
+// Motion language: spring overshoot, velocity smear, blur-in staggers, 3D flips,
+// counter roll-ups, cursor trails, ambient parallax background, per-scene camera push.
+const {Stage, Sprite, useSprite, useTimeline} = window;
+
+const C={bg:'#0E1116',blue:'#35B6FF',lime:'#C6F221',green:'#3DDC84',red:'#FF3B4A',grey:'#8A93A0',panel:'rgba(21,27,36,.72)',txt:'#EAF2F9',dim:'#8A93A0'};
+const SANS="'Archivo','IBM Plex Sans',system-ui,sans-serif";
+const MONO="'IBM Plex Mono',ui-monospace,monospace";
+const cl=t=>t<=0?0:t>=1?1:t;
+const ez=t=>{t=cl(t);return 1-Math.pow(1-t,3)};
+const ezE=t=>{t=cl(t);return t>=1?1:1-Math.pow(2,-10*t)};
+const ezB=t=>{t=cl(t);const c=1.70158;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
+const spr=t=>{t=cl(t);return t>=1?1:1-Math.cos(t*Math.PI*2.2)*Math.exp(-5.2*t)};
+const neon=(c,w=2)=>({border:`${w}px solid ${c}`,boxShadow:`0 0 10px ${c}55,0 0 32px ${c}26`,background:C.panel,borderRadius:16});
+
+/* ---------- ambient background: parallax dot grid + drifting glow + particles + vignette ---------- */
+const PTS=Array.from({length:14},(_,i)=>({x:(i*173+40)%1280,y:(i*397+60)%720,r:1.4+(i%3)*0.8,sp:5+(i%5)*2.4,ph:i*1.7}));
+function BG(){
+  const tl=useTimeline();
+  return <div style={{position:'absolute',inset:0,overflow:'hidden'}}>
+    {/* Dot grid removed (feedback item 6) — soft glow + drift particles only. */}
+    <div style={{position:'absolute',inset:0,background:`radial-gradient(1100px 620px at ${50+Math.sin(tl.time*0.11)*7}% ${44+Math.cos(tl.time*0.09)*6}%, rgba(53,182,255,.06), transparent 62%)`}}/>
+    {PTS.map((p,i)=>{const y=((p.y+tl.time*p.sp)%780)-30;return <div key={i} style={{position:'absolute',left:p.x,top:y,width:p.r*2,height:p.r*2,borderRadius:'50%',background:C.blue,opacity:0.05+0.05*Math.sin(tl.time*0.8+p.ph),boxShadow:`0 0 6px ${C.blue}55`}}/>;})}
+    <div style={{position:'absolute',inset:0,background:'radial-gradient(125% 95% at 50% 46%, transparent 56%, rgba(5,7,10,.55))'}}/>
+  </div>;
+}
+/* slow cinematic push per scene */
+function Cam({from=1,to=1.035,origin='50% 45%',children}){
+  const {localTime,duration}=useSprite();
+  const s=from+(to-from)*(localTime/duration);
+  return <div style={{position:'absolute',inset:0,transform:`scale(${s})`,transformOrigin:origin}}>{children}</div>;
+}
+/* fade + rise + blur-in */
+function F({x=0,y=0,w,h,dur=0.55,rise=16,blur=6,delay=0,style,children,center}){
+  const {localTime,duration}=useSprite();
+  const i=ez((localTime-delay)/dur),o=ez((duration-localTime)/0.4);
+  const a=Math.max(0,Math.min(i,o));
+  return <div style={{position:'absolute',left:x,top:y,width:w,height:h,opacity:a,transform:`translateY(${(1-i)*rise}px) scale(${0.985+0.015*Math.min(i,o)})`,filter:i<1?`blur(${(1-i)*blur}px)`:'none',...(center?{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',textAlign:'center'}:null),...style}}>{children}</div>;
+}
+/* slide with velocity smear (skew + stretch while moving) and spring settle */
+function SlideX({x,y,delay=0,dur=1.0,from=480,style,children}){
+  const {localTime,duration}=useSprite();
+  const raw=(localTime-delay)/dur;
+  const p=spr(raw),p2=spr(raw+0.03);
+  const vel=raw>0&&raw<1?(p2-p)/0.03:0;
+  const o=ez((duration-localTime)/0.4);
+  return <div style={{position:'absolute',left:x,top:y,opacity:Math.min(localTime<delay?0:1,o),transform:`translateX(${(1-p)*from}px) skewX(${-Math.max(-14,Math.min(14,vel*5))}deg) scaleX(${1+Math.min(0.1,Math.abs(vel)*0.035)})`,...style}}>{children}</div>;
+}
+/* spring pop with overshoot */
+function Pop({delay=0,style,children}){
+  const {localTime,duration}=useSprite();
+  const t=(localTime-delay)/0.55;
+  const o=ez((duration-localTime)/0.3);
+  if(t<=0)return null;
+  return <div style={{transform:`scale(${spr(t)})`,opacity:Math.min(1,t*3,o),...style}}>{children}</div>;
+}
+/* label with per-character stagger, blur-in */
+function Lab({text,color=C.blue,y=600,size=30,delay=0.3,ls='.2em'}){
+  const {localTime,duration}=useSprite();
+  const o=ez((duration-localTime)/0.4);
+  return <div style={{position:'absolute',left:0,top:y,width:1280,textAlign:'center',opacity:o}}>
+    {[...text].map((ch,i)=>{
+      const e=ez((localTime-delay-i*0.026)/0.5);
+      return <span key={i} style={{display:'inline-block',whiteSpace:'pre',fontFamily:SANS,fontWeight:800,fontSize:size,letterSpacing:ls,textTransform:'uppercase',color,opacity:e,transform:`translateY(${(1-e)*20}px)`,filter:e<1?`blur(${(1-e)*7}px)`:'none',textShadow:`0 0 14px ${color}88,0 0 44px ${color}44`}}>{ch}</span>;
+    })}
+  </div>;
+}
+/* hint with per-word blur-reveal (text-generate) */
+// Bottom band of the 1280×720 frame is reserved for subtitles — keep content
+// above this y (see CLAUDE.md rule 7). Subtitles sit bottom-center and can wrap
+// to two lines, reaching up to ~y592.
+const SUBS_SAFE_TOP = 588;
+function Hint({text,y=560,delay=0.6,color=C.dim,size=15}){
+  const {localTime,duration}=useSprite();
+  const o=ez((duration-localTime)/0.4);
+  const top=Math.min(y, SUBS_SAFE_TOP-28);   // a hint may never enter the subtitle safe zone
+  return <div style={{position:'absolute',left:0,top,width:1280,textAlign:'center',opacity:o}}>
+    {text.split(' ').map((w,i)=>{
+      const e=ez((localTime-delay-i*0.09)/0.5);
+      return <span key={i} style={{display:'inline-block',marginRight:'0.65em',fontFamily:MONO,fontSize:size,letterSpacing:'.14em',textTransform:'uppercase',color,opacity:e,transform:`translateY(${(1-e)*8}px)`,filter:e<1?`blur(${(1-e)*6}px)`:'none'}}>{w}</span>;
+    })}
+  </div>;
+}
+/* counter roll-up for the "4 out of 10" stat (VO: "four out of ten") */
+function Forty({y,delay}){
+  const {localTime,duration}=useSprite();
+  const p=ez((localTime-delay)/1.5),o=ez((duration-localTime)/0.4);
+  if(localTime<delay)return null;
+  const glow=1+0.25*Math.exp(-(localTime-delay-1.5>0?localTime-delay-1.5:0)*2)*(p>=1?Math.abs(Math.sin((localTime-delay)*3)):0);
+  return <div style={{position:'absolute',left:0,top:y,width:1280,textAlign:'center',opacity:o}}>
+    <span style={{fontFamily:SANS,fontWeight:800,fontSize:52,color:C.red,fontVariantNumeric:'tabular-nums',textShadow:`0 0 ${16*glow}px ${C.red}99,0 0 ${50*glow}px ${C.red}44`}}>{Math.round(4*p)} out of 10</span>
+    <span style={{fontFamily:SANS,fontWeight:800,fontSize:28,letterSpacing:'.18em',textTransform:'uppercase',color:C.blue,marginLeft:22,opacity:ez((localTime-delay-0.9)/0.5),textShadow:`0 0 14px ${C.blue}77`}}>click this one</span>
+  </div>;
+}
+function Ic({k,c=C.blue,s=26,sw=2}){
+  const p={fill:'none',stroke:c,strokeWidth:sw,strokeLinecap:'round',strokeLinejoin:'round'};
+  const g={filter:`drop-shadow(0 0 5px ${c}88)`};
+  if(k==='clock')return <svg width={s} height={s} viewBox="0 0 24 24" style={g}><circle cx="12" cy="12" r="8.5" {...p}/><path d="M12 7.5v4.5l3 2" {...p}/></svg>;
+  if(k==='mask')return <svg width={s} height={s} viewBox="0 0 24 24" style={g}><circle cx="7.5" cy="12" r="3.6" {...p}/><circle cx="16.5" cy="12" r="3.6" {...p}/><path d="M11.1 11.2c.6-.5 1.2-.5 1.8 0" {...p}/></svg>;
+  if(k==='key')return <svg width={s} height={s} viewBox="0 0 24 24" style={g}><circle cx="7.5" cy="12" r="3.4" {...p}/><path d="M10.9 12H21M18.4 12v3.2M14.9 12v2.4" {...p}/></svg>;
+  if(k==='link')return <svg width={s} height={s} viewBox="0 0 24 24" style={g}><path d="M9.5 14.5l5-5M8.8 12l-2.2 2.2a3.4 3.4 0 1 0 4.8 4.8l2.2-2.2M15.2 12l2.2-2.2a3.4 3.4 0 1 0-4.8-4.8L10.4 7.2" {...p}/></svg>;
+  if(k==='shield')return <svg width={s} height={s} viewBox="0 0 24 24" style={g}><path d="M12 2.8l7 2.8v6c0 4.6-7 8.6-7 8.6s-7-4-7-8.6v-6z" {...p}/><path d="M8.8 11.8l2.2 2.2 4.2-4.4" {...p}/></svg>;
+  if(k==='coin')return <svg width={s} height={s} viewBox="0 0 24 24" style={g}><circle cx="12" cy="12" r="8.5" {...p}/><path d="M12 7.5v9M9.6 9.6h3.6a1.8 1.8 0 0 1 0 3.6H10a1.8 1.8 0 0 0 0 3.6h4" {...p} strokeWidth={sw*0.85}/></svg>;
+  if(k==='mag')return <svg width={s} height={s} viewBox="0 0 24 24" style={g}><circle cx="10.5" cy="10.5" r="6.5" {...p}/><path d="M15.5 15.5L21 21" {...p}/></svg>;
+  if(k==='gift')return <svg width={s} height={s} viewBox="0 0 24 24" style={g}><rect x="4" y="9" width="16" height="11" rx="2" {...p}/><path d="M4 13h16M12 9v11M12 9c-2.8 0-4.6-1-4.6-2.6C7.4 5 9 4.6 10 5.4c1 .8 2 3.6 2 3.6s1-2.8 2-3.6c1-.8 2.6-.4 2.6 1C16.6 8 14.8 9 12 9z" {...p}/></svg>;
+  return null;
+}
+function Badge({k,c=C.blue,text}){
+  return <div style={{display:'flex',alignItems:'center',gap:6,padding:'5px 9px',borderRadius:9,...neon(c,1.5)}}>
+    {k?<Ic k={k} c={c} s={17}/>:null}{text?<span style={{fontFamily:MONO,fontSize:11.5,fontWeight:600,letterSpacing:'.08em',color:c}}>{text}</span>:null}
+  </div>;
+}
+function Bars({w=440,n=2,c=C.grey}){
+  return <div style={{display:'flex',flexDirection:'column',gap:9,padding:'16px 20px 20px'}}>
+    {Array.from({length:n}).map((_,i)=><div key={i} style={{height:9,borderRadius:5,background:`${c}30`,width:i===n-1?w*0.58:w}}/>)}
+  </div>;
+}
+function NMail({w=560,from,subj,badge,body,tone=C.blue,style}){
+  return <div style={{width:w,overflow:'hidden',...neon(tone),...style}}>
+    <div style={{display:'flex',alignItems:'center',gap:13,padding:'15px 20px',borderBottom:`1px solid ${tone}33`,background:`${tone}0f`}}>
+      <div style={{width:32,height:32,borderRadius:'50%',border:`2px solid ${tone}`,boxShadow:`0 0 8px ${tone}66`,flex:'none'}}/>
+      <div style={{minWidth:0,flex:1}}>
+        <div style={{fontFamily:MONO,fontSize:13,color:tone===C.grey?C.dim:'#B9C7D4',whiteSpace:'nowrap'}}>{from}</div>
+        <div style={{fontFamily:SANS,fontSize:16.5,fontWeight:700,color:tone===C.grey?C.dim:C.txt,marginTop:3,whiteSpace:'nowrap'}}>{subj}</div>
+      </div>
+      {badge?<div style={{flex:'none'}}>{badge}</div>:null}
+    </div>
+    {body!==undefined?body:<Bars w={w-120}/>}
+  </div>;
+}
+/* Gmail-style email card — matches the quiz / inbox "opened message" look one
+   to one (white panel, initial avatar, name + <addr>, "to me", blue links,
+   Gmail greys), scaled up (k) for the film's 1280-wide stage. Used only for the
+   CEO gift-card letter; the neon NMail stays for every other card. */
+const GAV_COLORS=['#1a73e8','#d93025','#188038','#f9ab00','#9334e6','#12b5cb','#e8710a'];
+function gAvatarColor(name){let h=0;for(let i=0;i<name.length;i++)h=(h*31+name.charCodeAt(i))>>>0;return GAV_COLORS[h%GAV_COLORS.length];}
+function gAvatarInitial(name){const l=name.replace(/[^A-Za-z]/g,'');return (l[0]||'?').toUpperCase();}
+function gParseFrom(raw){const m=raw.match(/^(.*?)<(.*)>\s*$/);return m?{name:m[1].trim(),addr:m[2].trim()}:{name:raw.trim(),addr:''};}
+const GSANS="'Google Sans',Roboto,Arial,sans-serif";
+const GBODY="Roboto,Arial,sans-serif";
+function GMail({w=920,from,subj,time,body,k=1.45,style}){
+  const {name,addr}=gParseFrom(from);
+  return <div style={{width:w,overflow:'hidden',background:'#fff',border:'1.5px solid #dadce0',borderRadius:12,boxShadow:'0 10px 40px rgba(0,0,0,.45)',...style}}>
+    <div style={{padding:`${16*k}px ${20*k}px ${2*k}px`,fontFamily:GSANS,fontWeight:500,fontSize:19*k,lineHeight:1.35,color:'#202124'}}>{subj}</div>
+    <div style={{display:'flex',gap:12*k,alignItems:'flex-start',padding:`${6*k}px ${20*k}px ${14*k}px`,borderBottom:'1px solid #f1f3f4'}}>
+      <div style={{width:36*k,height:36*k,borderRadius:'50%',flex:'none',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontFamily:GSANS,fontWeight:500,fontSize:15*k,background:gAvatarColor(name)}}>{gAvatarInitial(name)}</div>
+      <div style={{flex:1,minWidth:0,paddingTop:2*k}}>
+        <div style={{fontFamily:GBODY,fontSize:14*k,color:'#202124',lineHeight:1.4}}><span style={{fontWeight:700}}>{name}</span>{addr?<span style={{fontSize:12.5*k,color:'#5f6368',marginLeft:4}}>{`<${addr}>`}</span>:null}</div>
+        <div style={{fontFamily:GBODY,fontSize:12*k,color:'#5f6368',marginTop:2*k}}>to me</div>
+      </div>
+      {time?<div style={{fontFamily:GBODY,fontSize:12*k,color:'#5f6368',whiteSpace:'nowrap',flex:'none',paddingTop:4*k}}>{time}</div>:null}
+    </div>
+    <div style={{padding:`${14*k}px ${20*k}px ${20*k}px`,fontFamily:GBODY,fontSize:14*k,lineHeight:1.6,color:'#202124'}}>{body}</div>
+  </div>;
+}
+/* idle hover: gentle float + glow breathing */
+function Idle({phase=0,children}){
+  const tl=useTimeline();
+  return <div style={{transform:`translateY(${Math.sin(tl.time*1.1+phase)*3.5}px)`,filter:`brightness(${1.02+0.09*Math.sin(tl.time*1.7+phase)})`}}>{children}</div>;
+}
+function Ring({x,y,r,c=C.red,delay=0,dur=1.2}){
+  const {localTime}=useSprite();
+  const p=cl((localTime-delay)/dur);
+  if(p<=0||p>=1)return null;
+  const e=ez(p);
+  return <div style={{position:'absolute',left:x-r*(1+e*0.55),top:y-r*(1+e*0.55),width:2*r*(1+e*0.55),height:2*r*(1+e*0.55),borderRadius:'50%',border:`2.5px solid ${c}`,opacity:1-e,boxShadow:`0 0 18px ${c}66, inset 0 0 18px ${c}33`}}/>;
+}
+/* cursor with fading trail */
+function Cursor({from,to,start,dur=1.8,press}){
+  const {localTime}=useSprite();
+  const at=tt=>{const p=ez((tt-start)/dur);return [from[0]+(to[0]-from[0])*p,from[1]+(to[1]-from[1])*p];};
+  if(localTime<start-0.2)return null;
+  const [x,y]=at(localTime);
+  const s=press&&localTime>start+dur+0.3&&localTime<start+dur+0.55?0.8:1;
+  return <div style={{position:'absolute',left:0,top:0,zIndex:8}}>
+    <div style={{position:'absolute',left:x-170,top:y-170,width:340,height:340,borderRadius:'50%',background:`radial-gradient(circle,${C.blue}26,transparent 65%)`,pointerEvents:'none'}}/>
+    {[0.16,0.09].map((lag,i)=>{const [tx,ty]=at(localTime-lag);const mv=localTime<start+dur;return mv?<div key={i} style={{position:'absolute',left:tx+4,top:ty+4,width:8-i*2,height:8-i*2,borderRadius:'50%',background:C.blue,opacity:0.18+i*0.12,filter:'blur(1px)'}}/>:null;})}
+    <div style={{position:'absolute',left:x,top:y,transform:`scale(${s})`,transition:'transform .1s'}}>
+      <svg width="27" height="27" viewBox="0 0 24 24" style={{filter:`drop-shadow(0 0 6px ${C.blue}aa)`}}><path d="M4 2l14 12-6.5 1L15 21l-3 1.4-3.5-6L4 20V2z" fill="#EAF2F9" stroke={C.blue} strokeWidth="1.4"/></svg>
+    </div>
+  </div>;
+}
+/* stamp: hard impact + electric flicker after landing */
+function Stamp({x,y,delay}){
+  const {localTime}=useSprite();
+  const t=(localTime-delay)/0.42;
+  if(t<=0)return null;
+  const s=t>=1?1:3-2*ezE(t);
+  const fl=localTime-delay-0.42;
+  const flick=(fl>0.1&&fl<0.16)||(fl>0.26&&fl<0.3)?0.35:1;
+  return <div style={{position:'absolute',left:x,top:y,transform:`rotate(-11deg) scale(${s})`,opacity:Math.min(1,t*2.4)*flick,padding:'8px 18px',border:`3px solid ${C.red}`,borderRadius:10,fontFamily:SANS,fontWeight:800,fontSize:26,letterSpacing:'.22em',color:C.red,textShadow:`0 0 14px ${C.red}88`,boxShadow:`0 0 16px ${C.red}44, inset 0 0 12px ${C.red}22`,background:'rgba(255,59,74,.06)'}}>URGENT</div>;
+}
+function Vib({children,amp=1.6}){
+  const tl=useTimeline();
+  return <span style={{display:'inline-block',transform:`translate(${Math.sin(tl.time*31)*amp}px,${Math.cos(tl.time*26)*amp*0.6}px)`}}>{children}</span>;
+}
+/* timeline-driven meteors — deterministic, scrubbable */
+function Meteors({n=7,c=C.red,delay=0}){
+  const {localTime,duration}=useSprite();
+  const on=ez((localTime-delay)/0.6)*ez((duration-localTime)/0.4);
+  if(on<=0)return null;
+  return <div style={{position:'absolute',inset:0,pointerEvents:'none',opacity:on}}>
+    {Array.from({length:n}).map((_,i)=>{
+      const dur=2.2+(i%3)*0.7,t=(((localTime-delay)/dur)+i*0.37)%1;
+      const x0=120+((i*331+97)%1100),y0=-20+((i*173)%160),d=t*560;
+      const fade=Math.min(1,t*5,(1-t)*3);
+      return <div key={i} style={{position:'absolute',left:x0-d*0.82,top:y0+d*0.57,width:2.5,height:2.5,borderRadius:'50%',background:'#EAF2F9',opacity:fade*0.85,boxShadow:`0 0 8px 2px ${c}aa`}}>
+        <div style={{position:'absolute',left:2,top:1,width:95,height:1,background:`linear-gradient(90deg,${c}cc,transparent)`,transform:'rotate(-35deg)',transformOrigin:'0 0'}}/>
+      </div>;
+    })}
+  </div>;
+}
+/* aurora wash — background drift tied to localTime */
+function Aurora({delay=0,o=.4}){
+  const {localTime}=useSprite();
+  const on=ez((localTime-delay)/1.4);
+  if(on<=0)return null;
+  return <div style={{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none'}}>
+    <div style={{position:'absolute',inset:'-40%',filter:'blur(52px)',opacity:o*on,background:`repeating-linear-gradient(100deg,${C.blue} 10%,#1B6BFF 18%,${C.lime} 26%,${C.blue} 34%)`,backgroundSize:'300% 200%',backgroundPosition:`${(localTime*20)%300}% 50%`}}/>
+    <div style={{position:'absolute',inset:0,background:`radial-gradient(ellipse at 50% 100%,transparent 8%,${C.bg} 76%)`}}/>
+  </div>;
+}
+/* radial focus dim — darkens everything except a circle */
+function Dim({x=640,y=330,r=380,delay=0,max=.72}){
+  const {localTime,duration}=useSprite();
+  const p=ez((localTime-delay)/0.8)*ez((duration-localTime)/0.5);
+  if(p<=0)return null;
+  return <div style={{position:'absolute',inset:0,pointerEvents:'none',opacity:p,background:`radial-gradient(${r}px circle at ${x}px ${y}px, transparent 38%, rgba(8,11,15,${max}) 84%)`}}/>;
+}
+/* mesh gradient wash */
+function Mesh({delay=0,o=.55}){
+  const {localTime,duration}=useSprite();
+  const p=ez((localTime-delay)/1)*ez((duration-localTime)/0.5);
+  if(p<=0)return null;
+  return <div style={{position:'absolute',inset:0,pointerEvents:'none',opacity:o*p,background:`radial-gradient(at 12% 18%,${C.blue}2e 0,transparent 50%),radial-gradient(at 85% 25%,${C.lime}1c 0,transparent 45%),radial-gradient(at 70% 90%,#1B6BFF30 0,transparent 55%)`}}/>;
+}
+/* typewriter — chars revealed by localTime, blinking caret */
+function Type({text,delay=0,cps=24,style}){
+  const {localTime}=useSprite();
+  const n=Math.max(0,Math.floor((localTime-delay)*cps));
+  const done=n>=text.length;
+  const caret=!done||Math.sin(localTime*7)>0;
+  return <span style={style}>{text.slice(0,n)}<span style={{opacity:caret?1:0}}>▍</span></span>;
+}
+/* cue tile with true 3D flip to red */
+function Tile({icon,c=C.blue,size=170,flip}){
+  const {localTime}=useSprite();
+  let rot=0,col=c,red=false;
+  if(flip!==undefined&&localTime>flip){
+    const e=ez(cl((localTime-flip)/0.65));
+    if(e<0.5){rot=e*180;}else{rot=e*180-180;col=C.red;red=true;}
+  }
+  return <div style={{perspective:700}}>
+    <div style={{width:size,height:size,display:'flex',alignItems:'center',justifyContent:'center',transform:`rotateY(${rot}deg)`,...neon(col),borderRadius:22,...(red?{background:'rgba(255,59,74,.12)',boxShadow:`0 0 18px ${C.red}66,0 0 50px ${C.red}2a`}:null)}}>
+      <Ic k={icon} c={col} s={size*0.42}/>
+    </div>
+  </div>;
+}
+/* Setosa-style continuous probability stream: dots fall and split ~40/60 into click/ignore */
+function StreamSplit({x,y,delay=2.2}){
+  const {localTime}=useSprite();
+  const tl=useTimeline();
+  const on=ez((localTime-delay)/0.8);
+  if(on<=0)return null;
+  const N=12;
+  const bez=(a,b,c,d,u)=>{const m=1-u;return m*m*m*a+3*m*m*u*b+3*m*u*u*c+u*u*u*d;};
+  return <div style={{position:'absolute',left:x,top:y,width:220,height:360,opacity:on}}>
+    <svg width="220" height="330">
+      <path d="M110 8 V150" stroke={`${C.grey}30`} strokeWidth="2" fill="none"/>
+      <path d="M110 150 C110 205 52 215 52 268" stroke={`${C.red}40`} strokeWidth="2" fill="none"/>
+      <path d="M110 150 C110 205 168 215 168 268" stroke={`${C.grey}30`} strokeWidth="2" fill="none"/>
+      {Array.from({length:N}).map((_,i)=>{
+        const s=((tl.time*0.14)+i/N)%1;
+        const red=((i*7)%5)<2;
+        let px,py;
+        if(s<0.45){px=110;py=8+(s/0.45)*142;}
+        else{const u=(s-0.45)/0.55;px=bez(110,110,red?52:168,red?52:168,u);py=bez(150,205,215,268,u);}
+        const fade=Math.min(1,s*8,(1-s)*8);
+        const col=s<0.45?C.blue:(red?C.red:C.grey);
+        return <circle key={i} cx={px} cy={py} r="4.5" fill={col} opacity={0.85*fade} style={{filter:`drop-shadow(0 0 4px ${col})`}}/>;
+      })}
+    </svg>
+    <div style={{position:'absolute',left:8,top:286,width:90,textAlign:'center',fontFamily:MONO,fontSize:12,letterSpacing:'.12em',textTransform:'uppercase',color:C.red}}>click</div>
+    <div style={{position:'absolute',left:124,top:286,width:90,textAlign:'center',fontFamily:MONO,fontSize:12,letterSpacing:'.12em',textTransform:'uppercase',color:C.dim}}>ignore</div>
+  </div>;
+}
+/* Link-mismatch reveal: fades in below the link line, inside the same email
+   card, so "shows" vs "goes to" reads as one continuous block rather than a
+   separate floating tooltip. */
+function LinkReveal({delay}){
+  const {localTime}=useSprite();
+  const o=ez((localTime-delay)/0.6);
+  if(o<=0)return null;
+  return <div style={{opacity:o,borderTop:`1px solid ${C.red}33`,background:'rgba(255,59,74,.05)',padding:'16px 24px 20px'}}>
+    <div style={{display:'grid',gridTemplateColumns:'96px 1fr',gap:'10px 16px',alignItems:'center'}}>
+      <span style={{fontFamily:MONO,fontSize:13,letterSpacing:'.12em',textTransform:'uppercase',color:C.dim}}>shows</span>
+      <span style={{fontFamily:MONO,fontSize:18,color:C.blue,padding:'8px 14px',border:`1.5px solid ${C.blue}88`,borderRadius:9}}>portal.corp.com/password-reset</span>
+      <span style={{fontFamily:MONO,fontSize:13,letterSpacing:'.12em',textTransform:'uppercase',color:C.dim}}>goes to</span>
+      <span style={{fontFamily:MONO,fontSize:18,color:C.red,fontWeight:600,padding:'8px 14px',border:`1.5px solid ${C.red}`,borderRadius:9,textShadow:`0 0 10px ${C.red}77`,background:'rgba(255,59,74,.08)'}}><Type text="corp-login.zx.tk/reset" delay={delay+0.5} cps={26}/></span>
+    </div>
+  </div>;
+}
+const dash={borderRadius:22,border:`2px dashed ${C.blue}66`,background:'rgba(53,182,255,.04)'};
+const theFrom=<span>it-support@secur<span style={{color:C.red,fontWeight:700}}>1</span>ty-corp.com</span>;
+
+// Scene timing lives here so the VO editor can retune it. bounds = 12 contiguous
+// scene edges (11 scenes); holds = [at,dur] timeline freezes (the pauses in VO gaps).
+// timing.json (dropped next to this file by the editor) overrides these defaults.
+const DEFAULT_TIMING={
+  bounds:[0,9.8,21.7,31.4,42,54.5,66.4,76.6,86.7,100.4,112,121],
+  holds:[[9.6,1.8],[21.5,0.7],[31.2,0.7],[41.8,0.7],[54.3,0.7],[66.2,0.7],[76.4,0.7],[86.3,0.7],[100.2,0.7],[108.2,2.0],[111.5,0.6]]
+};
+let TIMING=DEFAULT_TIMING;
+const B=i=>TIMING.bounds[i];
+
+function Video1Neon({loop}){
+  return <Stage width={1280} height={720} duration={B(11)} background={C.bg} loop={loop} autoplay={false}>
+    <BG/>
+    <AudioSync/>
+    <Subtitles/>
+    <WatchComplete/>
+    {/* Beats between scenes — each sits in a natural VO silence gap so the
+        narration is never clipped. Longer holds where we ask the viewer to
+        look ("pick one", t≈9.6) or think ("your turn", t≈108.2). */}
+    {TIMING.holds.map(([at,dur],i)=><Hold key={i} at={at} dur={dur}/>)}
+    {/* Reading pause: the VO says "take your time" right at the end of S8
+        (the CEO gift-card email — the "final letter" the learner must read),
+        then S9 immediately reveals the answer. Pause here with a visible 10s
+        countdown next to the letter so the learner gets a clear, bounded
+        reading window; auto-resumes when it runs out, or early on play/space. */}
+    <ReadingPause at={B(10)-0.2} dur={10} x={1145} y={260}/>
+    {/* S1 · HOOK — cards smear in from the right, settle with spring, idle float */}
+    <Sprite start={B(0)} end={B(1)}>
+      <Cam>
+      <SlideX x={360} y={78} delay={0.4}><Idle phase={0}><NMail from="news@corp.com" subj="Weekly digest — issue #214"/></Idle></SlideX>
+      <SlideX x={360} y={276} delay={0.85}><Idle phase={2}><NMail from="it-support@secur1ty-corp.com" subj="Your password expires in 2 hours" badge={<Badge k="clock" text="2H"/>}/></Idle></SlideX>
+      <SlideX x={360} y={474} delay={1.3}><Idle phase={4}><NMail from="billing@corp.com" subj="Invoice INV-0847 attached" badge={<Badge text=".ZIP"/>}/></Idle></SlideX>
+      <F x={960} y={330} w={240} delay={5.0} style={{textAlign:'left'}}><Idle phase={1}><span style={{fontFamily:MONO,fontSize:16,letterSpacing:'.16em',textTransform:'uppercase',color:C.lime,textShadow:`0 0 10px ${C.lime}66`}}>← pick one</span></Idle></F>
+      </Cam>
+    </Sprite>
+    {/* S2 · REVEAL — winner springs to center, losers desaturate, counter rolls up */}
+    <Sprite start={B(1)} end={B(2)}>
+      <Cam from={1.01} to={1.05}>
+      <Meteors delay={2.1}/>
+      <F x={300} y={70} w={300} dur={0.7} rise={0} delay={0} style={{opacity:0.2,filter:'saturate(0) blur(0.5px)'}}><NMail w={440} tone={C.grey} from="news@corp.com" subj="Weekly digest — issue #214"/></F>
+      <F x={300} y={540} w={300} dur={0.7} rise={0} delay={0} style={{opacity:0.2,filter:'saturate(0) blur(0.5px)'}}><NMail w={440} tone={C.grey} from="billing@corp.com" subj="Invoice INV-0847 attached" badge={<Badge text=".ZIP" c={C.grey}/>}/></F>
+      {/* Card sits left-of-centre so the click/ignore stream fits fully inside
+          the frame on the right (StreamSplit is 220 wide; 1015+220=1235 < 1280). */}
+      <F x={130} y={196} w={820} dur={0.8} rise={30} delay={0.15}><Pop delay={0.15}><NMail w={820} from={theFrom} subj="Your password expires in 2 hours" badge={<Badge k="clock" text="2H" c={C.red}/>} body={<Bars w={620} n={3}/>}/></Pop></F>
+      <Ring x={540} y={300} r={310} delay={1.3}/>
+      <Ring x={540} y={300} r={310} delay={1.55} dur={1.4}/>
+      <Forty y={478} delay={7.4}/>
+      <StreamSplit x={1015} y={160} delay={4.9}/>
+      </Cam>
+    </Sprite>
+    {/* S3 · PROMISE — card parks in the corner, tiles cascade in, shield pops */}
+    <Sprite start={B(2)} end={B(3)}>
+      <Cam>
+      <F x={44} y={40} w={300} dur={0.7} rise={-12} delay={0.1}><div style={{transform:'scale(0.72)',transformOrigin:'top left',opacity:0.75}}><NMail w={420} from="it-support@secur1ty…" subj="Your password expires…" badge={<Badge k="clock" c={C.red}/>}/></div></F>
+      <F x={0} y={266} w={1280} delay={0.5} center><div style={{display:'flex',gap:26,alignItems:'center'}}>
+        {[0,1,2,3].map(i=><Pop key={i} delay={0.5+i*0.28} style={{position:'relative'}}><div style={{width:150,height:150,...dash}}/></Pop>)}
+        <Pop delay={5.6} style={{position:'relative'}}><Idle phase={3}><div style={{width:150,height:150,display:'flex',alignItems:'center',justifyContent:'center',...neon(C.green),borderRadius:22}}><Ic k="shield" c={C.green} s={66}/></div></Idle></Pop>
+      </div></F>
+      <Ring x={1042} y={341} r={90} delay={6.0} dur={1} c={C.green}/>
+      <Lab text="4 tells · 1 safe move" color={C.blue} y={510} delay={6.4}/>
+      </Cam>
+    </Sprite>
+    {/* S4a · CUE 1 — urgency stamp slams on with flicker */}
+    <Sprite start={B(3)} end={B(4)}>
+      <Cam origin="62% 30%">
+      <Meteors delay={1.7} n={5}/>
+      {/* Heading reads first, then the card settles in — card scaled to ~72% of
+          stage width so it dominates the frame instead of floating in empty space. */}
+      <F x={180} y={170} w={920} delay={1.1} rise={20}><NMail w={920} from={theFrom} subj="Your password expires in 2 hours" body={<Bars w={700} n={3}/>}/></F>
+      <Stamp x={830} y={117} delay={4.4}/>
+      <Ring x={944} y={164} r={140} delay={4.8} dur={1}/>
+      <Ring x={944} y={164} r={140} delay={5.0} dur={1.2}/>
+      <Hint text="tell 1 · pressure out of nowhere" y={54} delay={0} size={22} color={C.blue}/>
+      </Cam>
+    </Sprite>
+    {/* S4b · CUE 2 — push into the sender line, the "1" vibrates */}
+    <Sprite start={B(4)} end={B(5)}>
+      <Cam from={1.05} to={1} origin="50% 42%">
+      <Dim x={640} y={352} delay={1.4}/>
+      {/* Card widened to ~72% of stage width (was auto-sized to its text, which
+          left it a narrow strip in a mostly-empty frame) and appears after the
+          heading, not alongside it. */}
+      <F x={0} y={200} w={1280} delay={1.2} center>
+        <div style={{width:920,padding:'40px 56px',...neon(C.blue),borderRadius:22,textAlign:'left'}}>
+          <div style={{fontFamily:MONO,fontSize:16,letterSpacing:'.14em',textTransform:'uppercase',color:C.dim,marginBottom:16}}>from:</div>
+          <div style={{fontFamily:MONO,fontSize:40,color:C.txt}}>it-support@secur<Vib><span style={{color:C.red,fontWeight:700,textShadow:`0 0 12px ${C.red}aa`,padding:'0 3px',border:`2px solid ${C.red}`,borderRadius:7}}>1</span></Vib>ty-corp.com</div>
+        </div>
+      </F>
+      {/* Accent lands exactly on "One letter is different" (VO t≈7.1 in-scene). */}
+      <Ring x={580} y={302} r={44} delay={7.2} dur={1} c={C.red}/>
+      <Ring x={580} y={302} r={44} delay={7.45} dur={1.2} c={C.red}/>
+      <Hint text="tell 2 · look-alike domain, one letter off" y={54} delay={0} size={22} color={C.blue}/>
+      </Cam>
+    </Sprite>
+    {/* S5a · CUE 3 — key + coin glow inside the body */}
+    <Sprite start={B(5)} end={B(6)}>
+      <Cam origin="45% 50%">
+      <F x={180} y={130} w={920} delay={1.6} rise={20}><NMail w={920} from={theFrom} subj="Your password expires in 2 hours" body={
+        <div style={{padding:'20px 24px',display:'flex',flexDirection:'column',gap:14}}>
+          <div style={{height:9,borderRadius:5,background:`${C.grey}30`,width:660}}/>
+          <div style={{display:'flex',gap:20,alignItems:'center'}}>
+            <Pop delay={2.7} style={{position:'relative'}}><div style={{padding:12,...neon(C.red),borderRadius:14,background:'rgba(255,59,74,.08)'}}><Ic k="key" c={C.red} s={34}/></div></Pop>
+            <Pop delay={4.9} style={{position:'relative'}}><div style={{padding:12,...neon(C.red),borderRadius:14,background:'rgba(255,59,74,.08)'}}><Ic k="coin" c={C.red} s={34}/></div></Pop>
+            <div style={{height:9,borderRadius:5,background:`${C.grey}30`,width:380}}/>
+          </div>
+          <div style={{height:9,borderRadius:5,background:`${C.grey}30`,width:480}}/>
+        </div>}/></F>
+      <Hint text="tell 3 · it asks for your password. IT never needs it" y={54} delay={0} size={22} color={C.blue}/>
+      </Cam>
+    </Sprite>
+    {/* S5b · CUE 4 — cursor glides in with trail; the shows/goes-to reveal is
+        one continuous panel inside the same email card (not a separate
+        floating tooltip), so the whole link-mismatch demo reads as one block. */}
+    <Sprite start={B(6)} end={B(7)}>
+      <Cam>
+      <F x={180} y={180} w={920} delay={1.5} rise={16}><NMail w={920} from={theFrom} subj="Your password expires in 2 hours" body={
+        <React.Fragment>
+          <div style={{padding:'18px 24px 8px'}}>
+            <span style={{fontFamily:MONO,fontSize:19,color:C.blue,textDecoration:'underline',textShadow:`0 0 10px ${C.blue}55`}}>portal.corp.com/password-reset</span>
+          </div>
+          <LinkReveal delay={4.7}/>
+        </React.Fragment>}/></F>
+      <Cursor from={[1040,620]} to={[340,283]} start={2.5} dur={1.8}/>
+      <Hint text="tell 4 · hover, don't click. trust where it really goes" y={54} delay={0} size={22} color={C.blue}/>
+      </Cam>
+    </Sprite>
+    {/* S6 · THE RULE — grid assembles, one tile 3D-flips to red */}
+    <Sprite start={B(7)} end={B(8)}>
+      <Cam>
+      <Mesh delay={0.3}/>
+      <Lab text="One is enough" color={C.lime} y={100} size={46} delay={2.8}/>
+      {/* Single row instead of a 2x2 block, and bigger tiles — the row now spans
+          ~71% of stage width instead of a small square parked in the middle. */}
+      <F x={0} y={305} w={1280} delay={0.3} center><div style={{display:'flex',gap:50}}>
+        <Pop delay={0.3}><Tile icon="clock" size={190}/></Pop><Pop delay={0.5}><Tile icon="mask" size={190} flip={2.2}/></Pop>
+        <Pop delay={0.7}><Tile icon="key" size={190}/></Pop><Pop delay={0.9}><Tile icon="link" size={190}/></Pop>
+      </div></F>
+      <Ring x={640} y={400} r={260} delay={2.9} dur={1.3} c={C.red}/>
+      <Ring x={640} y={400} r={290} delay={3.4} dur={1.5} c={C.lime}/>
+      <Hint text="one tell is enough · stop and report" y={545} delay={4.4}/>
+      </Cam>
+    </Sprite>
+    {/* S7 · THE SAFE MOVE — one email card, report button pressed, dominates the
+        frame. (Previously a split composition — card left, org/shield graphics
+        right; the right side is gone, the card is scaled up to take its place.) */}
+    <Sprite start={B(8)} end={B(9)}>
+      <Cam origin="50% 48%">
+      <F x={180} y={200} w={920} delay={0.3} rise={18}>
+        <NMail w={920} from={theFrom} subj="Your password expires…" body={
+          <div style={{padding:'26px 30px 32px',display:'flex',gap:20,alignItems:'center'}}>
+            <span style={{fontFamily:SANS,fontSize:26,fontWeight:800,letterSpacing:'.06em',color:C.bg,background:C.blue,padding:'16px 40px',borderRadius:14,boxShadow:`0 0 22px ${C.blue}66`}}>Report</span>
+            <Pop delay={4.6} style={{position:'relative'}}><Ic k="shield" c={C.green} s={54}/></Pop>
+          </div>}/>
+      </F>
+      <Cursor from={[520,640]} to={[285,310]} start={1.6} dur={1.8} press/>
+      <Ring x={285} y={310} r={85} delay={4.2} dur={1} c={C.green}/>
+      <Ring x={285} y={310} r={85} delay={4.5} dur={1.3} c={C.green}/>
+      <Hint text="one report warns everyone" y={430} delay={9.9} color={C.green}/>
+      <Hint text="report, don't delete · one click protects everyone" y={54} delay={0} size={22} color={C.green}/>
+      </Cam>
+    </Sprite>
+    {/* S8 · ACTIVE RECAP — CEO mail floats, question mark breathes behind */}
+    <Sprite start={B(9)} end={B(10)}>
+      <Breath/>
+      <Cam from={1} to={1.03} origin="50% 46%">
+      {/* Letter card widened to ~72% of stage width so it dominates the frame —
+          this is also the card the reading-pause countdown sits next to. */}
+      <Floaty x={180}><GMail w={920} time="9:14 AM" from="Daniel Reeve <ceo.office.mail@gmail.com>" subj="Need this handled quietly" body={
+        <span>Quick favour. Are you at your desk? I'm heading into a board meeting and can't talk. I need you to buy 4 &#215; 100 euro gift cards for a client thank-you. Send me the codes here. <span style={{fontWeight:600}}>And keep it between us for now.</span></span>
+      }/></Floaty>
+      <Hint text="your turn · how many tells?" y={54} delay={0} size={22} color={C.lime}/>
+      </Cam>
+    </Sprite>
+    {/* S9 · EXIT — badges pop with spring, end card blooms */}
+    <Sprite start={B(10)} end={B(11)}>
+      <Cam>
+      <Aurora delay={2.6}/>
+      <F x={180} y={150} w={920} delay={0} dur={0.3} rise={0}><GMail w={920} time="9:14 AM" from="Daniel Reeve <ceo.office.mail@gmail.com>" subj="Need this handled quietly" body={<span>Quick favour. Are you at your desk? Buy 4 &#215; 100 euro gift cards and send me the codes. <span style={{fontWeight:600}}>Keep it between us.</span></span>}/></F>
+      <div style={{position:'absolute',left:180,top:84,width:920,display:'flex',gap:16,justifyContent:'center'}}>
+        {['clock','mask','key','link'].map((k,i)=><Pop key={k} delay={0.5+i*0.45}><div style={{padding:11,...neon(C.red),borderRadius:14,background:'rgba(255,59,74,.12)'}}><Ic k={k} c={C.red} s={28}/></div></Pop>)}
+      </div>
+      <Ring x={640} y={110} r={60} delay={2.4} dur={1} c={C.red}/>
+      <F x={0} y={470} w={1280} delay={3.4} center><Pop delay={3.4}><Idle phase={2}>
+        <span style={{fontFamily:SANS,fontWeight:800,fontSize:36,letterSpacing:'.02em',color:C.lime,textShadow:`0 0 26px ${C.lime}66`}}>Four tells. One safe move.</span>
+      </Idle></Pop></F>
+      <Ring x={640} y={508} r={180} delay={3.9} dur={1.4} c={C.lime}/>
+      </Cam>
+    </Sprite>
+  </Stage>;
+}
+/* prefers-reduced-motion — read once, tracked live in case it changes mid-session. */
+function usePrefersReducedMotion(){
+  const query='(prefers-reduced-motion: reduce)';
+  const [reduced,setReduced]=React.useState(()=>{
+    try{ return window.matchMedia(query).matches; }catch(e){ return false; }
+  });
+  React.useEffect(()=>{
+    let mq; try{ mq=window.matchMedia(query); }catch(e){ return; }
+    const onChange=()=>setReduced(mq.matches);
+    if(mq.addEventListener) mq.addEventListener('change',onChange); else mq.addListener(onChange);
+    return ()=>{ if(mq.removeEventListener) mq.removeEventListener('change',onChange); else mq.removeListener(onChange); };
+  },[]);
+  return reduced;
+}
+/* Reading pause: once the playhead reaches `at`, pause and show a visible
+   10s countdown near the letter, then auto-resume — a fixed, legible reading
+   window instead of a silent freeze the learner has no way to escape. The
+   previous version just called setPlaying(false) with no on-screen sign why
+   playback stopped, and — worse — since it flagged itself "done" only at the
+   moment it fired, pressing play again from a persisted/scrubbed position at
+   or after `at` re-armed nothing: the same effect saw playing go true with
+   time still >= at and immediately paused it again, so the learner could
+   never get playback moving (this was the "can't pause/resume at all" bug).
+   Here the 0.6s catch window (mirroring Hold below) means the guard only
+   ever fires once, right at the natural crossing; a big forward scrub past
+   `at` no longer re-traps playback. Pressing play/space during the countdown
+   cancels it and resumes immediately. Re-arms if the learner scrubs back
+   before `at`. The countdown itself runs on the wall clock (setInterval),
+   not tl.time, since it has to keep counting while the timeline is paused —
+   this is player chrome, not scene content, so it's exempt from the
+   pure-function-of-time rule (like the playback bar). */
+function ReadingPause({at,dur=10,x=1040,y=300}){
+  const tl=useTimeline();
+  // `phase` must be real React state, not a ref: this component's own render
+  // output depends on it (the countdown UI mounts/unmounts with it). A ref
+  // mutation plus tl.setHolding()/tl.setPlaying() doesn't necessarily
+  // re-render *this* component — the timeline context value is memoized on
+  // [time, duration, playing, rate, subsOn], so a holding-only change doesn't
+  // change that memoized object and this component can be skipped entirely,
+  // leaving the countdown UI stuck on screen after it had already canceled
+  // internally. State fixes that: setPhase always schedules a re-render.
+  const [phase,setPhase]=React.useState('armed'); // armed → counting → done
+  const timerRef=React.useRef(null);
+  const deadlineRef=React.useRef(0);
+  const [remaining,setRemaining]=React.useState(dur);
+
+  const clearTimer=()=>{ if(timerRef.current){ clearInterval(timerRef.current); timerRef.current=null; } };
+
+  // A single if/else-if chain so exactly one branch fires per commit — this
+  // matters: the "enter counting" and "cancel early" checks used to live in
+  // two separate effects and both ran on the very same commit that flipped
+  // tl.playing to true (the click that arms the countdown also looks, to a
+  // second independent effect, like a click that should cancel it), so the
+  // countdown immediately canceled itself the instant it started. Chaining
+  // them as mutually exclusive branches means only the "enter" branch can
+  // match on that first commit; "cancel" only matches on a later, genuinely
+  // separate playing-become-true transition while still 'counting'.
+  React.useEffect(()=>{
+    if(phase==='armed'&&tl.playing&&tl.time>=at&&tl.time<at+0.6){
+      deadlineRef.current=Date.now()+dur*1000;
+      setRemaining(dur);
+      tl.setHolding(true); // hide the big Play/Resume overlay — the countdown is the affordance now
+      tl.setPlaying(false);
+      setPhase('counting');
+      timerRef.current=setInterval(()=>{
+        const left=Math.max(0,(deadlineRef.current-Date.now())/1000);
+        setRemaining(left);
+        if(left<=0){
+          clearTimer();
+          tl.setHolding(false);
+          tl.setPlaying(true);
+          setPhase('done');
+        }
+      },100);
+    } else if(phase==='counting'&&tl.playing){
+      // Manual resume (Play button or Space) during the countdown — cancel early.
+      tl.setHolding(false);
+      clearTimer();
+      setPhase('done');
+    } else if(phase!=='armed'&&tl.time<at-0.4){
+      tl.setHolding(false);
+      clearTimer();
+      setRemaining(dur);
+      setPhase('armed');
+    }
+  },[tl.time,tl.playing,at,dur,phase]);
+
+  React.useEffect(()=>clearTimer,[]);
+
+  if(phase!=='counting') return null;
+  return <ReadingCountdown seconds={remaining} total={dur} x={x} y={y}/>;
+}
+/* Small, unobtrusive countdown near the letter — a thin blue ring + number.
+   Under prefers-reduced-motion: a static digit, no animated ring. */
+function ReadingCountdown({seconds,total,x,y}){
+  const reduced=usePrefersReducedMotion();
+  const n=Math.max(0,Math.ceil(seconds-0.001));
+  const numeral=<div style={{fontFamily:MONO,fontSize:20,fontWeight:700,color:C.blue,fontVariantNumeric:'tabular-nums'}}>{n}</div>;
+  if(reduced){
+    return <div style={{position:'absolute',left:x,top:y,transform:'translate(-50%,-50%)',padding:'6px 13px',borderRadius:10,border:`1.5px solid ${C.blue}55`,background:'rgba(14,17,22,0.55)'}}>{numeral}</div>;
+  }
+  const r=24,circ=2*Math.PI*r,p=total>0?cl(seconds/total):0;
+  return <div style={{position:'absolute',left:x,top:y,width:60,height:60,transform:'translate(-50%,-50%)'}}>
+    <svg width="60" height="60" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r={r} fill="none" stroke={`${C.blue}2a`} strokeWidth="3"/>
+      <circle cx="30" cy="30" r={r} fill="none" stroke={C.blue} strokeWidth="3" strokeLinecap="round"
+        strokeDasharray={circ} strokeDashoffset={circ*(1-p)} transform="rotate(-90 30 30)"
+        style={{filter:`drop-shadow(0 0 6px ${C.blue}88)`}}/>
+    </svg>
+    <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center'}}>{numeral}</div>
+  </div>;
+}
+/* Hold — freeze the playhead (and, via AudioSync, the VO) for `dur` seconds
+   when playback first reaches `at`. Placed inside the VO's natural silence
+   gaps so the narration is never cut mid-word; gives scenes room to breathe
+   and lets the viewer look / think. Fire-and-forget timeout (no effect
+   cleanup) so pausing doesn't cancel the resume. Re-arms if the user scrubs
+   back before the hold point. */
+function Hold({at,dur}){
+  const {time,playing,setPlaying,setHolding}=useTimeline();
+  const st=React.useRef('armed'); // armed → held → done
+  React.useEffect(()=>{
+    if(st.current==='armed'&&playing&&time>=at&&time<at+0.6){
+      st.current='held';
+      setHolding(true);
+      setPlaying(false);
+      setTimeout(()=>{ st.current='done'; setHolding(false); setPlaying(true); }, dur*1000);
+    } else if(st.current==='done'&&time<at-0.4){
+      st.current='armed';
+    }
+  });
+  return null;
+}
+/* Tell the SCORM shell the video has been watched once the playhead reaches
+   the end. Fires once; re-arms only if the learner scrubs back to the start. */
+function WatchComplete(){
+  const {time,duration}=useTimeline();
+  const done=React.useRef(false);
+  React.useEffect(()=>{
+    if(!done.current&&duration>0&&time>=duration-0.4){
+      done.current=true;
+      try{ window.parent&&window.parent.postMessage({type:'u1-progress',id:'watch'},'*'); }catch(e){}
+    } else if(done.current&&time<1){
+      done.current=false;
+    }
+  },[time,duration]);
+  return null;
+}
+/* sync the VO audio track to the timeline playhead */
+function AudioSync(){
+  const {time,playing,rate}=useTimeline();
+  React.useEffect(()=>{ const a=document.getElementById('vo'); if(a){ if(playing) a.play().catch(()=>{}); else a.pause(); } },[playing]);
+  React.useEffect(()=>{ const a=document.getElementById('vo'); if(a&&Math.abs(a.currentTime-time)>0.3){ try{a.currentTime=time;}catch(e){} } },[time]);
+  React.useEffect(()=>{ const a=document.getElementById('vo'); if(a){ a.playbackRate=rate||1; try{a.preservesPitch=true;}catch(e){} } },[rate]);  // audio follows playback speed
+  return null;
+}
+/* Subtitles — burned into the frame (inside the foreignObject, so they land in
+   the video export) and synced to the playhead. Reads TIMING.subs authored by the
+   VO editor: { lang: [[startSec,endSec,text],...] }. Learner content is EN, so we
+   show 'en' (or the only track); no in-player language switch.
+   ponytail: single-track render, add a selector only if a course ships multilingual subs. */
+function Subtitles(){
+  const {time,subsOn}=useTimeline();
+  if(!subsOn) return null;
+  const subs=TIMING.subs;
+  if(!subs||typeof subs!=='object') return null;
+  const lang=subs.en?'en':Object.keys(subs)[0];
+  const cues=subs[lang];
+  if(!Array.isArray(cues)||!cues.length) return null;
+  const cue=cues.find(c=>time>=c[0]&&time<c[1]);
+  if(!cue||!cue[2]) return null;
+  return <div style={{position:'absolute',left:'50%',bottom:40,transform:'translateX(-50%)',
+    maxWidth:'86%',padding:'8px 22px',borderRadius:9,background:'rgba(6,8,12,0.82)',
+    color:'#fff',fontFamily:SANS,fontWeight:600,fontSize:27,lineHeight:1.34,textAlign:'center',
+    whiteSpace:'pre-wrap',pointerEvents:'none',boxShadow:'0 3px 14px rgba(0,0,0,0.45)'}}>{cue[2]}</div>;
+}
+function Floaty({children,x=290,y=200}){
+  const tl=useTimeline();
+  return <div style={{position:'absolute',left:x,top:y,transform:`translateY(${Math.sin(tl.time*0.9)*7}px) rotate(${Math.sin(tl.time*0.5)*0.4}deg)`}}>{children}</div>;
+}
+function Breath(){
+  const tl=useTimeline();
+  return <div style={{position:'absolute',left:0,top:0,width:1280,height:720,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:SANS,fontWeight:800,fontSize:560,color:C.blue,opacity:0.05+0.035*Math.sin(tl.time*1.1),userSelect:'none'}}>?</div>;
+}
+window.Video1Neon=Video1Neon;
+
+const _root = ReactDOM.createRoot(document.getElementById('root'));
+function _mount(){ _root.render(<div style={{width:'100vw',height:'100vh'}}><Video1Neon loop={false}/></div>); }
+// Load editor-tuned timing if present, else fall back to DEFAULT_TIMING.
+fetch('timing.json').then(r=>r.ok?r.json():null).then(t=>{
+  if(t&&Array.isArray(t.bounds)&&t.bounds.length===12&&Array.isArray(t.holds)) TIMING=t;
+}).catch(()=>{}).finally(_mount);
+
+</script>
+
+</body></html>

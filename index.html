@@ -1225,6 +1225,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .case-cta:hover { gap: 10px; }
 .case-cta .arrow { font-size: 14px; }
+/* Two CTAs on one card: share a single rule above the row. */
+.case-ctas { display: flex; flex-wrap: wrap; gap: 18px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.case-ctas .case-cta { border-top: 0; padding-top: 0; }
 
 /* ---------- services ---------- */
 .services {
@@ -3104,6 +3107,24 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         <span>branching</span><span>simulation</span><span>6 endings</span><span>SCORM-ready</span>
       </div>
       <a class="case-cta" href="pipeline/incident-response/" target="_blank">Run the night <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case case--demo" data-demo="true">
+      <div class="case-head">
+        <span class="case-num">— D6</span>
+        <span class="case-tag case-tag--demo">DEMO · course design + shipped unit</span>
+      </div>
+      <div class="case-employer">Compliance awareness <span class="syn-pill">synthetic</span></div>
+      <h3>A compliance micro-course,<br>designed <em>and built</em></h3>
+      <p class="case-period">6 micro-units designed · Unit 1 shipped · SCORM 1.2 + mobile web</p>
+      <p class="case-desc">Security and privacy awareness rebuilt as six self-contained micro-units carrying a retrieval chain, in place of a 40-minute deck with a final quiz. The case page is the design map: ABCD×Bloom outcomes, unit inventory, an experience map with cognitive-load and emotional-design targets, and criterion-referenced assessment with one non-compensatory critical item. Unit 1 is playable end to end — a 2-minute film, a longread, nine checks and an inbox simulator inside a gated lesson shell. Grounded in public standards (ISO 27001/27002/27701, GDPR, NIS2).</p>
+      <div class="case-tags">
+        <span>backward design</span><span>experience map</span><span>gated shell</span><span>SCORM 1.2</span>
+      </div>
+      <div class="case-ctas">
+        <a class="case-cta" href="pipeline/artefacts/compliance-microlearning/unit-1.html" target="_blank">▶ Play Unit 1 <span class="arrow">→</span></a>
+        <a class="case-cta" href="pipeline/artefacts/compliance-microlearning/" target="_blank">Course map <span class="arrow">→</span></a>
+      </div>
     </article>
 
   </div>

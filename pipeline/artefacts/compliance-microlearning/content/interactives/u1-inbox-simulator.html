@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 1 — Inbox: flag the tells</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0E1116; --panel:rgba(21,27,36,.72); --card:#151B24; --txt:#EAF2F9; --dim:#8A93A0;
+    --blue:#35B6FF; --lime:#C6F221; --green:#3DDC84; --red:#FF3B4A; --line:rgba(53,182,255,.18);
+    --sans:'Archivo','IBM Plex Sans',system-ui,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+    /* Gmail-like palette, scoped to the .mailapp client area only (item 23). */
+    --g-font:'Google Sans',Roboto,Arial,sans-serif;
+    --g-white:#fff; --g-border:#dadce0; --g-titlebar:#f6f8fc; --g-text:#202124; --g-sub:#5f6368;
+    --g-link:#1a73e8; --g-hover:#f2f6fc; --g-read-bg:#fafafa; --g-active:#e8f0fe; --g-active-bar:#1a73e8;
+    --g-flag-hover:#e8f0fe; --g-flag:#fdd663; --g-flag-border:#f9ab00;
+    --g-hit-bg:#ceead6; --g-hit-border:#137333; --g-miss-border:#d93025; --g-fp-bg:#fce8e6; --g-fp-border:#d93025;
+    --g-chip-bg:#f1f3f4; --g-danger:#d93025;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  /* Plain dark background — dot grid removed (feedback item 6). */
+  body { background: var(--bg); color: var(--txt); font: 400 15px/1.55 var(--body); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  #root { max-width: 1000px; margin: 0 auto; padding: 26px 20px 80px; }
+  .top { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  h1 { font: 700 clamp(21px, 6vw, 27px)/1.1 var(--sans); letter-spacing: -.01em; }
+  .flagcount { font: 600 12px var(--mono); color: var(--lime); border: 1px solid rgba(198,242,33,.4); border-radius: 7px; padding: 3px 9px; }
+  .qtext { font-size: 16px; font-weight: 600; margin: 8px 0 4px; }
+  .qsub { color: var(--dim); font-size: 13.5px; margin-bottom: 18px; max-width: 760px; }
+  .qsub b { color: var(--txt); font-weight: 600; }
+
+  /* ── Gmail-like mail client area (item 23) ── everything below is scoped under .mailapp */
+  .mailapp { border: 1px solid var(--g-border); border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(60,64,67,.15), 0 2px 8px rgba(60,64,67,.1); background: var(--g-white); color: var(--g-text); font-family: var(--g-font); }
+  .mtitle { display: flex; align-items: center; gap: 9px; padding: 10px 15px; border-bottom: 1px solid var(--g-border); background: var(--g-titlebar); }
+  .appname { font: 500 14px var(--g-font); color: var(--g-text); }
+  .mbody { display: grid; grid-template-columns: 300px 1fr; min-height: 420px; }
+  @media (max-width: 720px) { .mbody { grid-template-columns: 1fr; } }
+
+  .mlist { border-right: 1px solid var(--g-border); overflow-y: auto; max-height: 520px; background: var(--g-white); }
+  .lhead { font: 600 11px var(--g-font); letter-spacing: .08em; text-transform: uppercase; color: var(--g-sub); padding: 12px 15px 6px; }
+  .mrow { padding: 12px 15px; border-bottom: 1px solid #e8eaed; cursor: pointer; transition: background .15s; background: var(--g-white); }
+  .mrow.read { background: var(--g-read-bg); }
+  .mrow:hover { background: var(--g-hover); }
+  .mrow.active { background: var(--g-active); box-shadow: inset 3px 0 0 var(--g-active-bar); }
+  .rfrom { display: flex; align-items: center; gap: 7px; font: 700 13.5px var(--g-font); color: var(--g-text); }
+  .mrow.read .rfrom { font-weight: 400; }
+  .unread { width: 7px; height: 7px; border-radius: 50%; background: var(--g-link); flex: none; }
+  .mrow.read .unread { background: transparent; }
+  .rsub { font: 600 13px var(--g-font); color: var(--g-text); margin: 3px 0 1px; }
+  .mrow.read .rsub { font-weight: 400; }
+  .rprev { font-size: 12.5px; color: var(--g-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rmeta { display: flex; justify-content: space-between; margin-top: 4px; }
+  .rtime { font: 400 12px var(--g-font); color: var(--g-sub); }
+  .rflags { font: 600 11px var(--g-font); color: var(--g-link); background: var(--g-chip-bg); border-radius: 4px; padding: 1px 6px; }
+
+  .mread { padding: 0; position: relative; display: flex; flex-direction: column; background: var(--g-white); }
+  .mempty { color: var(--g-sub); display: flex; align-items: center; justify-content: center; min-height: 360px; font-size: 14px; }
+  .mhead { padding: 18px 22px 14px; border-bottom: 1px solid var(--g-border); }
+  .msubj { font: 500 20px var(--g-font); color: var(--g-text); margin-bottom: 12px; }
+  .mfrom { display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font: 700 13px var(--g-font); color: #fff; flex: none; }
+  .mmeta { flex: 1; min-width: 0; }
+  .mmeta .name { font-weight: 700; font-size: 14px; color: var(--g-text); }
+  .mmeta .addr { font: 400 12.5px var(--g-font); color: var(--g-sub); }
+  .mmeta .to { font: 400 12px var(--g-font); color: var(--g-sub); margin-top: 2px; }
+  .mtime { font: 400 12px var(--g-font); color: var(--g-sub); }
+  .ghostrow { display: flex; gap: 8px; margin-top: 14px; }
+  .ghostbtn { font: 500 13px var(--g-font); color: var(--g-sub); background: transparent; border: 1px solid var(--g-border);
+    border-radius: 16px; padding: 6px 16px; cursor: default; user-select: none; }
+  .mcontent { padding: 20px 22px; font-size: 14px; line-height: 1.6; flex: 1; color: var(--g-text); }
+  .mcontent p { margin: 0 0 12px; }
+  .mlink { color: var(--g-link); text-decoration: underline; cursor: inherit; }
+  .attach { display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px; border: 1px solid transparent;
+    border-radius: 8px; background: var(--g-chip-bg); font: 500 12.5px var(--g-font); color: var(--g-text); cursor: inherit; }
+
+  /* clickable tell hotspots, readable on the light client bg */
+  .spot { cursor: pointer; border-radius: 4px; padding: 0 2px; transition: background .15s, box-shadow .2s; position: relative; }
+  .spot:hover { background: var(--g-flag-hover); }
+  .spot.flag { background: var(--g-flag); box-shadow: inset 0 0 0 1.5px var(--g-flag-border); }
+  .spot.hit { background: var(--g-hit-bg); box-shadow: inset 0 0 0 1.5px var(--g-hit-border); }
+  .spot.miss { background: transparent; outline: 1.5px dashed var(--g-miss-border); outline-offset: 1px; }
+  .spot.miss::after { content: 'missed'; position: absolute; top: -16px; left: 0; font: 600 9px var(--g-font); letter-spacing: .08em; color: var(--g-miss-border); text-transform: uppercase; }
+  .spot.fp { background: var(--g-fp-bg); box-shadow: inset 0 0 0 1.5px var(--g-fp-border); animation: shake .4s; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-3px); } 40%,80% { transform: translateX(3px); } }
+
+  .statusbar { border-top: 1px solid var(--g-border); padding: 8px 22px; font: 400 12.5px var(--g-font); color: var(--g-sub); min-height: 34px; background: var(--g-titlebar); }
+  .statusbar .url { color: var(--g-danger); }
+
+  .foot { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding: 14px 18px; border-radius: 14px;
+    border: 1px solid var(--line); background: var(--panel); transition: .3s; }
+  .foot.ok { border-color: var(--green); box-shadow: 0 0 24px rgba(61,220,132,.18); }
+  .foot.mid { border-color: var(--lime); box-shadow: 0 0 24px rgba(198,242,33,.16); }
+  .foot.bad { border-color: var(--red); box-shadow: 0 0 24px rgba(255,59,74,.16); }
+  .fico { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px; flex: none; border: 2px solid var(--dim); color: var(--dim); }
+  .foot.ok .fico { border-color: var(--green); color: var(--green); }
+  .foot.mid .fico { border-color: var(--lime); color: var(--lime); }
+  .foot.bad .fico { border-color: var(--red); color: var(--red); }
+  .fmsg { flex: 1; font-size: 13.5px; line-height: 1.5; }
+  .fmsg b { display: block; font: 700 15px var(--sans); margin-bottom: 2px; }
+  .cbtn { font: 600 14px var(--body); color: var(--bg); background: var(--blue); border: none; border-radius: 10px;
+    padding: 10px 22px; cursor: pointer; box-shadow: 0 0 16px rgba(53,182,255,.4); transition: .15s; flex: none; }
+  .cbtn:hover:not(:disabled) { background: var(--lime); box-shadow: 0 0 18px rgba(198,242,33,.5); }
+  .cbtn:disabled { background: #2b3542; color: var(--dim); box-shadow: none; cursor: default; }
+
+  .debrief { margin-top: 18px; border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; background: var(--panel);
+    animation: pop .5s cubic-bezier(.2,1.2,.4,1); }
+  @keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  .debrief h3 { font: 700 15px var(--sans); margin-bottom: 12px; }
+  .dbrow { display: flex; gap: 11px; padding: 7px 0; border-bottom: 1px solid rgba(53,182,255,.06); font-size: 13.5px; line-height: 1.5; }
+  .dbadge { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font: 700 11px var(--mono); flex: none; }
+  .dbadge.g { background: rgba(61,220,132,.16); color: var(--green); }
+  .dbadge.m { background: rgba(138,147,160,.16); color: var(--dim); }
+  .dbadge.r { background: rgba(255,59,74,.16); color: var(--red); }
+  .dref { font: 500 11.5px var(--mono); color: var(--dim); letter-spacing: .04em; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="v1-would-you-click/js/react.js"></script>
+<script src="v1-would-you-click/js/react-dom.js"></script>
+<script src="v1-would-you-click/js/babel.js"></script>
+
+<script type="text/babel">
+const {useState, useRef, useEffect} = React;
+
+/* ── Data ───────────────────────────────────────── */
+const MAILS = [
+  { id:"m1", time:"08:47", color:"#5B7FA6", initial:"C", clean:true,
+    fromName:"Comms Team", fromAddr:"newsletter@yourcompany.com",
+    subj:"March town hall — recording and slides",
+    prev:"Hi all, the recording from Tuesday's town hall…",
+    html:`<p>Hi all,</p>
+      <p>The recording from Tuesday's town hall is now on <span class="spot" data-id="d1"><span class="mlink" data-url="https://intranet.yourcompany.com/townhall/march">the intranet</span></span>. Slides attached for anyone who wants the short version.</p>
+      <p><span class="spot" data-id="d2"><span class="attach"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>townhall-march-slides.pdf · 2.1 MB</span></span></p>
+      <p>— Comms</p>` },
+  { id:"m2", time:"08:58", color:"#8A6FB0", initial:"IT",
+    fromName:"IT Support", fromAddr:"it-helpdesk@yourcompany-security.net",
+    fromAddrHTML:`<span class="spot" data-id="c1">it-helpdesk@yourcompany-security.net</span>`,
+    subj:"ACTION REQUIRED: password expires in 2 hours",
+    subjHTML:`<span class="spot" data-id="c2">ACTION REQUIRED: password expires in 2 hours</span>`,
+    prev:"Your network password expires today at 17:00…",
+    html:`<p>Dear user,</p>
+      <p>Your network password expires <span class="spot" data-id="c3">today at 17:00. To avoid losing access to email and shared drives, you must act within 2 hours</span>.</p>
+      <p><span class="spot" data-id="c4">Confirm your current password</span> using the secure portal below:</p>
+      <p><span class="spot" data-id="c5"><span class="mlink" data-url="http://yourcompany-security.net/portal/verify">Verify now — IT Security Portal</span></span></p>
+      <p>IT Support Desk</p>` },
+  { id:"m3", time:"09:01", color:"#B07A5B", initial:"D",
+    fromName:"Daniel Reeve (CEO)", fromAddr:"daniel.reeve.ceo@gmail.com",
+    fromAddrHTML:`<span class="spot" data-id="c6">daniel.reeve.ceo@gmail.com</span>`,
+    subj:"Quick favour — are you at your desk?",
+    prev:"I'm heading into a board meeting and can't talk…",
+    html:`<p>Hi,</p>
+      <p><span class="spot" data-id="c7">I'm heading into a board meeting and can't talk</span>. I need you to buy 4 × €100 gift cards for a client thank-you. <span class="spot" data-id="c8">Send me the codes here</span>.</p>
+      <p><span class="spot" data-id="c9">Keep it between us for now</span> — I'll explain later.</p>
+      <p>Sent from my iPhone</p>` },
+];
+
+const CUES = {
+  c1:{label:"Sender mismatch: <b>yourcompany-security.net</b> is a look-alike, not your company's domain.", ref:"27002 §8.7"},
+  c2:{label:"Manufactured urgency in the subject: ALL CAPS plus a 2-hour deadline you never heard about.", ref:"27002 §8.7"},
+  c3:{label:"Pressure repeated in the body. Unexpected plus urgent is the first tell family.", ref:"27002 §8.7"},
+  c4:{label:"Crown-jewels ask: IT never asks you to confirm a password. They have admin access.", ref:"27002 §5.17"},
+  c5:{label:"Link mismatch: hover shows <b>http://yourcompany-security.net</b>, not your real login page.", ref:"27002 §8.7"},
+  c6:{label:"The CEO's name on a <b>personal gmail address</b>. Display name is easy, the domain is the truth.", ref:"27002 §8.7"},
+  c7:{label:"Unavailable by design: 'can't talk' manufactures pressure by blocking verification. Part of the unexpected plus urgent family.", ref:"27002 §6.3"},
+  c8:{label:"Crown-jewels ask: gift-card codes are untraceable cash.", ref:"27002 §8.7"},
+  c9:{label:"'Keep it between us' cuts you off from checking. Manufactured pressure again: the unexpected plus urgent family.", ref:"27002 §6.3"},
+};
+const DECOYS = {
+  d1:"A link to the intranet, your company's real domain, for an event you already knew about. Links are only a tell when they point somewhere that is not your real domain, or arrive with no context.",
+  d2:"A PDF of slides you expected from a known internal sender. Attachments are only a tell when the mail itself is unexpected or pushy.",
+};
+const TOTAL = Object.keys(CUES).length;
+const spotIds = (row) => (row.html + (row.fromAddrHTML||"") + (row.subjHTML||"")).match(/data-id="([^"]+)"/g)?.map(s => s.slice(9,-1)) || [];
+
+/* ── App ────────────────────────────────────────── */
+function InboxSim() {
+  const [opened, setOpened] = useState(() => new Set());
+  const [flags, setFlags] = useState(() => new Set());
+  const [current, setCurrent] = useState(null);
+  const [checked, setChecked] = useState(false);
+  const [status, setStatus] = useState("");
+  const readerRef = useRef(null);
+
+  // Tell the SCORM shell the exercise is complete only on a clean sweep —
+  // every tell found, zero false alarms. False alarms drown the signal, so
+  // they must not unlock the gate. Same bar as the "Clean sweep" verdict below.
+  useEffect(() => {
+    if (!checked) return;
+    const nHits = [...flags].filter(id => CUES[id]).length;
+    const nFps = [...flags].filter(id => !CUES[id]).length;
+    if (nHits === TOTAL && nFps === 0) {
+      try { window.parent && window.parent.postMessage({ type: 'u1-progress', id: 'practice' }, '*'); } catch (e) {}
+    }
+  }, [checked]);
+
+  const openMail = (id) => {
+    setCurrent(id);
+    setOpened(prev => { const n = new Set(prev); n.add(id); return n; });
+    setStatus("");
+  };
+  const toggleFlag = (sid) => {
+    setFlags(prev => { const n = new Set(prev); n.has(sid) ? n.delete(sid) : n.add(sid); return n; });
+  };
+
+  const hits = [...flags].filter(id => CUES[id]);
+  const fps = [...flags].filter(id => !CUES[id]);
+  const missed = Object.keys(CUES).filter(id => !flags.has(id));
+
+  const gateReady = opened.size === MAILS.length && flags.size > 0;
+  let gateMsg;
+  if (!checked) {
+    if (opened.size < MAILS.length) gateMsg = <span><b>Read the room first.</b>Open all three messages before you judge them ({opened.size}/3 opened).</span>;
+    else if (flags.size === 0) gateMsg = <span><b>Nothing flagged yet.</b>Click the parts of a message that feel off: sender, subject, links, requests.</span>;
+    else gateMsg = <span><b>Ready. Press Check.</b>You can still unflag anything before checking.</span>;
+  }
+
+  let vClass = "", vIcon = "", vTitle = "", vNote = "";
+  if (checked) {
+    if (hits.length === TOTAL && fps.length === 0) {
+      vClass = "ok"; vIcon = "✓"; vTitle = "Clean sweep.";
+      vNote = `All ${TOTAL} tells found, no false alarms. One tell is already enough to stop and report. Report each one, don't just delete it.`;
+    } else if (hits.length >= 6 && fps.length <= 1) {
+      vClass = "mid"; vIcon = "!"; vTitle = "Almost there.";
+      vNote = `${hits.length} of ${TOTAL} tells${fps.length ? `, ${fps.length} false alarm${fps.length>1?"s":""}` : ""}. ${missed.length ? "Dashed marks show the tells still there to spot; the debrief names each one." : "The debrief explains each false alarm. Flagging clean mail drowns the real signal."}`;
+    } else {
+      vClass = "bad"; vIcon = "✕"; vTitle = "See what was there.";
+      vNote = `${hits.length} of ${TOTAL} tells found${fps.length ? `, ${fps.length} false alarm${fps.length>1?"s":""}` : ""}.${missed.length ? " Dashed marks show the tells still there to spot." : ""}${fps.length ? " Flagging clean mail drowns the real signal." : ""} Read the debrief, then run it again.`;
+    }
+  }
+
+  const spotClass = (sid) => {
+    const isCue = !!CUES[sid], flagged = flags.has(sid);
+    if (!checked) return "spot" + (flagged ? " flag" : "");
+    if (isCue && flagged) return "spot hit";
+    if (!isCue && flagged) return "spot fp";
+    if (isCue && !flagged) return "spot miss";
+    return "spot";
+  };
+
+  // wire spot clicks + link hover after each render of the reading pane
+  React.useEffect(() => {
+    const root = readerRef.current;
+    if (!root) return;
+    root.querySelectorAll(".spot").forEach(sp => {
+      sp.className = spotClass(sp.dataset.id);
+      sp.onclick = checked ? null : (e) => { e.stopPropagation(); toggleFlag(sp.dataset.id); };
+    });
+    root.querySelectorAll(".mlink").forEach(a => {
+      a.onmouseenter = () => setStatus(a.dataset.url);
+      a.onmouseleave = () => setStatus("");
+    });
+  });
+
+  const m = MAILS.find(x => x.id === current);
+  const unreadCount = MAILS.length - opened.size;
+
+  return (
+    <div>
+      <div className="top">
+        <h1>Your inbox, Monday 09:02</h1>
+        <span className="flagcount">Flagged: {flags.size}</span>
+      </div>
+      <div className="qtext">Flag only the suspicious signs.</div>
+      <div className="qsub">Open all <b>three</b> messages and read each one carefully. Flag <b>only what's actually suspicious</b> — don't flag everything: marking safe content counts against you. Check the sender, subject, links and requests, and <b>hover links</b> to see where they really go. One message is a perfectly normal email. This is a spotting drill: find every real tell in the dodgy ones to train your eye. On the job, a single tell is already enough to stop and report.</div>
+
+      <div className="mailapp">
+        <div className="mtitle"><span className="appname">Inbox ({unreadCount})</span></div>
+        <div className="mbody">
+          <div className="mlist">
+            <div className="lhead">Inbox</div>
+            {MAILS.map(row => {
+              const n = spotIds(row).filter(id => flags.has(id)).length;
+              return (
+                <div key={row.id} className={"mrow" + (opened.has(row.id) ? " read" : "") + (current === row.id ? " active" : "")}
+                     tabIndex={0} onClick={() => openMail(row.id)}
+                     onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openMail(row.id); } }}>
+                  <div className="rfrom"><span className="unread"/>{row.fromName}</div>
+                  <div className="rsub">{row.subj}</div>
+                  <div className="rprev">{row.prev}</div>
+                  <div className="rmeta"><span className="rtime">{row.time}</span>{n ? <span className="rflags">⚑ {n}</span> : <span/>}</div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="mread">
+            {!m ? <div className="mempty">Select a message to read it</div> : (
+              <div ref={readerRef}>
+                <div className="mhead">
+                  <div className="msubj" dangerouslySetInnerHTML={{__html: m.subjHTML || m.subj}}/>
+                  <div className="mfrom">
+                    <div className="avatar" style={{background: m.color}}>{m.initial}</div>
+                    <div className="mmeta">
+                      <div><span className="name">{m.fromName}</span> <span className="addr" dangerouslySetInnerHTML={{__html: "&lt;" + (m.fromAddrHTML || m.fromAddr) + "&gt;"}}/></div>
+                      <div className="to">To: you@yourcompany.com</div>
+                    </div>
+                    <div className="mtime">Mon {m.time}</div>
+                  </div>
+                  <div className="ghostrow" aria-hidden="true">
+                    <span className="ghostbtn">Reply</span>
+                    <span className="ghostbtn">Forward</span>
+                  </div>
+                </div>
+                <div className="mcontent" dangerouslySetInnerHTML={{__html: m.html}}/>
+              </div>
+            )}
+            <div className="statusbar">{status ? <span>→ <span className="url">{status}</span></span> : " "}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className={"foot " + vClass}>
+        {checked && <div className="fico">{vIcon}</div>}
+        <div className="fmsg">{checked ? <span><b>{vTitle}</b>{vNote}</span> : gateMsg}</div>
+        <button className="cbtn" disabled={!checked && !gateReady}
+          onClick={() => checked ? window.location.reload() : setChecked(true)}>
+          {checked ? "Try again" : "Check"}
+        </button>
+      </div>
+
+      {checked && (
+        <div className="debrief">
+          <h3>What was there to see</h3>
+          {Object.keys(CUES).map(id => (
+            <div className="dbrow" key={id}>
+              <span className={"dbadge " + (flags.has(id) ? "g" : "m")}>{flags.has(id) ? "✓" : "•"}</span>
+              <span><span dangerouslySetInnerHTML={{__html: CUES[id].label}}/> <span className="dref">· {CUES[id].ref}{flags.has(id) ? "" : " · one to spot next time"}</span></span>
+            </div>
+          ))}
+          {fps.map(id => (
+            <div className="dbrow" key={id}>
+              <span className="dbadge r">✕</span>
+              <span><b>False alarm:</b> {DECOYS[id]} <span className="dref">· flagging everything drowns the signal</span></span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<InboxSim/>);
+</script>
+</body>
+</html>
