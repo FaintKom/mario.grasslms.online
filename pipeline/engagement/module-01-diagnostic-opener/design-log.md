@@ -67,7 +67,7 @@ Each distractor cites a specific §11 Gong row or §10.4 P.B. anti-pattern:
 | Quiz Q3 · A/B/D | "Rephrase / fill / 'still there?'" | §10.4 P.B. silence-intolerance reflex | All three break the 5-s threshold |
 
 Every distractor's feedback string names the GC-XX or §10.x source verbatim,
-so the rep learns not just the keyed answer but *why each wrong answer fails*
+so the rep learns the keyed answer and *why each wrong answer fails*
 (Mayer 2014 ch. 12 · feedback-with-explanation).
 
 ## 5 · Accessibility (WCAG 2.1 AA) notes
