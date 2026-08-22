@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RiskDesk — payments fraud-review console (e-learning sim) · Mario Rafael Becerra Dueñas</title>
+<title>RiskDesk · payments fraud-review console (e-learning sim) · Mario Rafael Becerra Dueñas</title>
 <meta name="description" content="Interactive HTML5 e-learning sample modelled on a real payments fraud-review case manager (Stripe Radar / Sift style): review queue, risk score, rules triggered, approve / decline / escalate." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-  /* GrassLMS Lively — canonical: Manrope + Geist Mono, green-600 brand. Console layout, Stripe-Radar-style. */
+  /* GrassLMS Lively, canonical: Manrope + Geist Mono, green-600 brand. Console layout, Stripe-Radar-style. */
   :root{
     --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
     --green-300:#8fd770; --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754;
@@ -344,12 +344,12 @@
   <div class="intro-card">
     <p class="eyebrow">Interactive HTML5 · simulation · gamified · fintech</p>
     <h1>You're on the <em>payments risk desk</em></h1>
-    <p>Flagged transactions are waiting in your review queue. Open each case, read the rules that fired, and clear it — fast. Over-blocking good customers costs the business as much as letting fraud through.</p>
-    <p style="font-size:12.5px;color:var(--ink-500);margin-top:-4px;">The model <b style="color:var(--ink-700)">risk score is a hint, not the answer</b> — on some cases it points the wrong way, and reading the signals is the job. Every shift is freshly generated, so you can keep training.</p>
+    <p>Flagged transactions are waiting in your review queue. Open each case, read the rules that fired, and clear it quickly. Over-blocking good customers costs the business as much as letting fraud through.</p>
+    <p style="font-size:12.5px;color:var(--ink-500);margin-top:-4px;">The model gives you a <b style="color:var(--ink-700)">risk score you are allowed to overrule</b>. On some cases it points the wrong way, and reading the signals underneath it is the job. Every shift is generated fresh, so the queue never repeats.</p>
     <div class="rules-mini">
       <div class="rmini"><span class="tag approve">Approve</span><span>Signals look clean. Release the payment.</span></div>
       <div class="rmini"><span class="tag decline">Decline</span><span>Clear fraud pattern. Block before it settles.</span></div>
-      <div class="rmini"><span class="tag review">Escalate</span><span>Signals conflict — send to a senior analyst, don't guess.</span></div>
+      <div class="rmini"><span class="tag review">Escalate</span><span>Signals conflict. Send it to a senior analyst.</span></div>
     </div>
     <p style="font-size:12.5px;color:var(--ink-500)"><b style="color:var(--ink-700)">Keyboard:</b> <span class="mono">A</span> approve · <span class="mono">D</span> decline · <span class="mono">E</span> escalate.</p>
     <div style="display:flex;justify-content:flex-end;"><button class="btn-primary" id="btnStart">Start shift →</button></div>
@@ -376,7 +376,7 @@
     <div class="debrief">
       <h3>What a senior analyst reads first</h3>
       <ul>
-        <li><b>Velocity beats amount.</b> A tiny charge after five declines in two minutes is card-testing — block it, cheap as it is.</li>
+        <li><b>Velocity beats amount.</b> A tiny charge after five declines in two minutes is card testing. Block it, cheap as it is.</li>
         <li><b>Mismatch &gt; single red flag.</b> One foreign IP isn't fraud. IP, BIN country and address all disagreeing is.</li>
         <li><b>Ambiguous ≠ decline.</b> When good and bad signals tie, <em>Escalate</em> is correct. Snapping to Decline quietly bleeds real revenue.</li>
       </ul>
@@ -394,9 +394,9 @@
 
   // ============================================================
   //  Procedural case generator. The correct action comes from the
-  //  archetype's ground truth — NOT from the model risk score. Two
+  //  archetype's ground truth, never the model risk score. Two
   //  archetypes are deliberately MISALIGNED (score disagrees with the
-  //  right call) so the learner must read signals, not chase the number.
+  //  right call) so the learner has to read the signals underneath the score.
   //  All data synthetic. signals: [severity, RULE_CODE, label].
   // ============================================================
   const R = {
@@ -426,8 +426,8 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Subscription"]],
           dev:[["IP location",loc],["Device","Recognised — "+visits+"th visit"],["Account age",y+" yr "+m+" mo"],["Velocity","Normal"]],
           signals:[["good","HISTORY_CLEAN",prior+" prior good charges, same card"],["good","GEO_MATCH","IP = billing country"],["good","DEVICE_KNOWN","Returning trusted device"]],
-          fb:{ approve:{ok:true, why:"Known device, matching geography, "+prior+" clean prior charges. Textbook good customer — approve and keep revenue flowing.", money:+amt},
-               decline:{ok:false, why:"You blocked a loyal subscriber over nothing — churn and lost revenue, the silent cost of a trigger-happy desk.", money:-amt},
+          fb:{ approve:{ok:true, why:"Known device, matching geography, "+prior+" clean prior charges. Nothing here needs a human. Approve and keep the revenue.", money:+amt},
+               decline:{ok:false, why:"You blocked a loyal subscriber over nothing. That is churn plus lost revenue, and it never shows up in the fraud numbers.", money:-amt},
                review:{ok:false, why:"Escalating a clean, low-value renewal just burns analyst time. Approve it.", money:-8} } };
       } },
 
@@ -439,7 +439,7 @@
           signals:[["good","GEO_MATCH","Device + geo match"],["good","AMOUNT_LOW","Low amount, low-risk category"],["good","CARD_SEEN","Card used here before"]],
           fb:{ approve:{ok:true, why:"Clean and low-risk: known device, matching country, small top-up. Approve and move on.", money:+amt},
                decline:{ok:false, why:"Nothing here is suspicious. Declining low-value traffic frustrates good players and inflates your false-positive rate.", money:-amt},
-               review:{ok:false, why:"No conflict to resolve — a clear approve. Escalating just adds cost.", money:-8} } };
+               review:{ok:false, why:"There is no conflict to resolve. Escalating a clear approve just adds cost.", money:-8} } };
       } },
 
     { key:"cardTesting", weight:2, build(){
@@ -448,9 +448,9 @@
           pay:[["Method","Mixed cards"],["Card","•••• rotating"],["BIN country",R.pick(["Brazil","Indonesia","Nigeria","Vietnam"])],["Category","Verification"]],
           dev:[["IP location","Datacenter, "+R.pick(["NL","DE","US"])],["Device","New — first seen"],["Account age","minutes"],["Velocity",n+" attempts / "+secs+"s"]],
           signals:[["bad","VELOCITY_TEST",n+" declined cards in "+secs+" seconds"],["bad","IP_DATACENTER","Datacenter / proxy IP"],["warn","AMOUNT_MICRO","Tiny 'test' amount"]],
-          fb:{ approve:{ok:false, why:"Card testing — a bot validating stolen cards with micro-charges before the real hit. Approving funds the next attack.", money:-amt},
-               decline:{ok:true, why:"Correct. The low amount is the trap; the tell is velocity — "+n+" cards in "+secs+" seconds from a datacenter IP. Block it.", money:0},
-               review:{ok:false, why:"Escalation is too slow for a live automated attack. The pattern is unambiguous — decline now.", money:-amt} } };
+          fb:{ approve:{ok:false, why:"This is card testing: a bot validating stolen cards with micro-charges before the real hit. Approving funds whatever comes next.", money:-amt},
+               decline:{ok:true, why:"Correct. The low amount is the trap. The tell is velocity: "+n+" cards in "+secs+" seconds from a datacenter IP.", money:0},
+               review:{ok:false, why:"Escalation is too slow for an attack that is running right now. The pattern is unambiguous. Decline.", money:-amt} } };
       } },
 
     { key:"giftCashout", weight:1, build(){
@@ -460,7 +460,7 @@
           dev:[["IP location",loc+" — VPN"],["Device","New — VPN detected"],["Account age",R.int(1,9)+" hr"],["Velocity",orders+(orders>1?"rd":"st")+" large order today"]],
           signals:[["bad","CASHOUT_GIFTCARD","Untraceable prepaid gift cards"],["bad","IP_VPN_MISMATCH","VPN + IP ≠ BIN country"],["bad","VELOCITY_HIGH",orders+" large orders in one day"],["bad","DEVICE_NEW","Brand-new device"]],
           fb:{ approve:{ok:false, why:"Every signal is red: untraceable gift cards, masked location, escalating order size. Approving is a direct loss plus chargeback fees.", money:-amt},
-               decline:{ok:true, why:"Correct and decisive. Gift-card cash-out + VPN + geo mismatch + velocity is fraud with no benign reading. Block it.", money:0},
+               decline:{ok:true, why:"Correct and decisive. Gift-card cash-out, a VPN, a geo mismatch and rising order size read as fraud with no benign explanation.", money:0},
                review:{ok:false, why:"Escalation wastes time on an open-and-shut case and risks it settling first. Decline outright.", money:-amt} } };
       } },
 
@@ -470,9 +470,9 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","High-resale"]],
           dev:[["IP location",loc],["Device","New — first seen"],["Account age",R.int(1,4)+" day"],["Velocity","Normal"]],
           signals:[["bad","GEO_MISMATCH","IP country ≠ BIN country"],["warn","CATEGORY_RESALE","High-resale goods"],["warn","DEVICE_NEW","First-time device"],["good","AVS_PASS","Address verification passed"]],
-          fb:{ approve:{ok:false, why:"Geo mismatch + high-resale goods + new device is a classic stolen-card profile. AVS passed though — could be a real traveller. Too risky to wave through.", money:-amt},
-               decline:{ok:false, why:"Plausible fraud — but AVS passed and people travel. A hard decline may block a genuine high-value sale. Don't guess on a mixed signal.", money:-amt},
-               review:{ok:true, why:"Right call. Signals genuinely conflict on a high-value order — escalate for a step-up check (3DS / call-back) instead of guessing.", money:0} } };
+          fb:{ approve:{ok:false, why:"Geo mismatch, high-resale goods and a new device make a classic stolen-card profile. AVS did pass, so a real traveller is possible, but that is too much doubt to wave through.", money:-amt},
+               decline:{ok:false, why:"Plausible fraud, except AVS passed and people do travel. A hard decline may kill a genuine high-value sale. Don't guess on a mixed signal.", money:-amt},
+               review:{ok:true, why:"Right call. The signals genuinely conflict on a high-value order, so a step-up check (3DS or a call-back) settles it without a guess.", money:0} } };
       } },
 
     { key:"atoGrey", weight:1, build(){
@@ -481,9 +481,9 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",R.pick(["Poland","Spain","Germany"])],["Category","Gaming wallet"]],
           dev:[["IP location",loc],["Device","New device, returning account"],["Account age",yrs+" yr (clean)"],["Velocity","Normal"]],
           signals:[["warn","DEVICE_NEW_ACCT","New device on an existing account"],["warn","GEO_MISMATCH","IP ≠ BIN country"],["good","ACCOUNT_AGED",yrs+"-year clean account"],["good","AMOUNT_TYPICAL","Deposit in normal range"]],
-          fb:{ approve:{ok:false, why:"Could be the real owner on a new phone abroad — or an account takeover. On a gaming wallet a wrong approve funds a cash-out. Don't wave it through.", money:-amt},
+          fb:{ approve:{ok:false, why:"This could be the real owner on a new phone abroad. It could equally be an account takeover, and on a gaming wallet a wrong approve funds a cash-out.", money:-amt},
                decline:{ok:false, why:"A "+yrs+"-year clean account deserves better than a hard block on two soft flags. You may have frozen a real player. Verify first.", money:-amt},
-               review:{ok:true, why:"Right. New device + geo shift on an established account is the account-takeover grey zone — trigger step-up verification, don't guess.", money:0} } };
+               review:{ok:true, why:"Right. A new device plus a geo shift on an established account is the account-takeover grey zone. Step-up verification answers it.", money:0} } };
       } },
 
     // ---- MISALIGNED: model score ELEVATED but the right call is APPROVE ----
@@ -493,9 +493,9 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country","Spain"],["Category","Travel"]],
           dev:[["IP location",loc+" (roaming)"],["Device","Recognised — "+visits+"th visit"],["Account age",yrs+" yr"],["Velocity","Normal"]],
           signals:[["warn","GEO_SOFT","IP country ≠ billing (roaming)"],["good","DEVICE_KNOWN","Known device, long history"],["good","TRAVEL_CONSISTENT","Purchase matches roaming pattern"]],
-          fb:{ approve:{ok:true, why:"The model flagged the geo 'mismatch', but it's just a Spanish customer booking travel from "+loc.split(",")[0]+" — known device and "+yrs+"-year history confirm it. Read past the score: approve.", money:+amt},
-               decline:{ok:false, why:"You trusted a mid-high score and blocked a real customer mid-trip. Device and history clearly say it's them — a costly false positive.", money:-amt},
-               review:{ok:false, why:"The known device + travel-consistent roaming resolve the only flag. This is an approve — escalating just delays a good customer.", money:-8} } };
+          fb:{ approve:{ok:true, why:"The model flagged the geo 'mismatch'. It is a Spanish customer booking travel from "+loc.split(",")[0]+", and the known device plus "+yrs+" years of history confirm it. You read past the score.", money:+amt},
+               decline:{ok:false, why:"You trusted a mid-high score and blocked a real customer mid-trip. The device and the history both say it is them. Expensive false positive.", money:-amt},
+               review:{ok:false, why:"The known device and the roaming pattern already resolve the only flag. This one is an approve, and escalating just delays a good customer.", money:-8} } };
       } },
 
     // ---- MISALIGNED: model score LOW but the right call is DECLINE ----
@@ -505,9 +505,9 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","General retail"]],
           dev:[["IP location",loc],["Device","New — first seen"],["Account age",R.int(1,6)+" hr"],["Velocity","Normal"]],
           signals:[["warn","ACCOUNT_FRESH","Account created hours ago"],["warn","SHIP_BILL_DIFF","Shipping ≠ billing address"],["warn","DEVICE_NEW","First-time device"],["warn","EMAIL_DISPOSABLE","Disposable email domain"]],
-          fb:{ approve:{ok:false, why:"The model scored this low — but the combination tells the story: hours-old account, disposable email, shipping ≠ billing, new device. That's a fresh fraud ring the model under-weights. Approving is a loss.", money:-amt},
-               decline:{ok:true, why:"Correct — you read past a low score. No single flag is damning, but a brand-new account + disposable email + address mismatch together is a setup. Block it.", money:0},
-               review:{ok:true, why:"Defensible — escalating a low-score case that smells wrong beats approving it. Decline is cleaner here, but you didn't trust the number, which is the point.", money:0} } };
+          fb:{ approve:{ok:false, why:"The model scored this low, and the combination tells a different story: an account hours old, a disposable email, shipping that does not match billing, a new device. Fresh rings are exactly what the model under-weights.", money:-amt},
+               decline:{ok:true, why:"Correct, and you read past a low score. No single flag is damning. A brand-new account, a disposable email and an address mismatch together are a setup.", money:0},
+               review:{ok:true, why:"Defensible. Escalating a low-score case that smells wrong is far better than approving it. Decline was cleaner, but you refused to trust the number, and that is the habit worth having.", money:0} } };
       } }
   ];
 
@@ -644,7 +644,7 @@
   function grade(){
     const correct=tally.approveGood+tally.fraudCaught, pct=correct/TOTAL;
     if(pct>=0.875) return {g:"A",cls:"",label:"Senior-ready"};
-    if(pct>=0.625) return {g:"B",cls:"b",label:"Solid — refine the grey zone"};
+    if(pct>=0.625) return {g:"B",cls:"b",label:"Solid, grey zone needs work"};
     if(pct>=0.5)   return {g:"C",cls:"c",label:"Over-snapping the calls"};
     return {g:"D",cls:"d",label:"Re-read the signals"};
   }
@@ -665,7 +665,7 @@
     addTrained(reviewed);
     $("rSub").textContent = TOTAL+" cases cleared · "+trainedTotal()+" reviewed in training so far.";
     $("rNote").innerHTML = misTotal
-      ? "On <b>"+misTotal+"</b> case"+(misTotal>1?"s":"")+" the model risk score pointed the wrong way — you read past it on <b>"+misRight+"/"+misTotal+"</b>. That override judgement is the actual job."
+      ? "On <b>"+misTotal+"</b> case"+(misTotal>1?"s":"")+" the model risk score pointed the wrong way, and you read past it on <b>"+misRight+"/"+misTotal+"</b>. Knowing when to overrule the number is the job."
       : "";
 
     $("results").classList.add("show");

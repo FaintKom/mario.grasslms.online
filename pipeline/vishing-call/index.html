@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>The Call — social-engineering defence (branching voice scenario) · Mario Rafael Becerra Dueñas</title>
-<meta name="description" content="Interactive HTML5 branching voice scenario: an attacker phones you posing as IT Security. Listen, choose your replies, and keep them out — your choices change how the attacker pushes and how the call ends." />
+<title>The Call · social-engineering defence (branching voice scenario) · Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="Interactive HTML5 branching voice scenario: an attacker phones you posing as IT Security. Listen, choose your replies, and keep him out. Your choices change how he pushes and how the call ends." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-  /* GrassLMS Lively — Manrope + Geist Mono, green-600 brand. Vishing "live call" layout. */
+  /* GrassLMS Lively: Manrope + Geist Mono, green-600 brand. Vishing "live call" layout. */
   :root{
     --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
     --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754; --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
@@ -143,7 +143,7 @@
 <body>
 
 <div class="topbar">
-  <div class="brand"><span class="mark">M</span><span>Mario Rafael Becerra Dueñas — e-learning sample</span></div>
+  <div class="brand"><span class="mark">M</span><span>Mario Rafael Becerra Dueñas · e-learning sample</span></div>
   <a href="../mini-cases/">← more samples</a>
 </div>
 
@@ -183,7 +183,7 @@
     </div>
   </section>
 
-  <div class="note-foot"><b>Non-linear scenario</b> — your choices change how the attacker pushes and how the call ends.</div>
+  <div class="note-foot"><b>Non-linear scenario.</b> Your choices change how the attacker pushes and how the call ends.</div>
 </div>
 
 <!-- intro -->
@@ -191,13 +191,13 @@
   <div class="ov-card">
     <p class="eyebrow">Branching voice scenario · interactive HTML5</p>
     <h1>Your phone rings. It's <em>"IT Security."</em></h1>
-    <p>You work on the payments team. A caller says there's an account takeover in progress on your login and he needs your help to stop it — fast. He's calm, he knows things about you, and he's in a hurry. Only one problem: you can't actually see who's on the line. Listen, and choose what you say back.</p>
+    <p>You work on the payments team. A caller says there is an account takeover running on your login and he needs your help to stop it right now. He is calm, he knows things about you, and he is in a hurry. You cannot see who is on the line. Listen, and choose what you say back.</p>
     <div class="ov-rules">
-      <div class="ov-r"><span class="tg">Verify</span><span>You called nobody — verify the caller out-of-band before you do anything.</span></div>
+      <div class="ov-r"><span class="tg">Verify</span><span>You called nobody. Verify the caller out-of-band before you do anything.</span></div>
       <div class="ov-r"><span class="tg">Never share</span><span>No OTP, no password, no push-approval. Real IT never asks for them.</span></div>
       <div class="ov-r"><span class="tg">Report</span><span>Urgency + authority + secrecy is the attack. Name it and report it.</span></div>
     </div>
-    <p style="font-size:12.5px;color:var(--ink-500)">The voiceover is the caller. Reading the transcript instead of listening costs a few points — there's no transcript on a real call. Keys <span class="mono">1</span>/<span class="mono">2</span>/<span class="mono">3</span>.</p>
+    <p style="font-size:12.5px;color:var(--ink-500)">The voiceover is the caller. Opening the transcript costs a few points, because a real call does not come with one. Keys <span class="mono">1</span>/<span class="mono">2</span>/<span class="mono">3</span>.</p>
     <div style="display:flex;justify-content:flex-end;"><button class="btn-primary" id="btnStart">Answer the call →</button></div>
   </div>
 </div>
@@ -214,15 +214,15 @@
       <div class="es"><div class="n" id="eExp" style="color:var(--coral-700)">None</div><div class="l">Account exposure</div></div>
       <div class="es"><div class="n" id="eVer">—</div><div class="l">Verification rigor</div></div>
     </div>
-    <div class="obj-head">Learning objectives — what this call assessed</div>
+    <div class="obj-head">Learning objectives · what this call assessed</div>
     <div class="checklist" id="eChecklist"></div>
     <div class="debrief">
       <h3>How to beat a vishing call</h3>
       <ul>
-        <li><b>Verify out-of-band.</b> Hang up and call IT back on a number you already trust — never one the caller gives you. A real team never minds.</li>
+        <li><b>Verify out-of-band.</b> Hang up and call IT back on a number you already trust, never one the caller gives you. A real team never minds.</li>
         <li><b>Never read an OTP or approve a push you didn't start.</b> Those exist to stop exactly this. IT will never ask for them.</li>
-        <li><b>The pressure is the attack.</b> Urgency, authority and "keep this between us" are engineered to make you skip verification — that's the red flag, not the context.</li>
-        <li><b>If you slip, report instantly.</b> Fast reporting lets security burn the code or kill the session before it's used — turning a breach back into a near-miss.</li>
+        <li><b>The pressure is the attack.</b> Urgency, authority and "keep this between us" are engineered to make you skip verification. The pressure itself is the red flag.</li>
+        <li><b>If you slip, report instantly.</b> Fast reporting lets security burn the code or kill the session before it is used, which turns a breach back into a near-miss.</li>
       </ul>
     </div>
     <div class="res-actions">
@@ -241,46 +241,46 @@
     start:{ time:"00:06",
       body:"Hi — this is Mark Reeves, IT Security. We've just flagged a sign-in to your account from an IP in Bucharest, about two minutes ago. It looks like an account takeover in progress, and I'm trying to lock it down before they reach the payments tools. First — am I speaking with the account owner?",
       choices:[
-        {k:1, lab:"“Yes, that's me — what do you need?”", good:false, eff:{exposure:+5}, note:"You confirmed your identity to a caller you haven't verified, and handed him the initiative. Not fatal — but you're now playing his game.", to:"ask"},
-        {k:2, lab:"“Before anything — what team are you on, and what's the ticket number?”", good:true, eff:{verification:+15}, note:"Good instinct — you're making him prove who he is instead of taking it on faith. Watch what he asks for in return.", to:"verify"},
-        {k:3, lab:"“I'm going to hang up and call IT back on the number in our directory.”", good:true, eff:{verification:+25}, note:"Textbook. Out-of-band verification is the whole defence — and notice how he reacts to it.", to:"callback"}
+        {k:1, lab:"“Yes, that's me — what do you need?”", good:false, eff:{exposure:+5}, note:"You confirmed your identity to a caller you haven't verified, and handed him the initiative. Not fatal. From here you are playing his game.", to:"ask"},
+        {k:2, lab:"“Before anything — what team are you on, and what's the ticket number?”", good:true, eff:{verification:+15}, note:"Good instinct. You are making him prove who he is. Watch what he asks for in return.", to:"verify"},
+        {k:3, lab:"“I'm going to hang up and call IT back on the number in our directory.”", good:true, eff:{verification:+25}, note:"Out-of-band verification is the whole defence, and it costs a real IT team nothing. Notice how he reacts to it.", to:"callback"}
       ] },
 
     callback:{ time:"00:18",
       body:"Whoa — there's no time for that. By the time you dig through the directory and wait on hold, they're already inside. I just need sixty seconds of your help here. Don't overthink a simple verification, okay?",
       choices:[
-        {k:1, lab:"“No. If it's real, IT won't mind me calling back. Hanging up now.”", good:true, eff:{verification:+20}, note:"Exactly. A genuine security team loses nothing because you verified. His panic about you calling back is the tell.", to:"end_callback_win"},
-        {k:2, lab:"“Okay, fair — it's urgent. What do you need me to do?”", good:false, eff:{exposure:+10, verification:-15}, note:"He manufactured a countdown and you accepted it. Urgency is the lever — the moment you feel rushed is the moment to slow down.", to:"pressure"}
+        {k:1, lab:"“No. If it's real, IT won't mind me calling back. Hanging up now.”", good:true, eff:{verification:+20}, note:"A genuine security team loses nothing because you verified. His panic about the callback is the tell.", to:"end_callback_win"},
+        {k:2, lab:"“Okay, fair — it's urgent. What do you need me to do?”", good:false, eff:{exposure:+10, verification:-15}, note:"He manufactured a countdown and you accepted it. Urgency is the lever. The moment you feel rushed is the moment to slow down.", to:"pressure"}
       ] },
 
     verify:{ time:"00:22",
       body:"Of course — it's ticket INC-4471, I'm on the SecOps team under Dana Whitfield. Look, to verify it's really you and whitelist your device, we just pushed a six-digit code to your phone. Read it back to me and I'll lock the attacker straight out.",
       choices:[
-        {k:1, lab:"“I'm not reading out a one-time code — IT never needs that.”", good:true, eff:{verification:+20}, note:"Correct, and this is the crux: a ticket number and a manager's name are easy to invent. The OTP request is the attack wearing a verification costume.", to:"pressure"},
+        {k:1, lab:"“I'm not reading out a one-time code — IT never needs that.”", good:true, eff:{verification:+20}, note:"Correct, and this is the crux. A ticket number and a manager's name cost nothing to invent. The OTP request is the attack wearing a verification costume.", to:"pressure"},
         {k:2, lab:"“Sure, hold on… let me grab my phone — it's…”", good:false, eff:{exposure:+60}, note:"That code is the one thing standing between him and your account. The 'verification' framing is exactly how the ask gets through.", to:"leak_otp"},
-        {k:3, lab:"“I'll call SecOps back and confirm that ticket myself first.”", good:true, eff:{verification:+18}, note:"Right move — a ticket number you can't independently check isn't proof. Verify it through a channel he doesn't control.", to:"end_callback_win"}
+        {k:3, lab:"“I'll call SecOps back and confirm that ticket myself first.”", good:true, eff:{verification:+18}, note:"A ticket number you cannot independently check is not proof of anything. Verify it through a channel he does not control.", to:"end_callback_win"}
       ] },
 
     ask:{ time:"00:20",
       body:"Great. To prove it's you on a trusted device, I've just sent a push to your authenticator app — you'll see an Approve prompt pop up. Tap Approve and we'll kick the attacker out immediately.",
       choices:[
-        {k:1, lab:"“I'm not approving a login I didn't start. How do I know that prompt isn't you?”", good:true, eff:{verification:+18}, note:"Exactly the right question. An unprompted push means someone is trying to log in right now — and it's almost certainly him.", to:"pressure"},
-        {k:2, lab:"“Okay — tapping Approve now.”", good:false, eff:{exposure:+70}, note:"That approval just let his login through your MFA. Never approve a prompt you didn't trigger yourself — that's what it's there to stop.", to:"leak_push"},
-        {k:3, lab:"“Hold on — what's the ticket number and your manager's name?”", good:true, eff:{verification:+10}, note:"Reasonable — make him produce details. Just remember those details can be faked; the real test is out-of-band verification.", to:"verify"}
+        {k:1, lab:"“I'm not approving a login I didn't start. How do I know that prompt isn't you?”", good:true, eff:{verification:+18}, note:"Exactly the right question. An unprompted push means someone is trying to log in at that moment, and it is almost certainly him.", to:"pressure"},
+        {k:2, lab:"“Okay — tapping Approve now.”", good:false, eff:{exposure:+70}, note:"That approval just let his login through your MFA. A prompt you did not trigger is the exact thing MFA exists to stop.", to:"leak_push"},
+        {k:3, lab:"“Hold on — what's the ticket number and your manager's name?”", good:true, eff:{verification:+10}, note:"Reasonable enough to make him produce details. Remember that details can be faked, so the test that counts is still the callback.", to:"verify"}
       ] },
 
     pressure:{ time:"00:41",
       body:"Listen to me. I have your employee ID, I can see you're on the payments team, I know your last login time. If this account gets used for fraud on YOUR watch, that lands on you — not me. I'm handing you the way out right now. The code. Read it to me.",
       choices:[
-        {k:1, lab:"“Knowing my ID proves nothing — none of that is secret. I'm reporting this call. Goodbye.”", good:true, eff:{verification:+20}, note:"Perfect. Personal details create a feeling of legitimacy, not proof of it. You named the manipulation and shut it down.", to:"end_resist_win"},
-        {k:2, lab:"“…okay, okay — the code is…”", good:false, eff:{exposure:+60}, note:"The threat worked. Fear of being blamed is a classic closer — and it pushed you past the one rule that mattered.", to:"leak_otp"},
-        {k:3, lab:"“I'm putting you on hold and calling the official IT line right now.”", good:true, eff:{verification:+15}, note:"Good. Under pressure you fell back on process instead of his script. That's the habit that beats these calls.", to:"end_callback_win"}
+        {k:1, lab:"“Knowing my ID proves nothing — none of that is secret. I'm reporting this call. Goodbye.”", good:true, eff:{verification:+20}, note:"Personal details create a feeling of legitimacy without being proof of anything. You named the manipulation and shut it down.", to:"end_resist_win"},
+        {k:2, lab:"“…okay, okay — the code is…”", good:false, eff:{exposure:+60}, note:"The threat worked. Fear of being blamed is a classic closer, and it pushed you past the one rule that mattered.", to:"leak_otp"},
+        {k:3, lab:"“I'm putting you on hold and calling the official IT line right now.”", good:true, eff:{verification:+15}, note:"Under pressure you fell back on process while he was reading from a script. That habit is what beats these calls.", to:"end_callback_win"}
       ] },
 
     leak_otp:{ time:"00:52",
       body:"…got it. Perfect. You've been really helpful. (There's a short pause — then the line goes dead.)",
       choices:[
-        {k:1, lab:"Realise what just happened — call real IT immediately and report that the code is burned.", good:true, eff:{exposure:-25}, note:"The damage is done, but reporting in seconds lets security invalidate the code and lock the session before he uses it. This is the save.", to:"end_leaked_but_reported"},
+        {k:1, lab:"Realise what just happened — call real IT immediately and report that the code is burned.", good:true, eff:{exposure:-25}, note:"The damage is done, but reporting in seconds lets security invalidate the code and lock the session before he uses it. That is the save.", to:"end_leaked_but_reported"},
         {k:2, lab:"Shrug it off — it was probably IT after all.", good:false, eff:{}, note:"That 'thanks, bye' and the dead line were the attacker leaving with what he came for. Assuming it was fine is how a slip becomes a breach.", to:"end_compromised"}
       ] },
 
@@ -293,13 +293,13 @@
 
     // ---- endings ----
     end_callback_win:{ end:true, gradeFixed:"A", etag:"Call ended · you hung up", title:"You hung up and verified.",
-      verdict:"You refused to act inside his countdown, ended the call, and reached IT on a number you actually trust. That's the gold standard: a real security team never loses anything because you called them back — and an attacker can't survive it. Nothing leaked, and you reported the attempt." },
+      verdict:"You refused to act inside his countdown, ended the call, and reached IT on a number you trust. That is the whole defence: a real security team loses nothing when you call back, and an attacker cannot survive it. Nothing leaked, and you reported the attempt." },
     end_resist_win:{ end:true, gradeFixed:"A", etag:"Call ended · you held", title:"You held the line.",
-      verdict:"The authority, the urgency, the personal details — none of it moved you. You refused the code, named the call for what it was, and reported it — a full defence. (The cleanest version is to hang up and verify out-of-band before engaging at all; the checklist below shows where you landed.)" },
-    end_leaked_but_reported:{ end:true, gradeFixed:"C", etag:"Call ended · reported", title:"You slipped — but you reported fast.",
-      verdict:"You gave the attacker what he asked for. The save was realising it immediately and reporting, so security could burn the code or kill the session before it was used. Fast reporting is what turns a breach back into a near-miss — but the goal is never to hand it over in the first place." },
+      verdict:"The authority, the urgency, the personal details: none of it moved you. You refused the code, named the call for what it was, and reported it. (The cleanest version is to hang up and verify out-of-band before engaging at all. The checklist below shows where you landed.)" },
+    end_leaked_but_reported:{ end:true, gradeFixed:"C", etag:"Call ended · reported", title:"You slipped, then reported fast.",
+      verdict:"You gave the attacker what he asked for. The save was realising it at once and reporting, so security could burn the code or kill the session before it was used. Fast reporting turns a breach back into a near-miss. The goal is still to never hand it over." },
     end_compromised:{ end:true, gradeFixed:"D", etag:"Call ended · compromised", title:"Account taken over.",
-      verdict:"You handed an unverified caller the one thing that defeats your MFA — and then assumed it was fine. By the time anyone notices, he's been inside the payments tools for hours. Every part of that call was the attack: the authority, the urgency, the secrecy, the 'I'm helping you.'" }
+      verdict:"You handed an unverified caller the one thing that defeats your MFA, and then assumed it was fine. By the time anyone notices, he has been inside the payments tools for hours. Every part of that call was the attack: the authority, the urgency, the secrecy, the 'I'm helping you.'" }
   };
 
   // ---- engine ----
@@ -397,7 +397,7 @@
     $("btnNext").focus();
   }
 
-  const GL={A:"Textbook defence",B:"Defended — but leaned on the transcript",C:"Close call — you slipped",D:"Account compromised"};
+  const GL={A:"Clean defence",B:"Defended, but leaned on the transcript",C:"Close call, you slipped",D:"Account compromised"};
   const CLS={A:"",B:"b",C:"c",D:"d"};
   // Criterion-referenced: grade is fixed by the outcome reached. Heavy transcript use demotes a clean A to B.
   function grade(node){
@@ -410,20 +410,20 @@
     $("eTag").textContent=node.etag||"Call ended";
     $("eTitle").textContent=node.title;
     $("eVerdict").textContent=node.verdict;
-    stopAudio();  // ending is text only — no voiceover
+    stopAudio();  // ending is text only, no voiceover
     $("eExp").textContent=expLabel(state.exposure);
     $("eVer").textContent=verLabel(state.verification);
     const reported = ["end_callback_win","end_resist_win","end_leaked_but_reported"].indexOf(curId)>=0;
     const objs=[
       {met:flags.oob,        t:"Verified the caller out-of-band"},
-      {met:!flags.leaked,    t:"Protected the secret — no OTP, no push approval"},
+      {met:!flags.leaked,    t:"Protected the secret: no OTP, no push approval"},
       {met:flags.recognize,  t:"Recognised the manipulation (urgency · authority · secrecy)"},
       {met:reported,         t:"Reported the attempt"}
     ];
     $("eChecklist").innerHTML = objs.map(o=>'<div class="crow '+(o.met?"met":"miss")+'"><span class="ic">'+(o.met?"✓":"✗")+'</span><span>'+o.t+'</span></div>').join("");
     const g=grade(node); $("eGrade").textContent=g.g; $("eGrade").className="g "+g.cls; $("eGradeLabel").textContent=g.label;
     const hp=Math.min(hintScenes.size*4,16);
-    $("eHints").textContent = hintScenes.size ? ("Transcript opened on "+hintScenes.size+" line"+(hintScenes.size>1?"s":"")+" · −"+hp+" pts (a real call has no transcript — train your ear).") : "You ran the whole call on your ears — no transcript crutch.";
+    $("eHints").textContent = hintScenes.size ? ("Transcript opened on "+hintScenes.size+" line"+(hintScenes.size>1?"s":"")+" · −"+hp+" pts, because a real call has no transcript.") : "You ran the whole call on your ears, with no transcript to lean on.";
     $("ending").classList.remove("hide");
     $("btnReplay").focus();
   }
