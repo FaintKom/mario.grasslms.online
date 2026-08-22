@@ -170,9 +170,16 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 @media (max-width: 560px) {
   .hero-meta { grid-template-columns: 1fr 1fr; }
+  /* The header had no mobile rules at all: the full name wrapped to four lines
+     and the nav to three rows, so a sticky bar ate 18% of a phone screen. */
+  .sig span { display: none; }
+  .topbar nav { flex: 1 1 0; min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .sig { flex: 0 0 auto; }
+  .topbar nav::-webkit-scrollbar { display: none; }
+  .navlink { white-space: nowrap; }
 }
 .hero-meta .k { color: var(--ink-faint); display: block; font-size: 10px; margin-bottom: 2px; }
-.hero-meta .v { color: var(--ink); font-weight: 500; }
+.hero-meta .v { color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
 
 .hero h1 {
   font-family: var(--sans); font-weight: 800;

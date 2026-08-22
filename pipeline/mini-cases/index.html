@@ -478,6 +478,9 @@
     .hero-sub, .case { grid-template-columns: 1fr; gap: 24px; }
     .case-num { font-size: 22px; padding: 0; }
     .case-preview { aspect-ratio: 16/10; }
+    /* Bleed only as far as the gutter: at 24px padding a 48px bleed pushed
+       the page 24px wide. The tint is hover-only and phones have no hover. */
+    .case::before { left: -24px; right: -24px; }
   }
 </style>
 </head>

@@ -237,6 +237,9 @@
     .case{padding:16px 14px;} .actbar{grid-template-columns:1fr;}
     .case-hd{flex-direction:column;} .gauge{text-align:left;} .gauge .grow,.gauge .gscale,.gauge .gwrap{margin-left:0;}
   }
+  /* 320px phones: the shift label plus the Portfolio link no longer fit on one row.
+     Drop the label, keep the avatar and the way out. */
+  @media (max-width:400px){ .who span:first-child{display:none;} }
   @media (prefers-reduced-motion:reduce){ *{animation:none !important;transition:none !important;} }
 </style>
 </head>
