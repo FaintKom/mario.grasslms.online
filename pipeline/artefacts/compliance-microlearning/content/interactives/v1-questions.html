@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 1 — Would you click? · questions</title>
+<title>Unit 1 · Would you click? · questions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -102,8 +102,8 @@ const ITEMS = [
     mail:{ from:'Accounts &lt;billing@supplier-invoices.com&gt;', subj:'Overdue invoice #48213 — final notice', time:'Mon 09:14',
       body:'Please find attached the outstanding invoice. Settle within 24 hours to avoid escalation. <span class="mono">[invoice_48213.zip]</span>' },
     opts:[
-      { t:'Report', ok:true, fb:'Right. Unexpected + urgent + a zip attachment from a domain you don\'t recognise. Zip attachments in surprise invoices are the classic malware delivery. If it might be real, verify with finance through a channel you choose.' },
-      { t:'Trust', ok:false, fb:'Check the tells: did you expect this invoice? Is supplier-invoices.com a supplier you know? Why a zip file, why 24 hours? Unexpected + urgent + attachment is the standard malware pattern.' },
+      { t:'Report', ok:true, fb:'Right. Unexpected, urgent, and carrying a zip file from a domain you don\'t recognise. Zip attachments in surprise invoices are the classic malware delivery. If it might be real, verify with finance through a channel you choose.' },
+      { t:'Trust', ok:false, fb:'Check the tells: did you expect this invoice? Is supplier-invoices.com a supplier you know? Why a zip file, why 24 hours? Unexpected, urgent and carrying an attachment is the standard malware pattern.' },
     ], ref:'27002 §8.7' },
 
   { id:'u1-check-1', tag:'check · cue recognition',
@@ -127,7 +127,7 @@ const ITEMS = [
   { id:'u1-check-3', tag:'check · crown jewels',
     q:'An email from "IT Support" asks you to confirm your current password. What does that tell you?',
     opts:[
-      { t:'Routine security practice — comply', ok:false, fb:'No legitimate system asks you to confirm your password by email; IT resets passwords, it doesn\'t collect them.' },
+      { t:'Routine security practice, comply', ok:false, fb:'No legitimate system asks you to confirm your password by email; IT resets passwords, it doesn\'t collect them.' },
       { t:'Fine if the sender domain matches', ok:false, fb:'The domain isn\'t the point. A credentials ask by email is a tell on its own, matching domain or not.' },
       { t:'A phish tell on its own: IT never needs your password', ok:true, fb:'Exactly. IT has admin access; they never need your password. A credentials ask is a full-stop tell even when everything else looks clean.' },
       { t:'Reply and ask if the request is real', ok:false, fb:'Never verify through the message itself; use a channel you choose. And the ask is already the tell.' },
@@ -146,7 +146,7 @@ const ITEMS = [
     mail:{ from:'Daniel Reeve &lt;ceo.office.mail@gmail.com&gt;', subj:'Quick favour — are you at your desk?', time:'Mon 09:32',
       body:'I\'m heading into a board meeting and can\'t talk. I need you to buy 4 × €100 gift cards for a client thank-you. Send me the codes here. Keep it between us for now.' },
     opts:[
-      { t:'Report', ok:true, fb:'Correct. Authority + urgency + secrecy + gift cards: the full CEO-fraud pattern, from a personal address. Real executives don\'t buy gift cards by email, and "keep it between us" exists to stop you verifying.' },
+      { t:'Report', ok:true, fb:'Correct. Authority, urgency, secrecy and gift cards: the full CEO-fraud pattern, from a personal address. Real executives don\'t buy gift cards by email, and "keep it between us" exists to stop you verifying.' },
       { t:'Trust', ok:false, fb:'The name is real. That\'s what makes it work. Look at the address: gmail, not your company. And the ask: gift-card codes, urgently, in secret. "Don\'t tell anyone" is itself the tell.' },
     ], ref:'27002 §8.7, §6.3' },
 
@@ -160,7 +160,7 @@ const ITEMS = [
 ];
 
 const deck = document.getElementById('deck');
-const PASS = 7;                          // proceed at 7 of 9 correct — no need to ace it
+const PASS = 7;                          // proceed at 7 of 9 correct, no need to ace it
 let answered = 0, correct = 0, passed = false;
 
 function updateScore() {

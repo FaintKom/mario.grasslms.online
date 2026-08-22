@@ -51,7 +51,7 @@ const BRANCHES = [
         text:
           "Okay. Let me see what's been going on with your account — can I get your account number?",
         delta: -2,
-        feedback: "Passable. You moved to data without acknowledging the third-call friction. He'll comply — but the relational debt stays on the table.",
+        feedback: "Passable. You moved to data without acknowledging the third-call friction. He will comply, and the relational debt stays on the table.",
       },
       {
         grade: "wrong",
@@ -60,7 +60,7 @@ const BRANCHES = [
         text:
           "Okay, so what's the issue today?",
         delta: 12,
-        feedback: "Worst Listen failure: you treated the call as new. He reads this as the previous two calls being invisible to your system — confirming his fear that no one is owning this.",
+        feedback: "Worst Listen failure: you treated the call as new. He reads that as the previous two calls being invisible to your system, which confirms his fear that nobody owns this.",
       },
     ],
   },
@@ -80,7 +80,7 @@ const BRANCHES = [
         text:
           "That shouldn't have happened — you were told it was resolved, and it wasn't. I'm going to fix it now and make sure you see the credit before we hang up.",
         delta: -12,
-        feedback: "Textbook Acknowledge. You named the specific failure (\"told it was resolved, and it wasn't\") instead of a generic \"I understand\". You also committed to a verifiable outcome on this call — that's the unlock.",
+        feedback: "That is Acknowledge done properly. You named the specific failure (\"told it was resolved, and it wasn't\") where a generic \"I understand\" would have slid off. Then you committed to an outcome he can check before the call ends, which is what opens the rest of the conversation.",
       },
       {
         grade: "passable",
@@ -89,7 +89,7 @@ const BRANCHES = [
         text:
           "I understand. Let me pull up the account and see what was logged last time.",
         delta: -3,
-        feedback: "\"I understand\" is acknowledgement-shaped but it's not acknowledgement — it doesn't name what went wrong. The data move is correct.",
+        feedback: "\"I understand\" is acknowledgement-shaped without doing the work, because it never names what went wrong. The data move is correct.",
       },
       {
         grade: "wrong",
@@ -127,7 +127,7 @@ const BRANCHES = [
         text:
           "I'll mark this as a priority case so it doesn't get lost again.",
         delta: -1,
-        feedback: "Marking it priority feels nice but adds zero diagnostic signal — you're still working blind. The case will close faster with one targeted question.",
+        feedback: "Marking it priority feels responsive and adds no diagnostic signal at all. You are still working blind. One targeted question closes the case faster.",
       },
       {
         grade: "wrong",
@@ -582,7 +582,7 @@ function App() {
               <span className="live-pulse" />
               VoiceCoach · Live coaching
             </div>
-            <div className="right-head-title">{branch ? `${branch.stage} stage — LAER ${branch.code}` : "Call ended"}</div>
+            <div className="right-head-title">{branch ? `${branch.stage} stage · LAER ${branch.code}` : "Call ended"}</div>
             <div className="right-head-sub">AI is listening, sentiment-tracking & ranking responses against the LAER framework in real time.</div>
           </div>
 
@@ -717,8 +717,8 @@ function App() {
             </div>
             <div className="results-sub">
               {idealCount >= 3
-                ? "You stayed inside LAER under live pressure — the customer is hangable-up calm by the end. Replays below show what kept it on the rails."
-                : "Tension climbed when the script stepped outside LAER. Replays below show the exact beats — the ones tagged Off-script are the ones to study."}
+                ? "You stayed inside LAER under live pressure, and the customer is calm enough to hang up by the end. The replays below show what kept it on the rails."
+                : "Tension climbed whenever the script stepped outside LAER. The replays below show the exact beats, and the ones tagged Off-script are the ones to study."}
             </div>
           </div>
 

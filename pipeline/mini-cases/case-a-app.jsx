@@ -1,7 +1,7 @@
 const { useState, useEffect, useRef, useMemo, Fragment } = React;
 
 /* ─────────────────────────────────────────────────────
-   Phish-or-Pass — Outlook-immersive simulation
+   Phish-or-Pass · Outlook-immersive simulation
    Day-1 inbox triage with one trick-positive.
    ───────────────────────────────────────────────────── */
 
@@ -52,18 +52,18 @@ const EMAILS = [
     ),
     correct: "phishing",
     teach: {
-      title: "Credential-harvest phish — textbook.",
+      title: "Credential harvest, and it hides nothing.",
       summary:
-        "Display name says IT Helpdesk, but the real sender is compan-y-it.com — a look-alike of the company domain. The reset link rewrites to the same look-alike. Three pressure phrases are stacked in 4 lines.",
+        "Display name says IT Helpdesk. The real sender is compan-y-it.com, a look-alike of the company domain, and the reset link rewrites to the same look-alike. Three pressure phrases are stacked in four lines.",
       indicators: [
         { kind: "bad", text: "Display name vs sender: \"IT Helpdesk\" claims internal, real domain is external look-alike (compan-y-it.com)." },
         { kind: "bad", text: "Domain authentication failed (Defender banner). SPF/DKIM did not pass." },
-        { kind: "bad", text: "Link text says company.com but resolves to compan-y-it.com — classic redirect." },
+        { kind: "bad", text: "Link text says company.com and resolves to compan-y-it.com. Classic redirect." },
         { kind: "bad", text: "Urgency stacking: \"expires today\", \"keep your account active\", \"failure to act\"." },
       ],
-      verdictIfRight: "Reporting this directly is exactly right — the indicators are conclusive. The Junk-only option also catches it but starts a longer triage clock for the SOC team.",
+      verdictIfRight: "Reporting this directly is exactly right, because the indicators are conclusive. The Junk-only option also catches it, but it starts a longer triage clock for the SOC team.",
       verdictIfWrong: {
-        safe: "Marking this safe leaves a credential-harvest URL in production inboxes. This is the easy one — if it slipped past, the next won't be obvious.",
+        safe: "Marking this safe leaves a credential-harvest URL in production inboxes. This is the easy one. If it slipped past, the next will not be obvious.",
         junk: "Junk-only is too soft for this signal stack. Authentication-failed + look-alike domain + pressure stacking warrants the phishing report, which routes to the SOC fast-lane.",
       },
     },
@@ -102,16 +102,16 @@ const EMAILS = [
     ),
     correct: "safe",
     teach: {
-      title: "Routine onboarding — looks exactly like what it is.",
+      title: "Routine onboarding, and it looks exactly like what it is.",
       summary:
         "Display name and real sender domain match. Internal sender is verified. No urgency, no payment ask, no surprise links. The mention of an inbound DocuSign envelope is the context you'll want for the fourth message.",
       indicators: [
         { kind: "ok", text: "Display name and real sender domain match (sarah.chen@company.com)." },
         { kind: "ok", text: "Internal verified sender (Defender authentication passed)." },
         { kind: "neutral", text: "No urgency, no payment ask, no out-of-band channel jumping." },
-        { kind: "neutral", text: "Mentions a DocuSign envelope coming in the next hour — note this for later." },
+        { kind: "neutral", text: "Mentions a DocuSign envelope coming in the next hour. Worth remembering." },
       ],
-      verdictIfRight: "Right call. Not every new email needs a Defender escalation — clean signals get the clean disposition.",
+      verdictIfRight: "Right call. Not every new email needs a Defender escalation. Clean signals get the clean disposition.",
       verdictIfWrong: {
         junk: "Reporting a verified internal sender as Junk is exactly the noise the SOC training tries to dial down. Junk-rate inflation buries real signal.",
         phishing: "Reporting your People-Ops contact as phishing is the over-rotation new hires often make after generic awareness training. Calibrate.",
@@ -148,16 +148,16 @@ const EMAILS = [
     ),
     correct: "phishing",
     teach: {
-      title: "Business Email Compromise — CEO impersonation pattern.",
+      title: "Business Email Compromise, the CEO impersonation pattern.",
       summary:
         "Display says CEO but the real sender is a personal Gmail. The opener stacks three pressure-isolation moves: \"quick favour\", \"don't loop anyone in\", \"reply from your phone\". The classic follow-up is a gift-card or wire request.",
       indicators: [
         { kind: "bad", text: "Display \"Sundar Aravind\" resembles internal exec; real sender is ceo.aravind@gmail.com." },
         { kind: "bad", text: "External sender flagged by Defender. No prior thread with this address." },
         { kind: "bad", text: "Urgency + channel switch (\"reply from your phone, not email\")." },
-        { kind: "bad", text: "Isolation (\"don't loop anyone in\") — keeps the target from a sanity-check." },
+        { kind: "bad", text: "Isolation (\"don't loop anyone in\") keeps the target away from a sanity check." },
       ],
-      verdictIfRight: "Right call. BEC openers like this rarely contain a payload yet — the trick is catching the opener so you never see the wire request.",
+      verdictIfRight: "Right call. BEC openers like this rarely carry a payload yet. Catch the opener and the wire request never arrives.",
       verdictIfWrong: {
         safe: "Marking safe is the failure mode this whole cohort exists to fix. BEC successfully delivered is six-figure money on average.",
         junk: "Junk-only sends this to a slower SOC queue. The combined indicators warrant the phishing report and the executive-team alert that comes with it.",
@@ -222,14 +222,14 @@ const EMAILS = [
       summary:
         "Real sender is dse_NA8@docusign.net (DocuSign's actual mail domain). The link resolves to docusign.net. Sarah told you in the previous email this envelope was coming. Three independent confirmations.",
       indicators: [
-        { kind: "ok", text: "Sender domain is docusign.net — DocuSign's real envelope-sender." },
+        { kind: "ok", text: "Sender domain is docusign.net, which is DocuSign's real envelope-sender." },
         { kind: "ok", text: "Authentication passed. Defender marked sender as verified." },
         { kind: "ok", text: "Link resolves to na8.docusign.net (the real DocuSign region for North-America EU envelopes)." },
         { kind: "ok", text: "Context match: the People-Ops email from Sarah explicitly mentioned this envelope was on its way." },
       ],
-      verdictIfRight: "Exactly the call the cohort usually misses. Awareness training over-trains for \"report anything transactional\" — the discipline you just showed is what good triage looks like.",
+      verdictIfRight: "Exactly the call the cohort usually misses. Awareness training over-trains for \"report anything transactional\". The restraint you just showed is what good triage looks like.",
       verdictIfWrong: {
-        junk: "Most cohorts mark legit DocuSign as Junk because it \"looks transactional\". Over-reporting buries real signals under noise — the SOC stops trusting alerts from your team.",
+        junk: "Most cohorts mark legit DocuSign as Junk because it \"looks transactional\". Over-reporting buries real signals under noise, and the SOC stops trusting alerts from your team.",
         phishing: "Reporting a verified DocuSign envelope that you were told to expect is exactly the over-rotation we're calibrating away from. This is the part awareness training skips.",
       },
     },
@@ -390,13 +390,13 @@ function App() {
           </button>
         </div>
 
-        {/* Triage actions — the real decisions */}
+        {/* Triage actions: the real decisions */}
         <div className="rb-group" style={{ background: decided ? "transparent" : "var(--rail)", borderRadius: 4 }}>
           <button
             className="rb-btn"
             onClick={() => decide("safe")}
             disabled={!email || decided}
-            title="Keep in Inbox — no further action"
+            title="Keep in Inbox, no further action"
           >
             <span className="rb-icon" style={{ color: "var(--ok-fg)" }}>✓</span>
             Looks fine
@@ -647,7 +647,7 @@ function App() {
                 </div>
                 <div className="results-sub">
                   Simulated phish-cohort #14 · 4 messages including one trick-positive. The
-                  pass-bar is 3 / 4 correct triages — including catching the legitimate
+                  pass-bar is 3 of 4 correct triages, including catching the legitimate
                   message that looks suspicious.
                 </div>
               </div>

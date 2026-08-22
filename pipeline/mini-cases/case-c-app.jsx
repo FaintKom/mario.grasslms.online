@@ -13,7 +13,7 @@ const RULES = [
     then: <>If <b>no</b> → <b>Legal & Compliance</b> (vendor-onboarding pack must clear first).</>,
     field: "Vendor status",
     evaluate: (po) => (po.vendor.onboarded ? "yes" : "no"),
-    onNo: { queue: "legal", note: "Vendor not yet onboarded — Legal owns the onboarding pack." },
+    onNo: { queue: "legal", note: "Vendor not yet onboarded. Legal owns the onboarding pack." },
   },
   {
     id: "r2",
@@ -22,7 +22,7 @@ const RULES = [
     then: <>If <b>yes</b> → <b>Legal & Compliance</b> (cross-border terms, data residency, withholding).</>,
     field: "Jurisdiction",
     evaluate: (po) => (po.vendor.jurisdiction !== "DE" ? "yes" : "no"),
-    onYes: { queue: "legal", note: "Foreign jurisdiction — Legal must clear cross-border terms." },
+    onYes: { queue: "legal", note: "Foreign jurisdiction. Legal must clear cross-border terms." },
   },
   {
     id: "r3",
@@ -31,7 +31,7 @@ const RULES = [
     then: <>If <b>yes</b> → <b>Finance review</b> (funding-line check before commitment).</>,
     field: "Amount × category",
     evaluate: (po) => (po.amount > 10000 || po.category === "CapEx" ? "yes" : "no"),
-    onYes: { queue: "finance", note: "Over threshold or CapEx — Finance owns funding-line check." },
+    onYes: { queue: "finance", note: "Over threshold or CapEx. Finance owns the funding-line check." },
   },
   {
     id: "r4",
@@ -66,10 +66,10 @@ const POS = [
     ],
     vendor: { name: "Acme Industrial GmbH", onboarded: true, tier: 2, jurisdiction: "DE", vendorId: "VEN-00482", since: "Aug 2023", contract: "MSA-Acme-2024", paymentTerms: "Net-45", taxId: "DE 8821-4477-90", logo: "AI" },
     correct: "finance",
-    teach: "Two independent gates fire: total (€12,480 > €10K) AND category (CapEx). Either alone routes to Finance — both stacked makes it unambiguous. The trap: vendor looks fine and amount is \"ordinary\" — but the gates aren't about vendor goodness, they're about funding-line accountability.",
+    teach: "Two independent gates fire: total (€12,480 > €10K) and category (CapEx). Either one alone routes to Finance, and both together leave no room to argue. The trap is that the vendor looks fine and the amount reads as ordinary. The gates were never about whether the vendor is good. They are about who answers for the funding line.",
     flow: [
       { rule: "r1", outcome: "yes", note: "Onboarded · Tier-2" },
-      { rule: "r2", outcome: "no",  note: "Jurisdiction DE — domestic" },
+      { rule: "r2", outcome: "no",  note: "Jurisdiction DE, domestic" },
       { rule: "r3", outcome: "yes", note: "€12,480 > €10K and CapEx" },
     ],
     activity: [
@@ -98,7 +98,7 @@ const POS = [
     ],
     vendor: { name: "Globex Cloud Services Inc.", onboarded: false, tier: null, jurisdiction: "US", vendorId: "VEN-NEW", since: "—", contract: "Pending Legal", paymentTerms: "Annual prepaid (no NET terms)", taxId: "US-EIN 88-3300114", logo: "GX" },
     correct: "legal",
-    teach: "Small recurring SaaS — easy to wave through. And that's the trap. The vendor isn't on the approved list yet, which alone routes to Legal. The US jurisdiction would have caught it too. Two independent gates fire before amount or category even matter.",
+    teach: "Small recurring SaaS is easy to wave through, and that is the trap. The vendor is not on the approved list yet, which routes to Legal on its own. The US jurisdiction would have caught it as well. Two independent gates fire before amount or category matter at all.",
     flow: [
       { rule: "r1", outcome: "no", note: "Vendor not onboarded" },
     ],
@@ -202,7 +202,7 @@ function App() {
     setToast({
       msg: isCorrect
         ? `Routed to ${queueLabel(queueId)}.`
-        : `Routed to ${queueLabel(queueId)} — re-routing on review.`,
+        : `Routed to ${queueLabel(queueId)}. Re-routing on review.`,
       kind: isCorrect ? "success" : "info",
     });
     setTimeout(() => setToast(null), 2300);
@@ -595,7 +595,7 @@ function App() {
             <div className="right-eyebrow">Step · Route</div>
             <div className="right-title">Pick a queue</div>
             <div className="right-sub">
-              The screens move; the rules don't. Route from the rules — check the Policy reference below if you need to confirm.
+              The screens move; the rules don't. Route from the rules, and check the Policy reference below if you need to confirm.
             </div>
           </div>
 
@@ -695,8 +695,8 @@ function App() {
             </div>
             <div className="results-sub">
               {correctCount === POS.length
-                ? "You routed from the rules, not the UI. Procurement can rebuild the screens next quarter — your decision logic moves with the rules, not the buttons."
-                : "The UI moves; the rules don't. Walk back through the trace below — the failure is almost always a gate that fired earlier than you noticed."}
+                ? "You routed from the rules underneath the screens. Procurement can rebuild the interface next quarter and your decision logic will still hold, because it was never tied to the buttons."
+                : "The UI moves; the rules don't. Walk back through the trace below, because the failure is almost always a gate that fired earlier than you noticed."}
             </div>
           </div>
           <div className="results-score">
