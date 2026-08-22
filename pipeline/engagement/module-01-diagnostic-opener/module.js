@@ -127,8 +127,8 @@ function showWelcomeCard(onStart) {
       <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
       <p class="welcome-card__lede">
         Open every cold call with one specific question pulled off the buyer's
-        LinkedIn or Companies House profile. Then five seconds of silence —
-        that's where the signal lives.
+        LinkedIn or Companies House profile. Then five seconds of silence, because
+        that is where the signal lives.
       </p>
       <button type="button" class="welcome-card__start" data-action="start">
         Start module &rarr;
@@ -258,8 +258,8 @@ function stepStateOutcome(body) {
     <ul style="font-size:13.5px;margin:6px 0 10px 18px;">
       <li><strong>One specific question</strong> off the buyer's LinkedIn / CH
           profile in the first 60 seconds.</li>
-      <li><strong>Five seconds of silence</strong> after — that's where the
-          deal happens.</li>
+      <li><strong>Five seconds of silence</strong> after, because that is where
+          the deal happens.</li>
     </ul>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
       Next action: open the LinkedIn / Companies House app to find Maria's
@@ -304,14 +304,14 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Quick recall — three keystone moves:</p>
+    <p style="font-size:14px;">Quick recall of the three keystone moves:</p>
     <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
       <li><strong>M1 · Diagnostic.</strong> ← <em>this module.</em></li>
       <li><strong>M2 · Acknowledge.</strong> Restate the objection in their words.</li>
       <li><strong>M3 · Close.</strong> Two slots, one invite, during the call.</li>
     </ol>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next action: open the Phone-dialler — you'll dial after the worked example.
+      Next action: open the Phone-dialler. You dial after the worked example.
     </p>
   `;
   setTimeout(() => {
@@ -653,7 +653,7 @@ function stepFeedback(body) {
     { author: "J.T. (pod lead)", initials: "JT", ts: "12:52",
       body: "The 5s silence is the part bottom-quartile reps blow. You held it. Keep it." },
     { author: "M.G. (peer)", initials: "MG", ts: "12:54",
-      body: "First-call mute is hard. One diagnostic in muscle memory — repeat it for 10 cold calls. Then swap." },
+      body: "First-call mute is hard. Get one diagnostic into muscle memory. Repeat it for 10 cold calls, then swap." },
   ];
   state.api.os.openApp("slack", {
     channel: {
@@ -830,7 +830,7 @@ function stepTakeaway(body) {
         </div>
         <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
           "One specific question pulled off their LinkedIn or Companies House
-          profile. Then five seconds of silence. The pitch can come later —
+          profile. Then five seconds of silence. The pitch can come later, because
           the silence is where the deal happens."
         </p>
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
@@ -859,7 +859,7 @@ function finishModule() {
   state.api.complete(scorePct);
   document.getElementById("narrative-body").innerHTML = `
     <p><strong>Module complete.</strong> Score posted to the LMS.</p>
-    <p>See you in Module 2 — Objection Acknowledge.</p>
+    <p>See you in Module 2, Objection Acknowledge.</p>
   `;
   document.getElementById("narrative-next").hidden = true;
   document.getElementById("narrative-back").hidden = true;

@@ -205,7 +205,7 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Recall — the 3 keystone moves run AFTER you pick the right lead.</p>
+    <p style="font-size:14px;">Recall: the 3 keystone moves run AFTER you pick the right lead.</p>
     <ol style="font-size:13.5px;margin:6px 0 8px 18px;">
       <li><strong>M1 Diagnostic</strong> · M2 Acknowledge · M3 Close.</li>
       <li>None of them save you if the lead never converted.</li>
@@ -276,7 +276,7 @@ function stepCompletionProblem(body) {
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">Pick his ICP total in the drawer.</p>`;
   const options = [
-    { label: "A", result: "anti", text: "Skip — too small.", rationale: "Wrong. 64 FTE × €27K/mo = clear ICP." },
+    { label: "A", result: "anti", text: "Skip, too small.", rationale: "Wrong. 64 FTE × €27K/mo = clear ICP." },
     { label: "B", result: "correct", text: "Dial today · score 21/25.", rationale: "Yes. Industry 5 / FTE 5 / Spend 5 / DM 4 / Intent 2 = 21." },
     { label: "C", result: "partial", text: "Add to nurture · score 17/25.", rationale: "Close to cutoff but borderline. Actual is 21." },
     { label: "D", result: "anti", text: "Escalate to AE · enterprise tier.", rationale: "64 FTE is mid-SMB, not enterprise. AE handoff wastes the lead." },

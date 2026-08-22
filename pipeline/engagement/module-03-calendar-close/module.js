@@ -261,7 +261,7 @@ function stepGainAttention(body) {
     </blockquote>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
       Do the task in the Outreach window. The narrative panel just
-      describes what you're seeing — the work happens in the apps.
+      describes what you are seeing. The work happens in the apps.
     </p>
   `;
   state.api.os.openApp("outreach", { highlightLeadId: "L-MARIA" });
@@ -321,9 +321,9 @@ function stepStateOutcome(body) {
   body.innerHTML = `
     <p style="font-size:14px;">By the end of these 10 minutes:</p>
     <ul style="font-size:14px; margin:6px 0 10px 18px;">
-      <li><strong>Calendar invite during the call</strong> — not after.</li>
-      <li><strong>Calendar open in a second tab before every dial</strong>
-          — habit, not afterthought.</li>
+      <li><strong>Calendar invite goes out during the call</strong>, while they are still on the line.</li>
+      <li><strong>Calendar open in a second tab before every dial</strong>,
+          every time, until it stops being a decision.</li>
     </ul>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
       Next action: confirm the open-signal in Outreach (clicking the chip
@@ -359,7 +359,7 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Quick recall — three keystone moves:</p>
+    <p style="font-size:14px;">Quick recall of the three keystone moves:</p>
     <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
       <li><strong>M1 · Diagnostic.</strong> One sharp question off the
         LinkedIn / CH profile. Then silence.</li>
@@ -369,7 +369,7 @@ function stepRecallPrior(body) {
         one invite, during the call.</li>
     </ol>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next action: open the Calendar app — that's the habit gate. Dial
+      Next action: open the Calendar app. That is the habit gate, and Dial
       stays disabled until Calendar is open in a second window.
     </p>
   `;
@@ -433,8 +433,8 @@ function stepWorkedExample(body) {
       time. Calendar sits in a second tab from the moment the call starts.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Listen for the <strong>M3 [Close]</strong> tag — invite goes out
-      <em>during</em> the call, not after. The Gong window highlights it.
+      Listen for the <strong>M3 [Close]</strong> tag. The invite goes out
+      <em>during</em> the call. The Gong window highlights it.
     </p>
   `;
 
@@ -531,13 +531,13 @@ function stepCompletionProblem(body) {
   const options = [
     { label: "A", result: "partial",
       text: `"I'll send a calendar invite with some times by email."`,
-      rationale: "Partial credit at best — GC-05 pattern. Invite delayed past the call window." },
+      rationale: "Partial credit at best. This is the GC-05 pattern, with the invite delayed past the call window." },
     { label: "B", result: "correct",
       text: `"What's the best 20 minutes next week to walk you through the FX-cost-vs-Brex on your last month's spend — Tuesday 11 or Thursday 2?"`,
       rationale: "Yes. Two specific slots, framed around Tom's actual pain. L.D.'s GC-03 + GC-06 pattern." },
     { label: "C", result: "anti",
       text: `"I'll follow up by email next week."`,
-      rationale: "GC-10 / GC-11 anti-pattern. This is where deals die — no re-engage." },
+      rationale: "GC-10 and GC-11 anti-pattern. This is where deals die, with no re-engage." },
     { label: "D", result: "anti",
       text: `"Let me check my calendar and get back to you."`,
       rationale: "GC-19 / GC-22 anti-pattern. Calendar should already be open." },
@@ -709,7 +709,7 @@ function installHabitGate(emma) {
     const coach = document.createElement("div");
     coach.className = "gate-coach-mark";
     coach.setAttribute("role", "note");
-    coach.textContent = "Open Calendar before dialling — second tab. That's the habit.";
+    coach.textContent = "Open Calendar before dialling, in a second tab. That is the habit.";
     coach.style.top  = "-56px";
     coach.style.left = "0";
     wrap.appendChild(coach);
@@ -835,7 +835,7 @@ function showInterestLine(emma) {
         detail: { event_name: "slots_stated", slot_id: slot },
       }));
     } else {
-      status.textContent = "Two slots max — deselect one first.";
+      status.textContent = "Two slots max. Deselect one first.";
       return;
     }
     sendBtn.setAttribute("aria-disabled", state.slotsPicked.length === 2 ? "false" : "true");
@@ -957,9 +957,9 @@ function stepFeedback(body) {
       body: `✅ ${e.label} — ${e.detail}`,
     })),
     { author: "J.T. (pod lead)", initials: "JT", ts: "12:52",
-      body: "Calendar was open before dial. Invite during the call. That's the habit — keep it." },
+      body: "Calendar was open before dial. Invite during the call. That is the habit, so keep it." },
     { author: "M.G. (peer)", initials: "MG", ts: "12:54",
-      body: "Nice. I have my calendar open in a second tab the entire time. Try it on the cold leads too — habit transfers." },
+      body: "Nice. I have my calendar open in a second tab the entire time. Try it on the cold leads too, the habit transfers." },
   ];
 
   state.api.os.openApp("slack", {
@@ -1171,7 +1171,7 @@ function stepTakeaway(body) {
         </div>
         <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
           "Calendar in second tab. Two slots. One invite. Sent before you
-          hang up. 'Follow up' is the failure mode — make it impossible by
+          hang up. 'Follow up' is the failure mode, so make it impossible by
           sending live."
         </p>
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
@@ -1202,7 +1202,7 @@ function finishModule() {
   state.api.complete(scorePct);
   document.getElementById("narrative-body").innerHTML = `
     <p><strong>Module complete.</strong> Score posted to the LMS.</p>
-    <p>See you in Module 4 — ICP buyer fit.</p>
+    <p>See you in Module 4, ICP buyer fit.</p>
   `;
   document.getElementById("narrative-next").hidden = true;
   document.getElementById("narrative-back").hidden = true;

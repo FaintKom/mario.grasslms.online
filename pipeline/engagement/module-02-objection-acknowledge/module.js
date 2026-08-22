@@ -126,7 +126,7 @@ function showWelcomeCard(onStart) {
       <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
       <p class="welcome-card__lede">
         When the buyer pushes back, restate the objection in their own words
-        before you respond. Two-token overlap minimum. Then wait — the open
+        before you respond. Two-token overlap minimum. Then wait, and the open
         follow-up question writes itself.
       </p>
       <button type="button" class="welcome-card__start" data-action="start">
@@ -245,7 +245,7 @@ function stepStateOutcome(body) {
     <ul style="font-size:13.5px;margin:6px 0 10px 18px;">
       <li><strong>Restate</strong> the buyer's objection in their own words
           (≥2 token overlap) before any rebuttal.</li>
-      <li><strong>Then wait</strong> — the open follow-up writes itself.</li>
+      <li><strong>Then wait.</strong> The open follow-up writes itself.</li>
     </ul>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
       Next: confirm you know Tom's top objection.
@@ -288,7 +288,7 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Quick recall — three keystone moves:</p>
+    <p style="font-size:14px;">Quick recall of the three keystone moves:</p>
     <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
       <li><strong>M1 · Diagnostic.</strong> One sharp question off the profile.</li>
       <li><strong>M2 · Acknowledge.</strong> ← <em>this module.</em></li>
@@ -512,7 +512,7 @@ function decorateSoloFlow(tom) {
   mountTaskBanner(outreachBody, {
     id: "m2-s6-solo",
     label: `Restate ${tom.name}'s objection (≥2 token overlap) before any rebuttal`,
-    hint: "Then wait — the open follow-up writes itself",
+    hint: "Then wait. The open follow-up writes itself",
     state: "active",
   });
   if (outreachBody.querySelector("[data-m2-s6-stage]")) return;
@@ -557,7 +557,7 @@ function decorateSoloFlow(tom) {
     send.style.color = ok ? "#fff" : "#666";
     send.style.cursor = ok ? "pointer" : "not-allowed";
     status.textContent = ok
-      ? `Good — ${overlap} token overlap. Send when ready.`
+      ? `Good. ${overlap} token overlap. Send when ready.`
       : `Token overlap so far: ${overlap}. Need ≥2 from the objection.`;
   });
   send.addEventListener("click", () => {
@@ -596,7 +596,7 @@ function stepFeedback(body) {
     { author: "J.T. (pod lead)", initials: "JT", ts: "13:05",
       body: "Restate first, rebut never. If you must rebut, do it after a question they answered." },
     { author: "M.G. (peer)", initials: "MG", ts: "13:06",
-      body: "Train the restate reflex — the rebuttal mostly stops being needed. Buyers self-correct." },
+      body: "Train the restate reflex and the rebuttal mostly stops being needed. Buyers self-correct." },
   ];
   state.api.os.openApp("slack", {
     channel: {
@@ -772,7 +772,7 @@ function stepTakeaway(body) {
           📌 Pinned by M.G. (peer · Manchester pod)
         </div>
         <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
-          "Restate before you rebut. Use the buyer's exact words — two tokens
+          "Restate before you rebut. Use the buyer's exact words, two tokens
           minimum. Then ask one open question. The rebuttal is almost never
           needed after that."
         </p>
@@ -802,7 +802,7 @@ function finishModule() {
   state.api.complete(scorePct);
   document.getElementById("narrative-body").innerHTML = `
     <p><strong>Module complete.</strong> Score posted to the LMS.</p>
-    <p>See you in Module 3 — Calendar Close.</p>
+    <p>See you in Module 3, Calendar Close.</p>
   `;
   document.getElementById("narrative-next").hidden = true;
   document.getElementById("narrative-back").hidden = true;
