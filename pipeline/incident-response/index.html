@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Night Shift — fraud-attack incident response (branching scenario) · Mario Rafael Becerra Dueñas</title>
-<meta name="description" content="Interactive HTML5 branching-scenario e-learning sample: respond to a live card-testing attack. Your choices change what the attacker does and how the night ends — multiple branches and endings." />
+<title>Night Shift · fraud-attack incident response (branching scenario) · Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="Interactive HTML5 branching-scenario e-learning sample: respond to a live card-testing attack. Your choices change what the attacker does and how the night ends, across several branches and six endings." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-  /* GrassLMS Lively — Manrope + Geist Mono, green-600 brand. Branching-scenario "war room" layout. */
+  /* GrassLMS Lively: Manrope + Geist Mono, green-600 brand. Branching-scenario "war room" layout. */
   :root{
     --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
     --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754; --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
@@ -154,7 +154,7 @@
 <body>
 
 <div class="topbar">
-  <div class="brand"><span class="mark">M</span><span>Mario Rafael Becerra Dueñas — e-learning sample</span></div>
+  <div class="brand"><span class="mark">M</span><span>Mario Rafael Becerra Dueñas · e-learning sample</span></div>
   <a href="../mini-cases/">← more samples</a>
 </div>
 
@@ -188,7 +188,7 @@
     </section>
   </div>
 
-  <div class="note-foot"><b>Non-linear scenario</b> — your choices change the path and the ending.</div>
+  <div class="note-foot"><b>Non-linear scenario.</b> Your choices change the path and the ending.</div>
 </div>
 
 <!-- intro -->
@@ -196,9 +196,9 @@
   <div class="ov-card">
     <p class="eyebrow">Branching scenario · interactive HTML5</p>
     <h1>It's 02:14. You're <em>on call.</em></h1>
-    <p>A card-testing attack just lit up the payments dashboard. You're the on-call risk analyst — the only one awake. What you do in the next twenty minutes decides how much money walks, how many real customers get hurt, and what your lead thinks of you in the morning.</p>
+    <p>A card-testing attack just lit up the payments dashboard. You are the on-call risk analyst, and the only one awake. What you do in the next twenty minutes decides how much money walks, how many real customers get hurt, and what your lead thinks of you in the morning.</p>
     <div class="ov-rules">
-      <div class="ov-r"><span class="tg">Read</span><span>Diagnose the attack before you swing — the right control matches the pattern.</span></div>
+      <div class="ov-r"><span class="tg">Read</span><span>Diagnose the attack before you swing. The control has to match the pattern.</span></div>
       <div class="ov-r"><span class="tg">Balance</span><span>Over-blocking kills real revenue. Under-reacting bleeds fraud. Both cost you.</span></div>
       <div class="ov-r"><span class="tg">Communicate</span><span>Contain first, then escalate with data. Silence and noise both burn trust.</span></div>
     </div>
@@ -224,8 +224,8 @@
       <h3>How a strong responder runs this</h3>
       <ul>
         <li><b>Diagnose, then act.</b> The signature (micro-auths, one BIN range, datacenter ASNs, velocity) tells you the control: rate-limit + block that BIN + those ASNs. Panic-blocking everything trades a fraud loss for a bigger revenue loss.</li>
-        <li><b>Don't chase IPs.</b> A bot rotates IPs in seconds. Target the durable signals — BIN range and velocity — or you fall behind the attack.</li>
-        <li><b>Contain, then communicate.</b> A crisp incident note — what happened, what you did, what you recommend — earns trust. Going silent blindsides leadership; mass-paging everyone is crying wolf.</li>
+        <li><b>Don't chase IPs.</b> A bot rotates IPs in seconds. Target the signals it cannot rotate away from, the BIN range and the velocity, or you spend the night one step behind.</li>
+        <li><b>Contain, then communicate.</b> A short incident note earns trust: what happened, what you did, what you recommend. Going silent blindsides leadership. Paging everyone teaches them to tune you out.</li>
       </ul>
     </div>
     <div class="res-actions">
@@ -243,10 +243,10 @@
   const NODES = {
     start:{ clock:"T+00:00", tag:"DETECTION",
       log:[{t:"02:14", x:"ALERT — decline_rate_spike, 6× baseline", s:"bad"}],
-      body:"<b>02:14.</b> PagerDuty wakes you. The card-payment decline rate just jumped <b>6× in four minutes</b>. Most of the failed attempts are tiny — sub-€2 authorisations. The detail view is still loading. The floor is empty; you're the only analyst on call.",
+      body:"<b>02:14.</b> PagerDuty wakes you. The card-payment decline rate just jumped <b>6× in four minutes</b>. Most of the failed attempts are tiny, sub-€2 authorisations. The detail view is still loading. The floor is empty; you're the only analyst on call.",
       choices:[
         {k:1, lab:"Pull the transaction detail and find the pattern before touching any controls.", eff:{trust:+5}, note:"Measured. Thirty seconds of diagnosis now saves you from swinging at the wrong target.", to:"investigate"},
-        {k:2, lab:"Don't wait — block all non-domestic cards right now.", eff:{impact:+55, loss:+300, trust:-5}, note:"You stop the bot instantly — and a wall of legitimate foreign customers with it. Checkout errors spike.", to:"overblock"},
+        {k:2, lab:"Skip the diagnosis. Block all non-domestic cards right now.", eff:{impact:+55, loss:+300, trust:-5}, note:"You stop the bot instantly, and a wall of legitimate foreign customers with it. Checkout errors spike.", to:"overblock"},
         {k:3, lab:"Decline spikes happen. Acknowledge the page and watch for ten minutes.", eff:{}, note:"You go back to your coffee. The graph keeps climbing while you wait.", to:"ignore"}
       ] },
 
@@ -256,16 +256,16 @@
       body:"The detail loads and the picture is clear: hundreds of <b>€0.50–€2 auth attempts</b>, all hitting one <span class='mono'>5xxxxx</span> BIN range, brand-new device fingerprints, from <b>two datacenter ASNs</b>. It's a bot validating stolen cards. About <b>€1,900</b> in network fees already burned.",
       choices:[
         {k:1, lab:"Apply a targeted control: velocity rate-limit + block that BIN range + the two datacenter ASNs.", eff:{loss:+600, impact:+3, trust:+6}, note:"Surgical. You hit exactly what the attack depends on and leave legitimate traffic untouched.", to:"contain"},
-        {k:2, lab:"Hit the kill switch — pause all card payments site-wide until it's over.", eff:{impact:+80, trust:-4}, note:"The bot dies — so does every real checkout on the site. You've turned an attack into an outage.", to:"end_shutdown"},
+        {k:2, lab:"Hit the kill switch and pause all card payments site-wide until it is over.", eff:{impact:+80, trust:-4}, note:"The bot dies. So does every real checkout on the site. You have turned an attack into an outage.", to:"end_shutdown"},
         {k:3, lab:"Block just the IP addresses currently hitting you.", eff:{}, note:"You block what you can see right now. It works… for about two minutes.", to:"narrow"}
       ] },
 
     ignore:{ clock:"T+15:00", tag:"ESCALATING",
       onEnter:{loss:+13000, trust:-8},
       log:[{t:"02:29", x:"Losses climbing — ~€14k in fees & exposure", s:"bad"},{t:"02:29", x:"Finance on-call pings: 'what's going on?'", s:"bad"}],
-      body:"Eleven minutes later it's not noise. The attack scaled — tens of thousands of attempts, <b>~€14k</b> burned, and a few stolen cards are now clearing real purchases. Finance's on-call just messaged you directly. You can't sit on this anymore.",
+      body:"Eleven minutes later it's not noise. The attack scaled to tens of thousands of attempts, <b>~€14k</b> burned, and a few stolen cards are now clearing real purchases. Finance's on-call just messaged you directly. You can't sit on this anymore.",
       choices:[
-        {k:1, lab:"Dig in now — find the pattern and apply a targeted control.", eff:{trust:-2}, note:"Late, but right. You finally read the signature and move on the BIN range and ASNs.", to:"contain"},
+        {k:1, lab:"Dig in now, find the pattern, and apply a targeted control.", eff:{trust:-2}, note:"Late, but right. You finally read the signature and move on the BIN range and ASNs.", to:"contain"},
         {k:2, lab:"Still probably transient. Keep watching a bit longer.", eff:{}, note:"You hesitate again. The graph goes vertical.", to:"losing"}
       ] },
 
@@ -273,50 +273,50 @@
       log:[{t:"02:19", x:"YOU — blocked all non-domestic cards", s:"you"},{t:"02:20", x:"Checkout error rate 22% · support queue flooding", s:"bad"}],
       body:"The fraud auths flatline immediately. But so does legitimate business: checkout error rate hits <b>22%</b>, real customers abroad can't pay, and the support queue is filling with furious tickets. You stopped the bleeding with a tourniquet around the whole arm.",
       choices:[
-        {k:1, lab:"Refine it — replace the blanket block with targeted BIN / velocity / ASN rules and restore legit flow.", eff:{impact:-12, trust:+4}, note:"You narrow the net to the actual attack and let real customers back through. Damage already done, but recovering.", to:"contain"},
+        {k:1, lab:"Refine it. Swap the blanket block for targeted BIN, velocity and ASN rules, and let real traffic back through.", eff:{impact:-12, trust:+4}, note:"You narrow the net to the actual attack and let real customers back through. Damage already done, but recovering.", to:"contain"},
         {k:2, lab:"Leave it. Better to over-block than under-block on my shift.", eff:{impact:+15, trust:-3}, note:"You hold the blanket block 'to be safe'. Revenue keeps draining all night.", to:"end_overblock_hold"}
       ] },
 
     narrow:{ clock:"T+08:00", tag:"FALLING BEHIND",
       onEnter:{loss:+5000},
       log:[{t:"02:22", x:"YOU — blocked live attacker IPs", s:"you"},{t:"02:24", x:"Attack resumed from a fresh ASN — bot rotated", s:"bad"}],
-      body:"You block the IPs that are live. Two minutes later the attack resumes from a <b>completely new ASN</b> — the bot just rotated its infrastructure. Losses tick past <b>€5k</b>. You're playing whack-a-mole and losing.",
+      body:"You block the IPs that are live. Two minutes later the attack resumes from a <b>completely new ASN</b>. The bot just rotated its infrastructure. Losses tick past <b>€5k</b>. You're playing whack-a-mole and losing.",
       choices:[
-        {k:1, lab:"Stop chasing IPs — go after the durable signals: the BIN range + velocity.", eff:{trust:+3}, note:"Right adjustment. You target what the bot can't rotate away, and the attack curve finally bends.", to:"contain"},
+        {k:1, lab:"Stop chasing IPs and go after what the bot cannot rotate: the BIN range and the velocity.", eff:{trust:+3}, note:"Right adjustment. You target what the bot can't rotate away, and the attack curve finally bends.", to:"contain"},
         {k:2, lab:"Block the new ASN's IPs too and keep up.", eff:{}, note:"You chase the new IPs. It rotates again. And again.", to:"losing"}
       ] },
 
     losing:{ clock:"T+20:00", tag:"CRISIS",
       onEnter:{loss:+17000, trust:-12},
       log:[{t:"02:34", x:"Losses ~€22k · threshold auto-paged the lead", s:"bad"},{t:"02:34", x:"Lead joins, finds the incident still uncontained", s:"bad"}],
-      body:"The attack outpaces you. Losses are around <b>€22k</b> and climbing, and the automated threshold has now paged your lead — who joins to find the incident <b>still uncontained</b> and you reacting one step behind. This is the worst way for them to find out.",
+      body:"The attack outpaces you. Losses are around <b>€22k</b> and climbing, and the automated threshold has now paged your lead, who joins to find the incident <b>still uncontained</b> and you reacting one step behind. This is the worst way for them to find out.",
       choices:[
-        {k:1, lab:"Escalate properly and apply the BIN / velocity rules the lead expects.", eff:{trust:+2}, note:"You finally do the right thing, with your lead watching. Contained — but the bill is steep.", to:"contain"},
+        {k:1, lab:"Escalate properly and apply the BIN / velocity rules the lead expects.", eff:{trust:+2}, note:"You finally do the right thing, with your lead watching. Contained, at a steep bill.", to:"contain"},
         {k:2, lab:"Defer to the lead entirely and step back.", eff:{trust:-4}, note:"You hand it off mid-crisis. It gets contained without you.", to:"end_costly"}
       ] },
 
     contain:{ clock:"T+10:40", tag:"CONTAINMENT",
       log:[{t:"02:25", x:"YOU — velocity limit + BIN block + ASN block live", s:"you"},{t:"02:26", x:"Attack curve flattening — auths from those ASNs ≈ 0", s:"good"}],
-      body:"Within a minute the attack curve flattens — auth attempts from those ASNs and that BIN range drop to near zero, and legitimate traffic is unaffected. <b>Containment holds.</b> The immediate fire is out. Now the question is who needs to know, and how.",
+      body:"Within a minute the attack curve flattens. Auth attempts from those ASNs and that BIN range drop to near zero, and legitimate traffic is unaffected. <b>Containment holds.</b> The immediate fire is out. Now the question is who needs to know, and how.",
       choices:[
         {k:1, lab:"Post an incident note in #risk-oncall with the data and actions taken, page the lead, recommend holding the rules 24h.", eff:{trust:+12}, note:"Exactly right. Clear, factual, actionable. Your lead wakes up to a handled incident, not a mystery.", to:"end_textbook"},
-        {k:2, lab:"You handled it. No need to wake anyone — you'll write it up tomorrow.", eff:{trust:-12}, note:"You close your laptop. By morning, finance and your lead piece it together from the dip — without you in the story.", to:"end_quiet"},
+        {k:2, lab:"You handled it. No need to wake anyone, and you can write it up tomorrow.", eff:{trust:-12}, note:"You close your laptop. By morning, finance and your lead piece it together from the dip — without you in the story.", to:"end_quiet"},
         {k:3, lab:"Mass-alert: page the lead, the CTO, and post in #general that the company is under attack.", eff:{trust:-5}, note:"You broadcast a contained, routine attack to the whole company at 2am. The CTO is not amused.", to:"end_overcomms"}
       ] },
 
     // ---- endings ----
-    end_textbook:{ end:true, etag:"Incident closed · clean", title:"Textbook response.",
-      verdict:"You diagnosed before you swung, hit the attack where it lived, kept real customers paying, and handed leadership a clean, data-backed incident note. This is exactly how the night is supposed to go — and the version your lead will quote to the next hire." },
-    end_quiet:{ end:true, etag:"Incident closed · comms gap", title:"Contained — but you vanished from the story.",
-      verdict:"You stopped the attack well. Then you went silent. Leadership reconstructed the night from a revenue dip and a chargeback report instead of from you — and 'I handled it quietly' reads, from the outside, like 'something happened and nobody told us.' Containment was the easy half. The note was the half that builds trust." },
-    end_overcomms:{ end:true, etag:"Incident closed · noisy", title:"Contained — and you cried wolf.",
+    end_textbook:{ end:true, etag:"Incident closed · clean", title:"The night went the way it should.",
+      verdict:"You diagnosed before you swung, hit the attack where it lived, kept real customers paying, and handed leadership a short incident note with numbers in it. This is the version your lead quotes to the next hire." },
+    end_quiet:{ end:true, etag:"Incident closed · comms gap", title:"Contained, and you vanished from the story.",
+      verdict:"You stopped the attack well. Then you went silent. Leadership reconstructed the night from a revenue dip and a chargeback report. From the outside, 'I handled it quietly' reads as 'something happened and nobody told us.' Containment was the easy half. The note was the half that builds trust." },
+    end_overcomms:{ end:true, etag:"Incident closed · noisy", title:"Contained, and you cried wolf.",
       verdict:"The attack was handled, but paging the CTO and blasting #general over a routine, already-contained card-testing wave taught the org to tune you out. Next time you raise a flag, it lands softer. Calibrate the alarm to the fire." },
     end_overblock_hold:{ end:true, etag:"Incident closed · revenue bruised", title:"You stopped the fraud and most of the revenue.",
-      verdict:"The blanket block held all night. Fraud losses were small — but you turned away a wall of legitimate customers, spiked support load, and the revenue hole dwarfs what the bot would ever have taken. Over-blocking isn't 'safe'; it just moves the loss somewhere finance notices later." },
+      verdict:"The blanket block held all night and fraud losses were small. You also turned away a wall of legitimate customers, spiked support load, and opened a revenue hole bigger than anything the bot would have taken. Over-blocking moves the loss somewhere finance notices later." },
     end_shutdown:{ end:true, etag:"Incident closed · self-inflicted outage", title:"You turned an attack into an outage.",
-      verdict:"Pausing all card payments killed the bot — and every real sale on the platform. The post-mortem won't be about the attacker; it'll be about the decision to take the whole funnel down over a targeted card-testing wave. The kill switch is a last resort, not a first move." },
+      verdict:"Pausing all card payments killed the bot and every real sale on the platform. The post-mortem will be about the decision to take the whole funnel down over a targeted card-testing wave. Keep the kill switch for the night nothing narrower will hold." },
     end_costly:{ end:true, etag:"Incident closed · costly", title:"A costly lesson, learned the hard way.",
-      verdict:"By the time the attack was contained, the losses were heavy and your lead had to step in mid-crisis. The fix was always the same handful of rules — the cost was the fifteen minutes you spent not reading the signature. Speed of diagnosis is the whole game here." }
+      verdict:"By the time the attack was contained, the losses were heavy and your lead had to step in mid-crisis. The fix was always the same handful of rules. What it cost you was the fifteen minutes before you read the signature." }
   };
 
   // ---- engine ----
@@ -456,7 +456,7 @@
     const impPen  = state.impact*0.45;               // up to -45
     const q = clampPct((state.trust-50) + 70 - lossPen - impPen);
     if(q>=75) return {g:"A",cls:"",label:"Senior-ready response"};
-    if(q>=55) return {g:"B",cls:"b",label:"Solid — tighten the reflexes"};
+    if(q>=55) return {g:"B",cls:"b",label:"Solid, reflexes need tightening"};
     if(q>=40) return {g:"C",cls:"c",label:"Contained, but costly"};
     return {g:"D",cls:"d",label:"Re-run the playbook"};
   }

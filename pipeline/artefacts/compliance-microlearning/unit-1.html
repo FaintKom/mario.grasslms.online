@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 1 — Would you click?</title>
+<title>Unit 1 · Would you click?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -314,7 +314,7 @@ window.LESSON = {
       gate:"questions", gateHint:"Get at least 7 of 9 right to continue." },
     { n:5, t:"Practice", d:"Your inbox · flag the tells", kind:'embed', fit:'tall', src:SRC+"u1-inbox-simulator.html",
       hint:"Open all three, flag what's off, then Check.",
-      gate:"practice", gateHint:"Flag every tell with no false alarms, then Check — a clean sweep unlocks the next step." },
+      gate:"practice", gateHint:"Flag every tell with no false alarms, then Check. A clean sweep unlocks the next step." },
     { n:6, t:"Commit", d:"One habit to keep", kind:'prose', render: commitHTML },
   ],
 };
@@ -345,7 +345,7 @@ window.LESSON = {
 function boot() {
   const LESSON = window.LESSON;
   if (!LESSON || !Array.isArray(LESSON.steps)) {
-    console.error('shell.js: window.LESSON missing — unit module not loaded?');
+    console.error('shell.js: window.LESSON missing, unit module not loaded?');
     return;
   }
   const STEPS = LESSON.steps;
@@ -459,7 +459,7 @@ function boot() {
       <button class="btn" id="back" ${cur === 0 ? 'disabled' : ''}>← Back</button>`;
     if (s.gate && s.gateHint) {
       const met = gates.has(s.gate);
-      html += `<div class="gate-note${met ? ' met' : ''}" id="gatenote"><span class="lk">${met ? '✓' : '🔒'}</span><span>${met ? 'Done — you can continue.' : s.gateHint}</span></div>`;
+      html += `<div class="gate-note${met ? ' met' : ''}" id="gatenote"><span class="lk">${met ? '✓' : '🔒'}</span><span>${met ? 'Done. You can continue.' : s.gateHint}</span></div>`;
     }
     html += `<button class="btn primary ${last ? 'done' : ''}" id="next" ${locked ? 'disabled' : ''}>${last ? 'Finish ✓' : 'Next →'}</button>
     </div>`;
@@ -499,7 +499,7 @@ function boot() {
     const note = document.getElementById('gatenote');
     if (note && s.gate && gates.has(s.gate)) {
       note.className = 'gate-note met';
-      note.innerHTML = `<span class="lk">✓</span><span>Done — you can continue.</span>`;
+      note.innerHTML = `<span class="lk">✓</span><span>Done. You can continue.</span>`;
     }
     buildRail();
     updateProgress();
