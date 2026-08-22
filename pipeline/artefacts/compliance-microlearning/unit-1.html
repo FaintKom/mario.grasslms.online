@@ -26,6 +26,8 @@ a { color: var(--blue); }
 .bar { position: sticky; top: 0; z-index: 20; background: rgba(14,17,22,.92); backdrop-filter: blur(8px);
        border-bottom: 1px solid var(--line); padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
 .bar .title { font: 700 16px var(--sans); }
+.bar-home { font: 500 13px var(--mono); color: var(--dim); text-decoration: none; white-space: nowrap; }
+.bar-home:hover, .bar-home:focus-visible { color: var(--blue); outline: none; }
 .bar .prog { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .bar .track { width: 160px; height: 6px; background: rgba(255,255,255,.08); border-radius: 3px; overflow: hidden; }
 .bar .fill { height: 100%; width: 0; background: var(--green); box-shadow: 0 0 10px var(--green); border-radius: 3px; transition: width .4s; }
@@ -261,6 +263,7 @@ if(__exports != exports)module.exports = exports;return module.exports}));
 <body>
 <div class="bar">
   <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="rail" aria-haspopup="true"><span class="ic" aria-hidden="true">&#9776;</span>Steps</button>
+  <a class="bar-home" href="../../../">← Portfolio</a>
   <span class="title"></span>
   <span class="quizscore" id="quizScore" hidden></span>
   <div class="prog"><div class="track"><div class="fill" id="fill"></div></div><span class="pct" id="pct">0%</span></div>
@@ -411,7 +414,7 @@ function boot() {
     });
     const links = document.createElement('div');
     links.className = 'rail-links';
-    links.innerHTML = `<a href="index.html">← Course map</a>`;
+    links.innerHTML = `<a href="index.html">← Course map</a><a href="../../../">← Portfolio</a>`;
     rail.appendChild(links);
   }
 
