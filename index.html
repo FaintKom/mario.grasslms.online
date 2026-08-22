@@ -6,6 +6,7 @@
 <title>Mario Rafael Becerra Dueñas — Learning Experience Designer</title>
 <meta name="description" content="Learning Experience Designer, 10+ years in EdTech. End-to-end curricula at Yandex Practicum, TripleTen and BEAM Institute, plus the AI content pipelines and the LMS behind them."/>
 <link rel="canonical" href="https://mario.grasslms.online/"/>
+<link rel="icon" href="icon.svg" sizes="any" type="image/svg+xml"/>
 
 <!-- link preview · LinkedIn, Telegram, WhatsApp, Slack, X -->
 <meta property="og:type" content="profile"/>
@@ -358,8 +359,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
 /* ---------- section head ---------- */
 .section-head {
-  display: grid; grid-template-columns: 120px 1fr auto;
-  gap: 24px; align-items: baseline;
+  display: flex; flex-wrap: wrap;
+  gap: 12px 24px; align-items: baseline;
   padding: calc(64px * var(--density)) 0 24px;
   border-bottom: 1px solid var(--rule);
   margin-bottom: 32px;
@@ -369,6 +370,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   letter-spacing: .08em;
 }
 .section-head h2 {
+  flex: 1 1 auto;
   font-family: var(--sans); font-weight: 800;
   font-size: clamp(32px, 5vw, 56px);
   line-height: 1;
@@ -800,14 +802,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 /* Section-head with right-aligned CTA button (overrides default count slot) */
 .flag-head { align-items: end; }
 .flag-head .flag-head-cta {
-  justify-self: end;
+  margin-left: auto;
   align-self: end;
   white-space: nowrap;
   margin-bottom: 4px;
 }
 @media (max-width: 720px) {
   .flag-head .flag-head-cta {
-    justify-self: start;
+    margin-left: 0;
     margin-top: 10px;
   }
 }
@@ -1160,7 +1162,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   background: var(--bg);
   padding: calc(32px * var(--density)) calc(28px * var(--density));
   display: grid;
-  grid-template-rows: auto auto auto auto 1fr auto auto;
+  grid-template-rows: auto auto 1fr auto;
   gap: 14px;
   transition: background .25s;
 }
@@ -1231,19 +1233,26 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .case-cta {
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--accent);
   text-transform: uppercase;
   letter-spacing: .06em;
-  display: inline-flex; align-items: center; gap: 6px;
-  border-top: 1px solid var(--rule);
-  padding-top: 12px;
-  transition: gap .2s;
+  display: inline-flex; align-items: center; gap: 8px;
+  justify-self: start;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 11px 16px;
+  transition: background .18s, border-color .18s, gap .18s;
 }
-.case-cta:hover { gap: 10px; }
+.case-cta:hover { background: var(--ink); border-color: var(--ink); gap: 12px; }
 .case-cta .arrow { font-size: 14px; }
-/* Two CTAs on one card: share a single rule above the row. */
-.case-ctas { display: flex; flex-wrap: wrap; gap: 18px; border-top: 1px solid var(--rule); padding-top: 12px; }
-.case-ctas .case-cta { border-top: 0; padding-top: 0; }
+/* Two CTAs on one card: first is primary, the rest outlined. */
+.case-ctas { display: flex; flex-wrap: wrap; gap: 10px; justify-self: start; }
+.case-ctas .case-cta ~ .case-cta {
+  background: transparent;
+  color: var(--accent);
+}
+.case-ctas .case-cta ~ .case-cta:hover { background: var(--accent); color: var(--accent-ink); }
 
 /* ---------- services ---------- */
 .services {
@@ -1259,7 +1268,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   padding: calc(32px * var(--density)) calc(28px * var(--density));
   display: grid;
   grid-template-columns: 56px 1fr;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
   column-gap: 18px;
   row-gap: 14px;
   position: relative;
@@ -1282,7 +1291,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--accent);
   text-transform: none;
   align-self: start;
-  padding-top: 4px;
 }
 .service-tag {
   font-family: var(--mono);
@@ -1291,6 +1299,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   text-transform: uppercase;
 }
 .service h3 {
+  margin: 0;
   font-family: var(--sans);
   font-size: clamp(28px, 3vw, 40px);
   line-height: 1;
@@ -1300,6 +1309,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .service h3 em { font-style: normal; color: var(--accent); font-weight: 800; }
 .service-desc {
+  margin: 0;
   font-size: 15px; line-height: 1.5;
   color: var(--ink-dim);
   text-wrap: pretty;
@@ -1515,7 +1525,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   .hero-sub { grid-template-columns: 1fr; gap: 24px; }
   .flagship { grid-template-columns: 1fr; }
   .flagship-visual { min-height: 360px; }
-  .section-head { grid-template-columns: 1fr; gap: 6px; }
+  .section-head { flex-direction: column; align-items: flex-start; gap: 6px; }
   .card, .card.span-4, .card.span-8 { grid-column: span 12; min-height: 240px; }
   .modal-head h2 {font-weight: 800;  font-size: 40px; }
   .modal-head { padding: 22px 22px 16px; }
@@ -2473,7 +2483,21 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   border-radius: 2px;
   vertical-align: 2px;
 }
-.case--demo .case-employer { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.case--demo { grid-template-rows: auto auto 1fr auto; }
+.case-shot {
+  display: block;
+  width: 100%;
+  /* height:auto beats the width/height attribute hints, so aspect-ratio wins;
+     align-self:start stops the grid from stretching the row */
+  height: auto;
+  align-self: start;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--bg-3);
+}
 
 </style>
 </head>
@@ -2488,9 +2512,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     </a>
     <nav>
       <a class="navlink" href="#cases">Cases</a>
-      <a class="navlink" href="#services">Tools</a>
-      <a class="navlink" href="#flagship">GrassLMS</a>
       <a class="navlink" href="#demos">Demos</a>
+      <a class="navlink" href="#flagship">GrassLMS</a>
+      <a class="navlink" href="#services">Tools</a>
       <a class="navlink" href="#background">Services</a>
     </nav>
   </div>
@@ -2512,14 +2536,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="hero-sub">
     <p class="hero-lede">
-      <b>Learning Experience Designer</b> with 10+ years in EdTech. End-to-end curricula at Yandex Practicum, TripleTen and BEAM Institute — plus the AI tooling that lets a content team ship faster: 4C/ID pipelines, internal automations, an LMS shipped solo.
+      <b>Learning Experience Designer</b>, 10+ years in EdTech. I built the curricula at Yandex Practicum, TripleTen and BEAM Institute, and then the tooling those content teams ran on: 4C/ID pipelines, internal automations, an LMS shipped solo.
     </p>
-    <div class="hero-stats">
-      <div><div class="n">10+</div><div class="l">yrs in EdTech</div></div>
-      <div><div class="n">50+</div><div class="l">courses designed</div></div>
-      <div><div class="n">60–85%</div><div class="l">content time saved · AI pipelines</div></div>
-      <div><div class="n">80+</div><div class="l">features in own LMS</div></div>
-    </div>
   </div>
 </section>
 
@@ -2535,370 +2553,155 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 <!-- ============ REAL CLIENT WORK ============ -->
 <section class="wrap" id="cases">
   <div class="section-head">
-    <span class="num">§ 01 / CASES</span>
     <h2>Recent <em>programs</em></h2>
-    <span class="count">real client work · selected · 50+ shipped total</span>
   </div>
-
-  <!-- Mini-index · quick-jump within §01 -->
-  <nav class="case-jumper" aria-label="Jump to a case">
-    <span class="cj-k">Jump</span>
-    <a href="#c01">01 <i>UX/UI</i></a>
-    <a href="#c02">02 <i>Graphic</i></a>
-    <a href="#c03">03 <i>Marketing</i></a>
-    <span class="cj-sep">·</span>
-    <a href="#c04">04 <i>Mgmt</i></a>
-    <a href="#c05">05 <i>Backend</i></a>
-    <a href="#c06">06 <i>AI</i></a>
-    <span class="cj-sep">·</span>
-    <a href="#c07">07 <i>Data Gov</i></a>
-    <a href="#c08">08 <i>AI for PMs</i></a>
-    <span class="cj-sep">·</span>
-    <a href="#c09" class="cj-cur">09 <i>Algonova</i> <span class="cj-dot"></span></a>
-  </nav>
 
   <!-- Yandex Practicum band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://practicum.yandex.ru/" target="_blank" rel="noopener">Yandex Practicum&nbsp;<span class="band-arr">↗</span></a> · career-change &amp; level-up programs</span></h3>
+    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://practicum.yandex.ru/" target="_blank" rel="noopener">Yandex Practicum&nbsp;<span class="band-arr">↗</span></a></span></h3>
   </div>
 
   <div class="cases">
 
     <article class="case" id="c01">
-      <div class="case-head">
-        <span class="case-num">— 01</span>
-        <span class="case-tag">UX / UI · career-change + level-up</span>
-      </div>
-      <div class="case-employer">Yandex Practicum</div>
-      <h3>UX/UI design curriculum,<br><em>reverse-designed</em> from hiring requirements</h3>
+      <h3>UX/UI for <em>career switchers</em><br>and designers levelling up</h3>
       <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">End-to-end UX/UI curriculum — full career-change track and a shorter level-up track for working designers. Cohorts launched on schedule every 4–6 weeks via a cross-functional pipeline of designers, developers and reviewers. Outcomes aligned to current industry hiring criteria.</p>
-      <div class="case-tags">
-        <span>4C/ID</span><span>career-change</span><span>level-up</span><span>cross-functional</span>
-      </div>
+      <p class="case-desc">Two tracks came off one curriculum, a full career change and a shorter one for designers already working. A pipeline of designers, developers and reviewers put out a cohort every four to six weeks, with outcomes written against what the industry was hiring for.</p>
       <a class="case-cta" href="pipeline/artefacts/addie-case-yandex/" target="_blank">ADDIE walk-through <span class="arrow">→</span></a>
     </article>
 
     <article class="case" id="c02">
-      <div class="case-head">
-        <span class="case-num">— 02</span>
-        <span class="case-tag">Graphic design · career-change</span>
-      </div>
-      <div class="case-employer">Yandex Practicum</div>
-      <h3>Graphic design,<br><em>portfolio-first</em> career switch</h3>
+      <h3>Graphic design that ends<br>in a <em>portfolio defence</em></h3>
       <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Career-switcher graphic-design curriculum sequenced around portfolio-worthy deliverables: brand identity, editorial layout, packaging, social. Weekly critique rituals, SME-led reviews, and an end-of-track portfolio defence built around target hiring criteria.</p>
-      <div class="case-tags">
-        <span>portfolio-led</span><span>critique cycles</span><span>SME reviews</span><span>career-change</span>
-      </div>
-    </article>
+      <p class="case-desc">Every unit ended in something a switcher could show: brand identity, editorial layout, packaging, social. Weekly critiques and SME reviews led to a portfolio defence at the end of the track.</p>    </article>
 
     <article class="case" id="c03">
-      <div class="case-head">
-        <span class="case-num">— 03</span>
-        <span class="case-tag">Marketing · career-change</span>
-      </div>
-      <div class="case-employer">Yandex Practicum</div>
-      <h3>Digital marketing,<br><em>brief-driven</em> practice</h3>
+      <h3>Marketing taught on<br><em>real client briefs</em></h3>
       <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Career-switcher marketing curriculum built around real client briefs: performance, content, lifecycle, analytics. Practice tied to measurable funnel outcomes; assessments mirrored junior-marketing tasks from partner companies.</p>
-      <div class="case-tags">
-        <span>brief-driven</span><span>funnel metrics</span><span>partner companies</span><span>career-change</span>
-      </div>
-    </article>
+      <p class="case-desc">Learners worked real briefs from partner companies across performance, content, lifecycle and analytics. Assessments mirrored the tasks a junior marketer gets, and practice was scored against funnel numbers.</p>    </article>
 
   </div>
 
   <!-- TripleTen band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2B</span><span class="band-v"><a href="https://tripleten.com/" target="_blank" rel="noopener">TripleTen (Nebius Group)&nbsp;<span class="band-arr">↗</span></a> · microcourses assembled per client</span></h3>
+    <h3 class="band-head"><span class="band-k">B2B</span><span class="band-v"><a href="https://tripleten.com/" target="_blank" rel="noopener">TripleTen (Nebius Group)&nbsp;<span class="band-arr">↗</span></a></span></h3>
   </div>
 
   <div class="cases">
 
     <article class="case" id="c04">
-      <div class="case-head">
-        <span class="case-num">— 04</span>
-        <span class="case-tag">Management · B2B microcourses</span>
-      </div>
-      <div class="case-employer">TripleTen (Nebius Group)</div>
-      <h3>Management microcourses,<br><em>assembled</em> per client</h3>
+      <h3>Management courses,<br><em>rebuilt per client</em></h3>
       <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Short B2B management courses assembled from the master TripleTen management curriculum and adapted to each client's role-profile and business context. Localised for LatAm markets where relevant; HeyGen AI-avatar scripts for video segments.</p>
-      <div class="case-tags">
-        <span>microcourses</span><span>assembled-from-base</span><span>HeyGen scripts</span><span>B2B</span>
-      </div>
-    </article>
+      <p class="case-desc">Each client got a short course recut from TripleTen's master management curriculum to fit their roles and their business. Some were localised for LatAm, and the video segments ran on HeyGen AI-avatar scripts.</p>    </article>
 
     <article class="case" id="c05">
-      <div class="case-head">
-        <span class="case-num">— 05</span>
-        <span class="case-tag">Backend · B2B microcourses</span>
-      </div>
-      <div class="case-employer">TripleTen (Nebius Group)</div>
-      <h3>Backend microcourses,<br><em>scoped</em> to engineering teams</h3>
+      <h3>Backend courses cut to<br><em>stack and seniority</em></h3>
       <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Backend-development microcourses adapted from TripleTen's long-form backend program for B2B engineering audiences. Scoped per client around the specific stack and seniority profile; assessments built around real codebases where possible.</p>
-      <div class="case-tags">
-        <span>microcourses</span><span>stack-scoped</span><span>code assessments</span><span>B2B</span>
-      </div>
-    </article>
+      <p class="case-desc">Each client's course started from TripleTen's long-form backend program and was cut to their stack and their seniority mix. Where a real codebase was available, assessments were built on it.</p>    </article>
 
     <article class="case" id="c06">
-      <div class="case-head">
-        <span class="case-num">— 06</span>
-        <span class="case-tag">AI · B2B microcourses</span>
-      </div>
-      <div class="case-employer">TripleTen (Nebius Group)</div>
-      <h3>AI microcourses,<br><em>practice-led</em> for non-tech roles</h3>
+      <h3>Generative AI for people<br>who <em>don't write code</em></h3>
       <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Generative-AI microcourses for B2B clients — prompt engineering, role-specific AI workflows, responsible-use guardrails. Adapted from TripleTen's AI curriculum and tuned to each client's tooling and policies.</p>
-      <div class="case-tags">
-        <span>prompt eng</span><span>role-specific</span><span>responsible AI</span><span>B2B</span>
-      </div>
-    </article>
+      <p class="case-desc">Prompt engineering, the AI workflows for a given role, and where the guardrails sit. Each version was tuned to the tools a client already ran and the policies they had to honour.</p>    </article>
 
   </div>
 
   <!-- BEAM band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://beam.education/" target="_blank" rel="noopener">BEAM Institute&nbsp;<span class="band-arr">↗</span></a> · career-change tracks built from scratch with industry SMEs</span></h3>
+    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://beam.education/" target="_blank" rel="noopener">BEAM Institute&nbsp;<span class="band-arr">↗</span></a></span></h3>
   </div>
 
   <div class="cases">
 
     <article class="case" id="c07">
-      <div class="case-head">
-        <span class="case-num">— 07</span>
-        <span class="case-tag">Data Governance · from scratch</span>
-      </div>
-      <div class="case-employer">BEAM Institute of Technology</div>
-      <h3>Data Governance course built<br>with <em>Billigence</em> SMEs</h3>
+      <h3>Data governance, from scratch<br>with <em>Billigence</em></h3>
       <p class="case-period">Learning Experience Designer · Freelance · project-based</p>
-      <p class="case-desc">Full instructional-design cycle from scratch at BEAM with subject-matter experts from Billigence (data-governance consultancy): needs analysis, curriculum architecture, content development, QA. Coordinated with industry practitioners to keep regulatory content current.</p>
-      <div class="case-tags">
-        <span>regulated content</span><span>SME-driven</span><span>full ID cycle</span><span>career-change</span>
-      </div>
-    </article>
+      <p class="case-desc">Nothing existed before this one: needs analysis, curriculum architecture, content and QA all ran from zero. Consultants from Billigence, a data-governance firm, kept the regulatory material current.</p>    </article>
 
     <article class="case" id="c08">
-      <div class="case-head">
-        <span class="case-num">— 08</span>
-        <span class="case-tag">AI for PMs · from scratch</span>
-      </div>
-      <div class="case-employer">BEAM Institute of Technology</div>
-      <h3>AI for Project Managers,<br><em>built</em> with practitioner SMEs</h3>
+      <h3>AI for project managers,<br>practised on <em>briefs and roadmaps</em></h3>
       <p class="case-period">Learning Experience Designer · Freelance · project-based</p>
-      <p class="case-desc">Career-change track teaching practising PMs to integrate AI into discovery, planning and delivery. Built from scratch with industry SMEs; practice tasks mirror real PM artefacts (briefs, roadmaps, retros) augmented with AI workflows.</p>
-      <div class="case-tags">
-        <span>career-change</span><span>SME-driven</span><span>PM workflows</span><span>full ID cycle</span>
-      </div>
-    </article>
+      <p class="case-desc">The track was written with practising PMs, so it taught where AI belongs in discovery, planning and delivery. Practice ran on their own artefacts: briefs, roadmaps, retros, each rebuilt around an AI workflow.</p>    </article>
 
   </div>
 
   <!-- Algonova consulting band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">Consulting · L&amp;D</span><span class="band-v"><a href="https://algonova.com/" target="_blank" rel="noopener">Algonova&nbsp;<span class="band-arr">↗</span></a> · current engagement</span></h3>
+    <h3 class="band-head"><span class="band-k">Consulting · L&amp;D</span><span class="band-v"><a href="https://algonova.com/" target="_blank" rel="noopener">Algonova&nbsp;<span class="band-arr">↗</span></a></span></h3>
   </div>
 
   <div class="cases">
 
     <article class="case" id="c09">
-      <div class="case-head">
-        <span class="case-num">— 09</span>
-        <span class="case-tag">Consulting · L&amp;D · current</span>
-      </div>
-      <div class="case-employer">Algonova</div>
-      <h3>AI consulting &amp; L&amp;D<br>for an <em>EdTech</em> ID team</h3>
+      <h3>Teaching an ID team<br>to <em>build with AI</em></h3>
       <p class="case-period">AI Consulting · L&amp;D · Internal Tooling · Freelance · current</p>
-      <p class="case-desc">Internal AI consulting and L&amp;D for the instructional-design team of an AI-personalised K-3 math platform: workshops on AI use in content design, mentoring on prompt engineering and review pipelines, plus internal tools — slide / board generators, autofill userscripts, lesson-review pipeline, adaptive curriculum knowledge graph.</p>
-      <div class="case-tags">
-        <span>AI consulting</span><span>L&amp;D for IDs</span><span>workshops</span><span>internal tooling</span>
-      </div>
-    </article>
+      <p class="case-desc">Workshops take the instructional-design team of a K-3 maths platform through AI in content design. Mentoring covers prompt engineering and review pipelines one to one. The tooling comes with it: slide and board generators, autofill userscripts, a lesson-review pipeline, an adaptive-curriculum knowledge graph.</p>    </article>
 
   </div>
-
-  <p class="cases-foot">
-    Recent work, selected — across 10+ years I've shipped 50+ courses for many more clients.
+      <p class="cases-foot">
+    Recent work, selected. 10+ years, 50+ courses, more clients than fit on a page.
   </p>
 </section>
 
-<!-- ============ TOOLS ============ -->
-<section class="wrap" id="services">
+<!-- ============ PORTFOLIO DEMOS ============ -->
+<section class="wrap" id="demos">
   <div class="section-head">
-    <span class="num">§ 02 / TOOLS</span>
-    <h2>Tools I built<br>for <em>instructional</em> teams</h2>
-    <span class="count">focused · pipeline</span>
+    <h2>Try it <em>yourself</em></h2>
   </div>
 
-  <!-- Focused tools band -->
-  <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">Focused</span><span class="band-v">One problem · time saved · drop-in</span></h3>
-  </div>
+  <div class="cases">
 
-  <div class="services">
-
-    <article class="service">
-      <span class="service-num">01</span>
-      <div class="service-head">
-        <span class="service-tag">Userscript · autofill</span>
-      </div>
-      <h3>Teacher autofill<br><em>userscript</em></h3>
-      <p class="service-desc">Flask backend + Tampermonkey userscripts that fill matching, categorisation and fill-in-the-blank tests across teacher-training platforms. Cuts hours of routine clicking per week per instructional designer.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Flask + Tampermonkey</li>
-          <li>Matching · categorisation · fill-in</li>
-          <li>~5h / wk saved per ID</li>
-        </ul>
-      </div>
-      <div class="service-metric">~5<span class="unit">h/wk ↓</span></div>
+    <article class="case case--demo">
+      <img class="case-shot" src="previews/d1-os-simulator.webp" alt="Simulated SDR desktop with Outreach, Gong, Salesforce and Slack in draggable windows" loading="lazy" decoding="async" width="960" height="600">
+      <h3>OS <em>simulator</em></h3>
+      <p class="case-desc">A new SDR's desk, running in the browser: Outreach, Gong, Salesforce, LinkedIn, Calendar, a dialler and Slack, each one a draggable window. Have a look around.</p>
+      <a class="case-cta" href="pipeline/engagement/scorm-shell/" target="_blank">Open the desktop <span class="arrow">→</span></a>
     </article>
 
-    <article class="service">
-      <span class="service-num">02</span>
-      <div class="service-head">
-        <span class="service-tag">Telegram bot</span>
-      </div>
-      <h3>Homework <em>bot</em><br>on Telegram</h3>
-      <p class="service-desc">Telegram bot that pushes homework prompts, collects submissions and surfaces them in a triage view for instructors. Replaces a chat-thread mess with structured tracking, without forcing learners onto a new platform.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Telegram Bot API</li>
-          <li>Submission triage view</li>
-          <li>No new platform for learners</li>
-        </ul>
-      </div>
+    <article class="case case--demo">
+      <img class="case-shot" src="previews/d2-scorm-shorts.webp" alt="Index of three SCORM mini-cases" loading="lazy" decoding="async" width="960" height="600">
+      <h3>Security, de-escalation,<br><em>procurement</em></h3>
+      <p class="case-desc">Three SCORM 1.2 packages, one brief each: security onboarding for new hires, de-escalation for a call centre, an ERP procurement rollout. Each runs from the analysis brief to a package you can drop into an LMS.</p>
+      <a class="case-cta" href="pipeline/mini-cases/" target="_blank">See all three <span class="arrow">→</span></a>
     </article>
 
-    <article class="service">
-      <span class="service-num">03</span>
-      <div class="service-head">
-        <span class="service-tag">Google Slides add-on</span>
-      </div>
-      <h3>Math Slides<br><em>add-on</em></h3>
-      <p class="service-desc">Google Slides add-on with branded template, layout catalogue and custom math font. Drops the cost of producing a maths deck from ~2 hours to ~15 minutes per deck while keeping brand integrity.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Branded template + layouts</li>
-          <li>Custom math font</li>
-          <li>2h → 15 min per deck</li>
-        </ul>
-      </div>
-      <div class="service-metric">85%<span class="unit">time ↓</span></div>
+    <article class="case case--demo">
+      <img class="case-shot" src="previews/d3-fraud-queue.webp" alt="Risk-analyst review queue with flagged transactions and risk scores" loading="lazy" decoding="async" width="960" height="600">
+      <h3>A branching <em>fraud queue</em></h3>
+      <p class="case-desc">A payments risk desk: flagged transactions, a risk score, the rules that fired, and Approve, Decline or Escalate. Every shift is generated fresh, and the model is wrong often enough that you have to read the signals yourself.</p>
+      <a class="case-cta" href="pipeline/fintech-fraud-triage/" target="_blank">Open the queue <span class="arrow">→</span></a>
     </article>
 
-    <article class="service">
-      <span class="service-num">04</span>
-      <div class="service-head">
-        <span class="service-tag">JSON → slides</span>
-      </div>
-      <h3>Presentation <em>generator</em><br>from JSON</h3>
-      <p class="service-desc">Takes a lesson-plan JSON and emits a branded-template Google Slides deck. Used by instructional designers to skip the layout step entirely — the deck arrives ready for content polish.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>JSON → branded deck</li>
-          <li>Layouts &amp; brand pre-applied</li>
-          <li>Pairs with lesson-plan output</li>
-        </ul>
-      </div>
-      <div class="service-metric">2h → 15m<span class="unit">per deck</span></div>
+    <article class="case case--demo">
+      <img class="case-shot" src="previews/d4-vishing-call.webp" alt="Live vishing call interface with caller panel and branching replies" loading="lazy" decoding="async" width="960" height="600">
+      <h3>A <em>vishing call</em><br>that argues back</h3>
+      <p class="case-desc">An attacker phones posing as IT Security and works you for your MFA code. He is voiced, your replies branch the call, and his pressure adapts: urgency, authority, threat. Four endings.</p>
+      <a class="case-cta" href="pipeline/vishing-call/" target="_blank">Take the call <span class="arrow">→</span></a>
     </article>
 
-    <article class="service">
-      <span class="service-num">05</span>
-      <div class="service-head">
-        <span class="service-tag">JSON → Miro / Figma</span>
-      </div>
-      <h3>Board <em>generator</em><br>for Miro &amp; Figma</h3>
-      <p class="service-desc">Python tool that takes structured input and generates branded Miro / Figma boards via API — for workshops, lesson canvases, retros. Brand config + layout templates baked in so output stays consistent across teams.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Python + Miro / Figma APIs</li>
-          <li>Brand config + layouts</li>
-          <li>Workshop / lesson canvases</li>
-        </ul>
-      </div>
+    <article class="case case--demo">
+      <img class="case-shot" src="previews/d5-incident-night.webp" alt="Incident console with clock, fraud-loss meters and response choices" loading="lazy" decoding="async" width="960" height="600">
+      <h3><em>2am</em><br>on the risk desk</h3>
+      <p class="case-desc">A card-testing attack is running and you are the only analyst on call. Chase the IPs and the bot rotates. Six endings across three live meters: fraud losses, customer impact, leadership trust.</p>
+      <a class="case-cta" href="pipeline/incident-response/" target="_blank">Run the night <span class="arrow">→</span></a>
     </article>
 
-  </div>
-
-  <!-- Pipeline tools band -->
-  <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">Pipeline</span><span class="band-v">Multi-step systems · data → decision → artefact</span></h3>
-  </div>
-
-  <div class="services">
-
-    <article class="service">
-      <span class="service-num">06</span>
-      <div class="service-head">
-        <span class="service-tag">Adaptive curriculum · knowledge graph</span>
-      </div>
-      <h3>Adaptive curriculum<br><em>knowledge graph</em></h3>
-      <p class="service-desc">Curriculum spine for an AI-personalised K-3 math platform. Knowledge graph of skills + observable action-level objectives drives diagnostic assessment, BKT mastery estimation and adaptive lesson assembly per learner.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>45 modules · 212 topics</li>
-          <li>~200 skills (G1–G3)</li>
-          <li>BKT · lesson assembly</li>
-        </ul>
-      </div>
-      <div class="service-metric">212<span class="unit">topics</span></div>
-    </article>
-
-    <article class="service">
-      <span class="service-num">07</span>
-      <div class="service-head">
-        <span class="service-tag">ID dashboard</span>
-      </div>
-      <h3>Instructional designer<br><em>dashboard</em> for Algorithmika</h3>
-      <p class="service-desc">Internal dashboard for a CS-curriculum team of instructional designers: catalogues lesson assets, tracks review state, surfaces methodology references, and exposes MCP-server endpoints so AI tools plug in directly to the same source of truth.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Lesson asset catalogue</li>
-          <li>Review-state pipeline</li>
-          <li>MCP endpoints for AI tools</li>
-        </ul>
-      </div>
-    </article>
-
-    <article class="service">
-      <span class="service-num">08</span>
-      <div class="service-head">
-        <span class="service-tag">Lesson QA · transcription pipeline</span>
-      </div>
-      <h3>Lesson QA<br><em>pipeline</em></h3>
-      <p class="service-desc">Multi-step pipeline that ingests Slack threads, Notion comments, mentor rubric forms and post-cohort survey CSVs, transcribes recorded lessons, then normalises everything into a triage-ready issue DB for the QA team.</p>
-
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Sources → normalise → DB</li>
-          <li>Transcription of recorded lessons</li>
-          <li>Triage-ready for QA team</li>
-        </ul>
+    <article class="case case--demo">
+      <img class="case-shot" src="previews/d6-compliance.webp" alt="Compliance micro-unit with step rail and progress meter" loading="lazy" decoding="async" width="960" height="600">
+      <h3><em>Boring compliance</em>,<br>rebuilt</h3>
+      <p class="case-desc">Security and privacy awareness, the usual 40-minute deck rebuilt as six self-contained micro-units on a retrieval chain. The case page is the design map; Unit 1 is playable in full, with a 2-minute film, a longread, nine checks and an inbox simulator.</p>
+      <div class="case-ctas">
+        <a class="case-cta" href="pipeline/artefacts/compliance-microlearning/unit-1.html" target="_blank">▶ Play Unit 1 <span class="arrow">→</span></a>
+        <a class="case-cta" href="pipeline/artefacts/compliance-microlearning/" target="_blank">Course map <span class="arrow">→</span></a>
       </div>
     </article>
 
   </div>
 </section>
-
-
 
 <!-- ============ FLAGSHIP ============ -->
 <section class="wrap" id="flagship">
   <div class="section-head flag-head">
-    <span class="num">§ 03 / FLAGSHIP</span>
     <h2>GrassLMS<br>my own <em>LMS</em></h2>
     <a class="btn primary flag-head-cta" href="https://grasslms.online" target="_blank" rel="noopener">
       <span>Open the live LMS</span>
@@ -2908,7 +2711,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="flag-intro">
     <p>
-      A teacher-first LMS built around <em>a huge library of task types</em> and <em>flexible content tools</em>. Teachers can author every screen by hand, or hand the wheel to AI — from a single intro lesson to a full personalised skill-practice set per student. Content always stays editable, so the teacher's craft is preserved.
+      An LMS where <em>the teacher keeps the pen</em>. Task types drop into any lesson: a 37-language code sandbox, Desmos maths, a 2D robot grid, a 3D world, quizzes, peer review. AI can draft a single intro lesson or <em>a whole practice set</em> tuned to one student's gap, and every screen it writes stays editable.
     </p>
   </div>
 
@@ -3014,7 +2817,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
           <span class="fs-lib-chip">Project</span>
         </div>
       </div>
-      <figcaption>Task library · 11+ interaction types, mix &amp; match</figcaption>
+      <figcaption>Task library · 11+ interaction types</figcaption>
     </figure>
 
   </div>
@@ -3022,136 +2825,168 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   <div class="flag-modes">
     <div class="flag-mode">
       <span class="fm-k">Manual</span>
-      <span class="fm-v">Author every screen yourself. Pick task types, write the brief, drop in your own assets. Full control.</span>
+      <span class="fm-v">Author every screen yourself. Pick the task types, write the brief, drop in your own assets.</span>
     </div>
     <div class="flag-mode flag-mode--mid">
       <span class="fm-k">AI · partial</span>
-      <span class="fm-v">Hand AI a topic. Get one intro lesson back, fully editable. Use it as a starting point and polish.</span>
+      <span class="fm-v">Hand AI a topic. One intro lesson comes back, editable line by line.</span>
     </div>
     <div class="flag-mode flag-mode--full">
       <span class="fm-k">AI · full personalisation</span>
-      <span class="fm-v">Hand AI a skill gap per student. Get a complete practice set — intro · drills · project · quiz — adapted to the learner's level.</span>
+      <span class="fm-v">Hand AI a skill gap for one student. A whole practice set comes back: intro, drills, project, quiz, pitched at that learner's level.</span>
     </div>
   </div>
 
 </section>
 
-<!-- ============ PORTFOLIO DEMOS ============ -->
-<section class="wrap" id="demos">
+<!-- ============ TOOLS ============ -->
+<section class="wrap" id="services">
   <div class="section-head">
-    <span class="num">§ 04 / PORTFOLIO DEMOS</span>
-    <h2>End-to-end <em>demos</em><br>built as portfolio pieces</h2>
-    <span class="count">illustrative · synthetic clients</span>
+    <h2>Tools I built<br>for <em>instructional teams</em></h2>
   </div>
 
-  <p class="demos-lede">
-    Built end-to-end on synthetic briefs so the full pipeline is visible — analysis, design, build, eval. Useful for showing how I think; not real client work. Real client programs are in <a href="#cases">§ 01</a>.
-  </p>
+  <!-- Focused tools band -->
+  <div class="cases-band">
+    <h3 class="band-head"><span class="band-k">Focused</span><span class="band-v">One problem · time saved · drop-in</span></h3>
+  </div>
 
-  <div class="cases">
+  <div class="services">
 
-    <article class="case case--demo" data-demo="true">
-      <div class="case-head">
-        <span class="case-num">— D1</span>
-        <span class="case-tag case-tag--demo">DEMO · mini-OS shell</span>
+    <article class="service">
+      <span class="service-num">01</span>
+      <h3>The test forms<br><em>fill themselves</em></h3>
+      <p class="service-desc">A Flask backend and a set of Tampermonkey scripts fill matching, categorisation and fill-in-the-blank tests on the teacher-training platforms. Each instructional designer gets back about five hours a week that used to go into clicking.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Flask + Tampermonkey</li>
+          <li>Matching · categorisation · fill-in</li>
+          <li>~5h / wk saved per ID</li>
+        </ul>
       </div>
-      <div class="case-employer">SDR onboarding <span class="syn-pill">synthetic brief</span></div>
-      <h3>Custom <em>mini-OS</em><br>for scenario-based onboarding</h3>
-      <p class="case-period">Self-contained shell · runs in any LMS or standalone</p>
-      <p class="case-desc">A custom mini-OS shell simulating the SDR's real workspace — Outreach, Gong, Salesforce, LinkedIn, Calendar, phone-dialler, Slack — each as its own draggable window on a desktop. Click any app to explore. Shows how scripted SCORM modules could drop a learner into a believable working environment instead of a slide deck.</p>
-      <div class="case-tags">
-        <span>mini-OS sim</span><span>7 simulated apps</span><span>SCORM-ready</span><span>shell only</span>
-      </div>
-      <a class="case-cta" href="pipeline/engagement/scorm-shell/" target="_blank">Open the mini-OS <span class="arrow">→</span></a>
+      <div class="service-metric">~5<span class="unit">h/wk ↓</span></div>
     </article>
 
-    <article class="case case--demo" data-demo="true">
-      <div class="case-head">
-        <span class="case-num">— D2</span>
-        <span class="case-tag case-tag--demo">DEMO · SCORM mini-cases</span>
+    <article class="service">
+      <span class="service-num">02</span>
+      <h3>Homework collected<br>in <em>Telegram</em></h3>
+      <p class="service-desc">The bot pushes homework prompts into Telegram, collects what comes back and lays it out for instructors in a triage view. Learners stay in the app they already have open.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Telegram Bot API</li>
+          <li>Submission triage view</li>
+          <li>No new platform for learners</li>
+        </ul>
       </div>
-      <div class="case-employer">Three mini-briefs <span class="syn-pill">synthetic</span></div>
-      <h3>Three small SCORM<br><em>shipped</em> end-to-end</h3>
-      <p class="case-period">Built end-to-end as portfolio pieces · single-LXD</p>
-      <p class="case-desc">Three tightly-scoped SCORM 1.2 packages built to show short-form delivery: security onboarding, call-centre de-escalation, ERP procurement rollout. Each: analysis brief → microlearning sequence → quizzes → SCORM package ready to drop into an LMS.</p>
-      <div class="case-tags">
-        <span>SCORM 1.2</span><span>microlearning</span><span>quiz interactions</span>
-      </div>
-      <a class="case-cta" href="pipeline/mini-cases/" target="_blank">See the demos <span class="arrow">→</span></a>
     </article>
 
-    <article class="case case--demo" data-demo="true">
-      <div class="case-head">
-        <span class="case-num">— D3</span>
-        <span class="case-tag case-tag--demo">DEMO · fraud-review trainer</span>
+    <article class="service">
+      <span class="service-num">03</span>
+      <h3>A maths deck in<br><em>fifteen minutes</em></h3>
+      <p class="service-desc">The add-on carries the branded template, a catalogue of layouts and a custom maths font into Google Slides. A deck that took two hours now takes about fifteen minutes, and it still comes out on brand.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Branded template + layouts</li>
+          <li>Custom math font</li>
+          <li>2h → 15 min per deck</li>
+        </ul>
       </div>
-      <div class="case-employer">Payments risk desk <span class="syn-pill">synthetic</span></div>
-      <h3>A <em>fraud-review</em> console<br>that trains near-endlessly</h3>
-      <p class="case-period">Procedural generator · runs standalone or in any LMS</p>
-      <p class="case-desc">A Stripe-Radar-style review console for payments risk: a queue of flagged transactions, a risk score, the rules that fired, and Approve / Decline / Escalate. Every shift is procedurally generated, and the model risk score is deliberately wrong on some cases — so the learner reads the signals instead of memorising. Instant feedback, a cost model, and an end-of-shift scorecard.</p>
-      <div class="case-tags">
-        <span>HTML5 sim</span><span>procedural</span><span>gamified</span><span>SCORM-ready</span>
-      </div>
-      <a class="case-cta" href="pipeline/fintech-fraud-triage/" target="_blank">Open the trainer <span class="arrow">→</span></a>
+      <div class="service-metric">85%<span class="unit">time ↓</span></div>
     </article>
 
-    <article class="case case--demo" data-demo="true">
-      <div class="case-head">
-        <span class="case-num">— D4</span>
-        <span class="case-tag case-tag--demo">DEMO · branching voice scenario</span>
+    <article class="service">
+      <span class="service-num">04</span>
+      <h3><em>JSON</em> in,<br>finished deck out</h3>
+      <p class="service-desc">Hand it a lesson-plan JSON and it returns a Google Slides deck already on the branded template. The layout step disappears, so a designer opens the file and goes straight to the content.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>JSON → branded deck</li>
+          <li>Layouts &amp; brand pre-applied</li>
+          <li>Pairs with lesson-plan output</li>
+        </ul>
       </div>
-      <div class="case-employer">Security awareness <span class="syn-pill">synthetic</span></div>
-      <h3>A <em>vishing call</em><br>you have to talk your way out of</h3>
-      <p class="case-period">Voiced branching scenario · runs standalone or in any LMS</p>
-      <p class="case-desc">An attacker phones you posing as IT Security and tries to talk you out of your MFA. The caller is voiced (audio), your replies branch the conversation, and he adapts his pressure — urgency, authority, threat. A real decision tree with four endings, a criterion-referenced objectives checklist, and a transcript-as-hint penalty (no transcript on a real call). Built for the moment awareness training usually skips.</p>
-      <div class="case-tags">
-        <span>branching</span><span>voiced (TTS)</span><span>criterion-referenced</span><span>SCORM-ready</span>
-      </div>
-      <a class="case-cta" href="pipeline/vishing-call/" target="_blank">Take the call <span class="arrow">→</span></a>
+      <div class="service-metric">2h → 15m<span class="unit">per deck</span></div>
     </article>
 
-    <article class="case case--demo" data-demo="true">
-      <div class="case-head">
-        <span class="case-num">— D5</span>
-        <span class="case-tag case-tag--demo">DEMO · branching incident response</span>
+    <article class="service">
+      <span class="service-num">05</span>
+      <h3>Branded boards straight<br>into <em>Miro and Figma</em></h3>
+      <p class="service-desc">Structured input goes in and the tool draws the board in Miro or Figma over the API, whether that is a workshop canvas, a lesson canvas or a retro. Brand config and layouts live inside it, so two teams asking for the same board get the same board.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Python + Miro / Figma APIs</li>
+          <li>Brand config + layouts</li>
+          <li>Workshop / lesson canvases</li>
+        </ul>
       </div>
-      <div class="case-employer">Payments risk, on-call <span class="syn-pill">synthetic</span></div>
-      <h3>A <em>live fraud attack</em><br>you run from the risk desk</h3>
-      <p class="case-period">Branching scenario · runs standalone or in any LMS</p>
-      <p class="case-desc">It's 2am, a card-testing attack is underway, and you're the only analyst on call. Your choices change how the attacker adapts — chase the IPs and the bot just rotates — and how the night ends: six outcomes across three live meters (fraud losses, customer impact, leadership trust). A real decision tree that teaches proportional response, not a quiz.</p>
-      <div class="case-tags">
-        <span>branching</span><span>simulation</span><span>6 endings</span><span>SCORM-ready</span>
-      </div>
-      <a class="case-cta" href="pipeline/incident-response/" target="_blank">Run the night <span class="arrow">→</span></a>
     </article>
 
-    <article class="case case--demo" data-demo="true">
-      <div class="case-head">
-        <span class="case-num">— D6</span>
-        <span class="case-tag case-tag--demo">DEMO · course design + shipped unit</span>
+  </div>
+
+  <!-- Pipeline tools band -->
+  <div class="cases-band">
+    <h3 class="band-head"><span class="band-k">Pipeline</span><span class="band-v">Multi-step systems · raw sources in, finished artefact out</span></h3>
+  </div>
+
+  <div class="services">
+
+    <article class="service">
+      <span class="service-num">06</span>
+      <h3><em>K-3 maths</em> as a<br>graph of skills</h3>
+      <p class="service-desc">A knowledge graph holds the skills of K-3 maths and the observable objectives sitting under each one. It feeds the diagnostic, the BKT mastery estimate, and the lesson a given learner gets next.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>45 modules · 212 topics</li>
+          <li>~200 skills (G1–G3)</li>
+          <li>BKT · lesson assembly</li>
+        </ul>
       </div>
-      <div class="case-employer">Compliance awareness <span class="syn-pill">synthetic</span></div>
-      <h3>A compliance micro-course,<br>designed <em>and built</em></h3>
-      <p class="case-period">6 micro-units designed · Unit 1 shipped · SCORM 1.2 + mobile web</p>
-      <p class="case-desc">Security and privacy awareness rebuilt as six self-contained micro-units carrying a retrieval chain, in place of a 40-minute deck with a final quiz. The case page is the design map: ABCD×Bloom outcomes, unit inventory, an experience map with cognitive-load and emotional-design targets, and criterion-referenced assessment with one non-compensatory critical item. Unit 1 is playable end to end — a 2-minute film, a longread, nine checks and an inbox simulator inside a gated lesson shell. Grounded in public standards (ISO 27001/27002/27701, GDPR, NIS2).</p>
-      <div class="case-tags">
-        <span>backward design</span><span>experience map</span><span>gated shell</span><span>SCORM 1.2</span>
+      <div class="service-metric">212<span class="unit">topics</span></div>
+    </article>
+
+    <article class="service">
+      <span class="service-num">07</span>
+      <h3>Where the <em>ID team</em><br>looks things up</h3>
+      <p class="service-desc">The dashboard catalogues lesson assets, tracks what has been reviewed and keeps the methodology references where the curriculum team can reach them. MCP endpoints expose the same data, so AI tools read from what the team reads from.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Lesson asset catalogue</li>
+          <li>Review-state pipeline</li>
+          <li>MCP endpoints for AI tools</li>
+        </ul>
       </div>
-      <div class="case-ctas">
-        <a class="case-cta" href="pipeline/artefacts/compliance-microlearning/unit-1.html" target="_blank">▶ Play Unit 1 <span class="arrow">→</span></a>
-        <a class="case-cta" href="pipeline/artefacts/compliance-microlearning/" target="_blank">Course map <span class="arrow">→</span></a>
+    </article>
+
+    <article class="service">
+      <span class="service-num">08</span>
+      <h3>Every complaint about a lesson,<br>in <em>one queue</em></h3>
+      <p class="service-desc">Slack threads, Notion comments, mentor rubrics and post-cohort survey CSVs all land in one place, and recorded lessons are transcribed alongside them. The pipeline normalises the lot into an issue database the QA team can work through.</p>
+
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Sources → normalise → DB</li>
+          <li>Transcription of recorded lessons</li>
+          <li>Triage-ready for QA team</li>
+        </ul>
       </div>
     </article>
 
   </div>
 </section>
+
+
 
 <!-- ============ SERVICES I OFFER ============ -->
 <section class="wrap" id="background">
   <div class="section-head">
-    <span class="num">§ 05 / SERVICES</span>
     <h2>What I <em>offer</em></h2>
-    <span class="count">10+ years · EdTech</span>
   </div>
 
   <!-- Services I currently ship -->
@@ -3159,38 +2994,38 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <div class="bg-services-grid">
       <div class="bg-svc">
         <span class="bg-svc-n">01</span>
-        <span class="bg-svc-t">AI content-generation pipelines</span>
-        <span class="bg-svc-d">Brief → generate → judge → publish. LLM-as-judge eval loop, rubric scoring, retries, drift detection.</span>
+        <span class="bg-svc-t">AI pipelines that grade their own output</span>
+        <span class="bg-svc-d">A brief goes in, the model drafts, a second model scores that draft against a rubric, and only passing work publishes. Retries and drift detection sit inside the loop.</span>
         <span class="bg-svc-p">60–85% content time ↓</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">02</span>
-        <span class="bg-svc-t">Focused tools for ID teams</span>
-        <span class="bg-svc-d">Userscripts, slide/board generators, autofill, Telegram bots — single-problem tools that save hours per week.</span>
+        <span class="bg-svc-t">Small tools, one problem each</span>
+        <span class="bg-svc-d">Userscripts, slide and board generators, autofill, Telegram bots. Each one takes out a single recurring job.</span>
         <span class="bg-svc-p">~5h / wk per ID</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">03</span>
-        <span class="bg-svc-t">Adaptive curriculum architecture</span>
-        <span class="bg-svc-d">Skill graphs, observable objectives, BKT mastery models. The spine that makes adaptive lesson assembly possible.</span>
+        <span class="bg-svc-t">Curriculum built as a skill graph</span>
+        <span class="bg-svc-d">Skill graphs with observable objectives underneath, and a BKT model tracking mastery. That structure is what lets a platform pick the next lesson for a given learner.</span>
         <span class="bg-svc-p">212 topics · ~200 skills</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">04</span>
-        <span class="bg-svc-t">AI consulting &amp; L&amp;D for ID teams</span>
-        <span class="bg-svc-d">Workshops, mentoring, prompt-engineering systems. Helping IDs use AI without losing craft.</span>
+        <span class="bg-svc-t">Teaching ID teams to work with AI</span>
+        <span class="bg-svc-d">Workshops, one-to-one mentoring, and prompt systems the team can reuse. Designers keep making the calls.</span>
         <span class="bg-svc-p">current at Algonova</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">05</span>
-        <span class="bg-svc-t">End-to-end ID engagements</span>
-        <span class="bg-svc-d">ADDIE / 4C/ID full cycle: analysis → design → build → eval. Solo or with SMEs.</span>
+        <span class="bg-svc-t">Whole programmes, analysis to eval</span>
+        <span class="bg-svc-d">Analysis, design, build and evaluation, run through ADDIE or 4C/ID. Solo, or alongside subject-matter experts.</span>
         <span class="bg-svc-p">9 programs · Yandex / TripleTen / BEAM</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">06</span>
-        <span class="bg-svc-t">Full-stack EdTech platforms</span>
-        <span class="bg-svc-d">LMS / course platforms shipped solo — DB, backend, frontend, billing, deploy. <a href="https://grasslms.online" target="_blank" rel="noopener">GrassLMS</a> is the reference.</span>
+        <span class="bg-svc-t">EdTech platforms, shipped solo</span>
+        <span class="bg-svc-d">Database, backend, frontend, billing, deploy, all of it by one person. <a href="https://grasslms.online" target="_blank" rel="noopener">GrassLMS</a> is the reference build.</span>
         <span class="bg-svc-p">80+ features · shipped solo</span>
       </div>
     </div>
@@ -3423,8 +3258,6 @@ function renderTicker() {
     `<span class="sep">✦</span>`,
     `<b>17</b><span>public projects</span>`,
     `<span class="sep">✦</span>`,
-    `<b>2021→</b><span>shipping solo</span>`,
-    `<span class="sep">✦</span>`,
   ];
   const full = bits.join(" · ");
   document.getElementById("tickerTrack").innerHTML = full + " · " + full;
@@ -3503,9 +3336,7 @@ function renderCards() {
       const num = String(ci + 3).padStart(2, "0");
       html += `
         <div class="section-head" style="padding-top:${ci === 0 ? "24px" : "48px"}">
-          <span class="num">§ 06.${String(ci + 1).padStart(2, "0")} / ${cat.label[state.language].toUpperCase()}</span>
           <h2 style="font-size: clamp(24px, 3.2vw, 40px);">${cat.label[state.language]}</h2>
-          <span class="count">${inCat.length}</span>
         </div>`;
     }
     html += `<div class="grid">`;
@@ -3530,7 +3361,7 @@ function renderCards() {
             <span class="id">№ ${p.n}</span>
             <span class="card-status ${p.status}">${statusLabel}</span>
           </div>
-          <h3>${numbered ? `<em>${p.n}.</em> ` : ""}${title}</h3>
+      <h3>${numbered ? `<em>${p.n}.</em> ` : ""}${title}</h3>
           <div class="role">${role}</div>
           <p>${short}</p>
           <div class="card-stack">${tags}</div>
