@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('home.title') }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .home-page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-lg);
+    }
+    
+    .home-logo {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .home-robot {
+        width: 180px;
+        height: 200px;
+        margin: 0 auto;
+    }
+    
+    .home-title {
+        font-size: var(--font-size-2xl);
+        color: var(--color-primary);
+        margin-bottom: var(--spacing-sm);
+        text-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
+    }
+    
+    .home-subtitle {
+        font-size: var(--font-size-lg);
+        color: var(--color-text-muted);
+        margin-bottom: var(--spacing-2xl);
+    }
+    
+    .home-form {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-lg);
+        width: 100%;
+        max-width: 400px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .home-label {
+        display: block;
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-md);
+        color: var(--color-primary);
+    }
+    
+    .home-input {
+        width: 100%;
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-lg);
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        border-radius: var(--radius-xl);
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--color-text);
+        text-align: center;
+        margin-bottom: var(--spacing-lg);
+        transition: all var(--transition-normal);
+    }
+    
+    .home-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
+    }
+    
+    .home-input::placeholder {
+        color: var(--color-text-muted);
+    }
+    
+    .home-btn {
+        width: 100%;
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-lg);
+    }
+    
+    /* Rocket decoration */
+    .rocket-decoration {
+        position: fixed;
+        bottom: 50px;
+        right: 50px;
+        font-size: 60px;
+        animation: rocketFloat 3s ease-in-out infinite;
+        opacity: 0.5;
+    }
+    
+    @keyframes rocketFloat {
+        0%, 100% { transform: translateY(0) rotate(-45deg); }
+        50% { transform: translateY(-20px) rotate(-45deg); }
+    }
+    
+    /* Planet decorations */
+    .planet {
+        position: fixed;
+        border-radius: 50%;
+        opacity: 0.3;
+    }
+    
+    .planet-1 {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        top: 10%;
+        left: 5%;
+    }
+    
+    .planet-2 {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        top: 20%;
+        right: 10%;
+    }
+    
+    .planet-3 {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        bottom: 15%;
+        left: 8%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Decorations -->
+<div class="planet planet-1"></div>
+<div class="planet planet-2"></div>
+<div class="planet planet-3"></div>
+<div class="rocket-decoration">🚀</div>
+
+<div class="home-page">
+    <div class="home-logo">
+        <div class="home-robot">
+            {% include 'components/robot.svg' %}
+        </div>
+    </div>
+    
+    <h1 class="home-title">{{ t('home.title') }}</h1>
+    <p class="home-subtitle">{{ t('home.subtitle') }}</p>
+    
+    <form class="home-form" action="{{ url_for('set_name') }}" method="POST">
+        <label class="home-label">{{ t('home.enter_name') }}</label>
+        <input 
+            type="text" 
+            name="name" 
+            class="home-input" 
+            placeholder="{{ t('home.name_placeholder') }}"
+            maxlength="20"
+            required
+            autofocus
+        >
+        <button type="submit" class="btn btn-primary home-btn">
+            🚀 {{ t('home.start_mission') }}
+        </button>
+    </form>
+</div>
+
+<script>
+    // Add idle animation to robot
+    document.querySelector('.robot-svg')?.classList.add('idle');
+</script>
+{% endblock %}

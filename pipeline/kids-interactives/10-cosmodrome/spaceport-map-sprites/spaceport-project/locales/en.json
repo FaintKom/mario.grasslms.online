@@ -1,0 +1,158 @@
+{
+  "common": {
+    "check": "Check",
+    "download": "Download",
+    "upload": "Upload",
+    "next": "Next",
+    "back": "Back",
+    "hint": "Hint",
+    "close": "Close",
+    "start": "Start",
+    "review": "Review",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "reset": "Reset",
+    "attempts_left": "Attempts left: {n}",
+    "task_completed": "Task completed!",
+    "task_failed": "Try again!",
+    "all_tasks_done": "All tasks completed!"
+  },
+  "header": {
+    "title": "Spaceport",
+    "subtitle": "Virus Attack",
+    "my_codes": "My codes",
+    "progress": "PROGRESS"
+  },
+  "map": {
+    "launch_pad": "LAUNCH PAD",
+    "ready_status": "Ready: {percent}%",
+    "launch_btn": "Launch rocket",
+    "launch_disabled": "Free all sectors to launch"
+  },
+  "sectors": {
+    "a": {
+      "name": "SECTOR A",
+      "title": "File Archive",
+      "description": "The virus scrambled all the files! Complete tasks to free the sector.",
+      "task1": {
+        "title": "Sort files into folders",
+        "description": "The virus mixed up all the files! Sort them into the correct folders.",
+        "hint": "Think about what each file is for. Is an antenna for communication or engines?"
+      },
+      "task2": {
+        "title": "Find file by path",
+        "description": "The virus hid important files! Find them in the explorer using the given path.",
+        "hint": "Read the path from left to right. Each / means entering a folder."
+      },
+      "task3": {
+        "title": "Fix folder structure",
+        "description": "The virus mixed up the folders! Restore the correct structure using the example.",
+        "hint": "Look at the example on the left. Which folder should be inside Mission?"
+      }
+    },
+    "b": {
+      "name": "SECTOR B",
+      "title": "Graphics Station",
+      "description": "Graphics files are damaged! Use Sumo Paint to restore them.",
+      "task1": {
+        "title": "Fix circuit board (simple)",
+        "description": "The virus damaged the control board! Fill the damaged elements with the correct colors.",
+        "hint": "Use the 'Fill' tool (bucket). Select a color from the legend and click inside the element."
+      },
+      "task2": {
+        "title": "Fix circuit board (complex)",
+        "description": "This board is more damaged! Fill all elements and draw the missing component.",
+        "hint": "Don't forget: 1) fill all 6 elements with correct colors, 2) draw something in the center!"
+      },
+      "task3": {
+        "title": "Match the tools",
+        "description": "The virus mixed up tool names! Match each tool with its function.",
+        "hint": "Remember which tool you used to fill elements with color? What do you use to erase mistakes?"
+      }
+    },
+    "c": {
+      "name": "SECTOR C",
+      "title": "Documentation Center",
+      "description": "Documents are damaged by the virus! Fix errors and restore formatting.",
+      "task1": {
+        "title": "Fix text errors",
+        "description": "The virus corrupted an important document! Find and fix all errors in English words.",
+        "hint": "How do you spell 'file' correctly: 'flie' or 'file'? Check each word carefully."
+      },
+      "task2": {
+        "title": "Format the text",
+        "description": "The virus reset all formatting! Format the text according to the example on the left.",
+        "hint": "Select 'COMPUTER RULES' and press B (bold). Select the three action lines and press the list button."
+      },
+      "task3": {
+        "title": "Fill in missing words",
+        "description": "The virus erased important words! Drag IT terms to their places.",
+        "hint": "Where do you save files? In a folder! What do you use to open websites? A browser!"
+      }
+    },
+    "d": {
+      "name": "SECTOR D",
+      "title": "Command Center",
+      "description": "The mission presentation is destroyed! Restore it in WPS Presentation.",
+      "task1": {
+        "title": "Arrange slides",
+        "description": "The slides are mixed up! Arrange them in the correct order."
+      },
+      "task2": {
+        "title": "Add titles",
+        "description": "Slides 2, 3, 4 have no titles. Add them based on the images."
+      },
+      "task3": {
+        "title": "Fix design errors",
+        "description": "Some slides have problems. Find and fix them."
+      },
+      "hint": "Check: 1) First slide — 'Mission to Mars', last — 'Launch!' 2) Slides have titles 3) Text is readable"
+    }
+  },
+  "status": {
+    "locked": "Locked",
+    "infected": "Infected",
+    "in_progress": "In progress",
+    "completed": "Freed",
+    "not_completed": "Not completed"
+  },
+  "codes": {
+    "title": "My LMS codes",
+    "sector_a": "Sector A: Files",
+    "sector_b": "Sector B: Graphics",
+    "sector_c": "Sector C: Documents",
+    "sector_d": "Sector D: Presentations"
+  },
+  "virus": {
+    "intro": "Ha-ha-ha! I've captured your spaceport! Try to stop me!",
+    "locked": "Ha! This sector is locked! Free the others first!",
+    "sector_a_defeated": "No! How did you free the file archive?! It means nothing!",
+    "sector_b_defeated": "Aaa! My graphics station! But I still have the documents!",
+    "sector_c_defeated": "Impossible! You're too smart... But you'll never crack the presentations!",
+    "sector_d_defeated": "NOOOO! You ruined everything! But I'll be back!!!",
+    "launch": "NOOOO!"
+  },
+  "launch": {
+    "approved": "Launch approved!",
+    "countdown": "Countdown",
+    "success": "Mission complete! Spaceport saved!",
+    "replay": "Watch camera recording"
+  },
+  "folders": {
+    "engines": "Engines",
+    "navigation": "Navigation",
+    "communication": "Communication"
+  },
+  "tools": {
+    "brush": "Brush",
+    "fill": "Fill",
+    "pencil": "Pencil",
+    "eraser": "Eraser",
+    "selection": "Selection",
+    "brush_desc": "Draws lines of various thickness",
+    "fill_desc": "Fills an area with color",
+    "pencil_desc": "Draws thin lines",
+    "eraser_desc": "Erases what's drawn",
+    "selection_desc": "Selects part of the image"
+  }
+}

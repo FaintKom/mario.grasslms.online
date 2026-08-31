@@ -1,0 +1,202 @@
+<style>
+/* ==========================================================================
+   Google Slides, drawn in CSS.
+
+   The recognisable parts are the yellow deck icon, the filmstrip of numbered
+   thumbnails down the left, and the 16:9 slide on a grey stage. Empty
+   placeholders say "Click to add text" because that is what Slides shows, and
+   spotting which slides are empty is half of this task.
+
+   Prefixed .gs- so it cannot reach the GrassLMS page around it.
+   ========================================================================== */
+
+.gs {
+  --gs-yellow: #f6b704;
+  --gs-blue: #1a73e8;
+  --gs-text: #202124;
+  --gs-dim: #5f6368;
+  --gs-line: #dadce0;
+  --gs-bar: #edf2fa;
+  --gs-stage: #f8f9fa;
+  --gs-hover: rgba(60, 64, 67, .08);
+
+  border: 1px solid var(--gs-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .16), 0 6px 22px rgba(60, 64, 67, .1);
+  font-family: Roboto, "Segoe UI", Arial, system-ui, sans-serif;
+  color: var(--gs-text);
+  -webkit-font-smoothing: antialiased;
+}
+.gs svg { display: block; }
+
+/* ---- title row ---------------------------------------------------------- */
+.gs__head { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px 0; }
+.gs__logo { width: 36px; height: 36px; flex: 0 0 36px; margin-top: 2px; }
+.gs__titles { min-width: 0; flex: 1; }
+.gs__name { font-size: 17px; line-height: 1.3; }
+.gs__menu { display: flex; flex-wrap: wrap; gap: 1px; margin-top: 1px; }
+.gs__menu span { padding: 3px 7px; border-radius: 4px; font-size: 13px; color: #3c4043; white-space: nowrap; }
+.gs__menu span:hover { background: var(--gs-hover); }
+.gs__right { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.gs__present {
+  display: flex; align-items: center; gap: 6px;
+  height: 34px; padding: 0 14px; border-radius: 4px;
+  border: 1px solid var(--gs-line); font-size: 13px; color: #3c4043; white-space: nowrap;
+}
+.gs__present svg { width: 14px; height: 14px; }
+.gs__share {
+  display: flex; align-items: center; gap: 7px;
+  height: 34px; padding: 0 18px; border-radius: 999px;
+  background: #c2e7ff; color: #001d35; font-size: 13px; font-weight: 500; white-space: nowrap;
+}
+.gs__share svg { width: 16px; height: 16px; }
+.gs__avatar {
+  width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%;
+  background: #0b8043; color: #fff; display: grid; place-items: center;
+  font-size: 12px; font-weight: 500;
+}
+@media (max-width: 720px) { .gs__present { display: none; } .gs__share span { display: none; } .gs__share { padding: 0 12px; } }
+
+/* ---- toolbar ------------------------------------------------------------ */
+.gs__toolwrap { padding: 6px 12px 10px; }
+.gs__tools {
+  display: flex; align-items: center; gap: 1px;
+  height: 40px; padding: 0 10px;
+  border-radius: 999px; background: var(--gs-bar);
+  overflow-x: auto; scrollbar-width: none;
+}
+.gs__tools::-webkit-scrollbar { display: none; }
+.gs-t {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  height: 28px; min-width: 28px; padding: 0 7px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 13px; color: #444746;
+  white-space: nowrap; flex: 0 0 auto;
+}
+.gs-t:hover { background: rgba(68, 71, 70, .1); }
+.gs-t svg { width: 18px; height: 18px; }
+.gs__tsep { width: 1px; height: 20px; margin: 0 5px; background: #c7c7c7; flex: 0 0 1px; }
+
+/* ---- filmstrip and stage ------------------------------------------------ */
+.gs__body { display: grid; grid-template-columns: 148px minmax(0, 1fr); border-top: 1px solid #e3e6e8; }
+@media (max-width: 720px) {
+  .gs__body { grid-template-columns: 1fr; }
+  .gs__strip { display: flex; gap: 8px; overflow-x: auto; max-height: none; border-right: 0; border-bottom: 1px solid var(--gs-line); }
+  .gs-thumb { flex: 0 0 128px; margin-bottom: 0; }
+  .gs-thumb__face { height: 58px; }
+}
+
+.gs__strip {
+  padding: 10px 8px; background: #fff;
+  border-right: 1px solid var(--gs-line);
+  overflow-y: auto;
+}
+.gs-thumb {
+  display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 6px;
+  align-items: start; margin-bottom: 8px;
+  background: none; border: 0; padding: 0; font: inherit; cursor: pointer; text-align: left;
+}
+.gs-thumb__n { display: block; font-size: 11px; color: var(--gs-dim); padding-top: 2px; }
+.gs-thumb__face {
+  /* A fixed height rather than an aspect ratio: the body text on a full slide
+     is taller than 16:9 at this scale and would stretch that one thumbnail
+     while the empty ones stayed short. */
+  display: block; box-sizing: border-box;
+  height: 63px; padding: 5px 6px;
+  border: 1px solid var(--gs-line); background: #fff;
+  overflow: hidden;
+}
+.gs-thumb[aria-current="true"] .gs-thumb__face { border: 2px solid var(--gs-blue); }
+.gs-thumb[aria-current="true"] .gs-thumb__n { color: var(--gs-blue); font-weight: 500; }
+.gs-thumb__t { display: block; font-size: 6px; font-weight: 700; line-height: 1.2; color: #202124; }
+.gs-thumb__b { display: block; font-size: 5px; line-height: 1.3; color: #5f6368; margin-top: 3px; }
+.gs-thumb__ph { display: block; margin-top: 3px; height: 58%; border: 1px dashed #bdc1c6; }
+
+.gs__stage { background: var(--gs-stage); padding: 18px; display: grid; place-items: center; }
+.gs__slide {
+  width: 100%; max-width: 600px; aspect-ratio: 16 / 9;
+  background: #fff; border: 1px solid #e6e6e6;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .18);
+  padding: 6% 7%;
+  display: flex; flex-direction: column; gap: 3%;
+}
+.gs__slide h3 {
+  margin: 0; font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(17px, 3.2vw, 26px); font-weight: 700; letter-spacing: 0; color: #202124;
+}
+.gs__slide p {
+  margin: 0; font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(12px, 1.8vw, 15px); line-height: 1.5; color: #3c4043;
+}
+/* A slide that is still empty, shown the way Slides shows it. */
+.gs__ph {
+  flex: 1; display: grid; place-items: center;
+  border: 1px dashed #9aa0a6; color: #80868b;
+  font-size: clamp(11px, 1.6vw, 14px); text-align: center;
+}
+.gs__ph span { display: grid; justify-items: center; gap: 6px; }
+.gs__ph svg { width: 26px; height: 26px; color: #9aa0a6; }
+
+/* ---- status strip ------------------------------------------------------- */
+.gs__status {
+  display: flex; align-items: center; gap: 14px;
+  height: 28px; padding: 0 14px;
+  border-top: 1px solid #e3e6e8; background: #fff;
+  font-size: 11px; color: var(--gs-dim);
+}
+.gs__status b { margin-left: auto; font-weight: 400; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="gs-logo" viewBox="0 0 36 36">
+      <path d="M8 3h13l7 7v23a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#f6b704"/>
+      <path d="M21 3l7 7h-6a1 1 0 0 1-1-1z" fill="#fbdc8a"/>
+      <rect x="11" y="16" width="14" height="10" rx="1" fill="#fff"/>
+    </symbol>
+    <symbol id="gs-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 8h9a5.5 5.5 0 0 1 0 11H8"/><path d="M8 4L4 8l4 4"/>
+    </symbol>
+    <symbol id="gs-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 8h-9a5.5 5.5 0 0 0 0 11h5"/><path d="M16 4l4 4-4 4"/>
+    </symbol>
+    <symbol id="gs-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><rect x="7" y="14" width="10" height="7"/>
+    </symbol>
+    <symbol id="gs-paint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="4" y="3" width="14" height="6" rx="1.5"/><path d="M18 6h2v5H10v3"/><rect x="8" y="14" width="4" height="6" rx="1"/>
+    </symbol>
+    <symbol id="gs-select" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6 3l12 8-5 1.4 3 6-2.6 1.3-3-6L6 17z"/>
+    </symbol>
+    <symbol id="gs-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M5 6h14M12 6v13M9 19h6"/>
+    </symbol>
+    <symbol id="gs-shape" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <circle cx="9" cy="9" r="5"/><rect x="11" y="11" width="9" height="9" rx="1.5"/>
+    </symbol>
+    <symbol id="gs-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M5 19L19 5"/><circle cx="5" cy="19" r="1.8" fill="currentColor"/><circle cx="19" cy="5" r="1.8" fill="currentColor"/>
+    </symbol>
+    <symbol id="gs-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M4 17l5-5 4 4 3-3 4 4"/>
+    </symbol>
+    <symbol id="gs-comment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M20 4H4a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 4 16h4l4 4v-4h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 20 4z"/>
+    </symbol>
+    <symbol id="gs-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="7" cy="8" r="3"/><path d="M2 19a5 5 0 0 1 10 0"/><path d="M17 6v6M14 9h6"/>
+    </symbol>
+    <symbol id="gs-play" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M8 5l11 7-11 7z"/>
+    </symbol>
+    <symbol id="gs-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M12 5v14M5 12h14"/>
+    </symbol>
+    <symbol id="gs-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 4.5L6 7.5 9 4.5"/>
+    </symbol>
+  </defs>
+</svg>

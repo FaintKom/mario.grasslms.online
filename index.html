@@ -1255,6 +1255,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .case-cta .arrow { font-size: 14px; }
 /* Two CTAs on one card: first is primary, the rest outlined. */
 .case-ctas { display: flex; flex-wrap: wrap; gap: 10px; justify-self: start; }
+.cases-more {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 16px;
+  margin: 28px 0 0; color: var(--muted); font-size: 15px;
+}
 .case-ctas .case-cta ~ .case-cta {
   background: transparent;
   color: var(--accent);
@@ -2702,7 +2706,33 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       </div>
     </article>
 
+    <article class="case case--demo">
+      <img class="case-shot" src="previews/d7-cosmodrome.webp" alt="A 3D cosmodrome seen from orbit, four buildings ringed in purple with the virus sitting on each" loading="lazy" decoding="async" width="960" height="600">
+      <h3>A cosmodrome <em>held by a virus</em></h3>
+      <p class="case-desc">Fly round the launch field in 3D and pick a building. Each one is held until the job inside it is done, and all four ask for something different: bin the virus files without binning ours, reconnect four wires, hold a purge down while it fights back, pull a lever and keep it there.</p>
+      <a class="case-cta" href="pipeline/kids-interactives/10-cosmodrome/cosmodrome-map-3d.html" target="_blank">Take the field back <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case case--demo">
+      <img class="case-shot" src="previews/d8-clicker.webp" alt="A purple match-three style game screen with four game tiles, difficulty pills and a Start button" loading="lazy" decoding="async" width="960" height="600">
+      <h3>Four games for <em>one small hand</em></h3>
+      <p class="case-desc">Click, double-click, drag, chase. The four movements a six-year-old needs before any of the rest of a computer makes sense, each at three speeds, scored out of three stars. Dressed as a game because a drill dressed as a worksheet gets opened once.</p>
+      <a class="case-cta" href="pipeline/kids-interactives/02-motor-skills/clicker-3-modes/index.html" target="_blank">Play a round <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case case--demo">
+      <img class="case-shot" src="previews/d9-vision-rooms.webp" alt="Five empty gallery rooms, each waiting for one kind of photo, with a note about where the recogniser runs" loading="lazy" decoding="async" width="960" height="600">
+      <h3>Five rooms, one <em>fussy machine</em></h3>
+      <p class="case-desc">Hang a photo in a room and a machine says what it thinks it sees, then decides whether it belongs. The recogniser is MobileNet running inside the page: no key, no account, and no photo ever leaves the computer. It shows its guesses and the score it judged on, so a child can see why it said no.</p>
+      <a class="case-cta" href="pipeline/kids-interactives/09-vision-ai/nova-vision-gallery/nova-vision-gallery.html" target="_blank">Hang a photo <span class="arrow">→</span></a>
+    </article>
+
   </div>
+
+  <p class="cases-more">
+    Twenty of these, from a Windows file manager to a Google Docs find-and-replace, live in one place.
+    <a class="case-cta" href="pipeline/kids-interactives/" target="_blank">Open the catalogue <span class="arrow">→</span></a>
+  </p>
 </section>
 
 <!-- ============ FLAGSHIP ============ -->

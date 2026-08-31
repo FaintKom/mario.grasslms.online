@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="en" data-night>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cosmodrome Sector Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  /* One screen on open. The page is a column the height of the viewport and
+     the stage takes whatever the fixed rows leave over, so there is no magic
+     number to go stale when a heading grows by a line. */
+  body { padding: var(--page-top) 0 var(--page-bottom); }
+  .wrap { height: calc(100svh - var(--page-pad)); }   /* the body padding above and below */
+  h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
+  .lede { font-size: var(--t-sm); max-width: 74ch; }
+  .stack--loose { gap: var(--s-4); }
+
+  .stage {
+    position: relative;
+    flex: 1 1 0; min-height: 180px;
+    border: 2px solid var(--color-border-strong); border-radius: var(--radius-lg);
+    background: #04080c; overflow: hidden;
+  }
+  .stage canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+  .stage canvas.is-dragging { cursor: grabbing; }
+  .stage canvas.is-over { cursor: pointer; }
+
+
+  /* ---- the four jobs that free a sector -------------------------------- */
+  /* One verb each, on purpose: pick and bin, connect, hold, pull. A sector
+     that opens with the same puzzle as the last one is not worth opening. */
+  .job { display: grid; gap: var(--s-3); }
+  .job__head { font-size: var(--t-sm); color: var(--color-text-muted); }
+  .job__done { font-weight: 700; color: var(--color-success-fg); }
+
+  /* A — the file list */
+  .files { display: grid; gap: 2px; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
+  .file {
+    display: grid; grid-template-columns: 22px minmax(0,1fr) auto; gap: var(--s-3);
+    align-items: center; padding: var(--s-2) var(--s-3);
+    background: var(--color-surface); border: 0; border-bottom: 1px solid var(--color-border);
+    font: inherit; font-family: var(--font-mono); font-size: var(--t-xs);
+    color: var(--color-text); text-align: left; cursor: pointer;
+  }
+  .file:last-child { border-bottom: 0; }
+  .file:hover { background: var(--color-surface-2); }
+  .file[aria-pressed="true"] { background: var(--color-primary-soft); }
+  .file__dot { width: 12px; height: 12px; border-radius: 3px; background: var(--ink-200); }
+  .file.is-bad .file__dot { background: #a855f7; }
+  .file__size { color: var(--color-text-subtle); }
+  .file.is-gone { opacity: .25; pointer-events: none; text-decoration: line-through; }
+
+  /* B — the wires */
+  .wires { position: relative; display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-6); align-items: stretch; }
+  .wires__col { display: grid; gap: var(--s-3); align-content: space-between; }
+  .plug {
+    width: 46px; height: 30px; border: 2px solid var(--ink-900); border-radius: 5px;
+    padding: 0; cursor: grab; touch-action: none;
+  }
+  .plug.is-done { cursor: default; box-shadow: inset 0 0 0 3px #fff; }
+  .wires svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+  /* C — hold to purge */
+  .purge { display: grid; gap: var(--s-3); justify-items: center; }
+  .purge__btn {
+    width: 128px; height: 128px; border-radius: 50%;
+    border: 3px solid var(--ink-900); background: var(--color-danger);
+    color: #fff; font: inherit; font-weight: 800; font-size: var(--t-sm);
+    cursor: pointer; touch-action: none; user-select: none;
+    box-shadow: 0 6px 0 var(--clay-700);
+  }
+  .purge__btn.is-down { transform: translateY(4px); box-shadow: 0 2px 0 var(--clay-700); }
+  .purge__meter { width: 100%; max-width: 320px; height: 14px; border-radius: var(--radius-pill); background: var(--color-surface-2); overflow: hidden; border: 1px solid var(--color-border); }
+  .purge__meter i { display: block; height: 100%; width: 0; background: var(--color-primary); }
+  .purge__meter.is-hit i { background: #a855f7; }
+
+  /* D — the lever */
+  .lever { position: relative; height: 190px; width: 92px; margin: 0 auto; touch-action: none; }
+  .lever__track {
+    position: absolute; left: 50%; top: 0; bottom: 0; width: 26px; margin-left: -13px;
+    border-radius: var(--radius-pill); background: var(--color-surface-2);
+    border: 2px solid var(--color-border-strong);
+  }
+  .lever__fill { position: absolute; left: 0; right: 0; bottom: 0; border-radius: var(--radius-pill); background: var(--color-primary-soft); }
+  .lever__grip {
+    position: absolute; left: 50%; width: 76px; height: 34px; margin-left: -38px;
+    border-radius: var(--radius-sm); border: 2px solid var(--ink-900);
+    background: var(--sun-400); cursor: grab; touch-action: none;
+    box-shadow: 0 4px 0 var(--sun-500);
+  }
+  .lever__grip:active { cursor: grabbing; }
+  .lever__grip::after { content: ""; position: absolute; inset: 6px 10px; border-radius: 2px; background: repeating-linear-gradient(var(--ink-900) 0 2px, transparent 2px 6px); opacity: .35; }
+
+  .stage__hint {
+    position: absolute; left: var(--s-3); bottom: var(--s-3);
+    padding: var(--s-2) var(--s-3); border-radius: var(--radius-pill);
+    background: rgba(4, 8, 12, .72); border: 1px solid var(--color-border);
+    font-size: var(--t-2xs); color: var(--color-text-muted);
+    pointer-events: none;
+  }
+  .stage__views { position: absolute; right: var(--s-3); top: var(--s-3); display: flex; gap: var(--s-1); }
+  .stage__views button {
+    min-height: 36px; padding: 0 var(--s-3);
+    border-radius: var(--radius-pill); border: 1px solid var(--color-border-strong);
+    background: rgba(4, 8, 12, .72); color: var(--color-text);
+    font: inherit; font-size: var(--t-2xs); cursor: pointer;
+  }
+  .stage__views button:hover { border-color: var(--color-primary); }
+
+  .stage__tip {
+    position: absolute; padding: var(--s-1) var(--s-3);
+    border-radius: var(--radius-pill); background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    font-size: var(--t-2xs); white-space: nowrap; pointer-events: none;
+    transform: translate(-50%, -140%);
+  }
+
+  .fallback { display: grid; place-items: center; height: 100%; padding: var(--s-8); text-align: center; }
+
+  .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: var(--s-2); }
+  .lg {
+    display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-2); align-items: center;
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid var(--color-border); border-radius: var(--radius-md);
+    background: var(--color-surface); font-size: var(--t-sm); text-align: left;
+    cursor: pointer; font-family: inherit; color: inherit; width: 100%;
+  }
+  .lg:hover { border-color: var(--color-border-strong); }
+  .lg__dot { width: 12px; height: 12px; border-radius: var(--radius-pill); }
+  .lg__state { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); }
+  .lg.is-clear .lg__state { color: var(--color-success-fg); }
+
+
+  .virus {
+    display: grid; grid-template-columns: auto 1fr; gap: var(--s-3); align-items: start;
+    padding: var(--s-4);
+    border: 2px solid var(--color-danger); border-radius: var(--radius-md);
+    background: var(--color-danger-soft);
+  }
+  .virus__face { font-size: 34px; }
+  .virus__line { font-weight: 700; }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--wide stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Cosmodrome · sector map</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">Four sectors,</span> <em class="mark" data-t="title2">one virus</em></h1>
+    <p class="lede" data-t="intro">The virus is sitting on all four sectors of the cosmodrome. Drag to walk around the field, click a building, and do the job inside it to push the virus off that sector.</p>
+  </header>
+
+  <div class="hud">
+    <div class="row">
+      <span class="eyebrow" data-t="clearedLabel">Sectors clear</span>
+      <span class="hud__score" id="score">0</span>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <canvas id="scene"></canvas>
+    <div class="stage__views" id="views"></div>
+    <div class="stage__hint" data-t="hint">Drag to turn · wheel to zoom · click a building</div>
+    <div class="stage__tip" id="tip" hidden></div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="row">
+    <button class="btn btn--ghost btn--sm" id="reset" data-t="reset">Reset progress</button>
+    <span class="muted" style="font-size: var(--t-2xs)" data-t="resetNote">Progress is kept in this browser only, and only on this device.</span>
+  </div>
+
+  <section class="card stack" id="panel" hidden>
+    <div class="row row--between">
+      <div class="stack stack--tight">
+        <p class="eyebrow" id="panelTag"></p>
+        <h2 id="panelName"></h2>
+      </div>
+      <button class="btn btn--ghost" id="closePanel" data-t="close">Close</button>
+    </div>
+    <p class="muted" id="panelWhat"></p>
+
+    <div class="stack stack--tight">
+    </div>
+
+    <div class="job" id="job"></div>
+    <div id="verdict" hidden></div>
+  </section>
+
+  <section class="stack" id="endgame" hidden aria-live="polite">
+    <div class="virus">
+      <span class="virus__face" id="virusFace">👾</span>
+      <div class="stack stack--tight">
+        <span class="virus__line" id="virusLine"></span>
+        <span class="muted" id="virusSub"></span>
+      </div>
+    </div>
+    <div class="row"><button class="btn" id="virusNext"></button></div>
+  </section>
+
+  <section class="card stack" id="won" hidden aria-live="polite">
+    <h2 data-t="wonTitle">The cosmodrome is yours again</h2>
+    <p class="muted" data-t="wonBody">Four sectors clear, the rocket back under your control, and one very quiet virus.</p>
+    <div><button class="btn btn--ghost" id="again" data-t="again">Play it again</button></div>
+  </section>
+
+</div>
+
+<script src="../_shared/vendor/three.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* One page in place of seven. The scene, the four sectors, the orbiting
+     camera, the virus swarm and the closing dialogue all come from the
+     original three.js maps (map_3d, map_rescue_c, map_rescue_d_final,
+     map_sector_a / _b, map_start).
+
+     three.js is vendored at _shared/vendor/three.min.js rather than pulled
+     from a CDN, so the page opens from a file:// path and travels inside a
+     frameBox archive. r128 is the last line that ships a classic build; the
+     module-only releases will not load over file://.
+
+     The models are new. The original gave all four sectors the same box with
+     a pyramid on top; here each building is made out of what its sector does,
+     so you can tell the archive from the command centre across the field. */
+
+  var SECTORS = [
+    { id: "A", pos: [-4.6, 0, -3.4], hue: 0x8fd770, build: "archive" },
+    { id: "B", pos: [-4.6, 0,  3.4], hue: 0xffd84d, build: "studio" },
+    { id: "C", pos: [ 4.6, 0, -3.4], hue: 0x3aa0b5, build: "tower" },
+    { id: "D", pos: [ 4.6, 0,  3.4], hue: 0xf6b394, build: "command" }
+  ];
+
+  var INFECTED = 0xa855f7;
+
+  var VIEWS = {
+    orbit: { angle: Math.PI * 0.25, height: 9.5,  distance: 17 },
+    top:   { angle: Math.PI * 0.25, height: 21,   distance: 12 },
+    low:   { angle: Math.PI * 0.95, height: 3.2,  distance: 14 }
+  };
+
+  /* Which tasks each sector owns. The ids match what the task pages write
+     into localStorage when they are finished. */
+  /* This screen was the level that joined the others together: the students
+     worked through the sector tasks on their own pages, and this is where the
+     result showed up. It carries no links now, only the story — but a sector
+     whose tasks were finished still comes up free, because the tasks write
+     their id into the same storage key this reads. */
+  var TASK_IDS = { A: ["explorer", "a3"], B: ["b1", "b3"], C: ["c1", "c2", "c3"], D: ["d1"] };
+
+
+  var T = {
+    en: {
+      jobDone: "This sector is clear. The virus has nothing left in here.",
+      jobs: {
+        A: { head: "The virus dropped its own files among ours. Pick out every one that is not ours, then bin the lot.",
+             hint: "Ours have names that say what they are. The virus files do not.",
+             action: "Delete selected", pickFirst: "Nothing is picked yet.",
+             oops: "One of those was ours. Everything is back — read the names again.",
+             more: "Good. There are still virus files in here." },
+        B: { head: "The colour boards are unplugged. Drag each wire across to the socket of the same colour.",
+             wire: "Wire", socket: "Socket" },
+        C: { head: "Hold the purge down until the meter is full. The virus knocks it back every couple of seconds, so do not let go.",
+             action: "HOLD TO PURGE" },
+        D: { head: "The dish is still taking orders from the virus. Pull the lever all the way down and hold it there.",
+             action: "Pull the lever down" }
+      },
+      eyebrow: "Cosmodrome · sector map",
+      title1: "Four sectors,", title2: "one virus",
+      intro: "The virus is sitting on all four sectors of the cosmodrome. Drag to walk around the field, click a building, and do the job inside it to push the virus off that sector.",
+      clearedLabel: "Sectors clear", close: "Close",
+      submit: "Drive the virus out",
+      again: "Play it again", sector: "Sector",
+      reset: "Reset progress",
+      resetNote: "Progress is kept in this browser only, and only on this device.",
+      hint: "Drag to turn · wheel to zoom · click a building",
+      views: { orbit: "Around", top: "From above", low: "From the pad" },
+      infected: "held by the virus", clear: "clear",
+      names: {
+        A: ["File archive", "Every folder on the station was tipped out here. The robots cannot find a single thing they need."],
+        B: ["Graphics station", "The colour has been drained out of the boards, and nothing on this station lights up without them."],
+        C: ["Text module", "Every message leaving the cosmodrome goes through here, and right now every one of them comes out scrambled."],
+        D: ["Command centre", "The dish still turns, but it is listening to the virus. Whoever holds this room holds the launch."]
+      },
+      right: function (id) { return "Sector " + id + " is free."; },
+      noWebgl: "This browser cannot draw 3D. Everything still works from the list below.",
+      wonTitle: "The cosmodrome is yours again",
+      wonBody: "Four sectors clear, the rocket back under your control, and one very quiet virus.",
+      endgame: [
+        { face: "😱", line: "NO! ALL FOUR SECTORS?!", sub: "This cannot be happening…", btn: "Keep going" },
+        { face: "😈", line: "Wait. WAIT.", sub: "If I cannot have the cosmodrome, I will take the rocket!", btn: "Stop the virus" },
+        { face: "😰", line: "What are you doing? Leave those wires alone!", sub: "Do not — STOP —", btn: "Cut the wires" },
+        { face: "💀", line: "I am… dissolving…", sub: "Goodbyeeee…", btn: "Watch it go" }
+      ]
+    },
+    es: {
+      jobDone: "Este sector está limpio. Al virus no le queda nada aquí.",
+      jobs: {
+        A: { head: "El virus dejó sus archivos entre los nuestros. Marca todos los que no son nuestros y bórralos.",
+             hint: "Los nuestros tienen nombres que dicen qué son. Los del virus no.",
+             action: "Borrar lo marcado", pickFirst: "Todavía no has marcado nada.",
+             oops: "Ese era nuestro. Está todo de vuelta: vuelve a leer los nombres.",
+             more: "Bien. Todavía quedan archivos del virus." },
+        B: { head: "Las placas de color están desenchufadas. Arrastra cada cable al conector de su mismo color.",
+             wire: "Cable", socket: "Conector" },
+        C: { head: "Mantén pulsada la purga hasta llenar la barra. El virus la tira hacia atrás cada dos segundos, así que no sueltes.",
+             action: "MANTÉN PULSADO" },
+        D: { head: "La antena sigue obedeciendo al virus. Baja la palanca del todo y mantenla ahí.",
+             action: "Baja la palanca" }
+      },
+      eyebrow: "Cosmódromo · mapa de sectores",
+      title1: "Cuatro sectores,", title2: "un virus",
+      intro: "El virus está sentado en los cuatro sectores del cosmódromo. Arrastra para dar la vuelta al campo, pulsa un edificio y haz el trabajo que hay dentro para echar al virus de ese sector.",
+      clearedLabel: "Sectores libres", close: "Cerrar",
+      submit: "Echar al virus",
+      again: "Jugar otra vez", sector: "Sector",
+      reset: "Borrar el progreso",
+      resetNote: "El progreso se guarda solo en este navegador y solo en este equipo.",
+      hint: "Arrastra para girar · rueda para acercar · pulsa un edificio",
+      views: { orbit: "Alrededor", top: "Desde arriba", low: "Desde la plataforma" },
+      infected: "en manos del virus", clear: "libre",
+      names: {
+        A: ["Archivo de ficheros", "Aquí volcaron todas las carpetas de la estación. Los robots no encuentran nada de lo que necesitan."],
+        B: ["Estación gráfica", "Le han sacado el color a las placas, y sin ellas en esta estación no se enciende nada."],
+        C: ["Módulo de texto", "Todos los mensajes que salen del cosmódromo pasan por aquí, y ahora mismo todos salen revueltos."],
+        D: ["Centro de mando", "La antena sigue girando, pero escucha al virus. Quien tenga esta sala tiene el lanzamiento."]
+      },
+      right: function (id) { return "El sector " + id + " está libre."; },
+      noWebgl: "Este navegador no puede dibujar en 3D. Todo sigue funcionando desde la lista de abajo.",
+      wonTitle: "El cosmódromo vuelve a ser tuyo",
+      wonBody: "Cuatro sectores libres, el cohete otra vez bajo control y un virus muy callado.",
+      endgame: [
+        { face: "😱", line: "¡NO! ¿LOS CUATRO SECTORES?", sub: "Esto no puede estar pasando…", btn: "Seguir" },
+        { face: "😈", line: "Un momento. UN MOMENTO.", sub: "Si no puedo tener el cosmódromo, ¡me llevo el cohete!", btn: "Detener al virus" },
+        { face: "😰", line: "¿Qué hacéis? ¡No toquéis esos cables!", sub: "No — PARAD —", btn: "Cortar los cables" },
+        { face: "💀", line: "Me… me estoy disolviendo…", sub: "Adióooos…", btn: "Verlo marchar" }
+      ]
+    }
+  };
+
+  var lang = "en", manual = {}, open = null, beat = -1;
+
+  /* Progress comes from the tasks themselves: each writes its id into one
+     shared localStorage key when it is finished, and the map reads it back.
+     The button on a sector panel is an override for when a teacher wants to
+     move on without replaying everything. */
+  var STORE = "kids.progress.v1";
+
+  function progress() {
+    try { return JSON.parse(localStorage.getItem(STORE) || "{}"); }
+    catch (err) { return {}; }
+  }
+
+  function isClear(id) {
+    if (manual[id]) return true;
+    var done = progress();
+    return TASK_IDS[id].every(function (task) { return done[task]; });
+  }
+
+  function forgetProgress() {
+    try { localStorage.removeItem(STORE); } catch (err) {}
+    manual = {};
+  }
+
+  function byId(id) { return document.getElementById(id); }
+  function t() { return T[lang]; }
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+  function hex(n) { return "#" + ("000000" + n.toString(16)).slice(-6); }
+  function say(kind, message) {
+    var v = byId("verdict");
+    v.hidden = false; v.className = "feedback feedback--" + kind; v.textContent = message;
+  }
+  function clearSay() { var v = byId("verdict"); v.hidden = true; v.className = ""; }
+
+  /* ====================================================================== */
+  /* models                                                                 */
+  /* ====================================================================== */
+  function shellMat() {
+    return new THREE.MeshStandardMaterial({ color: 0x2f3a46, metalness: .25, roughness: .75 });
+  }
+
+  function makeArchive(hue) {
+    /* Sector A — stacked slabs, like a drawer unit half pulled out. */
+    var g = new THREE.Group();
+    var body = shellMat();
+    var trim = new THREE.MeshStandardMaterial({ color: hue, metalness: .35, roughness: .45 });
+
+    for (var i = 0; i < 4; i++) {
+      var slab = new THREE.Mesh(new THREE.BoxGeometry(2.6 - i * 0.18, 0.44, 1.9), body);
+      slab.position.set(i % 2 ? 0.12 : -0.12, 0.3 + i * 0.5, 0);
+      slab.castShadow = true; slab.receiveShadow = true;
+      g.add(slab);
+
+      var handle = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.08, 0.1), trim);
+      handle.position.set(i % 2 ? 0.12 : -0.12, 0.3 + i * 0.5, 0.98);
+      g.add(handle);
+    }
+    var cap = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.16, 2.2), trim);
+    cap.position.y = 2.32; cap.castShadow = true;
+    g.add(cap);
+    return g;
+  }
+
+  function makeStudio(hue) {
+    /* Sector B — a dome over a plinth, with a screen facing the field. */
+    var g = new THREE.Group();
+    var body = shellMat();
+    var trim = new THREE.MeshStandardMaterial({ color: hue, metalness: .4, roughness: .35 });
+
+    var plinth = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.7, 1.1, 12), body);
+    plinth.position.y = 0.55; plinth.castShadow = true; plinth.receiveShadow = true;
+    g.add(plinth);
+
+    var dome = new THREE.Mesh(new THREE.SphereGeometry(1.45, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2), trim);
+    dome.position.y = 1.1; dome.castShadow = true;
+    g.add(dome);
+
+    var screen = new THREE.Mesh(
+      new THREE.BoxGeometry(1.5, 0.9, 0.12),
+      new THREE.MeshStandardMaterial({ color: 0x0d1a22, emissive: 0x1c5f74, emissiveIntensity: .7, roughness: .4 })
+    );
+    screen.position.set(0, 1.0, 1.62);
+    g.add(screen);
+
+    var easel = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.1, 6), body);
+    easel.position.set(1.7, 0.55, 0.9);
+    g.add(easel);
+    return g;
+  }
+
+  function makeTower(hue) {
+    /* Sector C — a narrow tower of window bands, like lines on a page. */
+    var g = new THREE.Group();
+    var body = shellMat();
+    var trim = new THREE.MeshStandardMaterial({ color: hue, metalness: .4, roughness: .4 });
+    var glass = new THREE.MeshStandardMaterial({ color: 0x0d1a22, emissive: 0x2b7fa0, emissiveIntensity: .6, roughness: .3 });
+
+    var shaft = new THREE.Mesh(new THREE.BoxGeometry(1.5, 3.4, 1.5), body);
+    shaft.position.y = 1.7; shaft.castShadow = true; shaft.receiveShadow = true;
+    g.add(shaft);
+
+    for (var r = 0; r < 5; r++) {
+      var band = new THREE.Mesh(new THREE.BoxGeometry(1.56, 0.22, 1.56), glass);
+      band.position.y = 0.7 + r * 0.6;
+      g.add(band);
+    }
+
+    var crown = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.9, 0.7, 8), trim);
+    crown.position.y = 3.7; crown.castShadow = true;
+    g.add(crown);
+
+    var mast = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.0, 6), trim);
+    mast.position.y = 4.5;
+    g.add(mast);
+    return g;
+  }
+
+  function makeCommand(hue) {
+    /* Sector D — a wide bunker with a dish that keeps sweeping. */
+    var g = new THREE.Group();
+    var body = shellMat();
+    var trim = new THREE.MeshStandardMaterial({ color: hue, metalness: .4, roughness: .4 });
+
+    var base = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.1, 2.2), body);
+    base.position.y = 0.55; base.castShadow = true; base.receiveShadow = true;
+    g.add(base);
+
+    var deck = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.7, 1.6), body);
+    deck.position.y = 1.45; deck.castShadow = true;
+    g.add(deck);
+
+    var rail = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.12, 2.4), trim);
+    rail.position.y = 1.12;
+    g.add(rail);
+
+    var pylon = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 0.9, 8), body);
+    pylon.position.set(0, 2.2, 0);
+    g.add(pylon);
+
+    var dish = new THREE.Group();
+    var pan = new THREE.Mesh(
+      new THREE.ConeGeometry(0.85, 0.42, 22, 1, true),
+      new THREE.MeshStandardMaterial({ color: hue, metalness: .5, roughness: .3, side: THREE.DoubleSide })
+    );
+    pan.rotation.x = Math.PI;          /* point down, mouth up */
+    dish.add(pan);
+    var horn = new THREE.Mesh(
+      new THREE.SphereGeometry(0.1, 10, 8),
+      new THREE.MeshStandardMaterial({ color: 0x1b2730, roughness: .5 })
+    );
+    horn.position.y = 0.34;
+    dish.add(horn);
+    dish.position.set(0, 2.55, 0);
+    dish.rotation.x = -Math.PI / 7;    /* tipped at the sky, not straight up */
+    dish.name = "dish";
+    g.add(dish);
+    return g;
+  }
+
+  var BUILDERS = { archive: makeArchive, studio: makeStudio, tower: makeTower, command: makeCommand };
+
+  function makeRocket() {
+    /* A lathe profile gives the hull a real silhouette instead of a cylinder. */
+    var g = new THREE.Group();
+    var hull = new THREE.MeshStandardMaterial({ color: 0xe8eeea, metalness: .55, roughness: .3 });
+    var accent = new THREE.MeshStandardMaterial({ color: 0xe2552f, metalness: .4, roughness: .4 });
+    var dark = new THREE.MeshStandardMaterial({ color: 0x1b2730, metalness: .6, roughness: .35, side: THREE.DoubleSide });
+
+    var pts = [[0, 0], [0.62, 0.05], [0.72, 0.55], [0.78, 1.6], [0.74, 3.0], [0.5, 3.9], [0.2, 4.5], [0, 4.9]];
+    var profile = pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); });
+    var body = new THREE.Mesh(new THREE.LatheGeometry(profile, 24), hull);
+    body.castShadow = true;
+    g.add(body);
+
+    var band = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.3, 24), accent);
+    band.position.y = 2.1;
+    g.add(band);
+
+    var glass = new THREE.Mesh(
+      new THREE.SphereGeometry(0.26, 14, 10),
+      new THREE.MeshStandardMaterial({ color: 0x0d1a22, emissive: 0x3aa0b5, emissiveIntensity: .8, roughness: .2 })
+    );
+    glass.position.set(0, 2.9, 0.62);
+    g.add(glass);
+
+    for (var f = 0; f < 3; f++) {
+      var fin = new THREE.Mesh(new THREE.ConeGeometry(0.42, 1.15, 4), accent);
+      var a = (f / 3) * Math.PI * 2;
+      fin.position.set(Math.cos(a) * 0.72, 0.55, Math.sin(a) * 0.72);
+      fin.rotation.y = -a;
+      fin.rotation.z = Math.PI;
+      fin.castShadow = true;
+      g.add(fin);
+    }
+
+    var bell = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.55, 0.5, 16, 1, true), dark);
+    bell.position.y = -0.18;
+    g.add(bell);
+
+    var flame = new THREE.Mesh(
+      new THREE.ConeGeometry(0.32, 1.1, 14),
+      new THREE.MeshBasicMaterial({ color: 0xffd84d, transparent: true, opacity: .85 })
+    );
+    flame.position.y = -0.85;
+    flame.rotation.x = Math.PI;
+    flame.name = "flame";
+    g.add(flame);
+
+    return g;
+  }
+
+  function makeVirus() {
+    /* A spiked core — the original drew flat blobs, these have spikes. */
+    var g = new THREE.Group();
+    var skin = new THREE.MeshStandardMaterial({
+      color: INFECTED, emissive: INFECTED, emissiveIntensity: .55, roughness: .4
+    });
+    g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.3, 0), skin));
+    for (var i = 0; i < 8; i++) {
+      var spike = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.26, 5), skin);
+      var a = (i / 8) * Math.PI * 2;
+      var y = i % 2 ? 0.18 : -0.18;
+      spike.position.set(Math.cos(a) * 0.3, y, Math.sin(a) * 0.3);
+      spike.lookAt(spike.position.clone().multiplyScalar(2));
+      spike.rotateX(Math.PI / 2);
+      g.add(spike);
+    }
+    return g;
+  }
+
+  /* ====================================================================== */
+  /* scene                                                                  */
+  /* ====================================================================== */
+  var three = { ready: false, particles: [] };
+
+  function initThree() {
+    if (typeof THREE === "undefined") return false;
+    var canvas = byId("scene");
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+    } catch (err) {
+      return false;
+    }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    if (THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
+
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x04080c);
+    scene.fog = new THREE.Fog(0x04080c, 24, 52);
+
+    var camera = new THREE.PerspectiveCamera(46, 16 / 10, 0.1, 220);
+
+    scene.add(new THREE.HemisphereLight(0x8ea8b8, 0x0a1410, 0.55));
+    var key = new THREE.DirectionalLight(0xffffff, 0.95);
+    key.position.set(8, 15, 6);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024);
+    key.shadow.camera.left = -16; key.shadow.camera.right = 16;
+    key.shadow.camera.top = 16; key.shadow.camera.bottom = -16;
+    scene.add(key);
+    var padLight = new THREE.PointLight(0xffd84d, 1.2, 14);
+    padLight.position.set(0, 1.2, 0);
+    scene.add(padLight);
+
+    var ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(60, 60),
+      new THREE.MeshStandardMaterial({ color: 0x0c1a16, roughness: 1 })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    var grid = new THREE.GridHelper(48, 48, 0x1d4a30, 0x14312a);
+    grid.position.y = 0.01;
+    if (grid.material) { grid.material.transparent = true; grid.material.opacity = 0.45; }
+    scene.add(grid);
+
+    var pad = new THREE.Mesh(
+      new THREE.CircleGeometry(3.1, 40),
+      new THREE.MeshStandardMaterial({ color: 0x16262f, roughness: .9 })
+    );
+    pad.rotation.x = -Math.PI / 2;
+    pad.position.y = 0.02;
+    pad.receiveShadow = true;
+    scene.add(pad);
+
+    var padRing = new THREE.Mesh(
+      new THREE.TorusGeometry(3.1, 0.06, 8, 48),
+      new THREE.MeshStandardMaterial({ color: 0xffd84d, emissive: 0xffd84d, emissiveIntensity: .35, roughness: .5 })
+    );
+    padRing.rotation.x = -Math.PI / 2;
+    padRing.position.y = 0.05;
+    scene.add(padRing);
+
+    var starGeo = new THREE.BufferGeometry();
+    var starPos = [];
+    for (var s = 0; s < 900; s++) {
+      var rad = 70 + Math.random() * 40;
+      var th = Math.random() * Math.PI * 2;
+      var ph = Math.acos(2 * Math.random() - 1);
+      starPos.push(
+        rad * Math.sin(ph) * Math.cos(th),
+        Math.abs(rad * Math.cos(ph)) + 5,
+        rad * Math.sin(ph) * Math.sin(th)
+      );
+    }
+    starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPos, 3));
+    scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({
+      color: 0xcfe4ea, size: 0.5, sizeAttenuation: true
+    })));
+
+    var rocket = makeRocket();
+    scene.add(rocket);
+
+    var pickables = [], built = {};
+    SECTORS.forEach(function (s) {
+      var group = new THREE.Group();
+      group.position.set(s.pos[0], 0, s.pos[2]);
+      group.lookAt(0, 0, 0);
+
+      var model = BUILDERS[s.build](s.hue);
+      group.add(model);
+
+      var shell = new THREE.Mesh(
+        new THREE.RingGeometry(1.9, 2.5, 40),
+        new THREE.MeshBasicMaterial({ color: INFECTED, transparent: true, opacity: .35, side: THREE.DoubleSide })
+      );
+      shell.rotation.x = -Math.PI / 2;
+      shell.position.y = 0.06;
+      group.add(shell);
+
+      /* One simple hit target rather than every little mesh. */
+      var hit = new THREE.Mesh(
+        new THREE.BoxGeometry(3.6, 4.8, 3.2),
+        new THREE.MeshBasicMaterial({ visible: false })
+      );
+      hit.position.y = 2.2;
+      hit.userData.sector = s.id;
+      group.add(hit);
+      pickables.push(hit);
+
+      var viruses = new THREE.Group();
+      for (var v = 0; v < 4; v++) {
+        var bug = makeVirus();
+        bug.userData.seed = v * 1.7;
+        viruses.add(bug);
+      }
+      viruses.position.y = 3.6;
+      group.add(viruses);
+
+      var dist = Math.sqrt(s.pos[0] * s.pos[0] + s.pos[2] * s.pos[2]);
+      var run = dist - 3.4;
+      var cable = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.05, 0.05, run, 6),
+        new THREE.MeshStandardMaterial({ color: 0x24404a, roughness: .8 })
+      );
+      cable.rotation.x = Math.PI / 2;
+      cable.position.set(0, 0.12, run / 2 + 1.6);
+      group.add(cable);
+
+      scene.add(group);
+      built[s.id] = { group: group, model: model, shell: shell, viruses: viruses, sector: s };
+    });
+
+    three = {
+      ready: true, renderer: renderer, scene: scene, camera: camera,
+      rocket: rocket, built: built, pickables: pickables,
+      raycaster: new THREE.Raycaster(), pointer: new THREE.Vector2(-2, -2),
+      angle: VIEWS.orbit.angle, height: VIEWS.orbit.height, distance: VIEWS.orbit.distance,
+      dragging: false, moved: 0, lastX: 0, lastY: 0,
+      hover: null, tipX: 0, tipY: 0, particles: []
+    };
+
+    placeCamera();
+    resize();
+    window.addEventListener("resize", resize);
+    bindPointer(canvas);
+    animate();
+    return true;
+  }
+
+  function placeCamera() {
+    var flat = three.flat || 0;
+    three.camera.position.set(
+      Math.cos(three.angle) * three.distance,
+      three.height * (1 - 0.34 * flat),
+      Math.sin(three.angle) * three.distance
+    );
+    three.camera.lookAt(0, 1.6 - 1.5 * flat, 0);
+  }
+
+  function resize() {
+    var stage = byId("stage");
+    var w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h) return;
+    three.renderer.setSize(w, h, false);
+    three.camera.aspect = w / h;
+    /* How far the frame has flattened past the 16:10 the shot was composed
+       for. Pulling the camera back at that point only shrinks the field; what
+       it needs is to drop and aim lower, so the buildings sit mid-frame. */
+    three.flat = Math.min(1, Math.max(0, (w / h) - 1.6) / 2.4);
+    three.camera.updateProjectionMatrix();
+    placeCamera();
+  }
+
+  function bindPointer(canvas) {
+    canvas.addEventListener("pointerdown", function (e) {
+      three.dragging = true; three.moved = 0;
+      three.lastX = e.clientX; three.lastY = e.clientY;
+      canvas.classList.add("is-dragging");
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    canvas.addEventListener("pointermove", function (e) {
+      var r = canvas.getBoundingClientRect();
+      three.pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+      three.pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+      three.tipX = e.clientX - r.left;
+      three.tipY = e.clientY - r.top;
+      if (!three.dragging) return;
+      var dx = e.clientX - three.lastX, dy = e.clientY - three.lastY;
+      three.moved += Math.abs(dx) + Math.abs(dy);
+      three.angle -= dx * 0.006;
+      three.height = Math.max(2.5, Math.min(24, three.height + dy * 0.05));
+      three.lastX = e.clientX; three.lastY = e.clientY;
+      placeCamera();
+    });
+    function release() {
+      canvas.classList.remove("is-dragging");
+      /* a short press is a click, a long one was a drag */
+      if (three.dragging && three.moved < 6) pick();
+      three.dragging = false;
+    }
+    canvas.addEventListener("pointerup", release);
+    canvas.addEventListener("pointercancel", release);
+    canvas.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      three.distance = Math.max(9, Math.min(36, three.distance + e.deltaY * 0.012));
+      placeCamera();
+    }, { passive: false });
+  }
+
+  function pick() {
+    three.raycaster.setFromCamera(three.pointer, three.camera);
+    var hits = three.raycaster.intersectObjects(three.pickables, false);
+    if (hits.length) openSector(hits[0].object.userData.sector);
+  }
+
+  function burst(id) {
+    /* the cleaning particles the original fired when a sector came free */
+    var b = three.built[id];
+    var geo = new THREE.BufferGeometry();
+    var pos = [], vel = [];
+    for (var i = 0; i < 140; i++) {
+      pos.push(0, 3.4, 0);
+      vel.push((Math.random() - .5) * .3, Math.random() * .28 + .05, (Math.random() - .5) * .3);
+    }
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+    var pts = new THREE.Points(geo, new THREE.PointsMaterial({
+      color: b.sector.hue, size: .18, transparent: true, opacity: 1
+    }));
+    b.group.add(pts);
+    three.particles.push({ points: pts, vel: vel, life: 0, group: b.group });
+  }
+
+  function paintSectors() {
+    if (!three.ready) return;
+    SECTORS.forEach(function (s) {
+      var b = three.built[s.id];
+      var clear = isClear(s.id);
+      b.shell.visible = !clear;
+      b.viruses.visible = !clear;
+    });
+  }
+
+  var clock = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    if (!three.ready) return;
+    clock += 0.016;
+
+    three.rocket.position.y = Math.sin(clock * 1.2) * 0.06;
+    var flame = three.rocket.getObjectByName("flame");
+    if (flame) flame.scale.y = 0.8 + Math.abs(Math.sin(clock * 6)) * 0.5;
+
+    SECTORS.forEach(function (s, si) {
+      var b = three.built[s.id];
+      if (b.viruses.visible) {
+        b.viruses.children.forEach(function (bug) {
+          var a = clock * 0.9 + bug.userData.seed + si;
+          bug.position.set(Math.cos(a) * 1.5, Math.sin(a * 1.6) * 0.35, Math.sin(a) * 1.5);
+          bug.rotation.y += 0.03;
+          bug.rotation.x += 0.02;
+        });
+      }
+      var dish = b.model.getObjectByName("dish");
+      if (dish) dish.rotation.z = Math.sin(clock * 0.4) * 0.6;
+
+      var lift = three.hover === s.id ? 0.25 : 0;
+      b.model.position.y += (lift - b.model.position.y) * 0.15;
+    });
+
+    for (var p = three.particles.length - 1; p >= 0; p--) {
+      var item = three.particles[p];
+      var arr = item.points.geometry.attributes.position.array;
+      for (var i = 0; i < arr.length; i += 3) {
+        arr[i] += item.vel[i];
+        arr[i + 1] += item.vel[i + 1];
+        arr[i + 2] += item.vel[i + 2];
+        item.vel[i + 1] -= 0.006;
+      }
+      item.points.geometry.attributes.position.needsUpdate = true;
+      item.life += 0.016;
+      item.points.material.opacity = Math.max(0, 1 - item.life / 1.6);
+      if (item.life > 1.6) {
+        item.group.remove(item.points);
+        item.points.geometry.dispose();
+        item.points.material.dispose();
+        three.particles.splice(p, 1);
+      }
+    }
+
+    if (!three.dragging) {
+      three.raycaster.setFromCamera(three.pointer, three.camera);
+      var hits = three.raycaster.intersectObjects(three.pickables, false);
+      var id = hits.length ? hits[0].object.userData.sector : null;
+      if (id !== three.hover) {
+        three.hover = id;
+        byId("scene").classList.toggle("is-over", !!id);
+        var tip = byId("tip");
+        tip.hidden = !id;
+        if (id) tip.textContent = t().sector + " " + id + " · " + t().names[id][0];
+      }
+      if (three.hover) {
+        var tip2 = byId("tip");
+        tip2.style.left = three.tipX + "px";
+        tip2.style.top = three.tipY + "px";
+      }
+    }
+
+    three.renderer.render(three.scene, three.camera);
+  }
+
+  /* ====================================================================== */
+  /* page                                                                   */
+  /* ====================================================================== */
+  /* ======================================================================
+     The four jobs. A sector stays with the virus until the job inside it is
+     done, and each one asks for a different movement: pick and bin, connect,
+     hold, pull. A sector that opens with the same puzzle as the last one is
+     not worth opening.
+
+     Every builder paints into `host` and calls `won()` once, when solved.
+     ====================================================================== */
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  /* --- A · file archive: bin the virus files, leave ours alone ---------- */
+  function jobArchive(host, won) {
+    var d = t(), g = d.jobs.A;
+    host.appendChild(el("p", "job__head", g.head));
+
+    var files = [
+      { name: "rocket-plan.png", size: "412 KB" },
+      { name: "x7d9~tmp.bin", size: "3 KB", bad: true },
+      { name: "crew-list.txt", size: "2 KB" },
+      { name: "launch-log.txt", size: "88 KB" },
+      { name: "qq00~tmp.bin", size: "3 KB", bad: true },
+      { name: "mars-route.svg", size: "31 KB" },
+      { name: "zz41~tmp.bin", size: "3 KB", bad: true }
+    ];
+    var picked = {}, gone = {};
+
+    var list = el("div", "files");
+    var rows = files.map(function (f, i) {
+      var b = el("button", "file" + (f.bad ? " is-bad" : ""));
+      b.type = "button";
+      b.setAttribute("aria-pressed", "false");
+      b.append(el("span", "file__dot"), el("span", null, f.name), el("span", "file__size", f.size));
+      b.onclick = function () {
+        if (gone[i]) return;
+        picked[i] = !picked[i];
+        b.setAttribute("aria-pressed", String(!!picked[i]));
+      };
+      list.appendChild(b);
+      return b;
+    });
+    host.appendChild(list);
+
+    var note = el("p", "muted");
+    note.style.fontSize = "var(--t-2xs)";
+    note.textContent = g.hint;
+    host.appendChild(note);
+
+    var bin = el("button", "btn btn--danger");
+    bin.type = "button";
+    bin.textContent = g.action;
+    bin.onclick = function () {
+      var chose = files.map(function (_, i) { return !!picked[i]; });
+      if (!chose.some(Boolean)) { note.textContent = g.pickFirst; return; }
+
+      /* Taking one of ours costs the whole selection: the lesson is to read
+         the names before pressing delete, not to delete quickly. */
+      if (files.some(function (f, i) { return chose[i] && !f.bad; })) {
+        picked = {};
+        rows.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+        note.textContent = g.oops;
+        return;
+      }
+
+      files.forEach(function (f, i) {
+        if (chose[i]) { gone[i] = true; rows[i].classList.add("is-gone"); }
+      });
+      picked = {};
+      if (files.every(function (f, i) { return !f.bad || gone[i]; })) {
+        bin.disabled = true;
+        won();
+      } else {
+        note.textContent = g.more;
+      }
+    };
+    var row = el("div", "row");
+    row.appendChild(bin);
+    host.appendChild(row);
+  }
+
+  /* --- B · graphics station: put the colours back on their sockets ------ */
+  function jobWires(host, won) {
+    var d = t(), g = d.jobs.B;
+    host.appendChild(el("p", "job__head", g.head));
+
+    var COLS = ["#e2552f", "#f5b800", "#0a8754", "#12798f"];
+    var RIGHT = ["#12798f", "#0a8754", "#e2552f", "#f5b800"];
+
+    var wrap = el("div", "wires");
+    var left = el("div", "wires__col"), rcol = el("div", "wires__col");
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    wrap.append(left, svg, rcol);
+    host.appendChild(wrap);
+
+    var from = null, live = null, joined = 0;
+
+    function centre(node) {
+      var a = node.getBoundingClientRect(), b = wrap.getBoundingClientRect();
+      return [a.left - b.left + a.width / 2, a.top - b.top + a.height / 2];
+    }
+    function curve(x1, y1, x2, y2) {
+      var mx = (x1 + x2) / 2;
+      return "M" + x1 + " " + y1 + " C" + mx + " " + y1 + " " + mx + " " + y2 + " " + x2 + " " + y2;
+    }
+    function line(x1, y1, x2, y2, colour) {
+      var l = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      l.setAttribute("stroke", colour);
+      l.setAttribute("stroke-width", "7");
+      l.setAttribute("stroke-linecap", "round");
+      l.setAttribute("fill", "none");
+      l.setAttribute("d", curve(x1, y1, x2, y2));
+      svg.appendChild(l);
+      return l;
+    }
+    function dropLive() {
+      if (live && live.parentNode) live.parentNode.removeChild(live);
+      live = null;
+    }
+
+    COLS.forEach(function (c) {
+      var b = el("button", "plug");
+      b.type = "button"; b.style.background = c;
+      b.dataset.colour = c;
+      b.setAttribute("aria-label", g.wire);
+      b.addEventListener("pointerdown", function (e) {
+        if (b.classList.contains("is-done")) return;
+        e.preventDefault();
+        dropLive();
+        from = b;
+        var p0 = centre(b);
+        live = line(p0[0], p0[1], p0[0], p0[1], c);
+        live.setAttribute("opacity", ".65");
+      });
+      left.appendChild(b);
+    });
+
+    function tryJoin(target) {
+      if (!from || target.classList.contains("is-done")) return;
+      if (target.dataset.colour !== from.dataset.colour) {
+        dropLive();
+        from = null;
+        return;
+      }
+      var a = centre(from), b2 = centre(target);
+      dropLive();
+      line(a[0], a[1], b2[0], b2[1], target.dataset.colour);
+      from.classList.add("is-done");
+      target.classList.add("is-done");
+      from = null;
+      if (++joined === COLS.length) won();
+    }
+
+    RIGHT.forEach(function (c) {
+      var b = el("button", "plug");
+      b.type = "button"; b.style.background = c;
+      b.dataset.colour = c;
+      b.setAttribute("aria-label", g.socket);
+      b.onclick = function () { tryJoin(b); };
+      rcol.appendChild(b);
+    });
+
+    wrap.addEventListener("pointermove", function (e) {
+      if (!live || !from) return;
+      var box = wrap.getBoundingClientRect(), a = centre(from);
+      live.setAttribute("d", curve(a[0], a[1], e.clientX - box.left, e.clientY - box.top));
+    });
+    /* Releasing over a socket joins. Releasing anywhere else leaves the wire
+       armed, so tap-then-tap works as well as a drag. */
+    wrap.addEventListener("pointerup", function (e) {
+      if (!from) return;
+      var hit = document.elementFromPoint(e.clientX, e.clientY);
+      if (hit && hit.classList.contains("plug") && hit.parentNode === rcol) tryJoin(hit);
+    });
+  }
+
+  /* --- C · text module: hold the purge down while the virus fights back -- */
+  function jobPurge(host, won) {
+    var d = t(), g = d.jobs.C;
+    host.appendChild(el("p", "job__head", g.head));
+
+    var box = el("div", "purge");
+    var btn = el("button", "purge__btn", g.action);
+    btn.type = "button";
+    var meter = el("div", "purge__meter");
+    var fill = el("i");
+    meter.appendChild(fill);
+    box.append(btn, meter);
+    host.appendChild(box);
+
+    var pct = 0, down = false, last = 0, knock = 0, done = false;
+
+    function press(on) {
+      if (done) return;
+      down = on;
+      btn.classList.toggle("is-down", on);
+    }
+    btn.addEventListener("pointerdown", function (e) { e.preventDefault(); press(true); });
+    window.addEventListener("pointerup", function () { press(false); });
+    btn.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); press(true); }
+    });
+    btn.addEventListener("keyup", function (e) {
+      if (e.key === " " || e.key === "Enter") press(false);
+    });
+
+    function step(now) {
+      /* The panel is rebuilt on every render, so a loop whose host has left
+         the document has to stop rather than keep burning frames. */
+      if (done) return;
+      if (!host.isConnected) { clearInterval(tick); return; }
+      if (!last) last = now;
+      var dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+
+      pct += down ? dt * 34 : -dt * 42;
+      knock += dt;
+      if (down && knock > 1.5) {
+        knock = 0;
+        pct -= 16;
+        meter.classList.add("is-hit");
+        setTimeout(function () { meter.classList.remove("is-hit"); }, 220);
+      }
+      pct = Math.max(0, Math.min(100, pct));
+      fill.style.width = pct + "%";
+
+      if (pct >= 100) {
+        done = true;
+        btn.disabled = true;
+        btn.classList.remove("is-down");
+        clearInterval(tick);
+        won();
+      }
+    }
+    var tick = setInterval(function () { step(performance.now()); }, 33);
+  }
+
+  /* --- D · command centre: pull the lever down and hold it there -------- */
+  function jobLever(host, won) {
+    var d = t(), g = d.jobs.D;
+    host.appendChild(el("p", "job__head", g.head));
+
+    var box = el("div", "lever");
+    var track = el("div", "lever__track");
+    var fillEl = el("div", "lever__fill");
+    var grip = el("div", "lever__grip");
+    grip.tabIndex = 0;
+    grip.setAttribute("role", "slider");
+    grip.setAttribute("aria-label", g.action);
+    track.appendChild(fillEl);
+    box.append(track, grip);
+    host.appendChild(box);
+
+    var TOP = 0, BOT = 156;          /* 190 tall, less the 34 of the grip */
+    var y = TOP, dragging = false, held = 0, keyDown = false, done = false, last = 0;
+
+    function place() {
+      grip.style.top = y + "px";
+      fillEl.style.height = Math.round((y / BOT) * 100) + "%";
+    }
+    place();
+
+    grip.addEventListener("pointerdown", function (e) {
+      e.preventDefault();
+      dragging = true;
+      grip.setPointerCapture(e.pointerId);
+    });
+    grip.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var b = box.getBoundingClientRect();
+      y = Math.max(TOP, Math.min(BOT, e.clientY - b.top - 17));
+      place();
+    });
+    grip.addEventListener("pointerup", function () { dragging = false; });
+    grip.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown") { e.preventDefault(); keyDown = true; }
+    });
+    grip.addEventListener("keyup", function (e) {
+      if (e.key === "ArrowDown") keyDown = false;
+    });
+
+    function step(now) {
+      if (done) return;
+      if (!host.isConnected) { clearInterval(tick); return; }
+      if (!last) last = now;
+      var dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+
+      if (keyDown) { y = Math.min(BOT, y + dt * 220); place(); }
+      /* Let go and the spring takes it back, so the lever has to be held. */
+      if (!dragging && !keyDown && y > TOP) { y = Math.max(TOP, y - dt * 150); place(); }
+
+      held = y >= BOT - 2 ? held + dt : 0;
+      if (held >= 1.2) {
+        done = true;
+        grip.style.pointerEvents = "none";
+        clearInterval(tick);
+        won();
+      }
+    }
+    var tick = setInterval(function () { step(performance.now()); }, 33);
+  }
+
+  var JOBS = { A: jobArchive, B: jobWires, C: jobPurge, D: jobLever };
+
+  function paintJob() {
+    var host = byId("job");
+    host.innerHTML = "";
+    if (!open) return;
+    if (isClear(open)) {
+      host.appendChild(el("p", "job__done", t().jobDone));
+      return;
+    }
+    JOBS[open](host, markDone);
+  }
+
+  function openSector(id) {
+    open = id;
+    clearSay();
+    render();
+    byId("panel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  /* The original asked for a code the task printed at the end, so a platform
+     could tell the task had been done. There is no platform here and the tasks
+     no longer print one, so the child just says when a sector is finished. */
+  function markDone() {
+    var d = t();
+    if (isClear(open)) return;
+    manual[open] = true;
+    if (three.ready) burst(open);
+    render();
+    say("ok", d.right(open));
+
+    if (SECTORS.every(function (x) { return isClear(x.id); })) {
+      beat = 0;
+      render();
+      byId("endgame").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }
+
+  function render() {
+    var d = t();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (n) {
+      var v = d[n.dataset.t];
+      if (typeof v === "string") n.textContent = v;
+    });
+    document.querySelectorAll("[data-tp]").forEach(function (n) {
+      n.placeholder = d[n.dataset.tp] || "";
+    });
+
+    var views = byId("views");
+    views.innerHTML = "";
+    if (three.ready) {
+      Object.keys(VIEWS).forEach(function (key) {
+        var b = el("button", null, d.views[key]);
+        b.type = "button";
+        b.onclick = function () {
+          three.angle = VIEWS[key].angle;
+          three.height = VIEWS[key].height;
+          three.distance = VIEWS[key].distance;
+          placeCamera();
+        };
+        views.appendChild(b);
+      });
+    }
+
+    var count = SECTORS.filter(function (s) { return isClear(s.id); }).length;
+    byId("score").innerHTML = count + "<span class=\"muted\">/" + SECTORS.length + "</span>";
+
+    var lg = byId("legend"); lg.innerHTML = "";
+    SECTORS.forEach(function (s) {
+      var done = isClear(s.id);
+      var b = el("button", "lg" + (done ? " is-clear" : ""));
+      b.type = "button";
+      var dot = el("span", "lg__dot");
+      dot.style.background = done ? hex(s.hue) : hex(INFECTED);
+      b.appendChild(dot);
+      b.appendChild(el("span", null, d.sector + " " + s.id + " · " + d.names[s.id][0]));
+      b.appendChild(el("span", "lg__state", done ? d.clear : d.infected));
+      b.onclick = function () { openSector(s.id); };
+      lg.appendChild(b);
+    });
+
+    byId("panel").hidden = !open;
+    if (open) {
+      byId("panelTag").textContent = d.sector + " " + open;
+      byId("panelName").textContent = d.names[open][0];
+      byId("panelWhat").textContent = d.names[open][1];
+      paintJob();
+      byId("codeWrap").hidden = isClear(open);
+    }
+
+    byId("endgame").hidden = !(beat >= 0 && beat < d.endgame.length);
+    if (beat >= 0 && beat < d.endgame.length) {
+      var e = d.endgame[beat];
+      byId("virusFace").textContent = e.face;
+      byId("virusLine").textContent = e.line;
+      byId("virusSub").textContent = e.sub;
+      byId("virusNext").textContent = e.btn;
+    }
+    byId("won").hidden = !(beat >= d.endgame.length);
+
+    paintSectors();
+  }
+
+  byId("closePanel").onclick = function () { open = null; clearSay(); render(); };
+  byId("virusNext").onclick = function () { beat++; render(); };
+  byId("again").onclick = function () {
+    forgetProgress(); open = null; beat = -1;
+    clearSay(); render();
+  };
+  byId("reset").onclick = function () {
+    forgetProgress(); open = null; beat = -1;
+    clearSay(); render();
+  };
+
+  /* Coming back from a task should show it ticked off, so re-read the store
+     whenever the page is looked at again, and when another tab writes to it. */
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) render();
+  });
+  window.addEventListener("focus", render);
+  window.addEventListener("storage", render);
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      render();
+    };
+  });
+
+  if (!initThree()) {
+    var stage = byId("stage");
+    stage.innerHTML = "";
+    var box = el("div", "fallback");
+    box.appendChild(el("p", "muted", T[lang].noWebgl));
+    stage.appendChild(box);
+  }
+  render();
+})();
+</script>
+</body>
+</html>

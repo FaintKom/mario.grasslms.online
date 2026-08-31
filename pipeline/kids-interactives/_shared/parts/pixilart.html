@@ -1,0 +1,199 @@
+<style>
+/* ==========================================================================
+   Pixilart's editor, drawn in CSS.
+
+   The recognisable parts are the dark shell, the narrow two-column tool rail
+   down the left, the canvas floating on a dark checkered ground, and the
+   stacked panels on the right under small uppercase headers. Prefixed .px- so
+   nothing here can reach the GrassLMS page around it.
+
+   The lesson page stays light: the studio is a window sitting on it, the way
+   the real editor sits on a desktop.
+   ========================================================================== */
+
+.px {
+  --px-bg: #1b1d21;
+  --px-panel: #26282e;
+  --px-panel-2: #2e3138;
+  --px-line: #383b43;
+  --px-text: #e6e8eb;
+  --px-dim: #9aa0a8;
+  --px-accent: #ef4d55;
+
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--px-bg);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .28);
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--px-text);
+  -webkit-font-smoothing: antialiased;
+}
+.px svg { display: block; }
+
+/* ---- title bar ---------------------------------------------------------- */
+.px__top {
+  display: flex; align-items: center; gap: 14px;
+  height: 40px; padding: 0 12px;
+  background: var(--px-panel);
+  border-bottom: 1px solid var(--px-line);
+  font-size: 13px;
+}
+.px__logo { display: flex; align-items: center; gap: 7px; font-weight: 700; letter-spacing: -.01em; }
+.px__logo svg { width: 18px; height: 18px; }
+.px__menu { display: flex; gap: 2px; }
+.px__menu span { padding: 4px 8px; border-radius: 4px; color: var(--px-dim); font-size: 12px; }
+.px__menu span:hover { background: rgba(255, 255, 255, .07); color: var(--px-text); }
+.px__file { margin-left: auto; color: var(--px-dim); font-size: 12px; }
+.px__save {
+  padding: 5px 12px; border-radius: 4px;
+  background: var(--px-accent); color: #fff; font-size: 12px; font-weight: 600;
+}
+
+/* ---- the three columns -------------------------------------------------- */
+.px__body { display: grid; grid-template-columns: 96px minmax(0, 1fr) 230px; }
+@media (max-width: 1040px) {
+  .px__body { grid-template-columns: 96px minmax(0, 1fr); }
+  .px__side { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--px-line); }
+}
+@media (max-width: 640px) {
+  .px__body { grid-template-columns: 1fr; }
+  .px__rail { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 1px solid var(--px-line); }
+}
+
+.px__rail {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 10px 8px;
+  background: var(--px-panel);
+  border-right: 1px solid var(--px-line);
+}
+.px__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.px-tool {
+  position: relative;
+  width: 100%; aspect-ratio: 1;
+  display: grid; place-items: center;
+  border: 1px solid transparent; border-radius: 4px;
+  background: var(--px-panel-2);
+  color: var(--px-dim); cursor: pointer; padding: 0;
+}
+.px-tool:hover { background: #363a42; color: var(--px-text); }
+.px-tool[aria-pressed="true"] { background: var(--px-accent); border-color: #ff6b70; color: #fff; }
+.px-tool svg { width: 20px; height: 20px; }
+/* A tool that has been used gets a corner tick, so the lesson can show its
+   progress without bolting on a widget the real editor has no room for. */
+.px-tool__done { position: absolute; right: 3px; bottom: 2px; font-size: 9px; line-height: 1; color: #6ee7a8; }
+.px-tool[aria-pressed="true"] .px-tool__done { color: #fff; }
+
+.px__railhead {
+  font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  color: #6f757e; padding-left: 2px;
+}
+.px__sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.px__sizes button {
+  aspect-ratio: 1; display: grid; place-items: center;
+  border: 1px solid transparent; border-radius: 4px;
+  background: var(--px-panel-2); cursor: pointer; padding: 0;
+}
+.px__sizes button i { display: block; border-radius: 50%; background: var(--px-dim); }
+.px__sizes button[aria-pressed="true"] { background: var(--px-accent); }
+.px__sizes button[aria-pressed="true"] i { background: #fff; }
+
+.px-railbtn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  height: 30px; border: 0; border-radius: 4px;
+  background: var(--px-panel-2); color: var(--px-dim);
+  font: inherit; font-size: 11px; cursor: pointer;
+}
+.px-railbtn:hover { background: #3a2226; color: #ff8a8f; }
+.px-railbtn svg { width: 14px; height: 14px; }
+
+/* ---- canvas stage ------------------------------------------------------- */
+.px__stage {
+  display: grid; place-items: center;
+  padding: 18px;
+  background: repeating-conic-gradient(#202226 0 25%, #24272c 0 50%) 0 0 / 16px 16px;
+  min-height: 300px;
+}
+.px__stage canvas {
+  width: 100%; height: auto; display: block;
+  max-height: min(50svh, 500px); object-fit: contain;
+  border: 1px solid #4a4e57;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .45);
+  background: #fff;
+  touch-action: none; cursor: crosshair;
+}
+
+/* ---- right panels ------------------------------------------------------- */
+.px__side {
+  background: var(--px-panel);
+  border-left: 1px solid var(--px-line);
+  display: flex; flex-direction: column;
+}
+.px-panel { border-bottom: 1px solid var(--px-line); padding: 10px; }
+.px-panel:last-child { border-bottom: 0; flex: 1; }
+.px-panel__head {
+  font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  color: #6f757e; margin-bottom: 8px;
+}
+.px__swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.px__swatches button {
+  aspect-ratio: 1; padding: 0; cursor: pointer;
+  border: 2px solid transparent; border-radius: 3px;
+}
+.px__swatches button[aria-pressed="true"] { border-color: #fff; box-shadow: 0 0 0 1px var(--px-accent); }
+
+.px__current { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 11px; color: var(--px-dim); }
+.px__current i { width: 22px; height: 22px; border-radius: 3px; border: 1px solid #4a4e57; }
+
+.px__check { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--px-text); cursor: pointer; }
+.px__check input { accent-color: var(--px-accent); }
+
+/* Steps live where Pixilart keeps layers: same panel, same header. */
+.px-step {
+  display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px;
+  align-items: start; font-size: 11px; line-height: 1.45;
+  color: #7d838c; padding: 4px 0;
+}
+.px-step__dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1px solid #4a4e57; background: var(--px-panel-2);
+  display: grid; place-items: center; font-size: 9px;
+}
+.px-step.is-now { color: var(--px-text); font-weight: 600; }
+.px-step.is-now .px-step__dot { border-color: var(--px-accent); color: #ff9095; }
+.px-step.is-done { color: #5e646c; }
+.px-step.is-done .px-step__dot { background: #2f7d4f; border-color: #2f7d4f; color: #fff; }
+
+/* ---- status bar --------------------------------------------------------- */
+.px__status {
+  display: flex; align-items: center; gap: 16px;
+  height: 26px; padding: 0 12px;
+  background: var(--px-panel);
+  border-top: 1px solid var(--px-line);
+  font-size: 11px; color: #6f757e;
+}
+.px__status b { margin-left: auto; font-weight: 400; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="px-logo" viewBox="0 0 24 24">
+      <rect x="2" y="2" width="20" height="20" rx="3" fill="#ef4d55"/>
+      <path d="M8 17V7h4.6a3.2 3.2 0 0 1 0 6.4H10.6V17z" fill="#fff"/>
+    </symbol>
+    <symbol id="px-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15.5 4.5l4 4L9 19l-5 1 1-5z"/><path d="M13.5 6.5l4 4"/>
+    </symbol>
+    <symbol id="px-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="12" cy="12" r="8"/>
+    </symbol>
+    <symbol id="px-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="4.5" y="4.5" width="15" height="15" rx="1"/>
+    </symbol>
+    <symbol id="px-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+      <path d="M12 4.5L20 19H4z"/>
+    </symbol>
+    <symbol id="px-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 7h16M10 4h4M6 7l1 13h10l1-13"/>
+    </symbol>
+  </defs>
+</svg>

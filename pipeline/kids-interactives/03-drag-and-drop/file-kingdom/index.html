@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File Kingdom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  body { padding: var(--s-6) 0 var(--s-12); }
+
+  .board { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--s-5); }
+  @media (max-width: 780px) { .board { grid-template-columns: 1fr; } }
+
+  .tray { display: flex; flex-wrap: wrap; gap: var(--s-2); align-content: start; min-height: var(--control-md); }
+  .tray:empty::after { content: attr(data-empty); color: var(--color-text-subtle); font-size: var(--t-sm); }
+
+  .token { font-family: var(--font-mono); font-size: var(--t-sm); }
+  .token[aria-pressed="true"] {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+    box-shadow: var(--ring-focus);
+  }
+
+  .bins { display: grid; gap: var(--s-3); }
+  .bin { display: grid; gap: var(--s-2); }
+  .bin__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-2); }
+  .bin__name { font-weight: 700; font-size: var(--t-sm); }
+  .bin__rule { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); }
+  .dropzone { display: flex; flex-wrap: wrap; gap: var(--s-2); align-content: start; cursor: pointer; }
+
+  .placed {
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    padding: var(--s-1) var(--s-3);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    font-family: var(--font-mono); font-size: var(--t-xs);
+  }
+  .placed button {
+    border: 0; background: none; cursor: pointer; padding: 0 var(--s-1);
+    color: var(--color-text-subtle); font: inherit; line-height: 1;
+  }
+  .placed.is-correct::before { content: "✓"; color: var(--color-success-fg); font-weight: 700; }
+  .placed.is-wrong::before   { content: "✕"; color: var(--color-danger-fg);  font-weight: 700; }
+
+  .done { display: none; }
+  .done[data-open] { display: block; }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--wide stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Ages 8–10 · file management</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">File</span> <em class="mark" data-t="title2">Kingdom</em></h1>
+    <p class="lede" data-t="intro">Files are scattered across the kingdom. Put each one back where it belongs.</p>
+  </header>
+
+  <div class="hud">
+    <div class="row">
+      <span class="eyebrow" data-t="levelLabel">Level</span>
+      <span class="hud__score" id="levelNum">1</span>
+    </div>
+    <div class="steps" style="flex:1; min-width:160px;" aria-hidden="true">
+      <i id="step1" class="is-current"></i><i id="step2"></i>
+    </div>
+    <div class="row">
+      <span class="eyebrow" data-t="placedLabel">Sorted</span>
+      <span class="hud__score" id="score">0</span>
+    </div>
+  </div>
+
+  <section class="card stack" aria-labelledby="taskTitle">
+    <div class="stack stack--tight">
+      <h2 id="taskTitle" data-t="ltitle">Sort by extension</h2>
+      <p class="muted" data-t="lbrief">Every file name ends with a dot and a few letters. That ending says what kind of file it is. Pick a file, then pick its room.</p>
+    </div>
+
+    <div class="board">
+      <div class="stack stack--tight">
+        <p class="eyebrow" data-t="trayLabel">Files waiting</p>
+        <div class="tray" id="tray" data-empty="All sorted."></div>
+      </div>
+      <div class="bins" id="bins"></div>
+    </div>
+
+    <div id="feedback" hidden></div>
+
+    <div class="row">
+      <button class="btn" id="check" data-t="check">Check</button>
+      <button class="btn btn--ghost" id="reset" data-t="reset">Start over</button>
+    </div>
+  </section>
+
+  <section class="card done" id="done" aria-live="polite">
+    <div class="stack">
+      <h2 data-t="doneTitle">The archive is back in order</h2>
+      <p class="muted" id="doneBody"></p>
+      <div class="row">
+        <button class="btn" id="next" data-t="next">Next level</button>
+        <button class="btn btn--ghost" id="again" data-t="again">Play again</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Progress. One shared key, so the sector map can see which tasks are done.
+     try/catch throughout — a private window or blocked site data makes
+     localStorage throw rather than hand back null. */
+  const TASK_ID = "fk";
+  function remember() {
+    try {
+      const key = "kids.progress.v1";
+      const seen = JSON.parse(localStorage.getItem(key) || "{}");
+      seen[TASK_ID] = true;
+      localStorage.setItem(key, JSON.stringify(seen));
+    } catch (err) {}
+  }
+
+  /* Level three came from a separate page in the cosmodrome quest: three
+     characters, and files that belong to whoever does that job. Same exercise,
+     recast into this page's fiction so the castle does not suddenly fill with
+     robots. The 2-2-2 split is the original: guessing cannot land on a shape
+     that looks plausible. */
+  const LEVELS = [
+    {
+      bins: [
+        { id: "doc",   en: "Documents", es: "Documentos", rule: ".txt .doc .pdf" },
+        { id: "img",   en: "Pictures",  es: "Imágenes",   rule: ".jpg .png" },
+        { id: "audio", en: "Audio",     es: "Audio",      rule: ".mp3" },
+        { id: "video", en: "Video",     es: "Vídeo",      rule: ".mp4" },
+        { id: "zip",   en: "Archives",  es: "Comprimidos", rule: ".zip" }
+      ],
+      items: [
+        { id: "f1", bin: "doc",   en: "old-tale.txt",      es: "cuento-viejo.txt" },
+        { id: "f2", bin: "img",   en: "castle.jpg",        es: "castillo.jpg" },
+        { id: "f3", bin: "audio", en: "royal-song.mp3",    es: "cancion-real.mp3" },
+        { id: "f4", bin: "video", en: "tournament.mp4",    es: "torneo.mp4" },
+        { id: "f5", bin: "zip",   en: "treasure-list.zip", es: "lista-tesoro.zip" },
+        { id: "f6", bin: "doc",   en: "kings-order.doc",   es: "orden-del-rey.doc" },
+        { id: "f7", bin: "img",   en: "kingdom-map.png",   es: "mapa-del-reino.png" },
+        { id: "f8", bin: "doc",   en: "manuscript.pdf",    es: "manuscrito.pdf" }
+      ]
+    },
+    {
+      bins: [
+        { id: "music",   en: "Music",   es: "Música",   rule: "" },
+        { id: "art",     en: "Art",     es: "Arte",     rule: "" },
+        { id: "science", en: "Science", es: "Ciencia",  rule: "" },
+        { id: "animals", en: "Animals", es: "Animales", rule: "" }
+      ],
+      items: [
+        { id: "g1",  bin: "music",   en: "Sheet music for the royal waltz", es: "Partitura del vals real" },
+        { id: "g2",  bin: "art",     en: "Portrait of the princess",        es: "Retrato de la princesa" },
+        { id: "g3",  bin: "science", en: "The alchemist's formulas",        es: "Fórmulas del alquimista" },
+        { id: "g4",  bin: "animals", en: "Horses of the royal stable",      es: "Caballos del establo real" },
+        { id: "g5",  bin: "music",   en: "The magic flute",                 es: "La flauta mágica" },
+        { id: "g6",  bin: "art",     en: "Mosaic of the throne room",       es: "Mosaico del salón del trono" },
+        { id: "g7",  bin: "science", en: "Map of the night sky",            es: "Mapa del cielo nocturno" },
+        { id: "g8",  bin: "animals", en: "Creatures of the forest",         es: "Criaturas del bosque" },
+        { id: "g9",  bin: "music",   en: "Songs of the minstrels",          es: "Canciones de los juglares" },
+        { id: "g10", bin: "art",     en: "Chapel stained glass",            es: "Vidrieras de la capilla" },
+        { id: "g11", bin: "science", en: "Gears of the clock tower",        es: "Engranajes del reloj" },
+        { id: "g12", bin: "animals", en: "Dragons at the border",           es: "Dragones en la frontera" }
+      ]
+    },
+    {
+      bins: [
+        { id: "cook",  en: "Royal cook", es: "Cocinera real", rule: "", ruleEn: "anything you can eat", ruleEs: "todo lo que se come" },
+        { id: "smith", en: "Blacksmith", es: "Herrero", rule: "", ruleEn: "anything that gets mended", ruleEs: "todo lo que se repara" },
+        { id: "maps",  en: "Map-maker", es: "Cartógrafo", rule: "", ruleEn: "anywhere you can travel", ruleEs: "todo lo que se recorre" }
+      ],
+      items: [
+        { id: "r1", bin: "cook",  en: "soup-recipe.txt",        es: "receta-sopa.txt" },
+        { id: "r2", bin: "cook",  en: "salad-recipe.txt",       es: "receta-ensalada.txt" },
+        { id: "r3", bin: "smith", en: "horseshoe-plans.txt",    es: "plano-herradura.txt" },
+        { id: "r4", bin: "smith", en: "how-to-fix-the-gate.txt", es: "como-arreglar-la-puerta.txt" },
+        { id: "r5", bin: "maps",  en: "road-to-the-north.txt",  es: "camino-al-norte.txt" },
+        { id: "r6", bin: "maps",  en: "route-to-the-port.txt",  es: "ruta-al-puerto.txt" }
+      ]
+    }
+  ];
+
+  const T = {
+    en: {
+      eyebrow: "Ages 8–10 · file management",
+      title1: "File", title2: "Kingdom",
+      intro: "Files are scattered across the kingdom. Put each one back where it belongs.",
+      levelLabel: "Level", placedLabel: "Sorted", trayLabel: "Files waiting",
+      titles: ["Sort by extension", "Sort by what is inside", "Sort by who needs it"],
+      briefs: [
+        "Every file name ends with a dot and a few letters. That ending says what kind of file it is. Pick a file, then pick its room.",
+        "These have no extension to help you. Read the name and decide which shelf it goes on.",
+        "Three people are waiting for their papers. The cook wants recipes, the blacksmith wants repairs, the map-maker wants roads. Each of them gets two."
+      ],
+      check: "Check", reset: "Start over", next: "Next level", again: "Play again",
+      doneTitle: "The archive is back in order",
+      empty: "All sorted.", remove: "Take back",
+      allRight: "Every file is home. Nothing left to fix.",
+      someWrong: (n) => n === 1
+        ? "One file is in the wrong room. It is marked — move it and check again."
+        : n + " files are in the wrong room. They are marked — move them and check again.",
+      notDone: (n) => n === 1 ? "One file is still waiting." : n + " files are still waiting.",
+      scoreLine: (a, b) => "You put " + a + " of " + b + " in the right place on the first try."
+    },
+    es: {
+      eyebrow: "8–10 años · gestión de archivos",
+      title1: "Reino de", title2: "Archivos",
+      intro: "Los archivos están repartidos por el reino. Devuelve cada uno a su sitio.",
+      levelLabel: "Nivel", placedLabel: "Ordenados", trayLabel: "Archivos pendientes",
+      titles: ["Ordena por extensión", "Ordena por su contenido", "Ordena por quién lo necesita"],
+      briefs: [
+        "El nombre de cada archivo termina en un punto y unas letras. Ese final dice qué tipo de archivo es. Elige un archivo y luego su sala.",
+        "Aquí no hay extensión que te ayude. Lee el nombre y decide en qué estante va.",
+        "Tres personas esperan sus papeles. La cocinera quiere recetas, el herrero quiere reparaciones, el cartógrafo quiere caminos. A cada uno le tocan dos."
+      ],
+      check: "Comprobar", reset: "Empezar de nuevo", next: "Siguiente nivel", again: "Jugar otra vez",
+      doneTitle: "El archivo vuelve a estar en orden",
+      empty: "Todo ordenado.", remove: "Devolver",
+      allRight: "Cada archivo está en su casa. No queda nada por corregir.",
+      someWrong: (n) => n === 1
+        ? "Un archivo está en la sala equivocada. Está marcado: muévelo y comprueba otra vez."
+        : n + " archivos están en la sala equivocada. Están marcados: muévelos y comprueba otra vez.",
+      notDone: (n) => n === 1 ? "Todavía queda un archivo." : "Todavía quedan " + n + " archivos.",
+      scoreLine: (a, b) => "Colocaste " + a + " de " + b + " en el sitio correcto al primer intento."
+    }
+  };
+
+  let lang = "en", level = 0, placement = {}, selected = null;
+  let firstTryRight = 0, checkedOnce = false;
+
+  const $ = (id) => document.getElementById(id);
+  const tray = $("tray"), bins = $("bins"), feedback = $("feedback");
+  const t = () => T[lang];
+  const label = (o) => o[lang];
+
+  function render() {
+    const L = LEVELS[level], d = t();
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll("[data-t]").forEach((el) => {
+      const k = el.dataset.t;
+      const v = k === "ltitle" ? d.titles[level] : k === "lbrief" ? d.briefs[level] : d[k];
+      if (typeof v === "string") el.textContent = v;
+    });
+    tray.dataset.empty = d.empty;
+
+    $("levelNum").innerHTML = (level + 1) + '<span class="muted">/' + LEVELS.length + "</span>";
+    $("step1").className = level === 0 ? "is-current" : "is-done";
+    $("step2").className = level === 1 ? "is-current" : "";
+    $("score").innerHTML = Object.keys(placement).length + '<span class="muted">/' + L.items.length + "</span>";
+
+    tray.innerHTML = "";
+    L.items.filter((i) => !placement[i.id]).forEach((item) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "token";
+      b.setAttribute("aria-pressed", String(selected === item.id));
+      b.textContent = label(item);
+      b.onclick = () => { selected = selected === item.id ? null : item.id; render(); };
+      tray.appendChild(b);
+    });
+
+    bins.innerHTML = "";
+    L.bins.forEach((bin) => {
+      const wrap = document.createElement("div");
+      wrap.className = "bin";
+
+      const head = document.createElement("div");
+      head.className = "bin__head";
+      const nm = document.createElement("span");
+      nm.className = "bin__name"; nm.textContent = label(bin);
+      const rl = document.createElement("span");
+      /* Levels 1-2 label a bin with its file extensions, which read the same
+         in both languages; level 3 labels it with a sentence, which does not. */
+      rl.className = "bin__rule";
+      rl.textContent = (lang === "es" ? bin.ruleEs : bin.ruleEn) || bin.rule;
+      head.append(nm, rl);
+      wrap.appendChild(head);
+
+      const zone = document.createElement("div");
+      zone.className = "dropzone";
+      zone.tabIndex = 0;
+      zone.setAttribute("role", "button");
+      zone.setAttribute("aria-label", label(bin));
+      const drop = () => {
+        if (!selected) return;
+        placement[selected] = bin.id; selected = null; clearMarks(); render();
+      };
+      zone.onclick = drop;
+      zone.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); drop(); } };
+
+      L.items.filter((i) => placement[i.id] === bin.id).forEach((item) => {
+        const tag = document.createElement("span");
+        tag.className = "placed";
+        tag.dataset.item = item.id;
+        const name = document.createElement("span");
+        name.textContent = label(item);
+        const rm = document.createElement("button");
+        rm.type = "button"; rm.textContent = "×";
+        rm.setAttribute("aria-label", d.remove + ": " + label(item));
+        rm.onclick = (e) => { e.stopPropagation(); delete placement[item.id]; clearMarks(); render(); };
+        tag.append(name, rm);
+        zone.appendChild(tag);
+      });
+
+      wrap.appendChild(zone);
+      bins.appendChild(wrap);
+    });
+  }
+
+  function clearMarks() { feedback.hidden = true; feedback.className = ""; }
+
+  function say(kind, text) {
+    feedback.hidden = false;
+    feedback.className = "feedback feedback--" + kind;
+    feedback.textContent = text;
+  }
+
+  function check() {
+    const L = LEVELS[level], d = t();
+    const left = L.items.length - Object.keys(placement).length;
+    if (left > 0) { say("hint", d.notDone(left)); return; }
+
+    const wrong = L.items.filter((i) => placement[i.id] !== i.bin);
+    if (!checkedOnce) { firstTryRight = L.items.length - wrong.length; checkedOnce = true; }
+
+    L.items.forEach((i) => {
+      const el = document.querySelector('.placed[data-item="' + i.id + '"]');
+      if (el) {
+        el.classList.remove("is-correct", "is-wrong");
+        el.classList.add(placement[i.id] === i.bin ? "is-correct" : "is-wrong");
+      }
+    });
+
+    if (wrong.length === 0) {
+      say("ok", d.allRight);
+      $("doneBody").textContent = d.scoreLine(firstTryRight, L.items.length);
+      $("done").setAttribute("data-open", "");
+      $("next").hidden = level >= LEVELS.length - 1;
+      if (level >= LEVELS.length - 1) remember();
+      $("done").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else {
+      say("no", d.someWrong(wrong.length));
+    }
+  }
+
+  function loadLevel(n) {
+    level = n; placement = {}; selected = null;
+    firstTryRight = 0; checkedOnce = false;
+    $("done").removeAttribute("data-open");
+    clearMarks(); render();
+  }
+
+  $("check").onclick = check;
+  $("reset").onclick = () => loadLevel(level);
+  $("again").onclick = () => loadLevel(level);
+  $("next").onclick  = () => loadLevel(Math.min(level + 1, LEVELS.length - 1));
+
+  document.querySelectorAll(".langs button").forEach((b) => {
+    b.onclick = () => {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      clearMarks(); render();
+    };
+  });
+
+  loadLevel(0);
+})();
+</script>
+</body>
+</html>

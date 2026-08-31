@@ -1,0 +1,23 @@
+// config/codes-config.json
+{
+  "sector-a": {
+    "code": "ФАЙЛЫ-2024",
+    "displayAfter": "all-tasks-complete"
+  },
+  "sector-b": {
+    "code": "ГРАФИКА-2024", 
+    "displayAfter": "all-tasks-complete"
+  },
+  "sector-c": {
+    "code": "ДОКУМЕНТ-2024",
+    "displayAfter": "all-tasks-complete"
+  },
+  "sector-d": {
+    "code": "ПРЕЗЕНТ-2024",
+    "displayAfter": "all-tasks-complete"
+  },
+  "virus-core": {
+    "code": "ЦИКЛЫ-2024",
+    "displayAfter": "animation-complete"
+  }
+}

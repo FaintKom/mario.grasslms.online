@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>М3У2 — Добавление чат-ботов в игру</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+  :root {
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --muted: #555;
+    --accent: #1a1a1a;
+    --border: #b0b0b0;
+    --header-bg: #e8e8e8;
+    --row-alt: #f5f5f5;
+    --link: #1a1a1a;
+    --section-bg: #f0f0f0;
+    --warning-bg: #f5f5f5;
+    --warning-border: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text);
+    background: #e8e8e8;
+    padding: 24px;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--bg);
+    padding: 40px 48px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.12);
+    border-radius: 2px;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 18px 0 8px;
+    color: var(--accent);
+  }
+
+  .meta-block {
+    margin-bottom: 14px;
+  }
+
+  .meta-block p {
+    margin: 2px 0;
+  }
+
+  .links-block {
+    background: var(--section-bg);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+
+  .links-block ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .links-block li {
+    margin: 3px 0;
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .links-block li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  a:hover { text-decoration: none; }
+
+  .warning {
+    background: var(--warning-bg);
+    border-left: 3px solid var(--warning-border);
+    padding: 8px 12px;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+
+  .goal-line {
+    margin-bottom: 14px;
+  }
+
+  .story-block, .prep-block {
+    margin-bottom: 14px;
+  }
+
+  .prep-block ul {
+    padding-left: 20px;
+    margin: 4px 0;
+  }
+
+  .prep-block li {
+    margin: 3px 0;
+  }
+
+  /* ─── Main table ─── */
+  .lesson-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 13px;
+  }
+
+  .lesson-table th {
+    background: var(--header-bg);
+    font-weight: 700;
+    text-align: left;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+
+  .lesson-table td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    vertical-align: top;
+  }
+
+  .lesson-table tr:nth-child(even) td {
+    background: var(--row-alt);
+  }
+
+  .col-time {
+    width: 60px;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .col-stage {
+    width: 140px;
+    font-weight: 600;
+  }
+
+  .stage-icon {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+
+  .lesson-table ol {
+    padding-left: 22px;
+    margin: 4px 0 4px 0;
+  }
+
+  .lesson-table ol li {
+    margin: 4px 0;
+  }
+
+  .lesson-table ul {
+    padding-left: 18px;
+    margin: 4px 0;
+  }
+
+  .lesson-table ul li {
+    margin: 3px 0;
+  }
+
+  .note {
+    background: var(--warning-bg);
+    border-left: 3px solid var(--warning-border);
+    padding: 6px 10px;
+    margin: 6px 0;
+    font-size: 12.5px;
+  }
+
+  .speech {
+    font-style: italic;
+    color: var(--muted);
+    margin: 4px 0;
+  }
+
+  @media (max-width: 700px) {
+    body { padding: 8px; }
+    .page { padding: 20px 16px; }
+    .lesson-table { font-size: 12px; }
+    .col-time { width: 44px; }
+    .col-stage { width: 100px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Добавление чат-ботов в игру</h1>
+
+<!-- ─── Links ─── -->
+<div class="links-block">
+  <h2>💾 ССЫЛКИ И РЕКВИЗИТ:</h2>
+  <ul>
+    <li><a href="https://docs.google.com/presentation/d/1CPfLtAFpfmiEJwj1k25xfwECxTFpTu08dI3JqZtc-Nk/edit?usp=sharing">Презентация</a></li>
+    <li><a href="https://drive.google.com/file/d/1C9qgfnHtbRz9GOAGlwPPAI-HRS-tjaeZ/view?usp=sharing">Эталонное решение</a></li>
+    <li><a href="https://drive.google.com/file/d/1CueAU04PcMvw7V1fcTwglwsHVcP90iPk/view?usp=sharing">Эталонное решение бонусных задач</a></li>
+  </ul>
+</div>
+
+<!-- ─── Goal ─── -->
+<div class="goal-line">
+  <h2>🎯 Цели занятия:</h2>
+  <p>Познакомиться с принципами создания диалогов в игровом мире и создать собственный.</p>
+</div>
+
+<!-- ─── Story ─── -->
+<div class="story-block">
+  <h2>🚀 СЮЖЕТНАЯ ЛИНИЯ:</h2>
+  <p>Команда разработчиков хочет добавить больше действующих персонажей в свои игры. Они обсуждают, кто такие NPC и как они действуют. Сити добавляет, что NPC одни из важнейших составляющих при разработке игр. Они передают историю игры, населяют и наполняют её мир.</p>
+</div>
+
+<!-- ─── Prep ─── -->
+<div class="prep-block">
+  <h2>⏩ ЗА ДЕНЬ ДО УРОКА:</h2>
+  <ul>
+    <li>посмотрите предложенные программы и попробуйте создать самостоятельно аналогичные;</li>
+    <li>изучите рекомендации и презентацию;</li>
+    <li>выполните задания, указанные в презентации;</li>
+    <li>продумайте проведение разминки: разберите предложенную или выберите из <a href="https://docs.google.com/document/d/1DmVXQCCUGVDQoNFjX2j6FXygs3wQ9ZwZ4Dx1cevii4c/edit?usp=sharing">списка</a>.</li>
+  </ul>
+</div>
+
+<div class="prep-block">
+  <h2>🔖 ЗА 30 МИНУТ ДО УРОКА:</h2>
+  <ul>
+    <li>откройте презентацию, задание на платформе;</li>
+    <li>откройте Roblox Studio на каждом компьютере, убедитесь, что он запускается и обновлён;</li>
+    <li>проверьте работоспособность ноутбуков и проектора, запустите платформу <a href="http://learn.algorithmics.asia/">learn.algoritmics.asia</a> на компьютерах учеников;</li>
+    <li>подготовьте пространство для комфортной работы вне компьютеров;</li>
+    <li>подготовьте доску или ватман для совместного планирования;</li>
+    <li>запустите сайт <a href="https://chatgpt.com/">ChatGPT</a>. Проверьте, какие ответы он выдаёт на ваши запросы.</li>
+  </ul>
+</div>
+
+<!-- ─── Main lesson table ─── -->
+<h2 style="margin-top:24px; font-size:15px;">РЕКОМЕНДУЕМАЯ СТРУКТУРА УРОКА</h2>
+
+<table class="lesson-table">
+<thead>
+  <tr>
+    <th class="col-time">Время</th>
+    <th class="col-stage">Этап</th>
+    <th>Рекомендации по проведению этапа</th>
+  </tr>
+</thead>
+<tbody>
+
+<!-- ── 1. Повторение ── -->
+<tr>
+  <td class="col-time"><span class="stage-icon">🗣️</span>5 мин</td>
+  <td class="col-stage">Повторение</td>
+  <td>
+    <ol>
+      <li>Поприветствуйте учеников.</li>
+      <li>Кратко повторите материал прошлых уроков.</li>
+    </ol>
+  </td>
+</tr>
+
+<!-- ── 2. Обсуждение ── -->
+<tr>
+  <td class="col-time"><span class="stage-icon">🗣️</span>5 мин</td>
+  <td class="col-stage">Обсуждение: «Создание диалогов»</td>
+  <td>
+    <ol>
+      <li>Проведите этап в зоне без компьютеров.</li>
+      <li>Обсудите с детьми, как интересно представить подсказки и задание на поиск предметов в квесте.</li>
+      <li>Расскажите, что с помощью диалогов можно: сделать сюжет игры более интересным, получить подсказки или новый предмет, определить характер персонажа, организовать работу магазина.</li>
+      <li>Предложите ребятам создать диалоговое дерево на платформе.</li>
+      <li>Определите задачи урока.</li>
+    </ol>
+  </td>
+</tr>
+
+<!-- ── 3. Новая тема: Добавление диалогов ── -->
+<tr>
+  <td class="col-time"><span class="stage-icon">💻</span>22 мин</td>
+  <td class="col-stage">Новая тема: «Добавление диалогов»</td>
+  <td>
+    <ol>
+      <li>Организуйте фронтальную работу за компьютерами.</li>
+      <li>Предложите ребятам добавить персонажа с помощью Toolbox. Прикрепите к голове персонажа объект <strong>Dialog</strong>.</li>
+      <li>Добавьте начальную фразу «Привет, игрок!» с помощью свойства InitialPrompt, конечную фразу «Пока» (свойство GoodbyeDiaLog).</li>
+      <li>Обратите внимание ребят на свойство Tone, с помощью которого можно задать отношение персонажа к игроку.</li>
+      <li>Объект <strong>Dialog</strong> отображает начальную фразу. Чтобы добавить выбор ответов, необходимо добавить <strong>DialogChoice</strong>. Предложите добавить несколько объектов DialogChoice для создания диалога с вариантами ответов.</li>
+      <li>Организуйте выполнение задания <a href="https://lms.algorithmics.asia/task-preview/107018?track=1&lesson=45710&position=1">«Добавление диалогов»</a> на платформе.</li>
+    </ol>
+    <div class="note"><strong>⚠️ Важно!</strong> После обновлений в феврале 2021 года окна с диалогами не всегда отображаются в Roblox Studio при запуске игры через инструмент Play. Если диалоги не отображаются, необходимо запустить игру через локальный сервер — инструмент <strong>Start</strong>. Созданные диалоги полноценно функционируют, если игру опубликовать на Roblox.com и запустить через Roblox Player.</div>
+  </td>
+</tr>
+
+<!-- ── 4. Задание на платформе ── -->
+<tr>
+  <td class="col-time"><span class="stage-icon">💻</span>8 мин</td>
+  <td class="col-stage">Задание на платформе</td>
+  <td>
+    <ol>
+      <li>Организуйте выполнение заданий на платформе.</li>
+    </ol>
+  </td>
+</tr>
+
+<!-- ── 5. Перерыв ── -->
+<tr>
+  <td class="col-time"><span class="stage-icon">☕</span>10 мин</td>
+  <td class="col-stage">Перерыв</td>
+  <td>
+    <ol>
+      <li>Помогите ученикам восстановить концентрацию.</li>
+      <li>Отвлеките учеников от компьютеров. Цель перерыва — переключить внимание и размяться.</li>
+      <li>Организуйте одну из <a href="https://docs.google.com/document/d/1KhGx4nh5-LtX5FFH99dKRokJEoSYfJT0yEACsaDmpio/edit?usp=sharing">предложенных активностей</a>.</li>
+    </ol>
+  </td>
+</tr>
+
+<!-- ── 6. Создание диалогов с нейросетями ── -->
+<tr>
+  <td class="col-time"><span class="stage-icon">💻</span>15 мин</td>
+  <td class="col-stage">Создание диалогов с нейросетями</td>
+  <td>
+    <ol>
+      <li>Следуйте слайдам презентации. Объясните, как можно работать с нейросетями.</li>
+      <li>Особое внимание уделите правилам создания промптов.</li>
+      <li>Объясните ученикам, что ChatGPT — это инструмент, который может ошибаться, и его ответы не всегда являются абсолютно точными. Важно сохранять критическое мышление и проверять полученную информацию.</li>
+      <li>Напомните, что вводить в систему личные данные, пароли или конфиденциальную информацию строго запрещено.</li>
+      <li>Откройте <a href="https://chatgpt.com/">ChatGPT</a>. Продемонстрируйте разницу ответов при правильном и неправильном запросах.</li>
+      <li>Расскажите, что чем больше пользуешься нейросетями, тем точнее становятся результаты. Объясните, зачем использовать нейросети.</li>
+    </ol>
+  </td>
+</tr>
+
+<!-- ── 7. Задание на платформе: NPC ── -->
+<tr>
+  <td class="col-time"><span class="stage-icon">💻</span>22 мин</td>
+  <td class="col-stage">Задание на платформе: «NPC общается с игроком»</td>
+  <td>
+    <ol>
+      <li>Организуйте работу на платформе.</li>
+      <li>Дети должны составить диалоги для своих персонажей и реализовать их в своём проекте.</li>
+    </ol>
+  </td>
+</tr>
+
+<!-- ── 8. Завершение урока ── -->
+<tr>
+  <td class="col-time"><span class="stage-icon">🗣️</span>3 мин</td>
+  <td class="col-stage">Завершение урока</td>
+  <td>
+    <ol>
+      <li>Обсудите с учениками, получилось ли у них выполнить задания.</li>
+      <li>Позвольте детям поделиться впечатлениями.</li>
+      <li>Подведите итоги: обсудите, что было пройдено на уроке.</li>
+    </ol>
+    <p class="speech">«Наше занятие подходит к концу. Давайте подведём итоги нашей работы. Спасибо за ваши ответы! Мне очень приятно, что вам сегодня было интересно.»</p>
+  </td>
+</tr>
+
+</tbody>
+</table>
+
+</div>
+</body>
+</html>

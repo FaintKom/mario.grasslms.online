@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<!-- part:win11:begin -->
+<!-- Built from _shared/parts/win11.html — edit that file, then run _shared/build.py -->
+<style>
+/* ==========================================================================
+   Windows 11 File Explorer, light theme, drawn in CSS.
+
+   Real measurements: a 40px tab strip, a 48px command bar, a 40px address row,
+   a 220px navigation pane, a 28px status bar. Chrome is #f3f3f3, content is
+   white, the accent is #0067c0 and selection is #cfe8fc. Prefixed .w- so it
+   cannot collide with the GrassLMS layer around it.
+
+   The icons are drawn rather than set in emoji: an emoji folder is whatever
+   font the machine happens to have, and half of them are not even the same
+   colour. A child is supposed to recognise this window on sight.
+   ========================================================================== */
+
+.w {
+  --w-chrome: #f3f3f3;
+  --w-face: #ffffff;
+  --w-line: #e5e5e5;
+  --w-text: #1b1b1b;
+  --w-dim: #5d5d5d;
+  --w-hover: rgba(0, 0, 0, .05);
+  --w-accent: #0067c0;
+  --w-sel: #cfe8fc;
+
+  display: flex; flex-direction: column;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--w-face);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .16), 0 1px 3px rgba(0, 0, 0, .08);
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--w-text);
+  -webkit-font-smoothing: antialiased;
+}
+.w svg { display: block; }
+
+/* ---- tab strip ---------------------------------------------------------- */
+.w__tabs {
+  display: flex; align-items: center;
+  height: 40px; padding-left: 8px;
+  background: var(--w-chrome);
+}
+.w-tab {
+  display: flex; align-items: center; gap: 8px;
+  height: 32px; padding: 0 10px; margin-top: 8px;
+  border-radius: 6px 6px 0 0;
+  background: var(--w-face);
+  font-size: 12px;
+}
+.w-tab svg { width: 16px; height: 16px; }
+.w-tab i { font-style: normal; }
+.w-tab u {
+  width: 16px; height: 16px; margin-left: 4px;
+  display: grid; place-items: center; border-radius: 4px;
+  text-decoration: none; color: var(--w-dim);
+}
+.w-tab u:hover { background: var(--w-hover); }
+.w-tab u svg { width: 8px; height: 8px; }
+.w__tabadd {
+  width: 28px; height: 28px; margin-left: 4px;
+  display: grid; place-items: center;
+  border-radius: 4px; color: var(--w-dim);
+}
+.w__tabadd:hover { background: var(--w-hover); }
+.w__tabadd svg { width: 11px; height: 11px; }
+
+.w__wc { display: flex; margin-left: auto; align-self: stretch; }
+.w__wc i { width: 46px; display: grid; place-items: center; color: var(--w-text); }
+.w__wc i svg { width: 10px; height: 10px; }
+.w__wc i:hover { background: var(--w-hover); }
+.w__wc i:last-child:hover { background: #c42b1c; color: #fff; }
+
+/* ---- command bar -------------------------------------------------------- */
+.w__cmd {
+  display: flex; align-items: center; gap: 2px;
+  height: 48px; padding: 0 8px;
+  background: var(--w-face);
+}
+.w-btn {
+  display: flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 10px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 12px; color: var(--w-text);
+  cursor: pointer; white-space: nowrap;
+}
+.w-btn:hover { background: var(--w-hover); }
+.w-btn:active { background: rgba(0, 0, 0, .08); }
+.w-btn:disabled { color: #a0a0a0; cursor: default; }
+.w-btn:disabled:hover { background: transparent; }
+.w-btn svg { width: 16px; height: 16px; flex: 0 0 16px; }
+.w-btn--icon { padding: 0; width: 32px; justify-content: center; }
+.w-btn--new svg:first-child { color: var(--w-accent); }
+.w-btn .w-chev { width: 8px; height: 8px; opacity: .65; }
+.w__sep { width: 1px; height: 20px; margin: 0 6px; background: var(--w-line); flex: 0 0 1px; }
+
+/* ---- address row -------------------------------------------------------- */
+.w__addr {
+  display: flex; align-items: center; gap: 2px;
+  height: 40px; padding: 0 8px 8px;
+  background: var(--w-face);
+}
+.w__crumbs {
+  display: flex; align-items: center; flex: 1; min-width: 0;
+  height: 32px; padding: 0 8px;
+  border: 1px solid var(--w-line); border-radius: 4px;
+  background: var(--w-face);
+  overflow: hidden;
+}
+.w__crumbs button {
+  border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: 12px; color: var(--w-text);
+  padding: 3px 6px; border-radius: 3px; white-space: nowrap;
+}
+.w__crumbs button:hover { background: var(--w-hover); }
+.w__crumbs svg { width: 8px; height: 8px; color: #757575; flex: 0 0 8px; }
+.w__crumbs > svg:first-child { width: 16px; height: 16px; flex: 0 0 16px; margin-right: 4px; }
+.w__search {
+  display: flex; align-items: center; gap: 6px;
+  width: 190px; height: 32px; margin-left: 6px; padding: 0 10px;
+  border: 1px solid var(--w-line); border-radius: 4px;
+  color: #757575; font-size: 12px; white-space: nowrap; overflow: hidden;
+}
+.w__search svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+/* ---- body: navigation pane and content ---------------------------------- */
+/* The window is a column, so the body takes the slack and the status bar
+   stays inside the frame instead of being clipped by overflow:hidden. */
+.w__body { display: grid; grid-template-columns: 220px 1fr; flex: 1 1 0; min-height: 0; }
+@media (max-width: 760px) { .w__body { grid-template-columns: 1fr; } .w__nav { display: none; } }
+
+.w__nav {
+  padding: 4px 8px 8px;
+  background: var(--w-chrome);
+  border-right: 1px solid var(--w-line);
+  overflow: auto;
+}
+.w-nav {
+  position: relative;
+  display: flex; align-items: center; gap: 10px;
+  height: 32px; padding: 0 10px; margin-bottom: 2px;
+  border-radius: 4px; font-size: 12px; color: var(--w-text);
+  white-space: nowrap;
+}
+.w-nav:hover { background: var(--w-hover); }
+.w-nav.is-open { background: rgba(0, 0, 0, .06); font-weight: 600; }
+.w-nav.is-open::before {
+  content: ""; position: absolute; left: 0; top: 8px;
+  width: 3px; height: 16px; border-radius: 2px; background: var(--w-accent);
+}
+.w-nav svg { width: 16px; height: 16px; flex: 0 0 16px; }
+.w-nav--sub { padding-left: 26px; }
+.w__navgap { height: 12px; }
+
+.w__content { background: var(--w-face); display: flex; flex-direction: column; min-height: 0; }
+
+/* ---- status bar --------------------------------------------------------- */
+.w__status {
+  display: flex; align-items: center; gap: 12px;
+  height: 28px; padding: 0 12px;
+  border-top: 1px solid var(--w-line);
+  background: var(--w-chrome);
+  font-size: 11px; color: var(--w-dim);
+}
+.w__views { margin-left: auto; display: flex; gap: 2px; }
+.w__views i { width: 24px; height: 20px; display: grid; place-items: center; border-radius: 3px; }
+.w__views i.is-on { background: rgba(0, 0, 0, .08); }
+.w__views svg { width: 13px; height: 13px; }
+
+/* ---- context menu, Windows 11 shape ------------------------------------- */
+.w-menu {
+  position: fixed; z-index: 60; min-width: 250px;
+  padding: 4px;
+  background: #f9f9f9;
+  border: 1px solid rgba(0, 0, 0, .09);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  font-size: 12px; color: #1b1b1b;
+}
+/* The row of bare icons Windows 11 puts at the top of a file menu. */
+.w-menu__icons { display: flex; gap: 2px; padding: 2px 2px 6px; }
+.w-menu__icons button {
+  flex: 1; height: 34px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 4px; background: transparent;
+  cursor: pointer; color: #1b1b1b;
+}
+.w-menu__icons button:hover:not(:disabled) { background: rgba(0, 0, 0, .06); }
+.w-menu__icons button:disabled { color: #a0a0a0; cursor: default; }
+.w-menu__icons svg { width: 16px; height: 16px; }
+.w-menu > button {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; height: 32px; padding: 0 10px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 12px; color: #1b1b1b;
+  text-align: left; cursor: pointer;
+}
+.w-menu > button:hover:not(:disabled) { background: rgba(0, 0, 0, .06); }
+.w-menu > button:disabled { color: #a0a0a0; cursor: default; }
+.w-menu > button svg { width: 16px; height: 16px; flex: 0 0 16px; }
+.w-menu > button span { flex: 1; }
+.w-menu > button kbd { font-family: inherit; font-size: 11px; color: #6d6d6d; }
+.w-menu hr { border: 0; border-top: 1px solid rgba(0, 0, 0, .08); margin: 4px 6px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="w-g-folder" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd772"/><stop offset="1" stop-color="#f0b429"/>
+    </linearGradient>
+    <linearGradient id="w-g-folderback" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7c14b"/><stop offset="1" stop-color="#e8a91c"/>
+    </linearGradient>
+
+    <!-- Files and folders in the Windows 11 shape: a folder with a raised back
+         panel, documents as a white sheet with a folded corner. -->
+    <symbol id="w-folder" viewBox="0 0 48 48">
+      <path d="M4 12a3 3 0 0 1 3-3h11.2a3 3 0 0 1 2.1.9l3.2 3.1H41a3 3 0 0 1 3 3v5H4z" fill="url(#w-g-folderback)"/>
+      <path d="M4 17h40a3 3 0 0 1 2.9 3.7l-3.6 15.1a4 4 0 0 1-3.9 3.2H8.6a4 4 0 0 1-3.9-3.2L1.1 20.7A3 3 0 0 1 4 17z" fill="url(#w-g-folder)"/>
+      <path d="M4 17h40a3 3 0 0 1 2.6 1.5H1.4A3 3 0 0 1 4 17z" fill="#fff" opacity=".4"/>
+    </symbol>
+
+    <symbol id="w-txt" viewBox="0 0 48 48">
+      <path d="M10 5h20l10 10v25a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z" fill="#fff" stroke="#c8c8c8" stroke-width="1.5"/>
+      <path d="M30 5l10 10H31a1 1 0 0 1-1-1z" fill="#e3e3e3"/>
+      <g stroke="#8a8a8a" stroke-width="2" stroke-linecap="round">
+        <path d="M14 21h20M14 27h20M14 33h13"/>
+      </g>
+    </symbol>
+
+    <symbol id="w-img" viewBox="0 0 48 48">
+      <path d="M10 5h20l10 10v25a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z" fill="#fff" stroke="#c8c8c8" stroke-width="1.5"/>
+      <path d="M30 5l10 10H31a1 1 0 0 1-1-1z" fill="#e3e3e3"/>
+      <rect x="12" y="20" width="24" height="17" rx="2" fill="#cde9f7"/>
+      <circle cx="18" cy="26" r="2.6" fill="#f5c34b"/>
+      <path d="M12 35l7-8 5 5 4-4 8 7v1a1 1 0 0 1-1 1H13a1 1 0 0 1-1-1z" fill="#4aa15e"/>
+    </symbol>
+
+    <symbol id="w-vid" viewBox="0 0 48 48">
+      <path d="M10 5h20l10 10v25a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z" fill="#fff" stroke="#c8c8c8" stroke-width="1.5"/>
+      <path d="M30 5l10 10H31a1 1 0 0 1-1-1z" fill="#e3e3e3"/>
+      <rect x="11" y="21" width="26" height="16" rx="2" fill="#3b5bdb"/>
+      <path d="M21 26l7 3-7 3z" fill="#fff"/>
+    </symbol>
+
+    <!-- Command bar and menu glyphs: one weight, one cap style, like Fluent. -->
+    <symbol id="w-new" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M12 5v14M5 12h14"/>
+    </symbol>
+    <symbol id="w-cut" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="18" r="2.6"/><circle cx="18" cy="18" r="2.6"/>
+      <path d="M7.6 16L18 4M16.4 16L6 4"/>
+    </symbol>
+    <symbol id="w-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="9" y="9" width="11" height="11" rx="2"/>
+      <path d="M15 6H6a2 2 0 0 0-2 2v9"/>
+    </symbol>
+    <symbol id="w-paste" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M9 4h6v3H9z"/>
+      <path d="M15 5.5h2.5A1.5 1.5 0 0 1 19 7v12a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19V7a1.5 1.5 0 0 1 1.5-1.5H9"/>
+    </symbol>
+    <symbol id="w-rename" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 20h16"/><path d="M14.5 4.5l4 4L9 18H5v-4z"/>
+    </symbol>
+    <symbol id="w-del" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 7h16M10 4h4M6 7l1 13h10l1-13M10 11v6M14 11v6"/>
+    </symbol>
+    <symbol id="w-sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 4v16M4 17l3 3 3-3M17 20V4M14 7l3-3 3 3"/>
+    </symbol>
+    <symbol id="w-view" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/>
+      <rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>
+    </symbol>
+    <symbol id="w-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+      <path d="M4 6h16M4 12h16M4 18h16"/>
+    </symbol>
+    <symbol id="w-more" viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/>
+    </symbol>
+    <symbol id="w-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M11 18l-6-6 6-6"/>
+    </symbol>
+    <symbol id="w-fwd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14M13 6l6 6-6 6"/>
+    </symbol>
+    <symbol id="w-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M6 11l6-6 6 6"/>
+    </symbol>
+    <symbol id="w-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 11a8 8 0 1 0-2.3 6.3"/><path d="M20 4v7h-7"/>
+    </symbol>
+    <symbol id="w-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/>
+    </symbol>
+    <symbol id="w-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 4.5L6 7.5 9 4.5"/>
+    </symbol>
+    <symbol id="w-chevr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 3L7.5 6 4.5 9"/>
+    </symbol>
+    <symbol id="w-x" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+      <path d="M2 2l8 8M10 2l-8 8"/>
+    </symbol>
+
+    <!-- Navigation pane -->
+    <symbol id="w-home" viewBox="0 0 24 24" fill="none" stroke="#0067c0" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M4 11l8-7 8 7v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/>
+    </symbol>
+    <symbol id="w-cloud" viewBox="0 0 24 24" fill="#0f7bd4">
+      <path d="M7 19a4.4 4.4 0 0 1-.5-8.8A5.6 5.6 0 0 1 17 9.6a3.9 3.9 0 0 1 .6 7.7z"/>
+    </symbol>
+    <symbol id="w-pc" viewBox="0 0 24 24" fill="none" stroke="#5d5d5d" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="M8 20h8"/>
+    </symbol>
+    <symbol id="w-down" viewBox="0 0 24 24" fill="none" stroke="#0f7bd4" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>
+    </symbol>
+    <symbol id="w-star" viewBox="0 0 24 24" fill="#f5b944">
+      <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>
+    </symbol>
+
+    <!-- Window controls -->
+    <symbol id="w-min" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1"><path d="M1 6h10"/></symbol>
+    <symbol id="w-max" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="1.5" width="9" height="9" rx="1"/></symbol>
+    <symbol id="w-close" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></symbol>
+  </defs>
+</svg>
+<!-- part:win11:end -->
+<style>
+  /* One screen on open: a tighter heading block, and the page held to the
+     height of the viewport so the working area can take what is left. */
+  body { padding: var(--page-top) 0 var(--page-bottom); }
+  .wrap { height: calc(100svh - var(--page-pad)); }
+  h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
+  .lede { font-size: var(--t-sm); max-width: 78ch; }
+  .stack--loose { gap: var(--s-4); }
+
+
+  /* The grid inside the window: Windows 11 sizing, so a 40px icon with the
+     name under it and a 4px selection rectangle. */
+  .w { flex: 1 1 0; min-height: 260px; }
+
+  .files {
+    flex: 1 1 0; min-height: 0; overflow: auto;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 2px; padding: 12px; align-content: start;
+  }
+  .files.is-over { background: #f5faff; }
+
+  .node {
+    display: grid; justify-items: center; gap: 6px;
+    padding: 10px 4px;
+    border: 1px solid transparent; border-radius: 4px;
+    background: none; font: inherit; color: #1b1b1b;
+    cursor: default; text-align: center;
+  }
+  .node:hover { background: rgba(0, 0, 0, .04); }
+  .node[aria-selected="true"] { background: #cfe8fc; border-color: #a5d3f5; }
+  .node.is-cut { opacity: .5; }
+  .node.is-over { background: #cfe8fc; border-color: #0067c0; border-style: dashed; }
+  .node__icon { width: 40px; height: 40px; }
+  .node__name { font-size: 12px; line-height: 1.35; word-break: break-word; max-width: 100%; }
+  .node__name input {
+    width: 88px; font: inherit; font-size: 12px; text-align: center;
+    border: 1px solid #0067c0; border-radius: 2px; padding: 1px 2px;
+  }
+
+  .empty {
+    grid-column: 1 / -1; display: grid; place-items: center; gap: 4px;
+    padding: 64px 16px; text-align: center; color: #757575; font-size: 12px;
+  }
+  .empty strong { font-size: 13px; color: #1b1b1b; font-weight: 600; }
+
+  .keys { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
+  .keys div { font-size: var(--t-sm); color: var(--color-text-muted); }
+  .keys kbd {
+    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 700;
+    background: var(--color-surface-2); border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-xs); padding: 2px var(--s-2); color: var(--color-text);
+  }
+
+  .modes { display: flex; gap: var(--s-2); }
+  .modes button {
+    min-height: 44px; padding: var(--s-2) var(--s-4);
+    border: 2px solid var(--color-border-strong); border-radius: var(--radius-pill);
+    background: var(--color-surface); cursor: pointer; font: inherit; font-size: var(--t-sm);
+  }
+  .modes button[aria-pressed="true"] {
+    background: var(--ink-900); color: #fff; border-color: var(--ink-900);
+  }
+
+  .target { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1); font-family: var(--font-mono); font-size: var(--t-sm); }
+  .target span { padding: var(--s-1) var(--s-2); border-radius: var(--radius-sm); background: var(--color-surface-2); }
+  .target span.is-last { background: var(--sun-300); font-weight: 700; }
+  .target b { color: var(--color-text-subtle); font-weight: 400; }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Ages 8–11 · files and folders</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">A place to</span> <em class="mark" data-t="title2">make a mess</em></h1>
+    <p class="lede" data-t="intro">Nothing here breaks. Make folders, put files inside them, rename things, move them around, and it stays as you left it. When you would rather have a goal than a sandbox, switch to the missions.</p>
+  </header>
+
+  <div class="modes" role="group" id="modes"></div>
+
+  <section class="card stack stack--tight" id="mission" hidden>
+    <div class="row row--between">
+      <p class="eyebrow" data-t="missionTag">Find this file</p>
+      <span class="hud__score" id="missionNo">1</span>
+    </div>
+    <div class="target" id="target"></div>
+    <div id="missionNote" hidden></div>
+  </section>
+
+  <div class="w">
+    <div class="w__tabs">
+      <div class="w-tab">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><use href="#w-folder"/></svg>
+        <i data-t="winTitle">File Explorer</i>
+        <u aria-hidden="true"><svg viewBox="0 0 12 12"><use href="#w-x"/></svg></u>
+      </div>
+      <span class="w__tabadd" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#w-new"/></svg></span>
+      <div class="w__wc" aria-hidden="true">
+        <i><svg viewBox="0 0 12 12"><use href="#w-min"/></svg></i>
+        <i><svg viewBox="0 0 12 12"><use href="#w-max"/></svg></i>
+        <i><svg viewBox="0 0 12 12"><use href="#w-close"/></svg></i>
+      </div>
+    </div>
+
+    <div class="w__cmd">
+      <button class="w-btn w-btn--new" id="newBtn" type="button">
+        <svg viewBox="0 0 24 24"><use href="#w-new"/></svg>
+        <span data-t="cmdNew">New</span>
+        <svg class="w-chev" viewBox="0 0 12 12"><use href="#w-chev"/></svg>
+      </button>
+      <span class="w__sep"></span>
+      <button class="w-btn w-btn--icon" id="cmdCut" type="button" data-tt="cut"><svg viewBox="0 0 24 24"><use href="#w-cut"/></svg></button>
+      <button class="w-btn w-btn--icon" id="cmdCopy" type="button" data-tt="copy"><svg viewBox="0 0 24 24"><use href="#w-copy"/></svg></button>
+      <button class="w-btn w-btn--icon" id="cmdPaste" type="button" data-tt="paste"><svg viewBox="0 0 24 24"><use href="#w-paste"/></svg></button>
+      <button class="w-btn w-btn--icon" id="cmdRename" type="button" data-tt="rename"><svg viewBox="0 0 24 24"><use href="#w-rename"/></svg></button>
+      <button class="w-btn w-btn--icon" id="cmdDelete" type="button" data-tt="del"><svg viewBox="0 0 24 24"><use href="#w-del"/></svg></button>
+      <span class="w__sep"></span>
+      <button class="w-btn" type="button" tabindex="-1">
+        <svg viewBox="0 0 24 24"><use href="#w-sort"/></svg><span data-t="cmdSort">Sort</span>
+        <svg class="w-chev" viewBox="0 0 12 12"><use href="#w-chev"/></svg>
+      </button>
+      <button class="w-btn" type="button" tabindex="-1">
+        <svg viewBox="0 0 24 24"><use href="#w-view"/></svg><span data-t="cmdView">View</span>
+        <svg class="w-chev" viewBox="0 0 12 12"><use href="#w-chev"/></svg>
+      </button>
+      <button class="w-btn w-btn--icon" id="moreBtn" type="button"><svg viewBox="0 0 24 24"><use href="#w-more"/></svg></button>
+    </div>
+
+    <div class="w__addr">
+      <button class="w-btn w-btn--icon" id="navBack" type="button" data-tt="back"><svg viewBox="0 0 24 24"><use href="#w-back"/></svg></button>
+      <button class="w-btn w-btn--icon" type="button" disabled><svg viewBox="0 0 24 24"><use href="#w-fwd"/></svg></button>
+      <button class="w-btn w-btn--icon" id="navUp" type="button" data-tt="up"><svg viewBox="0 0 24 24"><use href="#w-up"/></svg></button>
+      <button class="w-btn w-btn--icon" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#w-refresh"/></svg></button>
+      <nav class="w__crumbs" id="crumbs" aria-label="Path"></nav>
+      <div class="w__search" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><use href="#w-search"/></svg><span data-t="searchIn">Search</span>
+      </div>
+    </div>
+
+    <div class="w__body">
+      <aside class="w__nav" aria-hidden="true">
+        <div class="w-nav is-open"><svg viewBox="0 0 24 24"><use href="#w-home"/></svg><span data-t="navHome">Home</span></div>
+        <div class="w-nav"><svg viewBox="0 0 24 24"><use href="#w-star"/></svg><span data-t="navGallery">Gallery</span></div>
+        <div class="w__navgap"></div>
+        <div class="w-nav"><svg viewBox="0 0 24 24"><use href="#w-cloud"/></svg><span>OneDrive</span></div>
+        <div class="w__navgap"></div>
+        <div class="w-nav"><svg viewBox="0 0 48 48"><use href="#w-folder"/></svg><span data-t="navDesktop">Desktop</span></div>
+        <div class="w-nav"><svg viewBox="0 0 24 24"><use href="#w-down"/></svg><span data-t="navDownloads">Downloads</span></div>
+        <div class="w-nav"><svg viewBox="0 0 48 48"><use href="#w-folder"/></svg><span data-t="navDocuments">Documents</span></div>
+        <div class="w-nav"><svg viewBox="0 0 48 48"><use href="#w-img"/></svg><span data-t="navPictures">Pictures</span></div>
+        <div class="w-nav"><svg viewBox="0 0 48 48"><use href="#w-vid"/></svg><span data-t="navVideos">Videos</span></div>
+        <div class="w__navgap"></div>
+        <div class="w-nav"><svg viewBox="0 0 24 24"><use href="#w-pc"/></svg><span data-t="navPc">This PC</span></div>
+      </aside>
+
+      <div class="w__content">
+        <div class="files" id="files"></div>
+        <div class="w__status">
+          <span id="count"></span>
+          <span id="picked"></span>
+          <span class="w__views" aria-hidden="true">
+            <i class="is-on"><svg viewBox="0 0 24 24"><use href="#w-view"/></svg></i>
+            <i><svg viewBox="0 0 24 24"><use href="#w-list"/></svg></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="card stack stack--tight">
+    <p class="eyebrow" data-t="shortcuts">Shortcuts that work here</p>
+    <div class="keys" id="keys"></div>
+  </section>
+
+</div>
+
+<div class="w-menu" id="menu" hidden role="menu"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  const KEY = "explorer.tree.v1";
+
+  /* Progress. One shared key, so the sector map can see which tasks are done. */
+  const TASK_ID = "explorer";
+  function remember() {
+    try {
+      const k = "kids.progress.v1";
+      const seen = JSON.parse(localStorage.getItem(k) || "{}");
+      seen[TASK_ID] = true;
+      localStorage.setItem(k, JSON.stringify(seen));
+    } catch (err) {}
+  }
+
+  /* Missions came from a separate page: a path written out at the top, and a
+     folder tree to walk down until you reach the file. It needs a tree it can
+     rely on, so mission mode swaps in its own — held in memory and never
+     saved, which leaves whatever the child built in the sandbox untouched.
+     Editing is off while a mission is running: the exercise is reading a
+     path, not building one. */
+  const MISSION_TREE = {
+    en: [
+      { name: "Kitchen", type: "folder", content: [
+        { name: "Fridge", type: "folder", content: [
+          { name: "shopping-list.txt", type: "text" },
+          { name: "menu-this-week.txt", type: "text" } ] },
+        { name: "Stove", type: "folder", content: [
+          { name: "temperature.txt", type: "text" } ] } ] },
+      { name: "Workshop", type: "folder", content: [
+        { name: "Tools", type: "folder", content: [
+          { name: "screwdriver.txt", type: "text" },
+          { name: "hammer.txt", type: "text" } ] },
+        { name: "Spare parts", type: "folder", content: [
+          { name: "bolts.txt", type: "text" },
+          { name: "nuts.txt", type: "text" } ] } ] },
+      { name: "Bridge", type: "folder", content: [
+        { name: "Maps", type: "folder", content: [
+          { name: "star-chart.txt", type: "text" },
+          { name: "route.txt", type: "text" } ] },
+        { name: "Instruments", type: "folder", content: [
+          { name: "radar.txt", type: "text" } ] } ] }
+    ],
+    es: [
+      { name: "Cocina", type: "folder", content: [
+        { name: "Nevera", type: "folder", content: [
+          { name: "lista-de-compra.txt", type: "text" },
+          { name: "menu-semana.txt", type: "text" } ] },
+        { name: "Fogones", type: "folder", content: [
+          { name: "temperatura.txt", type: "text" } ] } ] },
+      { name: "Taller", type: "folder", content: [
+        { name: "Herramientas", type: "folder", content: [
+          { name: "destornillador.txt", type: "text" },
+          { name: "martillo.txt", type: "text" } ] },
+        { name: "Repuestos", type: "folder", content: [
+          { name: "tornillos.txt", type: "text" },
+          { name: "tuercas.txt", type: "text" } ] } ] },
+      { name: "Puente", type: "folder", content: [
+        { name: "Mapas", type: "folder", content: [
+          { name: "carta-estelar.txt", type: "text" },
+          { name: "ruta.txt", type: "text" } ] },
+        { name: "Instrumentos", type: "folder", content: [
+          { name: "radar.txt", type: "text" } ] } ] }
+    ]
+  };
+
+  /* Each mission is a list of indexes into the tree above, so both languages
+     resolve to the same three files. */
+  const MISSIONS = [[0, 0, 0], [1, 0, 0], [2, 0, 0]];
+  /* Windows draws these; emoji would be whatever font the machine happens to
+     have, in whatever colour. */
+  const ICON = { folder: "#w-folder", text: "#w-txt", image: "#w-img", video: "#w-vid" };
+  function iconFor(type) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "node__icon");
+    svg.setAttribute("viewBox", "0 0 48 48");
+    svg.setAttribute("aria-hidden", "true");
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", ICON[type]);
+    svg.appendChild(use);
+    return svg;
+  }
+
+  const T = {
+    en: {
+      eyebrow: "Ages 8–11 · files and folders",
+      title1: "A place to", title2: "make a mess",
+      intro: "Nothing here breaks. Make folders, put files inside them, rename things, move them around, and it stays as you left it. When you would rather have a goal than a sandbox, switch to the missions.",
+      winTitle: "File Explorer",
+      newFolder: "Folder", newText: "Text Document", newImage: "Bitmap image", newVideo: "Video clip",
+      cmdNew: "New", cmdSort: "Sort", cmdView: "View",
+      searchIn: "Search Home",
+      navHome: "Home", navGallery: "Gallery", navDesktop: "Desktop", navDownloads: "Downloads",
+      navDocuments: "Documents", navPictures: "Pictures", navVideos: "Videos", navPc: "This PC",
+      items: function (n) { return n === 1 ? "1 item" : n + " items"; },
+      oneSelected: "1 item selected",
+      tips: { back: "Back", up: "Up to This computer" },
+      wipe: "Clear everything",
+      shortcuts: "Shortcuts that work here",
+      home: "This computer",
+      emptyTitle: "Nothing in here yet",
+      emptyBody: "Use the buttons above. Drop a file on a folder to move it in.",
+      names: { folder: "New folder", text: "Notes.txt", image: "Photo.jpg", video: "Clip.mp4" },
+      menu: { open: "Open", rename: "Rename", copy: "Copy", cut: "Cut", paste: "Paste", del: "Delete" },
+      keys: [
+        ["Ctrl + C", "copy what you picked"],
+        ["Ctrl + X", "cut it"],
+        ["Ctrl + V", "paste into this folder"],
+        ["F2", "rename"],
+        ["Delete", "throw away"],
+        ["Backspace", "go up one folder"]
+      ],
+      modeSandbox: "Free play", modeMission: "Find the file",
+      missionTag: "Find this file",
+      mFound: "Found it. Next one.",
+      mWrongFile: "That is a different file. The last part of the path is the name you need.",
+      mAllDone: "Three files, three paths. Nothing stays hidden from you.",
+      confirmWipe: "Delete everything and start from an empty computer?"
+    },
+    es: {
+      eyebrow: "8–11 años · archivos y carpetas",
+      title1: "Un sitio donde", title2: "desordenar",
+      intro: "Aquí no se rompe nada. Crea carpetas, mete archivos dentro, cambia nombres, muévelo todo, y se queda como lo dejaste. Cuando prefieras un objetivo en vez de un patio de juegos, cambia a las misiones.",
+      winTitle: "Explorador de archivos",
+      newFolder: "Carpeta", newText: "Documento de texto", newImage: "Imagen de mapa de bits", newVideo: "Clip de vídeo",
+      cmdNew: "Nuevo", cmdSort: "Ordenar", cmdView: "Ver",
+      searchIn: "Buscar en Inicio",
+      navHome: "Inicio", navGallery: "Galería", navDesktop: "Escritorio", navDownloads: "Descargas",
+      navDocuments: "Documentos", navPictures: "Imágenes", navVideos: "Vídeos", navPc: "Este equipo",
+      items: function (n) { return n === 1 ? "1 elemento" : n + " elementos"; },
+      oneSelected: "1 elemento seleccionado",
+      tips: { back: "Atrás", up: "Subir a Este ordenador" },
+      wipe: "Borrar todo",
+      shortcuts: "Atajos que funcionan aquí",
+      home: "Este ordenador",
+      emptyTitle: "Aquí no hay nada todavía",
+      emptyBody: "Usa los botones de arriba. Suelta un archivo sobre una carpeta para meterlo dentro.",
+      names: { folder: "Nueva carpeta", text: "Notas.txt", image: "Foto.jpg", video: "Clip.mp4" },
+      menu: { open: "Abrir", rename: "Cambiar nombre", copy: "Copiar", cut: "Cortar", paste: "Pegar", del: "Eliminar" },
+      keys: [
+        ["Ctrl + C", "copiar lo que elegiste"],
+        ["Ctrl + X", "cortarlo"],
+        ["Ctrl + V", "pegar en esta carpeta"],
+        ["F2", "cambiar el nombre"],
+        ["Supr", "tirar a la basura"],
+        ["Retroceso", "subir una carpeta"]
+      ],
+      modeSandbox: "Juego libre", modeMission: "Busca el archivo",
+      missionTag: "Busca este archivo",
+      mFound: "Encontrado. El siguiente.",
+      mWrongFile: "Ese es otro archivo. La última parte de la ruta es el nombre que buscas.",
+      mAllDone: "Tres archivos, tres rutas. Nada se te esconde.",
+      confirmWipe: "¿Borrar todo y empezar con un ordenador vacío?"
+    }
+  };
+
+  var lang = "en";
+  var tree = [];
+  var path = [];
+  var mode = "sandbox", missionAt = 0, sandboxTree = null, sandboxNext = 1;
+  var nextId = 1;
+  var selected = null;
+  var clip = null, clipMode = null;
+  var renaming = null;
+
+  const $ = function (id) { return document.getElementById(id); };
+  const t = function () { return T[lang]; };
+
+  function save() {
+    if (mode === "mission") return;   /* the mission tree is scratch, not the sandbox */
+    try { localStorage.setItem(KEY, JSON.stringify({ tree: tree, nextId: nextId })); }
+    catch (e) { /* private window or quota — the sandbox still works in memory */ }
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d && Array.isArray(d.tree)) { tree = d.tree; nextId = d.nextId || 1; }
+    } catch (e) { /* corrupt or blocked — start empty */ }
+  }
+
+  function folderAt(p) {
+    var list = tree;
+    for (var i = 0; i < p.length; i++) {
+      const hit = list.filter(function (n) { return n.id === p[i]; })[0];
+      if (!hit || hit.type !== "folder") return { content: list };
+      list = hit.content;
+    }
+    return { content: list };
+  }
+  function here() { return folderAt(path).content; }
+
+  function findParent(list, id) {
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].id === id) return list;
+      if (list[i].type === "folder") {
+        const deep = findParent(list[i].content, id);
+        if (deep) return deep;
+      }
+    }
+    return null;
+  }
+  function findNode(list, id) {
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].id === id) return list[i];
+      if (list[i].type === "folder") {
+        const deep = findNode(list[i].content, id);
+        if (deep) return deep;
+      }
+    }
+    return null;
+  }
+  function isInside(ancestorId, nodeId) {
+    const a = findNode(tree, ancestorId);
+    if (!a || a.type !== "folder") return false;
+    return !!findNode(a.content, nodeId);
+  }
+
+  function uniqueName(list, base) {
+    var name = base, n = 2;
+    while (list.some(function (x) { return x.name === name; })) {
+      const dot = base.lastIndexOf(".");
+      name = dot > 0 ? base.slice(0, dot) + " " + n + base.slice(dot) : base + " " + n;
+      n++;
+    }
+    return name;
+  }
+
+  function create(type) {
+    const list = here();
+    const node = { id: nextId++, name: uniqueName(list, t().names[type]), type: type };
+    if (type === "folder") node.content = [];
+    list.push(node);
+    selected = node.id;
+    save(); render();
+  }
+
+  function commitRename(node, value) {
+    const clean = String(value || "").trim();
+    if (clean) {
+      const list = findParent(tree, node.id) || tree;
+      const others = list.filter(function (x) { return x !== node; });
+      node.name = others.some(function (x) { return x.name === clean; })
+        ? uniqueName(others, clean) : clean;
+    }
+    renaming = null; save(); render();
+  }
+
+  function moveInto(id, folderId) {
+    if (!id || id === folderId) return;
+    if (isInside(id, folderId)) return;   /* never drop a folder into itself */
+    const node = findNode(tree, id);
+    const from = findParent(tree, id);
+    const target = findNode(tree, folderId);
+    if (!node || !from || !target || target.type !== "folder") return;
+    from.splice(from.indexOf(node), 1);
+    node.name = uniqueName(target.content, node.name);
+    target.content.push(node);
+    save(); render();
+  }
+
+  function removeNode(id) {
+    const node = findNode(tree, id);
+    const from = findParent(tree, id);
+    if (!node || !from) return;
+    from.splice(from.indexOf(node), 1);
+    if (selected === id) selected = null;
+    save(); render();
+  }
+
+  function clone(node) {
+    const copy = { id: nextId++, name: node.name, type: node.type };
+    if (node.type === "folder") copy.content = node.content.map(clone);
+    return copy;
+  }
+
+  function paste() {
+    if (!clip) return;
+    const list = here();
+    if (clipMode === "cut") {
+      const node = findNode(tree, clip.id);
+      const from = findParent(tree, clip.id);
+      if (!node || !from) { clip = null; return; }
+      if (node.type === "folder" && path.indexOf(node.id) >= 0) return;
+      from.splice(from.indexOf(node), 1);
+      node.name = uniqueName(list, node.name);
+      list.push(node);
+      clip = null; clipMode = null;
+    } else {
+      const copy = clone(clip);
+      copy.name = uniqueName(list, copy.name);
+      list.push(copy);
+    }
+    save(); render();
+  }
+
+
+  /* ---- missions --------------------------------------------------------- */
+  function buildMissionTree() {
+    var id = 10000;   /* well clear of anything the sandbox handed out */
+    function walk(list) {
+      return list.map(function (n) {
+        var node = { id: id++, name: n.name, type: n.type };
+        if (n.type === "folder") node.content = walk(n.content || []);
+        return node;
+      });
+    }
+    return walk(MISSION_TREE[lang]);
+  }
+
+  function missionTarget() {
+    var list = tree, node = null;
+    MISSIONS[missionAt].forEach(function (i) {
+      node = list[i];
+      list = node.content || [];
+    });
+    return node;
+  }
+
+  function missionChain() {
+    var list = tree, out = [];
+    MISSIONS[missionAt].forEach(function (i) {
+      var node = list[i];
+      out.push(node);
+      list = node.content || [];
+    });
+    return out;
+  }
+
+  function paintMission() {
+    var d = t();
+    $("mission").hidden = mode !== "mission";
+
+    var modes = $("modes");
+    modes.innerHTML = "";
+    [["sandbox", d.modeSandbox], ["mission", d.modeMission]].forEach(function (pair) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = pair[1];
+      b.dataset.mode = pair[0];
+      b.setAttribute("aria-pressed", String(pair[0] === mode));
+      b.onclick = function () { setMode(pair[0]); };
+      modes.appendChild(b);
+    });
+    /* On a mission you are looking for a file, not making one, so the
+       creating controls step aside. */
+    var making = mode !== "mission";
+    $("newBtn").hidden = !making;
+    $("moreBtn").hidden = !making;
+    if (mode !== "mission") return;
+
+    $("missionNo").innerHTML = (missionAt + 1) + '<span class="muted">/' + MISSIONS.length + "</span>";
+    var box = $("target");
+    box.innerHTML = "";
+    var parts = [d.home].concat(missionChain().map(function (n) { return n.name; }));
+    parts.forEach(function (name, i) {
+      if (i) { var sep = document.createElement("b"); sep.textContent = "\u203a"; box.appendChild(sep); }
+      var sp = document.createElement("span");
+      sp.textContent = name;
+      if (i === parts.length - 1) sp.className = "is-last";
+      box.appendChild(sp);
+    });
+  }
+
+  function missionNote(kind, text) {
+    var n = $("missionNote");
+    n.hidden = false; n.className = "feedback feedback--" + kind; n.textContent = text;
+  }
+
+  function missionPick(node) {
+    var d = t();
+    if (node.type === "folder") return;
+    if (node.id !== missionTarget().id) { missionNote("no", d.mWrongFile); return; }
+    missionAt++;
+    if (missionAt >= MISSIONS.length) {
+      remember();
+      missionAt = MISSIONS.length - 1;
+      missionNote("ok", d.mAllDone);
+      return;
+    }
+    path = []; selected = null;
+    render();
+    missionNote("ok", d.mFound);
+  }
+
+  function setMode(next) {
+    if (next === mode) return;
+    if (next === "mission") {
+      sandboxTree = tree; sandboxNext = nextId;
+      tree = buildMissionTree();
+      missionAt = 0;
+    } else {
+      tree = sandboxTree || tree; nextId = sandboxNext;
+    }
+    mode = next;
+    path = []; selected = null;
+    $("missionNote").hidden = true;
+    render();
+  }
+
+  function render() {
+    const d = t();
+    paintMission();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (el) {
+      const v = d[el.dataset.t];
+      if (typeof v === "string") el.textContent = v;
+    });
+
+    const kb = $("keys");
+    kb.innerHTML = "";
+    d.keys.forEach(function (pair) {
+      const row = document.createElement("div");
+      const k = document.createElement("kbd"); k.textContent = pair[0];
+      row.append(k, document.createTextNode(" " + pair[1]));
+      kb.appendChild(row);
+    });
+
+    const cr = $("crumbs");
+    cr.innerHTML = "";
+    const rootIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    rootIcon.setAttribute("viewBox", "0 0 24 24"); rootIcon.setAttribute("aria-hidden", "true");
+    const ru = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    ru.setAttribute("href", "#w-pc"); rootIcon.appendChild(ru);
+    cr.appendChild(rootIcon);
+    const mkCrumb = function (label, depth) {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = label;
+      b.onclick = function () { path = path.slice(0, depth); selected = null; render(); };
+      return b;
+    };
+    cr.appendChild(mkCrumb(d.home, 0));
+    var walk = tree;
+    path.forEach(function (id, i) {
+      const node = walk.filter(function (n) { return n.id === id; })[0];
+      if (!node) return;
+      const sep = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      sep.setAttribute("viewBox", "0 0 12 12"); sep.setAttribute("aria-hidden", "true");
+      const su = document.createElementNS("http://www.w3.org/2000/svg", "use");
+      su.setAttribute("href", "#w-chevr"); sep.appendChild(su);
+      cr.append(sep, mkCrumb(node.name, i + 1));
+      walk = node.content;
+    });
+
+    paintStatus();
+
+    const box = $("files");
+    box.innerHTML = "";
+    const list = here();
+
+    if (!list.length) {
+      const e = document.createElement("div");
+      e.className = "empty";
+      const h = document.createElement("strong"); h.textContent = d.emptyTitle;
+      const p = document.createElement("span"); p.textContent = d.emptyBody;
+      e.append(h, p);
+      box.appendChild(e);
+      return;
+    }
+
+    list.forEach(function (node) {
+      const el = document.createElement("div");
+      el.className = "node";
+      el.tabIndex = 0;
+      el.setAttribute("role", "button");
+      el.setAttribute("aria-selected", String(selected === node.id));
+      if (clip && clipMode === "cut" && clip.id === node.id) el.classList.add("is-cut");
+      el.draggable = true;
+
+      const ic = iconFor(node.type);
+
+      const nm = document.createElement("span");
+      nm.className = "node__name";
+      if (renaming === node.id) {
+        const inp = document.createElement("input");
+        inp.value = node.name;
+        inp.onkeydown = function (e) {
+          if (e.key === "Enter") commitRename(node, inp.value);
+          if (e.key === "Escape") { renaming = null; render(); }
+        };
+        inp.onblur = function () { if (renaming === node.id) commitRename(node, inp.value); };
+        nm.appendChild(inp);
+        setTimeout(function () { inp.focus(); inp.select(); }, 0);
+      } else {
+        nm.textContent = node.name;
+      }
+
+      el.append(ic, nm);
+
+      el.onclick = function (e) {
+        e.stopPropagation(); selected = node.id; render();
+        if (mode === "mission") missionPick(node);
+      };
+      el.ondblclick = function (e) {
+        e.stopPropagation();
+        if (node.type === "folder") { path = path.concat([node.id]); selected = null; render(); }
+        else { renaming = node.id; render(); }
+      };
+      el.oncontextmenu = function (e) {
+        e.preventDefault(); e.stopPropagation();
+        selected = node.id; render(); openMenu(e.clientX, e.clientY, node);
+      };
+
+      el.ondragstart = function (e) { e.dataTransfer.setData("text/plain", String(node.id)); };
+      if (node.type === "folder") {
+        el.ondragover = function (e) { e.preventDefault(); el.classList.add("is-over"); };
+        el.ondragleave = function () { el.classList.remove("is-over"); };
+        el.ondrop = function (e) {
+          e.preventDefault(); e.stopPropagation();
+          el.classList.remove("is-over");
+          moveInto(Number(e.dataTransfer.getData("text/plain")), node.id);
+        };
+      }
+
+      box.appendChild(el);
+    });
+  }
+
+  /* Explorer keeps its status bar and its command bar honest about what is
+     selected; greyed-out buttons are half the lesson of a real window. */
+  function paintStatus() {
+    const d = t(), n = here().length, sel = selected !== null;
+    $("count").textContent = d.items(n);
+    $("picked").textContent = sel ? d.oneSelected : "";
+    [["cmdCut", !sel], ["cmdCopy", !sel], ["cmdRename", !sel], ["cmdDelete", !sel],
+     ["cmdPaste", !clip], ["navBack", !path.length], ["navUp", !path.length]].forEach(function (it) {
+      $(it[0]).disabled = it[1];
+    });
+    document.querySelectorAll("[data-tt]").forEach(function (b) {
+      const label = d.menu[b.dataset.tt] || d.tips[b.dataset.tt] || "";
+      b.title = label; b.setAttribute("aria-label", label);
+    });
+  }
+
+  /* One menu element serves the right-click menu, the New dropdown and the
+     overflow menu, because Windows draws all three the same way. */
+  function svgIcon(id, box) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", box || "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", id);
+    svg.appendChild(use);
+    return svg;
+  }
+
+  function menuRow(m, opts) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.appendChild(opts.icon ? svgIcon(opts.icon, opts.box) : svgIcon("#w-blank"));
+    const s2 = document.createElement("span"); s2.textContent = opts.label;
+    const k = document.createElement("kbd"); k.textContent = opts.key || "";
+    b.append(s2, k);
+    b.disabled = !!opts.off;
+    b.onclick = function () { closeMenu(); opts.on(); };
+    m.appendChild(b);
+    return b;
+  }
+
+  function showMenu(x, y) {
+    const m = $("menu");
+    m.hidden = false;
+    const w = m.offsetWidth, h = m.offsetHeight;
+    m.style.left = Math.max(8, Math.min(x, window.innerWidth - w - 8)) + "px";
+    m.style.top = Math.max(8, Math.min(y, window.innerHeight - h - 8)) + "px";
+  }
+
+  function openMenu(x, y, node) {
+    const d = t(), m = $("menu");
+    m.innerHTML = "";
+
+    /* Windows 11 opens a file menu with a bare row of the five things you do
+       most, and only then the worded list. */
+    if (node) {
+      const row = document.createElement("div");
+      row.className = "w-menu__icons";
+      [["#w-cut", d.menu.cut, function () { clip = node; clipMode = "cut"; render(); }],
+       ["#w-copy", d.menu.copy, function () { clip = node; clipMode = "copy"; render(); }],
+       ["#w-rename", d.menu.rename, function () { renaming = node.id; render(); }],
+       ["#w-del", d.menu.del, function () { removeNode(node.id); }]].forEach(function (it) {
+        const b = document.createElement("button");
+        b.type = "button"; b.title = it[1];
+        b.setAttribute("aria-label", it[1]);
+        b.appendChild(svgIcon(it[0]));
+        b.onclick = function () { closeMenu(); it[2](); };
+        row.appendChild(b);
+      });
+      const pb = document.createElement("button");
+      pb.type = "button"; pb.title = d.menu.paste;
+      pb.setAttribute("aria-label", d.menu.paste);
+      pb.appendChild(svgIcon("#w-paste"));
+      pb.disabled = !clip;
+      pb.onclick = function () { closeMenu(); paste(); };
+      row.appendChild(pb);
+      m.appendChild(row);
+
+      if (node.type === "folder") {
+        menuRow(m, { label: d.menu.open, icon: "#w-folder", box: "0 0 48 48",
+          on: function () { path = path.concat([node.id]); selected = null; render(); } });
+      }
+      menuRow(m, { label: d.menu.rename, key: "F2", icon: "#w-rename",
+        on: function () { renaming = node.id; render(); } });
+      m.appendChild(document.createElement("hr"));
+    }
+
+    menuRow(m, { label: d.menu.paste, key: "Ctrl+V", icon: "#w-paste", off: !clip, on: paste });
+    if (node) {
+      menuRow(m, { label: d.menu.del, key: "Del", icon: "#w-del",
+        on: function () { removeNode(node.id); } });
+    } else {
+      menuRow(m, { label: d.cmdNew, icon: "#w-new", on: function () { openNewMenu(); } });
+    }
+
+    showMenu(x, y);
+  }
+
+  function openNewMenu() {
+    const d = t(), m = $("menu");
+    m.innerHTML = "";
+    [["folder", d.newFolder, "#w-folder", "0 0 48 48"],
+     ["text", d.newText, "#w-txt", "0 0 48 48"],
+     ["image", d.newImage, "#w-img", "0 0 48 48"],
+     ["video", d.newVideo, "#w-vid", "0 0 48 48"]].forEach(function (it) {
+      menuRow(m, { label: it[1], icon: it[2], box: it[3], on: function () { create(it[0]); } });
+    });
+    const r = $("newBtn").getBoundingClientRect();
+    showMenu(r.left, r.bottom + 4);
+  }
+
+  function openMoreMenu() {
+    const d = t(), m = $("menu");
+    m.innerHTML = "";
+    menuRow(m, { label: d.wipe, icon: "#w-del", on: function () {
+      if (!window.confirm(d.confirmWipe)) return;
+      tree = []; path = []; selected = null; clip = null; nextId = 1;
+      save(); render();
+    } });
+    const r = $("moreBtn").getBoundingClientRect();
+    showMenu(r.right - 200, r.bottom + 4);
+  }
+
+  function closeMenu() { $("menu").hidden = true; }
+
+  function picked() { return selected === null ? null : findNode(tree, selected); }
+
+  $("newBtn").onclick = function (e) { e.stopPropagation(); openNewMenu(); };
+  $("moreBtn").onclick = function (e) { e.stopPropagation(); openMoreMenu(); };
+  $("cmdCut").onclick = function () { const n = picked(); if (n) { clip = n; clipMode = "cut"; render(); } };
+  $("cmdCopy").onclick = function () { const n = picked(); if (n) { clip = n; clipMode = "copy"; render(); } };
+  $("cmdPaste").onclick = paste;
+  $("cmdRename").onclick = function () { const n = picked(); if (n) { renaming = n.id; render(); } };
+  $("cmdDelete").onclick = function () { const n = picked(); if (n) removeNode(n.id); };
+  $("navBack").onclick = function () { if (path.length) { path = path.slice(0, -1); selected = null; render(); } };
+  $("navUp").onclick = function () { if (path.length) { path = path.slice(0, -1); selected = null; render(); } };
+
+  const filesBox = $("files");
+  filesBox.onclick = function () { selected = null; render(); };
+  filesBox.oncontextmenu = function (e) { e.preventDefault(); openMenu(e.clientX, e.clientY, null); };
+  filesBox.ondragover = function (e) { e.preventDefault(); filesBox.classList.add("is-over"); };
+  filesBox.ondragleave = function () { filesBox.classList.remove("is-over"); };
+  filesBox.ondrop = function (e) {
+    e.preventDefault();
+    filesBox.classList.remove("is-over");
+    const id = Number(e.dataTransfer.getData("text/plain"));
+    const node = findNode(tree, id), from = findParent(tree, id);
+    const list = here();
+    if (!node || !from || list.indexOf(node) >= 0) return;
+    if (node.type === "folder" && path.indexOf(node.id) >= 0) return;
+    from.splice(from.indexOf(node), 1);
+    node.name = uniqueName(list, node.name);
+    list.push(node);
+    save(); render();
+  };
+
+  document.addEventListener("click", closeMenu);
+  document.addEventListener("scroll", closeMenu, true);
+
+  document.addEventListener("keydown", function (e) {
+    if (renaming) return;
+    const node = selected ? findNode(tree, selected) : null;
+    const ctrl = e.ctrlKey || e.metaKey;
+    if (ctrl && e.key.toLowerCase() === "c" && node) { clip = node; clipMode = "copy"; render(); e.preventDefault(); }
+    else if (ctrl && e.key.toLowerCase() === "x" && node) { clip = node; clipMode = "cut"; render(); e.preventDefault(); }
+    else if (ctrl && e.key.toLowerCase() === "v") { paste(); e.preventDefault(); }
+    else if (e.key === "F2" && node) { renaming = node.id; render(); e.preventDefault(); }
+    else if (e.key === "Delete" && node) { removeNode(node.id); e.preventDefault(); }
+    else if (e.key === "Backspace" && path.length) { path = path.slice(0, -1); render(); e.preventDefault(); }
+  });
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      render();
+    };
+  });
+
+  load();
+  render();
+})();
+</script>
+</body>
+</html>

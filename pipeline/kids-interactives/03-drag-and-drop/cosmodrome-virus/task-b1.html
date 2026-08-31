@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repair the Circuit Boards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  /* One screen on open: a tighter heading block, and the page held to the
+     height of the viewport so the working area can take what is left. */
+  body { padding: var(--page-top) 0 var(--page-bottom); }
+  .wrap { height: calc(100svh - var(--page-pad)); }
+  h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
+  .lede { font-size: var(--t-sm); max-width: 78ch; }
+  .stack--loose { gap: var(--s-4); }
+
+
+  .lab { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: var(--s-4); align-items: start; }
+  /* The board is the thing to look at, so it gets whatever height is left
+     rather than a fixed slice of a very tall card. */
+  .board svg { max-height: min(46svh, 420px); }
+  @media (max-width: 860px) { .lab { grid-template-columns: 1fr; } }
+
+  .legend { display: grid; gap: var(--s-2); }
+  .legend__row { display: flex; align-items: center; gap: var(--s-2); font-size: var(--t-sm); }
+  .legend__chip { width: 28px; height: 28px; border-radius: var(--radius-sm); border: 2px solid var(--ink-900); flex: none; }
+  .legend__num { font-family: var(--font-mono); font-weight: 700; }
+
+  /* The board is the object being repaired, not page chrome, so it keeps a
+     real PCB colour instead of taking the page surface. */
+  .board { background: #0d2b1a; border-radius: var(--radius-lg); padding: var(--s-3); border: 3px solid var(--ink-900); }
+  .board__label { font-family: var(--font-mono); font-size: var(--t-2xs); color: #7de6a4; letter-spacing: .12em; margin-bottom: var(--s-2); }
+  .board svg { width: 100%; height: auto; display: block; }
+  .cell { cursor: pointer; }
+  .cell rect { transition: fill var(--motion-fast) var(--motion-ease); }
+  .cell:hover rect { stroke: #9df5bd; }
+  .cell text { font-family: var(--font-mono); font-size: 20px; font-weight: 700; fill: #f4f7f2; text-anchor: middle; pointer-events: none; }
+  .cell.is-wrong rect { stroke: var(--clay-500); stroke-width: 5; }
+
+  .swatches { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .sw {
+    width: 48px; height: 48px; border-radius: var(--radius-sm);
+    border: 3px solid var(--ink-900); cursor: pointer; padding: 0;
+    box-shadow: 2px 2px 0 var(--ink-900);
+    transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
+  }
+  .sw[aria-pressed="true"] { transform: translateY(2px); box-shadow: 0 0 0 3px var(--color-primary); }
+  .sw--erase { background: repeating-linear-gradient(45deg, #fff 0 6px, #ddd 6px 12px); }
+
+  .now { display: flex; align-items: center; gap: var(--s-2); font-size: var(--t-sm); }
+  .now__chip { width: 28px; height: 28px; border-radius: var(--radius-sm); border: 2px solid var(--ink-900); background: var(--color-surface-2); flex: none; }
+
+  [hidden] { display: none !important; }
+
+  /* The last notch, for a screen with barely 660px of room. */
+  @media (max-height: 700px) {
+    .board svg { max-height: 36svh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--wide stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Cosmodrome · sector B</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">The virus took</span> <em class="mark" data-t="title2">the colours away</em></h1>
+    <p class="lede" data-t="intro">Every part on the board went grey. The chart on the left says which colour each numbered one should be: pick a colour, then tap the part. Get the small board right and a bigger one comes up.</p>
+  </header>
+
+  <div class="hud">
+    <div class="row">
+      <span class="eyebrow" data-t="boardLabel">Board</span>
+      <span class="hud__score" id="levelNo">1</span>
+    </div>
+    <div class="row">
+      <span class="eyebrow" data-t="triesLabel">Tries left</span>
+      <span class="lives" id="lives" aria-hidden="true"></span>
+    </div>
+    <div class="now">
+      <span class="eyebrow" data-t="nowLabel">Holding</span>
+      <span class="now__chip" id="nowChip"></span>
+      <span id="nowName">—</span>
+    </div>
+  </div>
+
+  <section class="card stack" id="game">
+    <div class="lab">
+      <div class="stack">
+        <div class="stack stack--tight">
+          <p class="eyebrow" data-t="chartLabel">Wiring chart</p>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div class="stack stack--tight">
+          <p class="eyebrow" data-t="paletteLabel">Colours</p>
+          <div class="swatches" id="swatches"></div>
+        </div>
+      </div>
+
+      <div class="board">
+        <div class="board__label" id="boardName">ROB-2000</div>
+        <div id="boardSvg"></div>
+      </div>
+    </div>
+
+    <div id="verdict" hidden></div>
+
+    <div class="row">
+      <button class="btn" id="check" data-t="check">Check the board</button>
+      <button class="btn btn--ghost" id="reset" data-t="reset">Start over</button>
+    </div>
+  </section>
+
+  <section class="card stack" id="over" hidden aria-live="polite">
+    <h2 id="overTitle">…</h2>
+    <p class="muted" id="overBody"></p>
+    <div><button class="btn" id="again" data-t="again">Play again</button></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Progress. One shared key, so the sector map can see which tasks are done.
+     Five lines repeated per page rather than a shared script: every page has
+     to stay standalone for file:// and for a frameBox archive.
+     try/catch throughout — a private window or blocked site data makes
+     localStorage throw rather than hand back null. */
+  var TASK_ID = "b1";
+  function remember() {
+    try {
+      var key = "kids.progress.v1";
+      var seen = JSON.parse(localStorage.getItem(key) || "{}");
+      seen[TASK_ID] = true;
+      localStorage.setItem(key, JSON.stringify(seen));
+    } catch (err) {}
+  }
+
+  /* Two boards that used to be two separate pages. The mechanic was identical
+     — read the chart, paint the numbered part — so the bigger board is now
+     level two rather than a second card in the catalogue. Hex values, the
+     answers and the five-try budget are the originals.
+
+     The boards are drawn from data rather than written into the markup, which
+     is what made keeping two of them cheap. */
+  var TRIES = 5;
+  var BLANK = "#3a3a3a";
+
+  var PALETTE = [
+    { key: "red",    hex: "#ef4444" },
+    { key: "orange", hex: "#f97316" },
+    { key: "yellow", hex: "#facc15" },
+    { key: "green",  hex: "#22c55e" },
+    { key: "blue",   hex: "#3b82f6" },
+    { key: "purple", hex: "#a855f7" },
+    { key: "pink",   hex: "#ec4899" },
+    { key: "cyan",   hex: "#06b6d4" },
+    { key: "white",  hex: "#ffffff" },
+    { key: "black",  hex: "#111827" }
+  ];
+
+  var LEVELS = [
+    {
+      name: "ROB-2000", w: 350, h: 300, grid: 15,
+      answer: { 1: "red", 2: "blue", 3: "yellow", 4: "green" },
+      traces: ["M 85 70 L 85 112 L 175 112", "M 265 70 L 265 112 L 175 112",
+               "M 175 112 L 175 188",
+               "M 85 230 L 85 188 L 175 188", "M 265 230 L 265 188 L 175 188"],
+      joints: [[175, 112], [175, 188]],
+      parts: [[1, 45, 30, 80, 45], [2, 225, 30, 80, 45], [3, 45, 225, 80, 45], [4, 225, 225, 80, 45]],
+      core: { x: 135, y: 125, w: 80, h: 50, label: "CPU" },
+      holes: [[20, 20], [330, 20], [20, 280], [330, 280]]
+    },
+    {
+      name: "MAIN-CTRL-3000", w: 400, h: 320, grid: 16,
+      answer: { 1: "red", 2: "orange", 3: "yellow", 4: "green", 5: "blue", 6: "purple" },
+      traces: ["M 70 65 L 70 110 L 200 110", "M 200 65 L 200 110", "M 330 65 L 330 110 L 200 110",
+               "M 200 110 L 200 210",
+               "M 70 255 L 70 210 L 200 210", "M 200 255 L 200 210", "M 330 255 L 330 210 L 200 210"],
+      joints: [[200, 110], [200, 210]],
+      parts: [[1, 30, 25, 80, 40], [2, 160, 25, 80, 40], [3, 290, 25, 80, 40],
+              [4, 30, 255, 80, 40], [5, 160, 255, 80, 40], [6, 290, 255, 80, 40]],
+      core: { x: 150, y: 125, w: 100, h: 70, label: "MAIN" },
+      holes: [[16, 16], [384, 16], [16, 304], [384, 304]]
+    }
+  ];
+
+  var T = {
+    en: {
+      eyebrow: "Cosmodrome · sector B",
+      title1: "The virus took", title2: "the colours away",
+      intro: "Every part on the board went grey. The chart on the left says which colour each numbered one should be: pick a colour, then tap the part. Get the small board right and a bigger one comes up.",
+      boardLabel: "Board", triesLabel: "Tries left", nowLabel: "Holding",
+      chartLabel: "Wiring chart", paletteLabel: "Colours",
+      check: "Check the board", reset: "Start over", again: "Play again",
+      nothing: "nothing yet", erase: "Scrape it off", part: "Part",
+      colours: {
+        red: "Red", orange: "Orange", yellow: "Yellow", green: "Green", blue: "Blue",
+        purple: "Purple", pink: "Pink", cyan: "Cyan", white: "White", black: "Black"
+      },
+      pickFirst: "Pick a colour first, then tap a part.",
+      notDone: function (n) { return n === 1 ? "One part is still bare." : n + " parts are still bare."; },
+      someWrong: function (n) {
+        return n === 1
+          ? "One part is the wrong colour. It is outlined, so check the chart for that number."
+          : n + " parts are the wrong colour. They are outlined, so check the chart for those numbers.";
+      },
+      levelDone: "ROB-2000 is back online. Now the big one.",
+      wonTitle: "Both boards are running",
+      wonBody: function (n) { return "Ten parts across two boards, " + n + " of " + TRIES + " tries used."; },
+      lostTitle: "Out of tries",
+      lostBody: "The chart is the answer. On the small board: 1 red, 2 blue, 3 yellow, 4 green. On the big one the chart is a rainbow in order."
+    },
+    es: {
+      eyebrow: "Cosmódromo · sector B",
+      title1: "El virus se llevó", title2: "los colores",
+      intro: "Todas las piezas de la placa se quedaron grises. El esquema de la izquierda dice de qué color va cada una: elige un color y toca la pieza. Acierta la placa pequeña y saldrá otra más grande.",
+      boardLabel: "Placa", triesLabel: "Intentos", nowLabel: "En la mano",
+      chartLabel: "Esquema", paletteLabel: "Colores",
+      check: "Comprobar la placa", reset: "Empezar de nuevo", again: "Jugar otra vez",
+      nothing: "nada todavía", erase: "Rascar el color", part: "Pieza",
+      colours: {
+        red: "Rojo", orange: "Naranja", yellow: "Amarillo", green: "Verde", blue: "Azul",
+        purple: "Morado", pink: "Rosa", cyan: "Celeste", white: "Blanco", black: "Negro"
+      },
+      pickFirst: "Elige un color primero y luego toca una pieza.",
+      notDone: function (n) { return n === 1 ? "Queda una pieza sin pintar." : "Quedan " + n + " piezas sin pintar."; },
+      someWrong: function (n) {
+        return n === 1
+          ? "Una pieza tiene el color equivocado. Está marcada: mira el esquema para ese número."
+          : n + " piezas tienen el color equivocado. Están marcadas: mira el esquema para esos números.";
+      },
+      levelDone: "ROB-2000 vuelve a encenderse. Ahora la grande.",
+      wonTitle: "Las dos placas funcionan",
+      wonBody: function (n) { return "Diez piezas en dos placas, " + n + " de " + TRIES + " intentos usados."; },
+      lostTitle: "Se acabaron los intentos",
+      lostBody: "El esquema es la respuesta. En la placa pequeña: 1 rojo, 2 azul, 3 amarillo, 4 verde. En la grande el esquema es un arcoíris en orden."
+    }
+  };
+
+  var lang = "en", level = 0, held = null, painted = {}, used = 0;
+
+  function byId(id) { return document.getElementById(id); }
+  function t() { return T[lang]; }
+  function board() { return LEVELS[level]; }
+  function hexOf(key) {
+    for (var i = 0; i < PALETTE.length; i++) if (PALETTE[i].key === key) return PALETTE[i].hex;
+    return BLANK;
+  }
+
+  function say(kind, message) {
+    var v = byId("verdict");
+    v.hidden = false; v.className = "feedback feedback--" + kind; v.textContent = message;
+  }
+  function clearSay() {
+    var v = byId("verdict"); v.hidden = true; v.className = "";
+    document.querySelectorAll(".cell").forEach(function (c) { c.classList.remove("is-wrong"); });
+  }
+
+  /* ---- the board is built from the level data ---------------------------- */
+  var NS = "http://www.w3.org/2000/svg";
+  function svgEl(tag, attrs) {
+    var n = document.createElementNS(NS, tag);
+    Object.keys(attrs || {}).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+    return n;
+  }
+
+  function buildBoard() {
+    var d = t(), b = board();
+    byId("boardName").textContent = b.name;
+
+    var svg = svgEl("svg", {
+      viewBox: "0 0 " + b.w + " " + b.h, role: "img",
+      "aria-label": b.name + " circuit board"
+    });
+
+    var defs = svgEl("defs");
+    var pat = svgEl("pattern", {
+      id: "grid" + level, width: b.grid, height: b.grid, patternUnits: "userSpaceOnUse"
+    });
+    pat.appendChild(svgEl("path", {
+      d: "M " + b.grid + " 0 L 0 0 0 " + b.grid, fill: "none", stroke: "#1d4a30", "stroke-width": "0.5"
+    }));
+    defs.appendChild(pat);
+    svg.appendChild(defs);
+    svg.appendChild(svgEl("rect", { width: b.w, height: b.h, fill: "url(#grid" + level + ")" }));
+
+    var wires = svgEl("g", { stroke: "#3f9c63", "stroke-width": "4", fill: "none" });
+    b.traces.forEach(function (dAttr) { wires.appendChild(svgEl("path", { d: dAttr })); });
+    b.joints.forEach(function (j) {
+      wires.appendChild(svgEl("circle", { cx: j[0], cy: j[1], r: 6, fill: "#3f9c63" }));
+    });
+    svg.appendChild(wires);
+
+    b.parts.forEach(function (p) {
+      var num = p[0], x = p[1], y = p[2], w = p[3], h = p[4];
+      var g = svgEl("g", {
+        "class": "cell", "data-part": num, tabindex: "0", role: "button",
+        "aria-label": d.part + " " + num
+      });
+      g.appendChild(svgEl("rect", {
+        x: x, y: y, width: w, height: h, rx: 7,
+        fill: painted[num] ? hexOf(painted[num]) : BLANK,
+        stroke: "#6b7b70", "stroke-width": "3"
+      }));
+      var label = svgEl("text", { x: x + w / 2, y: y + h / 2 + 7 });
+      label.textContent = String(num);
+      g.appendChild(label);
+
+      g.addEventListener("click", function () { paint(num); });
+      g.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); paint(num); }
+      });
+      svg.appendChild(g);
+    });
+
+    var core = svgEl("g");
+    core.appendChild(svgEl("rect", {
+      x: b.core.x, y: b.core.y, width: b.core.w, height: b.core.h, rx: 6,
+      fill: "#101b16", stroke: "#6b7b70", "stroke-width": "2"
+    }));
+    var coreText = svgEl("text", {
+      x: b.core.x + b.core.w / 2, y: b.core.y + b.core.h / 2 + 5,
+      fill: "#7de6a4", "font-size": "14"
+    });
+    coreText.textContent = b.core.label;
+    core.appendChild(coreText);
+    svg.appendChild(core);
+
+    var holes = svgEl("g", { fill: "none", stroke: "#1d4a30", "stroke-width": "2" });
+    b.holes.forEach(function (h) { holes.appendChild(svgEl("circle", { cx: h[0], cy: h[1], r: 8 })); });
+    svg.appendChild(holes);
+
+    var host = byId("boardSvg");
+    host.innerHTML = "";
+    host.appendChild(svg);
+  }
+
+  function paint(num) {
+    clearSay();
+    if (!held) { say("hint", t().pickFirst); return; }
+    if (held === "erase") { delete painted[num]; } else { painted[num] = held; }
+    render();
+  }
+
+  function render() {
+    var d = t(), b = board();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (n) {
+      var v = d[n.dataset.t];
+      if (typeof v === "string") n.textContent = v;
+    });
+
+    byId("levelNo").innerHTML = (level + 1) + "<span class=\"muted\">/" + LEVELS.length + "</span>";
+
+    var lv = byId("lives"); lv.innerHTML = "";
+    for (var i = 0; i < TRIES; i++) {
+      var x = document.createElement("i");
+      if (i < used) x.className = "is-spent";
+      lv.appendChild(x);
+    }
+
+    byId("nowChip").style.background = held && held !== "erase" ? hexOf(held) : "";
+    byId("nowName").textContent = held ? (held === "erase" ? d.erase : d.colours[held]) : d.nothing;
+
+    var lg = byId("legend"); lg.innerHTML = "";
+    Object.keys(b.answer).forEach(function (num) {
+      var row = document.createElement("div");
+      row.className = "legend__row";
+      var chip = document.createElement("span");
+      chip.className = "legend__chip"; chip.style.background = hexOf(b.answer[num]);
+      var lab = document.createElement("span");
+      lab.className = "legend__num"; lab.textContent = d.part + " " + num;
+      var nm = document.createElement("span");
+      nm.className = "muted"; nm.textContent = d.colours[b.answer[num]];
+      row.appendChild(chip); row.appendChild(lab); row.appendChild(nm);
+      lg.appendChild(row);
+    });
+
+    var sw = byId("swatches"); sw.innerHTML = "";
+    PALETTE.forEach(function (c) {
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.className = "sw";
+      btn.style.background = c.hex;
+      btn.setAttribute("aria-pressed", String(held === c.key));
+      btn.setAttribute("aria-label", d.colours[c.key]);
+      btn.title = d.colours[c.key];
+      btn.onclick = function () { held = held === c.key ? null : c.key; render(); };
+      sw.appendChild(btn);
+    });
+    var er = document.createElement("button");
+    er.type = "button"; er.className = "sw sw--erase";
+    er.setAttribute("aria-pressed", String(held === "erase"));
+    er.setAttribute("aria-label", d.erase);
+    er.title = d.erase;
+    er.onclick = function () { held = held === "erase" ? null : "erase"; render(); };
+    sw.appendChild(er);
+
+    buildBoard();
+  }
+
+  function check() {
+    var d = t(), b = board();
+    var nums = Object.keys(b.answer);
+    var bare = nums.filter(function (n) { return !painted[n]; });
+    if (bare.length) { say("hint", d.notDone(bare.length)); return; }
+
+    used++;
+    var wrong = nums.filter(function (n) { return painted[n] !== b.answer[n]; });
+    render();
+    wrong.forEach(function (n) {
+      document.querySelector(".cell[data-part=\"" + n + "\"]").classList.add("is-wrong");
+    });
+
+    if (!wrong.length) {
+      if (level < LEVELS.length - 1) {
+        level++; painted = {}; held = null;
+        render();
+        say("ok", d.levelDone);
+        return;
+      }
+      remember();
+      byId("game").hidden = true; byId("over").hidden = false;
+      byId("overTitle").textContent = d.wonTitle;
+      byId("overBody").textContent = d.wonBody(used);
+      return;
+    }
+    if (used >= TRIES) {
+      byId("game").hidden = true; byId("over").hidden = false;
+      byId("overTitle").textContent = d.lostTitle;
+      byId("overBody").textContent = d.lostBody;
+      return;
+    }
+    say("no", d.someWrong(wrong.length));
+  }
+
+  function reset() {
+    level = 0; held = null; painted = {}; used = 0;
+    byId("game").hidden = false; byId("over").hidden = true;
+    clearSay(); render();
+  }
+
+  byId("check").onclick = check;
+  byId("reset").onclick = reset;
+  byId("again").onclick = reset;
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      reset();
+    };
+  });
+
+  reset();
+})();
+</script>
+</body>
+</html>

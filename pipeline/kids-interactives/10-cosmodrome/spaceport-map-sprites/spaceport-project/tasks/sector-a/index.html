@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сектор A: Файловый архив | Космодром</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/tasks.css">
+    <link rel="stylesheet" href="../../css/modal.css">
+</head>
+<body>
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <a href="../../index.html" style="text-decoration: none; display: flex; align-items: center; gap: 15px;">
+                <span class="logo-icon">🚀</span>
+                <div class="logo-text">
+                    <h1>Космодром</h1>
+                    <p>Сектор A: Файловый архив</p>
+                </div>
+            </a>
+        </div>
+        <div class="header-controls">
+            <a href="../../index.html" class="btn btn-secondary">
+                ← Назад к карте
+            </a>
+        </div>
+    </header>
+
+    <!-- Progress indicator -->
+    <div class="progress-container">
+        <span class="progress-label">ЗАДАНИЕ</span>
+        <div class="task-tabs">
+            <button class="task-tab active" onclick="showTask(1)">1</button>
+            <button class="task-tab" onclick="showTask(2)">2</button>
+            <button class="task-tab" onclick="showTask(3)">3</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="task-page">
+        <!-- Task 1: Drag files to folders -->
+        <div class="task-section active" id="task1">
+            <div id="taskContainer">
+                <!-- Task will be rendered here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Task 2: File Explorer -->
+        <div class="task-section" id="task2">
+            <div class="task-header">
+                <h1>Найди файл по пути</h1>
+                <p class="task-description">Вирус спрятал важные файлы! Найди их в проводнике по указанному пути.</p>
+            </div>
+            <div class="file-explorer" id="fileExplorer">
+                <!-- File explorer will be rendered here -->
+                <p style="text-align: center; padding: 50px; color: var(--color-text-dim);">
+                    🚧 Задание в разработке
+                </p>
+            </div>
+        </div>
+
+        <!-- Task 3: Fix Structure -->
+        <div class="task-section" id="task3">
+            <div class="task-header">
+                <h1>Исправь структуру папок</h1>
+                <p class="task-description">Вирус перепутал папки местами! Восстанови правильную структуру по образцу.</p>
+            </div>
+            <div class="structure-task" id="structureTask">
+                <!-- Structure task will be rendered here -->
+                <p style="text-align: center; padding: 50px; color: var(--color-text-dim);">
+                    🚧 Задание в разработке
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        // Generate stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            const size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Task switching
+        function showTask(taskNum) {
+            // Hide all tasks
+            document.querySelectorAll('.task-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.task-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected task
+            document.getElementById(`task${taskNum}`).classList.add('active');
+            document.querySelectorAll('.task-tab')[taskNum - 1].classList.add('active');
+        }
+    </script>
+    <script src="task-1-drag-files.js" type="module"></script>
+    
+    <style>
+        .task-page {
+            padding: 120px 20px 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .task-section {
+            display: none;
+        }
+
+        .task-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .task-tabs {
+            display: flex;
+            gap: 5px;
+        }
+
+        .task-tab {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--color-text);
+            font-family: var(--font-display);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .task-tab:hover {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: var(--color-accent);
+        }
+
+        .task-tab.active {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .task-tab.completed {
+            background: var(--color-completed);
+            border-color: var(--color-completed);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Task 1 specific styles */
+        .files-pool {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .files-pool h3 {
+            margin-bottom: 15px;
+            font-family: var(--font-display);
+        }
+
+        .files-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .folders-area {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .folders-area {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>
