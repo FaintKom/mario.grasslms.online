@@ -1,0 +1,247 @@
+<style>
+/* ==========================================================================
+   Google Docs, drawn in CSS. Shared by the three text tasks.
+
+   The measurements are the real ones: a 40px toolbar riding in a #edf2fa pill,
+   an 816px page (8.5 inches at 96dpi) on a #f9fbfd desk, #1a73e8 for anything
+   you can press. Prefixed .gd- so it cannot reach the GrassLMS page around it.
+
+   The page padding is 48px rather than the real 96px: an inch of margin makes
+   sense on paper and wastes half the frame inside a lesson.
+   ========================================================================== */
+
+.gd {
+  --gd-blue: #1a73e8;
+  --gd-text: #202124;
+  --gd-dim: #5f6368;
+  --gd-line: #dadce0;
+  --gd-bar: #edf2fa;
+  --gd-desk: #f9fbfd;
+  --gd-hover: rgba(60, 64, 67, .08);
+
+  border: 1px solid var(--gd-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .16), 0 6px 22px rgba(60, 64, 67, .1);
+  font-family: Roboto, "Segoe UI", Arial, system-ui, sans-serif;
+  color: var(--gd-text);
+  -webkit-font-smoothing: antialiased;
+}
+.gd svg { display: block; }
+
+/* ---- title row ---------------------------------------------------------- */
+.gd__head { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px 0; }
+.gd__logo { width: 36px; height: 36px; flex: 0 0 36px; margin-top: 2px; }
+.gd__titles { min-width: 0; flex: 1; }
+.gd__name { font-size: 17px; line-height: 1.3; color: var(--gd-text); }
+.gd__menu { display: flex; flex-wrap: wrap; gap: 1px; margin-top: 1px; }
+.gd__menu span {
+  padding: 3px 7px; border-radius: 4px;
+  font-size: 13px; color: #3c4043; white-space: nowrap;
+}
+.gd__menu span:hover { background: var(--gd-hover); }
+.gd__right { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.gd__share {
+  display: flex; align-items: center; gap: 7px;
+  height: 34px; padding: 0 18px; border-radius: 999px;
+  background: #c2e7ff; color: #001d35; font-size: 13px; font-weight: 500;
+  white-space: nowrap;
+}
+.gd__share svg { width: 16px; height: 16px; }
+.gd__avatar {
+  width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%;
+  background: #7b4bd8; color: #fff;
+  display: grid; place-items: center; font-size: 12px; font-weight: 500;
+}
+@media (max-width: 620px) { .gd__share span { display: none; } .gd__share { padding: 0 12px; } }
+
+/* ---- toolbar ------------------------------------------------------------ */
+.gd__toolwrap { padding: 6px 12px 10px; }
+.gd__tools {
+  display: flex; align-items: center; gap: 1px;
+  height: 40px; padding: 0 10px;
+  border-radius: 999px; background: var(--gd-bar);
+  overflow-x: auto; scrollbar-width: none;
+}
+.gd__tools::-webkit-scrollbar { display: none; }
+.gd-t {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  height: 28px; min-width: 28px; padding: 0 5px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 13px; color: #444746;
+  cursor: pointer; white-space: nowrap; flex: 0 0 auto;
+}
+.gd-t:hover:not(:disabled) { background: rgba(68, 71, 70, .1); }
+.gd-t:disabled { opacity: .38; cursor: default; }
+.gd-t[aria-pressed="true"] { background: #d3e3fd; color: #041e49; }
+.gd-t svg { width: 18px; height: 18px; }
+.gd-t--letter { font-family: "Times New Roman", Times, serif; font-size: 16px; }
+.gd-t--letter.is-b { font-weight: 700; }
+.gd-t--letter.is-i { font-style: italic; }
+.gd-t--letter.is-u { text-decoration: underline; }
+.gd__tsep { width: 1px; height: 20px; margin: 0 5px; background: #c7c7c7; flex: 0 0 1px; }
+.gd__size { display: flex; align-items: center; gap: 2px; flex: 0 0 auto; font-size: 13px; color: #444746; }
+.gd__size i { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; font-style: normal; }
+.gd__size i:hover { background: rgba(68, 71, 70, .1); }
+.gd__size b {
+  width: 34px; height: 24px; display: grid; place-items: center;
+  border: 1px solid var(--gd-line); border-radius: 4px; background: #fff; font-weight: 400;
+}
+
+/* ---- the desk and the page ---------------------------------------------- */
+.gd__desk {
+  position: relative;
+  background: var(--gd-desk);
+  border-top: 1px solid #e3e6e8;
+  padding: 20px 16px 28px;
+  max-height: 58svh; overflow: auto;
+}
+.gd__page {
+  width: 100%; max-width: 816px; margin: 0 auto;
+  min-height: 240px; padding: 48px 56px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .15);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px; line-height: 1.6; color: #202124;
+}
+.gd__page h1, .gd__page h2, .gd__page h3 {
+  font-family: Arial, Helvetica, sans-serif; letter-spacing: 0; color: #202124;
+}
+.gd__page p { margin: 0 0 14px; }
+.gd__page p:last-child { margin-bottom: 0; }
+.gd__page mark { background: #fff2a8; padding: 0 1px; }
+.gd__page mark.is-now { background: #ffb300; }
+
+/* ---- find and replace, the way Docs floats it over the page -------------- */
+.gd-find {
+  position: absolute; z-index: 5; top: 16px; right: 16px;
+  width: min(430px, calc(100% - 32px));
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .3), 0 4px 16px rgba(60, 64, 67, .18);
+  padding: 16px 20px 12px;
+  font-size: 13px;
+}
+@media (max-width: 720px) {
+  /* No room to float it: on a narrow screen it goes back into the flow. */
+  .gd-find { position: static; width: 100%; margin: 0 0 16px; }
+}
+.gd-find__head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 15px; color: var(--gd-text); margin-bottom: 12px;
+}
+.gd-find__head i { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; color: var(--gd-dim); font-style: normal; }
+.gd-find__head i:hover { background: var(--gd-hover); }
+.gd-find__head svg { width: 14px; height: 14px; }
+.gd-field { margin-bottom: 14px; }
+.gd-field label { display: block; font-size: 11px; color: var(--gd-blue); margin-bottom: 2px; }
+.gd-field input {
+  width: 100%; height: 30px; padding: 0 2px;
+  border: 0; border-bottom: 2px solid var(--gd-blue);
+  background: transparent; border-radius: 0;
+  font: inherit; font-size: 14px; color: var(--gd-text);
+}
+.gd-field input:focus { outline: none; }
+.gd-check { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; color: #3c4043; }
+.gd-check input { accent-color: var(--gd-blue); }
+.gd-find__foot { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 10px; flex-wrap: wrap; }
+.gd-flat {
+  height: 34px; padding: 0 12px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 14px; font-weight: 500; color: var(--gd-blue);
+  cursor: pointer; white-space: nowrap;
+}
+.gd-flat:hover:not(:disabled) { background: rgba(26, 115, 232, .08); }
+.gd-flat:disabled { color: #9aa0a6; cursor: default; }
+.gd-flat--ghost { color: var(--gd-dim); }
+.gd-flat--ghost:hover:not(:disabled) { background: var(--gd-hover); }
+
+/* ---- status strip along the bottom of the window ------------------------ */
+.gd__status {
+  display: flex; align-items: center; gap: 14px;
+  height: 28px; padding: 0 14px;
+  border-top: 1px solid #e3e6e8;
+  background: #fff;
+  font-size: 11px; color: var(--gd-dim);
+}
+.gd__status b { margin-left: auto; font-weight: 400; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="gd-logo" viewBox="0 0 36 36">
+      <path d="M8 3h13l7 7v23a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#4285f4"/>
+      <path d="M21 3l7 7h-6a1 1 0 0 1-1-1z" fill="#a1c2fa"/>
+      <g fill="#fff">
+        <rect x="11" y="16" width="14" height="1.8" rx=".9"/>
+        <rect x="11" y="20" width="14" height="1.8" rx=".9"/>
+        <rect x="11" y="24" width="9" height="1.8" rx=".9"/>
+      </g>
+    </symbol>
+    <symbol id="gd-slides" viewBox="0 0 36 36">
+      <path d="M8 3h13l7 7v23a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#f6b704"/>
+      <path d="M21 3l7 7h-6a1 1 0 0 1-1-1z" fill="#fbdc8a"/>
+      <rect x="11" y="16" width="14" height="10" rx="1" fill="#fff"/>
+    </symbol>
+    <symbol id="gd-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 8h9a5.5 5.5 0 0 1 0 11H8"/><path d="M8 4L4 8l4 4"/>
+    </symbol>
+    <symbol id="gd-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 8h-9a5.5 5.5 0 0 0 0 11h5"/><path d="M16 4l4 4-4 4"/>
+    </symbol>
+    <symbol id="gd-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><rect x="7" y="14" width="10" height="7"/>
+    </symbol>
+    <symbol id="gd-spell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 17L8 6l5 11M4.8 13.5h6.4"/><path d="M15 13l3 3 5-6"/>
+    </symbol>
+    <symbol id="gd-paint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="4" y="3" width="14" height="6" rx="1.5"/><path d="M18 6h2v5H10v3"/><rect x="8" y="14" width="4" height="6" rx="1"/>
+    </symbol>
+    <symbol id="gd-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M10 13a4 4 0 0 0 5.7 0l2.6-2.6a4 4 0 1 0-5.7-5.7L11.2 6"/>
+      <path d="M14 11a4 4 0 0 0-5.7 0l-2.6 2.6a4 4 0 1 0 5.7 5.7L12.8 18"/>
+    </symbol>
+    <symbol id="gd-comment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M20 4H4a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 4 16h4l4 4v-4h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 20 4z"/>
+    </symbol>
+    <symbol id="gd-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M4 17l5-5 4 4 3-3 4 4"/>
+    </symbol>
+    <symbol id="gd-align" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M4 6h16M4 10h10M4 14h16M4 18h10"/>
+    </symbol>
+    <symbol id="gd-spacing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 7h10M10 12h10M10 17h10"/><path d="M5 5v14M3 7l2-2 2 2M3 17l2 2 2-2"/>
+    </symbol>
+    <symbol id="gd-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M9 6h11M9 12h11M9 18h11"/>
+      <circle cx="4.5" cy="6" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="4.5" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="4.5" cy="18" r="1.3" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="gd-indent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 6h10M10 12h10M10 18h10M4 6h2M4 18h2"/><path d="M4 9l3 3-3 3"/>
+    </symbol>
+    <symbol id="gd-clear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 5h13M11 5l-3 9"/><path d="M14 14l6 6M20 14l-6 6"/>
+    </symbol>
+    <symbol id="gd-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15.5 4.5l4 4L9 19l-5 1 1-5z"/>
+    </symbol>
+    <symbol id="gd-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 4.5L6 7.5 9 4.5"/>
+    </symbol>
+    <symbol id="gd-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M5 5l14 14M19 5L5 19"/>
+    </symbol>
+    <symbol id="gd-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/>
+    </symbol>
+    <symbol id="gd-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="7" cy="8" r="3"/><path d="M2 19a5 5 0 0 1 10 0"/><path d="M17 6v6M14 9h6"/>
+    </symbol>
+  </defs>
+</svg>

@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fix the Garbled Message</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<!-- part:gdocs:begin -->
+<!-- Built from _shared/parts/gdocs.html — edit that file, then run _shared/build.py -->
+<style>
+/* ==========================================================================
+   Google Docs, drawn in CSS. Shared by the three text tasks.
+
+   The measurements are the real ones: a 40px toolbar riding in a #edf2fa pill,
+   an 816px page (8.5 inches at 96dpi) on a #f9fbfd desk, #1a73e8 for anything
+   you can press. Prefixed .gd- so it cannot reach the GrassLMS page around it.
+
+   The page padding is 48px rather than the real 96px: an inch of margin makes
+   sense on paper and wastes half the frame inside a lesson.
+   ========================================================================== */
+
+.gd {
+  --gd-blue: #1a73e8;
+  --gd-text: #202124;
+  --gd-dim: #5f6368;
+  --gd-line: #dadce0;
+  --gd-bar: #edf2fa;
+  --gd-desk: #f9fbfd;
+  --gd-hover: rgba(60, 64, 67, .08);
+
+  border: 1px solid var(--gd-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .16), 0 6px 22px rgba(60, 64, 67, .1);
+  font-family: Roboto, "Segoe UI", Arial, system-ui, sans-serif;
+  color: var(--gd-text);
+  -webkit-font-smoothing: antialiased;
+}
+.gd svg { display: block; }
+
+/* ---- title row ---------------------------------------------------------- */
+.gd__head { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px 0; }
+.gd__logo { width: 36px; height: 36px; flex: 0 0 36px; margin-top: 2px; }
+.gd__titles { min-width: 0; flex: 1; }
+.gd__name { font-size: 17px; line-height: 1.3; color: var(--gd-text); }
+.gd__menu { display: flex; flex-wrap: wrap; gap: 1px; margin-top: 1px; }
+.gd__menu span {
+  padding: 3px 7px; border-radius: 4px;
+  font-size: 13px; color: #3c4043; white-space: nowrap;
+}
+.gd__menu span:hover { background: var(--gd-hover); }
+.gd__right { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.gd__share {
+  display: flex; align-items: center; gap: 7px;
+  height: 34px; padding: 0 18px; border-radius: 999px;
+  background: #c2e7ff; color: #001d35; font-size: 13px; font-weight: 500;
+  white-space: nowrap;
+}
+.gd__share svg { width: 16px; height: 16px; }
+.gd__avatar {
+  width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%;
+  background: #7b4bd8; color: #fff;
+  display: grid; place-items: center; font-size: 12px; font-weight: 500;
+}
+@media (max-width: 620px) { .gd__share span { display: none; } .gd__share { padding: 0 12px; } }
+
+/* ---- toolbar ------------------------------------------------------------ */
+.gd__toolwrap { padding: 6px 12px 10px; }
+.gd__tools {
+  display: flex; align-items: center; gap: 1px;
+  height: 40px; padding: 0 10px;
+  border-radius: 999px; background: var(--gd-bar);
+  overflow-x: auto; scrollbar-width: none;
+}
+.gd__tools::-webkit-scrollbar { display: none; }
+.gd-t {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  height: 28px; min-width: 28px; padding: 0 5px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 13px; color: #444746;
+  cursor: pointer; white-space: nowrap; flex: 0 0 auto;
+}
+.gd-t:hover:not(:disabled) { background: rgba(68, 71, 70, .1); }
+.gd-t:disabled { opacity: .38; cursor: default; }
+.gd-t[aria-pressed="true"] { background: #d3e3fd; color: #041e49; }
+.gd-t svg { width: 18px; height: 18px; }
+.gd-t--letter { font-family: "Times New Roman", Times, serif; font-size: 16px; }
+.gd-t--letter.is-b { font-weight: 700; }
+.gd-t--letter.is-i { font-style: italic; }
+.gd-t--letter.is-u { text-decoration: underline; }
+.gd__tsep { width: 1px; height: 20px; margin: 0 5px; background: #c7c7c7; flex: 0 0 1px; }
+.gd__size { display: flex; align-items: center; gap: 2px; flex: 0 0 auto; font-size: 13px; color: #444746; }
+.gd__size i { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; font-style: normal; }
+.gd__size i:hover { background: rgba(68, 71, 70, .1); }
+.gd__size b {
+  width: 34px; height: 24px; display: grid; place-items: center;
+  border: 1px solid var(--gd-line); border-radius: 4px; background: #fff; font-weight: 400;
+}
+
+/* ---- the desk and the page ---------------------------------------------- */
+.gd__desk {
+  position: relative;
+  background: var(--gd-desk);
+  border-top: 1px solid #e3e6e8;
+  padding: 20px 16px 28px;
+  max-height: 58svh; overflow: auto;
+}
+.gd__page {
+  width: 100%; max-width: 816px; margin: 0 auto;
+  min-height: 240px; padding: 48px 56px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .15);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px; line-height: 1.6; color: #202124;
+}
+.gd__page h1, .gd__page h2, .gd__page h3 {
+  font-family: Arial, Helvetica, sans-serif; letter-spacing: 0; color: #202124;
+}
+.gd__page p { margin: 0 0 14px; }
+.gd__page p:last-child { margin-bottom: 0; }
+.gd__page mark { background: #fff2a8; padding: 0 1px; }
+.gd__page mark.is-now { background: #ffb300; }
+
+/* ---- find and replace, the way Docs floats it over the page -------------- */
+.gd-find {
+  position: absolute; z-index: 5; top: 16px; right: 16px;
+  width: min(430px, calc(100% - 32px));
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .3), 0 4px 16px rgba(60, 64, 67, .18);
+  padding: 16px 20px 12px;
+  font-size: 13px;
+}
+@media (max-width: 720px) {
+  /* No room to float it: on a narrow screen it goes back into the flow. */
+  .gd-find { position: static; width: 100%; margin: 0 0 16px; }
+}
+.gd-find__head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 15px; color: var(--gd-text); margin-bottom: 12px;
+}
+.gd-find__head i { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; color: var(--gd-dim); font-style: normal; }
+.gd-find__head i:hover { background: var(--gd-hover); }
+.gd-find__head svg { width: 14px; height: 14px; }
+.gd-field { margin-bottom: 14px; }
+.gd-field label { display: block; font-size: 11px; color: var(--gd-blue); margin-bottom: 2px; }
+.gd-field input {
+  width: 100%; height: 30px; padding: 0 2px;
+  border: 0; border-bottom: 2px solid var(--gd-blue);
+  background: transparent; border-radius: 0;
+  font: inherit; font-size: 14px; color: var(--gd-text);
+}
+.gd-field input:focus { outline: none; }
+.gd-check { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; color: #3c4043; }
+.gd-check input { accent-color: var(--gd-blue); }
+.gd-find__foot { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 10px; flex-wrap: wrap; }
+.gd-flat {
+  height: 34px; padding: 0 12px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 14px; font-weight: 500; color: var(--gd-blue);
+  cursor: pointer; white-space: nowrap;
+}
+.gd-flat:hover:not(:disabled) { background: rgba(26, 115, 232, .08); }
+.gd-flat:disabled { color: #9aa0a6; cursor: default; }
+.gd-flat--ghost { color: var(--gd-dim); }
+.gd-flat--ghost:hover:not(:disabled) { background: var(--gd-hover); }
+
+/* ---- status strip along the bottom of the window ------------------------ */
+.gd__status {
+  display: flex; align-items: center; gap: 14px;
+  height: 28px; padding: 0 14px;
+  border-top: 1px solid #e3e6e8;
+  background: #fff;
+  font-size: 11px; color: var(--gd-dim);
+}
+.gd__status b { margin-left: auto; font-weight: 400; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="gd-logo" viewBox="0 0 36 36">
+      <path d="M8 3h13l7 7v23a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#4285f4"/>
+      <path d="M21 3l7 7h-6a1 1 0 0 1-1-1z" fill="#a1c2fa"/>
+      <g fill="#fff">
+        <rect x="11" y="16" width="14" height="1.8" rx=".9"/>
+        <rect x="11" y="20" width="14" height="1.8" rx=".9"/>
+        <rect x="11" y="24" width="9" height="1.8" rx=".9"/>
+      </g>
+    </symbol>
+    <symbol id="gd-slides" viewBox="0 0 36 36">
+      <path d="M8 3h13l7 7v23a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#f6b704"/>
+      <path d="M21 3l7 7h-6a1 1 0 0 1-1-1z" fill="#fbdc8a"/>
+      <rect x="11" y="16" width="14" height="10" rx="1" fill="#fff"/>
+    </symbol>
+    <symbol id="gd-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 8h9a5.5 5.5 0 0 1 0 11H8"/><path d="M8 4L4 8l4 4"/>
+    </symbol>
+    <symbol id="gd-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 8h-9a5.5 5.5 0 0 0 0 11h5"/><path d="M16 4l4 4-4 4"/>
+    </symbol>
+    <symbol id="gd-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><rect x="7" y="14" width="10" height="7"/>
+    </symbol>
+    <symbol id="gd-spell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 17L8 6l5 11M4.8 13.5h6.4"/><path d="M15 13l3 3 5-6"/>
+    </symbol>
+    <symbol id="gd-paint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="4" y="3" width="14" height="6" rx="1.5"/><path d="M18 6h2v5H10v3"/><rect x="8" y="14" width="4" height="6" rx="1"/>
+    </symbol>
+    <symbol id="gd-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M10 13a4 4 0 0 0 5.7 0l2.6-2.6a4 4 0 1 0-5.7-5.7L11.2 6"/>
+      <path d="M14 11a4 4 0 0 0-5.7 0l-2.6 2.6a4 4 0 1 0 5.7 5.7L12.8 18"/>
+    </symbol>
+    <symbol id="gd-comment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M20 4H4a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 4 16h4l4 4v-4h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 20 4z"/>
+    </symbol>
+    <symbol id="gd-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M4 17l5-5 4 4 3-3 4 4"/>
+    </symbol>
+    <symbol id="gd-align" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M4 6h16M4 10h10M4 14h16M4 18h10"/>
+    </symbol>
+    <symbol id="gd-spacing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 7h10M10 12h10M10 17h10"/><path d="M5 5v14M3 7l2-2 2 2M3 17l2 2 2-2"/>
+    </symbol>
+    <symbol id="gd-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M9 6h11M9 12h11M9 18h11"/>
+      <circle cx="4.5" cy="6" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="4.5" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="4.5" cy="18" r="1.3" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="gd-indent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 6h10M10 12h10M10 18h10M4 6h2M4 18h2"/><path d="M4 9l3 3-3 3"/>
+    </symbol>
+    <symbol id="gd-clear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 5h13M11 5l-3 9"/><path d="M14 14l6 6M20 14l-6 6"/>
+    </symbol>
+    <symbol id="gd-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15.5 4.5l4 4L9 19l-5 1 1-5z"/>
+    </symbol>
+    <symbol id="gd-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 4.5L6 7.5 9 4.5"/>
+    </symbol>
+    <symbol id="gd-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M5 5l14 14M19 5L5 19"/>
+    </symbol>
+    <symbol id="gd-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/>
+    </symbol>
+    <symbol id="gd-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="7" cy="8" r="3"/><path d="M2 19a5 5 0 0 1 10 0"/><path d="M17 6v6M14 9h6"/>
+    </symbol>
+  </defs>
+</svg>
+<!-- part:gdocs:end -->
+<style>
+  body { padding: var(--s-6) 0 var(--s-12); }
+
+  /* One screen on open: the fixed rows keep their height and the document
+     desk takes whatever is left. */
+  body { padding: var(--page-top) 0 var(--page-bottom); }
+  .wrap { height: calc(100svh - var(--page-pad)); }
+  h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
+  .lede { font-size: var(--t-sm); max-width: 78ch; }
+  .stack--loose { gap: var(--s-4); }
+
+  .gd { flex: 1 1 0; min-height: 220px; display: flex; flex-direction: column; }
+  .gd__desk { flex: 1 1 0; max-height: none; }
+  .gd__page[contenteditable]:focus { outline: 2px solid #a8c7fa; outline-offset: 4px; }
+  .gd__page mark { border-radius: 2px; }
+
+  /* The list of words still to fix runs across rather than down: six short
+     words stacked vertically cost the document a third of its height. */
+  .todo {
+    margin: 0; padding: 0; list-style: none;
+    display: flex; flex-wrap: wrap; gap: var(--s-2);
+  }
+  .todo li {
+    display: flex; align-items: center; gap: var(--s-2);
+    padding: var(--s-1) var(--s-3);
+    border: 1px solid var(--color-border-strong); border-radius: var(--radius-pill);
+    font-size: var(--t-sm); font-family: var(--font-mono);
+  }
+  .todo li::before { content: "○"; color: var(--color-text-subtle); font-weight: 700; }
+  .todo li.is-done {
+    color: var(--color-success-fg); border-color: var(--color-success);
+    background: var(--color-success-soft); text-decoration: line-through;
+  }
+  .todo li.is-done::before { content: "●"; color: var(--color-success-fg); text-decoration: none; }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--wide stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Cosmodrome · sector C · task 1</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">The message came through</span> <em class="mark" data-t="title2">scrambled</em></h1>
+    <p class="lede" data-t="intro">Five words are misspelled and the launch year is wrong. Use find and replace instead of retyping: put the wrong word on the left, the right one on the right, and press Replace all.</p>
+  </header>
+
+  <div class="hud">
+    <div class="row">
+      <span class="eyebrow" data-t="triesLabel">Checks left</span>
+      <span class="lives" id="lives" aria-hidden="true"></span>
+    </div>
+    <div class="row">
+      <span class="eyebrow" data-t="fixedLabel">Fixed</span>
+      <span class="hud__score" id="score">0</span>
+    </div>
+  </div>
+
+  <div class="gd">
+    <div class="gd__head">
+      <svg class="gd__logo" viewBox="0 0 36 36" aria-hidden="true"><use href="#gd-logo"/></svg>
+      <div class="gd__titles">
+        <div class="gd__name" data-t="docName">Mission log</div>
+        <div class="gd__menu" aria-hidden="true">
+          <span data-t="mFile">File</span><span data-t="mEdit">Edit</span><span data-t="mView">View</span>
+          <span data-t="mInsert">Insert</span><span data-t="mFormat">Format</span><span data-t="mTools">Tools</span>
+          <span data-t="mHelp">Help</span>
+        </div>
+      </div>
+      <div class="gd__right" aria-hidden="true">
+        <span class="gd__share"><svg viewBox="0 0 24 24"><use href="#gd-share"/></svg><span data-t="share">Share</span></span>
+        <span class="gd__avatar">N</span>
+      </div>
+    </div>
+
+    <div class="gd__toolwrap">
+      <div class="gd__tools">
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-undo"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-redo"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-print"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-spell"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-paint"/></svg></button>
+        <span class="gd__tsep"></span>
+        <button class="gd-t" type="button" tabindex="-1">100%<svg viewBox="0 0 12 12" style="width:10px;height:10px"><use href="#gd-chev"/></svg></button>
+        <span class="gd__tsep"></span>
+        <button class="gd-t" type="button" tabindex="-1" data-t="normalText">Normal text<svg viewBox="0 0 12 12" style="width:10px;height:10px"><use href="#gd-chev"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1">Arial<svg viewBox="0 0 12 12" style="width:10px;height:10px"><use href="#gd-chev"/></svg></button>
+        <span class="gd__size" aria-hidden="true"><i>&#8722;</i><b>11</b><i>+</i></span>
+        <span class="gd__tsep"></span>
+        <span class="gd__tsep"></span>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-link"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-comment"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-image"/></svg></button>
+        <span class="gd__tsep"></span>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-align"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-spacing"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-list"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-indent"/></svg></button>
+        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-clear"/></svg></button>
+      </div>
+    </div>
+
+    <div class="gd__desk">
+      <div class="gd-find">
+        <div class="gd-find__head">
+          <span data-t="findLabel">Find and replace</span>
+          <i aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#gd-x"/></svg></i>
+        </div>
+        <div class="gd-field">
+          <label for="needle" data-t="findWhat">Find</label>
+          <input id="needle" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="gd-field">
+          <label for="repl" data-t="replaceWith">Replace with</label>
+          <input id="repl" autocomplete="off" spellcheck="false">
+        </div>
+        <label class="gd-check"><input type="checkbox" disabled><span data-t="matchCase">Match case</span></label>
+        <div class="gd-find__foot">
+          <button class="gd-flat gd-flat--ghost" type="button" disabled data-t="replaceOne">Replace</button>
+          <button class="gd-flat" type="button" id="doReplace" data-t="replaceAll">Replace all</button>
+        </div>
+      </div>
+
+      <div class="gd__page" id="doc" contenteditable="true" spellcheck="false" role="textbox" aria-multiline="true"></div>
+    </div>
+
+    <div class="gd__status">
+      <span data-t="shortcut">Tip: you can also edit the text straight in the page.</span>
+      <b data-t="docPages">Page 1 of 1</b>
+    </div>
+  </div>
+
+  <section class="card stack stack--tight" id="game">
+    <div class="stack stack--tight">
+      <p class="eyebrow" data-t="todoLabel">Still to fix</p>
+      <ul class="todo" id="todo"></ul>
+    </div>
+
+    <div id="verdict" hidden></div>
+
+    <div class="row">
+      <button class="btn" id="check" data-t="check">Send the message</button>
+      <button class="btn btn--ghost" id="reset" data-t="reset">Start over</button>
+    </div>
+  </section>
+
+  <section class="card stack" id="over" hidden aria-live="polite">
+    <h2 id="overTitle">…</h2>
+    <p class="muted" id="overBody"></p>
+    <div><button class="btn" id="again" data-t="again">Try again</button></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Progress. One shared key, so the sector map can see which tasks are done.
+     Five lines repeated per page rather than a shared script: every page has
+     to stay standalone for file:// and for a frameBox archive.
+     try/catch throughout — a private window or blocked site data makes
+     localStorage throw rather than hand back null. */
+  var TASK_ID = "c1";
+  function remember() {
+    try {
+      var key = "kids.progress.v1";
+      var seen = JSON.parse(localStorage.getItem(key) || "{}");
+      seen[TASK_ID] = true;
+      localStorage.setItem(key, JSON.stringify(seen));
+    } catch (err) {}
+  }
+
+  /* Five misspellings, a wrong year and the five-check budget come from the
+     original sector C task 1. The year window stays 2026–2036: any year in it
+     counts, because the point is noticing 2157 is impossible, not guessing a
+     particular date. */
+  var TRIES = 5;
+  var YEAR_MIN = 2026, YEAR_MAX = 2036;
+
+  var T = {
+    en: {
+      docName: "Mission log", share: "Share",
+      mFile: "File", mEdit: "Edit", mView: "View", mInsert: "Insert",
+      mFormat: "Format", mTools: "Tools", mHelp: "Help",
+      normalText: "Normal text", matchCase: "Match case",
+      replaceOne: "Replace", docPages: "Page 1 of 1",
+      eyebrow: "Cosmodrome · sector C · task 1",
+      title1: "The message came through", title2: "scrambled",
+      intro: "Five words are misspelled and the launch year is wrong. Use find and replace instead of retyping: put the wrong word on the left, the right one on the right, and press Replace all.",
+      triesLabel: "Checks left", fixedLabel: "Fixed", findLabel: "Find and replace",
+      findWhat: "Find", replaceWith: "Replace with", replaceAll: "Replace all",
+      todoLabel: "Still to fix", check: "Send the message", reset: "Start over",
+      again: "Try again",
+      shortcut: "Tip: you can also edit the text straight in the box.",
+      text: "MISSION LOG\n\nThe rockit is fuelled and standing on pad two. Our astronowt has checked the cabin twice. The shipp will leave Earth and head for the red planit that we watch every night beside the bright starr.\n\nLaunch year: 2157",
+      errors: [
+        { wrong: "rockit",    right: "rocket" },
+        { wrong: "astronowt", right: "astronaut" },
+        { wrong: "shipp",     right: "ship" },
+        { wrong: "planit",    right: "planet" },
+        { wrong: "starr",     right: "star" }
+      ],
+      yearLabel: "the launch year",
+      emptyFind: "Type the wrong word in the Find box first.",
+      noMatch: function (w) { return "There is no \"" + w + "\" in the message. Check what you typed."; },
+      swapped: function (n) { return n === 1 ? "One word swapped." : n + " words swapped."; },
+      stillWrong: function (n) { return n === 1 ? "One thing is still wrong. The list shows which." : n + " things are still wrong. The list shows which."; },
+      wonTitle: "Message sent",
+      wonBody: function (n) { return "Clean copy on check " + n + " of " + TRIES + "."; },
+      lostTitle: "The channel closed",
+      lostBody: "Every misspelled word is a letter or two away from the right one, and no rocket launches in 2157."
+    },
+    es: {
+      docName: "Diario de a bordo", share: "Compartir",
+      mFile: "Archivo", mEdit: "Editar", mView: "Ver", mInsert: "Insertar",
+      mFormat: "Formato", mTools: "Herramientas", mHelp: "Ayuda",
+      normalText: "Texto normal", matchCase: "Coincidir mayúsculas",
+      replaceOne: "Reemplazar", docPages: "Página 1 de 1",
+      eyebrow: "Cosmódromo · sector C · tarea 1",
+      title1: "El mensaje llegó", title2: "con errores",
+      intro: "Cinco palabras están mal escritas y el año de lanzamiento es imposible. Usa buscar y reemplazar en vez de escribirlo todo otra vez: la palabra mal a la izquierda, la correcta a la derecha, y pulsa Reemplazar todo.",
+      triesLabel: "Revisiones", fixedLabel: "Corregidos", findLabel: "Buscar y reemplazar",
+      findWhat: "Buscar", replaceWith: "Reemplazar por", replaceAll: "Reemplazar todo",
+      todoLabel: "Falta corregir", check: "Enviar el mensaje", reset: "Empezar de nuevo",
+      again: "Intentar otra vez",
+      shortcut: "Truco: también puedes escribir directamente en el cuadro.",
+      text: "DIARIO DE MISIÓN\n\nEl coete está cargado y espera en la plataforma dos. Nuestra astronowta ha revisado la cabina dos veces. La nabe saldrá de la Tierra hacia el planetta rojo que miramos cada noche junto a la estrela más brillante.\n\nAño de lanzamiento: 2157",
+      errors: [
+        { wrong: "coete",      right: "cohete" },
+        { wrong: "astronowta", right: "astronauta" },
+        { wrong: "nabe",       right: "nave" },
+        { wrong: "planetta",   right: "planeta" },
+        { wrong: "estrela",    right: "estrella" }
+      ],
+      yearLabel: "el año de lanzamiento",
+      emptyFind: "Escribe primero la palabra equivocada en Buscar.",
+      noMatch: function (w) { return "No hay ningún \"" + w + "\" en el mensaje. Revisa lo que escribiste."; },
+      swapped: function (n) { return n === 1 ? "Una palabra cambiada." : n + " palabras cambiadas."; },
+      stillWrong: function (n) { return n === 1 ? "Queda un fallo. La lista dice cuál." : "Quedan " + n + " fallos. La lista dice cuáles."; },
+      wonTitle: "Mensaje enviado",
+      wonBody: function (n) { return "Copia limpia en la revisión " + n + " de " + TRIES + "."; },
+      lostTitle: "El canal se cerró",
+      lostBody: "Cada palabra mal escrita está a una o dos letras de la correcta, y ningún cohete despega en 2157."
+    }
+  };
+
+  var lang = "en", used = 0;
+
+  function byId(id) { return document.getElementById(id); }
+  function t() { return T[lang]; }
+  function text() { return byId("doc").innerText; }
+
+  function say(kind, message) {
+    var v = byId("verdict");
+    v.hidden = false; v.className = "feedback feedback--" + kind; v.textContent = message;
+  }
+  function clearSay() { var v = byId("verdict"); v.hidden = true; v.className = ""; }
+
+  /* A word counts as fixed when the misspelling is gone AND the right word is
+     there — deleting it instead of correcting it does not pass. */
+  function fixedFlags() {
+    var body = text().toLowerCase();
+    var flags = t().errors.map(function (e) {
+      return body.indexOf(e.wrong.toLowerCase()) === -1 && body.indexOf(e.right.toLowerCase()) !== -1;
+    });
+    var years = body.match(/\b\d{4}\b/g) || [];
+    var yearOk = years.length > 0 && years.every(function (y) {
+      var n = parseInt(y, 10);
+      return n >= YEAR_MIN && n <= YEAR_MAX;
+    });
+    flags.push(yearOk);
+    return flags;
+  }
+
+  function paintTodo() {
+    var d = t(), flags = fixedFlags();
+    var ul = byId("todo"); ul.innerHTML = "";
+    d.errors.forEach(function (e, i) {
+      var li = document.createElement("li");
+      if (flags[i]) li.classList.add("is-done");
+      li.textContent = e.wrong;
+      ul.appendChild(li);
+    });
+    var last = document.createElement("li");
+    if (flags[flags.length - 1]) last.classList.add("is-done");
+    last.textContent = d.yearLabel;
+    ul.appendChild(last);
+
+    var done = flags.filter(Boolean).length;
+    byId("score").innerHTML = done + "<span class=\"muted\">/" + flags.length + "</span>";
+  }
+
+  function replaceAll() {
+    var d = t();
+    var needle = byId("needle").value.trim();
+    var repl = byId("repl").value;
+    if (!needle) { say("hint", d.emptyFind); return; }
+
+    /* Plain string split/join rather than a regex, so a child typing a dot or
+       a bracket gets exactly what they expect. */
+    var parts = text().split(needle);
+    if (parts.length === 1) { say("no", d.noMatch(needle)); return; }
+
+    byId("doc").innerText = parts.join(repl);
+    byId("needle").value = ""; byId("repl").value = "";
+    byId("needle").focus();
+    say("ok", d.swapped(parts.length - 1));
+    paintTodo();
+  }
+
+  function renderLives() {
+    var lv = byId("lives"); lv.innerHTML = "";
+    for (var i = 0; i < TRIES; i++) {
+      var x = document.createElement("i");
+      if (i < used) x.className = "is-spent";
+      lv.appendChild(x);
+    }
+  }
+
+  function check() {
+    var d = t();
+    used++;
+    var flags = fixedFlags();
+    var left = flags.filter(function (f) { return !f; }).length;
+    paintTodo(); renderLives();
+
+    if (left === 0) {
+      byId("game").hidden = true; byId("over").hidden = false;
+      remember();
+      byId("overTitle").textContent = d.wonTitle;
+      byId("overBody").textContent = d.wonBody(used);
+      return;
+    }
+    if (used >= TRIES) {
+      byId("game").hidden = true; byId("over").hidden = false;
+      byId("overTitle").textContent = d.lostTitle;
+      byId("overBody").textContent = d.lostBody;
+      return;
+    }
+    say("no", d.stillWrong(left));
+  }
+
+  function render() {
+    var d = t();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (el) {
+      var v = d[el.dataset.t];
+      if (typeof v === "string") el.textContent = v;
+    });
+    renderLives();
+    paintTodo();
+  }
+
+  function reset() {
+    used = 0;
+    byId("doc").innerText = t().text;
+    byId("needle").value = ""; byId("repl").value = "";
+    byId("game").hidden = false; byId("over").hidden = true;
+    clearSay(); render();
+  }
+
+  byId("doReplace").onclick = replaceAll;
+  byId("check").onclick = check;
+  byId("reset").onclick = reset;
+  byId("again").onclick = reset;
+  byId("doc").addEventListener("input", paintTodo);
+  byId("repl").addEventListener("keydown", function (e) { if (e.key === "Enter") replaceAll(); });
+  byId("needle").addEventListener("keydown", function (e) { if (e.key === "Enter") byId("repl").focus(); });
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      reset();
+    };
+  });
+
+  reset();
+})();
+</script>
+</body>
+</html>

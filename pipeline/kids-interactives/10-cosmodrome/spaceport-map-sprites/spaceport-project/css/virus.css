@@ -1,0 +1,176 @@
+/* ═══════════════════════════════════════════════════════════
+   VIRUS CHARACTER STYLES
+   ═══════════════════════════════════════════════════════════ */
+
+.virus-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.virus-speech {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--color-infected);
+    border-radius: 20px;
+    padding: 15px 25px;
+    max-width: 300px;
+    position: relative;
+    animation: speech-appear 0.5s ease;
+    box-shadow: 0 10px 40px rgba(239, 68, 68, 0.3);
+}
+
+.virus-speech::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    right: 40px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--color-infected);
+}
+
+@keyframes speech-appear {
+    0% { opacity: 0; transform: translateY(20px) scale(0.8); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.virus-speech p {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.virus-speech .highlight {
+    color: var(--color-infected);
+    font-weight: 600;
+}
+
+.virus-character {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+    border: 3px solid var(--color-infected);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    animation: virus-float 3s ease-in-out infinite, virus-glitch 4s ease-in-out infinite;
+    box-shadow: 
+        0 0 30px var(--color-infected-glow),
+        inset 0 0 30px rgba(239, 68, 68, 0.1);
+    overflow: hidden;
+}
+
+.virus-character::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(239, 68, 68, 0.03) 2px,
+            rgba(239, 68, 68, 0.03) 4px
+        );
+    pointer-events: none;
+}
+
+@keyframes virus-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes virus-glitch {
+    0%, 90%, 100% { filter: none; }
+    92% { filter: hue-rotate(90deg); transform: translate(2px, 0); }
+    94% { filter: hue-rotate(-90deg); transform: translate(-2px, 0); }
+    96% { filter: hue-rotate(45deg); transform: translate(0, 2px); }
+    98% { filter: none; transform: translate(0, 0); }
+}
+
+.virus-face {
+    font-size: 3rem;
+    animation: face-change 5s ease-in-out infinite;
+}
+
+@keyframes face-change {
+    0%, 45%, 55%, 100% { content: '👾'; }
+    50% { transform: scale(1.1); }
+}
+
+.virus-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.virus-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--color-infected);
+    border-radius: 50%;
+    animation: particle-float 3s ease-in-out infinite;
+}
+
+@keyframes particle-float {
+    0%, 100% { opacity: 0; transform: translate(0, 0) scale(0); }
+    50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1); }
+}
+
+/* Virus defeat animation */
+.virus-container.defeated .virus-character {
+    animation: virus-defeat 2s ease-out forwards;
+}
+
+@keyframes virus-defeat {
+    0% { transform: scale(1); opacity: 1; }
+    30% { transform: scale(1.2) rotate(10deg); }
+    50% { transform: scale(0.8) rotate(-10deg); }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+.virus-container.defeated .virus-speech {
+    animation: speech-defeat 1s ease-out forwards;
+}
+
+@keyframes speech-defeat {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-50px); }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .virus-container {
+        bottom: 100px;
+        right: 10px;
+    }
+
+    .virus-speech {
+        max-width: 200px;
+        font-size: 0.85rem;
+        padding: 12px 18px;
+    }
+
+    .virus-character {
+        width: 70px;
+        height: 70px;
+    }
+
+    .virus-face {
+        font-size: 2rem;
+    }
+}

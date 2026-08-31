@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Level Editor — Руководство</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            border-bottom: 3px solid #1a73e8;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #1a73e8;
+            margin-top: 35px;
+            border-left: 4px solid #1a73e8;
+            padding-left: 12px;
+        }
+        h3 {
+            color: #555;
+            margin-top: 20px;
+        }
+        a {
+            color: #1a73e8;
+        }
+        .link-box {
+            background: #e8f0fe;
+            border: 2px solid #1a73e8;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .link-box a {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        ol, ul {
+            margin: 15px 0;
+        }
+        li {
+            margin: 8px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #1a73e8;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .items-list {
+            background: #f9f9f9;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .items-list li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🤖 Платформа создания уровней Robot Level Editor</h1>
+
+<div class="link-box">
+    <strong>🔗 Ссылка на платформу:</strong><br><br>
+    <a href="https://replit.com/@Mario-RafaelRa1/Python-2" target="_blank">https://replit.com/@Mario-RafaelRa1/Python-2</a>
+</div>
+
+<h2>0. Как запустить платформу</h2>
+<ol>
+    <li>Откройте ссылку выше</li>
+    <li>Нажмите кнопку <strong>«Remix this app»</strong> (создать свою копию)</li>
+    <li>Войдите через любой Google-аккаунт (или создайте аккаунт Replit)</li>
+    <li>Дождитесь копирования проекта</li>
+    <li>Нажмите зелёную кнопку <strong>«Run»</strong> для запуска</li>
+    <li>Откройте превью сайта нажав на <strong>плюс (+)</strong> и выбрав <strong>Превью</strong></li>
+    <li>Нажмите кнопку со стрелкой <strong>(↗)</strong> в правом верхнем углу окна с сайтом, чтобы открыть его во внешнем окне</li>
+</ol>
+
+<div class="info">
+    <strong>💡 ВАЖНО:</strong> Скопируйте ссылку из внешнего окна — именно её нужно давать ученикам. Ссылка будет вида: <code>ваш-проект.replit.app</code>
+</div>
+
+<h2>1. Создание комнаты для урока</h2>
+<p>Чтобы начать работу с учениками:</p>
+<ol>
+    <li>Откройте сайт платформы в браузере</li>
+    <li>В блоке <strong>«Buat Ruangan»</strong> введите название урока (например: «Робототехника — 5А»)</li>
+    <li>Нажмите кнопку <strong>«Buat Ruangan»</strong></li>
+    <li>Запомните или запишите <strong>4-значный код комнаты</strong> (отображается вверху страницы)</li>
+</ol>
+
+<h2>2. Как поделиться кодом с учениками</h2>
+<p>Есть несколько способов:</p>
+
+<table>
+    <tr>
+        <th>Способ</th>
+        <th>Описание</th>
+    </tr>
+    <tr>
+        <td><strong>Отправить ссылку</strong></td>
+        <td>Скопируйте URL из адресной строки браузера</td>
+    </tr>
+    <tr>
+        <td><strong>Отправить в чат</strong></td>
+        <td>Продиктуйте или напишите в чат 4 цифры кода</td>
+    </tr>
+    <tr>
+        <td><strong>Показать на экране</strong></td>
+        <td>Откройте комнату через демонстрацию экрана</td>
+    </tr>
+</table>
+
+<p><strong>Пример:</strong></p>
+<ul>
+    <li>Код комнаты: <code>4521</code></li>
+    <li>Ссылка: <code>сайт.replit.app/room/4521</code></li>
+</ul>
+
+<h2>3. Управление комнатой (режим учителя)</h2>
+<p>Вы можете удалять уровни учеников:</p>
+<ol>
+    <li>Находясь в комнате, нажмите на кнопку <strong>🔐 Mode Guru</strong></li>
+    <li>Введите секретный код: <code>10122025</code></li>
+    <li>Появится кнопка <strong>«🚪 Keluar»</strong> — это означает, что режим активен</li>
+    <li>Теперь вы можете удалять уровни (кнопка 🗑️ рядом с каждым уровнем)</li>
+    <li>Нажмите <strong>«Keluar»</strong> для отключения режима учителя</li>
+</ol>
+
+<div class="warning">
+    <strong>⚠️ Важно:</strong> Режим учителя работает только в текущей комнате. При переходе в другую комнату права сбрасываются.
+</div>
+
+<h2>4. Что делают ученики</h2>
+<p><strong>Инструкция для учеников (можете продиктовать):</strong></p>
+<ol>
+    <li>Откройте сайт по ссылке от преподавателя</li>
+    <li>Введите код комнаты и нажмите <strong>«Masuk»</strong></li>
+    <li>Нажмите <strong>«✨ Buat Level»</strong></li>
+    <li>Введите своё имя и выберите размер сетки (5×5, 8×8 или 10×10)</li>
+    <li>Нажмите <strong>«Mulai Membuat»</strong></li>
+    <li>Разместите на сетке элементы (см. ниже)</li>
+    <li>Нажмите <strong>«🎮 Uji Level»</strong> и пройдите свой уровень</li>
+    <li>После прохождения нажмите <strong>«📤 Publikasi»</strong></li>
+    <li>Готово! Можно играть в уровни одноклассников</li>
+</ol>
+
+<h3>Элементы для размещения:</h3>
+<div class="items-list">
+    <ul>
+        <li>🤖 <strong>Робот</strong> — откуда начинает</li>
+        <li>🏁 <strong>Финиш</strong> — куда нужно дойти</li>
+        <li>💎 <strong>Кристаллы</strong> — нужно собрать</li>
+        <li>🪨 <strong>Камни</strong> — препятствия</li>
+    </ul>
+</div>
+
+<h2>5. Полезные функции</h2>
+
+<p><strong>🖼️ Предпросмотр уровней</strong><br>
+Каждый уровень показывает миниатюру с расположением объектов прямо в списке.</p>
+
+<p><strong>❤️ Система лайков</strong><br>
+Ученики могут ставить лайки понравившимся уровням. Нажмите кнопку «❤️ Suka» во время игры. Уровни с большим количеством лайков отображаются выше.</p>
+
+<p><strong>🏷️ Названия уровней</strong><br>
+Каждый уровень получает уникальное имя: Имя-123 (имя автора + случайный код).</p>
+
+<p><strong>✅ Проверка перед публикацией</strong><br>
+Уровень можно опубликовать только после того, как автор сам его прошёл. Это гарантирует, что все уровни проходимы.</p>
+
+<h2>6. Секретные коды</h2>
+
+<table>
+    <tr>
+        <th>Код</th>
+        <th>Роль</th>
+        <th>Возможности</th>
+    </tr>
+    <tr>
+        <td><code>10122025</code></td>
+        <td><strong>Учитель</strong></td>
+        <td>Управление только текущей комнатой</td>
+    </tr>
+    <tr>
+        <td><code>10122025Ad</code></td>
+        <td><strong>Администратор</strong></td>
+        <td>Полный доступ ко всем комнатам (вводится как код комнаты на главной странице)</td>
+    </tr>
+</table>
+
+<h2>7. Смена языка</h2>
+<p>Платформа поддерживает 4 языка. Кнопки в правом нижнем углу:</p>
+<ul>
+    <li>🇮🇩 Индонезийский (по умолчанию)</li>
+    <li>🇬🇧 Английский</li>
+    <li>🇪🇸 Испанский</li>
+    <li>🇷🇺 Русский</li>
+</ul>
+
+<hr style="margin-top: 40px;">
+<p style="text-align: center; font-size: 18px;"><strong>🎮 Удачных уроков!</strong></p>
+
+</body>
+</html>

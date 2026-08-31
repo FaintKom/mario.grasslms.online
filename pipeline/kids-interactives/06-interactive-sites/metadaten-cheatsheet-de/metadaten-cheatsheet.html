@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metadaten Cheatsheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  /* This one stays in German on purpose: it is a professional reference for a
+     German-speaking audience, not a kid-facing activity, so translating it
+     would cost it its readers. Only the styling was replaced — the markup and
+     every word below are the original. */
+
+  body { padding: var(--s-8) 0 var(--s-12); }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); display: flex; flex-direction: column; gap: var(--s-6); }
+
+  h1 { margin-bottom: var(--s-1); }
+  h2 { margin-top: var(--s-6); padding-bottom: var(--s-2); border-bottom: 2px solid var(--color-border-strong); }
+  h3 { margin-top: var(--s-4); }
+  p  { margin: 0 0 var(--s-2); }
+  ul, ol { margin: 0 0 var(--s-2); padding-left: var(--s-6); }
+  li { margin-bottom: var(--s-1); }
+
+  .subtitle { font-size: var(--t-md); color: var(--color-text-muted); margin-bottom: var(--s-4); }
+
+  .definition-box,
+  .info-card,
+  .example-box,
+  .type-box,
+  .branch-section,
+  .tool-item {
+    padding: var(--s-4) var(--s-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    margin-bottom: var(--s-3);
+  }
+
+  .definition-box { border-left: 4px solid var(--color-primary); background: var(--green-25); }
+  .example-box    { border-left: 4px solid var(--lagoon-400); background: var(--lagoon-50); }
+  .type-box       { border-left: 4px solid var(--sun-500); background: var(--sun-50); }
+  .branch-section { border: 2px solid var(--color-border-strong); }
+  .tool-item      { margin-bottom: var(--s-2); }
+
+  .definition-box > strong,
+  .info-card > strong {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--t-2xs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    margin-bottom: var(--s-2);
+  }
+
+  .highlight {
+    background: var(--sun-300);
+    padding: 0 var(--s-1);
+    border-radius: var(--radius-xs);
+  }
+
+  .two-column,
+  .metadata-types,
+  .tools-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--s-3);
+  }
+  .two-column > *, .metadata-types > *, .tools-list > * { margin-bottom: 0; }
+
+  .compact { font-size: var(--t-sm); }
+  .compact li { margin-bottom: 2px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--t-sm);
+    margin-bottom: var(--s-3);
+  }
+  th, td {
+    text-align: left;
+    padding: var(--s-2) var(--s-3);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+  }
+  th {
+    font-family: var(--font-mono);
+    font-size: var(--t-2xs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    font-weight: 500;
+    border-bottom: 2px solid var(--color-border-strong);
+  }
+  tr:last-child td { border-bottom: 0; }
+
+  /* Tables are the densest thing on this page; let them scroll rather than
+     push the page sideways. */
+  .info-card, .branch-section { overflow-x: auto; }
+
+  .footer {
+    margin-top: var(--s-8);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--t-sm);
+    color: var(--color-text-muted);
+  }
+
+  .page-break { display: none; }
+
+  @media print {
+    body { padding: 0; }
+    .page-break { display: block; break-after: page; }
+    .definition-box, .info-card, .example-box, .type-box, .branch-section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Metadaten Cheatsheet</h1>
+        <p class="subtitle">Umfassender Leitfaden zu Metadaten in Data Governance</p>
+
+        <h2>🎯 Grundlegende Definitionen</h2>
+        
+        <div class="definition-box">
+            <strong>Daten</strong>
+            <p>Daten sind eine <span class="highlight">Beschreibung der realen Welt</span>, ihrer Eigenschaften, Strukturen und ihrer Prozesse.</p>
+            <p style="margin-top: 10px;">Sie werden entweder <strong>digital</strong> durch Code (Files, Datenbanken, Software) oder durch <strong>manuelle</strong> Aufzeichnung dokumentiert.</p>
+        </div>
+
+        <div class="definition-box">
+            <strong>Metadaten</strong>
+            <p>Metadaten sind <span class="highlight">Beschreibungen von Daten-Objekten</span>, ihrer Eigenschaften, Strukturen und ihrer Prozesse, die im jeweiligen Kontext von Interesse sind.</p>
+            <p style="margin-top: 10px; font-style: italic; color: #2c5f2d;">„Metadaten sind zunächst einmal Daten und dann 'Meta'."</p>
+        </div>
+
+        <h2>📂 Dimensionen von Metadaten</h2>
+
+        <div class="metadata-types">
+            <div class="type-box">
+                <h4>Fachliche Metadaten</h4>
+                <p>Titel, Autor, Beschreibung, Schlagwörter</p>
+            </div>
+            <div class="type-box">
+                <h4>Technische Metadaten</h4>
+                <p>Dateiformat, Größe, Auflösung, Datentyp</p>
+            </div>
+            <div class="type-box">
+                <h4>Administrative Metadaten</h4>
+                <p>Zugriffsrechte, Lizenz, Versionierung</p>
+            </div>
+            <div class="type-box">
+                <h4>Strukturelle Metadaten</h4>
+                <p>Beziehungen, Hierarchien, Verknüpfungen</p>
+            </div>
+        </div>
+
+        <h3>Fachliche Metadaten</h3>
+        <div class="info-card">
+            <p>Beschreibende Metadaten helfen, dass auch Mitarbeiter, die nicht (IT)-technisch ausgebildet sind, den Inhalt und Kontext von Daten verstehen.</p>
+            <ul class="compact">
+                <li>Titel, Beschreibung, Zweck der Daten</li>
+                <li>Schlagwörter / Tags</li>
+                <li>Geschäftsdefinitionen (Business Glossar)</li>
+                <li>Verantwortliche Person oder Abteilung</li>
+                <li>Datenkategorie (z. B. Kundendaten, Finanzdaten)</li>
+            </ul>
+        </div>
+
+        <h3>Technische Metadaten</h3>
+        <div class="info-card">
+            <p>Technische Metadaten beschreiben die technischen Strukturen und Eigenschaften von Daten.</p>
+            <ul class="compact">
+                <li>Tabellenname, Feldname, Datentyp</li>
+                <li>Datenbankname, Schema, Speicherort</li>
+                <li>Format (z. B. CSV, JSON, Parquet)</li>
+                <li>Datenquelle (z. B. SAP, Oracle, API)</li>
+                <li>Lineage (Datenherkunft und -fluss)</li>
+            </ul>
+        </div>
+
+        <div class="page-break"></div>
+
+        <h3>Administrative Metadaten</h3>
+        <div class="info-card">
+            <p>Administrative Metadaten regeln Zugriff, Nutzung und Governance von Daten.</p>
+            <ul class="compact">
+                <li>Zugriffsrechte / Rollen</li>
+                <li>Datenschutzklassifikation (z. B. vertraulich, öffentlich)</li>
+                <li>Lizenzinformationen</li>
+                <li>Gültigkeitsdauer / Archivierungsstatus</li>
+                <li>Änderungsprotokolle / Versionierung</li>
+                <li>Compliance-Status (z. B. DSGVO, HIPAA)</li>
+            </ul>
+        </div>
+
+        <h3>Strukturelle Metadaten</h3>
+        <div class="info-card">
+            <p>Strukturelle Metadaten zeigen inhaltliche Beziehungen und Organisation von Datenobjekten.</p>
+            <ul class="compact">
+                <li>Beziehungen zwischen Tabellen (z. B. Foreign Keys)</li>
+                <li>Hierarchien (z. B. Produktkategorien)</li>
+                <li>Verknüpfungen zu externen Datenquellen</li>
+                <li>Aggregationslogiken (z. B. Summen, Mittelwerte)</li>
+                <li>Verweise zwischen fachlichen und technischen Metadaten</li>
+            </ul>
+        </div>
+
+        <h2>🗂️ Arten von Datenobjekten</h2>
+
+        <div class="two-column">
+            <div class="info-card">
+                <h4>Unstrukturierte Datenobjekte</h4>
+                <p>Datenobjekte, bei denen der Hauptinhalt ein unstrukturiertes Binary Large Object (BLOB) ist.</p>
+                <ul class="compact">
+                    <li>Fotos (.jpg, .png)</li>
+                    <li>Videos (.mp4, .avi)</li>
+                    <li>Audio (.mp3, .wav)</li>
+                    <li>PDFs</li>
+                    <li>Office-Dokumente</li>
+                </ul>
+            </div><div class="info-card">
+                <h4>Strukturierte Datenobjekte</h4>
+                <p>Datenobjekte, deren Zweck die Beschreibung der Struktur und von Eigenschaften anderer Objekte ist.</p>
+                <ul class="compact">
+                    <li>Datenbanktabellen</li>
+                    <li>CSV-Dateien</li>
+                    <li>JSON/XML-Dateien</li>
+                    <li>Excel-Tabellen</li>
+                    <li>Metadaten-Kataloge</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>📸 Metadaten digitaler Medien</h2>
+
+        <h3>Beispiel: Foto-Metadaten</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kategorie</th>
+                    <th>Metadatenfeld</th>
+                    <th>Beispiel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Fachlich</td>
+                    <td>GPS-Koordinaten</td>
+                    <td>51.5074° N, 0.1278° W</td>
+                </tr>
+                <tr>
+                    <td>Fachlich</td>
+                    <td>Fotografiertes Objekt</td>
+                    <td>Stadtlandschaft</td>
+                </tr>
+                <tr>
+                    <td>Technisch</td>
+                    <td>Abmessungen</td>
+                    <td>1920 x 1080 Pixel</td>
+                </tr>
+                <tr>
+                    <td>Technisch</td>
+                    <td>Kameramodell</td>
+                    <td>Canon EOS R5</td>
+                </tr>
+                <tr>
+                    <td>Technisch</td>
+                    <td>Belichtungszeit</td>
+                    <td>1/125 s, ISO 400, f/5.6</td>
+                </tr>
+                <tr>
+                    <td>Technisch</td>
+                    <td>Farbtiefe</td>
+                    <td>24 Bit</td>
+                </tr>
+                <tr>
+                    <td>Administrativ</td>
+                    <td>Erstellungsdatum</td>
+                    <td>2024-10-15 14:30:22</td>
+                </tr>
+                <tr>
+                    <td>Administrativ</td>
+                    <td>Software</td>
+                    <td>Adobe Lightroom 12.0</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="page-break"></div>
+
+        <h2>💼 Branchenbezogene Metadaten-Nutzung</h2>
+
+        <div class="branch-section">
+            <h3>🏥 Gesundheitswesen</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metadatentyp</th>
+                        <th>Beispiele</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fachlich</strong></td>
+                        <td>Patientenname, Diagnose, Behandlungsbeschreibung</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technisch</strong></td>
+                        <td>Bildauflösung (DICOM), Geräteparameter</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Administrativ</strong></td>
+                        <td>Zugriffsrechte, Datenschutzklassifikation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Strukturell</strong></td>
+                        <td>Verknüpfung von Patientenakten, zeitliche Abfolge</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Berufsgruppen:</strong> Ärzt:innen, Pflegefachkräfte, Medizinische Dokumentar:innen, Medizininformatiker:innen, Radiologietechnolog:innen</p>
+        </div>
+
+        <div class="branch-section">
+            <h3>🏛️ Kultur- und Gedächtnisinstitutionen</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metadatentyp</th>
+                        <th>Beispiele</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fachlich</strong></td>
+                        <td>Titel, Autor, Beschreibung, Schlagworte</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technisch</strong></td>
+                        <td>Dateiformat, Digitalisierungseinstellungen</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Administrativ</strong></td>
+                        <td>Provenienz, Lizenzinformationen, Archivstatus</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Strukturell</strong></td>
+                        <td>Hierarchie von Sammlungen, Serienstruktur</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Berufsgruppen:</strong> Bibliothekar:innen, Archivar:innen, Museolog:innen, Kurator:innen, Restaurator:innen</p>
+        </div>
+
+        <div class="branch-section">
+            <h3>💻 IT und Datenmanagement</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metadatentyp</th>
+                        <th>Beispiele</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fachlich</strong></td>
+                        <td>Datenfeldnamen, Beschreibung von Datenobjekten</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technisch</strong></td>
+                        <td>Datentypen, Systemkompatibilität</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Administrativ</strong></td>
+                        <td>Zugriffsrechte, Versionierung, Verantwortlichkeiten</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Strukturell</strong></td>
+                        <td>Datenmodellierung, Beziehungen zwischen Tabellen</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Berufsgruppen:</strong> Data Stewards, Data Engineers, Data Scientists, Datenbankadministrator:innen, Chief Data Officers</p>
+        </div>
+
+        <div class="page-break"></div>
+
+        <h2>🛠️ Metadaten-Tools in Data Governance</h2>
+
+        <div class="tools-list">
+            <div class="tool-item">
+                <strong>Collibra</strong>
+                <p>Data Catalog</p>
+                <small>Metadatenverwaltung, Governance</small>
+            </div>
+            <div class="tool-item">
+                <strong>Alation</strong>
+                <p>Data Catalog</p>
+                <small>Datenkatalogisierung, Zusammenarbeit</small>
+            </div>
+            <div class="tool-item">
+                <strong>Microsoft Purview</strong>
+                <p>Data Catalog</p>
+                <small>Datenklassifikation, Compliance</small>
+            </div>
+            <div class="tool-item">
+                <strong>Apache Atlas</strong>
+                <p>Open Source</p>
+                <small>Datenklassifikation, Lineage</small>
+            </div>
+            <div class="tool-item">
+                <strong>ExifTool</strong>
+                <p>Open Source</p>
+                <small>Metadaten auslesen und bearbeiten</small>
+            </div>
+            <div class="tool-item">
+                <strong>SAP Master Data Governance</strong>
+                <p>MDM</p>
+                <small>Stammdatenpflege, Governance</small>
+            </div>
+        </div>
+
+        <h2>📁 Datei-Metadaten nach Windows-Objekttyp</h2>
+
+        <h3>.docx (Word-Dokumente)</h3>
+        <div class="example-box">
+            <strong>Fachlich:</strong> Titel, Autor, Schlagwörter, Kategorien<br>
+            <strong>Technisch:</strong> Wörter/Seiten/Zeichen, Bearbeitungszeit, Version<br>
+            <strong>Administrativ:</strong> Erstellt am, Geändert am, Letzter Bearbeiter, Kommentare
+        </div>
+
+        <h3>.jpg/.png (Bilder)</h3>
+        <div class="example-box">
+            <strong>Fachlich:</strong> GPS-Koordinaten, Fotografiertes Objekt<br>
+            <strong>Technisch:</strong> Abmessungen, Farbtiefe, Kameramodell, Belichtungszeit, ISO, Blende<br>
+            <strong>Administrativ:</strong> Erstellungsdatum, Software, EXIF/IPTC/XMP
+        </div>
+
+        <h3>.html (Webseiten)</h3>
+        <div class="example-box">
+            <strong>Fachlich:</strong> Titel, Meta-Tags (Beschreibung, Keywords)<br>
+            <strong>Technisch:</strong> Encoding, Sprache, Verlinkte Ressourcen (CSS, JS)<br>
+            <strong>Administrativ:</strong> Erstellungs-/Änderungsdatum
+        </div>
+
+        <h3>.zip (Archive)</h3>
+        <div class="example-box">
+            <strong>Fachlich:</strong> Name, Kommentar<br>
+            <strong>Technisch:</strong> Größe (komprimiert/unkomprimiert), Komprimierungsmethode, Anzahl Dateien<br>
+            <strong>Administrativ:</strong> Erstellungs-/Änderungsdatum
+        </div>
+
+        <h2>🎯 Häufige Anwendungsfälle</h2>
+
+        <div class="two-column">
+            <div class="info-card">
+                <h4>📸 Fotoanalyse</h4>
+                <p>Analysieren von Kameraeinstellungen, Überprüfen der Echtheit von Fotos und Lernen von Techniken anderer Fotografen.</p>
+            </div><div class="info-card">
+                <h4>🔍 Digitale Forensik</h4>
+                <p>Untersuchen der Herkunft von Dateien, Überprüfen von Zeitstempeln und Extrahieren versteckter Informationen.</p>
+            </div>
+        </div>
+        <div class="two-column">
+            <div class="info-card">
+                <h4>🛡️ Datenschutz</h4>
+                <p>Überprüfen, welche persönlichen Informationen Dateien enthalten, bevor sie online geteilt werden.</p>
+            </div><div class="info-card">
+                <h4>📊 Medienorganisation</h4>
+                <p>Sortieren und Organisieren von Medienbibliotheken anhand von Metadaten wie Datum, Kamera oder Ort.</p>
+            </div>
+        </div>
+
+        <h2>🌐 Metadaten im Internet</h2>
+
+        <h3>HTML-Metadaten</h3>
+        <div class="example-box">
+            <p><strong>Title-Tag:</strong> Definiert den Titel der Webseite</p>
+            <p><strong>Meta Description:</strong> Kurze Beschreibung des Seiteninhalts</p>
+            <p><strong>Meta Keywords:</strong> Schlagwörter (veraltet, aber noch genutzt)</p>
+            <p><strong>Open Graph Tags:</strong> Für Social Media Darstellung</p>
+            <p><strong>Schema.org:</strong> Strukturierte Daten für Suchmaschinen</p>
+        </div>
+
+        <div class="page-break"></div>
+
+        <h2>💡 Wichtige Erkenntnisse</h2>
+
+        <div class="info-card" style="background: #fff3cd; border-color: #ffc107;">
+            <ul class="compact">
+                <li>Metadaten helfen, Daten besser zu verstehen, zu klassifizieren und zu nutzen</li>
+                <li>Die Verwaltung von Metadaten ist der Hauptgegenstand von Data Governance</li>
+                <li>Metadaten enthalten oft mehr Informationen als auf den ersten Blick sichtbar</li>
+                <li>Verschiedene Branchen nutzen Metadaten auf unterschiedliche Weise</li>
+                <li>Datenschutz und ethische Aspekte sind bei Metadaten besonders wichtig</li>
+                <li>Tools zur Metadatenverwaltung unterstützen Compliance und Datenqualität</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p><strong>Metadaten Cheatsheet</strong> | Data Governance & Metadaten-Management</p>
+            <p style="margin-top: 8px;">Basierend auf Modul 2, Einheiten 37-40</p>
+        </div>
+    </div>
+</body>
+</html>

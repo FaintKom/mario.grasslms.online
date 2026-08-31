@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('map.title') }} - {{ t('common.app_name') }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .map-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing-lg);
+    }
+    
+    .map-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+    }
+    
+    .welcome-text {
+        font-size: var(--font-size-xl);
+        color: var(--color-primary);
+    }
+    
+    .player-name {
+        color: var(--color-text);
+    }
+    
+    .map-actions {
+        display: flex;
+        gap: var(--spacing-md);
+    }
+    
+    .mission-brief {
+        background: rgba(255, 255, 255, 0.05);
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-xl);
+        border-left: 4px solid var(--color-virus);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-lg);
+    }
+    
+    .mission-brief-virus {
+        width: 60px;
+        height: 60px;
+        flex-shrink: 0;
+    }
+    
+    .mission-brief-text {
+        flex: 1;
+    }
+    
+    /* Sectors grid */
+    .sectors-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xl);
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    @media (max-width: 768px) {
+        .sectors-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    /* Sector card */
+    .sector-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-xl);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        transition: all var(--transition-normal);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .sector-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--color-primary);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .sector-card.locked {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .sector-card.locked:hover {
+        transform: none;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .sector-card.completed {
+        border-color: var(--color-success);
+    }
+    
+    .sector-card.completed::before {
+        content: '✓';
+        position: absolute;
+        top: var(--spacing-md);
+        right: var(--spacing-md);
+        width: 30px;
+        height: 30px;
+        background: var(--color-success);
+        border-radius: var(--radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    
+    .sector-icon {
+        font-size: 48px;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .sector-letter {
+        display: inline-block;
+        background: var(--color-primary);
+        color: var(--color-bg-dark);
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-full);
+        font-weight: bold;
+        font-size: var(--font-size-lg);
+        line-height: 40px;
+        text-align: center;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .sector-name {
+        font-size: var(--font-size-lg);
+        font-weight: 700;
+        margin-bottom: var(--spacing-xs);
+    }
+    
+    .sector-description {
+        color: var(--color-text-muted);
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .sector-tasks {
+        display: flex;
+        gap: var(--spacing-sm);
+    }
+    
+    .task-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: var(--radius-full);
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .task-dot.completed {
+        background: var(--color-success);
+    }
+    
+    .task-dot.current {
+        background: var(--color-primary);
+        animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
+    
+    /* Rocket section */
+    .rocket-section {
+        text-align: center;
+        padding: var(--spacing-2xl);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-lg);
+    }
+    
+    .rocket-icon {
+        font-size: 80px;
+        margin-bottom: var(--spacing-md);
+        animation: rocketHover 2s ease-in-out infinite;
+    }
+    
+    @keyframes rocketHover {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .rocket-title {
+        font-size: var(--font-size-xl);
+        color: var(--color-primary);
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .rocket-status {
+        color: var(--color-text-muted);
+    }
+    
+    /* Sector colors */
+    .sector-a { border-left: 4px solid #3b82f6; }
+    .sector-a .sector-letter { background: #3b82f6; }
+    
+    .sector-b { border-left: 4px solid #22c55e; }
+    .sector-b .sector-letter { background: #22c55e; }
+    
+    .sector-c { border-left: 4px solid #f59e0b; }
+    .sector-c .sector-letter { background: #f59e0b; }
+    
+    .sector-d { border-left: 4px solid #ef4444; }
+    .sector-d .sector-letter { background: #ef4444; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="map-page">
+    <!-- Header -->
+    <div class="map-header">
+        <div>
+            <h1 class="welcome-text">
+                {{ t('map.welcome', name='') }}<span class="player-name">{{ session.name }}</span>!
+            </h1>
+        </div>
+        <div class="map-actions">
+            <a href="{{ url_for('codes_page') }}" class="btn btn-secondary">
+                🎫 {{ t('map.my_codes') }}
+            </a>
+        </div>
+    </div>
+    
+    <!-- Mission brief -->
+    <div class="mission-brief">
+        <div class="mission-brief-virus">
+            {% include 'components/virus.svg' %}
+        </div>
+        <div class="mission-brief-text">
+            <p>{{ t('map.mission_brief') }}</p>
+        </div>
+    </div>
+    
+    <!-- Sectors grid -->
+    <div class="sectors-grid">
+        <!-- Sector A -->
+        <div class="sector-card sector-a" onclick="goToSector('a')">
+            <div class="sector-icon">📁</div>
+            <div class="sector-letter">A</div>
+            <div class="sector-name">{{ t('sectors.a.name') }}</div>
+            <div class="sector-description">{{ t('sectors.a.description') }}</div>
+            <div class="sector-tasks">
+                <div class="task-dot current"></div>
+                <div class="task-dot"></div>
+                <div class="task-dot"></div>
+            </div>
+        </div>
+        
+        <!-- Sector B -->
+        <div class="sector-card sector-b" onclick="goToSector('b')">
+            <div class="sector-icon">🎨</div>
+            <div class="sector-letter">B</div>
+            <div class="sector-name">{{ t('sectors.b.name') }}</div>
+            <div class="sector-description">{{ t('sectors.b.description') }}</div>
+            <div class="sector-tasks">
+                <div class="task-dot"></div>
+                <div class="task-dot"></div>
+                <div class="task-dot"></div>
+            </div>
+        </div>
+        
+        <!-- Sector C -->
+        <div class="sector-card sector-c" onclick="goToSector('c')">
+            <div class="sector-icon">📝</div>
+            <div class="sector-letter">C</div>
+            <div class="sector-name">{{ t('sectors.c.name') }}</div>
+            <div class="sector-description">{{ t('sectors.c.description') }}</div>
+            <div class="sector-tasks">
+                <div class="task-dot"></div>
+                <div class="task-dot"></div>
+                <div class="task-dot"></div>
+            </div>
+        </div>
+        
+        <!-- Sector D -->
+        <div class="sector-card sector-d" onclick="goToSector('d')">
+            <div class="sector-icon">📊</div>
+            <div class="sector-letter">D</div>
+            <div class="sector-name">{{ t('sectors.d.name') }}</div>
+            <div class="sector-description">{{ t('sectors.d.description') }}</div>
+            <div class="sector-tasks">
+                <div class="task-dot"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rocket -->
+    <div class="rocket-section">
+        <div class="rocket-icon">🚀</div>
+        <h2 class="rocket-title">Ракета на Марс</h2>
+        <p class="rocket-status">Выполни все задания, чтобы запустить ракету!</p>
+    </div>
+</div>
+
+<script>
+    // Add virus animation
+    document.querySelector('.mission-brief-virus .virus-svg')?.classList.add('idle');
+    
+    function goToSector(sector) {
+        // For now, go directly to first task of each sector
+        const taskMap = {
+            'a': 'a1',
+            'b': 'b1',
+            'c': 'c1',
+            'd': 'd1'
+        };
+        
+        window.location.href = `/task/${taskMap[sector]}`;
+    }
+</script>
+{% endblock %}

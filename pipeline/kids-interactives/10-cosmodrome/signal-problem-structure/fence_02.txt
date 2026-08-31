@@ -1,0 +1,52 @@
+space-virus-quest/
+├── index.html                 # Главная страница
+├── css/
+│   ├── main.css              # Общие стили
+│   ├── map.css               # Стили карты космодрома
+│   └── tasks.css             # Стили заданий
+├── js/
+│   ├── app.js                # Главный файл приложения
+│   ├── map.js                # Логика карты и секторов
+│   ├── progress.js           # Сохранение прогресса
+│   ├── rocket-launch.js      # Финальный запуск
+│   └── file-checker.js       # Проверка загруженных файлов
+├── tasks/
+│   ├── sector-a/             # ФАЙЛОВЫЙ АРХИВ
+│   │   ├── task-1-drag-drop.js
+│   │   ├── task-2-find-path.js
+│   │   └── task-3-fix-structure.js
+│   ├── sector-b/             # ГРАФИЧЕСКАЯ СТАНЦИЯ
+│   │   ├── task-1-draw-icon.js
+│   │   ├── task-2-color-rocket.js
+│   │   └── task-3-select-icon.js
+│   ├── sector-c/             # ДОКУМЕНТАЦИЯ
+│   │   ├── task-1-fix-errors.js
+│   │   ├── task-2-format-text.js
+│   │   └── task-3-fill-gaps.js
+│   ├── sector-d/             # ПРЕЗЕНТАЦИИ
+│   │   ├── task-1-order-slides.js
+│   │   ├── task-2-add-titles.js
+│   │   └── task-3-find-mistake.js
+│   └── virus-core/           # ЯДРО ВИРУСА
+│       └── cycles-reveal.js
+├── assets/
+│   ├── images/
+│   │   ├── map/              # Элементы карты
+│   │   ├── sectors/          # Иконки секторов
+│   │   ├── rocket/           # Ракета и роботы
+│   │   └── virus/            # Вирусные эффекты
+│   ├── downloads/            # Файлы для скачивания
+│   │   ├── rocket-template.png
+│   │   ├── broken-document.docx
+│   │   └── broken-presentation.pptx
+│   └── sounds/               # Звуки (опционально)
+├── api/
+│   ├── server.js             # Express сервер
+│   ├── check-docx.js         # Проверка .docx
+│   ├── check-pptx.js         # Проверка .pptx
+│   └── progress-api.js       # API прогресса
+├── config/
+│   ├── tasks-config.json     # Настройки заданий
+│   ├── codes-config.json     # Коды для LMS
+│   └── sectors-config.json   # Настройки секторов
+└── README.md

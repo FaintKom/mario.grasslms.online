@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Космодром: Атака вируса</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg-dark: #0a0a1a;
+            --color-bg-mid: #1a1a3a;
+            --color-accent: #6366f1;
+            --color-accent-glow: rgba(99, 102, 241, 0.6);
+            --color-infected: #ef4444;
+            --color-infected-glow: rgba(239, 68, 68, 0.6);
+            --color-progress: #f59e0b;
+            --color-progress-glow: rgba(245, 158, 11, 0.6);
+            --color-completed: #22c55e;
+            --color-completed-glow: rgba(34, 197, 94, 0.6);
+            --color-locked: #6b7280;
+            --color-text: #e5e7eb;
+            --color-text-dim: #9ca3af;
+            --font-display: 'Orbitron', monospace;
+            --font-body: 'Exo 2', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(180deg, var(--color-bg-dark) 0%, var(--color-bg-mid) 50%, var(--color-bg-dark) 100%);
+            min-height: 100vh;
+            font-family: var(--font-body);
+            color: var(--color-text);
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           STARS BACKGROUND
+           ═══════════════════════════════════════════════════════════ */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        .star.shooting {
+            width: 2px !important;
+            height: 2px !important;
+            background: linear-gradient(90deg, white, transparent);
+            animation: shoot 3s linear infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes shoot {
+            0% { transform: translateX(0) translateY(0); opacity: 1; }
+            100% { transform: translateX(200px) translateY(200px); opacity: 0; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════ */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(10, 10, 26, 0.95) 0%, transparent 100%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .logo-text h1 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #fff, var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 0.8rem;
+            color: var(--color-text-dim);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .lang-select {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--color-accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-select:hover {
+            background: var(--color-accent);
+            box-shadow: 0 0 20px var(--color-accent-glow);
+        }
+
+        .btn-codes {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-codes:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           PROGRESS BAR
+           ═══════════════════════════════════════════════════════════ */
+        .progress-container {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 25px;
+            border-radius: 30px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-label {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--color-text-dim);
+            letter-spacing: 2px;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-completed), #4ade80);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--color-completed-glow);
+        }
+
+        .progress-text {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-completed);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           MAIN MAP AREA
+           ═══════════════════════════════════════════════════════════ */
+        .map-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 120px 20px 60px;
+        }
+
+        .spaceport-map {
+            position: relative;
+            width: 900px;
+            height: 700px;
+        }
+
+        /* Ground Platform */
+        .ground-platform {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 300px;
+            background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+            border-radius: 20px;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .ground-platform::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(99, 102, 241, 0.05) 40px,
+                    rgba(99, 102, 241, 0.05) 41px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(99, 102, 241, 0.05) 40px,
+                    rgba(99, 102, 241, 0.05) 41px
+                );
+            border-radius: 20px;
+        }
+
+        .ground-glow {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 820px;
+            height: 20px;
+            background: radial-gradient(ellipse, var(--color-accent-glow) 0%, transparent 70%);
+            filter: blur(10px);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           SECTORS
+           ═══════════════════════════════════════════════════════════ */
+        .sector {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .sector:hover {
+            transform: scale(1.08) translateY(-10px);
+        }
+
+        .sector:hover .sector-glow {
+            opacity: 1;
+        }
+
+        .sector-building {
+            width: 140px;
+            height: auto;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+            transition: filter 0.3s ease;
+        }
+
+        .sector-glow {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 30px;
+            border-radius: 50%;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            filter: blur(15px);
+        }
+
+        .sector-label {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .sector-name {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .sector-status {
+            font-size: 0.75rem;
+            color: var(--color-text-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .sector-icon {
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            font-size: 1.5rem;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Sector positions */
+        .sector-a { left: 50px; bottom: 280px; }
+        .sector-b { left: 200px; bottom: 380px; }
+        .sector-c { right: 200px; bottom: 380px; }
+        .sector-d { right: 50px; bottom: 280px; }
+
+        /* Sector States */
+        .sector.locked .sector-building {
+            filter: grayscale(100%) brightness(0.5) drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+        }
+        .sector.locked .sector-glow { background: var(--color-locked); }
+        .sector.locked .sector-name { color: var(--color-locked); }
+        .sector.locked { cursor: not-allowed; }
+        .sector.locked:hover { transform: none; }
+
+        .sector.infected .sector-building {
+            animation: glitch 0.3s infinite;
+        }
+        .sector.infected .sector-glow { background: var(--color-infected); }
+        .sector.infected .sector-name { color: var(--color-infected); }
+
+        @keyframes glitch {
+            0% { transform: translate(0); filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5)) hue-rotate(0deg); }
+            20% { transform: translate(-2px, 2px); filter: drop-shadow(2px 20px 30px rgba(239, 68, 68, 0.5)) hue-rotate(10deg); }
+            40% { transform: translate(2px, -2px); filter: drop-shadow(-2px 20px 30px rgba(239, 68, 68, 0.5)) hue-rotate(-10deg); }
+            60% { transform: translate(-1px, 1px); filter: drop-shadow(1px 20px 30px rgba(239, 68, 68, 0.5)) hue-rotate(5deg); }
+            80% { transform: translate(1px, -1px); filter: drop-shadow(-1px 20px 30px rgba(239, 68, 68, 0.5)) hue-rotate(-5deg); }
+            100% { transform: translate(0); filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5)) hue-rotate(0deg); }
+        }
+
+        .sector.in-progress .sector-building {
+            animation: scanning 2s ease-in-out infinite;
+        }
+        .sector.in-progress .sector-glow { 
+            background: var(--color-progress); 
+            animation: pulse-glow 1s ease-in-out infinite;
+        }
+        .sector.in-progress .sector-name { color: var(--color-progress); }
+
+        @keyframes scanning {
+            0%, 100% { filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5)) brightness(1); }
+            50% { filter: drop-shadow(0 20px 40px rgba(245, 158, 11, 0.6)) brightness(1.2); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+        }
+
+        .sector.completed .sector-glow { background: var(--color-completed); }
+        .sector.completed .sector-name { color: var(--color-completed); }
+        .sector.completed .sector-building {
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 20px var(--color-completed-glow));
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           ROCKET
+           ═══════════════════════════════════════════════════════════ */
+        .rocket-area {
+            position: absolute;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+        }
+
+        .launch-pad {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 25px;
+            background: linear-gradient(180deg, #4a5568 0%, #2d3748 100%);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .launch-pad::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 8px;
+            background: var(--color-progress);
+            border-radius: 4px;
+            box-shadow: 0 0 20px var(--color-progress-glow);
+            animation: pad-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pad-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .rocket-container {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .rocket-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .rocket-img {
+            width: 100px;
+            height: auto;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6));
+        }
+
+        .rocket-label {
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .rocket-label .sector-name {
+            color: var(--color-accent);
+        }
+
+        /* Fire effects */
+        .fire-effects {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 3px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .rocket-area.ready .fire-effects {
+            opacity: 1;
+        }
+
+        .fire-effect {
+            width: 30px;
+            height: auto;
+            image-rendering: pixelated;
+            animation: flicker 0.15s infinite alternate;
+        }
+
+        .fire-effect:nth-child(2) {
+            animation-delay: 0.05s;
+            transform: scale(1.3);
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.7; transform: scaleY(0.9); }
+            100% { opacity: 1; transform: scaleY(1.1); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           VIRUS CHARACTER
+           ═══════════════════════════════════════════════════════════ */
+        .virus-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        .virus-speech {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--color-infected);
+            border-radius: 20px;
+            padding: 15px 25px;
+            max-width: 300px;
+            position: relative;
+            animation: speech-appear 0.5s ease;
+            box-shadow: 0 10px 40px rgba(239, 68, 68, 0.3);
+        }
+
+        .virus-speech::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 40px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid var(--color-infected);
+        }
+
+        @keyframes speech-appear {
+            0% { opacity: 0; transform: translateY(20px) scale(0.8); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .virus-speech p {
+            font-size: 0.95rem;
+            color: var(--color-text);
+            line-height: 1.5;
+        }
+
+        .virus-speech .highlight {
+            color: var(--color-infected);
+            font-weight: 600;
+        }
+
+        .virus-character {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+            border: 3px solid var(--color-infected);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            animation: virus-float 3s ease-in-out infinite, virus-glitch 4s ease-in-out infinite;
+            box-shadow: 
+                0 0 30px var(--color-infected-glow),
+                inset 0 0 30px rgba(239, 68, 68, 0.1);
+            overflow: hidden;
+        }
+
+        .virus-character::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(239, 68, 68, 0.03) 2px,
+                    rgba(239, 68, 68, 0.03) 4px
+                );
+            pointer-events: none;
+        }
+
+        @keyframes virus-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes virus-glitch {
+            0%, 90%, 100% { filter: none; }
+            92% { filter: hue-rotate(90deg); transform: translate(2px, 0); }
+            94% { filter: hue-rotate(-90deg); transform: translate(-2px, 0); }
+            96% { filter: hue-rotate(45deg); transform: translate(0, 2px); }
+            98% { filter: none; transform: translate(0, 0); }
+        }
+
+        .virus-face {
+            font-size: 3rem;
+            animation: face-change 5s ease-in-out infinite;
+        }
+
+        @keyframes face-change {
+            0%, 45%, 55%, 100% { content: '👾'; }
+            50% { transform: scale(1.1); }
+        }
+
+        .virus-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .virus-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--color-infected);
+            border-radius: 50%;
+            animation: particle-float 3s ease-in-out infinite;
+        }
+
+        @keyframes particle-float {
+            0%, 100% { opacity: 0; transform: translate(0, 0) scale(0); }
+            50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           LAUNCH BUTTON
+           ═══════════════════════════════════════════════════════════ */
+        .launch-button-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .btn-launch {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            border: none;
+            color: white;
+            padding: 18px 50px;
+            border-radius: 50px;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 40px rgba(239, 68, 68, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-launch:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 50px rgba(239, 68, 68, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-launch:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-launch:disabled {
+            background: linear-gradient(135deg, #4b5563, #374151);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-launch .icon {
+            font-size: 1.3rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           MODAL
+           ═══════════════════════════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 500;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fade-in 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: linear-gradient(180deg, #1a1a3a 0%, #0f0f2f 100%);
+            border: 2px solid var(--color-accent);
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            animation: modal-appear 0.4s ease;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes modal-appear {
+            from { opacity: 0; transform: scale(0.8) translateY(50px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header .icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .modal-content {
+            margin-bottom: 30px;
+        }
+
+        .modal-content p {
+            color: var(--color-text-dim);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .task-list li:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .task-list li .task-icon {
+            font-size: 1.2rem;
+        }
+
+        .task-list li .task-name {
+            flex: 1;
+        }
+
+        .task-list li .task-status {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .task-list li .task-status.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-progress);
+        }
+
+        .task-list li .task-status.done {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-completed);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn-modal {
+            padding: 14px 35px;
+            border-radius: 30px;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-modal.primary {
+            background: linear-gradient(135deg, var(--color-accent), #4f46e5);
+            color: white;
+            box-shadow: 0 10px 30px var(--color-accent-glow);
+        }
+
+        .btn-modal.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px var(--color-accent-glow);
+        }
+
+        .btn-modal.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--color-text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-modal.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           ASTRONAUTS
+           ═══════════════════════════════════════════════════════════ */
+        .astronaut {
+            position: absolute;
+            width: 45px;
+            height: auto;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+            animation: astronaut-walk 4s ease-in-out infinite;
+            z-index: 15;
+        }
+
+        .astronaut-1 {
+            bottom: 230px;
+            left: 320px;
+            animation-delay: 0s;
+        }
+
+        .astronaut-2 {
+            bottom: 230px;
+            right: 320px;
+            animation-delay: 2s;
+            transform: scaleX(-1);
+        }
+
+        @keyframes astronaut-walk {
+            0%, 100% { transform: translateY(0) scaleX(1); }
+            25% { transform: translateY(-3px) scaleX(1); }
+            50% { transform: translateY(0) scaleX(1); }
+            75% { transform: translateY(-3px) scaleX(1); }
+        }
+
+        .astronaut-2 {
+            animation-name: astronaut-walk-flip;
+        }
+
+        @keyframes astronaut-walk-flip {
+            0%, 100% { transform: translateY(0) scaleX(-1); }
+            25% { transform: translateY(-3px) scaleX(-1); }
+            50% { transform: translateY(0) scaleX(-1); }
+            75% { transform: translateY(-3px) scaleX(-1); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .spaceport-map {
+                transform: scale(0.8);
+                transform-origin: center center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .spaceport-map {
+                transform: scale(0.6);
+            }
+
+            .virus-container {
+                bottom: 100px;
+                right: 10px;
+            }
+
+            .virus-speech {
+                max-width: 200px;
+                font-size: 0.85rem;
+            }
+
+            .virus-character {
+                width: 70px;
+                height: 70px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           CODE DISPLAY PANEL
+           ═══════════════════════════════════════════════════════════ */
+        .codes-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(180deg, #1a1a3a 0%, #0f0f2f 100%);
+            border: 2px solid var(--color-accent);
+            border-radius: 25px;
+            padding: 30px;
+            min-width: 350px;
+            z-index: 600;
+            display: none;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .codes-panel.show {
+            display: block;
+            animation: modal-appear 0.4s ease;
+        }
+
+        .codes-panel h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .code-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .code-item .sector-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-item .code-value {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            color: var(--color-completed);
+            letter-spacing: 1px;
+        }
+
+        .code-item .locked-text {
+            color: var(--color-locked);
+            font-size: 0.85rem;
+        }
+
+        .close-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--color-text-dim);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-panel:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">🚀</span>
+            <div class="logo-text">
+                <h1>Космодром</h1>
+                <p>Атака вируса</p>
+            </div>
+        </div>
+        <div class="header-controls">
+            <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="id">🇮🇩 Bahasa</option>
+            </select>
+            <button class="btn-codes" onclick="toggleCodesPanel()">
+                <span>🔑</span>
+                <span data-i18n="my_codes">Мои коды</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <span class="progress-label" data-i18n="progress">ПРОГРЕСС</span>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 25%"></div>
+        </div>
+        <span class="progress-text" id="progressText">1/4</span>
+    </div>
+
+    <!-- Main Map -->
+    <div class="map-container">
+        <div class="spaceport-map">
+            <!-- Ground Glow -->
+            <div class="ground-glow"></div>
+
+            <!-- Ground Platform -->
+            <div class="ground-platform"></div>
+
+            <!-- Sector A: File Archive -->
+            <div class="sector sector-a completed" onclick="openSector('a')" data-sector="a">
+                <span class="sector-icon">✅</span>
+                <img src="assets/buildings/buildingTiles_030.png" class="sector-building" alt="Сектор A">
+                <div class="sector-glow"></div>
+                <div class="sector-label">
+                    <div class="sector-name" data-i18n="sector_a_name">СЕКТОР A</div>
+                    <div class="sector-status">
+                        <span>📁</span>
+                        <span data-i18n="sector_a_title">Файловый архив</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sector B: Graphics Station -->
+            <div class="sector sector-b in-progress" onclick="openSector('b')" data-sector="b">
+                <span class="sector-icon">⚡</span>
+                <img src="assets/buildings/buildingTiles_034.png" class="sector-building" alt="Сектор B">
+                <div class="sector-glow"></div>
+                <div class="sector-label">
+                    <div class="sector-name" data-i18n="sector_b_name">СЕКТОР B</div>
+                    <div class="sector-status">
+                        <span>🎨</span>
+                        <span data-i18n="sector_b_title">Графическая станция</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sector C: Documentation Center -->
+            <div class="sector sector-c infected" onclick="openSector('c')" data-sector="c">
+                <span class="sector-icon">🔴</span>
+                <img src="assets/buildings/buildingTiles_041.png" class="sector-building" alt="Сектор C">
+                <div class="sector-glow"></div>
+                <div class="sector-label">
+                    <div class="sector-name" data-i18n="sector_c_name">СЕКТОР C</div>
+                    <div class="sector-status">
+                        <span>📄</span>
+                        <span data-i18n="sector_c_title">Центр документации</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sector D: Command Center -->
+            <div class="sector sector-d locked" onclick="openSector('d')" data-sector="d">
+                <span class="sector-icon">🔒</span>
+                <img src="assets/buildings/buildingTiles_054.png" class="sector-building" alt="Сектор D">
+                <div class="sector-glow"></div>
+                <div class="sector-label">
+                    <div class="sector-name" data-i18n="sector_d_name">СЕКТОР D</div>
+                    <div class="sector-status">
+                        <span>📊</span>
+                        <span data-i18n="sector_d_title">Командный центр</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Astronauts -->
+            <img src="assets/space/Astronauts/spaceAstronauts_007.png" class="astronaut astronaut-1" alt="Астронавт 1">
+            <img src="assets/space/Astronauts/spaceAstronauts_008.png" class="astronaut astronaut-2" alt="Астронавт 2">
+
+            <!-- Rocket Area -->
+            <div class="rocket-area" id="rocketArea">
+                <div class="launch-pad"></div>
+                <div class="rocket-container">
+                    <img src="assets/space/Rockets/spaceRockets_001.png" class="rocket-img" alt="Ракета">
+                    <div class="fire-effects">
+                        <img src="assets/space/Effects/spaceEffects_008.png" class="fire-effect" alt="">
+                        <img src="assets/space/Effects/spaceEffects_012.png" class="fire-effect" alt="">
+                        <img src="assets/space/Effects/spaceEffects_016.png" class="fire-effect" alt="">
+                    </div>
+                </div>
+                <div class="rocket-label">
+                    <div class="sector-name" data-i18n="launch_pad">СТАРТОВАЯ ПЛОЩАДКА</div>
+                    <div class="sector-status">
+                        <span data-i18n="ready_status">Готовность: 25%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Launch Button -->
+    <div class="launch-button-container">
+        <button class="btn-launch" id="launchBtn" disabled onclick="attemptLaunch()">
+            <span class="icon">🚀</span>
+            <span data-i18n="launch_btn">Запуск ракеты</span>
+        </button>
+    </div>
+
+    <!-- Virus Character -->
+    <div class="virus-container" id="virusContainer">
+        <div class="virus-speech" id="virusSpeech">
+            <p><span class="highlight">Ха-ха-ха!</span> Я захватил ваш космодром! Попробуйте меня остановить, если сможете!</p>
+        </div>
+        <div class="virus-character">
+            <div class="virus-particles" id="virusParticles"></div>
+            <span class="virus-face">👾</span>
+        </div>
+    </div>
+
+    <!-- Sector Modal -->
+    <div class="modal-overlay" id="sectorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="icon" id="modalIcon">📁</span>
+                <h2 id="modalTitle">Сектор A: Файловый архив</h2>
+            </div>
+            <div class="modal-content">
+                <p id="modalDescription">Вирус перемешал все файлы! Выполни задания, чтобы освободить сектор.</p>
+                <ul class="task-list" id="taskList">
+                    <li>
+                        <span class="task-icon">📋</span>
+                        <span class="task-name">Разложи файлы по папкам</span>
+                        <span class="task-status done">✓ Выполнено</span>
+                    </li>
+                    <li>
+                        <span class="task-icon">🔍</span>
+                        <span class="task-name">Найди файл по пути</span>
+                        <span class="task-status done">✓ Выполнено</span>
+                    </li>
+                    <li>
+                        <span class="task-icon">🗂️</span>
+                        <span class="task-name">Исправь структуру папок</span>
+                        <span class="task-status done">✓ Выполнено</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal secondary" onclick="closeModal()">Закрыть</button>
+                <button class="btn-modal primary" id="modalActionBtn" onclick="startSector()">Начать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Codes Panel -->
+    <div class="codes-panel" id="codesPanel">
+        <button class="close-panel" onclick="toggleCodesPanel()">×</button>
+        <h3>🔑 Мои коды для LMS</h3>
+        <div class="code-item">
+            <div class="sector-info">
+                <span>📁</span>
+                <span>Сектор A: Файлы</span>
+            </div>
+            <span class="code-value">FILES-2312</span>
+        </div>
+        <div class="code-item">
+            <div class="sector-info">
+                <span>🎨</span>
+                <span>Сектор B: Графика</span>
+            </div>
+            <span class="locked-text">🔒 Не завершён</span>
+        </div>
+        <div class="code-item">
+            <div class="sector-info">
+                <span>📄</span>
+                <span>Сектор C: Документы</span>
+            </div>
+            <span class="locked-text">🔒 Не завершён</span>
+        </div>
+        <div class="code-item">
+            <div class="sector-info">
+                <span>📊</span>
+                <span>Сектор D: Презентации</span>
+            </div>
+            <span class="locked-text">🔒 Заблокирован</span>
+        </div>
+    </div>
+
+    <!-- Overlay for codes panel -->
+    <div class="modal-overlay" id="codesOverlay" onclick="toggleCodesPanel()"></div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════
+        // LOCALIZATION
+        // ═══════════════════════════════════════════════════════════
+        const translations = {
+            ru: {
+                progress: "ПРОГРЕСС",
+                my_codes: "Мои коды",
+                sector_a_name: "СЕКТОР A",
+                sector_a_title: "Файловый архив",
+                sector_b_name: "СЕКТОР B",
+                sector_b_title: "Графическая станция",
+                sector_c_name: "СЕКТОР C",
+                sector_c_title: "Центр документации",
+                sector_d_name: "СЕКТОР D",
+                sector_d_title: "Командный центр",
+                launch_pad: "СТАРТОВАЯ ПЛОЩАДКА",
+                ready_status: "Готовность: 25%",
+                launch_btn: "Запуск ракеты",
+                virus_intro: "Ха-ха-ха! Я захватил ваш космодром! Попробуйте меня остановить!",
+                virus_sector_a: "Нет! Как вы освободили файловый архив?! Это ничего не значит!",
+                virus_sector_b: "Ааа! Моя графическая станция! Но у меня ещё есть документы!",
+                virus_sector_c: "Не может быть! Вы слишком умные... Но презентации вам не взломать!",
+                virus_sector_d: "НЕЕЕЕТ! Вы всё испортили! Но я ещё вернусь!!!"
+            },
+            en: {
+                progress: "PROGRESS",
+                my_codes: "My codes",
+                sector_a_name: "SECTOR A",
+                sector_a_title: "File Archive",
+                sector_b_name: "SECTOR B",
+                sector_b_title: "Graphics Station",
+                sector_c_name: "SECTOR C",
+                sector_c_title: "Documentation Center",
+                sector_d_name: "SECTOR D",
+                sector_d_title: "Command Center",
+                launch_pad: "LAUNCH PAD",
+                ready_status: "Ready: 25%",
+                launch_btn: "Launch rocket",
+                virus_intro: "Ha-ha-ha! I've captured your spaceport! Try to stop me!",
+                virus_sector_a: "No! How did you free the file archive?! It means nothing!",
+                virus_sector_b: "Aaa! My graphics station! But I still have the documents!",
+                virus_sector_c: "Impossible! You're too smart... But you'll never crack the presentations!",
+                virus_sector_d: "NOOOO! You ruined everything! But I'll be back!!!"
+            },
+            es: {
+                progress: "PROGRESO",
+                my_codes: "Mis códigos",
+                sector_a_name: "SECTOR A",
+                sector_a_title: "Archivo de ficheros",
+                sector_b_name: "SECTOR B",
+                sector_b_title: "Estación gráfica",
+                sector_c_name: "SECTOR C",
+                sector_c_title: "Centro de documentación",
+                sector_d_name: "SECTOR D",
+                sector_d_title: "Centro de mando",
+                launch_pad: "PLATAFORMA DE LANZAMIENTO",
+                ready_status: "Listo: 25%",
+                launch_btn: "Lanzar cohete",
+                virus_intro: "¡Ja-ja-ja! ¡He capturado tu puerto espacial! ¡Intenta detenerme!",
+                virus_sector_a: "¡No! ¿Cómo liberaron el archivo? ¡No significa nada!",
+                virus_sector_b: "¡Aaa! ¡Mi estación gráfica! ¡Pero aún tengo los documentos!",
+                virus_sector_c: "¡Imposible! Son muy listos... ¡Pero nunca descifrarán las presentaciones!",
+                virus_sector_d: "¡¡¡NOOO!!! ¡Lo arruinaron todo! ¡¡Pero volveré!!"
+            },
+            id: {
+                progress: "KEMAJUAN",
+                my_codes: "Kode saya",
+                sector_a_name: "SEKTOR A",
+                sector_a_title: "Arsip File",
+                sector_b_name: "SEKTOR B",
+                sector_b_title: "Stasiun Grafis",
+                sector_c_name: "SEKTOR C",
+                sector_c_title: "Pusat Dokumentasi",
+                sector_d_name: "SEKTOR D",
+                sector_d_title: "Pusat Komando",
+                launch_pad: "LANDASAN PELUNCURAN",
+                ready_status: "Kesiapan: 25%",
+                launch_btn: "Luncurkan roket",
+                virus_intro: "Ha-ha-ha! Aku telah menguasai pelabuhan antariksa kalian! Coba hentikan aku!",
+                virus_sector_a: "Tidak! Bagaimana kalian membebaskan arsip file?! Ini tidak berarti apa-apa!",
+                virus_sector_b: "Aaa! Stasiun grafisku! Tapi aku masih punya dokumen!",
+                virus_sector_c: "Tidak mungkin! Kalian terlalu pintar... Tapi presentasi tidak akan bisa kalian bobol!",
+                virus_sector_d: "TIDAAAK! Kalian merusak segalanya! Tapi aku akan kembali!!!"
+            }
+        };
+
+        let currentLang = 'ru';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            updateVirusSpeech();
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // STARS GENERATION
+        // ═══════════════════════════════════════════════════════════
+        const starsContainer = document.getElementById('stars');
+        
+        // Regular stars
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            const size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Shooting stars
+        for (let i = 0; i < 3; i++) {
+            const star = document.createElement('div');
+            star.className = 'star shooting';
+            star.style.left = Math.random() * 50 + '%';
+            star.style.top = Math.random() * 30 + '%';
+            star.style.animationDelay = (Math.random() * 10 + i * 5) + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // VIRUS PARTICLES
+        // ═══════════════════════════════════════════════════════════
+        const virusParticles = document.getElementById('virusParticles');
+        for (let i = 0; i < 8; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'virus-particle';
+            particle.style.left = 50 + Math.random() * 20 - 10 + '%';
+            particle.style.top = 50 + Math.random() * 20 - 10 + '%';
+            particle.style.setProperty('--tx', (Math.random() * 60 - 30) + 'px');
+            particle.style.setProperty('--ty', (Math.random() * 60 - 30) + 'px');
+            particle.style.animationDelay = Math.random() * 3 + 's';
+            virusParticles.appendChild(particle);
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // GAME STATE
+        // ═══════════════════════════════════════════════════════════
+        const gameState = {
+            sectors: {
+                a: { status: 'completed', tasks: [true, true, true], code: 'FILES-2312' },
+                b: { status: 'in-progress', tasks: [true, false, false], code: 'GRAPHICS-2312' },
+                c: { status: 'infected', tasks: [false, false, false], code: 'DOCUMENT-2312' },
+                d: { status: 'locked', tasks: [false, false, false], code: 'PRESENT-2312' }
+            },
+            launchReady: false
+        };
+
+        const sectorData = {
+            a: {
+                icon: '📁',
+                name: { ru: 'Сектор A: Файловый архив', en: 'Sector A: File Archive', es: 'Sector A: Archivo de ficheros', id: 'Sektor A: Arsip File' },
+                description: { ru: 'Вирус перемешал все файлы! Выполни задания, чтобы освободить сектор.', en: 'The virus scrambled all the files! Complete tasks to free the sector.', es: 'El virus mezcló todos los archivos! Completa las tareas para liberar el sector.', id: 'Virus mengacaukan semua file! Selesaikan tugas untuk membebaskan sektor.' },
+                tasks: [
+                    { ru: 'Разложи файлы по папкам', en: 'Sort files into folders', es: 'Organiza archivos en carpetas', id: 'Sortir file ke folder' },
+                    { ru: 'Найди файл по пути', en: 'Find file by path', es: 'Encuentra archivo por ruta', id: 'Temukan file berdasarkan path' },
+                    { ru: 'Исправь структуру папок', en: 'Fix folder structure', es: 'Arregla estructura de carpetas', id: 'Perbaiki struktur folder' }
+                ]
+            },
+            b: {
+                icon: '🎨',
+                name: { ru: 'Сектор B: Графическая станция', en: 'Sector B: Graphics Station', es: 'Sector B: Estación gráfica', id: 'Sektor B: Stasiun Grafis' },
+                description: { ru: 'Графические файлы повреждены! Используй Sumo Paint, чтобы их восстановить.', en: 'Graphics files are damaged! Use Sumo Paint to restore them.', es: 'Los archivos gráficos están dañados! Usa Sumo Paint para restaurarlos.', id: 'File grafis rusak! Gunakan Sumo Paint untuk memperbaikinya.' },
+                tasks: [
+                    { ru: 'Почини простую плату', en: 'Fix simple circuit board', es: 'Repara placa simple', id: 'Perbaiki papan sirkuit sederhana' },
+                    { ru: 'Почини сложную плату', en: 'Fix complex circuit board', es: 'Repara placa compleja', id: 'Perbaiki papan sirkuit kompleks' },
+                    { ru: 'Соедини инструменты с функциями', en: 'Match tools with functions', es: 'Relaciona herramientas con funciones', id: 'Cocokkan alat dengan fungsi' }
+                ]
+            },
+            c: {
+                icon: '📄',
+                name: { ru: 'Сектор C: Центр документации', en: 'Sector C: Documentation Center', es: 'Sector C: Centro de documentación', id: 'Sektor C: Pusat Dokumentasi' },
+                description: { ru: 'Документы повреждены вирусом! Исправь ошибки и восстанови форматирование.', en: 'Documents are damaged by the virus! Fix errors and restore formatting.', es: 'Los documentos están dañados por el virus! Corrige errores y restaura el formato.', id: 'Dokumen rusak oleh virus! Perbaiki kesalahan dan pulihkan format.' },
+                tasks: [
+                    { ru: 'Исправь ошибки в тексте', en: 'Fix text errors', es: 'Corrige errores en el texto', id: 'Perbaiki kesalahan teks' },
+                    { ru: 'Отформатируй текст по образцу', en: 'Format text by example', es: 'Formatea texto según ejemplo', id: 'Format teks sesuai contoh' },
+                    { ru: 'Вставь пропущенные слова', en: 'Fill in missing words', es: 'Completa palabras faltantes', id: 'Isi kata yang hilang' }
+                ]
+            },
+            d: {
+                icon: '📊',
+                name: { ru: 'Сектор D: Командный центр', en: 'Sector D: Command Center', es: 'Sector D: Centro de mando', id: 'Sektor D: Pusat Komando' },
+                description: { ru: 'Презентация миссии уничтожена! Восстанови её в WPS Presentation.', en: 'Mission presentation destroyed! Restore it in WPS Presentation.', es: 'La presentación de la misión está destruida! Restáurala en WPS Presentation.', id: 'Presentasi misi hancur! Pulihkan di WPS Presentation.' },
+                tasks: [
+                    { ru: 'Расставь слайды по порядку', en: 'Arrange slides in order', es: 'Ordena las diapositivas', id: 'Susun slide sesuai urutan' },
+                    { ru: 'Добавь заголовки', en: 'Add titles', es: 'Añade títulos', id: 'Tambahkan judul' },
+                    { ru: 'Исправь ошибки дизайна', en: 'Fix design errors', es: 'Corrige errores de diseño', id: 'Perbaiki kesalahan desain' }
+                ]
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // MODAL FUNCTIONS
+        // ═══════════════════════════════════════════════════════════
+        function openSector(sectorId) {
+            const sector = gameState.sectors[sectorId];
+            
+            if (sector.status === 'locked') {
+                showVirusMessage('locked');
+                return;
+            }
+
+            const data = sectorData[sectorId];
+            const modal = document.getElementById('sectorModal');
+            
+            document.getElementById('modalIcon').textContent = data.icon;
+            document.getElementById('modalTitle').textContent = data.name[currentLang];
+            document.getElementById('modalDescription').textContent = data.description[currentLang];
+            
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+            
+            data.tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                const isDone = sector.tasks[index];
+                li.innerHTML = `
+                    <span class="task-icon">${index + 1}️⃣</span>
+                    <span class="task-name">${task[currentLang]}</span>
+                    <span class="task-status ${isDone ? 'done' : 'pending'}">${isDone ? '✓ Выполнено' : '○ В процессе'}</span>
+                `;
+                taskList.appendChild(li);
+            });
+
+            const actionBtn = document.getElementById('modalActionBtn');
+            if (sector.status === 'completed') {
+                actionBtn.textContent = currentLang === 'ru' ? 'Пересмотреть' : 'Review';
+            } else {
+                actionBtn.textContent = currentLang === 'ru' ? 'Начать' : 'Start';
+            }
+
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('sectorModal').classList.remove('show');
+        }
+
+        function startSector() {
+            // Here you would navigate to the sector tasks
+            closeModal();
+            alert('Здесь откроется страница с заданиями сектора');
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // CODES PANEL
+        // ═══════════════════════════════════════════════════════════
+        function toggleCodesPanel() {
+            const panel = document.getElementById('codesPanel');
+            const overlay = document.getElementById('codesOverlay');
+            
+            if (panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                overlay.classList.remove('show');
+            } else {
+                panel.classList.add('show');
+                overlay.classList.add('show');
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // VIRUS MESSAGES
+        // ═══════════════════════════════════════════════════════════
+        const virusMessages = {
+            intro: { ru: '<span class="highlight">Ха-ха-ха!</span> Я захватил ваш космодром! Попробуйте меня остановить, если сможете!', en: '<span class="highlight">Ha-ha-ha!</span> I\'ve captured your spaceport! Try to stop me if you can!', es: '<span class="highlight">¡Ja-ja-ja!</span> ¡He capturado su puerto espacial! ¡Intenten detenerme si pueden!', id: '<span class="highlight">Ha-ha-ha!</span> Aku telah menguasai pelabuhan antariksa kalian! Coba hentikan aku kalau bisa!' },
+            locked: { ru: '<span class="highlight">Ха!</span> Этот сектор заблокирован! Сначала освободите другие!', en: '<span class="highlight">Ha!</span> This sector is locked! Free the others first!', es: '<span class="highlight">¡Ja!</span> ¡Este sector está bloqueado! ¡Libera los otros primero!', id: '<span class="highlight">Ha!</span> Sektor ini terkunci! Bebaskan yang lain dulu!' },
+            sector_a: { ru: '<span class="highlight">Нет!</span> Как вы освободили файловый архив?! Это ничего не значит!', en: '<span class="highlight">No!</span> How did you free the file archive?! It means nothing!', es: '<span class="highlight">¡No!</span> ¿Cómo liberaron el archivo? ¡No significa nada!', id: '<span class="highlight">Tidak!</span> Bagaimana kalian membebaskan arsip file?! Ini tidak berarti apa-apa!' }
+        };
+
+        function showVirusMessage(type) {
+            const speech = document.getElementById('virusSpeech');
+            const message = virusMessages[type] || virusMessages.intro;
+            speech.innerHTML = `<p>${message[currentLang]}</p>`;
+            
+            // Trigger animation
+            speech.style.animation = 'none';
+            speech.offsetHeight; // Trigger reflow
+            speech.style.animation = 'speech-appear 0.5s ease';
+        }
+
+        function updateVirusSpeech() {
+            showVirusMessage('intro');
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // LAUNCH FUNCTION
+        // ═══════════════════════════════════════════════════════════
+        function attemptLaunch() {
+            alert('Запуск будет доступен после освобождения всех секторов!');
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // PROGRESS UPDATE
+        // ═══════════════════════════════════════════════════════════
+        function updateProgress() {
+            const completed = Object.values(gameState.sectors).filter(s => s.status === 'completed').length;
+            const total = Object.keys(gameState.sectors).length;
+            const percentage = (completed / total) * 100;
+            
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${completed}/${total}`;
+            
+            // Enable launch button if all completed
+            if (completed === total) {
+                document.getElementById('launchBtn').disabled = false;
+                document.getElementById('rocketArea').classList.add('ready');
+            }
+        }
+
+        // Initialize
+        updateProgress();
+
+        // Close modal on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                if (document.getElementById('codesPanel').classList.contains('show')) {
+                    toggleCodesPanel();
+                }
+            }
+        });
+
+        // Close modal on overlay click
+        document.getElementById('sectorModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

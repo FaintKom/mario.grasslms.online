@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assemble the Mission Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<!-- part:gslides:begin -->
+<!-- Built from _shared/parts/gslides.html — edit that file, then run _shared/build.py -->
+<style>
+/* ==========================================================================
+   Google Slides, drawn in CSS.
+
+   The recognisable parts are the yellow deck icon, the filmstrip of numbered
+   thumbnails down the left, and the 16:9 slide on a grey stage. Empty
+   placeholders say "Click to add text" because that is what Slides shows, and
+   spotting which slides are empty is half of this task.
+
+   Prefixed .gs- so it cannot reach the GrassLMS page around it.
+   ========================================================================== */
+
+.gs {
+  --gs-yellow: #f6b704;
+  --gs-blue: #1a73e8;
+  --gs-text: #202124;
+  --gs-dim: #5f6368;
+  --gs-line: #dadce0;
+  --gs-bar: #edf2fa;
+  --gs-stage: #f8f9fa;
+  --gs-hover: rgba(60, 64, 67, .08);
+
+  border: 1px solid var(--gs-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .16), 0 6px 22px rgba(60, 64, 67, .1);
+  font-family: Roboto, "Segoe UI", Arial, system-ui, sans-serif;
+  color: var(--gs-text);
+  -webkit-font-smoothing: antialiased;
+}
+.gs svg { display: block; }
+
+/* ---- title row ---------------------------------------------------------- */
+.gs__head { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px 0; }
+.gs__logo { width: 36px; height: 36px; flex: 0 0 36px; margin-top: 2px; }
+.gs__titles { min-width: 0; flex: 1; }
+.gs__name { font-size: 17px; line-height: 1.3; }
+.gs__menu { display: flex; flex-wrap: wrap; gap: 1px; margin-top: 1px; }
+.gs__menu span { padding: 3px 7px; border-radius: 4px; font-size: 13px; color: #3c4043; white-space: nowrap; }
+.gs__menu span:hover { background: var(--gs-hover); }
+.gs__right { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.gs__present {
+  display: flex; align-items: center; gap: 6px;
+  height: 34px; padding: 0 14px; border-radius: 4px;
+  border: 1px solid var(--gs-line); font-size: 13px; color: #3c4043; white-space: nowrap;
+}
+.gs__present svg { width: 14px; height: 14px; }
+.gs__share {
+  display: flex; align-items: center; gap: 7px;
+  height: 34px; padding: 0 18px; border-radius: 999px;
+  background: #c2e7ff; color: #001d35; font-size: 13px; font-weight: 500; white-space: nowrap;
+}
+.gs__share svg { width: 16px; height: 16px; }
+.gs__avatar {
+  width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%;
+  background: #0b8043; color: #fff; display: grid; place-items: center;
+  font-size: 12px; font-weight: 500;
+}
+@media (max-width: 720px) { .gs__present { display: none; } .gs__share span { display: none; } .gs__share { padding: 0 12px; } }
+
+/* ---- toolbar ------------------------------------------------------------ */
+.gs__toolwrap { padding: 6px 12px 10px; }
+.gs__tools {
+  display: flex; align-items: center; gap: 1px;
+  height: 40px; padding: 0 10px;
+  border-radius: 999px; background: var(--gs-bar);
+  overflow-x: auto; scrollbar-width: none;
+}
+.gs__tools::-webkit-scrollbar { display: none; }
+.gs-t {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  height: 28px; min-width: 28px; padding: 0 7px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 13px; color: #444746;
+  white-space: nowrap; flex: 0 0 auto;
+}
+.gs-t:hover { background: rgba(68, 71, 70, .1); }
+.gs-t svg { width: 18px; height: 18px; }
+.gs__tsep { width: 1px; height: 20px; margin: 0 5px; background: #c7c7c7; flex: 0 0 1px; }
+
+/* ---- filmstrip and stage ------------------------------------------------ */
+.gs__body { display: grid; grid-template-columns: 148px minmax(0, 1fr); border-top: 1px solid #e3e6e8; }
+@media (max-width: 720px) {
+  .gs__body { grid-template-columns: 1fr; }
+  .gs__strip { display: flex; gap: 8px; overflow-x: auto; max-height: none; border-right: 0; border-bottom: 1px solid var(--gs-line); }
+  .gs-thumb { flex: 0 0 128px; margin-bottom: 0; }
+  .gs-thumb__face { height: 58px; }
+}
+
+.gs__strip {
+  padding: 10px 8px; background: #fff;
+  border-right: 1px solid var(--gs-line);
+  overflow-y: auto;
+}
+.gs-thumb {
+  display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 6px;
+  align-items: start; margin-bottom: 8px;
+  background: none; border: 0; padding: 0; font: inherit; cursor: pointer; text-align: left;
+}
+.gs-thumb__n { display: block; font-size: 11px; color: var(--gs-dim); padding-top: 2px; }
+.gs-thumb__face {
+  /* A fixed height rather than an aspect ratio: the body text on a full slide
+     is taller than 16:9 at this scale and would stretch that one thumbnail
+     while the empty ones stayed short. */
+  display: block; box-sizing: border-box;
+  height: 63px; padding: 5px 6px;
+  border: 1px solid var(--gs-line); background: #fff;
+  overflow: hidden;
+}
+.gs-thumb[aria-current="true"] .gs-thumb__face { border: 2px solid var(--gs-blue); }
+.gs-thumb[aria-current="true"] .gs-thumb__n { color: var(--gs-blue); font-weight: 500; }
+.gs-thumb__t { display: block; font-size: 6px; font-weight: 700; line-height: 1.2; color: #202124; }
+.gs-thumb__b { display: block; font-size: 5px; line-height: 1.3; color: #5f6368; margin-top: 3px; }
+.gs-thumb__ph { display: block; margin-top: 3px; height: 58%; border: 1px dashed #bdc1c6; }
+
+.gs__stage { background: var(--gs-stage); padding: 18px; display: grid; place-items: center; }
+.gs__slide {
+  width: 100%; max-width: 600px; aspect-ratio: 16 / 9;
+  background: #fff; border: 1px solid #e6e6e6;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, .18);
+  padding: 6% 7%;
+  display: flex; flex-direction: column; gap: 3%;
+}
+.gs__slide h3 {
+  margin: 0; font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(17px, 3.2vw, 26px); font-weight: 700; letter-spacing: 0; color: #202124;
+}
+.gs__slide p {
+  margin: 0; font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(12px, 1.8vw, 15px); line-height: 1.5; color: #3c4043;
+}
+/* A slide that is still empty, shown the way Slides shows it. */
+.gs__ph {
+  flex: 1; display: grid; place-items: center;
+  border: 1px dashed #9aa0a6; color: #80868b;
+  font-size: clamp(11px, 1.6vw, 14px); text-align: center;
+}
+.gs__ph span { display: grid; justify-items: center; gap: 6px; }
+.gs__ph svg { width: 26px; height: 26px; color: #9aa0a6; }
+
+/* ---- status strip ------------------------------------------------------- */
+.gs__status {
+  display: flex; align-items: center; gap: 14px;
+  height: 28px; padding: 0 14px;
+  border-top: 1px solid #e3e6e8; background: #fff;
+  font-size: 11px; color: var(--gs-dim);
+}
+.gs__status b { margin-left: auto; font-weight: 400; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="gs-logo" viewBox="0 0 36 36">
+      <path d="M8 3h13l7 7v23a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#f6b704"/>
+      <path d="M21 3l7 7h-6a1 1 0 0 1-1-1z" fill="#fbdc8a"/>
+      <rect x="11" y="16" width="14" height="10" rx="1" fill="#fff"/>
+    </symbol>
+    <symbol id="gs-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 8h9a5.5 5.5 0 0 1 0 11H8"/><path d="M8 4L4 8l4 4"/>
+    </symbol>
+    <symbol id="gs-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 8h-9a5.5 5.5 0 0 0 0 11h5"/><path d="M16 4l4 4-4 4"/>
+    </symbol>
+    <symbol id="gs-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><rect x="7" y="14" width="10" height="7"/>
+    </symbol>
+    <symbol id="gs-paint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="4" y="3" width="14" height="6" rx="1.5"/><path d="M18 6h2v5H10v3"/><rect x="8" y="14" width="4" height="6" rx="1"/>
+    </symbol>
+    <symbol id="gs-select" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6 3l12 8-5 1.4 3 6-2.6 1.3-3-6L6 17z"/>
+    </symbol>
+    <symbol id="gs-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M5 6h14M12 6v13M9 19h6"/>
+    </symbol>
+    <symbol id="gs-shape" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <circle cx="9" cy="9" r="5"/><rect x="11" y="11" width="9" height="9" rx="1.5"/>
+    </symbol>
+    <symbol id="gs-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M5 19L19 5"/><circle cx="5" cy="19" r="1.8" fill="currentColor"/><circle cx="19" cy="5" r="1.8" fill="currentColor"/>
+    </symbol>
+    <symbol id="gs-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M4 17l5-5 4 4 3-3 4 4"/>
+    </symbol>
+    <symbol id="gs-comment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M20 4H4a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 4 16h4l4 4v-4h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 20 4z"/>
+    </symbol>
+    <symbol id="gs-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="7" cy="8" r="3"/><path d="M2 19a5 5 0 0 1 10 0"/><path d="M17 6v6M14 9h6"/>
+    </symbol>
+    <symbol id="gs-play" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M8 5l11 7-11 7z"/>
+    </symbol>
+    <symbol id="gs-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M12 5v14M5 12h14"/>
+    </symbol>
+    <symbol id="gs-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 4.5L6 7.5 9 4.5"/>
+    </symbol>
+  </defs>
+</svg>
+<!-- part:gslides:end -->
+<style>
+  /* One screen on open: the deck window takes whatever the fixed rows leave. */
+  body { padding: var(--page-top) 0 var(--page-bottom); }
+  .wrap { height: calc(100svh - var(--page-pad)); }
+  h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
+  .lede { font-size: var(--t-sm); max-width: 78ch; }
+  .stack--loose { gap: var(--s-4); }
+
+  .gs { flex: 1 1 0; min-height: 240px; display: flex; flex-direction: column; }
+  .gs__body { flex: 1 1 0; min-height: 0; }
+  .gs__strip { max-height: 100%; }
+
+  /* The three steps run across the bottom rather than as three stacked cards:
+     stacked, they pushed the deck itself off the screen. */
+  .steps3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+  @media (max-width: 860px) { .steps3 { grid-template-columns: 1fr; } }
+
+  .steps__n {
+    width: 28px; height: 28px; flex: none;
+    display: grid; place-items: center;
+    border-radius: var(--radius-pill);
+    background: var(--ink-900); color: var(--color-text-inverse);
+    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 700;
+  }
+  .step { display: grid; grid-template-columns: 28px 1fr; gap: var(--s-3); align-items: start; }
+  .step h3 { font-size: var(--t-md); }
+
+  .fixlist { margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+  .fixlist li { list-style: none; display: grid; grid-template-columns: auto 1fr; gap: var(--s-2); font-size: var(--t-sm); }
+  .fixlist b { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); white-space: nowrap; }
+
+  .drop {
+    display: grid; place-items: center; gap: var(--s-1);
+    padding: var(--s-4); text-align: center;
+    border: 2px dashed var(--color-border-strong); border-radius: var(--radius-md);
+    background: var(--color-surface); cursor: pointer;
+  }
+  .drop.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+  .drop__icon { font-size: 24px; }
+
+  .results { display: grid; gap: var(--s-2); }
+  .result {
+    display: grid; grid-template-columns: 26px 1fr auto; gap: var(--s-3); align-items: center;
+    padding: var(--s-3) var(--s-4);
+    border: 2px solid var(--color-border); border-radius: var(--radius-md);
+    background: var(--color-surface); font-size: var(--t-sm);
+  }
+  .result.is-ok  { border-color: var(--color-success); background: var(--color-success-soft); }
+  .result.is-bad { border-color: var(--color-danger);  background: var(--color-danger-soft); }
+  .result__mark { font-weight: 700; text-align: center; }
+  .result.is-ok  .result__mark { color: var(--color-success-fg); }
+  .result.is-bad .result__mark { color: var(--color-danger-fg); }
+  .result__why { color: var(--color-text-muted); font-size: var(--t-2xs); }
+
+  [hidden] { display: none !important; }
+
+  /* The last notch, for a screen with barely 660px of room. */
+  @media (max-height: 700px) {
+    .gs { min-height: 170px; }
+    .gs__stage { padding: 10px; }
+    .gs__toolwrap { padding: 4px 10px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--wide stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Cosmodrome · sector D · task 1</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">The deck is in</span> <em class="mark" data-t="title2">the wrong order</em></h1>
+    <p class="lede" data-t="intro">Download the mission deck, fix it in whatever slide program you use, and bring it back here. This page opens the file and checks it slide by slide. Nothing is uploaded anywhere.</p>
+  </header>
+
+  <div class="gs">
+    <div class="gs__head">
+      <svg class="gs__logo" viewBox="0 0 36 36" aria-hidden="true"><use href="#gs-logo"/></svg>
+      <div class="gs__titles">
+        <div class="gs__name" data-t="deckName">Mission deck</div>
+        <div class="gs__menu" aria-hidden="true">
+          <span data-t="mFile">File</span><span data-t="mEdit">Edit</span><span data-t="mView">View</span>
+          <span data-t="mInsert">Insert</span><span data-t="mFormat">Format</span><span data-t="mSlide">Slide</span>
+          <span data-t="mHelp">Help</span>
+        </div>
+      </div>
+      <div class="gs__right" aria-hidden="true">
+        <span class="gs__present"><svg viewBox="0 0 24 24"><use href="#gs-play"/></svg><span data-t="present">Slideshow</span></span>
+        <span class="gs__share"><svg viewBox="0 0 24 24"><use href="#gs-share"/></svg><span data-t="share">Share</span></span>
+        <span class="gs__avatar">N</span>
+      </div>
+    </div>
+
+    <div class="gs__toolwrap">
+      <div class="gs__tools" aria-hidden="true">
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-undo"/></svg></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-redo"/></svg></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-print"/></svg></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-paint"/></svg></span>
+        <span class="gs__tsep"></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-plus"/></svg><span data-t="newSlide">New slide</span><svg viewBox="0 0 12 12" style="width:10px;height:10px"><use href="#gs-chev"/></svg></span>
+        <span class="gs-t" data-t="layout">Layout<svg viewBox="0 0 12 12" style="width:10px;height:10px"><use href="#gs-chev"/></svg></span>
+        <span class="gs-t" data-t="theme">Theme</span>
+        <span class="gs-t" data-t="transition">Transition</span>
+        <span class="gs__tsep"></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-select"/></svg></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-text"/></svg></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-image"/></svg></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-shape"/></svg></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-line"/></svg></span>
+        <span class="gs__tsep"></span>
+        <span class="gs-t"><svg viewBox="0 0 24 24"><use href="#gs-comment"/></svg></span>
+      </div>
+    </div>
+
+    <div class="gs__body">
+      <div class="gs__strip" id="strip" role="tablist" aria-label="Slides"></div>
+      <div class="gs__stage"><div class="gs__slide" id="slide" role="tabpanel"></div></div>
+    </div>
+
+    <div class="gs__status">
+      <span data-t="deckState">Four slides, as they came</span>
+      <b id="slidePos"></b>
+    </div>
+  </div>
+
+  <div class="steps3">
+    <section class="card stack stack--tight">
+      <div class="step">
+        <span class="steps__n">1</span>
+        <div class="stack stack--tight">
+          <h3 data-t="step1">Take the files</h3>
+          <div class="row">
+            <a class="btn btn--sm" id="deck" href="mission_template_en.pptx" download data-t="getDeck">Mission deck (.pptx)</a>
+            <a class="btn btn--sm btn--ghost" href="rocket.svg" download data-t="getRocket">Rocket picture (.svg)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card stack stack--tight">
+      <div class="step">
+        <span class="steps__n">2</span>
+        <div class="stack stack--tight">
+          <h3 data-t="step2">Fix four things</h3>
+          <ul class="fixlist" id="fixlist"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card stack stack--tight">
+      <div class="step">
+        <span class="steps__n">3</span>
+        <div class="stack stack--tight">
+          <h3 data-t="step3">Bring it back</h3>
+          <div class="drop" id="drop" tabindex="0" role="button">
+            <span class="drop__icon" aria-hidden="true">📊</span>
+            <span data-t="dropHere">Drop your .pptx here, or tap to choose it</span>
+            <span class="mono" id="fileName"></span>
+          </div>
+          <input type="file" id="file" accept=".pptx" hidden>
+          <div id="verdict" hidden></div>
+          <div><button class="btn btn--sm" id="check" data-t="check" disabled>Check the deck</button></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card stack" id="report" hidden aria-live="polite">
+    <h2 id="reportTitle">…</h2>
+    <div class="results" id="results"></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Progress. One shared key, so the sector map can see which tasks are done.
+     Five lines repeated per page rather than a shared script: every page has
+     to stay standalone for file:// and for a frameBox archive.
+     try/catch throughout — a private window or blocked site data makes
+     localStorage throw rather than hand back null. */
+  var TASK_ID = "d1";
+  function remember() {
+    try {
+      var key = "kids.progress.v1";
+      var seen = JSON.parse(localStorage.getItem(key) || "{}");
+      seen[TASK_ID] = true;
+      localStorage.setItem(key, JSON.stringify(seen));
+    } catch (err) {}
+  }
+
+  /* Slide order and keywords come from the original sector D
+     task. The original pulled JSZip off a CDN; this reads the .pptx itself
+     with DecompressionStream, so the page still works from a file:// path or
+     inside a frameBox with no network. */
+
+  var KEYWORDS = {
+    goal:       ["goal", "objetivo", "цель", "tujuan"],
+    crew:       ["crew", "tripulaci", "экипаж", "kru"],
+    route:      ["route", "ruta", "маршрут", "rute"],
+    results:    ["result", "resultado", "итог", "hasil"],
+    crewText:   ["pilot", "engineer", "scientist", "piloto", "ingenier", "cient", "инженер", "учён", "insinyur", "ilmuwan"],
+    resultText: ["success", "completed", "éxito", "exito", "completada", "успешно", "выполнен", "berhasil"]
+  };
+
+  var T = {
+    en: {
+      deckName: "Mission deck", share: "Share", present: "Slideshow",
+      mFile: "File", mEdit: "Edit", mView: "View", mInsert: "Insert",
+      mFormat: "Format", mSlide: "Slide", mHelp: "Help",
+      newSlide: "New slide", layout: "Layout", theme: "Theme", transition: "Transition",
+      deckState: "Four slides, exactly as they came",
+      addText: "Click to add text", addImage: "The picture is missing",
+      slideOf: function (n, all) { return "Slide " + n + " of " + all; },
+      eyebrow: "Cosmodrome · sector D · task 1",
+      title1: "The deck is in", title2: "the wrong order",
+      intro: "Download the mission deck, fix it in whatever slide program you use, and bring it back here. This page opens the file and checks it slide by slide. Nothing is uploaded anywhere.",
+      step1: "Take the files",
+      step1body: "The deck has four slides in the wrong order, two slides missing their text, and one slide missing its picture.",
+      getDeck: "Mission deck (.pptx)", getRocket: "Rocket picture (.svg)",
+      step2: "Fix four things",
+      step3: "Bring it back",
+      dropHere: "Drop your .pptx here, or tap to choose it",
+      check: "Check the deck",
+      fixes: [
+        ["Slide 1", "Mission goal — already complete, it just has to come first."],
+        ["Slide 2", "Crew — write who is flying: a pilot, an engineer, a scientist."],
+        ["Slide 3", "Flight route — insert the rocket picture you downloaded."],
+        ["Slide 4", "Mission results — write how the mission went."]
+      ],
+      wrongType: "That is not a .pptx file. Save your deck as PowerPoint, then bring it back.",
+      unreadable: "This file will not open. Save it again as .pptx and try once more.",
+      slideNames: ["Slide 1 — Mission goal", "Slide 2 — Crew", "Slide 3 — Flight route", "Slide 4 — Mission results"],
+      why: {
+        missing: "This slide is not in the deck.",
+        order:   "A different slide is in this position.",
+        text:    "The slide is in place, but its text is still missing.",
+        image:   "The slide is in place, but the picture is missing."
+      },
+      allGood: "Everything checks out",
+      allGoodBody: "Four slides, right order, nothing missing.",
+      someBad: function (n) { return n === 1 ? "One slide still needs work" : n + " slides still need work"; }
+    },
+    es: {
+      deckName: "Presentación de la misión", share: "Compartir", present: "Presentar",
+      mFile: "Archivo", mEdit: "Editar", mView: "Ver", mInsert: "Insertar",
+      mFormat: "Formato", mSlide: "Diapositiva", mHelp: "Ayuda",
+      newSlide: "Nueva diapositiva", layout: "Diseño", theme: "Tema", transition: "Transición",
+      deckState: "Cuatro diapositivas, tal como llegaron",
+      addText: "Haz clic para añadir texto", addImage: "Falta la imagen",
+      slideOf: function (n, all) { return "Diapositiva " + n + " de " + all; },
+      eyebrow: "Cosmódromo · sector D · tarea 1",
+      title1: "La presentación está", title2: "en mal orden",
+      intro: "Descarga la presentación, arréglala en el programa de diapositivas que uses y tráela de vuelta aquí. Esta página abre el archivo y lo revisa diapositiva a diapositiva: no se sube a ningún sitio.",
+      step1: "Llévate los archivos",
+      step1body: "La presentación tiene cuatro diapositivas en mal orden, dos sin su texto y una sin su imagen.",
+      getDeck: "Presentación (.pptx)", getRocket: "Imagen del cohete (.svg)",
+      step2: "Arregla cuatro cosas",
+      step3: "Tráela de vuelta",
+      dropHere: "Suelta aquí tu .pptx, o toca para elegirlo",
+      check: "Comprobar la presentación",
+      fixes: [
+        ["Diapositiva 1", "Objetivo de la misión: ya está completa, solo tiene que ir primero."],
+        ["Diapositiva 2", "Tripulación: escribe quién va — un piloto, una ingeniera, un científico."],
+        ["Diapositiva 3", "Ruta de vuelo: inserta la imagen del cohete que descargaste."],
+        ["Diapositiva 4", "Resultados: escribe cómo salió la misión."]
+      ],
+      wrongType: "Ese no es un archivo .pptx. Guarda tu presentación como PowerPoint y tráela otra vez.",
+      unreadable: "Este archivo no se abre. Guárdalo otra vez como .pptx e inténtalo de nuevo.",
+      slideNames: ["Diapositiva 1 — Objetivo", "Diapositiva 2 — Tripulación", "Diapositiva 3 — Ruta de vuelo", "Diapositiva 4 — Resultados"],
+      why: {
+        missing: "Esta diapositiva no está en la presentación.",
+        order:   "En esta posición hay otra diapositiva.",
+        text:    "La diapositiva está en su sitio, pero le falta el texto.",
+        image:   "La diapositiva está en su sitio, pero le falta la imagen."
+      },
+      allGood: "Todo correcto",
+      allGoodBody: "Cuatro diapositivas, en orden, sin nada que falte.",
+      someBad: function (n) { return n === 1 ? "Falta arreglar una diapositiva" : "Faltan arreglar " + n + " diapositivas"; }
+    }
+  };
+
+  var lang = "en", picked = null;
+
+  function byId(id) { return document.getElementById(id); }
+  function t() { return T[lang]; }
+
+  function say(kind, message) {
+    var v = byId("verdict");
+    v.hidden = false; v.className = "feedback feedback--" + kind; v.textContent = message;
+  }
+  function clearSay() { var v = byId("verdict"); v.hidden = true; v.className = ""; }
+
+  /* ---- minimal ZIP reader ------------------------------------------------
+     A .pptx is a ZIP. Read the central directory, then inflate the few
+     entries we care about. Zip64 is not handled: a four-slide deck never
+     gets near 4 GB, and an unreadable file is reported plainly. */
+  function u16(dv, o) { return dv.getUint16(o, true); }
+  function u32(dv, o) { return dv.getUint32(o, true); }
+
+  function openZip(buf) {
+    var dv = new DataView(buf), bytes = new Uint8Array(buf);
+    var eocd = -1;
+    var floor = Math.max(0, bytes.length - 22 - 65535);
+    for (var i = bytes.length - 22; i >= floor; i--) {
+      if (u32(dv, i) === 0x06054b50) { eocd = i; break; }
+    }
+    if (eocd < 0) throw new Error("no central directory");
+
+    var count = u16(dv, eocd + 10);
+    var p = u32(dv, eocd + 16);
+    var entries = {};
+    for (var n = 0; n < count; n++) {
+      if (u32(dv, p) !== 0x02014b50) break;
+      var nameLen = u16(dv, p + 28);
+      var name = new TextDecoder().decode(bytes.subarray(p + 46, p + 46 + nameLen));
+      entries[name] = {
+        method: u16(dv, p + 10),
+        size: u32(dv, p + 20),
+        offset: u32(dv, p + 42)
+      };
+      p += 46 + nameLen + u16(dv, p + 30) + u16(dv, p + 32);
+    }
+    return { dv: dv, bytes: bytes, entries: entries };
+  }
+
+  async function readText(zip, name) {
+    var e = zip.entries[name];
+    if (!e) return null;
+    if (u32(zip.dv, e.offset) !== 0x04034b50) return null;
+    var start = e.offset + 30 + u16(zip.dv, e.offset + 26) + u16(zip.dv, e.offset + 28);
+    var data = zip.bytes.subarray(start, start + e.size);
+    if (e.method === 0) return new TextDecoder().decode(data);
+    if (e.method !== 8) return null;
+    var stream = new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    var out = await new Response(stream).arrayBuffer();
+    return new TextDecoder().decode(out);
+  }
+
+  function slideText(xml) {
+    var out = [], re = /<a:t>([^<]*)<\/a:t>/g, m;
+    while ((m = re.exec(xml)) !== null) out.push(m[1]);
+    return out.join(" ").toLowerCase();
+  }
+
+  function hasAny(text, list) {
+    return list.some(function (k) { return text.indexOf(k) !== -1; });
+  }
+
+  function judge(slides, hasImage) {
+    var w = t().why;
+    var out = [];
+
+    if (slides.length < 1) out.push({ ok: false, why: w.missing });
+    else if (!hasAny(slides[0], KEYWORDS.goal)) out.push({ ok: false, why: w.order });
+    else out.push({ ok: true });
+
+    if (slides.length < 2) out.push({ ok: false, why: w.missing });
+    else if (!hasAny(slides[1], KEYWORDS.crew)) out.push({ ok: false, why: w.order });
+    else if (!hasAny(slides[1], KEYWORDS.crewText)) out.push({ ok: false, why: w.text });
+    else out.push({ ok: true });
+
+    if (slides.length < 3) out.push({ ok: false, why: w.missing });
+    else if (!hasAny(slides[2], KEYWORDS.route)) out.push({ ok: false, why: w.order });
+    else if (!hasImage) out.push({ ok: false, why: w.image });
+    else out.push({ ok: true });
+
+    if (slides.length < 4) out.push({ ok: false, why: w.missing });
+    else if (!hasAny(slides[3], KEYWORDS.results)) out.push({ ok: false, why: w.order });
+    else if (!hasAny(slides[3], KEYWORDS.resultText)) out.push({ ok: false, why: w.text });
+    else out.push({ ok: true });
+
+    return out;
+  }
+
+  async function check() {
+    var d = t();
+    clearSay();
+    byId("report").hidden = true;
+    try {
+      var zip = openZip(await picked.arrayBuffer());
+      var slides = [];
+      for (var i = 1; i <= 40; i++) {
+        var xml = await readText(zip, "ppt/slides/slide" + i + ".xml");
+        if (xml === null) break;
+        slides.push(slideText(xml));
+      }
+      if (!slides.length) { say("no", d.unreadable); return; }
+
+      var hasImage = Object.keys(zip.entries).some(function (n) {
+        return n.indexOf("ppt/media/") === 0;
+      });
+
+      var verdicts = judge(slides, hasImage);
+      var bad = verdicts.filter(function (v) { return !v.ok; }).length;
+
+      var list = byId("results"); list.innerHTML = "";
+      verdicts.forEach(function (v, i) {
+        var row = document.createElement("div");
+        row.className = "result " + (v.ok ? "is-ok" : "is-bad");
+        var mark = document.createElement("span");
+        mark.className = "result__mark"; mark.textContent = v.ok ? "✓" : "✕";
+        var name = document.createElement("span");
+        name.textContent = d.slideNames[i];
+        var why = document.createElement("span");
+        why.className = "result__why"; why.textContent = v.ok ? "" : v.why;
+        row.appendChild(mark); row.appendChild(name); row.appendChild(why);
+        list.appendChild(row);
+      });
+
+      byId("reportTitle").textContent = bad ? d.someBad(bad) : d.allGood;
+      byId("report").hidden = false;
+      remember();
+      if (!bad) say("ok", d.allGoodBody);
+    } catch (err) {
+      say("no", d.unreadable);
+    }
+  }
+
+  function take(file) {
+    var d = t();
+    if (!file) return;
+    if (!/\.pptx$/i.test(file.name)) { say("no", d.wrongType); return; }
+    picked = file;
+    byId("fileName").textContent = file.name;
+    byId("check").disabled = false;
+    clearSay();
+  }
+
+  var drop = byId("drop");
+  drop.addEventListener("click", function () { byId("file").click(); });
+  drop.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); byId("file").click(); }
+  });
+  drop.addEventListener("dragover", function (e) { e.preventDefault(); drop.classList.add("is-over"); });
+  drop.addEventListener("dragleave", function () { drop.classList.remove("is-over"); });
+  drop.addEventListener("drop", function (e) {
+    e.preventDefault(); drop.classList.remove("is-over");
+    take(e.dataTransfer.files[0]);
+  });
+  byId("file").addEventListener("change", function (e) { take(e.target.files[0]); });
+  byId("check").addEventListener("click", check);
+
+  /* The deck as it arrives: the goal slide is not first, two slides have no
+     text yet and the route slide has no picture. Showing it before the child
+     downloads anything makes the four faults visible rather than described. */
+  var DECK = {
+    en: [
+      { title: "Crew" },
+      { title: "Mission goal", body: "Land on the red planet and bring back one rock." },
+      { title: "Flight route", pic: true },
+      { title: "Mission results" }
+    ],
+    es: [
+      { title: "Tripulación" },
+      { title: "Objetivo de la misión", body: "Aterrizar en el planeta rojo y traer una roca." },
+      { title: "Ruta de vuelo", pic: true },
+      { title: "Resultados de la misión" }
+    ]
+  };
+  var slideAt = 0;
+
+  function paintDeck() {
+    var d = t(), deck = DECK[lang] || DECK.en;
+    var strip = byId("strip");
+    strip.innerHTML = "";
+
+    deck.forEach(function (sl, i) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "gs-thumb";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-current", String(i === slideAt));
+
+      var n = document.createElement("span");
+      n.className = "gs-thumb__n"; n.textContent = String(i + 1);
+
+      var face = document.createElement("span");
+      face.className = "gs-thumb__face";
+      var ft = document.createElement("span");
+      ft.className = "gs-thumb__t"; ft.textContent = sl.title;
+      face.appendChild(ft);
+      if (sl.body) {
+        var fb = document.createElement("span");
+        fb.className = "gs-thumb__b"; fb.textContent = sl.body;
+        face.appendChild(fb);
+      } else {
+        var ph = document.createElement("span");
+        ph.className = "gs-thumb__ph";
+        face.appendChild(ph);
+      }
+
+      b.append(n, face);
+      b.onclick = function () { slideAt = i; paintDeck(); };
+      strip.appendChild(b);
+    });
+
+    var cur = deck[slideAt], stage = byId("slide");
+    stage.innerHTML = "";
+    var h = document.createElement("h3"); h.textContent = cur.title;
+    stage.appendChild(h);
+
+    if (cur.body) {
+      var p2 = document.createElement("p"); p2.textContent = cur.body;
+      stage.appendChild(p2);
+    } else {
+      var box = document.createElement("div");
+      box.className = "gs__ph";
+      var wrap = document.createElement("span");
+      if (cur.pic) {
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        var use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        use.setAttribute("href", "#gs-image");
+        svg.appendChild(use);
+        wrap.appendChild(svg);
+      }
+      var label = document.createElement("span");
+      label.textContent = cur.pic ? d.addImage : d.addText;
+      wrap.appendChild(label);
+      box.appendChild(wrap);
+      stage.appendChild(box);
+    }
+
+    byId("slidePos").textContent = d.slideOf(slideAt + 1, deck.length);
+  }
+
+  function render() {
+    var d = t();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (el) {
+      var v = d[el.dataset.t];
+      if (typeof v === "string") el.textContent = v;
+    });
+    byId("deck").href = "mission_template_" + lang + ".pptx";
+
+    paintDeck();
+
+    var ul = byId("fixlist"); ul.innerHTML = "";
+    d.fixes.forEach(function (pair) {
+      var li = document.createElement("li");
+      var b = document.createElement("b"); b.textContent = pair[0];
+      var s = document.createElement("span"); s.textContent = pair[1];
+      li.appendChild(b); li.appendChild(s);
+      ul.appendChild(li);
+    });
+
+    if (picked) byId("fileName").textContent = picked.name;
+  }
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      byId("report").hidden = true;
+      clearSay();
+      render();
+    };
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

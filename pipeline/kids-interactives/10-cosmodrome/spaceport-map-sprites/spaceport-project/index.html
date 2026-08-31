@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Космодром: Атака вируса</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/map.css">
+    <link rel="stylesheet" href="css/virus.css">
+    <link rel="stylesheet" href="css/modal.css">
+</head>
+<body>
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">🚀</span>
+            <div class="logo-text">
+                <h1 data-i18n="header.title">Космодром</h1>
+                <p data-i18n="header.subtitle">Атака вируса</p>
+            </div>
+        </div>
+        <div class="header-controls">
+            <select class="select" id="langSelect" onchange="i18n.setLanguage(this.value)">
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="id">🇮🇩 Bahasa</option>
+            </select>
+            <button class="btn-codes" onclick="toggleCodesPanel()">
+                <span>🔑</span>
+                <span data-i18n="header.my_codes">Мои коды</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <span class="progress-label" data-i18n="header.progress">ПРОГРЕСС</span>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <span class="progress-text" id="progressText">0/4</span>
+    </div>
+
+    <!-- Main Map -->
+    <div class="map-container">
+        <div class="spaceport-map">
+            <!-- Ground Glow -->
+            <div class="ground-glow"></div>
+
+            <!-- Ground Platform -->
+            <div class="ground-platform"></div>
+
+            <!-- Sector A: File Archive -->
+            <div class="sector sector-a infected" onclick="openSector('a')" data-sector="a">
+                <span class="sector-icon">🔴</span>
+                <img src="assets/buildings/buildingTiles_030.png" class="sector-building" alt="Сектор A">
+                <div class="sector-glow"></div>
+                <div class="sector-label">
+                    <div class="sector-name" data-i18n="sectors.a.name">СЕКТОР A</div>
+                    <div class="sector-status">
+                        <span>📁</span>
+                        <span data-i18n="sectors.a.title">Файловый архив</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sector B: Graphics Station -->
+            <div class="sector sector-b locked" onclick="openSector('b')" data-sector="b">
+                <span class="sector-icon">🔒</span>
+                <img src="assets/buildings/buildingTiles_034.png" class="sector-building" alt="Сектор B">
+                <div class="sector-glow"></div>
+                <div class="sector-label">
+                    <div class="sector-name" data-i18n="sectors.b.name">СЕКТОР B</div>
+                    <div class="sector-status">
+                        <span>🎨</span>
+                        <span data-i18n="sectors.b.title">Графическая станция</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sector C: Documentation Center -->
+            <div class="sector sector-c locked" onclick="openSector('c')" data-sector="c">
+                <span class="sector-icon">🔒</span>
+                <img src="assets/buildings/buildingTiles_041.png" class="sector-building" alt="Сектор C">
+                <div class="sector-glow"></div>
+                <div class="sector-label">
+                    <div class="sector-name" data-i18n="sectors.c.name">СЕКТОР C</div>
+                    <div class="sector-status">
+                        <span>📄</span>
+                        <span data-i18n="sectors.c.title">Центр документации</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sector D: Command Center -->
+            <div class="sector sector-d locked" onclick="openSector('d')" data-sector="d">
+                <span class="sector-icon">🔒</span>
+                <img src="assets/buildings/buildingTiles_054.png" class="sector-building" alt="Сектор D">
+                <div class="sector-glow"></div>
+                <div class="sector-label">
+                    <div class="sector-name" data-i18n="sectors.d.name">СЕКТОР D</div>
+                    <div class="sector-status">
+                        <span>📊</span>
+                        <span data-i18n="sectors.d.title">Командный центр</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Astronauts -->
+            <img src="assets/space/Astronauts/spaceAstronauts_007.png" class="astronaut astronaut-1" alt="Астронавт 1">
+            <img src="assets/space/Astronauts/spaceAstronauts_008.png" class="astronaut astronaut-2" alt="Астронавт 2">
+
+            <!-- Rocket Area -->
+            <div class="rocket-area" id="rocketArea">
+                <div class="launch-pad"></div>
+                <div class="rocket-container">
+                    <img src="assets/space/Rockets/spaceRockets_001.png" class="rocket-img" alt="Ракета">
+                    <div class="fire-effects">
+                        <img src="assets/space/Effects/spaceEffects_008.png" class="fire-effect" alt="">
+                        <img src="assets/space/Effects/spaceEffects_012.png" class="fire-effect" alt="">
+                        <img src="assets/space/Effects/spaceEffects_016.png" class="fire-effect" alt="">
+                    </div>
+                </div>
+                <div class="rocket-label">
+                    <div class="sector-name" data-i18n="map.launch_pad">СТАРТОВАЯ ПЛОЩАДКА</div>
+                    <div class="sector-status">
+                        <span data-i18n="map.ready_status" data-i18n-params='{"percent": 0}'>Готовность: 0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Launch Button -->
+    <div class="launch-button-container">
+        <button class="btn-launch" id="launchBtn" disabled onclick="attemptLaunch()">
+            <span class="icon">🚀</span>
+            <span data-i18n="map.launch_btn">Запуск ракеты</span>
+        </button>
+    </div>
+
+    <!-- Virus Character -->
+    <div class="virus-container" id="virusContainer">
+        <div class="virus-speech" id="virusSpeech">
+            <p><span class="highlight">Ха-ха-ха!</span> Я захватил ваш космодром! Попробуйте меня остановить!</p>
+        </div>
+        <div class="virus-character">
+            <div class="virus-particles" id="virusParticles"></div>
+            <span class="virus-face">👾</span>
+        </div>
+    </div>
+
+    <!-- Sector Modal -->
+    <div class="modal-overlay" id="sectorModal" onclick="if(event.target === this) closeModal()">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="icon" id="modalIcon">📁</span>
+                <h2 id="modalTitle">Сектор A: Файловый архив</h2>
+            </div>
+            <div class="modal-content">
+                <p id="modalDescription">Вирус перемешал все файлы! Выполни задания, чтобы освободить сектор.</p>
+                <ul class="task-list" id="taskList">
+                    <!-- Tasks will be populated dynamically -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal secondary" onclick="closeModal()" data-i18n="common.close">Закрыть</button>
+                <button class="btn-modal primary" id="modalActionBtn" data-i18n="common.start">Начать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Codes Panel -->
+    <div class="codes-panel" id="codesPanel">
+        <button class="close-panel" onclick="toggleCodesPanel()">×</button>
+        <h3>🔑 <span data-i18n="codes.title">Мои коды для LMS</span></h3>
+        <div id="codesContent">
+            <!-- Codes will be populated dynamically -->
+        </div>
+    </div>
+
+    <!-- Overlay for codes panel -->
+    <div class="modal-overlay" id="codesOverlay" onclick="toggleCodesPanel()"></div>
+
+    <!-- Scripts -->
+    <script src="js/i18n.js" type="module"></script>
+    <script src="js/app.js" type="module"></script>
+    <script src="js/virus.js" type="module"></script>
+    <script src="components/modal.js" type="module"></script>
+    
+    <!-- Inline scripts for non-module functions -->
+    <script>
+        // ═══════════════════════════════════════════════════════════
+        // STARS GENERATION
+        // ═══════════════════════════════════════════════════════════
+        const starsContainer = document.getElementById('stars');
+        
+        // Regular stars
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            const size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Shooting stars
+        for (let i = 0; i < 3; i++) {
+            const star = document.createElement('div');
+            star.className = 'star shooting';
+            star.style.left = Math.random() * 50 + '%';
+            star.style.top = Math.random() * 30 + '%';
+            star.style.animationDelay = (Math.random() * 10 + i * 5) + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // CODES PANEL
+        // ═══════════════════════════════════════════════════════════
+        function toggleCodesPanel() {
+            const panel = document.getElementById('codesPanel');
+            const overlay = document.getElementById('codesOverlay');
+            
+            if (panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                overlay.classList.remove('show');
+            } else {
+                updateCodesPanel();
+                panel.classList.add('show');
+                overlay.classList.add('show');
+            }
+        }
+
+        function updateCodesPanel() {
+            const content = document.getElementById('codesContent');
+            if (!content || !window.GameState) return;
+
+            const sectors = [
+                { id: 'a', icon: '📁', name: 'Сектор A: Файлы', code: 'FILES-2312' },
+                { id: 'b', icon: '🎨', name: 'Сектор B: Графика', code: 'GRAPHICS-2312' },
+                { id: 'c', icon: '📄', name: 'Сектор C: Документы', code: 'DOCUMENT-2312' },
+                { id: 'd', icon: '📊', name: 'Сектор D: Презентации', code: 'PRESENT-2312' }
+            ];
+
+            content.innerHTML = sectors.map(sector => {
+                const state = window.GameState.sectors[sector.id];
+                const isCompleted = state?.status === 'completed';
+                
+                return `
+                    <div class="code-item">
+                        <div class="sector-info">
+                            <span>${sector.icon}</span>
+                            <span>${sector.name}</span>
+                        </div>
+                        ${isCompleted 
+                            ? `<span class="code-value">${sector.code}</span>` 
+                            : `<span class="locked-text">🔒 Не завершён</span>`
+                        }
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // MODAL FUNCTIONS (fallback)
+        // ═══════════════════════════════════════════════════════════
+        function closeModal() {
+            document.getElementById('sectorModal')?.classList.remove('show');
+        }
+    </script>
+</body>
+</html>

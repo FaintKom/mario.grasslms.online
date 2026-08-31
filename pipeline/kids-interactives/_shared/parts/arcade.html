@@ -1,0 +1,240 @@
+<style>
+/* ==========================================================================
+   Arcade shell — a match-three game look, in the Candy Crush manner.
+
+   This is the one place in the collection that steps off the GrassLMS design
+   system on purpose. A reflex drill for six-year-olds has to look like a game
+   or it will not be played twice, and the paper-and-green look reads as
+   schoolwork. Everything is scoped under .arcade, so the shared layer stays
+   underneath and the page only wears this on top.
+
+   The three moves that carry the style:
+     1. A deep grape ground with a warm glow at the top, not a flat colour.
+     2. Every solid has a lit top face and a hard bottom lip, so it reads as a
+        moulded sweet rather than a rectangle.
+     3. Display type is filled light and outlined dark the way cartoon
+        lettering is, done with layered text-shadows: Firefox does not support
+        paint-order on HTML text.
+   ========================================================================== */
+
+.arcade {
+  --ar-ink: #fff8e7;
+  --ar-dim: #cdbdf5;
+  --ar-panel: #5b3fc4;
+  --ar-panel-lip: #38228c;
+  --ar-panel-top: #7a5fe0;
+  --ar-board: #2a1a63;
+  --ar-board-lip: #170d3d;
+  --ar-gold: #ffd54a;
+  --ar-gold-lip: #d99a10;
+  --ar-green: #6ec83f;
+  --ar-green-lip: #3f8a19;
+  --ar-pink: #ff5d8f;
+  --ar-pink-lip: #c62c5c;
+
+  background:
+    radial-gradient(120% 80% at 50% -10%, #6a4fd6 0%, #3b2790 45%, #221552 78%, #170e3c 100%)
+    fixed;
+  color: var(--ar-ink);
+}
+
+/* ---- display type ------------------------------------------------------- */
+.arcade h1 {
+  color: #fff;
+  letter-spacing: -.01em;
+  text-shadow:
+     2px 0 0 #2b1560, -2px 0 0 #2b1560, 0 2px 0 #2b1560, 0 -2px 0 #2b1560,
+     2px 2px 0 #2b1560, -2px 2px 0 #2b1560, 2px -2px 0 #2b1560, -2px -2px 0 #2b1560,
+     0 5px 0 #2b1560, 0 8px 14px rgba(0, 0, 0, .45);
+}
+/* A smaller heading needs a thinner outline: the same eight offsets at 2px
+   close up the counters and the word turns into a smudge. */
+.arcade h2 {
+  color: #fff;
+  text-shadow:
+     1.2px 0 0 #2b1560, -1.2px 0 0 #2b1560, 0 1.2px 0 #2b1560, 0 -1.2px 0 #2b1560,
+     1.2px 1.2px 0 #2b1560, -1.2px 1.2px 0 #2b1560, 1.2px -1.2px 0 #2b1560, -1.2px -1.2px 0 #2b1560,
+     0 3px 0 #2b1560;
+}
+.arcade .mark {
+  background: linear-gradient(#ffe57a, var(--ar-gold) 55%, #f5b100);
+  color: #5a3600;
+  border-radius: 12px;
+  padding: 0 var(--s-3);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .7), 0 4px 0 var(--ar-gold-lip);
+  text-shadow: none;
+}
+.arcade .lede,
+.arcade .muted { color: var(--ar-dim); }
+.arcade .eyebrow { color: var(--ar-gold); }
+
+/* ---- panels: a lit top face and a hard lip ------------------------------ */
+.arcade .card,
+.arcade .hud {
+  background: linear-gradient(var(--ar-panel-top), var(--ar-panel) 42%, #4a30ac);
+  border: 3px solid rgba(20, 8, 60, .55);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 3px 0 rgba(255, 255, 255, .38),
+    inset 0 -6px 0 rgba(20, 8, 60, .28),
+    0 7px 0 var(--ar-panel-lip),
+    0 14px 24px rgba(10, 4, 34, .5);
+  color: var(--ar-ink);
+}
+.arcade .hud { border-radius: 16px; }
+.arcade .hud__score {
+  font-family: var(--font-sans); font-weight: 800; font-size: var(--t-2xl);
+  color: #fff;
+  text-shadow: 1.5px 1.5px 0 #2b1560, -1.5px 1.5px 0 #2b1560, 1.5px -1.5px 0 #2b1560, -1.5px -1.5px 0 #2b1560, 0 3px 0 #2b1560;
+}
+
+/* ---- buttons: moulded sweets -------------------------------------------- */
+.arcade .btn {
+  --ar-face: var(--ar-green);
+  --ar-lip: var(--ar-green-lip);
+  border-radius: 999px;
+  border: 3px solid rgba(20, 8, 60, .45);
+  background: linear-gradient(rgba(255, 255, 255, .42), rgba(255, 255, 255, 0) 46%), var(--ar-face);
+  color: #fff;
+  font-weight: 800;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .3);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .55), 0 6px 0 var(--ar-lip), 0 10px 16px rgba(10, 4, 34, .4);
+  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
+}
+.arcade .btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .55), 0 7px 0 var(--ar-lip), 0 12px 18px rgba(10, 4, 34, .45);
+}
+.arcade .btn:active:not(:disabled) {
+  transform: translateY(5px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .45), 0 1px 0 var(--ar-lip);
+}
+.arcade .btn--lg { font-size: var(--t-md); padding: var(--s-4) var(--s-8); }
+.arcade .btn--ghost {
+  --ar-face: rgba(255, 255, 255, .14);
+  --ar-lip: rgba(20, 8, 60, .5);
+  color: var(--ar-ink);
+}
+
+/* ---- the game picker ---------------------------------------------------- */
+.arcade .mode {
+  border-radius: 16px;
+  border: 3px solid rgba(20, 8, 60, .4);
+  background: linear-gradient(rgba(255, 255, 255, .16), rgba(255, 255, 255, .04));
+  color: var(--ar-ink);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .3), 0 5px 0 rgba(20, 8, 60, .35);
+  transition: transform var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease);
+}
+.arcade .mode:hover { transform: translateY(-2px); border-color: rgba(255, 213, 74, .6); }
+.arcade .mode span { color: var(--ar-dim); }
+.arcade .mode[aria-pressed="true"] {
+  background: linear-gradient(#ffe57a, var(--ar-gold) 60%, #f2ab08);
+  border-color: #8a5c00;
+  color: #4a2c00;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .8), 0 5px 0 var(--ar-gold-lip);
+}
+.arcade .mode[aria-pressed="true"] span { color: #6b4200; }
+
+.arcade .picker button {
+  border-radius: 999px;
+  border: 3px solid rgba(20, 8, 60, .4);
+  background: linear-gradient(rgba(255, 255, 255, .18), rgba(255, 255, 255, .05));
+  color: var(--ar-ink); font-weight: 800;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .3), 0 4px 0 rgba(20, 8, 60, .35);
+}
+.arcade .picker button[aria-pressed="true"] {
+  background: linear-gradient(#ff8fb1, var(--ar-pink) 60%, #ea3f75);
+  border-color: #8d1f45; color: #fff;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .5), 0 4px 0 var(--ar-pink-lip);
+}
+
+/* ---- the board ---------------------------------------------------------- */
+.arcade .field {
+  border: 4px solid rgba(20, 8, 60, .6);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, .1) 1.5px, transparent 0) 0 0 / 30px 30px,
+    linear-gradient(var(--ar-board), var(--ar-board-lip));
+  box-shadow: inset 0 6px 18px rgba(0, 0, 0, .5), inset 0 -3px 0 rgba(255, 255, 255, .06), 0 8px 0 rgba(15, 7, 40, .8);
+}
+
+/* ---- the sweets themselves ---------------------------------------------- */
+.arcade .target {
+  --ar-face: #7ad84a;
+  --ar-lip: #3f8a19;
+  border-radius: 50%;
+  border: 3px solid rgba(20, 8, 60, .45);
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, .92) 0 12%, rgba(255, 255, 255, 0) 46%),
+    radial-gradient(circle at 50% 118%, rgba(0, 0, 0, .3), rgba(0, 0, 0, 0) 60%),
+    var(--ar-face);
+  color: #fff;
+  font-weight: 800;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .35);
+  box-shadow: inset 0 -6px 0 rgba(0, 0, 0, .18), 0 6px 0 var(--ar-lip), 0 10px 16px rgba(10, 4, 34, .5);
+}
+.arcade .target:active { transform: translateY(4px); box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .18), 0 2px 0 var(--ar-lip); }
+.arcade .target--sun  { --ar-face: #ffc23d; --ar-lip: #d18a00; color: #4a2c00; text-shadow: 0 2px 0 rgba(255, 255, 255, .4); }
+.arcade .target--clay { --ar-face: #ff6b6b; --ar-lip: #c22f2f; }
+
+/* ---- the place a sweet has to be dragged to ----------------------------- */
+.arcade .goal {
+  border: 3px dashed var(--ar-gold);
+  border-radius: 18px;
+  background: radial-gradient(circle at 50% 40%, rgba(255, 213, 74, .3), rgba(255, 213, 74, .08));
+  color: var(--ar-gold);
+  font-weight: 800;
+  box-shadow: inset 0 0 22px rgba(255, 213, 74, .28);
+  animation: ar-breathe 1.6s ease-in-out infinite;
+}
+.arcade .goal.is-over {
+  border-style: solid;
+  background: radial-gradient(circle at 50% 40%, rgba(255, 213, 74, .6), rgba(255, 160, 30, .3));
+  color: #4a2c00;
+}
+@keyframes ar-breathe { 50% { box-shadow: inset 0 0 34px rgba(255, 213, 74, .5); } }
+
+/* A hit throws off a burst rather than a ring. */
+.arcade .pulse {
+  background: radial-gradient(circle, rgba(255, 255, 255, .95) 0 18%, rgba(255, 213, 74, .75) 34%, rgba(255, 213, 74, 0) 70%);
+  animation: ar-pop 340ms cubic-bezier(.2, .9, .3, 1) forwards;
+}
+@keyframes ar-pop {
+  from { opacity: 1; transform: scale(.4) rotate(0deg); }
+  to   { opacity: 0; transform: scale(2.1) rotate(35deg); }
+}
+
+/* ---- the score screen --------------------------------------------------- */
+.arcade .stats b {
+  color: #fff; font-family: var(--font-sans); font-weight: 800;
+  text-shadow: 1.5px 1.5px 0 #2b1560, -1.5px 1.5px 0 #2b1560, 1.5px -1.5px 0 #2b1560, -1.5px -1.5px 0 #2b1560, 0 4px 0 #2b1560;
+}
+.arcade .stars { display: flex; justify-content: center; align-items: center; gap: var(--s-3); min-height: 58px; }
+.arcade .stars svg { width: 54px; height: 54px; display: block; }
+.arcade .stars .is-off { opacity: .22; filter: grayscale(1); }
+.arcade .stars .is-on { animation: ar-land 420ms cubic-bezier(.2, 1.5, .4, 1) backwards; }
+.arcade .stars .is-on:nth-child(2) { animation-delay: 140ms; }
+.arcade .stars .is-on:nth-child(3) { animation-delay: 280ms; }
+@keyframes ar-land { from { transform: scale(2.4) rotate(-25deg); opacity: 0; } }
+
+.arcade .langs { background: rgba(20, 8, 60, .45); }
+.arcade .langs button { color: var(--ar-dim); }
+.arcade .langs button[aria-pressed="true"] { background: var(--ar-gold); color: #4a2c00; box-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade .goal, .arcade .stars .is-on { animation: none; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="ar-g-star" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff09a"/><stop offset=".5" stop-color="#ffd54a"/><stop offset="1" stop-color="#f0a91e"/>
+    </linearGradient>
+    <symbol id="ar-star" viewBox="0 0 48 48">
+      <path d="M24 3.5l6.3 12.8 14.1 2-10.2 10 2.4 14-12.6-6.6-12.6 6.6 2.4-14-10.2-10 14.1-2z"
+            fill="url(#ar-g-star)" stroke="#8a5c00" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M24 9.5l3.6 7.4-6.4 5.4z" fill="#fff" opacity=".5"/>
+    </symbol>
+  </defs>
+</svg>

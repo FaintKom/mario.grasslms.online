@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Literacy 2.0 — Algonova | Презентация</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --coral: #FF6B6B;
+            --mint: #4ECDC4;
+            --yellow: #FFE66D;
+            --blue: #74B9FF;
+            --pink: #FD79A8;
+            --green: #00B894;
+            --dark: #1a1a2e;
+            --darker: #0f0f1a;
+            --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-coral: linear-gradient(135deg, #FF6B6B 0%, #ee5a5a 100%);
+            --gradient-mint: linear-gradient(135deg, #4ECDC4 0%, #38f9d7 100%);
+            --gradient-dark: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --shadow: 0 25px 80px rgba(0,0,0,0.4);
+            --glow: 0 0 60px rgba(102, 126, 234, 0.3);
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--gradient-dark);
+            color: white;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slides-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Base Slide - Fixed dimensions */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 70px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(100px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100px);
+        }
+
+        /* Cover Slide */
+        .slide-cover {
+            background: var(--gradient-dark);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-cover::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-20px, -20px) rotate(5deg); }
+        }
+
+        .slide-cover .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--mint);
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide-cover h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #a8edea 50%, #fed6e3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.1;
+        }
+
+        .slide-cover .subtitle {
+            font-size: 1.8rem;
+            font-weight: 400;
+            opacity: 0.85;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Separator Slides */
+        .slide-separator {
+            background: var(--gradient-main);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-separator h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            max-width: 1000px;
+        }
+
+        .slide-separator.coral { background: var(--gradient-coral); }
+        .slide-separator.mint { background: var(--gradient-mint); color: var(--dark); }
+
+        /* Content Slides */
+        .slide-content {
+            background: var(--darker);
+        }
+
+        .slide-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-main);
+        }
+
+        .slide-header {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 35px;
+            flex-shrink: 0;
+        }
+
+        .slide-icon {
+            width: 75px;
+            height: 75px;
+            border-radius: 20px;
+            background: var(--gradient-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            box-shadow: var(--glow);
+            flex-shrink: 0;
+        }
+
+        .slide-content h2 {
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            color: white;
+        }
+
+        .slide-body {
+            flex: 1;
+            display: flex;
+            gap: 50px;
+            min-height: 0;
+            align-items: center;
+        }
+
+        .slide-body.vertical {
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .slide-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-text p {
+            font-size: 1.4rem;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+        }
+
+        .slide-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 0;
+        }
+
+        /* Feature List - Horizontal */
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-list li {
+            font-size: 1.35rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.9);
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            background: var(--gradient-main);
+        }
+
+        .feature-list li:nth-child(2)::before { background: var(--coral); }
+        .feature-list li:nth-child(3)::before { background: var(--mint); }
+        .feature-list li:nth-child(4)::before { background: var(--yellow); }
+        .feature-list li:nth-child(5)::before { background: var(--blue); }
+        .feature-list li:nth-child(6)::before { background: var(--pink); }
+
+        /* Horizontal Feature List */
+        .feature-list.horizontal {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 20px 40px;
+        }
+
+        .feature-list.horizontal li {
+            flex: 1 1 calc(50% - 40px);
+            min-width: 300px;
+        }
+
+        /* Cards Grid - Always horizontal */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        .cards-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .cards-grid.cols-5 {
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .cards-grid.cols-6 {
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.08);
+            border-color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+        }
+
+        .card h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .card p {
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.5;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 35px 50px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex: 1;
+            max-width: 220px;
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
+        }
+
+        /* Screenshot Container */
+        .screenshot-container {
+            background: rgba(0,0,0,0.4);
+            border-radius: 16px;
+            padding: 12px;
+            box-shadow: var(--shadow);
+            max-width: 480px;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot-container:hover {
+            transform: scale(1.02);
+        }
+
+        .screenshot-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .screenshot-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5f57;
+        }
+        .screenshot-dot:nth-child(2) { background: #febc2e; }
+        .screenshot-dot:nth-child(3) { background: #28c840; }
+
+        .screenshot-container img {
+            width: 100%;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .screenshot-label {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 1rem;
+            color: var(--mint);
+            font-weight: 500;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.2rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 20px 30px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.2);
+            font-weight: 600;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .comparison-table th:first-child { border-radius: 12px 0 0 0; }
+        .comparison-table th:last-child { border-radius: 0 12px 0 0; }
+
+        .comparison-table td {
+            color: rgba(255,255,255,0.85);
+        }
+
+        .check { color: var(--green); font-weight: 700; }
+        .cross { color: var(--coral); }
+
+        /* Pyramid - Horizontal */
+        .pyramid-horizontal {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            align-items: flex-end;
+            justify-content: center;
+            height: 300px;
+        }
+
+        .pyramid-bar {
+            flex: 1;
+            max-width: 180px;
+            background: var(--gradient-main);
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 20px 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .pyramid-bar:hover {
+            transform: translateY(-10px);
+        }
+
+        .pyramid-bar:nth-child(1) { height: 100%; background: var(--gradient-main); }
+        .pyramid-bar:nth-child(2) { height: 85%; background: rgba(102, 126, 234, 0.8); }
+        .pyramid-bar:nth-child(3) { height: 70%; background: rgba(102, 126, 234, 0.6); }
+        .pyramid-bar:nth-child(4) { height: 55%; background: rgba(102, 126, 234, 0.4); }
+        .pyramid-bar:nth-child(5) { height: 40%; background: rgba(102, 126, 234, 0.25); }
+
+        .pyramid-bar .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .pyramid-bar .label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        /* Arguments Grid - Horizontal */
+        .args-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .arg-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .arg-card:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(5px);
+        }
+
+        .arg-num {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--gradient-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .arg-card p {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .module-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px;
+            padding: 22px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .module-num {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--mint);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .module-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .module-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .module-card p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .tool-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: scale(1.03);
+            border-color: var(--mint);
+        }
+
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tool-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .tool-card p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Two Columns */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            width: 100%;
+        }
+
+        .column h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--mint);
+        }
+
+        .column h3.coral { color: var(--coral); }
+
+        /* Plan List */
+        .plan-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .plan-list li {
+            font-size: 1.4rem;
+            padding: 18px 25px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            border-left: 4px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .plan-list li.active {
+            background: rgba(102, 126, 234, 0.15);
+            border-left-color: var(--primary);
+            color: white;
+        }
+
+        .plan-list li.done {
+            color: rgba(255,255,255,0.5);
+            border-left-color: var(--green);
+        }
+
+        /* Portrait Section */
+        .portrait-section {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .portrait-avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 30px;
+            background: var(--gradient-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            flex-shrink: 0;
+        }
+
+        .portrait-info {
+            flex: 1;
+        }
+
+        .portrait-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: white;
+        }
+
+        /* Finish Slide */
+        .slide-finish {
+            background: var(--gradient-main);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-finish h2 {
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 30px;
+        }
+
+        .slide-finish .key-message {
+            font-size: 1.5rem;
+            max-width: 900px;
+            line-height: 1.6;
+            opacity: 0.95;
+            margin-bottom: 40px;
+        }
+
+        .slide-finish .badge {
+            display: inline-block;
+            padding: 18px 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Highlight */
+        .highlight { color: var(--mint); font-weight: 600; }
+        .highlight-coral { color: var(--coral); font-weight: 600; }
+        .highlight-yellow { color: var(--yellow); font-weight: 600; }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--gradient-main);
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .badge.coral { background: var(--gradient-coral); }
+
+        /* Lesson Structure - Timeline */
+        .lesson-timeline {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .timeline-step {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .timeline-step::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .timeline-step:last-child::after {
+            display: none;
+        }
+
+        .timeline-num {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0 auto 12px;
+        }
+
+        .timeline-step h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .timeline-step p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .result-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px;
+            padding: 25px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--mint);
+        }
+
+        .result-card .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .result-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .result-card p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.4;
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 12px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(20px);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: var(--gradient-main);
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .fullscreen-btn:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .keyboard-hint {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            z-index: 100;
+        }
+
+        .keyboard-hint kbd {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            font-family: inherit;
+            margin: 0 3px;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-title {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--coral);
+        }
+
+        /* Visual Elements */
+        .visual-diagram {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding: 30px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .diagram-icon {
+            font-size: 4rem;
+        }
+
+        .diagram-arrow {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .diagram-text {
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        /* Trainer Cards */
+        .trainers-row {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .trainer-card {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        .trainer-card .icon {
+            font-size: 3rem;
+            flex-shrink: 0;
+        }
+
+        .trainer-card h4 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .trainer-card ul {
+            list-style: none;
+        }
+
+        .trainer-card li {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .trainer-card li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--mint);
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <div class="slides-wrapper" id="slidesWrapper"></div>
+    </div>
+
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()">←</button>
+        <span class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">51</span></span>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">→</button>
+    </div>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+
+    <div class="keyboard-hint">
+        <kbd>←</kbd> <kbd>→</kbd> навигация &nbsp;|&nbsp; <kbd>F</kbd> полный экран
+    </div>
+
+    <div class="modal" id="screenshotModal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <img id="modalImage" alt="Screenshot">
+            <div class="modal-title" id="modalTitle"></div>
+        </div>
+    </div>
+
+    <script>
+        const screenshots = {
+            'perplexity': { src: null, title: 'Perplexity AI — Чат-бот с ИИ' },
+            'sumo': { src: null, title: 'Sumo Paint — Графический редактор' },
+            'whiteboard': { src: null, title: 'Whiteboard — Интерактивная доска' },
+            'wps': { src: null, title: 'WPS Office — Текстовый редактор и презентации' }
+        };
+
+        const slides = [
+            // 1. Cover
+            { type: 'cover', logo: 'ALGONOVA', title: 'Digital Literacy 2.0', subtitle: 'Презентация для отдела продаж' },
+            
+            // 2. Separator
+            { type: 'separator', title: 'О чём будем говорить сегодня?' },
+            
+            // 3. Plan
+            { type: 'content', icon: '📋', title: 'План презентации', body: `
+                <div class="slide-body">
+                    <ul class="plan-list" style="flex: 1;">
+                        <li>1️⃣ <strong>Цифровая грамотность:</strong> зачем она нужна современным детям?</li>
+                        <li>2️⃣ <strong>Курс Digital Literacy 2.0 от Algonova:</strong> цели, методология, конкуренты</li>
+                        <li>3️⃣ <strong>Структура курса:</strong> модули, проекты, результаты</li>
+                        <li>4️⃣ <strong>Ответы на вопросы</strong></li>
+                    </ul>
+                    <div class="slide-visual">
+                        <div class="visual-diagram" style="flex-direction: column; gap: 20px;">
+                            <div style="font-size: 5rem;">🎯</div>
+                            <div style="font-size: 1.4rem; text-align: center; color: var(--mint);">4 блока<br>~40 минут</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 4. Separator - Digital Literacy
+            { type: 'separator', variant: 'coral', title: 'Цифровая грамотность: зачем она нужна?' },
+            
+            // 5. What is Digital Literacy
+            { type: 'content', icon: '💻', title: 'Что такое цифровая грамотность?', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p><strong class="highlight" style="font-size: 1.6rem;">Digital Literacy</strong> — это базовые навыки уверенного использования компьютера и интернета как инструментов для учёбы, работы и жизни.</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div class="cards-grid cols-3" style="gap: 15px;">
+                            <div class="card"><div class="card-icon">🖱️</div><h4>Работа с ПК</h4><p>Мышь, клавиатура, файлы</p></div>
+                            <div class="card"><div class="card-icon">📝</div><h4>Документы</h4><p>Тексты и презентации</p></div>
+                            <div class="card"><div class="card-icon">🔒</div><h4>Безопасность</h4><p>Защита в интернете</p></div>
+                            <div class="card"><div class="card-icon">🧩</div><h4>Код</h4><p>Основы программирования</p></div>
+                            <div class="card"><div class="card-icon">🤖</div><h4>ИИ</h4><p>Работа с нейросетями</p></div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 6. Why now
+            { type: 'content', icon: '📈', title: 'Почему это важно именно сейчас?', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.5rem; margin-bottom: 30px;"><strong class="highlight">Цифровизация ускоряется:</strong></p>
+                        <ul class="feature-list">
+                            <li>Школы переходят на электронные дневники и онлайн-задания</li>
+                            <li>Домашние работы всё чаще требуют презентаций и рефератов</li>
+                            <li>ИИ-инструменты становятся частью повседневной жизни</li>
+                        </ul>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="background: rgba(255,107,107,0.15); border: 2px solid var(--coral); border-radius: 20px; padding: 35px; text-align: center;">
+                            <div style="font-size: 3.5rem; margin-bottom: 15px;">⚠️</div>
+                            <p style="font-size: 1.4rem; color: var(--coral); font-weight: 600;">Проблема:</p>
+                            <p style="font-size: 1.3rem; margin-top: 10px;">Дети умеют играть и смотреть видео,<br>но <strong>не умеют</strong> использовать компьютер<br>как инструмент для учёбы</p>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 7. Gap
+            { type: 'content', icon: '🎮', title: 'Разрыв между развлечением и навыками', body: `
+                <div class="slide-body">
+                    <div class="two-columns">
+                        <div class="column">
+                            <h3 class="coral">😐 Что дети делают за компьютером:</h3>
+                            <ul class="feature-list">
+                                <li style="font-size: 1.4rem;">Играют в игры</li>
+                                <li style="font-size: 1.4rem;">Смотрят YouTube и TikTok</li>
+                                <li style="font-size: 1.4rem;">Листают мемы</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h3>✅ Что им нужно уметь для школы:</h3>
+                            <ul class="feature-list">
+                                <li style="font-size: 1.4rem;">Оформить реферат в Word</li>
+                                <li style="font-size: 1.4rem;">Сделать презентацию</li>
+                                <li style="font-size: 1.4rem;">Найти информацию и отличить от рекламы</li>
+                                <li style="font-size: 1.4rem;">Безопасно вести себя в сети</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 30px; font-size: 1.6rem; background: var(--gradient-main); padding: 20px 40px; border-radius: 16px;"><strong>Наш курс закрывает этот разрыв! 🚀</strong></p>
+                </div>
+            ` },
+            
+            // 8. Benefits
+            { type: 'content', icon: '🚀', title: 'Что даёт ребёнку цифровая грамотность?', body: `
+                <div class="slide-body vertical">
+                    <div class="cards-grid cols-5">
+                        <div class="card"><div class="card-icon">🎓</div><h4>Самостоятельность</h4><p>Готовит презентации без помощи родителей</p></div>
+                        <div class="card"><div class="card-icon">🛡️</div><h4>Безопасность</h4><p>Знает, как защитить себя в интернете</p></div>
+                        <div class="card"><div class="card-icon">🧱</div><h4>Фундамент для IT</h4><p>Готов к изучению программирования</p></div>
+                        <div class="card"><div class="card-icon">⭐</div><h4>Преимущество</h4><p>Опережает сверстников в школе</p></div>
+                        <div class="card"><div class="card-icon">🤖</div><h4>Навыки будущего</h4><p>Умеет работать с ИИ-инструментами</p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 9. Back to plan
+            { type: 'separator', title: 'Вернёмся к плану' },
+            
+            // 10. Plan updated
+            { type: 'content', icon: '📋', title: 'План презентации', body: `
+                <div class="slide-body">
+                    <ul class="plan-list" style="flex: 1;">
+                        <li class="done">✓ Цифровая грамотность: зачем она нужна современным детям?</li>
+                        <li class="active">➡️ <strong>Курс Digital Literacy 2.0 от Algonova:</strong> цели, методология, конкуренты</li>
+                        <li>3️⃣ Структура курса: модули, проекты, результаты</li>
+                        <li>4️⃣ Ответы на вопросы</li>
+                    </ul>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 6rem;">📚</div>
+                            <div style="font-size: 1.3rem; color: var(--mint); margin-top: 15px;">Раздел 2 из 4</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 11. Separator - Course
+            { type: 'separator', variant: 'mint', title: 'Курс Digital Literacy 2.0 от Algonova' },
+            
+            // 12. Course info
+            { type: 'content', icon: '📊', title: 'Информация о курсе', body: `
+                <div class="slide-body vertical">
+                    <div class="stats-row">
+                        <div class="stat-item"><div class="stat-number">7-9</div><div class="stat-label">лет</div></div>
+                        <div class="stat-item"><div class="stat-number">36</div><div class="stat-label">уроков</div></div>
+                        <div class="stat-item"><div class="stat-number">8</div><div class="stat-label">модулей</div></div>
+                        <div class="stat-item"><div class="stat-number">8+</div><div class="stat-label">проектов</div></div>
+                        <div class="stat-item"><div class="stat-number">🌐</div><div class="stat-label">online</div></div>
+                    </div>
+                    <p style="text-align: center; font-size: 1.5rem; margin-top: 20px;">
+                        🎯 <strong>Цель:</strong> научить детей уверенно пользоваться компьютером как инструментом для учёбы и жизни
+                    </p>
+                </div>
+            ` },
+            
+            // 13. Course tasks
+            { type: 'content', icon: '🎯', title: 'Какие задачи заложены в курс?', body: `
+                <div class="slide-body vertical">
+                    <div class="cards-grid cols-6">
+                        <div class="card"><div class="card-icon">🖱️</div><h4>Базовые навыки</h4><p>Мышь, клавиатура, файлы</p></div>
+                        <div class="card"><div class="card-icon">📝</div><h4>Контент</h4><p>Документы и презентации</p></div>
+                        <div class="card"><div class="card-icon">🔒</div><h4>Безопасность</h4><p>Цифровая гигиена</p></div>
+                        <div class="card"><div class="card-icon">🧩</div><h4>Программирование</h4><p>Основы в Blockly</p></div>
+                        <div class="card"><div class="card-icon">🤖</div><h4>ИИ</h4><p>Работа с нейросетями</p></div>
+                        <div class="card"><div class="card-icon">🎨</div><h4>Креативность</h4><p>Проектное мышление</p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 14. Student portrait
+            { type: 'content', icon: '👧', title: 'Кого учим? Портрет ученика', body: `
+                <div class="slide-body">
+                    <div class="portrait-section">
+                        <div class="portrait-avatar">👦</div>
+                        <div class="portrait-info">
+                            <h3>Возраст: 7-9 лет</h3>
+                            <div class="two-columns" style="gap: 40px;">
+                                <div class="column">
+                                    <h3 class="coral">Что уже умеют:</h3>
+                                    <ul class="feature-list">
+                                        <li style="font-size: 1.3rem;">Читать и считать</li>
+                                        <li style="font-size: 1.3rem;">Выполнять задания по образцу</li>
+                                    </ul>
+                                </div>
+                                <div class="column">
+                                    <h3>Что любят:</h3>
+                                    <ul class="feature-list">
+                                        <li style="font-size: 1.3rem;">Играть в компьютерные игры</li>
+                                        <li style="font-size: 1.3rem;">Смотреть видео</li>
+                                        <li style="font-size: 1.3rem;">Играть с друзьями</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p style="margin-top: 25px; font-size: 1.3rem;"><strong class="highlight">Мотивация:</strong> одобрение родителей, новые друзья, быстрый результат</p>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 15. Methodology
+            { type: 'content', icon: '🎮', title: 'Как учим? Методология', body: `
+                <div class="slide-body vertical">
+                    <div class="cards-grid" style="grid-template-columns: repeat(4, 1fr);">
+                        <div class="card"><div class="card-icon">🎮</div><h4>Геймификация</h4><p>Игровой процесс для вовлечения</p></div>
+                        <div class="card"><div class="card-icon">🧩</div><h4>Проблемное обучение</h4><p>Решение реальных задач</p></div>
+                        <div class="card"><div class="card-icon">🖱️</div><h4>Тренажёры</h4><p>Отработка навыков мыши и клавиатуры</p></div>
+                        <div class="card"><div class="card-icon">🎯</div><h4>Проектный подход</h4><p>Собственный проект в каждом модуле</p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 16. LATAM market
+            { type: 'content', icon: '📊', title: 'Ситуация на рынке LATAM', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.5rem; margin-bottom: 25px;"><strong class="highlight">Что предлагают конкуренты:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.35rem;">Большинство курсов фокусируются на <strong>программировании</strong> (Scratch, Roblox)</li>
+                            <li style="font-size: 1.35rem;">Почти никто не учит базовой цифровой грамотности</li>
+                            <li style="font-size: 1.35rem;"><strong>ИИ</strong> предлагается только для детей от 8+ лет</li>
+                            <li style="font-size: 1.35rem;">Безопасность — редко отдельный модуль</li>
+                        </ul>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="background: rgba(255,107,107,0.15); border: 2px solid var(--coral); border-radius: 20px; padding: 35px; text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
+                            <p style="font-size: 1.4rem; color: var(--coral); font-weight: 600;">Проблема рынка:</p>
+                            <p style="font-size: 1.3rem; margin-top: 15px;">Курсы прыгают сразу<br>в программирование,<br><strong>пропуская базу</strong></p>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 17. Competitors
+            { type: 'content', icon: '🏢', title: 'Ключевые конкуренты', body: `
+                <div class="slide-body vertical">
+                    <div class="cards-grid cols-6">
+                        <div class="card"><div class="card-icon">🏫</div><h4>Algorithmics</h4><p>Франшиза, есть курс грамотности, но без ИИ</p></div>
+                        <div class="card"><div class="card-icon">💻</div><h4>Kodland</h4><p>Онлайн, Scratch/Roblox, ИИ только для подростков</p></div>
+                        <div class="card"><div class="card-icon">🤖</div><h4>Happy Code</h4><p>Робототехника, ИИ только для 10+</p></div>
+                        <div class="card"><div class="card-icon">🎮</div><h4>Creativos Digitales</h4><p>Только игры: Minecraft, Roblox</p></div>
+                        <div class="card"><div class="card-icon">🧠</div><h4>Innovakids</h4><p>Специализация на ИИ, но только с 8 лет</p></div>
+                        <div class="card"><div class="card-icon">👨‍🏫</div><h4>ITGenio</h4><p>Инд. уроки, премиум-цена, без ИИ</p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 18. Comparison table
+            { type: 'content', icon: '⚖️', title: 'Сравнение с конкурентами', body: `
+                <div class="slide-body vertical">
+                    <table class="comparison-table">
+                        <thead><tr><th>Критерий</th><th>Конкуренты</th><th>Algonova</th></tr></thead>
+                        <tbody>
+                            <tr><td>Базовые навыки ПК</td><td>Редко</td><td><span class="check">✓</span> Полный модуль</td></tr>
+                            <tr><td>Офисные программы</td><td>Почти нет</td><td><span class="check">✓</span> Word + Презентации</td></tr>
+                            <tr><td>Безопасность</td><td>Фрагментарно</td><td><span class="check">✓</span> Отдельный модуль</td></tr>
+                            <tr><td>Программирование</td><td>Есть</td><td><span class="check">✓</span> Blockly</td></tr>
+                            <tr><td>ИИ для 7 лет</td><td><span class="cross">✗</span> Нет</td><td><span class="check">✓</span> <strong>Единственные!</strong></td></tr>
+                            <tr><td>Проекты</td><td>1-3</td><td><span class="check">✓</span> <strong>8+</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            ` },
+            
+            // 19. USP Pyramid
+            { type: 'content', icon: '🏆', title: 'Позиционирование курса Algonova', body: `
+                <div class="slide-body">
+                    <div class="slide-text" style="flex: 0.6;">
+                        <p style="font-size: 1.5rem; margin-bottom: 25px;"><strong class="highlight">Наше уникальное предложение:</strong></p>
+                        <p style="font-size: 1.35rem;">Digital Literacy 2.0 — <strong>единственный курс в LATAM</strong> для 7-9 лет, который объединяет все необходимые навыки цифровой грамотности.</p>
+                        <p style="font-size: 1.6rem; margin-top: 30px; color: var(--mint);"><strong>Мы не пропускаем базу и готовим к будущему!</strong></p>
+                    </div>
+                    <div class="slide-visual">
+                        <div class="pyramid-horizontal">
+                            <div class="pyramid-bar"><span class="icon">🤖</span><span class="label">ИИ с 7 лет</span></div>
+                            <div class="pyramid-bar"><span class="icon">🔒</span><span class="label">Безопасность</span></div>
+                            <div class="pyramid-bar"><span class="icon">🧩</span><span class="label">Программирование</span></div>
+                            <div class="pyramid-bar"><span class="icon">📝</span><span class="label">Офисные программы</span></div>
+                            <div class="pyramid-bar"><span class="icon">🖱️</span><span class="label">Базовые навыки</span></div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 20. Sales arguments
+            { type: 'content', icon: '💬', title: 'Ключевые преимущества для продаж', body: `
+                <div class="slide-body vertical">
+                    <p style="font-size: 1.4rem; margin-bottom: 25px;"><strong class="highlight">Для разговора с родителями:</strong></p>
+                    <div class="args-grid" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="arg-card"><div class="arg-num">1</div><p>«Ребёнок сможет сам делать презентации для школы»</p></div>
+                        <div class="arg-card"><div class="arg-num">2</div><p>«Научится безопасно пользоваться интернетом»</p></div>
+                        <div class="arg-card"><div class="arg-num">3</div><p>«Освоит ИИ-инструменты раньше сверстников»</p></div>
+                        <div class="arg-card"><div class="arg-num">4</div><p>«Создаст 8+ собственных проектов-портфолио»</p></div>
+                        <div class="arg-card"><div class="arg-num">5</div><p>«Это фундамент для будущего изучения программирования»</p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 21. Back to plan
+            { type: 'separator', title: 'Вернёмся к плану' },
+            
+            // 22. Plan updated 2
+            { type: 'content', icon: '📋', title: 'План презентации', body: `
+                <div class="slide-body">
+                    <ul class="plan-list" style="flex: 1;">
+                        <li class="done">✓ Цифровая грамотность: зачем она нужна современным детям?</li>
+                        <li class="done">✓ Курс Digital Literacy 2.0 от Algonova: цели, методология, конкуренты</li>
+                        <li class="active">➡️ <strong>Структура курса:</strong> модули, проекты, результаты</li>
+                        <li>4️⃣ Ответы на вопросы</li>
+                    </ul>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 6rem;">🚀</div>
+                            <div style="font-size: 1.3rem; color: var(--mint); margin-top: 15px;">Раздел 3 из 4</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 23. Separator - Structure
+            { type: 'separator', variant: 'coral', title: 'Структура курса и примеры проектов' },
+            
+            // 24. Modules 1-4
+            { type: 'content', icon: '📚', title: 'Структура курса: 8 модулей (часть 1)', body: `
+                <div class="slide-body vertical">
+                    <div class="modules-grid">
+                        <div class="module-card"><div class="module-num">МОДУЛЬ 1</div><div class="module-icon">🖱️</div><h4>Цифровой старт</h4><p>Мышь, клавиатура, файлы • <strong>6 уроков</strong></p></div>
+                        <div class="module-card"><div class="module-num">МОДУЛЬ 2</div><div class="module-icon">🎨</div><h4>Графический редактор</h4><p>Рисование, слои, экспорт • <strong>4 урока</strong></p></div>
+                        <div class="module-card"><div class="module-num">МОДУЛЬ 3</div><div class="module-icon">📝</div><h4>Работа с текстом</h4><p>WPS Writer, форматирование • <strong>4 урока</strong></p></div>
+                        <div class="module-card"><div class="module-num">МОДУЛЬ 4</div><div class="module-icon">📊</div><h4>Редактор презентаций</h4><p>WPS Presentation, переходы • <strong>4 урока</strong></p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 25. Modules 5-8
+            { type: 'content', icon: '🚀', title: 'Структура курса: 8 модулей (часть 2)', body: `
+                <div class="slide-body vertical">
+                    <div class="modules-grid">
+                        <div class="module-card"><div class="module-num">МОДУЛЬ 5</div><div class="module-icon">🔒</div><h4>Безопасный интернет</h4><p>Браузер, поиск, гигиена • <strong>4 урока</strong></p></div>
+                        <div class="module-card"><div class="module-num">МОДУЛЬ 6</div><div class="module-icon">🤖</div><h4>Искусственный интеллект</h4><p>Чат-боты, генерация • <strong>4 урока</strong></p></div>
+                        <div class="module-card"><div class="module-num">МОДУЛЬ 7</div><div class="module-icon">🎮</div><h4>Создание квеста</h4><p>Интерактивный проект • <strong>4 урока</strong></p></div>
+                        <div class="module-card"><div class="module-num">МОДУЛЬ 8</div><div class="module-icon">🚀</div><h4>Миссия на Марс</h4><p>Финальный проект • <strong>6 уроков</strong></p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 26. Module 1 detail
+            { type: 'content', icon: '🖱️', title: 'Модуль 1: Цифровой старт', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p><span class="badge">6 уроков</span> &nbsp; Проект: <strong class="highlight">Карточка о животном</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;"><strong>Чему научатся:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Работать с мышью (клики, перетаскивание, контекстное меню)</li>
+                            <li style="font-size: 1.3rem;">Печатать текст с правильной постановкой рук</li>
+                            <li style="font-size: 1.3rem;">Копировать и вставлять текст</li>
+                            <li style="font-size: 1.3rem;">Управлять файлами и папками</li>
+                            <li style="font-size: 1.3rem;">Решать логические задачи в Blockly</li>
+                        </ul>
+                        <p style="margin-top: 25px; font-size: 1.3rem;">🎯 <strong>Результат:</strong> уверенная работа с компьютером</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 8rem;">🐾</div>
+                            <div style="font-size: 1.2rem; color: var(--mint); margin-top: 10px;">Проект модуля</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 27. Module 1 project
+            { type: 'content', icon: '🐾', title: 'Модуль 1: Пример проекта', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.6rem;"><strong class="highlight">📋 Карточка о животном</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;">Ученики оформляют карточку: размещают подходящую картинку и подробно описывают выбранное животное, используя шаблон.</p>
+                        <p style="margin-top: 30px; font-size: 1.4rem;"><strong>Навыки:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Работа с файлами</li>
+                            <li style="font-size: 1.3rem;">Форматирование текста</li>
+                            <li style="font-size: 1.3rem;">Вставка изображений</li>
+                        </ul>
+                    </div>
+                    <div class="slide-visual">
+                        <div class="visual-diagram" style="flex-direction: column; gap: 20px; padding: 40px;">
+                            <div style="display: flex; gap: 20px; align-items: center;">
+                                <span style="font-size: 3rem;">📄</span>
+                                <span style="font-size: 2rem; color: var(--primary);">→</span>
+                                <span style="font-size: 3rem;">🖼️</span>
+                                <span style="font-size: 2rem; color: var(--primary);">→</span>
+                                <span style="font-size: 3rem;">✏️</span>
+                                <span style="font-size: 2rem; color: var(--primary);">→</span>
+                                <span style="font-size: 3rem;">✅</span>
+                            </div>
+                            <p style="font-size: 1.1rem; color: rgba(255,255,255,0.7);">Шаблон → Картинка → Текст → Готово!</p>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 28. Module 2 detail
+            { type: 'content', icon: '🎨', title: 'Модуль 2: Графический редактор', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p><span class="badge">4 урока</span> &nbsp; Проект: <strong class="highlight">Карта приключений</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;"><strong>Чему научатся:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Работать в графическом редакторе Sumo Paint</li>
+                            <li style="font-size: 1.3rem;">Использовать кисти, фигуры, заливку, ластик</li>
+                            <li style="font-size: 1.3rem;">Работать со слоями</li>
+                            <li style="font-size: 1.3rem;">Экспортировать изображения в PNG</li>
+                        </ul>
+                        <p style="margin-top: 25px; font-size: 1.3rem;">🎯 <strong>Результат:</strong> создание собственных цифровых рисунков</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div class="screenshot-container" onclick="openModal('sumo')">
+                            <div class="screenshot-header"><div class="screenshot-dot"></div><div class="screenshot-dot"></div><div class="screenshot-dot"></div></div>
+                            <div class="screenshot-missing" role="img" aria-label="Sumo Paint" style="display:grid;place-items:center;gap:6px;min-height:220px;padding:24px;text-align:center;background:#f3f5ef;color:#485444;border:2px dashed #c4cdbe;border-radius:10px;font-size:14px;line-height:1.6"><strong style="color:#0d150d">Sumo Paint</strong><span>Скриншот не сохранился вместе с презентацией.</span><span style="font-family:ui-monospace,monospace;font-size:12px">sumopaint.com</span></div>
+                            <div class="screenshot-label">👆 Кликните для увеличения</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 29. Module 2 project
+            { type: 'content', icon: '🗺️', title: 'Модуль 2: Пример проекта', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.6rem;"><strong class="highlight">🗺️ Карта приключений</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;">Ученики скачивают шаблон карты, приступают к оформлению её локаций и в самом центре размещают рисунок своего любимого инструмента, изученного на курсе.</p>
+                        <p style="margin-top: 30px; font-size: 1.4rem;"><strong>Навыки:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Работа со слоями</li>
+                            <li style="font-size: 1.3rem;">Рисование фигур и линий</li>
+                            <li style="font-size: 1.3rem;">Экспорт в PNG</li>
+                        </ul>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 8rem;">🗺️</div>
+                            <div style="font-size: 1.2rem; color: var(--mint); margin-top: 10px;">Творческий проект</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 30. Module 3 detail
+            { type: 'content', icon: '📝', title: 'Модуль 3: Работа с текстом', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p><span class="badge">4 урока</span> &nbsp; Проект: <strong class="highlight">Паспорт робота-путешественника</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;"><strong>Чему научатся:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Создавать и сохранять документы в WPS Writer</li>
+                            <li style="font-size: 1.3rem;">Форматировать текст (шрифты, выравнивание, списки)</li>
+                            <li style="font-size: 1.3rem;">Вставлять изображения и таблицы</li>
+                            <li style="font-size: 1.3rem;">Структурировать информацию</li>
+                        </ul>
+                        <p style="margin-top: 25px; font-size: 1.3rem;">🎯 <strong>Результат:</strong> оформленный документ с описанием</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div class="screenshot-container" onclick="openModal('wps')">
+                            <div class="screenshot-header"><div class="screenshot-dot"></div><div class="screenshot-dot"></div><div class="screenshot-dot"></div></div>
+                            <div class="screenshot-missing" role="img" aria-label="WPS Office" style="display:grid;place-items:center;gap:6px;min-height:220px;padding:24px;text-align:center;background:#f3f5ef;color:#485444;border:2px dashed #c4cdbe;border-radius:10px;font-size:14px;line-height:1.6"><strong style="color:#0d150d">WPS Office</strong><span>Скриншот не сохранился вместе с презентацией.</span><span style="font-family:ui-monospace,monospace;font-size:12px">wps.com</span></div>
+                            <div class="screenshot-label">👆 Кликните для увеличения</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 31. Module 4 detail
+            { type: 'content', icon: '📊', title: 'Модуль 4: Редактор презентаций', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p><span class="badge">4 урока</span> &nbsp; Проект: <strong class="highlight">Презентация-портфолио «Мой путь к знаниям»</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;"><strong>Чему научатся:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Создавать презентации в WPS Presentation</li>
+                            <li style="font-size: 1.3rem;">Добавлять и редактировать изображения</li>
+                            <li style="font-size: 1.3rem;">Применять переходы между слайдами</li>
+                            <li style="font-size: 1.3rem;">Демонстрировать презентацию</li>
+                        </ul>
+                        <p style="margin-top: 25px; font-size: 1.3rem;">🎯 <strong>Результат:</strong> собственное цифровое портфолио</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 8rem;">📊</div>
+                            <div style="font-size: 1.2rem; color: var(--mint); margin-top: 10px;">Первая презентация</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 32. Module 5 detail
+            { type: 'content', icon: '🔒', title: 'Модуль 5: Безопасный интернет', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p><span class="badge">4 урока</span> &nbsp; Проект: <strong class="highlight">Значок безопасного интернет-исследователя</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;"><strong>Чему научатся:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Работать с браузером (URL, вкладки, навигация)</li>
+                            <li style="font-size: 1.3rem;">Находить информацию с помощью ключевых слов</li>
+                            <li style="font-size: 1.3rem;">Отличать рекламу от реальных результатов</li>
+                            <li style="font-size: 1.3rem;">Определять безопасные сайты</li>
+                            <li style="font-size: 1.3rem;">Соблюдать правила цифровой гигиены</li>
+                        </ul>
+                        <p style="margin-top: 25px; font-size: 1.3rem;">🎯 <strong>Результат:</strong> навыки безопасного поведения в сети</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 8rem;">🛡️</div>
+                            <div style="font-size: 1.2rem; color: var(--mint); margin-top: 10px;">Цифровая безопасность</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 33. Module 6 detail
+            { type: 'content', icon: '🤖', title: 'Модуль 6: Искусственный интеллект', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p><span class="badge">4 урока</span> &nbsp; Проект: <strong class="highlight">Презентация «Питомец мечты для Коди»</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;"><strong>Чему научатся:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Отличать ИИ от обычных программ</li>
+                            <li style="font-size: 1.3rem;">Работать с чат-ботом Perplexity</li>
+                            <li style="font-size: 1.3rem;">Формулировать чёткие запросы (промты)</li>
+                            <li style="font-size: 1.3rem;">Генерировать изображения с помощью ИИ</li>
+                        </ul>
+                        <p style="margin-top: 25px; font-size: 1.3rem;">🎯 <strong>Результат:</strong> презентация с ИИ-контентом</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div class="screenshot-container" onclick="openModal('perplexity')">
+                            <div class="screenshot-header"><div class="screenshot-dot"></div><div class="screenshot-dot"></div><div class="screenshot-dot"></div></div>
+                            <div class="screenshot-missing" role="img" aria-label="Perplexity AI" style="display:grid;place-items:center;gap:6px;min-height:220px;padding:24px;text-align:center;background:#f3f5ef;color:#485444;border:2px dashed #c4cdbe;border-radius:10px;font-size:14px;line-height:1.6"><strong style="color:#0d150d">Perplexity AI</strong><span>Скриншот не сохранился вместе с презентацией.</span><span style="font-family:ui-monospace,monospace;font-size:12px">perplexity.ai</span></div>
+                            <div class="screenshot-label">👆 Кликните для увеличения</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 34. Module 6 project
+            { type: 'content', icon: '🐕', title: 'Модуль 6: Пример проекта', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.6rem;"><strong class="highlight">🐕 Презентация «Питомец мечты для Коди»</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;">Ученики создают презентацию о воображаемом питомце, используя:</p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;"><strong>Perplexity</strong> — для поиска информации о животном</li>
+                            <li style="font-size: 1.3rem;"><strong>Craiyon</strong> — для генерации изображений питомца</li>
+                            <li style="font-size: 1.3rem;"><strong>WPS Presentation</strong> — для оформления слайдов</li>
+                        </ul>
+                        <p style="margin-top: 30px; font-size: 1.5rem;"><strong class="highlight">Интеграция всех навыков курса!</strong></p>
+                    </div>
+                    <div class="slide-visual">
+                        <div class="visual-diagram" style="flex-direction: column; gap: 15px; padding: 30px;">
+                            <div style="display: flex; gap: 15px; align-items: center; justify-content: center;">
+                                <span style="font-size: 2.5rem;">🤖</span>
+                                <span style="font-size: 1.5rem; color: var(--primary);">+</span>
+                                <span style="font-size: 2.5rem;">🖼️</span>
+                                <span style="font-size: 1.5rem; color: var(--primary);">+</span>
+                                <span style="font-size: 2.5rem;">📊</span>
+                                <span style="font-size: 1.5rem; color: var(--primary);">=</span>
+                                <span style="font-size: 2.5rem;">🎉</span>
+                            </div>
+                            <p style="font-size: 1.1rem; color: rgba(255,255,255,0.7); text-align: center;">ИИ + Картинки + Презентация = Проект!</p>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 35. Module 7 detail
+            { type: 'content', icon: '🎮', title: 'Модуль 7: Создание квеста', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p><span class="badge">4 урока</span> &nbsp; Проект: <strong class="highlight">Интерактивный квест</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;"><strong>Чему научатся:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Создавать нелинейный сюжет</li>
+                            <li style="font-size: 1.3rem;">Рисовать персонажей и фоны в едином стиле</li>
+                            <li style="font-size: 1.3rem;">Добавлять диалоги с выбором ответов</li>
+                            <li style="font-size: 1.3rem;">Создавать навигацию с гиперссылками</li>
+                            <li style="font-size: 1.3rem;">Тестировать и презентовать проект</li>
+                        </ul>
+                        <p style="margin-top: 25px; font-size: 1.3rem;">🎯 <strong>Результат:</strong> собственная интерактивная игра-квест</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div class="screenshot-container" onclick="openModal('whiteboard')">
+                            <div class="screenshot-header"><div class="screenshot-dot"></div><div class="screenshot-dot"></div><div class="screenshot-dot"></div></div>
+                            <div class="screenshot-missing" role="img" aria-label="Whiteboard" style="display:grid;place-items:center;gap:6px;min-height:220px;padding:24px;text-align:center;background:#f3f5ef;color:#485444;border:2px dashed #c4cdbe;border-radius:10px;font-size:14px;line-height:1.6"><strong style="color:#0d150d">Whiteboard</strong><span>Скриншот не сохранился вместе с презентацией.</span><span style="font-family:ui-monospace,monospace;font-size:12px">openboard.ch</span></div>
+                            <div class="screenshot-label">👆 Кликните для увеличения</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 36. Module 7 project
+            { type: 'content', icon: '🏰', title: 'Модуль 7: Пример проекта', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.6rem;"><strong class="highlight">🏰 Интерактивный квест</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;">Ученики создают собственную игру-историю с:</p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Разными локациями (лес, замок, пещера...)</li>
+                            <li style="font-size: 1.3rem;">Персонажами и диалогами</li>
+                            <li style="font-size: 1.3rem;">Выбором действий (гиперссылки между слайдами)</li>
+                            <li style="font-size: 1.3rem;">Загадками и головоломками</li>
+                        </ul>
+                        <p style="margin-top: 30px; font-size: 1.5rem;"><strong class="highlight">Кульминация творческих навыков курса!</strong></p>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 8rem;">🎮</div>
+                            <div style="font-size: 1.2rem; color: var(--mint); margin-top: 10px;">Своя игра!</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 37. Module 8 detail
+            { type: 'content', icon: '🚀', title: 'Модуль 8: Миссия на Марс', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p><span class="badge coral">6 уроков — ФИНАЛЬНЫЙ ПРОЕКТ</span></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;"><strong>Чему научатся:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">Создавать иконки в AutoDraw</li>
+                            <li style="font-size: 1.3rem;">Анимировать рисунки в Animated Drawings</li>
+                            <li style="font-size: 1.3rem;">Использовать циклы в Blockly</li>
+                            <li style="font-size: 1.3rem;">Генерировать изображения с помощью Craiyon</li>
+                            <li style="font-size: 1.3rem;">Планировать ресурсы и принимать решения</li>
+                        </ul>
+                        <p style="margin-top: 25px; font-size: 1.3rem;">🎯 <strong>Результат:</strong> презентация + сертификат об окончании курса</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 8rem;">🚀</div>
+                            <div style="font-size: 1.2rem; color: var(--mint); margin-top: 10px;">Финальная миссия</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 38. Module 8 project
+            { type: 'content', icon: '🏗️', title: 'Модуль 8: Финальный проект', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.6rem;"><strong class="highlight">🏗️ Марсианская база</strong></p>
+                        <p style="margin-top: 25px; font-size: 1.4rem;">Ученики создают презентацию о своей марсианской базе:</p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.3rem;">🤖 Иконка робота (AutoDraw + Animated Drawings)</li>
+                            <li style="font-size: 1.3rem;">🖼️ ИИ-изображения базы (Craiyon)</li>
+                            <li style="font-size: 1.3rem;">🧩 Программа управления роботом (Blockly)</li>
+                            <li style="font-size: 1.3rem;">📊 Презентация проекта</li>
+                        </ul>
+                        <p style="margin-top: 30px; font-size: 1.5rem;"><strong class="highlight">Интеграция ВСЕХ навыков курса + сертификат!</strong></p>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 5rem;">🎓</div>
+                            <div style="background: var(--gradient-main); padding: 20px 30px; border-radius: 16px; margin-top: 20px;">
+                                <div style="font-size: 1.3rem; font-weight: 600;">СЕРТИФИКАТ</div>
+                                <div style="font-size: 1rem; opacity: 0.8; margin-top: 5px;">об окончании курса</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 39. Graduate portrait
+            { type: 'content', icon: '🎓', title: 'Портрет выпускника: что будет уметь ребёнок?', body: `
+                <div class="slide-body vertical">
+                    <div class="cards-grid cols-5">
+                        <div class="card"><div class="card-icon">🖱️</div><h4>Работа с ПК</h4><p>Легко управляет мышью, клавиатурой, файлами</p></div>
+                        <div class="card"><div class="card-icon">🎨</div><h4>Цифровой контент</h4><p>Создаёт рисунки, документы, презентации</p></div>
+                        <div class="card"><div class="card-icon">🧩</div><h4>Программирование</h4><p>Понимает алгоритмы, Blockly</p></div>
+                        <div class="card"><div class="card-icon">🌐</div><h4>Интернет</h4><p>Находит информацию, соблюдает гигиену</p></div>
+                        <div class="card"><div class="card-icon">🤖</div><h4>ИИ</h4><p>Формулирует запросы, создаёт контент</p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 40. Tools
+            { type: 'content', icon: '🛠️', title: 'Цифровые инструменты курса', body: `
+                <div class="slide-body vertical">
+                    <div class="tools-grid" style="grid-template-columns: repeat(4, 1fr);">
+                        <div class="tool-card"><div class="tool-icon">🖱️</div><h4>Тренажёры</h4><p>Мышь и клавиатура</p></div>
+                        <div class="tool-card"><div class="tool-icon">📁</div><h4>Симуляторы</h4><p>Файлы и папки</p></div>
+                        <div class="tool-card" onclick="openModal('sumo')"><div class="tool-icon">🎨</div><h4>Sumo Paint</h4><p>Графический редактор</p></div>
+                        <div class="tool-card" onclick="openModal('wps')"><div class="tool-icon">📝</div><h4>WPS Writer</h4><p>Текстовый процессор</p></div>
+                        <div class="tool-card" onclick="openModal('wps')"><div class="tool-icon">📊</div><h4>WPS Presentation</h4><p>Редактор презентаций</p></div>
+                        <div class="tool-card"><div class="tool-icon">🧩</div><h4>Blockly</h4><p>Программирование</p></div>
+                        <div class="tool-card" onclick="openModal('perplexity')"><div class="tool-icon">🤖</div><h4>Perplexity</h4><p>Чат-бот с ИИ</p></div>
+                        <div class="tool-card"><div class="tool-icon">🖼️</div><h4>Craiyon</h4><p>Генерация изображений</p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 41. Trainers examples
+            { type: 'content', icon: '🕹️', title: 'Примеры тренажёров', body: `
+                <div class="slide-body vertical">
+                    <div class="trainers-row">
+                        <div class="trainer-card">
+                            <div class="icon">🖱️</div>
+                            <div>
+                                <h4>Тренажёр мыши</h4>
+                                <ul>
+                                    <li>Одинарный и двойной клик</li>
+                                    <li>Перетаскивание объектов</li>
+                                    <li>Контекстное меню</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="trainer-card">
+                            <div class="icon">⌨️</div>
+                            <div>
+                                <h4>Тренажёр клавиатуры</h4>
+                                <ul>
+                                    <li>Правильная постановка рук</li>
+                                    <li>Печать текста</li>
+                                    <li>Горячие клавиши</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="trainer-card">
+                            <div class="icon">📁</div>
+                            <div>
+                                <h4>Симулятор файловой системы</h4>
+                                <ul>
+                                    <li>Создание папок</li>
+                                    <li>Перемещение файлов</li>
+                                    <li>Работа с USB</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 42. Why good solution
+            { type: 'content', icon: '⭐', title: 'Почему курс Digital Literacy 2.0 — отличное решение?', body: `
+                <div class="slide-body vertical">
+                    <div class="args-grid" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="arg-card"><div class="arg-num">✅</div><p><strong>Практические навыки:</strong> ребёнок готовит презентации сам</p></div>
+                        <div class="arg-card"><div class="arg-num">✅</div><p><strong>Безопасная среда:</strong> занятия под руководством преподавателя</p></div>
+                        <div class="arg-card"><div class="arg-num">✅</div><p><strong>Быстрый результат:</strong> первые проекты через 6 уроков</p></div>
+                        <div class="arg-card"><div class="arg-num">✅</div><p><strong>ИИ с 7 лет:</strong> единственный курс в LATAM</p></div>
+                        <div class="arg-card"><div class="arg-num">✅</div><p><strong>Портфолио:</strong> 8+ собственных проектов за курс</p></div>
+                        <div class="arg-card"><div class="arg-num">✅</div><p><strong>Фундамент для IT:</strong> подготовка к программированию</p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 43. Back to plan
+            { type: 'separator', title: 'Вернёмся к плану' },
+            
+            // 44. Plan updated 3
+            { type: 'content', icon: '📋', title: 'План презентации', body: `
+                <div class="slide-body">
+                    <ul class="plan-list" style="flex: 1;">
+                        <li class="done">✓ Цифровая грамотность: зачем она нужна современным детям?</li>
+                        <li class="done">✓ Курс Digital Literacy 2.0 от Algonova: цели, методология, конкуренты</li>
+                        <li class="done">✓ Структура курса: модули, проекты, результаты</li>
+                        <li class="active">➡️ <strong>Ответы на вопросы</strong></li>
+                    </ul>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 6rem;">❓</div>
+                            <div style="font-size: 1.3rem; color: var(--mint); margin-top: 15px;">Раздел 4 из 4</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 45. Separator - Q&A
+            { type: 'separator', variant: 'mint', title: 'Ответы на вопросы' },
+            
+            // 46. Q1
+            { type: 'content', icon: '🎯', title: 'Стоит ли идти на курс, если ребёнок уже знаком с компьютером?', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.8rem; margin-bottom: 30px;"><strong class="highlight">✅ Да, курс будет полезен!</strong></p>
+                        <p style="font-size: 1.4rem;"><strong>Почему:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.35rem;">Курс учит <strong>эффективно применять</strong> инструменты, а не просто «тыкать»</li>
+                            <li style="font-size: 1.35rem;">Дети научатся решать практические задачи и создавать проекты</li>
+                            <li style="font-size: 1.35rem;">Для способных учеников есть <strong>бонусные задания</strong></li>
+                            <li style="font-size: 1.35rem;">Модули по ИИ и безопасности — новые даже для «продвинутых» детей</li>
+                        </ul>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 6rem;">🎯</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 47. Q2
+            { type: 'content', icon: '🧩', title: 'Каков уровень программирования на курсе?', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.6rem; margin-bottom: 30px;"><strong class="highlight">Начальный уровень</strong> с акцентом на логику и алгоритмическое мышление</p>
+                        <p style="font-size: 1.4rem;"><strong>Ученики:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.35rem;">Осваивают основы алгоритмизации в визуальной среде <strong>Blockly</strong></li>
+                            <li style="font-size: 1.35rem;">Учатся использовать <strong>циклы и условия</strong> при решении задач</li>
+                            <li style="font-size: 1.35rem;">Программируют робота для выполнения миссий</li>
+                        </ul>
+                        <p style="margin-top: 30px; font-size: 1.4rem;"><strong class="highlight">Это закладывает фундамент</strong> для дальнейшего изучения Python, Scratch и других языков</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 6rem;">🧩</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 48. Q3 - Lesson structure
+            { type: 'content', icon: '📋', title: 'Как проходит занятие на курсе?', body: `
+                <div class="slide-body vertical">
+                    <p style="font-size: 1.4rem; margin-bottom: 25px;"><strong class="highlight">Структура каждого урока:</strong></p>
+                    <div class="lesson-timeline">
+                        <div class="timeline-step"><div class="timeline-num">1</div><h4>Повторение</h4><p>Опрос по прошлому уроку</p></div>
+                        <div class="timeline-step"><div class="timeline-num">2</div><h4>Сюжет</h4><p>Новая история и проблема</p></div>
+                        <div class="timeline-step"><div class="timeline-num">3</div><h4>Исследование</h4><p>Изучение инструментов</p></div>
+                        <div class="timeline-step"><div class="timeline-num">4</div><h4>Практика</h4><p>Интерактивные задания</p></div>
+                        <div class="timeline-step"><div class="timeline-num">5</div><h4>Итоги</h4><p>Обсуждение результатов</p></div>
+                    </div>
+                    <p style="text-align: center; margin-top: 30px; font-size: 1.5rem;">🎮 <strong class="highlight">Геймификация делает каждый урок увлекательным!</strong></p>
+                </div>
+            ` },
+            
+            // 49. Q4 - AI Safety
+            { type: 'content', icon: '🛡️', title: 'Безопасно ли для детей работать с ИИ?', body: `
+                <div class="slide-body">
+                    <div class="slide-text">
+                        <p style="font-size: 1.8rem; margin-bottom: 30px;"><strong class="highlight">🔒 Да, мы используем безопасные инструменты:</strong></p>
+                        <ul class="feature-list">
+                            <li style="font-size: 1.35rem;"><strong>Perplexity</strong> — чат-бот с фильтрацией контента</li>
+                            <li style="font-size: 1.35rem;"><strong>Craiyon</strong> — генерация изображений без взрослого контента</li>
+                            <li style="font-size: 1.35rem;">Все занятия проходят <strong>под руководством преподавателя</strong></li>
+                        </ul>
+                        <p style="margin-top: 30px; font-size: 1.35rem;"><strong class="highlight-yellow">Важно:</strong> мы учим детей <strong>критически относиться</strong> к ответам ИИ и проверять информацию</p>
+                    </div>
+                    <div class="slide-visual">
+                        <div style="text-align: center;">
+                            <div style="font-size: 6rem;">🛡️</div>
+                        </div>
+                    </div>
+                </div>
+            ` },
+            
+            // 50. Q5 - Results
+            { type: 'content', icon: '🎓', title: 'Что получит ребёнок по окончании курса?', body: `
+                <div class="slide-body vertical">
+                    <div class="results-grid">
+                        <div class="result-card"><div class="icon">📁</div><h4>Портфолио</h4><p>8+ проектов: рисунки, презентации, квест</p></div>
+                        <div class="result-card"><div class="icon">🏆</div><h4>Сертификат</h4><p>Об окончании курса Digital Literacy 2.0</p></div>
+                        <div class="result-card"><div class="icon">💪</div><h4>Практические навыки</h4><p>Для школы и жизни</p></div>
+                        <div class="result-card"><div class="icon">🚀</div><h4>Готовность к IT</h4><p>К изучению программирования</p></div>
+                        <div class="result-card"><div class="icon">🤖</div><h4>Опыт с ИИ</h4><p>Преимущество перед сверстниками</p></div>
+                    </div>
+                </div>
+            ` },
+            
+            // 51. More questions
+            { type: 'separator', variant: 'coral', title: 'Есть ещё вопросы?' },
+            
+            // 52. Finish
+            { type: 'finish', title: 'Благодарим за внимание!', message: '📚 Digital Literacy 2.0 от Algonova<br>36 уроков | 8 модулей | 7-9 лет | Online', keyMessage: '«Ваш ребёнок научится использовать компьютер как инструмент для учёбы, освоит безопасность в интернете и будет работать с ИИ раньше сверстников»', badge: '🚀 Единственный курс в LATAM с ИИ для детей от 7 лет!' }
+        ];
+
+        let currentSlideIndex = 0;
+        const totalSlides = slides.length;
+
+        function generateSlides() {
+            const wrapper = document.getElementById('slidesWrapper');
+            
+            slides.forEach((slide, index) => {
+                const slideEl = document.createElement('div');
+                slideEl.className = `slide slide-${slide.type}${slide.variant ? ' ' + slide.variant : ''}`;
+                slideEl.dataset.index = index;
+                
+                if (index === 0) slideEl.classList.add('active');
+                
+                if (slide.type === 'cover') {
+                    slideEl.innerHTML = `
+                        <div class="logo">${slide.logo}</div>
+                        <h1>${slide.title}</h1>
+                        <p class="subtitle">${slide.subtitle}</p>
+                    `;
+                } else if (slide.type === 'separator') {
+                    slideEl.innerHTML = `<h2>${slide.title}</h2>`;
+                } else if (slide.type === 'content') {
+                    slideEl.innerHTML = `
+                        <div class="slide-header">
+                            <div class="slide-icon">${slide.icon}</div>
+                            <h2>${slide.title}</h2>
+                        </div>
+                        ${slide.body}
+                    `;
+                } else if (slide.type === 'finish') {
+                    slideEl.innerHTML = `
+                        <h2>${slide.title}</h2>
+                        <p style="font-size: 1.5rem; margin: 30px 0; opacity: 0.9;">${slide.message}</p>
+                        <p class="key-message">${slide.keyMessage}</p>
+                        <div class="badge">${slide.badge}</div>
+                    `;
+                }
+                
+                wrapper.appendChild(slideEl);
+            });
+            
+            document.getElementById('totalSlides').textContent = totalSlides;
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            
+            const allSlides = document.querySelectorAll('.slide');
+            const prevSlide = allSlides[currentSlideIndex];
+            const nextSlide = allSlides[index];
+            
+            if (index > currentSlideIndex) {
+                prevSlide.classList.add('prev');
+            }
+            
+            prevSlide.classList.remove('active');
+            nextSlide.classList.remove('prev');
+            nextSlide.classList.add('active');
+            
+            currentSlideIndex = index;
+            updateUI();
+        }
+
+        function nextSlide() { goToSlide(currentSlideIndex + 1); }
+        function prevSlide() { goToSlide(currentSlideIndex - 1); }
+
+        function updateUI() {
+            document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+            document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+            document.getElementById('nextBtn').disabled = currentSlideIndex === totalSlides - 1;
+            document.getElementById('progressBar').style.width = ((currentSlideIndex + 1) / totalSlides * 100) + '%';
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function openModal(tool) {
+            const modal = document.getElementById('screenshotModal');
+            const img = document.getElementById('modalImage');
+            const title = document.getElementById('modalTitle');
+            
+            // no screenshot survived for these tools, so the modal stays shut
+            if (screenshots[tool] && screenshots[tool].src) {
+                img.src = screenshots[tool].src;
+                title.textContent = screenshots[tool].title;
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('screenshotModal').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); nextSlide(); break;
+                case 'ArrowLeft': case 'PageUp': e.preventDefault(); prevSlide(); break;
+                case 'Home': e.preventDefault(); goToSlide(0); break;
+                case 'End': e.preventDefault(); goToSlide(totalSlides - 1); break;
+                case 'f': case 'F': toggleFullscreen(); break;
+                case 'Escape': closeModal(); break;
+            }
+        });
+
+        generateSlides();
+        updateUI();
+    </script>
+</body>
+</html>

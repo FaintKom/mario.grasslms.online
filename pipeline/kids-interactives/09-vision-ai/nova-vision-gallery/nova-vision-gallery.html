@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nova's Photo Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  /* One screen on open: a tighter heading block, and the page held to the
+     height of the viewport so the working area can take what is left. */
+  body { padding: var(--page-top) 0 var(--page-bottom); }
+  .wrap { height: calc(100svh - var(--page-pad)); }
+  h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
+  .lede { font-size: var(--t-sm); max-width: 78ch; }
+  .stack--loose { gap: var(--s-4); }
+
+
+  .setup { display: grid; grid-template-columns: 1fr auto; gap: var(--s-2); align-items: end; }
+  @media (max-width: 620px) { .setup { grid-template-columns: 1fr; } }
+
+  /* Five rooms across on a wide screen: two rows of frames pushed the last
+     room below the fold. */
+  .rooms { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-3); }
+  @media (max-width: 1100px) { .rooms { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 700px)  { .rooms { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .room h3 { font-size: var(--t-base); }
+  .room__head p { font-size: var(--t-2xs); }
+  .labels { max-height: 120px; overflow: auto; }
+  .room { display: grid; gap: var(--s-3); align-content: start; }
+  .room__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-2); }
+  .room__n { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); }
+  .room h3 { font-size: var(--t-md); }
+
+  .frame {
+    display: grid; place-items: center; gap: var(--s-2);
+    aspect-ratio: 4 / 3; padding: var(--s-3); text-align: center;
+    border: 2px dashed var(--color-border-strong); border-radius: var(--radius-md);
+    background: var(--color-surface); cursor: pointer; overflow: hidden;
+    font: inherit; font-size: var(--t-sm); color: var(--color-text-muted); width: 100%;
+  }
+  .frame.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+  .frame img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-sm); }
+  .frame__icon { font-size: 32px; }
+  .room.is-done .frame { border-style: solid; border-color: var(--green-600); }
+
+  .labels { display: grid; gap: var(--s-1); }
+  .label {
+    display: grid; grid-template-columns: 1fr auto; gap: var(--s-2); align-items: center;
+    font-size: var(--t-2xs); font-family: var(--font-mono);
+  }
+  .label span { color: var(--color-text-subtle); }
+
+  .bar { height: 6px; border-radius: var(--radius-pill); background: var(--color-surface-2); overflow: hidden; margin-top: 2px; }
+  .bar i { display: block; height: 100%; background: var(--color-border-strong); }
+  .label.is-hit .bar i { background: var(--color-primary); }
+
+  .saw__sum { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); margin-top: var(--s-1); }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--wide stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Vision AI · gallery</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">Five empty rooms.</span> <em class="mark" data-t="title2">Hang the right photo</em></h1>
+    <p class="lede" data-t="intro">Each room takes one kind of photo. Put a picture in the frame and a machine looks at it, says what it thinks it sees, and decides whether it belongs in that room.</p>
+  </header>
+
+  <section class="card stack">
+    <h2 data-t="setupTitle">Where the machine lives</h2>
+    <p class="muted" data-t="setupBody">The recogniser is not a website you send photos to. It is a 14 MB file that downloads once and then runs inside this page, on your own machine. Your photos never leave the computer, and there is no key and no account.</p>
+    <div id="netNote" class="feedback feedback--hint">It downloads the first time you use it: 14 MB, once, and then it is yours offline.</div>
+  </section>
+
+  <div class="hud">
+    <div class="row">
+      <span class="eyebrow" data-t="hungLabel">Photos hung</span>
+      <span class="hud__score" id="score">0</span>
+    </div>
+  </div>
+
+  <section class="stack">
+    <div class="rooms" id="rooms"></div>
+  </section>
+
+  <section class="card stack" id="over" hidden aria-live="polite">
+    <h2 data-t="wonTitle">The gallery is open</h2>
+    <p class="muted" data-t="wonBody">Five rooms, five photos, and a machine that agreed with every one of them.</p>
+    <div><button class="btn" id="again" data-t="again">Empty the gallery</button></div>
+  </section>
+
+</div>
+
+<script src="../../_shared/vendor/tf.min.js"></script>
+<script src="../../_shared/vendor/mobilenet.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* Five rooms and the shape of the gallery come from the original Detective
+     gallery. What changed is where the machine lives.
+
+     The original called Google Cloud Vision, so nothing worked until somebody
+     typed in an API key. The recogniser now runs on the device: TensorFlow.js
+     and MobileNet v2 sit in _shared/vendor, the 14 MB of weights download once,
+     and every photo is classified inside this page. No key, no account, and no
+     photo ever leaves the computer. */
+
+  var MODEL_URL = "../../_shared/vendor/mobilenet-v2/model.json";
+  var TOP_K = 6;
+
+  var ROOMS = ["animal", "nature", "transport", "sport", "food"];
+
+  /* A photo belongs in a room when the guesses matching that room add up to
+     `need`. Summing beats judging the top guess alone: one photo of one dog
+     usually splits its confidence across four different breeds, and no single
+     one of them clears a high bar.
+
+     The words are ImageNet's, not Vision's — a thousand class names, four
+     hundred of them animals, almost none of them landscapes. That imbalance is
+     why the bars below differ so much from room to room. */
+  var CATEGORY = {
+    animal: {
+      need: 0.25,
+      keywords: ["animal", "pet", "cat", "kitten", "dog", "puppy", "bird", "fish", "horse",
+        "pony", "foal", "cow", "ox", "bull", "pig", "hog", "boar", "warthog", "sheep",
+        "ram", "goat", "ibex", "bighorn", "rabbit", "hare", "hamster", "mouse", "rat",
+        "elephant", "lion", "tiger", "leopard", "jaguar", "cheetah", "lynx", "cougar",
+        "puma", "panther", "bear", "panda", "monkey", "ape", "gorilla", "chimpanzee",
+        "orangutan", "gibbon", "macaque", "baboon", "lemur", "marmoset", "zebra",
+        "giraffe", "deer", "elk", "antelope", "gazelle", "impala", "hartebeest", "bison",
+        "buffalo", "llama", "camel", "fox", "wolf", "coyote", "dingo", "jackal", "hyena",
+        "snake", "viper", "cobra", "mamba", "boa", "python", "adder", "sidewinder",
+        "lizard", "gecko", "iguana", "chameleon", "skink", "turtle", "terrapin",
+        "tortoise", "crocodile", "alligator", "frog", "toad", "newt", "salamander", "eft",
+        "butterfly", "moth", "insect", "beetle", "ladybug", "weevil", "bee", "ant",
+        "wasp", "fly", "grasshopper", "cricket", "mantis", "cicada", "dragonfly",
+        "damselfly", "lacewing", "spider", "tarantula", "scorpion", "tick", "centipede",
+        "dolphin", "whale", "dugong", "shark", "stingray", "eel", "goldfish", "sturgeon",
+        "gar", "puffer", "chicken", "hen", "cock", "duck", "drake", "goose", "swan",
+        "parrot", "macaw", "cockatoo", "lorikeet", "toucan", "eagle", "hawk", "kite",
+        "falcon", "vulture", "owl", "penguin", "pelican", "flamingo", "stork", "heron",
+        "bittern", "crane", "ostrich", "peacock", "quail", "partridge", "grouse",
+        "finch", "jay", "magpie", "chickadee", "robin", "bulbul", "hornbill",
+        "hummingbird", "jacamar", "albatross", "otter", "badger", "skunk", "weasel",
+        "mink", "ferret", "polecat", "mongoose", "meerkat", "beaver", "porcupine",
+        "squirrel", "marmot", "hedgehog", "armadillo", "sloth", "wombat", "koala",
+        "wallaby", "platypus", "echidna", "snail", "slug", "conch", "crab", "lobster",
+        "crayfish", "jellyfish", "anemone", "urchin", "starfish", "coral", "worm",
+        "mammal", "reptile", "rodent", "primate", "marsupial", "retriever", "terrier",
+        "spaniel", "poodle", "husky", "malamute", "shepherd", "hound", "setter",
+        "pointer", "collie", "corgi", "pug", "chihuahua", "dalmatian", "schnauzer",
+        "pinscher", "mastiff", "bulldog", "beagle", "dachshund", "pekinese", "shih-tzu",
+        "samoyed", "chow", "keeshond", "papillon", "whippet", "greyhound", "borzoi",
+        "saluki", "weimaraner", "rottweiler", "boxer", "dane", "bernard", "tabby",
+        "siamese", "persian", "egyptian"]
+    },
+    nature: {
+      /* ImageNet has barely a dozen landscape classes, so a real photo of a
+         hillside rarely scores high on any one of them. The bar is low here on
+         purpose, and the guesses are shown so the reason stays visible. */
+      need: 0.12,
+      keywords: ["nature", "landscape", "lakeside", "lakeshore", "seashore", "coast",
+        "shore", "beach", "valley", "vale", "alp", "volcano", "cliff", "drop-off",
+        "promontory", "headland", "sandbar", "sandbank", "geyser", "reef", "mountain",
+        "forest", "tree", "daisy", "flower", "slipper", "rapeseed", "corn", "acorn",
+        "hip", "buckeye", "conker", "mushroom", "agaric", "bolete", "stinkhorn",
+        "earthstar", "cardoon", "field", "meadow", "grass", "sky", "cloud", "waterfall",
+        "lake", "river", "ocean", "sea", "desert", "canyon", "glacier", "island", "park",
+        "garden", "jungle", "rainforest", "hill", "rock", "stone", "plant", "foliage",
+        "leaf", "branch", "fern", "moss", "cactus", "palm"]
+    },
+    transport: {
+      need: 0.20,
+      keywords: ["car", "convertible", "cab", "taxi", "jeep", "limousine", "minivan",
+        "wagon", "pickup", "truck", "trailer", "engine", "van", "ambulance", "bus",
+        "trolleybus", "minibus", "scooter", "moped", "motorcycle", "tricycle", "unicycle",
+        "bicycle", "bicycle-built-for-two", "tractor", "harvester", "thresher",
+        "forklift", "snowplow", "snowmobile", "go-kart", "airliner", "warplane",
+        "airship", "balloon", "parachute", "shuttle", "carrier", "liner", "ship",
+        "fireboat", "speedboat", "canoe", "catamaran", "trimaran", "schooner", "yawl",
+        "gondola", "lifeboat", "paddlewheel", "submarine", "locomotive", "train",
+        "streetcar", "wheel", "grille", "track", "tank", "vehicle", "boat", "plane",
+        "aircraft"]
+    },
+    sport: {
+      need: 0.15,
+      keywords: ["basketball", "soccer", "volleyball", "tennis", "racket", "racquet",
+        "ping-pong", "golf", "baseball", "ballplayer", "rugby", "punching bag", "ski",
+        "bobsled", "dogsled", "balance beam", "horizontal bar", "parallel bars",
+        "barbell", "dumbbell", "pool table", "billiard", "croquet", "puck", "paddle",
+        "scoreboard", "helmet", "scuba", "snorkel", "surfboard", "skateboard", "sport",
+        "sports", "athlete", "player", "stadium", "gym", "match", "race"]
+    },
+    food: {
+      need: 0.20,
+      keywords: ["pizza", "cheeseburger", "hotdog", "hot dog", "bagel", "pretzel",
+        "ice cream", "ice lolly", "loaf", "guacamole", "consomme", "hot pot", "trifle",
+        "carbonara", "meat loaf", "meatloaf", "burrito", "potpie", "mashed potato",
+        "cabbage", "broccoli", "cauliflower", "zucchini", "squash", "cucumber",
+        "artichoke", "bell pepper", "cardoon", "mushroom", "granny smith", "strawberry",
+        "orange", "lemon", "fig", "pineapple", "banana", "jackfruit", "custard apple",
+        "pomegranate", "corn", "espresso", "eggnog", "red wine", "chocolate sauce",
+        "dough", "bakery", "plate", "soup bowl", "mixing bowl", "frying pan", "wok",
+        "food", "meal", "dish", "cuisine", "restaurant", "menu", "rotisserie", "cleaver"]
+    }
+  };
+
+  var T = {
+    en: {
+      eyebrow: "Vision AI · gallery",
+      title1: "Five empty rooms.", title2: "Hang the right photo",
+      intro: "Each room takes one kind of photo. Put a picture in the frame and a machine looks at it, says what it thinks it sees, and decides whether it belongs in that room.",
+      setupTitle: "Where the machine lives",
+      setupBody: "The recogniser is not a website you send photos to. It is a 14 MB file that downloads once and then runs inside this page, on your own machine. Your photos never leave the computer, and there is no key and no account.",
+      idle: "It downloads the first time you use it: 14 MB, once, and then it is yours offline.",
+      loading: "Loading the recogniser…",
+      ready: "Ready. It knows a thousand kinds of thing, and four hundred of those are animals.",
+      failed: "The recogniser could not load. Open this page through a web server rather than straight from a folder: a browser will not read a 14 MB file off the disk from a file:// address.",
+      hungLabel: "Photos hung", again: "Empty the gallery",
+      wonTitle: "The gallery is open",
+      wonBody: "Five rooms, five photos, and a machine that agreed with every one of them.",
+      rooms: {
+        animal:    ["Animals", "Anything alive with fur, feathers or scales."],
+        nature:    ["Nature", "No people, no buildings — sky, water, trees, rock."],
+        transport: ["Getting around", "Something that carries people or things."],
+        sport:     ["Sport", "A game being played, or the kit for one."],
+        food:      ["Food", "Something to eat or drink."]
+      },
+      dropHere: "Drop a photo here, or tap to choose one",
+      thinking: "Looking at the photo…",
+      waiting: "Waiting for the recogniser to finish loading…",
+      badFile: "That is not an image file.",
+      failedShot: "Something went wrong looking at that photo.",
+      sawTitle: "What it saw",
+      tally: function (got, need) { return "Matching guesses came to " + got + "%. This room needs " + need + "%."; },
+      noLabels: "The machine saw nothing it could name in that photo.",
+      accepted: "Accepted — it belongs in this room.",
+      rejected: function (cat) { return "Rejected. Nothing in that photo looks like " + cat.toLowerCase() + " to the machine."; },
+      weak: "The machine is not sure enough about that photo. Try a clearer one."
+    },
+    es: {
+      eyebrow: "IA de visión · galería",
+      title1: "Cinco salas vacías.", title2: "Cuelga la foto correcta",
+      intro: "Cada sala admite un tipo de foto. Pon una imagen en el marco y una máquina la mira, dice qué cree que ve y decide si encaja en esa sala.",
+      setupTitle: "Dónde vive la máquina",
+      setupBody: "El reconocedor no es una web a la que mandas fotos. Es un archivo de 14 MB que se descarga una vez y luego funciona dentro de esta página, en tu propio ordenador. Tus fotos no salen de ahí, y no hace falta ni clave ni cuenta.",
+      idle: "Se descarga la primera vez que lo usas: 14 MB, una sola vez, y luego lo tienes sin conexión.",
+      loading: "Cargando el reconocedor…",
+      ready: "Listo. Conoce mil tipos de cosa, y cuatrocientos de ellos son animales.",
+      failed: "El reconocedor no ha podido cargarse. Abre esta página con un servidor web y no directamente desde una carpeta: un navegador no lee un archivo de 14 MB desde una dirección file://.",
+      hungLabel: "Fotos colgadas", again: "Vaciar la galería",
+      wonTitle: "La galería está abierta",
+      wonBody: "Cinco salas, cinco fotos y una máquina que estuvo de acuerdo con todas.",
+      rooms: {
+        animal:    ["Animales", "Cualquier ser vivo con pelo, plumas o escamas."],
+        nature:    ["Naturaleza", "Sin personas ni edificios: cielo, agua, árboles, roca."],
+        transport: ["Transporte", "Algo que lleva personas o cosas."],
+        sport:     ["Deporte", "Un juego en marcha, o el material para jugarlo."],
+        food:      ["Comida", "Algo de comer o de beber."]
+      },
+      dropHere: "Suelta aquí una foto, o toca para elegir una",
+      thinking: "Mirando la foto…",
+      waiting: "Esperando a que termine de cargar el reconocedor…",
+      badFile: "Ese archivo no es una imagen.",
+      failedShot: "Algo ha fallado al mirar esa foto.",
+      sawTitle: "Lo que vio",
+      tally: function (got, need) { return "Las conjeturas que encajan suman " + got + "%. Esta sala necesita un " + need + "%."; },
+      noLabels: "La máquina no supo nombrar nada en esa foto.",
+      accepted: "Aceptada: encaja en esta sala.",
+      rejected: function (cat) { return "Rechazada. Nada de esa foto le parece " + cat.toLowerCase() + " a la máquina."; },
+      weak: "La máquina no está lo bastante segura de esa foto. Prueba con una más clara."
+    }
+  };
+
+  var lang = "en";
+  var net = null, netState = "idle";
+  var state = {};   /* room -> { img, labels, done, busy, note, score } */
+
+  function byId(id) { return document.getElementById(id); }
+  function t() { return T[lang]; }
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+
+  function blank() {
+    var s = {};
+    ROOMS.forEach(function (r) { s[r] = { img: null, labels: null, done: false, busy: false, note: null, score: 0 }; });
+    return s;
+  }
+
+  /* Whole words only. A substring test finds "ant" inside "plant" and "ray"
+     inside "tray", and either one quietly wrecks a room. */
+  function belongs(label, cat) {
+    var text = " " + label.toLowerCase().replace(/[^a-z'\- ]+/g, " ").replace(/\s+/g, " ") + " ";
+    return CATEGORY[cat].keywords.some(function (k) {
+      return text.indexOf(" " + k + " ") !== -1;
+    });
+  }
+
+  /* MobileNet spreads its confidence: one dog can come back as four breeds at
+     0.2 each. Adding up every guess that matches the room reads that correctly,
+     where a threshold on the single top guess would throw the photo out. */
+  function judge(labels, cat) {
+    if (!labels.length) return { ok: false, why: "none", score: 0 };
+    var need = CATEGORY[cat].need;
+    var score = labels.reduce(function (sum, l) {
+      return belongs(l[0], cat) ? sum + l[1] : sum;
+    }, 0);
+    if (score >= need) return { ok: true, score: score };
+    return { ok: false, why: score > need * 0.45 ? "weak" : "reject", score: score };
+  }
+
+  function note(room, kind, message) {
+    state[room].note = { kind: kind, message: message };
+  }
+
+  /* The weights are big enough that the download deserves to be visible.
+     Everything after it happens on the device, so this is the only wait. */
+  async function loadNet() {
+    if (netState !== "idle") return;
+    netState = "loading";
+    render();
+    try {
+      net = await mobilenet.load({ version: 2, alpha: 1.0, modelUrl: MODEL_URL });
+      netState = "ready";
+    } catch (err) {
+      netState = "failed";
+    }
+    render();
+  }
+
+  function loadImage(dataUrl) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = reject;
+      img.src = dataUrl;
+    });
+  }
+
+  async function ask(room, dataUrl) {
+    var d = t(), s = state[room];
+
+    if (netState === "idle") loadNet();
+    if (netState === "loading") {
+      note(room, "hint", d.waiting);
+      render();
+      while (netState === "loading") await new Promise(function (r) { setTimeout(r, 200); });
+    }
+    if (netState === "failed") { note(room, "no", d.failed); s.busy = false; render(); return; }
+
+    try {
+      var img = await loadImage(dataUrl);
+      var preds = await net.classify(img, TOP_K);
+      s.labels = preds.map(function (pr) { return [pr.className, pr.probability]; });
+    } catch (err) {
+      note(room, "no", d.failedShot); s.busy = false; render(); return;
+    }
+
+    if (!s.labels.length) { note(room, "no", d.noLabels); s.busy = false; render(); return; }
+
+    var verdict = judge(s.labels, room);
+    s.done = verdict.ok;
+    s.score = verdict.score;
+    s.busy = false;
+    if (verdict.ok) note(room, "ok", d.accepted);
+    else if (verdict.why === "weak") note(room, "no", d.weak);
+    else note(room, "no", d.rejected(d.rooms[room][0]));
+    render();
+  }
+
+  function take(room, file) {
+    var d = t();
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { note(room, "no", d.badFile); render(); return; }
+
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var s = state[room];
+      s.img = e.target.result;
+      s.labels = null; s.done = false; s.busy = true; s.score = 0;
+      note(room, "hint", d.thinking);
+      render();
+      ask(room, s.img);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function render() {
+    var d = t();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (n) {
+      var v = d[n.dataset.t];
+      if (typeof v === "string") n.textContent = v;
+    });
+    document.querySelectorAll("[data-tp]").forEach(function (n) {
+      n.placeholder = d[n.dataset.tp] || "";
+    });
+
+    var sn = byId("netNote");
+    sn.className = "feedback feedback--" +
+      (netState === "ready" ? "ok" : netState === "failed" ? "no" : "hint");
+    sn.textContent = netState === "ready" ? d.ready
+                  : netState === "failed" ? d.failed
+                  : netState === "loading" ? d.loading
+                  : d.idle;
+
+    var done = ROOMS.filter(function (r) { return state[r].done; }).length;
+    byId("score").innerHTML = done + "<span class=\"muted\">/" + ROOMS.length + "</span>";
+    byId("over").hidden = done < ROOMS.length;
+
+    var wrap = byId("rooms"); wrap.innerHTML = "";
+    ROOMS.forEach(function (room, i) {
+      var s = state[room];
+      var card = el("div", "room card" + (s.done ? " is-done" : ""));
+
+      var head = el("div", "room__head");
+      var titles = el("div");
+      titles.appendChild(el("h3", null, d.rooms[room][0]));
+      titles.appendChild(el("p", "muted", d.rooms[room][1]));
+      head.appendChild(titles);
+      head.appendChild(el("span", "room__n", "0" + (i + 1)));
+      card.appendChild(head);
+
+      var frame = el("button", "frame");
+      frame.type = "button";
+      if (s.img) {
+        var img = document.createElement("img");
+        img.src = s.img; img.alt = d.rooms[room][0];
+        frame.appendChild(img);
+      } else {
+        frame.appendChild(el("span", "frame__icon", "🖼️"));
+        frame.appendChild(el("span", null, d.dropHere));
+      }
+
+      var input = document.createElement("input");
+      input.type = "file"; input.accept = "image/*"; input.hidden = true;
+      input.onchange = function (e) { take(room, e.target.files[0]); };
+
+      frame.onclick = function () { if (!s.busy) input.click(); };
+      frame.addEventListener("dragover", function (e) { e.preventDefault(); frame.classList.add("is-over"); });
+      frame.addEventListener("dragleave", function () { frame.classList.remove("is-over"); });
+      frame.addEventListener("drop", function (e) {
+        e.preventDefault(); frame.classList.remove("is-over");
+        if (!s.busy) take(room, e.dataTransfer.files[0]);
+      });
+      card.appendChild(frame);
+      card.appendChild(input);
+
+      if (s.labels) {
+        var list = el("div", "labels");
+        list.appendChild(el("span", "eyebrow", d.sawTitle));
+        s.labels.forEach(function (l) {
+          var row = el("div", "label" + (belongs(l[0], room) ? " is-hit" : ""));
+          var left = el("div");
+          left.appendChild(el("div", null, l[0]));
+          var bar = el("div", "bar");
+          var fill = el("i");
+          fill.style.width = Math.round(l[1] * 100) + "%";
+          bar.appendChild(fill);
+          left.appendChild(bar);
+          row.appendChild(left);
+          row.appendChild(el("span", null, Math.round(l[1] * 100) + "%"));
+          list.appendChild(row);
+        });
+        list.appendChild(el("p", "saw__sum",
+          d.tally(Math.round(s.score * 100), Math.round(CATEGORY[room].need * 100))));
+        card.appendChild(list);
+      }
+
+      if (s.note) {
+        card.appendChild(el("div", "feedback feedback--" + s.note.kind, s.note.message));
+      }
+
+      wrap.appendChild(card);
+    });
+  }
+
+  byId("again").onclick = function () { state = blank(); render(); };
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      render();
+    };
+  });
+
+  state = blank();
+  render();
+})();
+</script>
+</body>
+</html>
