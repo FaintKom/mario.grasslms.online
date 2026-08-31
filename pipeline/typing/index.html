@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Typing… · a small game about the gap between what you saw and what you did</title>
+<meta name="description" content="A four-minute playable scenario in a work messenger. No score. Feedback arrives while you are still playing. Built on Chris Argyris' Ladder of Inference."/>
+<link rel="icon" href="../../icon.svg" sizes="any" type="image/svg+xml"/>
+
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Typing… — a small game about how you decided"/>
+<meta property="og:description" content="Monday, 09:41. A client asks four words in a shared channel. Four minutes, four decisions, no score."/>
+<meta property="og:url" content="https://mario.grasslms.online/pipeline/typing/"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --bg:#fafbf6; --bg-2:#ffffff; --bg-3:#f4f5f1;
+  --ink:#0a1a10; --ink-dim:#4d5a51; --ink-faint:#6b7a70;
+  --rule:#e6e8e4; --rule-strong:#c9cec9;
+  --accent:#0a8754; --accent-ink:#ffffff;
+  --green-25:#f4fbef; --green-50:#ecf9e7; --green-700:#07683f;
+  --sun-100:#fff2b3; --sun-300:#ffe066; --sun-700:#7a5500;
+  --coral-50:#fff0eb; --coral-500:#ff7a5c; --coral-700:#c33d22;
+  --shadow-sm:0 2px 6px -1px rgba(10,26,16,.07);
+  --shadow-md:0 8px 24px -8px rgba(10,26,16,.12);
+  --mono:"Geist Mono",ui-monospace,Menlo,monospace;
+  --sans:"Manrope",ui-sans-serif,system-ui,sans-serif;
+
+  /* messenger chrome — deliberately unremarkable */
+  --app-rail:#1d2420; --app-rail-ink:#cfd8d2;
+  --app-bg:#ffffff; --app-line:#e9ebe7;
+  --bub:#f3f5f1; --bub-you:#e7f4ec;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+em{font-style:normal;background:var(--sun-300);padding:.06em .3em;border-radius:.25em;display:inline-block;transform:rotate(-1.2deg)}
+
+/* ---------- page frame ---------- */
+.wrap{max-width:1080px;margin:0 auto;padding:0 clamp(16px,3vw,32px)}
+.top{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:18px 0 14px;border-bottom:1px solid var(--rule);
+}
+.top .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+.top .sp{flex:1}
+.back{
+  font-family:var(--mono);font-size:12.5px;text-decoration:none;color:var(--ink-dim);
+  border:1px solid var(--rule-strong);border-radius:999px;padding:6px 12px;white-space:nowrap;
+}
+.back:hover{background:var(--bg-3);color:var(--ink)}
+
+.lede{padding:26px 0 20px;max-width:60ch}
+h1{font-size:clamp(30px,5.2vw,46px);line-height:1.05;letter-spacing:-.02em;margin:0 0 12px;font-weight:800}
+h1 .dots{color:var(--ink-faint);font-weight:500}
+.lede p{margin:0;color:var(--ink-dim);font-size:17px}
+
+/* ---------- the app ---------- */
+.stage{padding-bottom:34px}
+.app{
+  display:grid;grid-template-columns:64px 1fr;
+  height:min(660px,78vh);min-height:480px;
+  border:1px solid var(--rule-strong);border-radius:14px;overflow:hidden;
+  background:var(--app-bg);box-shadow:var(--shadow-md);position:relative;
+}
+.rail{background:var(--app-rail);color:var(--app-rail-ink);display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0}
+.rail .mark{width:32px;height:32px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;margin-bottom:8px}
+.rail .ch{width:36px;height:32px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-size:13px;opacity:.5}
+.rail .ch.on{background:rgba(255,255,255,.14);opacity:1}
+.rail .sp{flex:1}
+.rail .me{width:28px;height:28px;border-radius:8px;background:#43524a;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff}
+
+.pane{display:flex;flex-direction:column;min-width:0}
+.chead{
+  display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--app-line);
+  font-weight:700;font-size:15px;flex:none;
+}
+.chead .n{color:var(--ink-faint);font-weight:500}
+.chead .sp{flex:1}
+.clock{font-family:var(--mono);font-size:12.5px;color:var(--ink-faint);font-weight:500;font-variant-numeric:tabular-nums}
+
+.feed{flex:1;overflow-y:auto;padding:16px 16px 8px;scroll-behavior:smooth;transition:padding-bottom .2s}
+/* while the note is open the channel keeps scrolling above it, so you can
+   read what you just caused and what it is called at the same time */
+.feed.noted{padding-bottom:min(330px,62%)}
+.msg{display:flex;gap:10px;margin-bottom:14px;animation:rise .19s ease-out both}
+@keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.av{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;margin-top:2px}
+.av.d{background:#5b6ab0}.av.p{background:#a4557d}.av.t{background:#b07a3f}.av.n{background:#3f7d6a}.av.y{background:var(--accent)}
+.body{min-width:0;flex:1}
+.who{font-size:13.5px;font-weight:700;margin-bottom:2px}
+.who span{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--ink-faint);margin-left:7px;font-variant-numeric:tabular-nums}
+.bub{background:var(--bub);border-radius:4px 12px 12px 12px;padding:8px 12px;font-size:15px;display:inline-block;max-width:100%;word-wrap:break-word}
+.msg.you .bub{background:var(--bub-you)}
+.bub.gone{background:transparent;border:1px dashed var(--rule-strong);color:var(--ink-faint);font-style:italic;font-size:14px}
+.sys{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);text-align:center;padding:4px 0 12px;letter-spacing:.03em}
+
+.typing{display:flex;gap:10px;margin-bottom:14px;align-items:center}
+.typing .t{background:var(--bub);border-radius:12px;padding:10px 13px;display:flex;gap:4px}
+.typing i{width:5px;height:5px;border-radius:50%;background:var(--ink-faint);animation:blink 1.15s infinite}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:.95}}
+
+/* choices */
+.deck{flex:none;border-top:1px solid var(--app-line);padding:12px 16px 14px;background:var(--bg-2)}
+.deck .hint{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:9px}
+.opts{display:grid;gap:7px}
+.opt{
+  text-align:left;font-family:var(--sans);font-size:14.5px;line-height:1.4;color:var(--ink);
+  background:var(--bg-2);border:1px solid var(--rule-strong);border-radius:10px;
+  padding:10px 13px;cursor:pointer;transition:transform .1s,border-color .12s,background .12s;
+}
+.opt:hover{border-color:var(--accent);background:var(--green-25)}
+.opt:active{transform:translateY(1px)}
+.opt .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-bottom:2px}
+.opt:disabled{opacity:.4;cursor:default}
+
+/* DM drawer */
+.dm{
+  position:absolute;right:14px;bottom:14px;width:min(330px,calc(100% - 28px));
+  background:var(--bg-2);border:1px solid var(--rule-strong);border-radius:12px;
+  box-shadow:var(--shadow-md);overflow:hidden;
+  transform:translateY(14px);opacity:0;pointer-events:none;transition:transform .22s ease-out,opacity .22s;
+  z-index:5;
+}
+.dm.on{transform:none;opacity:1;pointer-events:auto}
+.dm .h{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--app-line);font-size:13.5px;font-weight:700}
+.dm .h .sp{flex:1}
+.dm .x{border:0;background:none;font-size:17px;line-height:1;color:var(--ink-faint);cursor:pointer;padding:0 2px}
+.dm .x:hover{color:var(--ink)}
+.dm .c{padding:11px 13px 4px;font-size:14.5px;line-height:1.52}
+.dm .c p{margin:0 0 8px}.dm .c p:last-child{margin:0}
+.dm .f{padding:9px 13px 12px;display:flex;justify-content:flex-end}
+.dm .on-btn{
+  font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--green-700);
+  background:var(--green-25);border:1px solid var(--green-50);border-radius:8px;
+  padding:7px 13px;cursor:pointer;
+}
+.dm .on-btn:hover{background:var(--green-50)}
+
+/* intro + results overlay */
+.veil{
+  position:absolute;inset:0;background:rgba(250,251,246,.97);z-index:9;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(20px,4vw,40px);overflow-y:auto;
+}
+.veil.off{display:none}
+.veil h2{margin:0 0 10px;font-size:clamp(21px,3.4vw,27px);letter-spacing:-.01em}
+.veil p{margin:0 0 12px;color:var(--ink-dim);max-width:52ch;font-size:15.5px}
+.veil .meta{font-family:var(--mono);font-size:12px;color:var(--ink-faint);letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px}
+.btn{
+  font-family:var(--sans);font-weight:700;font-size:15px;color:var(--accent-ink);background:var(--accent);
+  border:0;border-radius:10px;padding:11px 20px;cursor:pointer;box-shadow:0 3px 0 0 var(--green-700);
+  align-self:flex-start;margin-top:6px;
+}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 0 var(--green-700)}
+.btn.ghost{background:var(--bg-2);color:var(--ink);border:1px solid var(--rule-strong);box-shadow:none}
+
+/* results */
+.ladder{display:grid;gap:0;margin:14px 0 18px;border-top:1px solid var(--rule)}
+.rung{display:grid;grid-template-columns:58px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--rule);align-items:start}
+.rung .t{font-family:var(--mono);font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums;padding-top:2px}
+.rung .saw{font-size:14.5px;margin:0 0 3px;color:var(--ink)}
+.rung .saw b{font-weight:600}
+.rung .took{font-size:14px;margin:0;color:var(--ink-dim)}
+.rung .took i{font-style:normal;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin-right:6px}
+.verdict{background:var(--green-25);border:1px solid var(--green-50);border-radius:12px;padding:14px 16px;margin-bottom:14px;max-width:58ch}
+.verdict p{margin:0 0 8px;color:var(--ink);font-size:15.5px}.verdict p:last-child{margin:0}
+.veil .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- below the fold ---------- */
+.after{border-top:1px solid var(--rule);padding:30px 0 60px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px 34px;margin-bottom:30px}
+.cols h3,.sect{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 8px;font-weight:500}
+.cols p{margin:0 0 9px;font-size:15px;color:var(--ink-dim)}
+.cols p:last-child{margin:0}
+.cols a{color:var(--green-700);text-decoration-thickness:1px;text-underline-offset:2px}
+.rules{list-style:none;padding:0;margin:0;font-size:14.5px;color:var(--ink-dim)}
+.rules li{padding:5px 0 5px 18px;position:relative}
+.rules li::before{content:"·";position:absolute;left:4px;color:var(--ink-faint);font-weight:700}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.card{
+  display:block;text-decoration:none;border:1px solid var(--rule-strong);border-radius:11px;
+  padding:13px 15px;background:var(--bg-2);transition:border-color .12s,transform .1s;
+}
+.card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.card b{display:block;font-size:15px;margin-bottom:3px}
+.card span{font-size:13.5px;color:var(--ink-faint)}
+.foot{border-top:1px solid var(--rule);padding:16px 0 40px;font-size:13.5px;color:var(--ink-faint)}
+.foot a{color:var(--green-700)}
+
+@media (max-width:720px){
+  .app{grid-template-columns:48px 1fr;height:auto;min-height:0}
+  .feed{height:52vh;min-height:300px}
+  .rail .ch{width:30px;font-size:11px}
+  .dm{left:10px;right:10px;bottom:10px;width:auto}
+  .rung{grid-template-columns:1fr;gap:2px}
+  .rung .t{padding:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .feed{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <span class="kicker">Playable · 4 min</span>
+    <span class="sp"></span>
+    <a class="back" href="../../">↩ Portfolio</a>
+  </header>
+
+  <div class="lede">
+    <h1>Typing<span class="dots">…</span></h1>
+    <p>Monday, 09:41. A client asks four words in a shared channel. What happens next depends less on what he wrote than on <em>what you decided it meant</em>.</p>
+  </div>
+</div>
+
+<div class="wrap stage">
+  <div class="app" id="app">
+
+    <nav class="rail" aria-hidden="true">
+      <div class="mark">H</div>
+      <div class="ch">#gen</div>
+      <div class="ch on">#nl</div>
+      <div class="ch">#dev</div>
+      <div class="sp"></div>
+      <div class="me">M</div>
+    </nav>
+
+    <div class="pane">
+      <div class="chead">
+        <span>#northline-launch</span>
+        <span class="n">· 5 members</span>
+        <span class="sp"></span>
+        <span class="clock" id="clock">09:41</span>
+      </div>
+
+      <div class="feed" id="feed" role="log" aria-live="polite" aria-label="Channel messages"></div>
+
+      <div class="deck" id="deck" hidden>
+        <div class="hint" id="hint">Your move</div>
+        <div class="opts" id="opts"></div>
+      </div>
+    </div>
+
+    <!-- feedback drawer -->
+    <aside class="dm" id="dm" role="complementary" aria-label="Direct message from Noor">
+      <div class="h">
+        <span class="av n" style="width:22px;height:22px;border-radius:7px;font-size:10px;margin:0">N</span>
+        <span>Noor</span><span class="sp"></span>
+        <button class="x" id="dmx" aria-label="Close message">&times;</button>
+      </div>
+      <div class="c" id="dmc"></div>
+      <div class="f"><button class="on-btn" id="dmgo" type="button">Carry on &rarr;</button></div>
+    </aside>
+
+    <!-- intro -->
+    <div class="veil" id="intro">
+      <div class="meta">Studio Halcyon · you are the producer on Northline</div>
+      <h2>Four decisions. Nobody is going to tell you which one was right.</h2>
+      <p>Feedback arrives while you are still playing, from someone who works with you. It comments on how you decided. There is no score, because the number would be the only part you remembered.</p>
+      <p>About four minutes. Works on a phone.</p>
+      <button class="btn" id="go">Open the channel</button>
+    </div>
+
+    <!-- results -->
+    <div class="veil off" id="out">
+      <div class="meta">Your ladder · 09:41 to 10:04</div>
+      <h2>There is no score here. It would not have helped.</h2>
+      <div class="ladder" id="ladder"></div>
+      <div class="verdict" id="verdict"></div>
+      <div class="row">
+        <button class="btn" id="again">Play it differently</button>
+        <a class="btn ghost" href="../../" style="text-decoration:none;line-height:1.5">See the rest of the work</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="wrap after">
+  <div class="cols">
+    <div>
+      <h3>What this is</h3>
+      <p>A scenario that runs inside an interface you have used every working day for a decade. No tutorial, no onboarding, no new vocabulary — the shell explains how to play, so the writing is free to do everything else.</p>
+      <p>Four decisions, each launched from a different height. The game never says a choice was wrong. Afterwards it shows you the sentence that was on your screen, beside the sentence you replaced it with.</p>
+    </div>
+    <div>
+      <h3>The framework, and whose it is</h3>
+      <p>The rungs are the <b>Ladder of Inference</b> — observable data, selected data, meaning, assumption, conclusion, action. It belongs to <a href="https://en.wikipedia.org/wiki/The_Ladder_of_Inference" rel="noopener">Chris Argyris</a>, developed at Harvard and carried into wider use by Peter Senge.</p>
+      <p>I did not invent it. I made it playable, which is a different job and the only one I am claiming here.</p>
+    </div>
+    <div>
+      <h3>How the feedback behaves</h3>
+      <ul class="rules">
+        <li>Arrives mid-play, never as a report at the end</li>
+        <li>About how you decided, never about who you are</li>
+        <li>Reframes instead of evaluating</li>
+        <li>Stays tentative — you should need it less next time</li>
+        <li>No scores, no percentage, no stars</li>
+        <li>Every note ends with one thing to try tomorrow</li>
+      </ul>
+    </div>
+    <div>
+      <h3>How it was made</h3>
+      <p>One HTML file. No framework, no build step, no dependencies — it will still open in ten years. Claude did most of the typing and I did the arguing, over about a day.</p>
+      <p>The longest part was the dwell on the typing indicator, which is the only reason any of it feels like a room.</p>
+    </div>
+  </div>
+
+  <h3 class="sect">Longer things, same instinct</h3>
+  <div class="more">
+    <a class="card" href="../fintech-fraud-triage/"><b>RiskDesk</b><span>A payments fraud-review console. A shift clock, a queue, and a real cost to clearing it quickly.</span></a>
+    <a class="card" href="../incident-response/"><b>Night Shift</b><span>A branching fraud incident at 02:00. Every branch survivable, none of them clean.</span></a>
+    <a class="card" href="../mini-cases/"><b>Three mini-cases</b><span>Phish or pass, the first thirty seconds of a support call, and routing a purchase order.</span></a>
+  </div>
+</div>
+
+<div class="wrap foot">
+  Mario Rafael Becerra Dueñas · Learning Experience Designer ·
+  <a href="../../">mario.grasslms.online</a> ·
+  <a href="mailto:mrbecerraduenias@gmail.com">mrbecerraduenias@gmail.com</a>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var CAST = {
+    dev:{n:"Dev Raman",   a:"d"},
+    pri:{n:"Priya Okonjo",a:"p"},
+    tom:{n:"Tom Beake",   a:"t"},
+    you:{n:"You",         a:"y"}
+  };
+
+  // Rungs of the ladder, low to high. The lower you launch from, the more of
+  // the actual message is still in your hand when you act.
+  var RUNG = {
+    data:"Data", mean:"Meaning", assum:"Assumption", belief:"Belief", none:"Silence"
+  };
+
+  var BEATS = [
+    {
+      t:"09:41",
+      pre:[
+        {w:"dev", x:"Saw the deck."},
+        {w:"dev", x:"Who signed this off?"}
+      ],
+      saw:"Who signed this off?",
+      hint:"Dev is waiting. So is everyone else in the channel",
+      opts:[
+        { label:"“Which bit are you looking at?”", rung:"data",
+          took:"a question, until proven otherwise",
+          say:{w:"you", x:"Which bit are you looking at?"},
+          then:[{w:"dev", x:"Slide 9. The pricing ladder. My CFO wants to know who built it."}],
+          dm:["You asked before you answered. Small thing, and it set the temperature for the next twenty minutes.",
+              "You did it under time pressure, which is the part that is hard to repeat.",
+              "Tomorrow: try it once on something you are already sure you understand."] },
+
+        { label:"“I did. Happy to walk you through the thinking.”", rung:"mean",
+          took:"an accusation aimed at me",
+          say:{w:"you", x:"I did. Happy to walk you through the thinking."},
+          then:[{w:"dev", x:"Not blaming anyone. My CFO liked slide 9 and I wanted to put a name in front of him."},
+                {w:"pri", x:"…"}],
+          dm:["You answered a question about authorship as though it were a question about blame.",
+              "Could be ownership. Could be a flinch. From here the two look identical, and only one of them is cheap.",
+              "Tomorrow: read the message a second time before you decide what it is about."] },
+
+        { label:"Take it out of the channel — message Priya: “client's unhappy about the deck, what happened?”", rung:"assum",
+          took:"he is unhappy and someone here is at fault",
+          say:{w:"you", x:"client's unhappy about the deck — what happened?", dm:"Priya"},
+          then:[{w:"pri", x:"unhappy how? he said four words", dm:"Priya"},
+                {w:"dev", x:"Not blaming anyone — CFO liked slide 9, wanted to credit whoever built it."}],
+          dm:["Between “who signed this off” and “the client is unhappy” there is a whole sentence, and you wrote it.",
+              "Then you acted on your sentence rather than on his.",
+              "Tomorrow: say the sentence you added out loud before you act on it. Usually that is enough."] },
+
+        { label:"Say nothing for now. Let it settle.", rung:"none",
+          took:"someone else will handle this",
+          say:{sys:"You start typing. You stop typing."},
+          then:[{w:"tom", x:"Hi Dev!! That was me — really sorry if anything's off!"},
+                {w:"dev", x:"…why sorry?"}],
+          dm:["Silence is still a decision. It is just one that other people get to finish for you, and Tom finished it.",
+              "Tomorrow: if you are going to wait, say that you are waiting. It costs one line."] }
+      ]
+    },
+
+    {
+      t:"09:44",
+      pre:[
+        {w:"pri", x:"Hold on. Which deck actually went over?"},
+        {w:"pri", x:"The one in the folder, or the one I sent you Friday night?"},
+        {sys:"The pricing on slide 9 is last quarter's."}
+      ],
+      saw:"Which deck actually went over?",
+      hint:"Dev is still in the channel, reading",
+      opts:[
+        { label:"“There may be a problem with slide 9. Give me five minutes and I'll come back with what changed.”", rung:"data",
+          took:"the expensive part goes first",
+          say:{w:"you", x:"There may be a problem with slide 9. Give me five minutes and I'll come back with what changed."},
+          then:[{w:"dev", x:"Appreciate that."},{w:"pri", x:"ok. checking my end."}],
+          dm:["You said the expensive part first and asked for time second. That order is hard to hold when the client is in the room.",
+              "Tomorrow: try it on something small, so it is already in your hands when it is not small."] },
+
+        { label:"“Checking now.”", rung:"data",
+          took:"I do not know yet, and I will say so",
+          say:{w:"you", x:"Checking now."},
+          then:[{w:"tom", x:"it was the folder one. i thought that was the final version"},{w:"pri", x:"it wasn't."}],
+          dm:["Two words with no promises in them. You bought time without spending anything, which is more underrated than it sounds.",
+              "Tomorrow: notice you can do the same when you do know, and want a moment anyway."] },
+
+        { label:"“The one you sent Friday.”", rung:"mean",
+          took:"what I remember is what happened",
+          say:{w:"you", x:"The one you sent Friday."},
+          then:[{w:"pri", x:"It wasn't. I'm looking at the file."},{w:"dev", x:"👀"}],
+          dm:["You said a thing you hoped was true in the voice you keep for things you know.",
+              "The cost is not the mistake. It is that the next true thing you say now arrives at a discount.",
+              "Tomorrow: put “I think” in front of one sentence out loud. It costs less than it feels like it will."] },
+
+        { label:"Message Tom quietly: “did you send the folder version?”", rung:"assum",
+          took:"I already know who did this",
+          say:{w:"you", x:"did you send the folder version?", dm:"Tom"},
+          then:[{w:"tom", x:"i think so? sorry", dm:"Tom"},
+                {w:"pri", x:"anyone? which deck went over?"},
+                {sys:"Priya asks again. The channel watches you not answer."}],
+          dm:["You took it out of the room the moment it got expensive, and the room noticed the gap.",
+              "Tomorrow: before you open the private window, check whether it is for them or for you."] }
+      ]
+    },
+
+    {
+      t:"09:51",
+      pre:[
+        {w:"tom", x:"Hi Dev — that was my mistake, I sent the wrong file. Really sorry. Won't happen again."},
+        {sys:"Nobody agreed to that. There is now a junior apologising to a client on behalf of the studio."}
+      ],
+      saw:"Tom apologises to the client, unprompted",
+      hint:"Dev has already read it",
+      opts:[
+        { label:"“Thanks Tom. Dev — corrected deck with you in ten, and I'll flag exactly what changed.”", rung:"data",
+          took:"authorship is not the client's problem",
+          say:{w:"you", x:"Thanks Tom. Dev — corrected deck with you in ten, and I'll flag exactly what changed."},
+          then:[{w:"dev", x:"Ten's fine."},{w:"pri", x:"thank you"}],
+          dm:["You let him keep his footing and still moved the thing forward, in one message, in front of the client.",
+              "Tomorrow: notice what it cost you to leave the record uncorrected. That is the muscle, not the sentence."] },
+
+        { label:"Delete his message.", rung:"assum",
+          took:"this is damage, and damage can be removed",
+          say:{sys:"You delete Tom's message."},
+          then:[{gone:"This message was deleted"},
+                {w:"dev", x:"I read it."},
+                {w:"tom", x:"did i do something wrong", dm:"Tom"}],
+          dm:["It had already been read. What you removed was the record, not the moment.",
+              "Tomorrow: when you want to delete something, first write what you would say instead. Often you send that."] },
+
+        { label:"Message Tom: “please don't apologise to clients before we've talked.”", rung:"mean",
+          took:"this needs correcting immediately",
+          say:{w:"you", x:"please don't apologise to clients before we've talked. Come to me first.", dm:"Tom"},
+          then:[{w:"tom", x:"understood. sorry.", dm:"Tom"},
+                {sys:"Tom does not post again this morning."},
+                {w:"dev", x:"So — ten minutes?"}],
+          dm:["The right note, played into a room he had already left, while the client waited in the one you were both standing in.",
+              "Tomorrow: the correction and the cover can be two messages thirty seconds apart. They do not compete."] },
+
+        { label:"“Tom's covering for me — I sent that file. Fixed version in ten.”", rung:"belief",
+          took:"the generous version is the true one",
+          say:{w:"you", x:"Tom's covering for me — I sent that file. Fixed version in ten."},
+          then:[{w:"dev", x:"Fine. Ten."},{w:"pri", x:"you didn't send it.", dm:"Priya"}],
+          dm:["You picked the version of the morning that made the room calmest, including for you.",
+              "There are now two accounts of it and you are holding both.",
+              "Tomorrow: check whether the generous story is also the accurate one before you put your name on it."] }
+      ]
+    },
+
+    {
+      t:"09:58",
+      pre:[
+        {w:"dev", x:"While we're in here — add the Q4 regional splits to the corrected deck? Should be quick."},
+        {sys:"It is not in scope. It is also framed as though it obviously is."}
+      ],
+      saw:"“Should be quick.”",
+      hint:"You are currently the person who sent the wrong file",
+      opts:[
+        { label:"“Quick meaning two markets, or all nine?”", rung:"data",
+          took:"find out how big it is before answering",
+          say:{w:"you", x:"Quick meaning two markets, or all nine?"},
+          then:[{w:"dev", x:"Two would do it honestly. Nine was me being greedy."},
+                {sys:"The ask just lost seven markets."}],
+          dm:["You made it smaller by asking how big it was. Nothing else you could have said would have done that.",
+              "Tomorrow: try the same question on the next thing somebody calls quick."] },
+
+        { label:"“That's outside what we scoped — I'll price it and come back today.”", rung:"data",
+          took:"the line is the line",
+          say:{w:"you", x:"That's outside what we scoped — I'll price it and come back today."},
+          then:[{w:"dev", x:"Fair. Send it over."}],
+          dm:["You held a line without turning it into a referendum on the morning. Those two usually arrive glued together.",
+              "Tomorrow: say it once on a day when nothing has gone wrong. Same sentence, completely different weight."] },
+
+        { label:"“Sure, we'll get it in.”", rung:"belief",
+          took:"I owe him one after this morning",
+          say:{w:"you", x:"Sure, we'll get it in."},
+          then:[{w:"dev", x:"Great."},
+                {w:"pri", x:"we don't have Q4 splits. who's building those?", dm:"Priya"},
+                {sys:"You are. Tonight."}],
+          dm:["You agreed to something you would have priced on any other morning.",
+              "Tomorrow: watch for the moment you start paying for an earlier hour with a later one. It rarely announces itself."] },
+
+        { label:"Message Noor: “he's asking for regional splits. do I just do it?”", rung:"mean",
+          took:"I need someone to agree before I can say no",
+          say:{w:"you", x:"he's asking for regional splits. do I just do it?", dm:"Noor"},
+          then:[{w:"dev", x:"?"},
+                {sys:"The pause is audible."}],
+          dm:["You had the answer and went looking for a co-signer, and the pause went out over the channel anyway.",
+              "Tomorrow: ask the question you actually have. It is usually not the one about scope."] }
+      ]
+    }
+  ];
+
+  /* ---------- state ---------- */
+  var i = 0, picks = [], busy = false, resume = null;
+  var feed = document.getElementById("feed"),
+      deck = document.getElementById("deck"),
+      opts = document.getElementById("opts"),
+      hint = document.getElementById("hint"),
+      clock= document.getElementById("clock"),
+      dm   = document.getElementById("dm"),
+      dmc  = document.getElementById("dmc"),
+      intro= document.getElementById("intro"),
+      out  = document.getElementById("out");
+
+  var reduced = window.matchMedia &&
+                window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function wait(ms){ return new Promise(function(r){ setTimeout(r, reduced ? Math.min(ms,120) : ms); }); }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function bottom(){ feed.scrollTop = feed.scrollHeight; }
+
+  function push(html){
+    var d = document.createElement("div");
+    d.innerHTML = html;
+    while (d.firstChild) feed.appendChild(d.firstChild);
+    bottom();
+  }
+
+  function line(m, t){
+    if (m.sys)  return push('<div class="sys">' + esc(m.sys) + '</div>');
+    if (m.gone) return push('<div class="msg"><div class="av t">T</div><div class="body">' +
+                            '<div class="who">Tom Beake<span>' + t + '</span></div>' +
+                            '<div class="bub gone">' + esc(m.gone) + '</div></div></div>');
+    var c = CAST[m.w], you = m.w === "you";
+    var stamp = t + (m.dm ? " · direct · " + esc(m.dm) : "");
+    push('<div class="msg' + (you ? " you" : "") + '">' +
+           '<div class="av ' + c.a + '">' + c.n.charAt(0) + '</div>' +
+           '<div class="body">' +
+             '<div class="who">' + esc(c.n) + '<span>' + stamp + '</span></div>' +
+             '<div class="bub">' + esc(m.x) + '</div>' +
+           '</div></div>');
+  }
+
+  // The dwell before an incoming message is the whole illusion: roughly a
+  // typing speed, floored so that short lines still land with weight.
+  function dwell(m){
+    if (m.sys || m.gone) return 420;
+    return Math.min(1500, 480 + String(m.x).length * 13);
+  }
+
+  function say(list, t){
+    return list.reduce(function(chain, m){
+      return chain.then(function(){
+        var incoming = !m.sys && !m.gone && m.w !== "you";
+        if (!incoming) return wait(300).then(function(){ line(m, t); });
+        var c = CAST[m.w];
+        push('<div class="typing" id="tp"><div class="av ' + c.a + '">' + c.n.charAt(0) + '</div>' +
+             '<div class="t"><i></i><i></i><i></i></div></div>');
+        return wait(dwell(m)).then(function(){
+          var tp = document.getElementById("tp");
+          if (tp) tp.parentNode.removeChild(tp);
+          line(m, t);
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  function beat(){
+    if (i >= BEATS.length) return finish();
+    var b = BEATS[i];
+    busy = true;
+    deck.hidden = true;
+    clock.textContent = b.t;
+    dm.classList.remove("on");
+
+    say(b.pre, b.t).then(function(){
+      hint.textContent = b.hint;
+      opts.innerHTML = "";
+      b.opts.forEach(function(o, n){
+        var btn = document.createElement("button");
+        btn.className = "opt";
+        btn.type = "button";
+        btn.innerHTML = '<span class="tag">' + (n + 1) + '</span>' + esc(o.label);
+        btn.addEventListener("click", function(){ choose(o); });
+        opts.appendChild(btn);
+      });
+      deck.hidden = false;
+      busy = false;
+    });
+  }
+
+  function choose(o){
+    if (busy) return;
+    busy = true;
+    deck.hidden = true;
+
+    var b = BEATS[i];
+    picks.push({ t:b.t, saw:b.saw, took:o.took, rung:o.rung });
+
+    if (o.say) line(o.say, b.t);
+
+    wait(560)
+      .then(function(){ return say(o.then, b.t); })
+      // feedback lands while the scene is still warm, never as a report
+      .then(function(){ return wait(520); })
+      .then(function(){
+        dmc.innerHTML = o.dm.map(function(p, n){
+          var last = n === o.dm.length - 1;
+          return '<p' + (last ? ' style="color:var(--green-700);font-weight:600"' : '') + '>' + esc(p) + '</p>';
+        }).join("");
+        dm.classList.add("on");
+        feed.classList.add("noted");
+        setTimeout(bottom, 240); // after the padding transition, or it lands short
+        // the player sets the pace here — a timer would decide for them how
+        // long their own decision is worth thinking about
+        return new Promise(function(done){ resume = done; });
+      })
+      .then(function(){
+        resume = null;
+        dm.classList.remove("on");
+        feed.classList.remove("noted");
+        i++;
+        return wait(520);
+      })
+      .then(beat);
+  }
+
+  function finish(){
+    dm.classList.remove("on");
+
+    document.getElementById("ladder").innerHTML = picks.map(function(p){
+      return '<div class="rung">' +
+        '<div class="t">' + p.t + '</div>' +
+        '<div><p class="saw">On your screen: <b>' + esc(p.saw) + '</b></p>' +
+        '<p class="took"><i>' + RUNG[p.rung] + '</i>You took it as: ' + esc(p.took) + '</p></div>' +
+      '</div>';
+    }).join("");
+
+    var count = {};
+    picks.forEach(function(p){ count[p.rung] = (count[p.rung] || 0) + 1; });
+    var top = Object.keys(count).sort(function(a, b){ return count[b] - count[a]; })[0];
+
+    var verdict = {
+      data:  ["You spent most of the morning on the bottom rung — the one where the actual words are still in your hand.",
+              "It is slower in the moment, and it is the only place from which someone can talk you out of a mistake.",
+              "Tomorrow: notice which situation makes you climb. It will not be the loud one."],
+      mean:  ["You mostly acted on your reading of the room, and your reading was often good.",
+              "The part worth keeping hold of is that it was a reading. Right and checked are different states.",
+              "Tomorrow: name your reading out loud before you act on it, once, to one person."],
+      assum: ["You filled in the missing parts quickly and then treated the filling as the message.",
+              "Everyone does this. The difference is whether you can still find the seam afterwards.",
+              "Tomorrow: when certainty arrives early, look for the sentence nobody actually wrote."],
+      belief:["You worked from what you already believed about the morning rather than from what was in front of you.",
+              "It makes for a calmer room and a version of events you then have to maintain.",
+              "Tomorrow: separate the story that helps from the story that holds."],
+      none:  ["You let the room decide more than once, and the room was glad to.",
+              "Waiting is a real option. It only works when the other people know you have chosen it.",
+              "Tomorrow: say that you are waiting."]
+    }[top] || [];
+
+    document.getElementById("verdict").innerHTML = verdict.map(function(p, n){
+      var last = n === verdict.length - 1;
+      return '<p' + (last ? ' style="color:var(--green-700);font-weight:600"' : '') + '>' + esc(p) + '</p>';
+    }).join("");
+
+    out.classList.remove("off");
+  }
+
+  /* ---------- wiring ---------- */
+  document.getElementById("go").addEventListener("click", function(){
+    intro.classList.add("off");
+    beat();
+  });
+  document.getElementById("again").addEventListener("click", function(){
+    i = 0; picks = []; busy = false; resume = null;
+    feed.innerHTML = ""; feed.classList.remove("noted");
+    out.classList.add("off");
+    clock.textContent = "09:41";
+    beat();
+  });
+
+  // both the button and the close cross carry on — dismissing the note is
+  // itself a decision about how much of it you wanted
+  function carryOn(){ if (resume) resume(); }
+  document.getElementById("dmgo").addEventListener("click", carryOn);
+  document.getElementById("dmx").addEventListener("click", carryOn);
+
+  // number keys pick an option, matching how the other sims behave
+  document.addEventListener("keydown", function(e){
+    if (deck.hidden || busy) return;
+    var n = parseInt(e.key, 10);
+    if (n >= 1 && n <= 4){
+      var b = opts.children[n - 1];
+      if (b){ e.preventDefault(); b.click(); }
+    }
+  });
+})();
+</script>
+</body>
+</html>
