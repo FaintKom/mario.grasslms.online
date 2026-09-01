@@ -594,29 +594,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 
 
-/* 3 modes block */
-.flag-modes {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  margin: 0 0 24px;
-}
-.flag-mode {
-  background: var(--bg, #fafbf6);
-  padding: 18px 22px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.flag-mode--mid { background: var(--sun-50, #fffbe5); }
-.flag-mode--full { background: var(--green-50, #ecf9e7); }
-.fm-k {
-  font-family: var(--mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: .08em;
-  color: var(--green-700, #07683f); font-weight: 700;
-}
-.fm-v { font-family: var(--sans); font-size: 14px; line-height: 1.45; color: var(--ink); }
-
 /* Section-head with right-aligned CTA button (overrides default count slot) */
 .flag-head { align-items: end; }
 .flag-head .flag-head-cta {
@@ -3075,21 +3052,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     show(0);
   })();
   </script>
-
-  <div class="flag-modes">
-    <div class="flag-mode">
-      <span class="fm-k">Manual</span>
-      <span class="fm-v">Author every screen yourself. Pick the task types, write the brief, drop in your own assets.</span>
-    </div>
-    <div class="flag-mode flag-mode--mid">
-      <span class="fm-k">AI · partial</span>
-      <span class="fm-v">Hand AI a topic. One intro lesson comes back, editable line by line.</span>
-    </div>
-    <div class="flag-mode flag-mode--full">
-      <span class="fm-k">AI · full personalisation</span>
-      <span class="fm-v">Hand AI a skill gap for one student. A whole practice set comes back: intro, drills, project, quiz, pitched at that learner's level.</span>
-    </div>
-  </div>
 
 </section>
 
