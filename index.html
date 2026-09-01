@@ -2544,13 +2544,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   <style>
   .gx { margin: 0 0 34px; }
   .gx-h {
-    margin: 0; text-align: center;
+    margin: 0 0 26px; text-align: center;
     font-size: clamp(22px, 3.2vw, 32px); font-weight: 700; line-height: 1.18;
     letter-spacing: -.01em; color: var(--ink); text-wrap: balance;
-  }
-  .gx-sub {
-    margin: 10px auto 26px; max-width: 46ch; text-align: center;
-    font-size: 15px; color: var(--ink-dim);
   }
 
   .gx-stage { display: flex; align-items: center; gap: 14px; }
@@ -2598,7 +2594,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   /* The shadow-pop button: a hard offset, never a blur. */
   .gx-check {
     margin-left: auto; padding: 13px 34px; border-radius: 14px;
-    font-family: var(--mono); font-size: 12px; letter-spacing: .09em; text-transform: uppercase;
+    font-size: 14px; font-weight: 700; letter-spacing: .28px; text-transform: uppercase;
     background: var(--bg-3); color: var(--ink-dim);
     border: 1px solid var(--rule-strong); box-shadow: 0 4px 0 0 var(--rule-strong);
     cursor: pointer; transition: transform .1s, box-shadow .1s;
@@ -2624,13 +2620,27 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   /* ---- multiple choice ---- */
   .gx-opts { display: grid; gap: 10px; }
-  .gx-opt { display: flex; align-items: center; gap: 12px; padding: 15px 18px; text-align: left; }
-  .gx-opt__n {
-    flex: 0 0 auto; width: 22px; height: 22px; border-radius: 7px;
-    display: grid; place-items: center; margin-left: auto;
-    font-family: var(--mono); font-size: 11px; color: var(--ink-faint); background: var(--bg-3);
+  .gx-opt {
+    display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+    text-align: left; font-family: var(--mono);
   }
-  .gx-opt__mark { flex: 0 0 auto; font-size: 15px; }
+  .gx-opt__dot {
+    flex: 0 0 auto; width: 20px; height: 20px; border-radius: 999px;
+    display: grid; place-items: center;
+    background: var(--bg-2); border: 2px solid var(--rule-strong);
+    font-size: 11px; line-height: 1; color: transparent;
+  }
+  .gx-opt__label { flex: 1 1 0; }
+  .gx-opt__n { flex: 0 0 auto; font-family: var(--mono); font-size: 10px; color: var(--rule-strong); }
+  .gx-tile.is-picked .gx-opt__dot { border-color: var(--green-300); }
+  .gx-tile.is-right .gx-opt__dot { border-color: var(--green-500); background: var(--green-500); color: #fff; }
+  .gx-tile.is-wrong .gx-opt__dot { border-color: var(--coral-500); background: var(--coral-500); color: #fff; }
+  .gx-chip {
+    flex: 0 0 auto; border-radius: 999px; padding: 3px 8px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: #fff;
+  }
+  .gx-chip--ok { background: var(--accent); }
+  .gx-chip--no { background: var(--coral-500); }
 
   /* ---- matching ---- */
   .gx-match { position: relative; display: grid; grid-template-columns: 1fr 56px 1fr; gap: 10px; align-items: center; }
@@ -2686,8 +2696,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   </style>
 
   <div class="gx" id="gx">
-    <h3 class="gx-h">Here are four of the twenty-six exercise types you can set</h3>
-    <p class="gx-sub">They are the same components your students use, so try answering one.</p>
+    <h3 class="gx-h">Example exercises</h3>
 
     <div class="gx-stage">
       <button class="gx-arrow" type="button" id="gxPrev" aria-label="Previous exercise">
@@ -2767,11 +2776,15 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       OPTS.forEach(function (o, i) {
         var b = el("button", "gx-tile gx-opt");
         b.type = "button";
-        var mark = el("span", "gx-opt__mark", "");
-        b.append(mark, el("span", null, o.n), el("span", "gx-opt__n", String(i + 1)));
+        b.setAttribute("role", "radio");
+        b.setAttribute("aria-checked", "false");
+        b.append(el("span", "gx-opt__dot", ""), el("span", "gx-opt__label", o.n), el("span", "gx-opt__n", String(i + 1)));
         b.onclick = function () {
           picked = i;
-          tiles.forEach(function (t, j) { t.classList.toggle("is-picked", j === i); });
+          tiles.forEach(function (t, j) {
+            t.classList.toggle("is-picked", j === i);
+            t.setAttribute("aria-checked", String(j === i));
+          });
           f.btn.disabled = false;
         };
         wrap.appendChild(b);
@@ -2782,11 +2795,13 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       f.btn.onclick = function () {
         tiles.forEach(function (t) { t.disabled = true; t.classList.remove("is-picked"); });
         tiles[1].classList.add("is-right");
-        tiles[1].querySelector(".gx-opt__mark").textContent = "✓";
+        tiles[1].querySelector(".gx-opt__dot").textContent = "✓";
+        tiles[1].appendChild(el("span", "gx-chip gx-chip--ok", "Correct"));
         var ok = picked === 1;
         if (!ok) {
           tiles[picked].classList.add("is-wrong");
-          tiles[picked].querySelector(".gx-opt__mark").textContent = "✕";
+          tiles[picked].querySelector(".gx-opt__dot").textContent = "✕";
+          tiles[picked].appendChild(el("span", "gx-chip gx-chip--no", "Not this one"));
         }
         settle(f, ok, ok ? "Exactly right." : OPTS[picked].why + " 61 is the prime one.");
       };
