@@ -2680,32 +2680,20 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   }
   .gx-zone__drop { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; flex: 1; }
 
-  /* ---- code ---- */
-  .gx-code { display: grid; gap: 12px; }
-  .gx-code__bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .gx-lang {
-    padding: 7px 14px; border-radius: 999px; font-family: var(--mono); font-size: 11px;
-    background: var(--bg-2); border: 1px solid var(--rule); color: var(--ink-dim); cursor: pointer;
+  /* ---- fill in the blanks ---- */
+  .gx-cloze {
+    margin: 0; text-align: center; font-size: 18px; line-height: 2.2; color: var(--ink);
   }
-  .gx-lang.is-on { background: var(--ink); border-color: var(--ink); color: #fff; }
-  .gx-code__server {
-    margin-left: auto; display: inline-flex; align-items: center; gap: 7px;
-    font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
+  .gx-gap {
+    width: 4.5ch; margin: 0 4px; padding: 7px 4px; text-align: center;
+    font: inherit; font-size: 17px; font-weight: 700; color: var(--green-800);
+    background: var(--bg-2); border: 1px solid var(--rule); border-radius: 10px;
+    box-shadow: 0 2px 0 0 var(--rule);
   }
-  .gx-code__server::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 6px var(--ok); }
-  .gx-editor {
-    margin: 0; padding: 16px 18px; border-radius: 14px; overflow-x: auto;
-    background: var(--bg-2); border: 1px solid var(--rule);
-    font-family: var(--mono); font-size: 13px; line-height: 1.65; color: var(--ink);
-  }
-  .gx-editor .k { color: var(--green-700); font-weight: 600; }
-  .gx-editor .f { color: var(--sun-700); }
-  .gx-editor .c { color: var(--ink-faint); }
-  .gx-tests { display: grid; gap: 7px; }
-  .gx-test {
-    display: flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
-  }
-  .gx-test b { color: var(--ok); font-weight: 700; }
+  .gx-gap:focus { outline: none; border-color: var(--green-300); box-shadow: 0 2px 0 0 var(--green-300); }
+  .gx-gap.is-right { border-color: var(--green-500); box-shadow: 0 0 0 2px var(--green-100); }
+  .gx-gap.is-wrong { color: var(--warn); border-color: var(--coral-500); box-shadow: 0 0 0 2px var(--coral-50); }
+  .gx-gap:disabled { opacity: 1; }
 
   /* ---- rail ---- */
   .gx-rail { display: grid; justify-items: center; gap: 12px; margin-top: 20px; }
@@ -3015,53 +3003,44 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       };
     }
 
-    /* ---- 4 · code --------------------------------------------------------- */
-    function buildCode() {
-      var f = frame("Return every number below n that divides evenly by 3");
-      var SRC = {
-        Python: '<span class="k">def</span> <span class="f">by_three</span>(n):\n    <span class="k">return</span> [i <span class="k">for</span> i <span class="k">in</span> <span class="f">range</span>(1, n) <span class="k">if</span> i % 3 == 0]',
-        JavaScript: '<span class="k">function</span> <span class="f">byThree</span>(n) {\n  <span class="k">return</span> [...<span class="f">Array</span>(n).<span class="f">keys</span>()].<span class="f">filter</span>(i =&gt; i &amp;&amp; i % 3 === 0);\n}'
-      };
-      var wrap = el("div", "gx-code");
-      var bar = el("div", "gx-code__bar");
-      var pre = el("pre", "gx-editor");
-      var tests = el("div", "gx-tests");
+    /* ---- 4 · fill in the blanks ---------------------------------------- */
+    function buildCloze() {
+      var f = frame("Fill in the gaps");
+      var GAPS = [{ a: "0" }, { a: "100" }];
+      var parts = ["At sea level water freezes at ", " °C and boils at ", " °C."];
+      var line = el("p", "gx-cloze");
+      var inputs = [];
 
-      var CALL = { Python: "by_three", JavaScript: "byThree" };
-      function paintTests(lang) {
-        tests.innerHTML = "";
-        [["(10)", "[3, 6, 9]"], ["(3)", "[]"], ["(1)", "[]"]].forEach(function (t) {
-          var row = el("div", "gx-test");
-          row.append(el("b", null, "✓"), el("span", null, CALL[lang] + t[0] + "  →  " + t[1]));
-          tests.appendChild(row);
-        });
-      }
-      Object.keys(SRC).forEach(function (lang, i) {
-        var b = el("button", "gx-lang" + (i === 0 ? " is-on" : ""), lang);
-        b.type = "button";
-        b.onclick = function () {
-          [].forEach.call(bar.querySelectorAll(".gx-lang"), function (x) { x.classList.remove("is-on"); });
-          b.classList.add("is-on");
-          pre.innerHTML = SRC[lang];
-          paintTests(lang);
+      parts.forEach(function (chunk, i) {
+        line.appendChild(document.createTextNode(chunk));
+        if (i >= GAPS.length) return;
+        var input = el("input", "gx-gap");
+        input.type = "text";
+        input.inputMode = "numeric";
+        input.setAttribute("aria-label", "Gap " + (i + 1));
+        input.maxLength = 4;
+        input.oninput = function () {
+          f.btn.disabled = inputs.some(function (x) { return !x.value.trim(); });
         };
-        bar.appendChild(b);
+        input.onkeydown = function (e) { if (e.key === "Enter" && !f.btn.disabled) f.btn.click(); };
+        line.appendChild(input);
+        inputs.push(input);
       });
-      bar.appendChild(el("span", "gx-code__server", "Checked on our server"));
-      pre.innerHTML = SRC.Python;
+      f.body.appendChild(line);
 
-      paintTests("Python");
-
-      wrap.append(bar, pre, tests);
-      f.body.appendChild(wrap);
-
-      /* This one really is graded on the server, so the page does not pretend
-         to run it. The button goes where it can actually be run. */
-      f.verdict.textContent = "Grading runs on the server, so this one opens in the LMS itself.";
-      f.btn.textContent = "Open the live LMS";
-      f.btn.className = "gx-check gx-check--go";
-      f.btn.disabled = false;
-      f.btn.onclick = function () { window.open("https://grasslms.online", "_blank", "noopener"); };
+      f.btn.onclick = function () {
+        var right = 0;
+        inputs.forEach(function (input, i) {
+          var ok = input.value.trim() === GAPS[i].a;
+          if (ok) right++;
+          input.classList.add(ok ? "is-right" : "is-wrong");
+          input.disabled = true;
+        });
+        settle(f, right === GAPS.length,
+          right === GAPS.length
+            ? "Both right. The sentence says at sea level because higher up the boiling point drops."
+            : "Freezing is 0 °C and boiling is 100 °C, and both only at sea level.");
+      };
     }
 
     /* ---- carousel --------------------------------------------------------- */
@@ -3069,7 +3048,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       { name: "Multiple choice", build: buildMcq, path: '<circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.4 2.4 4.6-5"/>' },
       { name: "Matching", build: buildMatch, path: '<circle cx="6" cy="7" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M8.6 7H14a3 3 0 0 1 0 6h-4a3 3 0 0 0 0 6h5.4"/>' },
       { name: "Sorting", build: buildSort, path: '<rect x="3" y="4" width="7" height="7" rx="1.6"/><rect x="14" y="4" width="7" height="7" rx="1.6"/><rect x="8.5" y="14" width="7" height="7" rx="1.6"/>' },
-      { name: "Code", build: buildCode, path: '<path d="M8.5 8L4.5 12l4 4"/><path d="M15.5 8l4 4-4 4"/>' }
+      { name: "Fill in the blanks", build: buildCloze, path: '<path d="M4 18h16"/><path d="M6.5 14L14 6.5l3.5 3.5L10 17.5H6.5z"/>' }
     ];
     var at = 0;
     var now = document.getElementById("gxNow");
