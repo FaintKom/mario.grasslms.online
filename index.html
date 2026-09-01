@@ -448,19 +448,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   min-height: 520px;
   display: flex; flex-direction: column;
 }
-.flag-browser {
-  display: flex; align-items: center; gap: 6px;
-  padding: 10px 14px;
-  background: var(--bg-3);
-  border-bottom: 1px solid var(--rule);
-  font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
-}
-.flag-browser .dots { display: flex; gap: 4px; margin-right: 6px; }
-.flag-browser .dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--rule-strong); }
-.flag-browser .url { margin-left: 8px; color: var(--ink-dim); }
-.flag-browser .url b { color: var(--ink); font-weight: 500; }
-.flag-browser .status { margin-left: auto; color: var(--ok); font-weight: 500; display: inline-flex; gap: 6px; align-items: center; }
-.flag-browser .status::before { content:""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; }
 
 .flag-mock {
   flex: 1;
@@ -606,182 +593,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   padding: 0 4px; border-radius: 3px;
 }
 
-.flag-carousel {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 18px;
-  margin-bottom: 32px;
-}
-@media (max-width: 640px) {
-  .flag-carousel {
-    grid-template-columns: 1fr;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    grid-auto-flow: column;
-    grid-auto-columns: 85%;
-    padding-bottom: 12px;
-  }
-  .flag-carousel .flag-frame { scroll-snap-align: start; }
-}
-.flag-frame {
-  margin: 0;
-  background: var(--bg-2, #fff);
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  overflow: hidden;
-  display: flex; flex-direction: column;
-}
-.flag-frame figcaption {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-faint);
-  text-transform: uppercase; letter-spacing: .08em;
-  padding: 10px 14px;
-  border-top: 1px solid var(--rule);
-  background: var(--bg, #fafbf6);
-}
-.flag-screen {
-  flex: 1;
-  display: flex;
-  min-height: 220px;
-  font-family: var(--mono); font-size: 11px;
-  color: var(--ink);
-}
-
-/* Code screen */
-.flag-screen--code { display: grid; grid-template-columns: 110px 1fr; gap: 0; }
-.flag-screen--code .fs-side {
-  background: var(--ink-50, #f4f5f1);
-  padding: 10px 8px;
-  display: grid; gap: 4px; align-content: start;
-  border-right: 1px solid var(--rule);
-}
-.fs-side-row {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-dim);
-  padding: 4px 6px; border-radius: 3px;
-  display: flex; gap: 6px;
-}
-.fs-side-row span { color: var(--ink-faint); }
-.fs-side-row.active {
-  background: var(--accent); color: #fff;
-}
-.fs-side-row.active span { color: rgba(255,255,255,.7); }
-.flag-screen--code .fs-main { padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
-.fs-task {
-  font-family: var(--sans); font-size: 12px; color: var(--ink);
-  font-weight: 500;
-}
-.fs-editor {
-  background: var(--ink-50, #f4f5f1);
-  border-left: 2px solid var(--accent);
-  padding: 8px 10px;
-  margin: 0; font-size: 11px;
-  white-space: pre;
-  color: var(--ink);
-  border-radius: 0 3px 3px 0;
-  overflow: hidden;
-}
-.fs-editor .kw { color: #c33d22; font-weight: 600; }
-.fs-editor .fn { color: var(--green-700, #07683f); }
-.fs-run {
-  font-family: var(--mono); font-size: 10px;
-  display: flex; gap: 8px; padding: 6px 10px;
-  background: var(--green-50, #ecf9e7);
-  border-radius: 3px;
-}
-.fs-run-k { color: var(--ink-faint); text-transform: uppercase; letter-spacing: .08em; }
-.fs-run-v { color: var(--green-700, #07683f); font-weight: 600; }
-
-/* Robot puzzle screen */
-.flag-screen--robot {
-  padding: 14px;
-  flex-direction: column; gap: 12px;
-  align-items: center; justify-content: center;
-  background: linear-gradient(135deg, var(--bg, #fafbf6), var(--green-50, #ecf9e7));
-}
-.fs-robot-grid {
-  display: grid; grid-template-columns: repeat(3, 38px);
-  gap: 3px;
-}
-.fs-cell {
-  width: 38px; height: 38px;
-  background: var(--bg-2, #fff);
-  border: 1px solid var(--rule);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; border-radius: 3px;
-}
-.fs-cell--start { background: var(--green-50, #ecf9e7); color: var(--green-700, #07683f); font-weight: 700; }
-.fs-cell--wall { background: var(--ink-100, #e6e8e4); }
-.fs-cell--coin { color: var(--sun-500, #f5b800); }
-.fs-cell--goal { background: var(--sun-300, #ffe066); color: var(--ink); }
-.fs-cell--robot { background: var(--accent); color: #fff; }
-.fs-blocks { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
-.fs-block {
-  font-family: var(--mono); font-size: 10px;
-  background: var(--accent); color: #fff;
-  padding: 4px 8px; border-radius: 14px;
-  font-weight: 500;
-}
-
-/* AI plan screen */
-.flag-screen--ai { padding: 14px; flex-direction: column; gap: 10px; }
-.fs-ai-head {
-  display: flex; justify-content: space-between; align-items: center;
-  gap: 10px; flex-wrap: wrap;
-  padding-bottom: 8px; border-bottom: 1px solid var(--rule);
-}
-.fs-ai-tag {
-  background: var(--accent); color: #fff;
-  padding: 3px 8px; border-radius: 2px;
-  font-family: var(--mono); font-size: 9px; letter-spacing: .08em;
-  text-transform: uppercase; font-weight: 700;
-}
-.fs-ai-stu { font-family: var(--mono); font-size: 10px; color: var(--ink-dim); }
-.fs-ai-plan { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
-.fs-ai-plan li {
-  display: flex; align-items: center; gap: 8px;
-  font-family: var(--sans); font-size: 11px;
-  padding: 5px 8px; background: var(--ink-50, #f4f5f1);
-  border-radius: 3px;
-}
-.fs-ai-n {
-  background: var(--ink); color: #fff;
-  width: 18px; height: 18px;
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 50%; font-family: var(--mono); font-size: 10px;
-  font-weight: 700; flex-shrink: 0;
-}
-.fs-ai-ok { color: var(--green-700, #07683f); font-size: 10px; margin-left: auto; }
-.fs-ai-ai { color: var(--accent); font-size: 10px; margin-left: auto; font-style: italic; }
-.fs-ai-cta { display: flex; gap: 6px; margin-top: 6px; }
-.fs-ai-btn {
-  font-family: var(--mono); font-size: 10px;
-  padding: 5px 10px; border-radius: 3px;
-  background: var(--bg-2, #fff); border: 1px solid var(--rule);
-  color: var(--ink-dim);
-}
-.fs-ai-btn--p { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
-
-/* Task library screen */
-.flag-screen--lib { padding: 14px; flex-direction: column; gap: 10px; }
-.fs-lib-head {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-faint); text-transform: uppercase;
-  letter-spacing: .08em;
-  padding-bottom: 8px; border-bottom: 1px solid var(--rule);
-}
-.fs-lib-grid {
-  display: flex; flex-wrap: wrap; gap: 5px;
-}
-.fs-lib-chip {
-  font-family: var(--mono); font-size: 10px;
-  padding: 5px 9px; border-radius: 14px;
-  background: var(--bg-2, #fff);
-  border: 1px solid var(--rule);
-  color: var(--ink);
-}
-.fs-lib-chip:nth-child(3n) { background: var(--green-50, #ecf9e7); border-color: var(--accent); color: var(--green-700, #07683f); }
-.fs-lib-chip:nth-child(5n) { background: var(--sun-50, #fffbe5); }
 
 /* 3 modes block */
 .flag-modes {
@@ -2749,107 +2560,544 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   </div>
 
   <!-- Screen carousel -->
-  <div class="flag-carousel" aria-label="GrassLMS screen examples">
+  <!-- Exercise carousel, ported from grasslms.online. These are the components
+       a teacher actually sets, so they run here instead of being screenshots of
+       themselves. The answer keys sit in the page on purpose: the demo has to
+       work without an account, which is what the note underneath says. -->
+  <style>
+  .gx { margin: 0 0 34px; }
+  .gx-h {
+    margin: 0; text-align: center;
+    font-size: clamp(22px, 3.2vw, 32px); font-weight: 700; line-height: 1.18;
+    letter-spacing: -.01em; color: var(--ink); text-wrap: balance;
+  }
+  .gx-sub {
+    margin: 10px auto 26px; max-width: 46ch; text-align: center;
+    font-size: 15px; color: var(--ink-dim);
+  }
 
-    <figure class="flag-frame">
-      <div class="flag-browser">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <span class="url">grasslms.online / lesson / python-loops</span>
-      </div>
-      <div class="flag-screen flag-screen--code">
-        <div class="fs-side">
-          <div class="fs-side-row"><span>1.</span>Loops · for &amp; while</div>
-          <div class="fs-side-row active"><span>2.</span>Practice · 8 tasks</div>
-          <div class="fs-side-row"><span>3.</span>Project · word counter</div>
-          <div class="fs-side-row"><span>4.</span>Quiz</div>
-        </div>
-        <div class="fs-main">
-          <div class="fs-task">Print numbers 1 → 10 that are divisible by 3.</div>
-          <pre class="fs-editor"><span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(1, 11):
-    <span class="kw">if</span> n % 3 == 0:
-        <span class="fn">print</span>(n)</pre>
-          <div class="fs-run">
-            <span class="fs-run-k">Output</span>
-            <span class="fs-run-v">3  6  9 ✓</span>
-          </div>
-        </div>
-      </div>
-    </figure>
+  .gx-stage { display: flex; align-items: center; gap: 14px; }
+  .gx-arrow {
+    flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--bg-2); border: 1px solid var(--rule); color: var(--ink-dim);
+    cursor: pointer; transition: border-color .15s, color .15s, transform .15s;
+  }
+  .gx-arrow svg { width: 20px; height: 20px; }
+  .gx-arrow:hover { border-color: var(--rule-strong); color: var(--ink); }
+  .gx-arrow:active { transform: translateY(1px); }
+  .gx-arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    <figure class="flag-frame">
-      <div class="flag-browser">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <span class="url">grasslms.online / lesson / robot-grid</span>
-      </div>
-      <div class="flag-screen flag-screen--robot">
-        <div class="fs-robot-grid">
-          <div class="fs-cell fs-cell--start">▶</div>
-          <div class="fs-cell"></div>
-          <div class="fs-cell fs-cell--wall"></div>
-          <div class="fs-cell fs-cell--coin">●</div>
-          <div class="fs-cell"></div>
-          <div class="fs-cell fs-cell--robot">🤖</div>
-          <div class="fs-cell"></div>
-          <div class="fs-cell fs-cell--wall"></div>
-          <div class="fs-cell fs-cell--goal">★</div>
-        </div>
-        <div class="fs-blocks">
-          <span class="fs-block">move →</span>
-          <span class="fs-block">turn ↻</span>
-          <span class="fs-block">repeat 3</span>
-          <span class="fs-block">if coin</span>
-        </div>
-      </div>
-    </figure>
+  .gx-card {
+    flex: 1 1 auto; min-width: 0; min-height: 470px;
+    display: flex; flex-direction: column; gap: 16px;
+    background: rgba(255, 255, 255, .55);
+    border: 2px solid var(--rule); border-radius: 24px; padding: 24px;
+  }
+  @media (max-width: 640px) {
+    .gx-stage { gap: 8px; }
+    .gx-arrow { width: 38px; height: 38px; }
+    .gx-card { padding: 16px; min-height: 440px; }
+  }
 
-    <figure class="flag-frame">
-      <div class="flag-browser">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <span class="url">grasslms.online / studio / ai-plan</span>
-      </div>
-      <div class="flag-screen flag-screen--ai">
-        <div class="fs-ai-head">
-          <span class="fs-ai-tag">AI · personalised plan</span>
-          <span class="fs-ai-stu">Student: A. Carter · gap: loops</span>
-        </div>
-        <ul class="fs-ai-plan">
-          <li><span class="fs-ai-n">1</span>Intro · what a loop is <span class="fs-ai-ok">teacher-reviewed ✓</span></li>
-          <li><span class="fs-ai-n">2</span>Practice · 6 graded tasks <span class="fs-ai-ai">AI-drafted</span></li>
-          <li><span class="fs-ai-n">3</span>Project · word counter <span class="fs-ai-ai">AI-drafted</span></li>
-          <li><span class="fs-ai-n">4</span>Quiz · 8 questions <span class="fs-ai-ai">AI-drafted</span></li>
-        </ul>
-        <div class="fs-ai-cta">
-          <span class="fs-ai-btn">Edit any step</span>
-          <span class="fs-ai-btn fs-ai-btn--p">Assign to A. Carter</span>
-        </div>
-      </div>
-    </figure>
+  .gx-eyebrow {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  .gx-prompt { margin: 4px 0 0; font-size: 19px; font-weight: 700; color: var(--ink); }
+  .gx-body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  .gx-hint {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--ink-faint); text-align: center;
+  }
+  .gx-foot {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    border-top: 1px solid var(--rule); padding-top: 16px;
+  }
+  .gx-verdict { flex: 1 1 180px; font-size: 14px; color: var(--ink-dim); }
+  .gx-verdict.is-right { color: var(--green-800); font-weight: 600; }
+  .gx-verdict.is-wrong { color: var(--warn); }
 
-    <figure class="flag-frame">
-      <div class="flag-browser">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <span class="url">grasslms.online / studio / task-library</span>
-      </div>
-      <div class="flag-screen flag-screen--lib">
-        <div class="fs-lib-head">Task types · drop into any lesson</div>
-        <div class="fs-lib-grid">
-          <span class="fs-lib-chip">Code · 37 langs</span>
-          <span class="fs-lib-chip">Math · Desmos</span>
-          <span class="fs-lib-chip">2D robot</span>
-          <span class="fs-lib-chip">3D world</span>
-          <span class="fs-lib-chip">Quiz · MCQ</span>
-          <span class="fs-lib-chip">Fill-in</span>
-          <span class="fs-lib-chip">Matching</span>
-          <span class="fs-lib-chip">Drag-order</span>
-          <span class="fs-lib-chip">Free-text</span>
-          <span class="fs-lib-chip">File upload</span>
-          <span class="fs-lib-chip">Peer review</span>
-          <span class="fs-lib-chip">Project</span>
-        </div>
-      </div>
-    </figure>
+  /* The shadow-pop button: a hard offset, never a blur. */
+  .gx-check {
+    margin-left: auto; padding: 13px 34px; border-radius: 14px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: .09em; text-transform: uppercase;
+    background: var(--bg-3); color: var(--ink-dim);
+    border: 1px solid var(--rule-strong); box-shadow: 0 4px 0 0 var(--rule-strong);
+    cursor: pointer; transition: transform .1s, box-shadow .1s;
+  }
+  .gx-check:hover:not(:disabled) { transform: translateY(1px); box-shadow: 0 3px 0 0 var(--rule-strong); }
+  .gx-check:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--rule-strong); }
+  .gx-check:disabled { opacity: .5; cursor: default; }
+  .gx-check--go { background: var(--accent); color: var(--accent-ink); border-color: var(--green-700); box-shadow: 0 4px 0 0 var(--green-700); }
+  .gx-check--go:hover { box-shadow: 0 3px 0 0 var(--green-700); }
 
+  /* ---- shared tile ---- */
+  .gx-tile {
+    background: var(--bg-2); border: 1px solid var(--rule); border-radius: 14px;
+    box-shadow: 0 2px 0 0 var(--rule); color: var(--ink);
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    transition: border-color .15s, color .15s, box-shadow .15s, transform .15s;
+  }
+  .gx-tile:hover:not(:disabled) { border-color: var(--rule-strong); }
+  .gx-tile.is-picked { color: var(--green-800); border-color: var(--green-300); box-shadow: 0 2px 0 0 var(--green-300); }
+  .gx-tile.is-right { color: var(--green-800); border-color: var(--green-500); box-shadow: 0 0 0 2px var(--green-100); }
+  .gx-tile.is-wrong { color: var(--warn); border-color: var(--coral-500); box-shadow: 0 0 0 2px var(--coral-50); }
+  .gx-tile:disabled { cursor: default; }
+
+  /* ---- multiple choice ---- */
+  .gx-opts { display: grid; gap: 10px; }
+  .gx-opt { display: flex; align-items: center; gap: 12px; padding: 15px 18px; text-align: left; }
+  .gx-opt__n {
+    flex: 0 0 auto; width: 22px; height: 22px; border-radius: 7px;
+    display: grid; place-items: center; margin-left: auto;
+    font-family: var(--mono); font-size: 11px; color: var(--ink-faint); background: var(--bg-3);
+  }
+  .gx-opt__mark { flex: 0 0 auto; font-size: 15px; }
+
+  /* ---- matching ---- */
+  .gx-match { position: relative; display: grid; grid-template-columns: 1fr 56px 1fr; gap: 10px; align-items: center; }
+  .gx-match__col { display: grid; gap: 10px; }
+  .gx-match svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .gx-match .gx-tile { padding: 14px 16px; text-align: center; }
+  @media (max-width: 520px) { .gx-match { grid-template-columns: 1fr 28px 1fr; } }
+
+  /* ---- sorting ---- */
+  .gx-bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; min-height: 46px; }
+  .gx-bank .gx-tile, .gx-zone .gx-tile { padding: 11px 20px; border-radius: 999px; }
+  .gx-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .gx-zone {
+    border: 2px dashed var(--rule-strong); border-radius: 16px; padding: 12px;
+    min-height: 132px; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .15s, background .15s;
+  }
+  .gx-zone.is-over { border-color: var(--green-500); background: var(--green-25); }
+  .gx-zone__head { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--ink); }
+  .gx-zone__dot { width: 9px; height: 9px; border-radius: 50%; }
+  .gx-zone__n {
+    margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+    background: var(--bg-3); border-radius: 7px; padding: 2px 7px;
+  }
+  .gx-zone__drop { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; flex: 1; }
+
+  /* ---- code ---- */
+  .gx-code { display: grid; gap: 12px; }
+  .gx-code__bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .gx-lang {
+    padding: 7px 14px; border-radius: 999px; font-family: var(--mono); font-size: 11px;
+    background: var(--bg-2); border: 1px solid var(--rule); color: var(--ink-dim); cursor: pointer;
+  }
+  .gx-lang.is-on { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .gx-code__server {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
+  }
+  .gx-code__server::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+  .gx-editor {
+    margin: 0; padding: 16px 18px; border-radius: 14px; overflow-x: auto;
+    background: var(--bg-2); border: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 13px; line-height: 1.65; color: var(--ink);
+  }
+  .gx-editor .k { color: var(--green-700); font-weight: 600; }
+  .gx-editor .f { color: var(--sun-700); }
+  .gx-editor .c { color: var(--ink-faint); }
+  .gx-tests { display: grid; gap: 7px; }
+  .gx-test {
+    display: flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+  }
+  .gx-test b { color: var(--ok); font-weight: 700; }
+
+  /* ---- rail ---- */
+  .gx-rail { display: grid; justify-items: center; gap: 12px; margin-top: 20px; }
+  .gx-now { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ink); }
+  .gx-now svg { width: 17px; height: 17px; color: var(--accent); }
+  .gx-dots { display: flex; gap: 7px; }
+  .gx-dot {
+    width: 7px; height: 7px; border-radius: 99px; padding: 0;
+    background: var(--rule-strong); border: 0; cursor: pointer; transition: width .2s, background .2s;
+  }
+  .gx-dot.is-on { width: 22px; background: var(--accent); }
+  .gx-dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .gx-note { margin: 18px auto 0; max-width: 62ch; text-align: center; font-size: 12px; color: var(--ink-faint); }
+  </style>
+
+  <div class="gx" id="gx">
+    <h3 class="gx-h">Here are four of the twenty-six exercise types you can set</h3>
+    <p class="gx-sub">They are the same components your students use, so try answering one.</p>
+
+    <div class="gx-stage">
+      <button class="gx-arrow" type="button" id="gxPrev" aria-label="Previous exercise">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="gx-card" id="gxCard"></div>
+      <button class="gx-arrow" type="button" id="gxNext" aria-label="Next exercise">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="gx-rail">
+      <div class="gx-now" id="gxNow"></div>
+      <div class="gx-dots" id="gxDots"></div>
+    </div>
+
+    <p class="gx-note">In a real course the answer key stays on the server. Here it ships with the page so the demo works without an account.</p>
   </div>
+
+  <script>
+  (function () {
+    var card = document.getElementById("gxCard");
+    if (!card) return;
+
+    function el(tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    }
+    function icon(d) {
+      var s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      s.setAttribute("viewBox", "0 0 24 24");
+      s.setAttribute("fill", "none");
+      s.setAttribute("stroke", "currentColor");
+      s.setAttribute("stroke-width", "1.9");
+      s.setAttribute("stroke-linecap", "round");
+      s.setAttribute("stroke-linejoin", "round");
+      s.innerHTML = d;
+      return s;
+    }
+
+    /* Every exercise gets the same frame: label, prompt, work area, verdict
+       line and one button. Only the middle changes. */
+    function frame(prompt) {
+      var head = el("div");
+      head.append(el("div", "gx-eyebrow", "Sample exercise"), el("h4", "gx-prompt", prompt));
+      var body = el("div", "gx-body");
+      var foot = el("div", "gx-foot");
+      var verdict = el("p", "gx-verdict");
+      var btn = el("button", "gx-check", "Check");
+      btn.type = "button";
+      btn.disabled = true;
+      foot.append(verdict, btn);
+      card.append(head, body, foot);
+      return { body: body, verdict: verdict, btn: btn };
+    }
+    function settle(f, ok, text) {
+      f.verdict.className = "gx-verdict " + (ok ? "is-right" : "is-wrong");
+      f.verdict.textContent = text;
+      f.btn.textContent = "Try again";
+      f.btn.disabled = false;
+      f.btn.onclick = function () { show(at); };
+    }
+
+    /* ---- 1 · multiple choice -------------------------------------------- */
+    function buildMcq() {
+      var f = frame("Which of these numbers is prime?");
+      var OPTS = [
+        { n: "51", why: "51 is 3 × 17." },
+        { n: "61", why: null },
+        { n: "57", why: "57 is 3 × 19." },
+        { n: "63", why: "63 is 7 × 9." }
+      ];
+      var picked = -1, tiles = [];
+      var wrap = el("div", "gx-opts");
+
+      OPTS.forEach(function (o, i) {
+        var b = el("button", "gx-tile gx-opt");
+        b.type = "button";
+        var mark = el("span", "gx-opt__mark", "");
+        b.append(mark, el("span", null, o.n), el("span", "gx-opt__n", String(i + 1)));
+        b.onclick = function () {
+          picked = i;
+          tiles.forEach(function (t, j) { t.classList.toggle("is-picked", j === i); });
+          f.btn.disabled = false;
+        };
+        wrap.appendChild(b);
+        tiles.push(b);
+      });
+      f.body.appendChild(wrap);
+
+      f.btn.onclick = function () {
+        tiles.forEach(function (t) { t.disabled = true; t.classList.remove("is-picked"); });
+        tiles[1].classList.add("is-right");
+        tiles[1].querySelector(".gx-opt__mark").textContent = "✓";
+        var ok = picked === 1;
+        if (!ok) {
+          tiles[picked].classList.add("is-wrong");
+          tiles[picked].querySelector(".gx-opt__mark").textContent = "✕";
+        }
+        settle(f, ok, ok ? "Exactly right." : OPTS[picked].why + " 61 is the prime one.");
+      };
+    }
+
+    /* ---- 2 · matching ---------------------------------------------------- */
+    function buildMatch() {
+      var f = frame("Match each country with its capital");
+      var LEFT = ["Peru", "Japan", "France"];
+      var RIGHT = ["Lima", "Paris", "Tokyo"];
+      var KEY = { Peru: "Lima", Japan: "Tokyo", France: "Paris" };
+
+      var wrap = el("div", "gx-match");
+      var lcol = el("div", "gx-match__col");
+      var mid = el("div");
+      var rcol = el("div", "gx-match__col");
+      var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      wrap.append(lcol, mid, rcol, svg);
+      f.body.appendChild(wrap);
+      f.body.appendChild(el("p", "gx-hint", "Connect everything and press check · tap a linked tile to unhook the thread"));
+
+      var links = {}, hue = {}, armed = null, lt = {}, rt = {};
+
+      function centre(node, side) {
+        var a = node.getBoundingClientRect(), b = wrap.getBoundingClientRect();
+        return [side === "l" ? a.right - b.left : a.left - b.left, a.top - b.top + a.height / 2];
+      }
+      function draw() {
+        svg.innerHTML = "";
+        Object.keys(links).forEach(function (k) {
+          var p1 = centre(lt[k], "l"), p2 = centre(rt[links[k]], "r");
+          var mx = (p1[0] + p2[0]) / 2;
+          var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("d", "M" + p1[0] + " " + p1[1] + " C" + mx + " " + p1[1] + " " + mx + " " + p2[1] + " " + p2[0] + " " + p2[1]);
+          path.setAttribute("fill", "none");
+          path.setAttribute("stroke-width", "2.5");
+          path.setAttribute("stroke-linecap", "round");
+          path.setAttribute("stroke", hue[k] || "var(--green-300)");
+          svg.appendChild(path);
+        });
+        f.btn.disabled = Object.keys(links).length < LEFT.length;
+      }
+      function unhook(country) {
+        delete links[country];
+        delete hue[country];
+        lt[country].classList.remove("is-picked");
+        Object.keys(rt).forEach(function (c) {
+          rt[c].classList.toggle("is-picked", Object.keys(links).some(function (k) { return links[k] === c; }));
+        });
+        draw();
+      }
+
+      LEFT.forEach(function (c) {
+        var b = el("button", "gx-tile", c);
+        b.type = "button";
+        b.onclick = function () {
+          if (links[c]) { unhook(c); return; }
+          armed = armed === c ? null : c;
+          LEFT.forEach(function (x) { lt[x].classList.toggle("is-picked", x === armed || !!links[x]); });
+        };
+        lt[c] = b;
+        lcol.appendChild(b);
+      });
+
+      RIGHT.forEach(function (c) {
+        var b = el("button", "gx-tile", c);
+        b.type = "button";
+        b.onclick = function () {
+          var owner = Object.keys(links).filter(function (k) { return links[k] === c; })[0];
+          if (owner) { unhook(owner); return; }
+          if (!armed) return;
+          links[armed] = c;
+          lt[armed].classList.add("is-picked");
+          b.classList.add("is-picked");
+          armed = null;
+          draw();
+        };
+        rt[c] = b;
+        rcol.appendChild(b);
+      });
+
+      requestAnimationFrame(draw);
+      setTimeout(draw, 60);
+      window.addEventListener("resize", draw);
+
+      f.btn.onclick = function () {
+        var right = 0;
+        LEFT.forEach(function (c) {
+          var ok = links[c] === KEY[c];
+          if (ok) right++;
+          hue[c] = ok ? "var(--green-500)" : "var(--coral-500)";
+          lt[c].classList.remove("is-picked");
+          rt[links[c]].classList.remove("is-picked");
+          lt[c].classList.add(ok ? "is-right" : "is-wrong");
+          rt[links[c]].classList.add(ok ? "is-right" : "is-wrong");
+          lt[c].disabled = rt[links[c]].disabled = true;
+        });
+        draw();
+        settle(f, right === LEFT.length,
+          right === LEFT.length ? "All three, first go."
+            : right + " of 3. Peru goes with Lima, Japan with Tokyo, France with Paris.");
+      };
+    }
+
+    /* ---- 3 · sorting ------------------------------------------------------ */
+    function buildSort() {
+      var f = frame("Sort the animals into groups");
+      var CARDS = [
+        { name: "Dolphin", group: "Mammals" },
+        { name: "Bat", group: "Mammals" },
+        { name: "Penguin", group: "Birds" },
+        { name: "Owl", group: "Birds" }
+      ];
+      var GROUPS = [
+        { name: "Mammals", dot: "var(--accent)" },
+        { name: "Birds", dot: "var(--sun-500)" }
+      ];
+      var placed = {}, armed = null, tiles = {}, drops = {}, counts = {};
+
+      var bank = el("div", "gx-bank");
+      var zones = el("div", "gx-zones");
+      f.body.append(bank, zones);
+      f.body.appendChild(el("p", "gx-hint", "Drag a card — or tap it, then tap its group"));
+
+      function tally() {
+        GROUPS.forEach(function (g) {
+          counts[g.name].textContent = String(CARDS.filter(function (c) { return placed[c.name] === g.name; }).length);
+        });
+        f.btn.disabled = Object.keys(placed).length < CARDS.length;
+      }
+      function put(name, group) {
+        placed[name] = group;
+        armed = null;
+        (group ? drops[group] : bank).appendChild(tiles[name]);
+        Object.keys(tiles).forEach(function (n) { tiles[n].classList.remove("is-picked"); });
+        tally();
+      }
+
+      CARDS.forEach(function (c) {
+        var b = el("button", "gx-tile", c.name);
+        b.type = "button";
+        b.draggable = true;
+        b.addEventListener("dragstart", function (e) {
+          e.dataTransfer.setData("text/plain", c.name);
+          e.dataTransfer.effectAllowed = "move";
+        });
+        b.onclick = function () {
+          if (placed[c.name]) { delete placed[c.name]; put(c.name, null); return; }
+          armed = armed === c.name ? null : c.name;
+          Object.keys(tiles).forEach(function (n) { tiles[n].classList.toggle("is-picked", n === armed); });
+        };
+        tiles[c.name] = b;
+        bank.appendChild(b);
+      });
+
+      GROUPS.forEach(function (g) {
+        var z = el("div", "gx-zone");
+        var head = el("div", "gx-zone__head");
+        var dot = el("span", "gx-zone__dot");
+        dot.style.background = g.dot;
+        var n = el("span", "gx-zone__n", "0");
+        head.append(dot, el("span", null, g.name), n);
+        var drop = el("div", "gx-zone__drop");
+        z.append(head, drop);
+        z.addEventListener("dragover", function (e) { e.preventDefault(); z.classList.add("is-over"); });
+        z.addEventListener("dragleave", function () { z.classList.remove("is-over"); });
+        z.addEventListener("drop", function (e) {
+          e.preventDefault();
+          z.classList.remove("is-over");
+          put(e.dataTransfer.getData("text/plain"), g.name);
+        });
+        z.addEventListener("click", function () { if (armed) put(armed, g.name); });
+        counts[g.name] = n;
+        drops[g.name] = drop;
+        zones.appendChild(z);
+      });
+      tally();
+
+      f.btn.onclick = function () {
+        var right = 0;
+        CARDS.forEach(function (c) {
+          var ok = placed[c.name] === c.group;
+          if (ok) right++;
+          tiles[c.name].classList.add(ok ? "is-right" : "is-wrong");
+          tiles[c.name].disabled = true;
+          tiles[c.name].draggable = false;
+        });
+        settle(f, right === CARDS.length,
+          right === CARDS.length ? "All four home. A bat flies and is still a mammal."
+            : right + " of 4. A bat flies but feeds milk, and a penguin swims but has feathers.");
+      };
+    }
+
+    /* ---- 4 · code --------------------------------------------------------- */
+    function buildCode() {
+      var f = frame("Return every number below n that divides evenly by 3");
+      var SRC = {
+        Python: '<span class="k">def</span> <span class="f">by_three</span>(n):\n    <span class="k">return</span> [i <span class="k">for</span> i <span class="k">in</span> <span class="f">range</span>(1, n) <span class="k">if</span> i % 3 == 0]',
+        JavaScript: '<span class="k">function</span> <span class="f">byThree</span>(n) {\n  <span class="k">return</span> [...<span class="f">Array</span>(n).<span class="f">keys</span>()].<span class="f">filter</span>(i =&gt; i &amp;&amp; i % 3 === 0);\n}'
+      };
+      var wrap = el("div", "gx-code");
+      var bar = el("div", "gx-code__bar");
+      var pre = el("pre", "gx-editor");
+      var tests = el("div", "gx-tests");
+
+      var CALL = { Python: "by_three", JavaScript: "byThree" };
+      function paintTests(lang) {
+        tests.innerHTML = "";
+        [["(10)", "[3, 6, 9]"], ["(3)", "[]"], ["(1)", "[]"]].forEach(function (t) {
+          var row = el("div", "gx-test");
+          row.append(el("b", null, "✓"), el("span", null, CALL[lang] + t[0] + "  →  " + t[1]));
+          tests.appendChild(row);
+        });
+      }
+      Object.keys(SRC).forEach(function (lang, i) {
+        var b = el("button", "gx-lang" + (i === 0 ? " is-on" : ""), lang);
+        b.type = "button";
+        b.onclick = function () {
+          [].forEach.call(bar.querySelectorAll(".gx-lang"), function (x) { x.classList.remove("is-on"); });
+          b.classList.add("is-on");
+          pre.innerHTML = SRC[lang];
+          paintTests(lang);
+        };
+        bar.appendChild(b);
+      });
+      bar.appendChild(el("span", "gx-code__server", "Checked on our server"));
+      pre.innerHTML = SRC.Python;
+
+      paintTests("Python");
+
+      wrap.append(bar, pre, tests);
+      f.body.appendChild(wrap);
+
+      /* This one really is graded on the server, so the page does not pretend
+         to run it. The button goes where it can actually be run. */
+      f.verdict.textContent = "Grading runs on the server, so this one opens in the LMS itself.";
+      f.btn.textContent = "Open the live LMS";
+      f.btn.className = "gx-check gx-check--go";
+      f.btn.disabled = false;
+      f.btn.onclick = function () { window.open("https://grasslms.online", "_blank", "noopener"); };
+    }
+
+    /* ---- carousel --------------------------------------------------------- */
+    var TYPES = [
+      { name: "Multiple choice", build: buildMcq, path: '<circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.4 2.4 4.6-5"/>' },
+      { name: "Matching", build: buildMatch, path: '<circle cx="6" cy="7" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M8.6 7H14a3 3 0 0 1 0 6h-4a3 3 0 0 0 0 6h5.4"/>' },
+      { name: "Sorting", build: buildSort, path: '<rect x="3" y="4" width="7" height="7" rx="1.6"/><rect x="14" y="4" width="7" height="7" rx="1.6"/><rect x="8.5" y="14" width="7" height="7" rx="1.6"/>' },
+      { name: "Code", build: buildCode, path: '<path d="M8.5 8L4.5 12l4 4"/><path d="M15.5 8l4 4-4 4"/>' }
+    ];
+    var at = 0;
+    var now = document.getElementById("gxNow");
+    var dots = document.getElementById("gxDots");
+
+    TYPES.forEach(function (t, i) {
+      var d = el("button", "gx-dot");
+      d.type = "button";
+      d.setAttribute("aria-label", t.name);
+      d.onclick = function () { show(i); };
+      dots.appendChild(d);
+    });
+
+    function show(i) {
+      at = (i + TYPES.length) % TYPES.length;
+      card.innerHTML = "";
+      TYPES[at].build();
+      now.innerHTML = "";
+      now.append(icon(TYPES[at].path), el("span", null, TYPES[at].name));
+      [].forEach.call(dots.children, function (d, j) { d.classList.toggle("is-on", j === at); });
+    }
+    document.getElementById("gxPrev").onclick = function () { show(at - 1); };
+    document.getElementById("gxNext").onclick = function () { show(at + 1); };
+    show(0);
+  })();
+  </script>
 
   <div class="flag-modes">
     <div class="flag-mode">
