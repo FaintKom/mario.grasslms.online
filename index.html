@@ -2605,17 +2605,91 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   .gx-check--go { background: var(--accent); color: var(--accent-ink); border-color: var(--green-700); box-shadow: 0 4px 0 0 var(--green-700); }
   .gx-check--go:hover { box-shadow: 0 3px 0 0 var(--green-700); }
 
-  /* ---- shared tile ---- */
-  .gx-tile {
-    background: var(--bg-2); border: 1px solid var(--rule); border-radius: 14px;
-    box-shadow: 0 2px 0 0 var(--rule); color: var(--ink);
-    font-size: 15px; font-weight: 600; cursor: pointer;
-    transition: border-color .15s, color .15s, box-shadow .15s, transform .15s;
+  /* ---- motion knobs, ported from the LMS ----
+     Every duration goes through --mdur and every distance through --mamp, so
+     the whole system dials up or down from two numbers rather than thirty
+     rules. The page already damps prefers-reduced-motion globally. */
+  .gx {
+    --mamp: 1;
+    --mdur: 1;
+    --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --link-color: var(--green-500);
+    --err-bg: var(--coral-50);
+    --err-border: var(--coral-500);
+    --err-fg: var(--coral-700);
   }
-  .gx-tile:hover:not(:disabled) { border-color: var(--rule-strong); }
-  .gx-tile.is-picked { color: var(--green-800); border-color: var(--green-300); box-shadow: 0 2px 0 0 var(--green-300); }
-  .gx-tile.is-right { color: var(--green-800); border-color: var(--green-500); box-shadow: 0 0 0 2px var(--green-100); }
-  .gx-tile.is-wrong { color: var(--warn); border-color: var(--coral-500); box-shadow: 0 0 0 2px var(--coral-50); }
+
+  @keyframes gx-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(calc(-7px * var(--mamp))); }
+    40% { transform: translateX(calc(6px * var(--mamp))); }
+    60% { transform: translateX(calc(-4px * var(--mamp))); }
+    80% { transform: translateX(calc(2px * var(--mamp))); }
+  }
+  @keyframes gx-pop {
+    0% { transform: scale(.25); opacity: 0; }
+    60% { transform: scale(calc(1 + .18 * var(--mamp))); }
+    100% { transform: scale(1); }
+  }
+  @keyframes gx-halo {
+    0%, 100% { box-shadow: 0 2px 0 0 var(--rule), 0 0 0 0 color-mix(in oklab, var(--link-color) 30%, transparent); }
+    50% { box-shadow: 0 2px 0 0 var(--rule), 0 0 0 6px color-mix(in oklab, var(--link-color) 14%, transparent); }
+  }
+  @keyframes gx-ripple-g {
+    0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--green-500) 45%, transparent); }
+    100% { box-shadow: 0 0 0 16px color-mix(in oklab, var(--green-500) 0%, transparent); }
+  }
+  @keyframes gx-bucket-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(calc(1 + .03 * var(--mamp))); background: var(--green-50); }
+    100% { transform: scale(1); }
+  }
+  @keyframes gx-dash-flow { to { stroke-dashoffset: -13; } }
+  @keyframes gx-line-draw {
+    from { stroke-dasharray: 0 600; opacity: .4; }
+    to { stroke-dasharray: 600 0; opacity: .85; }
+  }
+
+  /* ---- shared tile ----
+     1 invite (hover lift) · 2 grab (pressed) · 3 guide (candidate/hot)
+     · 4 result (correct ripple / wrong shake) */
+  .gx-tile {
+    position: relative;
+    background: var(--bg-2); border: 2px solid var(--rule); border-radius: 14px;
+    box-shadow: 0 2px 0 0 var(--rule); color: var(--ink);
+    font-size: 15px; font-weight: 600; cursor: pointer; user-select: none;
+    transition: transform 120ms var(--motion-ease), box-shadow 120ms var(--motion-ease),
+                border-color 120ms, background 150ms, color 150ms, opacity 200ms;
+  }
+  /* 1 · invite */
+  .gx-tile:hover:not(:disabled):not(.is-right):not(.is-wrong) {
+    transform: translateY(calc(-2px * var(--mamp)));
+    border-color: var(--green-300);
+    box-shadow: 0 4px 0 0 var(--green-100);
+  }
+  /* 2 · grab */
+  .gx-tile:active:not(:disabled), .gx-tile.is-picked { transform: translateY(2px); box-shadow: 0 0 0 0 var(--rule); }
+  .gx-tile.is-picked {
+    border-color: var(--green-600); background: var(--green-100); color: var(--green-800);
+    box-shadow: 0 0 0 4px var(--green-100);
+  }
+  /* 3 · guide — free tiles pulse, the tile under the pointer magnetises */
+  .gx-tile.is-candidate { animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite; }
+  .gx-tile.is-hot {
+    border-color: var(--link-color);
+    box-shadow: 0 0 0 5px color-mix(in oklab, var(--link-color) 22%, transparent);
+    transform: translateY(calc(-2px * var(--mamp))) scale(1.02);
+    animation: none;
+  }
+  /* 4 · result */
+  .gx-tile.is-right {
+    border-color: var(--green-600); background: var(--green-50); color: var(--green-800); cursor: default;
+    animation: gx-ripple-g calc(.6s * var(--mdur)) ease-out both;
+  }
+  .gx-tile.is-wrong {
+    border-color: var(--err-border); background: var(--err-bg); color: var(--err-fg);
+    animation: gx-shake calc(.4s * var(--mdur)) ease both;
+  }
   .gx-tile:disabled { cursor: default; }
 
   /* ---- multiple choice ---- */
@@ -2632,20 +2706,30 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   }
   .gx-opt__label { flex: 1 1 0; }
   .gx-opt__n { flex: 0 0 auto; font-family: var(--mono); font-size: 10px; color: var(--rule-strong); }
-  .gx-tile.is-picked .gx-opt__dot { border-color: var(--green-300); }
-  .gx-tile.is-right .gx-opt__dot { border-color: var(--green-500); background: var(--green-500); color: #fff; }
-  .gx-tile.is-wrong .gx-opt__dot { border-color: var(--coral-500); background: var(--coral-500); color: #fff; }
+  .gx-opt__dot { transition: background 150ms, border-color 150ms, transform 150ms; }
+  .gx-tile.is-picked .gx-opt__dot,
+  .gx-tile.is-right .gx-opt__dot { background: var(--green-600); border-color: var(--green-600); color: #fff; transform: scale(1.1); }
+  .gx-tile.is-wrong .gx-opt__dot { background: var(--err-border); border-color: var(--err-border); color: #fff; }
   .gx-chip {
-    flex: 0 0 auto; border-radius: 999px; padding: 3px 8px;
-    font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: #fff;
+    position: absolute; top: -9px; right: 10px;
+    border-radius: 999px; padding: 3px 8px;
+    font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .08em; color: #fff;
+    animation: gx-pop calc(.36s * var(--mdur)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
-  .gx-chip--ok { background: var(--accent); }
-  .gx-chip--no { background: var(--coral-500); }
+  .gx-chip--ok { background: var(--green-600); }
+  .gx-chip--no { background: var(--err-border); }
 
   /* ---- matching ---- */
   .gx-match { position: relative; display: grid; grid-template-columns: 1fr 56px 1fr; gap: 10px; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; }
   .gx-match__col { display: grid; gap: 10px; }
-  .gx-match svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .gx-match svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 5; }
+  .gx-thread--live {
+    stroke: var(--link-color); opacity: .5;
+    stroke-dasharray: 1 12;
+    animation: gx-dash-flow .6s linear infinite;
+  }
+  .gx-thread--done { opacity: .85; }
+  .gx-thread--done.is-fresh { animation: gx-line-draw calc(.45s * var(--mdur)) ease-out both; }
   .gx-match .gx-tile { padding: 14px 16px; text-align: center; }
   @media (max-width: 520px) { .gx-match { grid-template-columns: 1fr 28px 1fr; } }
 
@@ -2656,9 +2740,21 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   .gx-zone {
     border: 2px dashed var(--rule-strong); border-radius: 16px; padding: 12px;
     min-height: 132px; display: flex; flex-direction: column; gap: 10px;
-    transition: border-color .15s, background .15s;
+    transition: border-color 150ms, background 150ms, transform 150ms;
   }
-  .gx-zone.is-over { border-color: var(--green-500); background: var(--green-25); }
+  .gx-zone.is-target {
+    border-color: var(--green-300); border-style: solid;
+    animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite;
+  }
+  .gx-zone.is-over {
+    border-color: var(--link-color); border-style: solid;
+    background: color-mix(in oklab, var(--link-color) 8%, var(--bg));
+    transform: scale(1.015); animation: none;
+  }
+  .gx-zone.is-catch {
+    border-color: var(--green-500); border-style: solid; animation: none;
+    animation: gx-bucket-pop calc(.4s * var(--mdur)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
   .gx-zone__head { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--ink); }
   .gx-zone__dot { width: 9px; height: 9px; border-radius: 50%; }
   .gx-zone__n {
@@ -2677,9 +2773,18 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     background: var(--bg-2); border: 1px solid var(--rule); border-radius: 10px;
     box-shadow: 0 2px 0 0 var(--rule);
   }
-  .gx-gap:focus { outline: none; border-color: var(--green-300); box-shadow: 0 2px 0 0 var(--green-300); }
-  .gx-gap.is-right { border-color: var(--green-500); box-shadow: 0 0 0 2px var(--green-100); }
-  .gx-gap.is-wrong { color: var(--warn); border-color: var(--coral-500); box-shadow: 0 0 0 2px var(--coral-50); }
+  .gx-gap { transition: border-color 150ms, box-shadow 150ms, background 150ms, color 150ms; }
+  .gx-gap:hover:not(:disabled) { border-color: var(--rule-strong); }
+  .gx-gap:focus { outline: none; border-color: var(--green-500); box-shadow: 0 0 0 4px var(--green-100); }
+  .gx-gap.is-empty { animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite; }
+  .gx-gap.is-right {
+    border-color: var(--green-600); background: var(--green-50); color: var(--green-800);
+    animation: gx-ripple-g calc(.6s * var(--mdur)) ease-out both;
+  }
+  .gx-gap.is-wrong {
+    border-color: var(--err-border); background: var(--err-bg); color: var(--err-fg);
+    animation: gx-shake calc(.4s * var(--mdur)) ease both;
+  }
   .gx-gap:disabled { opacity: 1; }
 
   /* ---- rail ---- */
@@ -2823,34 +2928,54 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
       f.body.appendChild(wrap);
       f.body.appendChild(el("p", "gx-hint", "Connect everything and press check · tap a linked tile to unhook the thread"));
 
-      var links = {}, hue = {}, armed = null, lt = {}, rt = {};
+      var links = {}, hue = {}, fresh = {}, armed = null, live = null, lt = {}, rt = {};
 
       function centre(node, side) {
         var a = node.getBoundingClientRect(), b = wrap.getBoundingClientRect();
         return [side === "l" ? a.right - b.left : a.left - b.left, a.top - b.top + a.height / 2];
       }
+      function curveD(p1, p2) {
+        var mx = (p1[0] + p2[0]) / 2;
+        return "M" + p1[0] + " " + p1[1] + " C" + mx + " " + p1[1] + " " + mx + " " + p2[1] + " " + p2[0] + " " + p2[1];
+      }
+      function thread(d, cls, colour) {
+        var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        path.setAttribute("class", cls);
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke-width", "3");
+        path.setAttribute("stroke-linecap", "round");
+        if (colour) path.setAttribute("stroke", colour);
+        svg.appendChild(path);
+        return path;
+      }
       function draw() {
         svg.innerHTML = "";
         Object.keys(links).forEach(function (k) {
-          var p1 = centre(lt[k], "l"), p2 = centre(rt[links[k]], "r");
-          var mx = (p1[0] + p2[0]) / 2;
-          var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          path.setAttribute("d", "M" + p1[0] + " " + p1[1] + " C" + mx + " " + p1[1] + " " + mx + " " + p2[1] + " " + p2[0] + " " + p2[1]);
-          path.setAttribute("fill", "none");
-          path.setAttribute("stroke-width", "2.5");
-          path.setAttribute("stroke-linecap", "round");
-          path.setAttribute("stroke", hue[k] || "var(--green-300)");
-          svg.appendChild(path);
+          var t = thread(curveD(centre(lt[k], "l"), centre(rt[links[k]], "r")),
+            "gx-thread--done" + (fresh[k] ? " is-fresh" : ""), hue[k] || "var(--green-500)");
+          if (fresh[k]) { delete fresh[k]; t.addEventListener("animationend", function () { t.classList.remove("is-fresh"); }); }
         });
+        if (live) thread(curveD(centre(lt[armed], "l"), live), "gx-thread--live");
         f.btn.disabled = Object.keys(links).length < LEFT.length;
+      }
+      /* Free tiles pulse so it reads as "these are still open", and the one
+         under the pointer magnetises while a thread is out. */
+      function guide() {
+        LEFT.forEach(function (c) {
+          lt[c].classList.toggle("is-candidate", !armed && !links[c]);
+          lt[c].classList.toggle("is-picked", c === armed || !!links[c]);
+        });
+        RIGHT.forEach(function (c) {
+          var taken = Object.keys(links).some(function (k) { return links[k] === c; });
+          rt[c].classList.toggle("is-candidate", !!armed && !taken);
+          rt[c].classList.toggle("is-picked", taken);
+        });
       }
       function unhook(country) {
         delete links[country];
         delete hue[country];
-        lt[country].classList.remove("is-picked");
-        Object.keys(rt).forEach(function (c) {
-          rt[c].classList.toggle("is-picked", Object.keys(links).some(function (k) { return links[k] === c; }));
-        });
+        guide();
         draw();
       }
 
@@ -2860,7 +2985,9 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         b.onclick = function () {
           if (links[c]) { unhook(c); return; }
           armed = armed === c ? null : c;
-          LEFT.forEach(function (x) { lt[x].classList.toggle("is-picked", x === armed || !!links[x]); });
+          if (!armed) live = null;
+          guide();
+          draw();
         };
         lt[c] = b;
         lcol.appendChild(b);
@@ -2874,27 +3001,41 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
           if (owner) { unhook(owner); return; }
           if (!armed) return;
           links[armed] = c;
-          lt[armed].classList.add("is-picked");
-          b.classList.add("is-picked");
+          fresh[armed] = true;
           armed = null;
+          live = null;
+          b.classList.remove("is-hot");
+          guide();
           draw();
         };
+        b.onpointerenter = function () { if (armed) b.classList.add("is-hot"); };
+        b.onpointerleave = function () { b.classList.remove("is-hot"); };
         rt[c] = b;
         rcol.appendChild(b);
       });
 
+      wrap.addEventListener("pointermove", function (e) {
+        if (!armed) return;
+        var box = wrap.getBoundingClientRect();
+        live = [e.clientX - box.left, e.clientY - box.top];
+        draw();
+      });
+      wrap.addEventListener("pointerleave", function () { live = null; draw(); });
+
+      guide();
       requestAnimationFrame(draw);
       setTimeout(draw, 60);
       window.addEventListener("resize", draw);
 
       f.btn.onclick = function () {
         var right = 0;
+        armed = null; live = null;
         LEFT.forEach(function (c) {
           var ok = links[c] === KEY[c];
           if (ok) right++;
           hue[c] = ok ? "var(--green-500)" : "var(--coral-500)";
-          lt[c].classList.remove("is-picked");
-          rt[links[c]].classList.remove("is-picked");
+          lt[c].classList.remove("is-picked", "is-candidate");
+          rt[links[c]].classList.remove("is-picked", "is-candidate", "is-hot");
           lt[c].classList.add(ok ? "is-right" : "is-wrong");
           rt[links[c]].classList.add(ok ? "is-right" : "is-wrong");
           lt[c].disabled = rt[links[c]].disabled = true;
@@ -2919,7 +3060,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         { name: "Mammals", dot: "var(--accent)" },
         { name: "Birds", dot: "var(--sun-500)" }
       ];
-      var placed = {}, armed = null, tiles = {}, drops = {}, counts = {};
+      var placed = {}, armed = null, tiles = {}, drops = {}, counts = {}, zoneEl = {};
 
       var bank = el("div", "gx-bank");
       var zones = el("div", "gx-zones");
@@ -2932,11 +3073,25 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         });
         f.btn.disabled = Object.keys(placed).length < CARDS.length;
       }
+      /* Zones pulse only while a card is in hand, so the invitation appears
+         exactly when it is actionable. */
+      function guide() {
+        var holding = !!armed;
+        GROUPS.forEach(function (g) { zoneEl[g.name].classList.toggle("is-target", holding); });
+      }
       function put(name, group) {
         placed[name] = group;
         armed = null;
         (group ? drops[group] : bank).appendChild(tiles[name]);
         Object.keys(tiles).forEach(function (n) { tiles[n].classList.remove("is-picked"); });
+        if (group) {
+          var z = zoneEl[group];
+          z.classList.remove("is-catch");
+          void z.offsetWidth;
+          z.classList.add("is-catch");
+          setTimeout(function () { z.classList.remove("is-catch"); }, 460);
+        }
+        guide();
         tally();
       }
 
@@ -2947,12 +3102,16 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         b.addEventListener("dragstart", function (e) {
           e.dataTransfer.setData("text/plain", c.name);
           e.dataTransfer.effectAllowed = "move";
+          armed = c.name;
+          guide();
         });
         b.onclick = function () {
           if (placed[c.name]) { delete placed[c.name]; put(c.name, null); return; }
           armed = armed === c.name ? null : c.name;
           Object.keys(tiles).forEach(function (n) { tiles[n].classList.toggle("is-picked", n === armed); });
+          guide();
         };
+        b.addEventListener("dragend", function () { armed = null; guide(); });
         tiles[c.name] = b;
         bank.appendChild(b);
       });
@@ -2973,7 +3132,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
           z.classList.remove("is-over");
           put(e.dataTransfer.getData("text/plain"), g.name);
         });
-        z.addEventListener("click", function () { if (armed) put(armed, g.name); });
+        z.addEventListener("pointerenter", function () { if (armed) z.classList.add("is-over"); });
+        z.addEventListener("pointerleave", function () { z.classList.remove("is-over"); });
+        z.addEventListener("click", function () { if (armed) { z.classList.remove("is-over"); put(armed, g.name); } });
+        zoneEl[g.name] = z;
         counts[g.name] = n;
         drops[g.name] = drop;
         zones.appendChild(z);
@@ -2982,6 +3144,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
       f.btn.onclick = function () {
         var right = 0;
+        armed = null;
+        GROUPS.forEach(function (g) { zoneEl[g.name].classList.remove("is-target", "is-over"); });
         CARDS.forEach(function (c) {
           var ok = placed[c.name] === c.group;
           if (ok) right++;
@@ -3012,6 +3176,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         input.setAttribute("aria-label", "Gap " + (i + 1));
         input.maxLength = 4;
         input.oninput = function () {
+          inputs.forEach(function (x) { x.classList.toggle("is-empty", !x.value.trim()); });
           f.btn.disabled = inputs.some(function (x) { return !x.value.trim(); });
         };
         input.onkeydown = function (e) { if (e.key === "Enter" && !f.btn.disabled) f.btn.click(); };
@@ -3019,10 +3184,12 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
         inputs.push(input);
       });
       f.body.appendChild(line);
+      inputs.forEach(function (x) { x.classList.add("is-empty"); });
 
       f.btn.onclick = function () {
         var right = 0;
         inputs.forEach(function (input, i) {
+          input.classList.remove("is-empty");
           var ok = input.value.trim() === GAPS[i].a;
           if (ok) right++;
           input.classList.add(ok ? "is-right" : "is-wrong");
