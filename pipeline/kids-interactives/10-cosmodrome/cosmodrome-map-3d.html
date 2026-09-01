@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cosmodrome Sector Map</title>
+<title>Spaceport Sector Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
@@ -676,14 +676,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   <header class="stack stack--tight">
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Cosmodrome · sector map</p>
+      <p class="eyebrow" data-t="eyebrow">Spaceport · sector map</p>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
     <h1><span data-t="title1">Four sectors,</span> <em class="mark" data-t="title2">one virus</em></h1>
-    <p class="lede" data-t="intro">The virus is sitting on all four sectors of the cosmodrome. Drag to walk around the field, click a building, and do the job inside it to push the virus off that sector.</p>
+    <p class="lede" data-t="intro">The virus is sitting on all four sectors of the spaceport. Drag to walk around the field, click a building, and do the job inside it to push the virus off that sector.</p>
   </header>
 
   <div class="hud">
@@ -736,7 +736,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   </section>
 
   <section class="card stack" id="won" hidden aria-live="polite">
-    <h2 data-t="wonTitle">The cosmodrome is yours again</h2>
+    <h2 data-t="wonTitle">The spaceport is yours again</h2>
     <p class="muted" data-t="wonBody">Four sectors clear, the rocket back under your control, and one very quiet virus.</p>
     <div><button class="btn btn--ghost" id="again" data-t="again">Play it again</button></div>
   </section>
@@ -803,9 +803,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         D: { head: "The dish is still taking orders from the virus. Pull the lever all the way down and hold it there.",
              action: "Pull the lever down" }
       },
-      eyebrow: "Cosmodrome · sector map",
+      eyebrow: "Spaceport · sector map",
       title1: "Four sectors,", title2: "one virus",
-      intro: "The virus is sitting on all four sectors of the cosmodrome. Drag to walk around the field, click a building, and do the job inside it to push the virus off that sector.",
+      intro: "The virus is sitting on all four sectors of the spaceport. Drag to walk around the field, click a building, and do the job inside it to push the virus off that sector.",
       clearedLabel: "Sectors clear", close: "Close",
       submit: "Drive the virus out",
       again: "Play it again", sector: "Sector",
@@ -817,16 +817,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       names: {
         A: ["File archive", "Every folder on the station was tipped out here. The robots cannot find a single thing they need."],
         B: ["Graphics station", "The colour has been drained out of the boards, and nothing on this station lights up without them."],
-        C: ["Text module", "Every message leaving the cosmodrome goes through here, and right now every one of them comes out scrambled."],
+        C: ["Text module", "Every message leaving the spaceport goes through here, and right now every one of them comes out scrambled."],
         D: ["Command centre", "The dish still turns, but it is listening to the virus. Whoever holds this room holds the launch."]
       },
       right: function (id) { return "Sector " + id + " is free."; },
       noWebgl: "This browser cannot draw 3D. Everything still works from the list below.",
-      wonTitle: "The cosmodrome is yours again",
+      wonTitle: "The spaceport is yours again",
       wonBody: "Four sectors clear, the rocket back under your control, and one very quiet virus.",
       endgame: [
         { face: "😱", line: "NO! ALL FOUR SECTORS?!", sub: "This cannot be happening…", btn: "Keep going" },
-        { face: "😈", line: "Wait. WAIT.", sub: "If I cannot have the cosmodrome, I will take the rocket!", btn: "Stop the virus" },
+        { face: "😈", line: "Wait. WAIT.", sub: "If I cannot have the spaceport, I will take the rocket!", btn: "Stop the virus" },
         { face: "😰", line: "What are you doing? Leave those wires alone!", sub: "Do not — STOP —", btn: "Cut the wires" },
         { face: "💀", line: "I am… dissolving…", sub: "Goodbyeeee…", btn: "Watch it go" }
       ]
@@ -846,9 +846,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         D: { head: "La antena sigue obedeciendo al virus. Baja la palanca del todo y mantenla ahí.",
              action: "Baja la palanca" }
       },
-      eyebrow: "Cosmódromo · mapa de sectores",
+      eyebrow: "Puerto espacial · mapa de sectores",
       title1: "Cuatro sectores,", title2: "un virus",
-      intro: "El virus está sentado en los cuatro sectores del cosmódromo. Arrastra para dar la vuelta al campo, pulsa un edificio y haz el trabajo que hay dentro para echar al virus de ese sector.",
+      intro: "El virus está sentado en los cuatro sectores del puerto espacial. Arrastra para dar la vuelta al campo, pulsa un edificio y haz el trabajo que hay dentro para echar al virus de ese sector.",
       clearedLabel: "Sectores libres", close: "Cerrar",
       submit: "Echar al virus",
       again: "Jugar otra vez", sector: "Sector",
@@ -860,16 +860,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       names: {
         A: ["Archivo de ficheros", "Aquí volcaron todas las carpetas de la estación. Los robots no encuentran nada de lo que necesitan."],
         B: ["Estación gráfica", "Le han sacado el color a las placas, y sin ellas en esta estación no se enciende nada."],
-        C: ["Módulo de texto", "Todos los mensajes que salen del cosmódromo pasan por aquí, y ahora mismo todos salen revueltos."],
+        C: ["Módulo de texto", "Todos los mensajes que salen del puerto espacial pasan por aquí, y ahora mismo todos salen revueltos."],
         D: ["Centro de mando", "La antena sigue girando, pero escucha al virus. Quien tenga esta sala tiene el lanzamiento."]
       },
       right: function (id) { return "El sector " + id + " está libre."; },
       noWebgl: "Este navegador no puede dibujar en 3D. Todo sigue funcionando desde la lista de abajo.",
-      wonTitle: "El cosmódromo vuelve a ser tuyo",
+      wonTitle: "El puerto espacial vuelve a ser tuyo",
       wonBody: "Cuatro sectores libres, el cohete otra vez bajo control y un virus muy callado.",
       endgame: [
         { face: "😱", line: "¡NO! ¿LOS CUATRO SECTORES?", sub: "Esto no puede estar pasando…", btn: "Seguir" },
-        { face: "😈", line: "Un momento. UN MOMENTO.", sub: "Si no puedo tener el cosmódromo, ¡me llevo el cohete!", btn: "Detener al virus" },
+        { face: "😈", line: "Un momento. UN MOMENTO.", sub: "Si no puedo tener el puerto espacial, ¡me llevo el cohete!", btn: "Detener al virus" },
         { face: "😰", line: "¿Qué hacéis? ¡No toquéis esos cables!", sub: "No — PARAD —", btn: "Cortar los cables" },
         { face: "💀", line: "Me… me estoy disolviendo…", sub: "Adióooos…", btn: "Verlo marchar" }
       ]
