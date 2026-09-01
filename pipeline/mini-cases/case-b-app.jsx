@@ -118,7 +118,7 @@ const BRANCHES = [
         text:
           "I hear you — your time matters. While I'm pulling this up, can you tell me whether the duplicate charge hit on the same day or different days? That tells me which system the error came from.",
         delta: -8,
-        feedback: "Best Explore move. You acknowledged the time cost in one beat, then pivoted to a specific diagnostic question. \"Same day vs different days\" is exactly the signal that distinguishes a system-of-record bug from a payment-rail retry.",
+        feedback: "Best Explore move. You acknowledged the time cost in one beat, then pivoted to a specific diagnostic question. \"Same day vs different days\" is the signal that distinguishes a system-of-record bug from a payment-rail retry.",
       },
       {
         grade: "passable",

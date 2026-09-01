@@ -61,7 +61,7 @@ const EMAILS = [
         { kind: "bad", text: "Link text says company.com and resolves to compan-y-it.com. Classic redirect." },
         { kind: "bad", text: "Urgency stacking: \"expires today\", \"keep your account active\", \"failure to act\"." },
       ],
-      verdictIfRight: "Reporting this directly is exactly right, because the indicators are conclusive. The Junk-only option also catches it, but it starts a longer triage clock for the SOC team.",
+      verdictIfRight: "Reporting this directly is correct: the indicators are conclusive. The Junk-only option also catches it, but it starts a longer triage clock for the SOC team.",
       verdictIfWrong: {
         safe: "Marking this safe leaves a credential-harvest URL in production inboxes. This is the easy one. If it slipped past, the next will not be obvious.",
         junk: "Junk-only is too soft for this signal stack. Authentication-failed + look-alike domain + pressure stacking warrants the phishing report, which routes to the SOC fast-lane.",
@@ -113,7 +113,7 @@ const EMAILS = [
       ],
       verdictIfRight: "Right call. Not every new email needs a Defender escalation. Clean signals get the clean disposition.",
       verdictIfWrong: {
-        junk: "Reporting a verified internal sender as Junk is exactly the noise the SOC training tries to dial down. Junk-rate inflation buries real signal.",
+        junk: "Reporting a verified internal sender as Junk is the noise the SOC training tries to dial down. Junk-rate inflation buries real signal.",
         phishing: "Reporting your People-Ops contact as phishing is the over-rotation new hires often make after generic awareness training. Calibrate.",
       },
     },
@@ -227,10 +227,10 @@ const EMAILS = [
         { kind: "ok", text: "Link resolves to na8.docusign.net (the real DocuSign region for North-America EU envelopes)." },
         { kind: "ok", text: "Context match: the People-Ops email from Sarah explicitly mentioned this envelope was on its way." },
       ],
-      verdictIfRight: "Exactly the call the cohort usually misses. Awareness training over-trains for \"report anything transactional\". The restraint you just showed is what good triage looks like.",
+      verdictIfRight: "The call the cohort usually misses. Awareness training over-trains for \"report anything transactional\". The restraint you just showed is what good triage looks like.",
       verdictIfWrong: {
         junk: "Most cohorts mark legit DocuSign as Junk because it \"looks transactional\". Over-reporting buries real signals under noise, and the SOC stops trusting alerts from your team.",
-        phishing: "Reporting a verified DocuSign envelope that you were told to expect is exactly the over-rotation we're calibrating away from. This is the part awareness training skips.",
+        phishing: "Reporting a verified DocuSign envelope that you were told to expect is exactly the over-rotation we're calibrating away from. Generic awareness training never gets this far.",
       },
     },
   },
