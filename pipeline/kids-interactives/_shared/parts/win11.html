@@ -1,0 +1,329 @@
+<style>
+/* ==========================================================================
+   Windows 11 File Explorer, light theme, drawn in CSS.
+
+   Real measurements: a 40px tab strip, a 48px command bar, a 40px address row,
+   a 220px navigation pane, a 28px status bar. Chrome is #f3f3f3, content is
+   white, the accent is #0067c0 and selection is #cfe8fc. Prefixed .w- so it
+   cannot collide with the GrassLMS layer around it.
+
+   The icons are drawn rather than set in emoji: an emoji folder is whatever
+   font the machine happens to have, and half of them are not even the same
+   colour. A child is supposed to recognise this window on sight.
+   ========================================================================== */
+
+.w {
+  --w-chrome: #f3f3f3;
+  --w-face: #ffffff;
+  --w-line: #e5e5e5;
+  --w-text: #1b1b1b;
+  --w-dim: #5d5d5d;
+  --w-hover: rgba(0, 0, 0, .05);
+  --w-accent: #0067c0;
+  --w-sel: #cfe8fc;
+
+  display: flex; flex-direction: column;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--w-face);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .16), 0 1px 3px rgba(0, 0, 0, .08);
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--w-text);
+  -webkit-font-smoothing: antialiased;
+}
+.w svg { display: block; }
+
+/* ---- tab strip ---------------------------------------------------------- */
+.w__tabs {
+  display: flex; align-items: center;
+  height: 40px; padding-left: 8px;
+  background: var(--w-chrome);
+}
+.w-tab {
+  display: flex; align-items: center; gap: 8px;
+  height: 32px; padding: 0 10px; margin-top: 8px;
+  border-radius: 6px 6px 0 0;
+  background: var(--w-face);
+  font-size: 12px;
+}
+.w-tab svg { width: 16px; height: 16px; }
+.w-tab i { font-style: normal; }
+.w-tab u {
+  width: 16px; height: 16px; margin-left: 4px;
+  display: grid; place-items: center; border-radius: 4px;
+  text-decoration: none; color: var(--w-dim);
+}
+.w-tab u:hover { background: var(--w-hover); }
+.w-tab u svg { width: 8px; height: 8px; }
+.w__tabadd {
+  width: 28px; height: 28px; margin-left: 4px;
+  display: grid; place-items: center;
+  border-radius: 4px; color: var(--w-dim);
+}
+.w__tabadd:hover { background: var(--w-hover); }
+.w__tabadd svg { width: 11px; height: 11px; }
+
+.w__wc { display: flex; margin-left: auto; align-self: stretch; }
+.w__wc i { width: 46px; display: grid; place-items: center; color: var(--w-text); }
+.w__wc i svg { width: 10px; height: 10px; }
+.w__wc i:hover { background: var(--w-hover); }
+.w__wc i:last-child:hover { background: #c42b1c; color: #fff; }
+
+/* ---- command bar -------------------------------------------------------- */
+.w__cmd {
+  display: flex; align-items: center; gap: 2px;
+  height: 48px; padding: 0 8px;
+  background: var(--w-face);
+}
+.w-btn {
+  display: flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 10px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 12px; color: var(--w-text);
+  cursor: pointer; white-space: nowrap;
+}
+.w-btn:hover { background: var(--w-hover); }
+.w-btn:active { background: rgba(0, 0, 0, .08); }
+.w-btn:disabled { color: #a0a0a0; cursor: default; }
+.w-btn:disabled:hover { background: transparent; }
+.w-btn svg { width: 16px; height: 16px; flex: 0 0 16px; }
+.w-btn--icon { padding: 0; width: 32px; justify-content: center; }
+.w-btn--new svg:first-child { color: var(--w-accent); }
+.w-btn .w-chev { width: 8px; height: 8px; opacity: .65; }
+.w__sep { width: 1px; height: 20px; margin: 0 6px; background: var(--w-line); flex: 0 0 1px; }
+
+/* ---- address row -------------------------------------------------------- */
+.w__addr {
+  display: flex; align-items: center; gap: 2px;
+  height: 40px; padding: 0 8px 8px;
+  background: var(--w-face);
+}
+.w__crumbs {
+  display: flex; align-items: center; flex: 1; min-width: 0;
+  height: 32px; padding: 0 8px;
+  border: 1px solid var(--w-line); border-radius: 4px;
+  background: var(--w-face);
+  overflow: hidden;
+}
+.w__crumbs button {
+  border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: 12px; color: var(--w-text);
+  padding: 3px 6px; border-radius: 3px; white-space: nowrap;
+}
+.w__crumbs button:hover { background: var(--w-hover); }
+.w__crumbs svg { width: 8px; height: 8px; color: #757575; flex: 0 0 8px; }
+.w__crumbs > svg:first-child { width: 16px; height: 16px; flex: 0 0 16px; margin-right: 4px; }
+.w__search {
+  display: flex; align-items: center; gap: 6px;
+  width: 190px; height: 32px; margin-left: 6px; padding: 0 10px;
+  border: 1px solid var(--w-line); border-radius: 4px;
+  color: #757575; font-size: 12px; white-space: nowrap; overflow: hidden;
+}
+.w__search svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+/* ---- body: navigation pane and content ---------------------------------- */
+/* The window is a column, so the body takes the slack and the status bar
+   stays inside the frame instead of being clipped by overflow:hidden. */
+.w__body { display: grid; grid-template-columns: 220px 1fr; flex: 1 1 0; min-height: 0; }
+@media (max-width: 760px) { .w__body { grid-template-columns: 1fr; } .w__nav { display: none; } }
+
+.w__nav {
+  padding: 4px 8px 8px;
+  background: var(--w-chrome);
+  border-right: 1px solid var(--w-line);
+  overflow: auto;
+}
+.w-nav {
+  position: relative;
+  display: flex; align-items: center; gap: 10px;
+  height: 32px; padding: 0 10px; margin-bottom: 2px;
+  border-radius: 4px; font-size: 12px; color: var(--w-text);
+  white-space: nowrap;
+}
+.w-nav:hover { background: var(--w-hover); }
+.w-nav.is-open { background: rgba(0, 0, 0, .06); font-weight: 600; }
+.w-nav.is-open::before {
+  content: ""; position: absolute; left: 0; top: 8px;
+  width: 3px; height: 16px; border-radius: 2px; background: var(--w-accent);
+}
+.w-nav svg { width: 16px; height: 16px; flex: 0 0 16px; }
+.w-nav--sub { padding-left: 26px; }
+.w__navgap { height: 12px; }
+
+.w__content { background: var(--w-face); display: flex; flex-direction: column; min-height: 0; }
+
+/* ---- status bar --------------------------------------------------------- */
+.w__status {
+  display: flex; align-items: center; gap: 12px;
+  height: 28px; padding: 0 12px;
+  border-top: 1px solid var(--w-line);
+  background: var(--w-chrome);
+  font-size: 11px; color: var(--w-dim);
+}
+.w__views { margin-left: auto; display: flex; gap: 2px; }
+.w__views i { width: 24px; height: 20px; display: grid; place-items: center; border-radius: 3px; }
+.w__views i.is-on { background: rgba(0, 0, 0, .08); }
+.w__views svg { width: 13px; height: 13px; }
+
+/* ---- context menu, Windows 11 shape ------------------------------------- */
+.w-menu {
+  position: fixed; z-index: 60; min-width: 250px;
+  padding: 4px;
+  background: #f9f9f9;
+  border: 1px solid rgba(0, 0, 0, .09);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  font-size: 12px; color: #1b1b1b;
+}
+/* The row of bare icons Windows 11 puts at the top of a file menu. */
+.w-menu__icons { display: flex; gap: 2px; padding: 2px 2px 6px; }
+.w-menu__icons button {
+  flex: 1; height: 34px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 4px; background: transparent;
+  cursor: pointer; color: #1b1b1b;
+}
+.w-menu__icons button:hover:not(:disabled) { background: rgba(0, 0, 0, .06); }
+.w-menu__icons button:disabled { color: #a0a0a0; cursor: default; }
+.w-menu__icons svg { width: 16px; height: 16px; }
+.w-menu > button {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; height: 32px; padding: 0 10px;
+  border: 0; border-radius: 4px; background: transparent;
+  font: inherit; font-size: 12px; color: #1b1b1b;
+  text-align: left; cursor: pointer;
+}
+.w-menu > button:hover:not(:disabled) { background: rgba(0, 0, 0, .06); }
+.w-menu > button:disabled { color: #a0a0a0; cursor: default; }
+.w-menu > button svg { width: 16px; height: 16px; flex: 0 0 16px; }
+.w-menu > button span { flex: 1; }
+.w-menu > button kbd { font-family: inherit; font-size: 11px; color: #6d6d6d; }
+.w-menu hr { border: 0; border-top: 1px solid rgba(0, 0, 0, .08); margin: 4px 6px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="w-g-folder" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd772"/><stop offset="1" stop-color="#f0b429"/>
+    </linearGradient>
+    <linearGradient id="w-g-folderback" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7c14b"/><stop offset="1" stop-color="#e8a91c"/>
+    </linearGradient>
+
+    <!-- Files and folders in the Windows 11 shape: a folder with a raised back
+         panel, documents as a white sheet with a folded corner. -->
+    <symbol id="w-folder" viewBox="0 0 48 48">
+      <path d="M4 12a3 3 0 0 1 3-3h11.2a3 3 0 0 1 2.1.9l3.2 3.1H41a3 3 0 0 1 3 3v5H4z" fill="url(#w-g-folderback)"/>
+      <path d="M4 17h40a3 3 0 0 1 2.9 3.7l-3.6 15.1a4 4 0 0 1-3.9 3.2H8.6a4 4 0 0 1-3.9-3.2L1.1 20.7A3 3 0 0 1 4 17z" fill="url(#w-g-folder)"/>
+      <path d="M4 17h40a3 3 0 0 1 2.6 1.5H1.4A3 3 0 0 1 4 17z" fill="#fff" opacity=".4"/>
+    </symbol>
+
+    <symbol id="w-txt" viewBox="0 0 48 48">
+      <path d="M10 5h20l10 10v25a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z" fill="#fff" stroke="#c8c8c8" stroke-width="1.5"/>
+      <path d="M30 5l10 10H31a1 1 0 0 1-1-1z" fill="#e3e3e3"/>
+      <g stroke="#8a8a8a" stroke-width="2" stroke-linecap="round">
+        <path d="M14 21h20M14 27h20M14 33h13"/>
+      </g>
+    </symbol>
+
+    <symbol id="w-img" viewBox="0 0 48 48">
+      <path d="M10 5h20l10 10v25a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z" fill="#fff" stroke="#c8c8c8" stroke-width="1.5"/>
+      <path d="M30 5l10 10H31a1 1 0 0 1-1-1z" fill="#e3e3e3"/>
+      <rect x="12" y="20" width="24" height="17" rx="2" fill="#cde9f7"/>
+      <circle cx="18" cy="26" r="2.6" fill="#f5c34b"/>
+      <path d="M12 35l7-8 5 5 4-4 8 7v1a1 1 0 0 1-1 1H13a1 1 0 0 1-1-1z" fill="#4aa15e"/>
+    </symbol>
+
+    <symbol id="w-vid" viewBox="0 0 48 48">
+      <path d="M10 5h20l10 10v25a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z" fill="#fff" stroke="#c8c8c8" stroke-width="1.5"/>
+      <path d="M30 5l10 10H31a1 1 0 0 1-1-1z" fill="#e3e3e3"/>
+      <rect x="11" y="21" width="26" height="16" rx="2" fill="#3b5bdb"/>
+      <path d="M21 26l7 3-7 3z" fill="#fff"/>
+    </symbol>
+
+    <!-- Command bar and menu glyphs: one weight, one cap style, like Fluent. -->
+    <symbol id="w-new" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M12 5v14M5 12h14"/>
+    </symbol>
+    <symbol id="w-cut" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="18" r="2.6"/><circle cx="18" cy="18" r="2.6"/>
+      <path d="M7.6 16L18 4M16.4 16L6 4"/>
+    </symbol>
+    <symbol id="w-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="9" y="9" width="11" height="11" rx="2"/>
+      <path d="M15 6H6a2 2 0 0 0-2 2v9"/>
+    </symbol>
+    <symbol id="w-paste" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M9 4h6v3H9z"/>
+      <path d="M15 5.5h2.5A1.5 1.5 0 0 1 19 7v12a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19V7a1.5 1.5 0 0 1 1.5-1.5H9"/>
+    </symbol>
+    <symbol id="w-rename" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 20h16"/><path d="M14.5 4.5l4 4L9 18H5v-4z"/>
+    </symbol>
+    <symbol id="w-del" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 7h16M10 4h4M6 7l1 13h10l1-13M10 11v6M14 11v6"/>
+    </symbol>
+    <symbol id="w-sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 4v16M4 17l3 3 3-3M17 20V4M14 7l3-3 3 3"/>
+    </symbol>
+    <symbol id="w-view" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/>
+      <rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>
+    </symbol>
+    <symbol id="w-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+      <path d="M4 6h16M4 12h16M4 18h16"/>
+    </symbol>
+    <symbol id="w-more" viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/>
+    </symbol>
+    <symbol id="w-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M11 18l-6-6 6-6"/>
+    </symbol>
+    <symbol id="w-fwd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14M13 6l6 6-6 6"/>
+    </symbol>
+    <symbol id="w-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M6 11l6-6 6 6"/>
+    </symbol>
+    <symbol id="w-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 11a8 8 0 1 0-2.3 6.3"/><path d="M20 4v7h-7"/>
+    </symbol>
+    <symbol id="w-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/>
+    </symbol>
+    <symbol id="w-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 4.5L6 7.5 9 4.5"/>
+    </symbol>
+    <symbol id="w-chevr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 3L7.5 6 4.5 9"/>
+    </symbol>
+    <symbol id="w-x" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+      <path d="M2 2l8 8M10 2l-8 8"/>
+    </symbol>
+
+    <!-- Navigation pane -->
+    <symbol id="w-home" viewBox="0 0 24 24" fill="none" stroke="#0067c0" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M4 11l8-7 8 7v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/>
+    </symbol>
+    <symbol id="w-cloud" viewBox="0 0 24 24" fill="#0f7bd4">
+      <path d="M7 19a4.4 4.4 0 0 1-.5-8.8A5.6 5.6 0 0 1 17 9.6a3.9 3.9 0 0 1 .6 7.7z"/>
+    </symbol>
+    <symbol id="w-pc" viewBox="0 0 24 24" fill="none" stroke="#5d5d5d" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="M8 20h8"/>
+    </symbol>
+    <symbol id="w-down" viewBox="0 0 24 24" fill="none" stroke="#0f7bd4" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>
+    </symbol>
+    <symbol id="w-star" viewBox="0 0 24 24" fill="#f5b944">
+      <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>
+    </symbol>
+
+    <!-- Window controls -->
+    <symbol id="w-min" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1"><path d="M1 6h10"/></symbol>
+    <symbol id="w-max" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="1.5" width="9" height="9" rx="1"/></symbol>
+    <symbol id="w-close" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></symbol>
+  </defs>
+</svg>

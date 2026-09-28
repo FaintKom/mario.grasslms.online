@@ -1,0 +1,25 @@
+spaceport-project/
+├── index.html          ← Главная карта космодрома
+├── css/
+│   ├── main.css        ← Основные стили, переменные
+│   ├── map.css         ← Стили карты
+│   ├── virus.css       ← Стили персонажа-вируса
+│   ├── modal.css       ← Модальные окна
+│   └── tasks.css       ← Стили для заданий
+├── js/
+│   ├── app.js          ← Логика игры, состояние
+│   ├── i18n.js         ← Переключение языков
+│   └── virus.js        ← Логика вируса
+├── locales/
+│   ├── ru.json         ← Русский перевод
+│   └── en.json         ← English translation
+├── tasks/
+│   └── sector-a/
+│       ├── index.html  ← Страница сектора A
+│       └── task-1-drag-files.js
+├── components/
+│   └── modal.js        ← Компонент модалок
+├── assets/             ← Все картинки
+├── config/sectors.json ← Настройки секторов
+├── package.json
+└── README.md           ← Документация

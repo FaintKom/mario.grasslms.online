@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NovaSearch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  body { padding: var(--s-6) 0 var(--s-12); }
+
+  .searchbar { display: flex; gap: var(--s-2); }
+  .searchbar .input { flex: 1; border-radius: var(--radius-pill); }
+
+  .results { display: grid; gap: var(--s-3); }
+  .result {
+    display: grid; gap: var(--s-1);
+    padding: var(--s-4);
+    border: 1px solid var(--color-border); border-radius: var(--radius-md);
+    background: var(--color-surface); text-align: left;
+    font: inherit; color: var(--color-text); cursor: pointer;
+  }
+  .result:hover:not(:disabled) { border-color: var(--color-border-focus); }
+  .result__top { display: flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; }
+  .result__url { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--color-text-subtle); }
+  .result__title { font-size: var(--t-md); font-weight: 700; color: var(--color-info); }
+  .result__snip { font-size: var(--t-sm); color: var(--color-text-muted); }
+  .result.is-right { border-color: var(--color-success); background: var(--color-success-soft); }
+  .result.is-off   { border-color: var(--color-danger);  background: var(--color-danger-soft); }
+
+  .missions { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-2); }
+  .mission {
+    display: grid; gap: var(--s-1); justify-items: center; text-align: center;
+    padding: var(--s-3);
+    border: 1px solid var(--color-border); border-radius: var(--radius-md);
+    font-size: var(--t-xs); color: var(--color-text-subtle);
+  }
+  .mission.is-now  { border-color: var(--color-primary); background: var(--color-primary-soft); color: var(--color-text); font-weight: 700; }
+  .mission.is-done { border-color: var(--color-success); background: var(--color-success-soft); color: var(--color-success-fg); }
+  .mission__icon { font-size: 22px; line-height: 1; }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--narrow stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Ages 9–12 · searching well</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">Ask the search box</span> <em class="mark" data-t="title2">a good question</em></h1>
+    <p class="lede" data-t="intro">Three questions you cannot answer by looking around the room. Type what you would really type, read what comes back, and pick the result worth believing. The top two are always ads.</p>
+  </header>
+
+  <section class="card stack" id="game">
+    <div class="missions" id="missions"></div>
+
+    <div class="stack stack--tight">
+      <p class="eyebrow" id="objective"></p>
+      <h2 id="brief">…</h2>
+    </div>
+
+    <div class="searchbar">
+      <input class="input" id="q" type="search" autocomplete="off">
+      <button class="btn" id="go" data-t="searchBtn">Search</button>
+    </div>
+
+    <div id="verdict" hidden></div>
+    <div class="results" id="results"></div>
+
+    <div class="row">
+      <button class="btn btn--ghost btn--sm" id="hint" data-t="hintBtn">Need a hint?</button>
+      <button class="btn" id="next" data-t="next" hidden>Next mission</button>
+    </div>
+  </section>
+
+  <section class="card stack" id="over" hidden aria-live="polite">
+    <h2 data-t="doneTitle">Three out of three</h2>
+    <p class="muted" id="doneBody"></p>
+    <div><button class="btn" id="again" data-t="again">Start over</button></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Three missions, three different reasons to open a search box. The old set
+     asked how many limbs a crab has, which you answer by looking at a crab.
+     Each of these needs a fact you cannot see from where you are sitting, and
+     each rewards a different habit: phrase the query, weigh the source, step
+     over the ads. Query matching is on keyword groups rather than one long
+     regular expression — easier to read and just as forgiving. */
+  const M = {
+    en: [
+      { icon: "🐟", objective: "Mission 1",
+        brief: "Nova's grandad swears he once saw a fish walk across the mud. Is there really a fish that does that?",
+        keys: [["fish", "mudskipper"], ["walk", "land", "mud", "out of water"]],
+        hint: "You do not have to fit the whole story in the box. Four words carry it: fish that walks on land.",
+        answer: "The mudskipper. It walks on its front fins and breathes out of the water.",
+        results: [
+          { ad: true, title: "FISH TANKS 70% OFF — today only", url: "aqua-deals.shop", snip: "Everything for your aquarium. Free delivery this week." },
+          { ad: true, title: "Weird animal videos — click here", url: "animal-clips.fake", snip: "You will not believe number four." },
+          { ok: true, title: "Mudskipper — the fish that walks", url: "wikipedia.org › Mudskipper", snip: "Mudskippers spend much of the day out of water, moving across mud flats on their pectoral fins." },
+          { title: "My fishing weekend", url: "someblog.example › diary", snip: "We caught nothing at all, but the weather was lovely." }
+        ] },
+
+      { icon: "🌙", objective: "Mission 2",
+        brief: "One page says a person can stay awake for a whole month. Another says eleven days. Which one would you believe?",
+        keys: [["sleep", "awake", "sleeping"], ["record", "without", "long", "days", "stay"]],
+        hint: "Search for the record, then look at who is saying it before you look at the number.",
+        answer: "About eleven days. The month comes from a shop selling energy drinks, which is exactly why you should doubt it.",
+        results: [
+          { ad: true, title: "STAY AWAKE 30 DAYS! Our drink works", url: "energy-boost.shop", snip: "Students swear by it. Order two cans, get one free." },
+          { ad: true, title: "Sleep tracker app — free download", url: "sleep-app.fake", snip: "Install now. No sign-up needed." },
+          { ok: true, title: "Sleep deprivation — the longest recorded case", url: "britannica.com › sleep", snip: "The longest documented time without sleep is about eleven days, recorded under medical supervision in 1964." },
+          { title: "Ten things that happen when you skip sleep", url: "clickbait-list.example", snip: "Number six will shock you." }
+        ] },
+
+      { icon: "🎮", objective: "Mission 3",
+        brief: "You want to build a game today, for free, without installing anything. Where do you go?",
+        keys: [["game", "code", "program", "scratch"], ["free", "online", "kid", "child", "learn", "browser", "scratch"]],
+        hint: "Add the words that narrow it down: free, in the browser, made for children.",
+        answer: "Scratch, at scratch.mit.edu. It runs in the browser and costs nothing.",
+        results: [
+          { ad: true, title: "DOWNLOAD 1000 GAMES FOR KIDS", url: "download-games.fake › kids", snip: "Free .exe file. Install now." },
+          { ad: true, title: "Free Robux generator", url: "get-robux-free.scam", snip: "Enter your account name to start." },
+          { ok: true, title: "Scratch — imagine, program, share", url: "scratch.mit.edu", snip: "A free coding community for children. Works in your browser, nothing to install." },
+          { title: "Best gaming laptops this year", url: "techshop.example › laptops", snip: "Our picks for gaming on a budget." }
+        ] }
+    ],
+    es: [
+      { icon: "🐟", objective: "Misión 1",
+        brief: "El abuelo de Nova jura que una vez vio un pez caminar por el barro. ¿Existe de verdad un pez que haga eso?",
+        keys: [["pez", "pescado", "saltarín", "saltarin"], ["camin", "tierra", "barro", "fuera del agua", "salta"]],
+        hint: "No hace falta meter toda la historia en la caja. Con cuatro palabras basta: pez que camina por tierra.",
+        answer: "El saltarín del fango. Camina sobre sus aletas delanteras y respira fuera del agua.",
+        results: [
+          { ad: true, title: "ACUARIOS AL 70% — solo hoy", url: "aqua-deals.shop", snip: "Todo para tu acuario. Envío gratis esta semana." },
+          { ad: true, title: "Vídeos de animales raros — pulsa aquí", url: "animal-clips.fake", snip: "No te vas a creer el número cuatro." },
+          { ok: true, title: "Saltarín del fango — el pez que camina", url: "wikipedia.org › Periophthalmus", snip: "Pasa buena parte del día fuera del agua y se desplaza por el fango sobre sus aletas pectorales." },
+          { title: "Mi fin de semana de pesca", url: "someblog.example › diario", snip: "No pescamos nada, pero hizo muy buen tiempo." }
+        ] },
+
+      { icon: "🌙", objective: "Misión 2",
+        brief: "Una página dice que se puede estar un mes entero sin dormir. Otra dice once días. ¿A cuál le creerías?",
+        keys: [["dormir", "sueño", "sueno", "despierto"], ["récord", "record", "sin", "cuánto", "cuanto", "tiempo", "días", "dias", "aguant"]],
+        hint: "Busca el récord y mira quién lo dice antes de mirar el número.",
+        answer: "Unos once días. Lo del mes lo dice una tienda de bebidas energéticas, y por eso mismo hay que dudarlo.",
+        results: [
+          { ad: true, title: "¡30 DÍAS DESPIERTO! Nuestra bebida funciona", url: "energy-boost.shop", snip: "Los estudiantes la recomiendan. Lleva dos latas y paga una." },
+          { ad: true, title: "App para medir el sueño — gratis", url: "sleep-app.fake", snip: "Instálala ya. Sin registro." },
+          { ok: true, title: "Privación de sueño — el caso más largo registrado", url: "britannica.com › sueno", snip: "El periodo documentado más largo sin dormir es de unos once días, bajo supervisión médica, en 1964." },
+          { title: "Diez cosas que pasan si no duermes", url: "clickbait-list.example", snip: "La número seis te va a sorprender." }
+        ] },
+
+      { icon: "🎮", objective: "Misión 3",
+        brief: "Quieres hacer un juego hoy, gratis y sin instalar nada. ¿A dónde vas?",
+        keys: [["juego", "program", "código", "codigo", "scratch"], ["gratis", "online", "niño", "nino", "aprend", "navegador", "scratch"]],
+        hint: "Añade las palabras que lo estrechan: gratis, en el navegador y para niños.",
+        answer: "Scratch, en scratch.mit.edu. Funciona en el navegador y no cuesta nada.",
+        results: [
+          { ad: true, title: "DESCARGA 1000 JUEGOS PARA NIÑOS", url: "download-games.fake › kids", snip: "Archivo .exe gratis. Instala ya." },
+          { ad: true, title: "Generador de Robux gratis", url: "get-robux-free.scam", snip: "Pon el nombre de tu cuenta para empezar." },
+          { ok: true, title: "Scratch — imagina, programa, comparte", url: "scratch.mit.edu", snip: "Una comunidad de programación gratuita para niños. Funciona en el navegador, no hay que instalar nada." },
+          { title: "Los mejores portátiles para jugar", url: "techshop.example › portatiles", snip: "Nuestra selección para jugar sin gastar mucho." }
+        ] }
+    ]
+  };
+
+  const T = {
+    en: {
+      eyebrow: "Ages 9–12 · searching well",
+      title1: "Ask the search box", title2: "a good question",
+      intro: "Three questions you cannot answer by looking around the room. Type what you would really type, read what comes back, and pick the result worth believing. The top two are always ads.",
+      searchBtn: "Search", hintBtn: "Need a hint?", next: "Next mission",
+      again: "Start over", doneTitle: "Three out of three",
+      adTag: "Ad", placeholder: "What do you want to find?",
+      tooVague: "That could mean anything. Add a word that says what you want to know.",
+      offTopic: "That is not what Nova is after. Read the mission again.",
+      pickOne: "Now pick the result worth trusting.",
+      okPick: function (a) { return "That is the one. " + a; },
+      adPick: "That is an ad. Ads sit at the top because someone paid for them. Scroll past.",
+      badPick: "That page is about something else. Look for a source that answers the question.",
+      done: function (n) {
+        return n === 3
+          ? "Three missions, three good sources. You skipped the ads and read the addresses."
+          : "You finished all three. " + n + " of them without a wrong pick first.";
+      }
+    },
+    es: {
+      eyebrow: "9–12 años · buscar bien",
+      title1: "Hazle al buscador", title2: "una buena pregunta",
+      intro: "Tres preguntas que no puedes responder mirando a tu alrededor. Escribe lo que escribirías de verdad, lee lo que sale y elige el resultado que merece que le creas. Los dos primeros siempre son anuncios.",
+      searchBtn: "Buscar", hintBtn: "¿Necesitas una pista?", next: "Siguiente misión",
+      again: "Empezar de nuevo", doneTitle: "Tres de tres",
+      adTag: "Anuncio", placeholder: "¿Qué quieres encontrar?",
+      tooVague: "Eso puede ser cualquier cosa. Añade una palabra que diga qué quieres saber.",
+      offTopic: "Eso no es lo que busca Nova. Vuelve a leer la misión.",
+      pickOne: "Ahora elige el resultado que merece confianza.",
+      okPick: function (a) { return "Ese es. " + a; },
+      adPick: "Eso es un anuncio. Van arriba porque alguien los pagó. Pásalos de largo.",
+      badPick: "Esa página va de otra cosa. Busca una fuente que responda a la pregunta.",
+      done: function (n) {
+        return n === 3
+          ? "Tres misiones, tres buenas fuentes. Saltaste los anuncios y leíste las direcciones."
+          : "Terminaste las tres. " + n + " sin fallar antes.";
+      }
+    }
+  };
+
+  var lang = "en", mi = 0, clean = 0, firstTry = true;
+
+  const $ = function (id) { return document.getElementById(id); };
+  const t = function () { return T[lang]; };
+  const list = function () { return M[lang]; };
+  const mission = function () { return list()[mi]; };
+
+  function say(kind, text) {
+    const v = $("verdict");
+    v.hidden = false;
+    v.className = "feedback feedback--" + kind;
+    v.textContent = text;
+  }
+
+  function paintMissions() {
+    const box = $("missions");
+    box.innerHTML = "";
+    list().forEach(function (m, i) {
+      const el = document.createElement("div");
+      el.className = "mission" + (i < mi ? " is-done" : i === mi ? " is-now" : "");
+      const ic = document.createElement("span");
+      ic.className = "mission__icon"; ic.textContent = m.icon;
+      const nm = document.createElement("span"); nm.textContent = m.objective;
+      el.append(ic, nm);
+      box.appendChild(el);
+    });
+  }
+
+  function render() {
+    const d = t(), m = mission();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (el) {
+      const v = d[el.dataset.t];
+      if (typeof v === "string") el.textContent = v;
+    });
+    $("q").placeholder = d.placeholder;
+    $("q").value = "";
+    $("objective").textContent = m.objective;
+    $("brief").textContent = m.brief;
+    $("results").innerHTML = "";
+    $("verdict").hidden = true;
+    $("next").hidden = true;
+    $("hint").hidden = false;
+    firstTry = true;
+    paintMissions();
+  }
+
+  function matches(q) {
+    const low = q.toLowerCase();
+    return mission().keys.every(function (group) {
+      return group.some(function (w) { return low.indexOf(w) >= 0; });
+    });
+  }
+
+  function search() {
+    const d = t(), m = mission();
+    const q = $("q").value.trim();
+    if (q.length < 3) { say("hint", d.tooVague); return; }
+    if (!matches(q)) { say("no", d.offTopic); firstTry = false; return; }
+
+    say("hint", d.pickOne);
+
+    const box = $("results");
+    box.innerHTML = "";
+    m.results.forEach(function (r) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "result";
+
+      const top = document.createElement("div");
+      top.className = "result__top";
+      if (r.ad) {
+        const tag = document.createElement("span");
+        tag.className = "chip chip--reward"; tag.textContent = d.adTag;
+        top.appendChild(tag);
+      }
+      const url = document.createElement("span");
+      url.className = "result__url"; url.textContent = r.url;
+      top.appendChild(url);
+
+      const ti = document.createElement("span");
+      ti.className = "result__title"; ti.textContent = r.title;
+      const sn = document.createElement("span");
+      sn.className = "result__snip"; sn.textContent = r.snip;
+
+      b.append(top, ti, sn);
+      b.onclick = function () {
+        if (r.ok) {
+          Array.prototype.forEach.call(box.children, function (x) { x.disabled = true; });
+          b.classList.add("is-right");
+          if (firstTry) clean++;
+          say("ok", d.okPick(m.answer));
+          $("next").hidden = false;
+          $("hint").hidden = true;
+        } else {
+          b.classList.add("is-off");
+          b.disabled = true;
+          firstTry = false;
+          say("no", r.ad ? d.adPick : d.badPick);
+        }
+      };
+      box.appendChild(b);
+    });
+  }
+
+  $("go").onclick = search;
+  $("q").addEventListener("keydown", function (e) { if (e.key === "Enter") search(); });
+  $("hint").onclick = function () { say("hint", mission().hint); };
+  $("next").onclick = function () {
+    mi++;
+    if (mi >= list().length) {
+      $("game").hidden = true;
+      $("over").hidden = false;
+      $("doneBody").textContent = t().done(clean);
+      return;
+    }
+    render();
+  };
+
+  function restart() {
+    mi = 0; clean = 0;
+    $("game").hidden = false; $("over").hidden = true;
+    render();
+  }
+  $("again").onclick = restart;
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      restart();
+    };
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

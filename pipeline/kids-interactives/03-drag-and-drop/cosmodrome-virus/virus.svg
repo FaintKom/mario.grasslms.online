@@ -1,0 +1,54 @@
+<svg class="virus-svg" id="virusSvg" viewBox="0 0 120 120">
+    <defs>
+        <linearGradient id="virusGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#c084fc"></stop>
+            <stop offset="50%" style="stop-color:#9333ea"></stop>
+            <stop offset="100%" style="stop-color:#7c3aed"></stop>
+        </linearGradient>
+        
+        <filter id="glitch">
+            <feColorMatrix type="saturate" values="2"/>
+        </filter>
+    </defs>
+    
+    <!-- Spikes -->
+    <g class="virus-spikes">
+        <circle class="spike" cx="60" cy="8" r="12" fill="url(#virusGradient)"/>
+        <circle class="spike" cx="100" cy="25" r="10" fill="url(#virusGradient)"/>
+        <circle class="spike" cx="112" cy="60" r="12" fill="url(#virusGradient)"/>
+        <circle class="spike" cx="100" cy="95" r="10" fill="url(#virusGradient)"/>
+        <circle class="spike" cx="60" cy="112" r="12" fill="url(#virusGradient)"/>
+        <circle class="spike" cx="20" cy="95" r="10" fill="url(#virusGradient)"/>
+        <circle class="spike" cx="8" cy="60" r="12" fill="url(#virusGradient)"/>
+        <circle class="spike" cx="20" cy="25" r="10" fill="url(#virusGradient)"/>
+    </g>
+    
+    <!-- Main body -->
+    <circle class="virus-body" cx="60" cy="60" r="40" fill="url(#virusGradient)"/>
+    
+    <!-- Face -->
+    <g class="virus-face">
+        <!-- Angry eyebrows -->
+        <line class="eyebrow" x1="38" y1="38" x2="52" y2="44" stroke="#1a1a2e" stroke-width="4" stroke-linecap="round"/>
+        <line class="eyebrow" x1="82" y1="38" x2="68" y2="44" stroke="#1a1a2e" stroke-width="4" stroke-linecap="round"/>
+        
+        <!-- Eyes -->
+        <g class="eye-left">
+            <ellipse cx="45" cy="52" rx="10" ry="12" fill="white"/>
+            <circle cx="45" cy="54" r="6" fill="#dc2626"/>
+            <circle cx="47" cy="50" r="2" fill="white"/>
+        </g>
+        <g class="eye-right">
+            <ellipse cx="75" cy="52" rx="10" ry="12" fill="white"/>
+            <circle cx="75" cy="54" r="6" fill="#dc2626"/>
+            <circle cx="77" cy="50" r="2" fill="white"/>
+        </g>
+        
+        <!-- Evil mouth -->
+        <path class="mouth" d="M 40,75 Q 50,65 60,75 Q 70,65 80,75" fill="none" stroke="#1a1a2e" stroke-width="4" stroke-linecap="round"/>
+        
+        <!-- Teeth -->
+        <path class="teeth" d="M 45,72 L 48,78 L 51,72" fill="#1a1a2e"/>
+        <path class="teeth" d="M 69,72 L 72,78 L 75,72" fill="#1a1a2e"/>
+    </g>
+</svg>

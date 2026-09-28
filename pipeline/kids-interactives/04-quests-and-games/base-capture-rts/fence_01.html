@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Захват Баз</title>
+    <style>
+        #gameCanvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        class Base {
+            constructor(x, y, color, isPlayer = false) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.hp = 10;
+                this.isPlayer = isPlayer;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 20, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.fillText(this.hp, this.x - 5, this.y + 5);
+            }
+        }
+
+        class Game {
+            constructor() {
+                this.bases = [];
+                this.level = 1;
+                this.selectedBase = null;
+                this.initLevel();
+            }
+
+            initLevel() {
+                this.bases = [
+                    new Base(100, 100, 'blue', true),
+                    new Base(700, 500, 'red'),
+                    new Base(400, 300, 'gray')
+                ];
+            }
+
+            update() {
+                this.bases.forEach(base => {
+                    if (base.color !== 'gray') {
+                        base.hp += 1/60;  // Увеличиваем HP на 1 в секунду
+                    }
+                });
+            }
+
+            draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                this.bases.forEach(base => base.draw());
+            }
+        }
+
+        const game = new Game();
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            game.bases.forEach(base => {
+                const distance = Math.sqrt((x - base.x)**2 + (y - base.y)**2);
+                if (distance < 20 && base.isPlayer) {
+                    game.selectedBase = base;
+                }
+            });
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (game.selectedBase) {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                game.bases.forEach(base => {
+                    const distance = Math.sqrt((x - base.x)**2 + (y - base.y)**2);
+                    if (distance < 20 && base !== game.selectedBase) {
+                        if (base.color === 'gray') {
+                            base.color = game.selectedBase.color;
+                            base.isPlayer = true;
+                        } else if (base.color !== game.selectedBase.color) {
+                            base.hp -= 5;
+                            if (base.hp <= 0) {
+                                base.color = game.selectedBase.color;
+                                base.isPlayer = true;
+                                base.hp = 1;
+                            }
+                        }
+                    }
+                });
+
+                game.selectedBase = null;
+            }
+        });
+
+        function gameLoop() {
+            game.update();
+            game.draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>

@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Story Festival</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  body { padding: var(--s-6) 0 var(--s-12); }
+  .option { font-size: var(--t-md); line-height: 1.4; }
+  .option.is-right { border-color: var(--color-success); background: var(--color-success-soft); }
+  .option.is-off   { border-color: var(--color-danger);  background: var(--color-danger-soft); }
+  .tally { display: flex; gap: var(--s-1); }
+  .tally i { width: 22px; height: 22px; border-radius: var(--radius-pill); background: var(--ink-100); }
+  .tally i.won  { background: var(--sun-400); }
+  .tally i.lost { background: var(--clay-100); }
+
+  /* ---- the class watching you ------------------------------------------
+     Three classmates drawn as flat vector shapes, so they stay crisp at any
+     size and cost nothing to load. They idle, cheer a right answer and look
+     puzzled at a wrong one. */
+  .hall { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: var(--s-5); align-items: start; }
+  @media (max-width: 880px) { .hall { grid-template-columns: 1fr; } .hall__seats { max-width: 300px; margin: 0 auto; } }
+
+  .hall__seats { display: grid; gap: var(--s-2); justify-items: center; }
+  .seats__note { font-size: var(--t-2xs); text-align: center; }
+  .crowd { width: 100%; height: auto; display: block; }
+
+  .crowd .shadow { fill: var(--ink-900); opacity: .10; }
+  .crowd .head   { fill: #f2d3b3; }
+  .crowd .eye    { fill: var(--ink-900); }
+  .crowd .mouth  { fill: none; stroke: var(--ink-900); stroke-width: 2.6; stroke-linecap: round; }
+  .crowd .arm path { fill: none; stroke: #f2d3b3; stroke-width: 8; stroke-linecap: round; }
+
+  .kid--a .body { fill: var(--green-600); } .kid--a .hair { fill: #3c2a20; }
+  .kid--b .body { fill: var(--sun-500); }   .kid--b .hair { fill: #1f1a17; }
+  .kid--c .body { fill: var(--lagoon-600); } .kid--c .hair { fill: #6d3b1f; }
+
+  .kid { transform-box: fill-box; transform-origin: center bottom; animation: bob 3.2s ease-in-out infinite; }
+  .kid--b { animation-delay: -1.1s; }
+  .kid--c { animation-delay: -2.2s; }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+  .crowd .arm { transform-box: fill-box; transform-origin: top center; transition: transform var(--motion-base) var(--motion-ease); }
+  .crowd .spark circle { fill: var(--sun-400); opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .crowd .wonder {
+    fill: var(--lagoon-600); font-family: var(--font-sans); font-size: 34px; font-weight: 800;
+    text-anchor: middle; opacity: 0;
+  }
+
+  .crowd.is-happy .arm--l { transform: rotate(-58deg) translateY(-6px); }
+  .crowd.is-happy .arm--r { transform: rotate(58deg) translateY(-6px); }
+  .crowd.is-happy .kid { animation-duration: .5s; }
+  .crowd.is-happy .spark circle { animation: pop 900ms ease-out; }
+  @keyframes pop {
+    0%   { opacity: 0; transform: scale(.4); }
+    35%  { opacity: 1; transform: scale(1.15); }
+    100% { opacity: 0; transform: scale(.9) translateY(-10px); }
+  }
+
+  .crowd.is-puzzled .kid { animation: none; }
+  .crowd.is-puzzled .kid--a { transform: rotate(-6deg); }
+  .crowd.is-puzzled .kid--b { transform: rotate(5deg); }
+  .crowd.is-puzzled .kid--c { transform: rotate(-3deg); }
+  .crowd.is-puzzled .arm--l { transform: rotate(14deg); }
+  .crowd.is-puzzled .arm--r { transform: rotate(-14deg); }
+  .crowd.is-puzzled .wonder { opacity: 1; animation: rise 1.1s ease-out; }
+  @keyframes rise {
+    0%   { opacity: 0; transform: translateY(8px); }
+    30%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: .85; transform: translateY(-4px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kid, .crowd.is-happy .spark circle, .crowd.is-puzzled .wonder { animation: none; }
+  }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Ages 7–10 · presenting your work</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">Showing your work to</span> <em class="mark" data-t="title2">the class</em></h1>
+    <p class="lede" data-t="intro">Today you present the quest you built, and you watch your friends present theirs. Five moments where the choice matters.</p>
+  </header>
+
+  <div class="hall">
+    <div class="hall__quiz">
+      <section class="card stack" id="game">
+    <div class="row row--between">
+      <span class="eyebrow"><span data-t="stepLabel">Moment</span> <span id="qNum" class="mono">1</span>/5</span>
+      <div class="tally" id="tally" aria-hidden="true"></div>
+    </div>
+
+    <div class="stack stack--tight">
+      <p class="eyebrow" id="qKicker">…</p>
+      <h2 id="qText">…</h2>
+    </div>
+
+    <div class="stack stack--tight" id="answers"></div>
+    <div id="verdict" hidden></div>
+    <div><button class="btn" id="next" data-t="next" hidden>Next</button></div>
+  </section>
+
+      </section>
+    </div>
+
+    <aside class="hall__seats" aria-hidden="true">
+      <svg id="crowd" class="crowd" viewBox="0 0 200 300" role="img">
+
+        <g class="kid kid--a">
+          <ellipse class="shadow" cx="52" cy="112" rx="26" ry="6"/>
+          <path class="body" d="M52 108c-17 0-27-12-27-28 0-17 12-28 27-28s27 11 27 28c0 16-10 28-27 28z"/>
+          <g class="arm arm--l"><path d="M28 66c-9 4-13 12-12 21"/></g>
+          <g class="arm arm--r"><path d="M76 66c9 4 13 12 12 21"/></g>
+          <circle class="head" cx="52" cy="34" r="19"/>
+          <path class="hair" d="M33 32c0-13 9-21 19-21s19 8 19 21c-4-7-11-9-19-9s-15 2-19 9z"/>
+          <circle class="eye" cx="45" cy="35" r="2.6"/><circle class="eye" cx="59" cy="35" r="2.6"/>
+          <path class="mouth" d="M46 43q6 5 12 0"/>
+        </g>
+
+        <g class="kid kid--b">
+          <ellipse class="shadow" cx="148" cy="122" rx="26" ry="6"/>
+          <path class="body" d="M148 118c-17 0-27-12-27-28 0-17 12-28 27-28s27 11 27 28c0 16-10 28-27 28z"/>
+          <g class="arm arm--l"><path d="M124 76c-9 4-13 12-12 21"/></g>
+          <g class="arm arm--r"><path d="M172 76c9 4 13 12 12 21"/></g>
+          <circle class="head" cx="148" cy="44" r="19"/>
+          <path class="hair" d="M129 44c-2-16 8-24 19-24s21 8 19 24c-3-5-6-11-19-11s-16 6-19 11z"/>
+          <circle class="eye" cx="141" cy="45" r="2.6"/><circle class="eye" cx="155" cy="45" r="2.6"/>
+          <path class="mouth" d="M142 53q6 5 12 0"/>
+        </g>
+
+        <g class="kid kid--c">
+          <ellipse class="shadow" cx="98" cy="214" rx="30" ry="7"/>
+          <path class="body" d="M98 210c-19 0-31-14-31-32 0-19 14-32 31-32s31 13 31 32c0 18-12 32-31 32z"/>
+          <g class="arm arm--l"><path d="M70 162c-10 5-15 14-14 24"/></g>
+          <g class="arm arm--r"><path d="M126 162c10 5 15 14 14 24"/></g>
+          <circle class="head" cx="98" cy="124" r="22"/>
+          <path class="hair" d="M76 124c0-15 10-24 22-24s22 9 22 24c-5-8-12-11-22-11s-17 3-22 11z"/>
+          <circle class="eye" cx="90" cy="125" r="3"/><circle class="eye" cx="106" cy="125" r="3"/>
+          <path class="mouth" d="M90 134q8 6 16 0"/>
+        </g>
+
+        <g class="spark">
+          <circle cx="34" cy="18" r="3"/><circle cx="168" cy="30" r="3"/>
+          <circle cx="100" cy="8" r="3"/><circle cx="18" cy="150" r="3"/>
+          <circle cx="182" cy="150" r="3"/><circle cx="150" cy="200" r="3"/>
+        </g>
+
+        <text class="wonder" x="100" y="30">?</text>
+      </svg>
+      <p class="seats__note muted" data-t="crowdNote">Your class is watching.</p>
+    </aside>
+  </div>
+
+  <section class="card stack" id="over" hidden aria-live="polite">
+    <h2 id="overTitle">…</h2>
+    <p class="muted" id="overBody"></p>
+    <div><button class="btn" id="again" data-t="again">Try again</button></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const Q = {
+    en: [
+      { kicker: "Your turn",
+        text: "You stand up to show your quest. What do you say first?",
+        good: "Hi, my name is Alex. My quest is called Space.",
+        bad: "Um, this is, my quest.",
+        okNote: "Your name and the title, in the first breath. Now everyone knows who made it and what it is.",
+        noNote: "Nobody caught your name or what the quest is called. Start with both." },
+
+      { kicker: "Two minutes",
+        text: "Your quest has four paths and you have two minutes. How much do you show?",
+        good: "One path, slowly, all the way through.",
+        bad: "All four, as fast as I can.",
+        okNote: "One path finished beats four paths half-seen. The class follows what you show.",
+        noNote: "Four paths in two minutes is a blur. Pick one and let people see it work." },
+
+      { kicker: "A friend presents",
+        text: "Bunny just showed a quest about carrots. You write in the chat.",
+        good: "The carrot drawing is great. How did you make it move?",
+        bad: "It's okay.",
+        okNote: "You named the thing you liked. That is what makes praise land.",
+        noNote: "It's okay tells Bunny nothing. Say which part you liked and why." },
+
+      { kicker: "Something breaks",
+        text: "Bear's button does not work during the demo. You speak up.",
+        good: "The story is good. The button is a small fix, I can show you.",
+        bad: "It's broken, it doesn't even work.",
+        okNote: "You said what worked, then offered help. Bear can keep going.",
+        noNote: "Bear already knows it broke. What Bear needs is the part that worked." },
+
+      { kicker: "Your mind goes blank",
+        text: "You are mid-presentation and you forget what comes next.",
+        good: "Keep clicking. The screen shows what happens next.",
+        bad: "Stop, apologise, and sit down.",
+        okNote: "Your quest is on the screen. Click, and the pictures carry the story for you.",
+        noNote: "Forgetting a line is not the end of the demo. Click on, the screen remembers." }
+    ],
+    es: [
+      { kicker: "Es tu turno",
+        text: "Te levantas para mostrar tu quest. ¿Qué dices primero?",
+        good: "Hola, me llamo Alex. Mi quest se llama Espacio.",
+        bad: "Eh, esto es, mi quest.",
+        okNote: "Tu nombre y el título, de entrada. Ya todos saben quién lo hizo y qué es.",
+        noNote: "Nadie entendió tu nombre ni el título. Empieza por los dos." },
+
+      { kicker: "Dos minutos",
+        text: "Tu quest tiene cuatro caminos y tienes dos minutos. ¿Cuánto enseñas?",
+        good: "Un camino, despacio, de principio a fin.",
+        bad: "Los cuatro, lo más rápido posible.",
+        okNote: "Un camino completo vale más que cuatro a medias. La clase sigue lo que enseñas.",
+        noNote: "Cuatro caminos en dos minutos no se ven. Elige uno y deja que funcione." },
+
+      { kicker: "Presenta un amigo",
+        text: "Conejo acaba de mostrar un quest sobre zanahorias. Escribes en el chat.",
+        good: "El dibujo de la zanahoria está genial. ¿Cómo lo hiciste mover?",
+        bad: "Está bien.",
+        okNote: "Dijiste qué te gustó. Eso es lo que hace que un elogio sirva.",
+        noNote: "Está bien no le dice nada a Conejo. Di qué parte te gustó y por qué." },
+
+      { kicker: "Algo se rompe",
+        text: "El botón de Oso no funciona durante la demo. Tú hablas.",
+        good: "La historia es buena. El botón se arregla rápido, te enseño.",
+        bad: "Está roto, ni siquiera funciona.",
+        okNote: "Dijiste qué funcionaba y ofreciste ayuda. Oso puede continuar.",
+        noNote: "Oso ya sabe que se rompió. Lo que necesita es saber qué sí funcionó." },
+
+      { kicker: "Te quedas en blanco",
+        text: "Estás presentando y olvidas lo que venía después.",
+        good: "Sigue haciendo clic. La pantalla enseña lo que viene.",
+        bad: "Parar, pedir perdón y sentarse.",
+        okNote: "Tu quest está en la pantalla. Haz clic y las imágenes cuentan la historia.",
+        noNote: "Olvidar una frase no acaba la demo. Sigue clicando, la pantalla se acuerda." }
+    ]
+  };
+
+  const T = {
+    en: {
+      eyebrow: "Ages 7–10 · presenting your work",
+      title1: "Showing your work to", title2: "the class",
+      intro: "Today you present the quest you built, and you watch your friends present theirs. Five moments where the choice matters.",
+      stepLabel: "Moment", next: "Next", again: "Try again", crowdNote: "Your class is watching.",
+      allTitle: "You are ready to present",
+      allBody: "Five for five. You know how to open, what to show, and what to say to someone whose demo went wrong.",
+      someTitle: "Nearly there",
+      someBody: function (n) { return "You chose well in " + n + " of 5. Read the notes on the ones you missed and run it again."; },
+      fewTitle: "Worth another run",
+      fewBody: function (n) { return "You chose well in " + n + " of 5. None of these are about the code. They are about what you say."; }
+    },
+    es: {
+      eyebrow: "7–10 años · presentar tu trabajo",
+      title1: "Presentar tu trabajo a", title2: "la clase",
+      intro: "Hoy presentas el quest que construiste y ves los de tus compañeros. Cinco momentos donde la elección importa.",
+      stepLabel: "Momento", next: "Siguiente", again: "Intentar otra vez", crowdNote: "Tu clase te está mirando.",
+      allTitle: "Estás listo para presentar",
+      allBody: "Cinco de cinco. Sabes cómo empezar, qué enseñar y qué decirle a alguien a quien se le rompió la demo.",
+      someTitle: "Casi",
+      someBody: function (n) { return "Elegiste bien en " + n + " de 5. Lee las notas de los que fallaste y vuelve a intentarlo."; },
+      fewTitle: "Merece otra vuelta",
+      fewBody: function (n) { return "Elegiste bien en " + n + " de 5. Ninguno va de código: van de lo que dices."; }
+    }
+  };
+
+  var lang = "en", idx = 0, score = 0, marks = [], answered = false;
+
+  const $ = function (id) { return document.getElementById(id); };
+  const t = function () { return T[lang]; };
+  const list = function () { return Q[lang]; };
+
+  function paintChrome() {
+    const d = t();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (el) {
+      const v = d[el.dataset.t];
+      if (typeof v === "string") el.textContent = v;
+    });
+  }
+
+  function paintTally() {
+    const box = $("tally");
+    box.innerHTML = "";
+    for (var i = 0; i < list().length; i++) {
+      const dot = document.createElement("i");
+      if (marks[i] === true) dot.className = "won";
+      else if (marks[i] === false) dot.className = "lost";
+      box.appendChild(dot);
+    }
+  }
+
+  function question() {
+    const q = list()[idx];
+    answered = false;
+    $("qNum").textContent = String(idx + 1);
+    $("qKicker").textContent = q.kicker;
+    $("qText").textContent = q.text;
+    $("verdict").hidden = true;
+    $("next").hidden = true;
+    paintTally();
+
+    /* Order is shuffled so the right answer is not always in the same slot.
+       A child spots a position pattern long before they read the options. */
+    var opts = [{ text: q.good, ok: true }, { text: q.bad, ok: false }];
+    if (Math.random() < 0.5) opts.reverse();
+
+    const box = $("answers");
+    box.innerHTML = "";
+    opts.forEach(function (o) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "option"; b.textContent = o.text;
+      b.onclick = function () { answer(o.ok, b); };
+      box.appendChild(b);
+    });
+  }
+
+  /* The class watches: cheering or puzzled for a beat, then back to waiting. */
+  var moodTimer = null;
+  function mood(state) {
+    const crowd = $("crowd");
+    if (!crowd) return;
+    crowd.classList.remove("is-happy", "is-puzzled");
+    if (moodTimer) clearTimeout(moodTimer);
+    if (!state) return;
+    void crowd.offsetWidth;
+    crowd.classList.add(state);
+    moodTimer = setTimeout(function () { crowd.classList.remove("is-happy", "is-puzzled"); }, 2200);
+  }
+
+  function answer(ok, btn) {
+    if (answered) return;
+    answered = true;
+    const q = list()[idx];
+
+    Array.prototype.forEach.call($("answers").children, function (b) {
+      b.disabled = true;
+      if (b === btn) b.classList.add(ok ? "is-right" : "is-off");
+      else if (!ok) b.classList.add("is-right");
+    });
+
+    marks[idx] = ok;
+    if (ok) score++;
+    paintTally();
+    mood(ok ? "is-happy" : "is-puzzled");
+
+    const v = $("verdict");
+    v.hidden = false;
+    v.className = "feedback feedback--" + (ok ? "ok" : "no");
+    v.textContent = ok ? q.okNote : q.noNote;
+
+    if (idx >= list().length - 1) finish();
+    else $("next").hidden = false;
+  }
+
+  function finish() {
+    const d = t(), n = list().length;
+    setTimeout(function () {
+      $("game").hidden = true;
+      $("over").hidden = false;
+      if (score === n) {
+        $("overTitle").textContent = d.allTitle;
+        $("overBody").textContent = d.allBody;
+      } else if (score >= 3) {
+        $("overTitle").textContent = d.someTitle;
+        $("overBody").textContent = d.someBody(score);
+      } else {
+        $("overTitle").textContent = d.fewTitle;
+        $("overBody").textContent = d.fewBody(score);
+      }
+    }, 1400);
+  }
+
+  function reset() {
+    idx = 0; score = 0; marks = [];
+    $("game").hidden = false; $("over").hidden = true;
+    paintChrome(); question();
+  }
+
+  $("next").onclick = function () { idx++; question(); };
+  $("again").onclick = reset;
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      reset();
+    };
+  });
+
+  reset();
+})();
+</script>
+</body>
+</html>

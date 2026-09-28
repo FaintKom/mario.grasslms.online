@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('codes.title') }} - {{ t('common.app_name') }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .codes-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: var(--spacing-lg);
+    }
+    
+    .codes-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-xl);
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+    }
+    
+    .codes-title {
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+    
+    .codes-empty {
+        text-align: center;
+        padding: var(--spacing-2xl);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-lg);
+    }
+    
+    .codes-empty-robot {
+        width: 120px;
+        height: 140px;
+        margin: 0 auto var(--spacing-lg);
+    }
+    
+    .codes-empty-text {
+        font-size: var(--font-size-lg);
+        color: var(--color-text-muted);
+    }
+    
+    .codes-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    .code-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-lg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all var(--transition-fast);
+    }
+    
+    .code-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--color-primary);
+    }
+    
+    .code-info {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+    }
+    
+    .code-icon {
+        font-size: 32px;
+    }
+    
+    .code-details h3 {
+        font-size: var(--font-size-md);
+        margin-bottom: var(--spacing-xs);
+    }
+    
+    .code-task {
+        color: var(--color-text-muted);
+        font-size: var(--font-size-sm);
+    }
+    
+    .code-value-container {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+    
+    .code-value {
+        font-family: 'Courier New', monospace;
+        font-size: var(--font-size-xl);
+        font-weight: 700;
+        color: var(--color-primary);
+        background: rgba(0, 0, 0, 0.3);
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--radius-sm);
+        letter-spacing: 2px;
+    }
+    
+    .copy-btn-small {
+        background: var(--color-secondary);
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: var(--spacing-sm);
+        cursor: pointer;
+        color: white;
+        transition: all var(--transition-fast);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .copy-btn-small:hover {
+        background: var(--color-secondary-light);
+        transform: scale(1.05);
+    }
+    
+    .codes-instruction {
+        text-align: center;
+        padding: var(--spacing-lg);
+        background: rgba(250, 204, 21, 0.1);
+        border-radius: var(--radius-md);
+        margin-top: var(--spacing-xl);
+        border: 1px dashed var(--color-primary);
+    }
+    
+    .codes-instruction p {
+        color: var(--color-primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="codes-page">
+    <!-- Header -->
+    <div class="codes-header">
+        <h1 class="codes-title">
+            <span>🎫</span>
+            {{ t('codes.title') }}
+        </h1>
+        <a href="{{ url_for('map_page') }}" class="btn btn-secondary">
+            {{ t('common.back_to_map') }}
+        </a>
+    </div>
+    
+    {% if codes %}
+    <!-- Codes list -->
+    <div class="codes-list">
+        {% for code in codes %}
+        <div class="code-item">
+            <div class="code-info">
+                <span class="code-icon">✅</span>
+                <div class="code-details">
+                    <h3>Код получен!</h3>
+                    <span class="code-task">Задание выполнено</span>
+                </div>
+            </div>
+            <div class="code-value-container">
+                <span class="code-value">{{ code }}</span>
+                <button class="copy-btn-small" onclick="copyCodeValue('{{ code }}')" title="{{ t('common.copy') }}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="codes-instruction">
+        <p>{{ t('codes.instruction') }}</p>
+    </div>
+    
+    {% else %}
+    <!-- Empty state -->
+    <div class="codes-empty">
+        <div class="codes-empty-robot">
+            {% include 'components/robot.svg' %}
+        </div>
+        <p class="codes-empty-text">{{ t('codes.empty') }}</p>
+        <a href="{{ url_for('map_page') }}" class="btn btn-primary mt-lg">
+            Перейти к заданиям
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Add idle animation to robot
+    document.querySelector('.codes-empty-robot .robot-svg')?.classList.add('idle');
+    
+    function copyCodeValue(code) {
+        navigator.clipboard.writeText(code).then(() => {
+            showToast('{{ t("codes.copy_success") }}', 'success');
+        }).catch(() => {
+            // Fallback
+            const textArea = document.createElement('textarea');
+            textArea.value = code;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showToast('{{ t("codes.copy_success") }}', 'success');
+        });
+    }
+</script>
+{% endblock %}

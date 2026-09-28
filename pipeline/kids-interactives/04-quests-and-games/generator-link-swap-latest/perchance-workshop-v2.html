@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arti's Prompt Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  body { padding: var(--s-6) 0 var(--s-12); }
+
+  .tabs { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .tabs button {
+    min-height: 44px; padding: var(--s-2) var(--s-4);
+    border: 2px solid var(--color-border-strong); border-radius: var(--radius-pill);
+    background: var(--color-surface); cursor: pointer; font: inherit; font-size: var(--t-sm);
+  }
+  .tabs button[aria-selected="true"] {
+    background: var(--ink-900); color: var(--color-text-inverse); border-color: var(--ink-900);
+  }
+
+  .controls { display: grid; gap: var(--s-3); }
+  .control { display: grid; grid-template-columns: 40px 1fr; gap: var(--s-3); align-items: start; }
+  .control__n {
+    width: 40px; height: 40px; display: grid; place-items: center;
+    border-radius: var(--radius-sm); background: var(--color-surface-2); font-size: 20px;
+  }
+  .control__name { font-weight: 700; font-size: var(--t-sm); display: block; }
+  .control__desc { color: var(--color-text-muted); font-size: var(--t-sm); }
+
+  .brushes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s-3); }
+  .brush { display: grid; gap: var(--s-2); align-content: start; }
+  .brush__name { font-family: var(--font-mono); font-weight: 700; font-size: var(--t-sm); text-transform: uppercase; letter-spacing: .08em; }
+  .brush ul { margin: 0; padding-left: var(--s-5); font-size: var(--t-sm); color: var(--color-text-muted); }
+
+  .levels { display: grid; gap: var(--s-2); }
+  .level { display: grid; grid-template-columns: auto 1fr; gap: var(--s-3); align-items: baseline; font-size: var(--t-sm); }
+  .level b { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); white-space: nowrap; }
+
+  .builder { display: grid; gap: var(--s-3); }
+  .builder label { display: grid; gap: var(--s-1); }
+  .out {
+    padding: var(--s-4); border-radius: var(--radius-md);
+    background: var(--ink-900); color: var(--color-text-inverse);
+    font-family: var(--font-mono); font-size: var(--t-sm); line-height: 1.7;
+    word-break: break-word; min-height: 64px; display: flex; align-items: center;
+  }
+  .out.is-empty { background: var(--color-surface-2); color: var(--color-text-subtle); }
+
+  .pills { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .pill {
+    min-height: 44px; padding: var(--s-2) var(--s-4);
+    border: 2px solid var(--color-border-strong); border-radius: var(--radius-pill);
+    background: var(--color-surface); cursor: pointer; font: inherit; font-size: var(--t-sm);
+  }
+  .pill[aria-pressed="true"] { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+  .examples { display: grid; gap: var(--s-2); }
+  .example {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: var(--s-3); align-items: center;
+    padding: var(--s-3); border: 1px solid var(--color-border); border-radius: var(--radius-md);
+    font-size: var(--t-sm);
+  }
+  .example__arrow { color: var(--color-text-subtle); }
+  .example code { font-family: var(--font-mono); font-size: var(--t-2xs); }
+  @media (max-width: 620px) { .example { grid-template-columns: 1fr; } .example__arrow { display: none; } }
+
+  .tips { margin: 0; padding-left: var(--s-5); display: grid; gap: var(--s-1); font-size: var(--t-sm); color: var(--color-text-muted); }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--wide stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">AI images · workshop</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">Words in,</span> <em class="mark" data-t="title2">pictures out</em></h1>
+    <p class="lede" data-t="intro">Perchance draws what you describe. The better the description, the better the picture — this workshop shows what the buttons do and how to build a prompt worth typing.</p>
+  </header>
+
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+
+  <section class="card stack" data-panel="interface">
+    <h2 data-t="p1Title">The five controls</h2>
+    <div class="controls" id="controls"></div>
+    <div class="panel stack stack--tight">
+      <p class="eyebrow" data-t="tipsTitle">Worth knowing</p>
+      <ul class="tips" id="tips1"></ul>
+    </div>
+  </section>
+
+  <section class="card stack" data-panel="styles" hidden>
+    <h2 data-t="p2Title">Five brushes</h2>
+    <div class="brushes" id="brushes"></div>
+  </section>
+
+  <section class="card stack" data-panel="builder" hidden>
+    <h2 data-t="p3Title">Build a prompt</h2>
+
+    <div class="panel stack stack--tight">
+      <p class="eyebrow" data-t="levelsTitle">How far to go</p>
+      <div class="levels" id="levels"></div>
+    </div>
+
+    <div class="builder">
+      <label>
+        <span class="eyebrow" data-t="fWho">Who or what</span>
+        <input class="input" id="who" autocomplete="off">
+      </label>
+      <label>
+        <span class="eyebrow" data-t="fWhere">Where</span>
+        <input class="input" id="where" autocomplete="off">
+      </label>
+      <label>
+        <span class="eyebrow" data-t="fWhat">Doing what</span>
+        <input class="input" id="what" autocomplete="off">
+      </label>
+      <div class="stack stack--tight">
+        <span class="eyebrow" data-t="fStyle">Style</span>
+        <div class="pills" id="stylePills"></div>
+      </div>
+      <label>
+        <span class="eyebrow" data-t="fExclude">Leave out (Exclude)</span>
+        <input class="input" id="exclude" autocomplete="off">
+      </label>
+    </div>
+
+    <div class="stack stack--tight">
+      <p class="eyebrow" data-t="outLabel">Your prompt</p>
+      <div class="out is-empty" id="out"></div>
+      <div class="out" id="outExclude" hidden></div>
+    </div>
+
+    <div class="row">
+      <button class="btn" id="copy" data-t="copy">Copy the prompt</button>
+      <button class="btn btn--ghost" id="clear" data-t="clear">Clear</button>
+      <a class="btn btn--ghost" href="https://perchance.org/ai-text-to-image-generator" target="_blank" rel="noopener" data-t="open">Open Perchance</a>
+    </div>
+    <div id="verdict" hidden></div>
+  </section>
+
+  <section class="card stack" data-panel="exclude" hidden>
+    <h2 data-t="p4Title">The magic eraser</h2>
+    <p class="lede" data-t="excludeIntro">Sometimes the picture comes back with something you never asked for. Exclude is where you say what must stay out.</p>
+    <div class="examples" id="excludeEx"></div>
+    <div class="panel stack stack--tight">
+      <p class="eyebrow" data-t="whenTitle">When to reach for it</p>
+      <ul class="tips" id="tips4"></ul>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Same four tabs, five controls, five brushes and three prompt levels as the
+     original workshop, and the same Perchance link. The prompt builder now
+     joins its parts with commas, which is what the generator actually reads. */
+
+  var PANELS = ["interface", "styles", "builder", "exclude"];
+  var STYLES = ["auto", "photo", "illustration", "vector", "raw"];
+
+  var T = {
+    en: {
+      eyebrow: "AI images · workshop",
+      title1: "Words in,", title2: "pictures out",
+      intro: "Perchance draws what you describe. The better the description, the better the picture — this workshop shows what the buttons do and how to build a prompt worth typing.",
+      tabs: ["The screen", "Brushes", "Build a prompt", "The eraser"],
+      p1Title: "The five controls", p2Title: "Five brushes",
+      p3Title: "Build a prompt", p4Title: "The magic eraser",
+      tipsTitle: "Worth knowing",
+      controls: [
+        ["✍️", "Prompt box", "Where the description goes. Any language works, English usually works best."],
+        ["🎨", "Draw", "The button that starts it. Then you wait a minute or two."],
+        ["🖌️", "Style", "Five brushes: Auto, Photo, Illustration, Vector, Raw."],
+        ["🖼️", "Format", "Square is free. The other shapes are for paid accounts."],
+        ["🚫", "Exclude", "The eraser. Whatever you write here stays out of the picture."]
+      ],
+      tips1: [
+        "Nine pictures come back at once — pick the one you like.",
+        "It takes a minute or two. That is normal.",
+        "Not what you wanted? Press Draw again; you get nine new ones.",
+        "Right-click a picture to save it."
+      ],
+      brushes: {
+        auto:         ["Auto", "The clever brush. It decides how to draw. Start here.", ["Your first picture", "You cannot decide", "You want a surprise"]],
+        photo:        ["Photo", "The camera brush. Comes back looking like a photograph.", ["Real animals or places", "Portraits", "Anything that should look true"]],
+        illustration: ["Illustration", "The pencil brush. Cartoon, storybook, bright.", ["Fairy-tale characters", "Pictures for a story", "Cartoon heroes"]],
+        vector:       ["Vector", "The sharp brush. Flat shapes and clean edges, like a logo.", ["Icons", "Patterns", "Simple, tidy design"]],
+        raw:          ["Raw", "The free brush. No help, no guessing — you decide everything.", ["Mixing styles", "Odd effects", "Experiments"]]
+      },
+      levelsTitle: "How far to go",
+      levels: [
+        ["Level 1", "who or what → a cat"],
+        ["Level 2", "who + where → a fluffy cat on a windowsill"],
+        ["Level 3", "who + where + doing what + style → a fluffy cat on a windowsill watching the rain, illustration"]
+      ],
+      fWho: "Who or what", fWhere: "Where", fWhat: "Doing what",
+      fStyle: "Style", fExclude: "Leave out (Exclude)",
+      outLabel: "Your prompt", empty: "Fill in a field and the prompt appears here.",
+      copy: "Copy the prompt", clear: "Clear", open: "Open Perchance",
+      copied: "Copied. Paste it into the prompt box on Perchance.",
+      nothingYet: "There is nothing to copy yet.",
+      excludeLabel: "Exclude:",
+      styleNames: { auto: "Auto", photo: "Photo", illustration: "Illustration", vector: "Vector", raw: "Raw" },
+      excludeIntro: "Sometimes the picture comes back with something you never asked for. Exclude is where you say what must stay out.",
+      excludeEx: [
+        ["a beach at noon", "sun", "a beach with no sun in the sky"],
+        ["a dragon on a cliff", "wings", "a dragon that cannot fly"],
+        ["a forest path", "dark, fog", "a bright, friendly forest"],
+        ["a robot friend", "metal, sharp edges", "a soft, colourful robot"]
+      ],
+      whenTitle: "When to reach for it",
+      tips4: [
+        "Picture too gloomy → exclude: dark, black",
+        "You want no people in it → exclude: people, person",
+        "You want a plain background → exclude: busy background, clutter",
+        "A colour keeps turning up → exclude that colour by name"
+      ]
+    },
+    es: {
+      eyebrow: "Imágenes con IA · taller",
+      title1: "Entran palabras,", title2: "salen imágenes",
+      intro: "Perchance dibuja lo que describes. Cuanto mejor la descripción, mejor la imagen: este taller enseña qué hace cada botón y cómo montar un prompt que valga la pena.",
+      tabs: ["La pantalla", "Pinceles", "Montar un prompt", "El borrador"],
+      p1Title: "Los cinco controles", p2Title: "Cinco pinceles",
+      p3Title: "Monta un prompt", p4Title: "El borrador mágico",
+      tipsTitle: "Conviene saber",
+      controls: [
+        ["✍️", "Campo del prompt", "Aquí va la descripción. Vale cualquier idioma, aunque el inglés suele funcionar mejor."],
+        ["🎨", "Draw", "El botón que lo pone en marcha. Luego esperas uno o dos minutos."],
+        ["🖌️", "Estilo", "Cinco pinceles: Auto, Photo, Illustration, Vector, Raw."],
+        ["🖼️", "Formato", "El cuadrado es gratis. Las demás formas son para cuentas de pago."],
+        ["🚫", "Exclude", "El borrador. Lo que escribas aquí se queda fuera de la imagen."]
+      ],
+      tips1: [
+        "Vuelven nueve imágenes a la vez: quédate con la que más te guste.",
+        "Tarda uno o dos minutos. Es normal.",
+        "¿No es lo que querías? Pulsa Draw otra vez y salen nueve nuevas.",
+        "Clic derecho sobre una imagen para guardarla."
+      ],
+      brushes: {
+        auto:         ["Auto", "El pincel listo. Decide él cómo dibujar. Empieza por aquí.", ["Tu primera imagen", "No sabes cuál elegir", "Quieres una sorpresa"]],
+        photo:        ["Photo", "El pincel cámara. Sale como una fotografía.", ["Animales o lugares reales", "Retratos", "Todo lo que deba parecer de verdad"]],
+        illustration: ["Illustration", "El pincel lápiz. Dibujo animado, cuento, color.", ["Personajes de cuento", "Ilustrar una historia", "Héroes de dibujos"]],
+        vector:       ["Vector", "El pincel afilado. Formas planas y bordes limpios, como un logo.", ["Iconos", "Patrones", "Diseño sencillo y ordenado"]],
+        raw:          ["Raw", "El pincel libre. Sin ayuda: decides tú todo.", ["Mezclar estilos", "Efectos raros", "Experimentos"]]
+      },
+      levelsTitle: "Hasta dónde llegar",
+      levels: [
+        ["Nivel 1", "quién o qué → un gato"],
+        ["Nivel 2", "quién + dónde → un gato peludo en la ventana"],
+        ["Nivel 3", "quién + dónde + qué hace + estilo → un gato peludo en la ventana mirando la lluvia, ilustración"]
+      ],
+      fWho: "Quién o qué", fWhere: "Dónde", fWhat: "Qué hace",
+      fStyle: "Estilo", fExclude: "Dejar fuera (Exclude)",
+      outLabel: "Tu prompt", empty: "Rellena un campo y el prompt aparece aquí.",
+      copy: "Copiar el prompt", clear: "Limpiar", open: "Abrir Perchance",
+      copied: "Copiado. Pégalo en el campo de prompt de Perchance.",
+      nothingYet: "Todavía no hay nada que copiar.",
+      excludeLabel: "Exclude:",
+      styleNames: { auto: "Auto", photo: "Photo", illustration: "Illustration", vector: "Vector", raw: "Raw" },
+      excludeIntro: "A veces la imagen vuelve con algo que nunca pediste. En Exclude dices lo que tiene que quedarse fuera.",
+      excludeEx: [
+        ["una playa a mediodía", "sol", "una playa sin sol en el cielo"],
+        ["un dragón en un acantilado", "alas", "un dragón que no puede volar"],
+        ["un sendero del bosque", "oscuro, niebla", "un bosque claro y amable"],
+        ["un robot amigo", "metal, bordes afilados", "un robot blando y de colores"]
+      ],
+      whenTitle: "Cuándo usarlo",
+      tips4: [
+        "Imagen demasiado sombría → exclude: dark, black",
+        "No quieres gente → exclude: people, person",
+        "Quieres un fondo liso → exclude: busy background, clutter",
+        "Un color se repite → exclúyelo por su nombre"
+      ]
+    }
+  };
+
+  var lang = "en", panel = "interface", style = null;
+
+  function byId(id) { return document.getElementById(id); }
+  function t() { return T[lang]; }
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+
+  function say(kind, message) {
+    var v = byId("verdict");
+    v.hidden = false; v.className = "feedback feedback--" + kind; v.textContent = message;
+  }
+  function clearSay() { var v = byId("verdict"); v.hidden = true; v.className = ""; }
+
+  function buildPrompt() {
+    var d = t();
+    var parts = [byId("who").value, byId("where").value, byId("what").value]
+      .map(function (v) { return v.trim(); })
+      .filter(Boolean);
+    if (style && style !== "auto") parts.push(d.styleNames[style].toLowerCase());
+    return parts.join(", ");
+  }
+
+  function paintOut() {
+    var d = t();
+    var text = buildPrompt();
+    var out = byId("out");
+    out.textContent = text || d.empty;
+    out.className = "out" + (text ? "" : " is-empty");
+
+    var ex = byId("exclude").value.trim();
+    var line = byId("outExclude");
+    line.hidden = !ex;
+    line.textContent = d.excludeLabel + " " + ex;
+  }
+
+  function showPanel(name) {
+    panel = name;
+    document.querySelectorAll("[data-panel]").forEach(function (s) {
+      s.hidden = s.dataset.panel !== name;
+    });
+    document.querySelectorAll("#tabs button").forEach(function (b) {
+      b.setAttribute("aria-selected", String(b.dataset.panel === name));
+    });
+  }
+
+  function render() {
+    var d = t();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (n) {
+      var v = d[n.dataset.t];
+      if (typeof v === "string") n.textContent = v;
+    });
+
+    var tabs = byId("tabs"); tabs.innerHTML = "";
+    PANELS.forEach(function (name, i) {
+      var b = el("button", null, d.tabs[i]);
+      b.type = "button";
+      b.dataset.panel = name;
+      b.setAttribute("role", "tab");
+      b.onclick = function () { showPanel(name); };
+      tabs.appendChild(b);
+    });
+
+    var controls = byId("controls"); controls.innerHTML = "";
+    d.controls.forEach(function (c) {
+      var row = el("div", "control");
+      row.appendChild(el("span", "control__n", c[0]));
+      var body = el("div");
+      body.appendChild(el("span", "control__name", c[1]));
+      body.appendChild(el("span", "control__desc", c[2]));
+      row.appendChild(body);
+      controls.appendChild(row);
+    });
+
+    var tips1 = byId("tips1"); tips1.innerHTML = "";
+    d.tips1.forEach(function (s) { tips1.appendChild(el("li", null, s)); });
+
+    var brushes = byId("brushes"); brushes.innerHTML = "";
+    STYLES.forEach(function (key) {
+      var b = d.brushes[key];
+      var card = el("div", "brush panel");
+      card.appendChild(el("span", "brush__name", b[0]));
+      card.appendChild(el("p", "muted", b[1]));
+      var ul = el("ul");
+      b[2].forEach(function (s) { ul.appendChild(el("li", null, s)); });
+      card.appendChild(ul);
+      brushes.appendChild(card);
+    });
+
+    var levels = byId("levels"); levels.innerHTML = "";
+    d.levels.forEach(function (l) {
+      var row = el("div", "level");
+      row.appendChild(el("b", null, l[0]));
+      row.appendChild(el("span", null, l[1]));
+      levels.appendChild(row);
+    });
+
+    var pills = byId("stylePills"); pills.innerHTML = "";
+    STYLES.forEach(function (key) {
+      var b = el("button", "pill", d.styleNames[key]);
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(style === key));
+      b.onclick = function () { style = style === key ? null : key; clearSay(); render(); };
+      pills.appendChild(b);
+    });
+
+    var ex = byId("excludeEx"); ex.innerHTML = "";
+    d.excludeEx.forEach(function (row) {
+      var box = el("div", "example");
+      var left = el("div");
+      left.appendChild(el("code", null, row[0]));
+      left.appendChild(el("div", "muted", d.excludeLabel + " " + row[1]));
+      box.appendChild(left);
+      box.appendChild(el("span", "example__arrow", "→"));
+      box.appendChild(el("span", null, row[2]));
+      ex.appendChild(box);
+    });
+
+    var tips4 = byId("tips4"); tips4.innerHTML = "";
+    d.tips4.forEach(function (s) { tips4.appendChild(el("li", null, s)); });
+
+    showPanel(panel);
+    paintOut();
+  }
+
+  ["who", "where", "what", "exclude"].forEach(function (id) {
+    byId(id).addEventListener("input", function () { clearSay(); paintOut(); });
+  });
+
+  byId("copy").onclick = function () {
+    var d = t();
+    var text = buildPrompt();
+    if (!text) { say("hint", d.nothingYet); return; }
+    var ex = byId("exclude").value.trim();
+    var full = ex ? text + "\n" + d.excludeLabel + " " + ex : text;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(full).then(
+        function () { say("ok", d.copied); },
+        function () { say("hint", full); }
+      );
+    } else {
+      say("hint", full);
+    }
+  };
+
+  byId("clear").onclick = function () {
+    ["who", "where", "what", "exclude"].forEach(function (id) { byId(id).value = ""; });
+    style = null; clearSay(); render();
+  };
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      clearSay(); render();
+    };
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

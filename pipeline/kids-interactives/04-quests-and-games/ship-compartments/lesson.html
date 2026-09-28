@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Квест «Отсеки корабля»</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .time-badge {
+            display: inline-block;
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .children-do {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .children-do span {
+            font-weight: 400;
+        }
+
+        ul {
+            list-style: disc;
+            padding-left: 28px;
+            margin-bottom: 16px;
+        }
+
+        ul li {
+            margin-bottom: 4px;
+        }
+
+        .send-chat {
+            margin-bottom: 16px;
+        }
+
+        .send-chat strong {
+            font-weight: 700;
+        }
+
+        .yellow-block {
+            background: #FFF9C4;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.65;
+        }
+
+        .yellow-block strong {
+            font-weight: 700;
+        }
+
+        .section-label {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .quest-heading {
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .quest-heading a {
+            color: #7C4DFF;
+            text-decoration: underline;
+            font-weight: 700;
+        }
+
+        .quest-heading .time {
+            font-weight: 400;
+            color: #333;
+        }
+
+        .quest-heading .arrow {
+            color: #333;
+            font-weight: 400;
+        }
+
+        .quest-heading .direction {
+            font-weight: 400;
+            color: #333;
+        }
+
+        .quest-description {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 12px;
+            line-height: 1.65;
+        }
+
+        .after-quest {
+            margin-bottom: 24px;
+            font-size: 15px;
+            line-height: 1.65;
+        }
+
+        .after-quest .label {
+            font-weight: 400;
+            color: #333;
+        }
+
+        .after-quest .quote {
+            color: #333;
+        }
+
+        .after-quest .quote u {
+            text-decoration: underline;
+        }
+
+        .green-block {
+            background: #E8F5E9;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.65;
+        }
+
+        .result-text {
+            color: #AB47BC;
+            font-size: 15px;
+            font-style: italic;
+            margin-top: 8px;
+            line-height: 1.65;
+        }
+
+        .quest-block {
+            margin-bottom: 28px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 24px 0;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <p class="children-do"><strong>Дети:</strong> <span>Проходят 3 квеста на платформе, узнают о новых направлениях</span></p>
+
+        <ul>
+            <li>Отправьте детей на платформу к заданиям квеста</li>
+        </ul>
+
+        <p class="send-chat"><strong>Отправьте в чат:</strong> ссылку на урок на платформе. Дети должны открыть ссылку и перейти к квестам самостоятельно.</p>
+
+        <div class="yellow-block">
+            А теперь отправляемся в путешествие! <strong>Отправляю ссылку на платформу в чат — открывайте!</strong> На нашем корабле есть 3 отсека. В каждом — мини-квест, который покажет вам новое направление, которым можно заниматься дальше!
+        </div>
+
+        <p class="section-label">Порядок квестов:</p>
+
+        <!-- Квест 1 -->
+        <div class="quest-block">
+            <p class="quest-heading">
+                🚀 <a href="#">Командный центр</a> <span class="time">(8 мин)</span> <span class="arrow">→</span> <span class="direction">Программирование</span>
+            </p>
+            <p class="quest-description">
+                Дети сначала отвечают на вопросы квеста на платформе, а затем попадают в интерактивное задание — визуальный редактор кода. Там можно собирать блоки (круги, дуги, прямоугольники), менять числа и цвета и сразу видеть результат на экране. Есть готовые примеры: Радуга, Звёзды, Спираль, Город, Смайлик — дети могут выбрать любой и поэкспериментировать. Также на экране появляются карточки о том, что создают программисты: игры, сайты, роботов и приложения.
+            </p>
+            <div class="after-quest">
+                <span class="label">Что сказать после квеста:</span> <span class="quote">«Программирование — это когда вы пишете команды для компьютера и <u>создаёте</u> приложения, игры и сайты. Вы только что сами попробовали — собирали блоки и рисовали картинки кодом! В будущем вы сможете изучать это глубже!»</span>
+            </div>
+        </div>
+
+        <!-- Квест 2 -->
+        <div class="quest-block">
+            <p class="quest-heading">
+                🔬 <a href="#">Лаборатория</a> <span class="time">(8 мин)</span> <span class="arrow">→</span> <span class="direction">3D-моделирование</span>
+            </p>
+            <p class="quest-description">
+                Дети сначала отвечают на вопросы квеста на платформе, а затем попадают в интерактивное задание — 3D-сцену. Там можно выбирать фигуры (куб, сфера, конус, тор, цилиндр, ракета), менять их цвет, размер и скорость вращения, а также вращать сцену мышкой. На экране появляются карточки о том, где используется 3D: анимация (Frozen, Shrek), игры (Minecraft, Fortnite), архитектура и 3D-печать.
+            </p>
+            <div class="after-quest">
+                <span class="label">Что сказать после квеста:</span> <span class="quote">«3D-моделирование — это создание <u>объёмных</u> объектов на компьютере. Вы только что сами крутили и настраивали 3D-фигуры! Можно делать персонажей, здания, целые миры — и даже печатать их на 3D-принтере!»</span>
+            </div>
+        </div>
+
+        <!-- Квест 3 -->
+        <div class="quest-block">
+            <p class="quest-heading">
+                🎮 <a href="#">Игровой зал</a> <span class="time">(9 мин)</span> <span class="arrow">→</span> <span class="direction">Геймдизайн</span>
+            </p>
+            <p class="quest-description">
+                Дети сначала отвечают на вопросы квеста на платформе, а затем попадают в интерактивное задание — конструктор мини-игры. Там можно выбрать тему мира (Космос, Океан, Лес, Сладости), персонажа (Ракета, Кот, Лиса, Звезда, Робот) и сложность (Легко, Средне, Сложно) — а потом сыграть в свою собственную игру, где нужно прыгать, уворачиваться от препятствий и собирать монеты. На экране появляются карточки о работе геймдизайнера: создание уровней, персонажей, баланс сложности и атмосфера.
+            </p>
+            <div class="after-quest">
+                <span class="label">Что сказать после квеста:</span> <span class="quote">«Геймдизайн — это создание своих собственных игр! Вы только что сами настроили игру — выбрали мир, персонажа, сложность и сыграли в неё. Придумывать правила, уровни, персонажей — всё это можно изучать!»</span>
+            </div>
+        </div>
+
+        <div class="yellow-block">
+            Вот видите — в будущем вы сможете развиваться в <strong>программировании, 3D-моделировании или геймдизайне!</strong> А пока — отличная работа, все квесты пройдены!
+        </div>
+
+        <div class="green-block">
+            Не нужно быть экспертом в этих направлениях. Достаточно прочитать описание выше и кратко рассказать после каждого квеста, о чём это направление. Интерактивные задания дети проходят самостоятельно — задача учителя просто подвести итог после каждого отсека.
+        </div>
+
+        <p class="result-text">Дети прошли квесты, попробовали интерактивные задания по каждому направлению и узнали о направлениях для дальнейшего развития.</p>
+
+    </div>
+</body>
+</html>

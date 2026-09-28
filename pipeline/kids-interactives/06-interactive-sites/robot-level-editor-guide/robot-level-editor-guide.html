@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Level Editor — Руководство</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #16213e;
+            --accent-blue: #4361ee;
+            --accent-purple: #7b2cbf;
+            --accent-cyan: #00d9ff;
+            --accent-green: #00f5a0;
+            --accent-orange: #ff6b35;
+            --accent-pink: #f72585;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b8;
+            --border-glow: rgba(67, 97, 238, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(67, 97, 238, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(67, 97, 238, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-purple);
+            opacity: 0.15;
+            top: -100px;
+            right: -100px;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent-cyan);
+            opacity: 0.1;
+            bottom: 20%;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: var(--accent-green);
+            opacity: 0.08;
+            bottom: -50px;
+            right: 20%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+        }
+
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .robot-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 10px 40px rgba(67, 97, 238, 0.4);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 40px rgba(67, 97, 238, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 15px 50px rgba(67, 97, 238, 0.6); }
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        /* Quick Link Card */
+        .link-card {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(67, 97, 238, 0.3);
+        }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .link-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .link-card a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .link-card a:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .section-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border: 2px solid var(--accent-blue);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        /* Card */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 35px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(67, 97, 238, 0.2);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-cyan));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        /* Steps */
+        .steps {
+            counter-reset: step;
+        }
+
+        .step {
+            display: flex;
+            gap: 20px;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            align-items: flex-start;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .step:first-child {
+            padding-top: 0;
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            min-width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--bg-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            margin: 15px 0;
+            display: inline-block;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(67, 97, 238, 0.2);
+            padding: 3px 8px;
+            border-radius: 6px;
+            color: var(--accent-cyan);
+            font-size: 0.9em;
+        }
+
+        /* Items grid */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .item:hover {
+            background: rgba(67, 97, 238, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .item-icon {
+            font-size: 2rem;
+        }
+
+        .item-text {
+            font-weight: 600;
+        }
+
+        .item-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Alert boxes */
+        .alert {
+            border-radius: 14px;
+            padding: 20px 25px;
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .alert-warning {
+            background: rgba(255, 107, 53, 0.15);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .alert-info {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(67, 97, 238, 0.08);
+            border-color: var(--accent-blue);
+            transform: translateY(-3px);
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Language buttons */
+        .lang-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(67, 97, 238, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .lang-btn.default {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border: none;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        footer .emoji {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 50px 20px 40px;
+            }
+
+            .logo-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .robot-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 30px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .link-card {
+                padding: 30px 25px;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-card);
+            border-radius: 5px;
+            border: 2px solid var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <header>
+        <div class="logo-container">
+            <div class="robot-icon">🤖</div>
+        </div>
+        <h1>Robot Level Editor</h1>
+        <p class="subtitle">Платформа создания уровней для обучения робототехнике</p>
+    </header>
+
+    <div class="container">
+        <!-- Quick Link -->
+        <div class="link-card">
+            <h2>🔗 Ссылка на платформу</h2>
+            <a href="https://replit.com/@Mario-RafaelRa1/Python-2" target="_blank">
+                <span>replit.com/@Mario-RafaelRa1/Python-2</span>
+                <span>↗</span>
+            </a>
+        </div>
+
+        <!-- Section 0: How to Run -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">0</div>
+                <h2 class="section-title">Как запустить платформу</h2>
+            </div>
+            <div class="card">
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-content">Откройте ссылку на платформу (см. выше)</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Нажмите кнопку <strong>«Remix this app»</strong> (создать свою копию)</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Войдите через любой Google-аккаунт (или создайте аккаунт Replit)</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Дождитесь копирования проекта</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Нажмите зелёную кнопку <strong>«Run»</strong> для запуска</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Откройте превью сайта, нажав на <strong>плюс (+)</strong> и выбрав <strong>Превью</strong></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Нажмите кнопку со стрелкой <strong>(↗)</strong> в правом верхнем углу окна с сайтом, чтобы открыть его во внешнем окне</div>
+                    </div>
+                </div>
+                <div class="alert alert-info">
+                    <span class="alert-icon">💡</span>
+                    <div><strong>ВАЖНО:</strong> Скопируйте ссылку из внешнего окна — именно её нужно давать ученикам. Ссылка будет вида: <code>ваш-проект.replit.app</code></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Creating Room -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2 class="section-title">Создание комнаты для урока</h2>
+            </div>
+            <div class="card">
+                <p style="margin-bottom: 20px; color: var(--text-secondary);">Чтобы начать работу с учениками:</p>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-content">Откройте сайт платформы в браузере</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">В блоке <strong>«Buat Ruangan»</strong> введите название урока (например: «Робототехника — 5А»)</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Нажмите кнопку <strong>«Buat Ruangan»</strong></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Запомните или запишите <strong>4-значный код комнаты</strong> (отображается вверху страницы)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Sharing Code -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2 class="section-title">Как поделиться кодом с учениками</h2>
+            </div>
+            <div class="card">
+                <p style="margin-bottom: 20px; color: var(--text-secondary);">Есть несколько способов:</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Способ</th>
+                                <th>Описание</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Отправить ссылку</strong></td>
+                                <td>Скопируйте URL из адресной строки браузера</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Отправить в чат</strong></td>
+                                <td>Продиктуйте или напишите в чат 4 цифры кода</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Показать на экране</strong></td>
+                                <td>Откройте комнату через демонстрацию экрана</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 25px;">
+                    <p style="color: var(--text-secondary); margin-bottom: 10px;">Пример:</p>
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <div class="code-block">Код комнаты: <strong>4521</strong></div>
+                        <div class="code-block">Ссылка: <strong>сайт.replit.app/room/4521</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Teacher Mode -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2 class="section-title">Управление комнатой (режим учителя)</h2>
+            </div>
+            <div class="card">
+                <p style="margin-bottom: 20px; color: var(--text-secondary);">Вы можете удалять уровни учеников:</p>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-content">Находясь в комнате, нажмите на кнопку <strong>🔐 Mode Guru</strong></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Введите секретный код: <code>10122025</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Появится кнопка <strong>«🚪 Keluar»</strong> — это означает, что режим активен</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Теперь вы можете удалять уровни (кнопка <strong>🗑️</strong> рядом с каждым уровнем)</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Нажмите <strong>«Keluar»</strong> для отключения режима учителя</div>
+                    </div>
+                </div>
+                <div class="alert alert-warning">
+                    <span class="alert-icon">⚠️</span>
+                    <div><strong>Важно:</strong> Режим учителя работает только в текущей комнате. При переходе в другую комнату права сбрасываются.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Student Instructions -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2 class="section-title">Что делают ученики</h2>
+            </div>
+            <div class="card">
+                <p style="margin-bottom: 20px; color: var(--text-secondary);">Инструкция для учеников (можете продиктовать):</p>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-content">Откройте сайт по ссылке от преподавателя</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Введите код комнаты и нажмите <strong>«Masuk»</strong></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Нажмите <strong>«✨ Buat Level»</strong></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Введите своё имя и выберите размер сетки (<strong>5×5</strong>, <strong>8×8</strong> или <strong>10×10</strong>)</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Нажмите <strong>«Mulai Membuat»</strong></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Разместите на сетке элементы (см. ниже)</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Нажмите <strong>«🎮 Uji Level»</strong> и пройдите свой уровень</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">После прохождения нажмите <strong>«📤 Publikasi»</strong></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">Готово! Можно играть в уровни одноклассников</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem;">Элементы для размещения:</h3>
+                <div class="items-grid">
+                    <div class="item">
+                        <span class="item-icon">🤖</span>
+                        <div>
+                            <div class="item-text">Робот</div>
+                            <div class="item-desc">Откуда начинает</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <span class="item-icon">🏁</span>
+                        <div>
+                            <div class="item-text">Финиш</div>
+                            <div class="item-desc">Куда нужно дойти</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <span class="item-icon">💎</span>
+                        <div>
+                            <div class="item-text">Кристаллы</div>
+                            <div class="item-desc">Нужно собрать</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <span class="item-icon">🪨</span>
+                        <div>
+                            <div class="item-text">Камни</div>
+                            <div class="item-desc">Препятствия</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Features -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2 class="section-title">Полезные функции</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-title">🖼️ Предпросмотр уровней</div>
+                    <div class="feature-desc">Каждый уровень показывает миниатюру с расположением объектов прямо в списке.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">❤️ Система лайков</div>
+                    <div class="feature-desc">Ученики могут ставить лайки понравившимся уровням. Уровни с большим количеством лайков отображаются выше.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">🏷️ Названия уровней</div>
+                    <div class="feature-desc">Каждый уровень получает уникальное имя: <code>Имя-123</code> (имя автора + случайный код).</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">✅ Проверка перед публикацией</div>
+                    <div class="feature-desc">Уровень можно опубликовать только после того, как автор сам его прошёл. Это гарантирует, что все уровни проходимы.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Secret Codes -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2 class="section-title">Секретные коды</h2>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Код</th>
+                                <th>Роль</th>
+                                <th>Возможности</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>10122025</code></td>
+                                <td><strong>Учитель</strong></td>
+                                <td>Управление только текущей комнатой</td>
+                            </tr>
+                            <tr>
+                                <td><code>10122025Ad</code></td>
+                                <td><strong>Администратор</strong></td>
+                                <td>Полный доступ ко всем комнатам, вводится как код комнаты на главной странице</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Languages -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2 class="section-title">Смена языка</h2>
+            </div>
+            <div class="card">
+                <p style="color: var(--text-secondary); margin-bottom: 10px;">Платформа поддерживает 4 языка. Кнопки в правом нижнем углу:</p>
+                <div class="lang-grid">
+                    <div class="lang-btn default">
+                        <span>🇮🇩</span>
+                        <span>Индонезийский</span>
+                        <span style="opacity: 0.7; font-size: 0.85em;">(по умолчанию)</span>
+                    </div>
+                    <div class="lang-btn">
+                        <span>🇬🇧</span>
+                        <span>Английский</span>
+                    </div>
+                    <div class="lang-btn">
+                        <span>🇪🇸</span>
+                        <span>Испанский</span>
+                    </div>
+                    <div class="lang-btn">
+                        <span>🇷🇺</span>
+                        <span>Русский</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="emoji">🎮</div>
+        <p>Удачных уроков!</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,119 @@
+/* compliance-microlearning · GrassLMS Lively · A4 portrait
+   Base styles from ../_shared/system.css
+   This file contains only artefact-specific styles. */
+
+code { font-family: var(--font-mono); font-size: 0.92em; background: var(--ink-50); padding: 1px 6px; border-radius: 4px; color: var(--green-700); }
+
+.meta-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 14px 0 22px;
+  padding: 12px 14px;
+  background: var(--green-50);
+  border-radius: var(--r-md);
+  border-left: 4px solid var(--green-600);
+}
+.meta-row .k { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-700); font-weight: 600; }
+.meta-row .v { font-size: 12.5px; font-weight: 700; color: var(--ink-900); margin-top: 2px; }
+
+.block {
+  margin: 22px 0;
+  padding: 16px 18px;
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  border-left: 4px solid var(--green-600);
+  page-break-inside: avoid;
+}
+.block.sun   { border-left-color: var(--sun-500); }
+.block.coral { border-left-color: var(--coral-500); }
+
+.block .bl-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0 0 8px;
+}
+.block .bl-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+  font-weight: 700;
+  margin: 0;
+}
+.block h2 { font-size: 18px; font-weight: 800; letter-spacing: -0.015em; margin: 0; }
+.block h3 { font-size: 13px; font-weight: 800; margin: 14px 0 6px; }
+.block p { font-size: 12.5px; color: var(--ink-700); margin: 0 0 8px; line-height: 1.55; }
+.block p strong { color: var(--ink-900); }
+.block ul { padding-left: 18px; margin: 4px 0 8px; }
+.block li { font-size: 12.5px; color: var(--ink-700); line-height: 1.55; margin-bottom: 4px; }
+
+/* Tables scroll inside their own box on narrow screens. */
+.tbl-wrap { overflow-x: auto; margin: 6px 0 10px; }
+table.grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  min-width: 520px;
+}
+table.grid th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green-700);
+  border-bottom: 2px solid var(--green-100);
+  padding: 6px 8px 5px;
+  vertical-align: bottom;
+}
+table.grid td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--ink-100);
+  color: var(--ink-700);
+  vertical-align: top;
+  line-height: 1.45;
+}
+table.grid td.u { font-family: var(--font-mono); font-weight: 700; color: var(--green-700); white-space: nowrap; }
+table.grid tr.built td { background: var(--green-50); }
+table.grid td strong { color: var(--ink-900); }
+
+.pillrow { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+.pill {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--ink-50);
+  border: 1px solid var(--ink-100);
+  color: var(--ink-500);
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 0;
+}
+.cta a.play {
+  background: var(--green-600);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 12.5px;
+  padding: 10px 18px;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-pop-sm);
+}
+.cta.cta-top { margin: 14px 0 0; }
+.cta a.play:hover { background: var(--green-700); color: #fff; }
+.cta .note { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-400); }
+
+@media print { .cta a.play { box-shadow: none; } }

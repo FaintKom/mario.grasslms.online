@@ -1,0 +1,67 @@
+<svg class="robot-svg" id="robotSvg" viewBox="0 0 200 220">
+    <defs>
+        <linearGradient id="yellowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#fde047"></stop>
+            <stop offset="50%" style="stop-color:#facc15"></stop>
+            <stop offset="100%" style="stop-color:#eab308"></stop>
+        </linearGradient>
+        
+        <linearGradient id="grayGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#4b5563"></stop>
+            <stop offset="50%" style="stop-color:#9ca3af"></stop>
+            <stop offset="100%" style="stop-color:#4b5563"></stop>
+        </linearGradient>
+    </defs>
+    
+    <!-- Левая рука -->
+    <g class="arm-left" id="armLeftGroup">
+        <g class="arm-segment" id="armLeftSegment" transform="translate(54, 108) rotate(34)">
+            <rect id="armLeftRect" rx="5" fill="url(#grayGradient)" x="0" y="0" width="10" height="35"></rect>
+            <g class="claw" id="clawLeftGroup" transform="translate(5, 45)">
+                <path id="clawLeftPath" fill="none" stroke="url(#yellowGradient)" stroke-linecap="round" d="M -12,0 A 12,12 0 1,1 12,0" stroke-width="11" transform="rotate(-1)"></path>
+                <circle id="clawLeftBall1" fill="#facc15" cx="-10" cy="8" r="8"></circle>
+                <circle id="clawLeftBall2" fill="#facc15" cx="10" cy="8" r="8"></circle>
+            </g>
+        </g>
+    </g>
+    
+    <!-- Правая рука -->
+    <g class="arm-right" id="armRightGroup">
+        <g class="arm-segment" id="armRightSegment" transform="translate(140, 111) rotate(-35)">
+            <rect id="armRightRect" rx="5" fill="url(#grayGradient)" x="0" y="0" width="10" height="35"></rect>
+            <g class="claw" id="clawRightGroup" transform="translate(5, 49)">
+                <path id="clawRightPath" fill="none" stroke="url(#yellowGradient)" stroke-linecap="round" d="M -12,0 A 12,12 0 1,1 12,0" stroke-width="11" transform="rotate(4)"></path>
+                <circle id="clawRightBall1" fill="#facc15" cx="-10" cy="8" r="8"></circle>
+                <circle id="clawRightBall2" fill="#facc15" cx="10" cy="8" r="8"></circle>
+            </g>
+        </g>
+    </g>
+    
+    <!-- Голова -->
+    <g class="head">
+        <rect id="headRect" fill="url(#yellowGradient)" x="35" y="10" width="130" height="80" rx="18"></rect>
+        
+        <g class="eyes">
+            <g class="eye-left">
+                <ellipse id="eyeLeftWhite" fill="white" cx="75" cy="45" rx="15" ry="16.95"></ellipse>
+                <circle class="pupil" id="eyeLeftPupil" fill="#1a1a2e" cx="75" cy="52" r="7"></circle>
+                <circle id="eyeLeftHighlight" fill="white" cx="80" cy="40" r="3"></circle>
+            </g>
+            <g class="eye-right">
+                <ellipse id="eyeRightWhite" fill="white" cx="125" cy="45" rx="15" ry="16.95"></ellipse>
+                <circle class="pupil" id="eyeRightPupil" fill="#1a1a2e" cx="125" cy="52" r="7"></circle>
+                <circle id="eyeRightHighlight" fill="white" cx="130" cy="40" r="3"></circle>
+            </g>
+        </g>
+        
+        <g class="mouth">
+            <path id="mouthPath" fill="#1a1a2e" d="M 76,68 Q 76,87 100,87 Q 124,87 124,68 Z"></path>
+            <ellipse id="tongue" fill="#ef4444" cx="100" cy="82" rx="12" ry="4"></ellipse>
+        </g>
+    </g>
+    
+    <!-- Тело -->
+    <g class="body">
+        <rect id="bodyRect" fill="url(#yellowGradient)" x="62.5" y="98" width="75" height="94" rx="18"></rect>
+    </g>
+</svg>

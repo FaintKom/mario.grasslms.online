@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="{{ session.get('lang', 'ru') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ t('common.app_name') }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Robot SVG (hidden, used as reference) -->
+    <div id="robot-svg-container" style="display: none;">
+        {% include 'components/robot.svg' %}
+    </div>
+    
+    <!-- Virus SVG (hidden, used as reference) -->
+    <div id="virus-svg-container" style="display: none;">
+        {% include 'components/virus.svg' %}
+    </div>
+    
+    <div class="app-container">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- Modal for messages -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-character" id="modal-character"></div>
+            <div class="modal-text" id="modal-text"></div>
+            <div class="modal-buttons" id="modal-buttons">
+                <button class="btn btn-primary" onclick="closeModal()">{{ t('common.close') }}</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast notifications -->
+    <div id="toast-container" class="toast-container"></div>
+    
+    <!-- Code display modal -->
+    <div id="code-modal" class="modal-overlay hidden">
+        <div class="modal-content code-modal">
+            <div class="code-modal-robot">
+                <!-- Robot will be inserted here -->
+            </div>
+            <h2 class="code-modal-title">🎉 {{ t('task.success') }}</h2>
+            <p class="code-modal-instruction">{{ t('task.code_instruction') }}</p>
+            <div class="code-display" id="code-display">
+                <span id="code-value"></span>
+                <button class="copy-btn" onclick="copyCode()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+            <button class="btn btn-primary btn-large" onclick="closeCodeModal()">{{ t('common.close') }}</button>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

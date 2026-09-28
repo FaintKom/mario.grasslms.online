@@ -1,0 +1,75 @@
+space-virus-quest/
+├── index.html
+├── package.json
+├── README.md
+│
+├── locales/                          # Локализация
+│   ├── ru.json                       # Русский (первая версия)
+│   ├── en.json                       # Английский (позже)
+│   ├── es.json                       # Испанский (позже)
+│   └── id.json                       # Индонезийский (позже)
+│
+├── css/
+│   ├── main.css
+│   ├── map.css
+│   ├── tasks.css
+│   ├── file-explorer.css
+│   └── editor.css
+│
+├── js/
+│   ├── app.js                        # Главный файл
+│   ├── i18n.js                       # Система локализации
+│   ├── map.js                        # Карта космодрома
+│   ├── progress.js                   # Сохранение прогресса
+│   ├── virus.js                      # Вирус-персонаж
+│   ├── rocket-launch.js              # Финальный запуск
+│   ├── file-explorer.js              # Симуляция проводника
+│   ├── text-editor.js                # Обёртка для редактора
+│   └── file-checker.js               # Проверка загруженных файлов
+│
+├── tasks/
+│   ├── sector-a/
+│   │   ├── task-1-drag-files.js
+│   │   ├── task-2-file-explorer.js
+│   │   └── task-3-fix-structure.js
+│   ├── sector-b/
+│   │   ├── task-1-simple-board.js
+│   │   ├── task-2-complex-board.js
+│   │   └── task-3-matching-tools.js
+│   ├── sector-c/
+│   │   ├── task-1-fix-errors.js
+│   │   ├── task-2-format-text.js
+│   │   └── task-3-fill-gaps.js
+│   └── sector-d/
+│       └── task-presentation.js       # Все 3 задания в одном
+│
+├── components/
+│   ├── modal.js
+│   ├── hints.js
+│   ├── code-display.js
+│   └── progress-bar.js
+│
+├── assets/
+│   ├── images/
+│   │   ├── map/
+│   │   ├── virus/
+│   │   ├── rocket/
+│   │   ├── sectors/
+│   │   └── tools/                    # Плейсхолдеры для B3
+│   ├── downloads/
+│   │   ├── board-simple.png
+│   │   ├── board-complex.png
+│   │   └── mission_presentation.pptx
+│   └── sounds/                       # Опционально
+│
+├── api/
+│   ├── server.js                     # Express сервер
+│   ├── rooms.js                      # API комнат
+│   ├── progress.js                   # API прогресса
+│   ├── check-image.js                # Проверка PNG
+│   └── check-pptx.js                 # Проверка презентаций
+│
+└── config/
+    ├── tasks.json
+    ├── codes.json
+    └── sectors.json

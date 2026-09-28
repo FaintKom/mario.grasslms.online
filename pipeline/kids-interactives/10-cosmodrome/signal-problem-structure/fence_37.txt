@@ -1,0 +1,36 @@
+space-virus-quest/
+├── app.py                 # Flask приложение
+├── config.py              # Настройки
+├── extensions.py          # db, socketio
+├── requirements.txt
+├── create_templates.py    # Генератор PNG/PPTX
+├── README.md
+│
+├── models/
+│   ├── room.py           # Модель комнаты
+│   └── student.py        # Модель ученика
+│
+├── routes/
+│   ├── main.py           # Главная страница
+│   ├── teacher.py        # Панель учителя
+│   ├── student.py        # Карта, сектора
+│   └── api.py            # API проверки заданий
+│
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── teacher/          # 2 шаблона
+│   ├── student/          # 5 шаблонов
+│   └── tasks/
+│       ├── sector_a/     # 3 задания
+│       ├── sector_b/     # 3 задания
+│       ├── sector_c/     # 3 задания
+│       └── sector_d/     # 1 задание
+│
+├── static/
+│   ├── css/              # 9 файлов стилей
+│   ├── js/main.js
+│   └── downloads/        # PNG платы + PPTX
+│
+├── locales/ru.json       # Все тексты
+└── utils/                # i18n + проверка файлов

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Фон - космос -->
+  <rect width="200" height="200" fill="#1e1b4b"/>
+  
+  <!-- Звёзды -->
+  <circle cx="20" cy="30" r="2" fill="#fff" opacity="0.8"/>
+  <circle cx="180" cy="40" r="1.5" fill="#fff" opacity="0.6"/>
+  <circle cx="50" cy="150" r="2" fill="#fff" opacity="0.7"/>
+  <circle cx="160" cy="160" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="30" cy="100" r="1.5" fill="#fff" opacity="0.6"/>
+  <circle cx="170" cy="90" r="2" fill="#fff" opacity="0.8"/>
+  <circle cx="90" cy="20" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="140" cy="180" r="1.5" fill="#fff" opacity="0.7"/>
+  
+  <!-- Пламя ракеты -->
+  <ellipse cx="100" cy="165" rx="15" ry="25" fill="#f59e0b"/>
+  <ellipse cx="100" cy="160" rx="10" ry="18" fill="#facc15"/>
+  <ellipse cx="100" cy="155" rx="6" ry="12" fill="#fef08a"/>
+  
+  <!-- Корпус ракеты -->
+  <path d="M100 30 L120 90 L120 140 L80 140 L80 90 Z" fill="#e2e8f0"/>
+  
+  <!-- Нос ракеты -->
+  <path d="M100 30 L115 70 L85 70 Z" fill="#ef4444"/>
+  
+  <!-- Иллюминатор -->
+  <circle cx="100" cy="95" r="12" fill="#3b82f6"/>
+  <circle cx="100" cy="95" r="8" fill="#60a5fa"/>
+  <circle cx="96" cy="91" r="3" fill="#bfdbfe"/>
+  
+  <!-- Боковые крылья -->
+  <path d="M80 120 L60 150 L80 140 Z" fill="#ef4444"/>
+  <path d="M120 120 L140 150 L120 140 Z" fill="#ef4444"/>
+  
+  <!-- Детали корпуса -->
+  <rect x="85" y="115" width="30" height="5" fill="#94a3b8"/>
+  <rect x="90" y="125" width="20" height="3" fill="#94a3b8"/>
+</svg>

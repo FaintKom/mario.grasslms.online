@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drawing Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<!-- part:pixilart:begin -->
+<!-- Built from _shared/parts/pixilart.html — edit that file, then run _shared/build.py -->
+<style>
+/* ==========================================================================
+   Pixilart's editor, drawn in CSS.
+
+   The recognisable parts are the dark shell, the narrow two-column tool rail
+   down the left, the canvas floating on a dark checkered ground, and the
+   stacked panels on the right under small uppercase headers. Prefixed .px- so
+   nothing here can reach the GrassLMS page around it.
+
+   The lesson page stays light: the studio is a window sitting on it, the way
+   the real editor sits on a desktop.
+   ========================================================================== */
+
+.px {
+  --px-bg: #1b1d21;
+  --px-panel: #26282e;
+  --px-panel-2: #2e3138;
+  --px-line: #383b43;
+  --px-text: #e6e8eb;
+  --px-dim: #9aa0a8;
+  --px-accent: #ef4d55;
+
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--px-bg);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .28);
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--px-text);
+  -webkit-font-smoothing: antialiased;
+}
+.px svg { display: block; }
+
+/* ---- title bar ---------------------------------------------------------- */
+.px__top {
+  display: flex; align-items: center; gap: 14px;
+  height: 40px; padding: 0 12px;
+  background: var(--px-panel);
+  border-bottom: 1px solid var(--px-line);
+  font-size: 13px;
+}
+.px__logo { display: flex; align-items: center; gap: 7px; font-weight: 700; letter-spacing: -.01em; }
+.px__logo svg { width: 18px; height: 18px; }
+.px__menu { display: flex; gap: 2px; }
+.px__menu span { padding: 4px 8px; border-radius: 4px; color: var(--px-dim); font-size: 12px; }
+.px__menu span:hover { background: rgba(255, 255, 255, .07); color: var(--px-text); }
+.px__file { margin-left: auto; color: var(--px-dim); font-size: 12px; }
+.px__save {
+  padding: 5px 12px; border-radius: 4px;
+  background: var(--px-accent); color: #fff; font-size: 12px; font-weight: 600;
+}
+
+/* ---- the three columns -------------------------------------------------- */
+.px__body { display: grid; grid-template-columns: 96px minmax(0, 1fr) 230px; }
+@media (max-width: 1040px) {
+  .px__body { grid-template-columns: 96px minmax(0, 1fr); }
+  .px__side { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--px-line); }
+}
+@media (max-width: 640px) {
+  .px__body { grid-template-columns: 1fr; }
+  .px__rail { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 1px solid var(--px-line); }
+}
+
+.px__rail {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 10px 8px;
+  background: var(--px-panel);
+  border-right: 1px solid var(--px-line);
+}
+.px__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.px-tool {
+  position: relative;
+  width: 100%; aspect-ratio: 1;
+  display: grid; place-items: center;
+  border: 1px solid transparent; border-radius: 4px;
+  background: var(--px-panel-2);
+  color: var(--px-dim); cursor: pointer; padding: 0;
+}
+.px-tool:hover { background: #363a42; color: var(--px-text); }
+.px-tool[aria-pressed="true"] { background: var(--px-accent); border-color: #ff6b70; color: #fff; }
+.px-tool svg { width: 20px; height: 20px; }
+/* A tool that has been used gets a corner tick, so the lesson can show its
+   progress without bolting on a widget the real editor has no room for. */
+.px-tool__done { position: absolute; right: 3px; bottom: 2px; font-size: 9px; line-height: 1; color: #6ee7a8; }
+.px-tool[aria-pressed="true"] .px-tool__done { color: #fff; }
+
+.px__railhead {
+  font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  color: #6f757e; padding-left: 2px;
+}
+.px__sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.px__sizes button {
+  aspect-ratio: 1; display: grid; place-items: center;
+  border: 1px solid transparent; border-radius: 4px;
+  background: var(--px-panel-2); cursor: pointer; padding: 0;
+}
+.px__sizes button i { display: block; border-radius: 50%; background: var(--px-dim); }
+.px__sizes button[aria-pressed="true"] { background: var(--px-accent); }
+.px__sizes button[aria-pressed="true"] i { background: #fff; }
+
+.px-railbtn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  height: 30px; border: 0; border-radius: 4px;
+  background: var(--px-panel-2); color: var(--px-dim);
+  font: inherit; font-size: 11px; cursor: pointer;
+}
+.px-railbtn:hover { background: #3a2226; color: #ff8a8f; }
+.px-railbtn svg { width: 14px; height: 14px; }
+
+/* ---- canvas stage ------------------------------------------------------- */
+.px__stage {
+  display: grid; place-items: center;
+  padding: 18px;
+  background: repeating-conic-gradient(#202226 0 25%, #24272c 0 50%) 0 0 / 16px 16px;
+  min-height: 300px;
+}
+.px__stage canvas {
+  width: 100%; height: auto; display: block;
+  max-height: min(50svh, 500px); object-fit: contain;
+  border: 1px solid #4a4e57;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .45);
+  background: #fff;
+  touch-action: none; cursor: crosshair;
+}
+
+/* ---- right panels ------------------------------------------------------- */
+.px__side {
+  background: var(--px-panel);
+  border-left: 1px solid var(--px-line);
+  display: flex; flex-direction: column;
+}
+.px-panel { border-bottom: 1px solid var(--px-line); padding: 10px; }
+.px-panel:last-child { border-bottom: 0; flex: 1; }
+.px-panel__head {
+  font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  color: #6f757e; margin-bottom: 8px;
+}
+.px__swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.px__swatches button {
+  aspect-ratio: 1; padding: 0; cursor: pointer;
+  border: 2px solid transparent; border-radius: 3px;
+}
+.px__swatches button[aria-pressed="true"] { border-color: #fff; box-shadow: 0 0 0 1px var(--px-accent); }
+
+.px__current { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 11px; color: var(--px-dim); }
+.px__current i { width: 22px; height: 22px; border-radius: 3px; border: 1px solid #4a4e57; }
+
+.px__check { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--px-text); cursor: pointer; }
+.px__check input { accent-color: var(--px-accent); }
+
+/* Steps live where Pixilart keeps layers: same panel, same header. */
+.px-step {
+  display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px;
+  align-items: start; font-size: 11px; line-height: 1.45;
+  color: #7d838c; padding: 4px 0;
+}
+.px-step__dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1px solid #4a4e57; background: var(--px-panel-2);
+  display: grid; place-items: center; font-size: 9px;
+}
+.px-step.is-now { color: var(--px-text); font-weight: 600; }
+.px-step.is-now .px-step__dot { border-color: var(--px-accent); color: #ff9095; }
+.px-step.is-done { color: #5e646c; }
+.px-step.is-done .px-step__dot { background: #2f7d4f; border-color: #2f7d4f; color: #fff; }
+
+/* ---- status bar --------------------------------------------------------- */
+.px__status {
+  display: flex; align-items: center; gap: 16px;
+  height: 26px; padding: 0 12px;
+  background: var(--px-panel);
+  border-top: 1px solid var(--px-line);
+  font-size: 11px; color: #6f757e;
+}
+.px__status b { margin-left: auto; font-weight: 400; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="px-logo" viewBox="0 0 24 24">
+      <rect x="2" y="2" width="20" height="20" rx="3" fill="#ef4d55"/>
+      <path d="M8 17V7h4.6a3.2 3.2 0 0 1 0 6.4H10.6V17z" fill="#fff"/>
+    </symbol>
+    <symbol id="px-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15.5 4.5l4 4L9 19l-5 1 1-5z"/><path d="M13.5 6.5l4 4"/>
+    </symbol>
+    <symbol id="px-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="12" cy="12" r="8"/>
+    </symbol>
+    <symbol id="px-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="4.5" y="4.5" width="15" height="15" rx="1"/>
+    </symbol>
+    <symbol id="px-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+      <path d="M12 4.5L20 19H4z"/>
+    </symbol>
+    <symbol id="px-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 7h16M10 4h4M6 7l1 13h10l1-13"/>
+    </symbol>
+  </defs>
+</svg>
+<!-- part:pixilart:end -->
+<style>
+  body { padding: var(--s-5) 0 var(--s-6); }
+  h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
+  .lede { font-size: var(--t-sm); }
+  .wrap { max-width: 1180px; }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--wide stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Ages 8–12 · drawing tools</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">Learn the tools</span> <em class="mark" data-t="title2">by using them</em></h1>
+    <p class="lede" data-t="intro">Pick a tool and it walks you through what it can do. A step only ticks off once you have really done it, so there is no skipping ahead.</p>
+  </header>
+
+  <div class="px">
+    <div class="px__top">
+      <span class="px__logo"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#px-logo"/></svg>Pixilart</span>
+      <span class="px__menu" aria-hidden="true"><span>File</span><span>Edit</span><span>View</span><span>Image</span></span>
+      <span class="px__file" aria-hidden="true">drawing.png</span>
+      <span class="px__save" aria-hidden="true" data-t="save">Save</span>
+    </div>
+
+    <div class="px__body">
+      <div class="px__rail">
+        <div class="px__grid" id="tools" role="group"></div>
+
+        <div id="sizeField">
+          <div class="px__railhead" data-t="sizeLabel">Size</div>
+          <div class="px__sizes" id="sizes" role="group"></div>
+        </div>
+
+        <button class="px-railbtn" id="clear" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#px-trash"/></svg>
+          <span data-t="clear">Clear</span>
+        </button>
+      </div>
+
+      <div class="px__stage">
+        <canvas id="cv" width="900" height="520"></canvas>
+      </div>
+
+      <aside class="px__side">
+        <div class="px-panel">
+          <div class="px-panel__head" data-t="strokeLabel">Colour</div>
+          <div class="px__current"><i id="curColour"></i><span id="curHex" class="mono"></span></div>
+          <div class="px__swatches" id="stroke" role="group"></div>
+        </div>
+
+        <div class="px-panel" id="fillField">
+          <div class="px-panel__head" data-t="fillHead">Fill</div>
+          <label class="px__check"><input type="checkbox" id="fill"><span data-t="fillLabel">Fill the shape</span></label>
+          <div id="fillColourField" style="margin-top:10px">
+            <div class="px-panel__head" data-t="fillColourLabel">Fill colour</div>
+            <div class="px__swatches" id="fillc" role="group"></div>
+          </div>
+        </div>
+
+        <div class="px-panel">
+          <div class="px-panel__head" data-t="stepsLabel">Steps</div>
+          <div id="steps"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="px__status">
+      <span id="statusTool"></span>
+      <span>900 &#215; 520</span>
+      <b>100%</b>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const PALETTE = ["#0d150d", "#e2552f", "#f5b800", "#0a8754", "#12798f", "#7c5cbf", "#ffffff"];
+
+  /* A step is done when its trigger fires. The tool teaches itself: nothing
+     advances until the child performs the action, not just reads about it.
+     Step order carried over from the original trainer. */
+  const SIZES = [2, 5, 10, 18];
+
+  const TOOLS = {
+    pencil:   { icon: "#px-pencil", fill: false, size: true,  steps: ["colour", "size", "draw", "drawMore"] },
+    circle:   { icon: "#px-circle", fill: true,  size: false, steps: ["colour", "draw", "drawOther", "fillOn", "fillColour", "drawFilled"] },
+    square:   { icon: "#px-square", fill: true,  size: false, steps: ["colour", "draw", "drawOther", "fillOn", "fillColour", "drawFilled"] },
+    triangle: { icon: "#px-triangle", fill: true,  size: false, steps: ["colour", "draw", "drawOther", "fillOn", "fillColour", "drawFilled"] }
+  };
+  const ORDER = ["pencil", "circle", "square", "triangle"];
+
+  const T = {
+    en: {
+      eyebrow: "Ages 8–12 · drawing tools",
+      title1: "Learn the tools", title2: "by using them",
+      intro: "Pick a tool and it walks you through what it can do. A step only ticks off once you have really done it, so there is no skipping ahead.",
+      stepsLabel: "Steps", strokeLabel: "Colour", sizeLabel: "Size",
+      fillHead: "Fill", save: "Save",
+      fillLabel: "Fill the shape", fillColourLabel: "Fill colour", clear: "Clear",
+      done: "done",
+      names: { pencil: "Pencil", circle: "Circle", square: "Square", triangle: "Triangle" },
+      steps: {
+        colour: "Pick a colour you like",
+        size: "Pick a different nib size on the left",
+        draw: "Draw something on the canvas",
+        drawMore: "Draw again with a different pen size",
+        drawOther: "Draw one more, a different size",
+        fillOn: "Tick Fill the shape",
+        fillColour: "Pick a fill colour",
+        drawFilled: "Draw a filled one"
+      },
+      finished: "All four tools done. The canvas is yours now."
+    },
+    es: {
+      eyebrow: "8–12 años · herramientas de dibujo",
+      title1: "Aprende las herramientas", title2: "usándolas",
+      intro: "Elige una herramienta y te guía por lo que sabe hacer. Un paso solo se marca cuando lo has hecho de verdad, así que no se puede saltar.",
+      stepsLabel: "Pasos", strokeLabel: "Color", sizeLabel: "Tamaño",
+      fillHead: "Relleno", save: "Guardar",
+      fillLabel: "Rellenar la figura", fillColourLabel: "Color de relleno", clear: "Limpiar",
+      done: "hecho",
+      names: { pencil: "Lápiz", circle: "Círculo", square: "Cuadrado", triangle: "Triángulo" },
+      steps: {
+        colour: "Elige un color que te guste",
+        size: "Elige otro grosor de punta a la izquierda",
+        draw: "Dibuja algo en el lienzo",
+        drawMore: "Dibuja otra vez con otro grosor",
+        drawOther: "Dibuja otra, de otro tamaño",
+        fillOn: "Marca Rellenar la figura",
+        fillColour: "Elige un color de relleno",
+        drawFilled: "Dibuja una rellena"
+      },
+      finished: "Las cuatro herramientas hechas. El lienzo es tuyo."
+    }
+  };
+
+  var lang = "en";
+  var tool = "pencil";
+  var step = 0;
+  var doneTools = {};
+  var stroke = PALETTE[0], fillColour = PALETTE[1];
+  var penSize = 4, fillOn = false;
+  var lastSize = 0;
+
+  const $ = function (id) { return document.getElementById(id); };
+  const t = function () { return T[lang]; };
+  const cv = $("cv"), ctx = cv.getContext("2d");
+
+  var drawing = false, startX = 0, startY = 0, snapshot = null;
+
+  function pos(e) {
+    const r = cv.getBoundingClientRect();
+    return { x: (e.clientX - r.left) * (cv.width / r.width),
+             y: (e.clientY - r.top) * (cv.height / r.height) };
+  }
+
+  function advance(trigger) {
+    const spec = TOOLS[tool];
+    if (step >= spec.steps.length) return;
+    if (spec.steps[step] === trigger) {
+      step++;
+      if (step >= spec.steps.length) doneTools[tool] = true;
+      render();
+    }
+  }
+
+  function drawShape(x0, y0, x1, y1) {
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = stroke;
+    ctx.fillStyle = fillColour;
+    ctx.beginPath();
+
+    if (tool === "circle") {
+      const r = Math.hypot(x1 - x0, y1 - y0);
+      ctx.arc(x0, y0, r, 0, Math.PI * 2);
+    } else if (tool === "square") {
+      ctx.rect(Math.min(x0, x1), Math.min(y0, y1), Math.abs(x1 - x0), Math.abs(y1 - y0));
+    } else if (tool === "triangle") {
+      ctx.moveTo(x0, y1);
+      ctx.lineTo((x0 + x1) / 2, y0);
+      ctx.lineTo(x1, y1);
+      ctx.closePath();
+    }
+    if (fillOn) ctx.fill();
+    ctx.stroke();
+    return Math.round(Math.hypot(x1 - x0, y1 - y0));
+  }
+
+  cv.addEventListener("pointerdown", function (e) {
+    drawing = true;
+    cv.setPointerCapture(e.pointerId);
+    const p = pos(e); startX = p.x; startY = p.y;
+    if (tool === "pencil") {
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      ctx.lineWidth = penSize; ctx.strokeStyle = stroke;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y);
+    } else {
+      snapshot = ctx.getImageData(0, 0, cv.width, cv.height);
+    }
+  });
+
+  cv.addEventListener("pointermove", function (e) {
+    if (!drawing) return;
+    const p = pos(e);
+    if (tool === "pencil") { ctx.lineTo(p.x, p.y); ctx.stroke(); }
+    else if (snapshot) { ctx.putImageData(snapshot, 0, 0); drawShape(startX, startY, p.x, p.y); }
+  });
+
+  cv.addEventListener("pointerup", function (e) {
+    if (!drawing) return;
+    drawing = false;
+    const p = pos(e);
+
+    if (tool === "pencil") {
+      advance("draw");
+      if (lastSize !== 0 && penSize !== lastSize) advance("drawMore");
+      lastSize = penSize;
+    } else {
+      const size = drawShape(startX, startY, p.x, p.y);
+      advance("draw");
+      if (lastSize && Math.abs(size - lastSize) > 12) advance("drawOther");
+      if (fillOn) advance("drawFilled");
+      lastSize = size;
+    }
+  });
+
+  function swatchRow(host, current, onPick) {
+    host.innerHTML = "";
+    PALETTE.forEach(function (c) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.style.background = c;
+      if (c === "#ffffff") b.style.boxShadow = "inset 0 0 0 1px #4a4e57";
+      b.setAttribute("aria-pressed", String(c === current));
+      b.setAttribute("aria-label", c);
+      b.onclick = function () { onPick(c); };
+      host.appendChild(b);
+    });
+  }
+
+  function render() {
+    const d = t(), spec = TOOLS[tool];
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (el) {
+      const v = d[el.dataset.t];
+      if (typeof v === "string") el.textContent = v;
+    });
+
+    const tb = $("tools");
+    tb.innerHTML = "";
+    ORDER.forEach(function (k) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "px-tool";
+      b.setAttribute("aria-pressed", String(tool === k));
+      b.title = d.names[k];
+      b.setAttribute("aria-label", d.names[k]);
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+      use.setAttribute("href", TOOLS[k].icon);
+      svg.appendChild(use);
+      b.appendChild(svg);
+      if (doneTools[k]) {
+        const ok = document.createElement("span");
+        ok.className = "px-tool__done"; ok.textContent = "✓";
+        b.appendChild(ok);
+      }
+      b.onclick = function () { tool = k; step = 0; lastSize = 0; render(); };
+      tb.appendChild(b);
+    });
+
+    const sb = $("steps");
+    sb.innerHTML = "";
+    spec.steps.forEach(function (key, i) {
+      const row = document.createElement("div");
+      row.className = "px-step" + (i < step ? " is-done" : i === step ? " is-now" : "");
+      const dot = document.createElement("span");
+      dot.className = "px-step__dot";
+      dot.textContent = i < step ? "✓" : String(i + 1);
+      const txt = document.createElement("span");
+      txt.textContent = d.steps[key];
+      row.append(dot, txt);
+      sb.appendChild(row);
+    });
+    if (step >= spec.steps.length) {
+      const row = document.createElement("div");
+      row.className = "px-step is-done";
+      row.style.color = "#6ee7a8";
+      row.style.fontWeight = "600";
+      row.textContent = Object.keys(doneTools).length === ORDER.length
+        ? d.finished : d.names[tool] + " — " + d.done;
+      sb.appendChild(row);
+    }
+
+    $("sizeField").hidden = !spec.size;
+    $("fillField").hidden = !spec.fill;
+    $("fillColourField").hidden = !spec.fill;
+    $("fill").checked = fillOn;
+    $("statusTool").textContent = d.names[tool];
+    $("curColour").style.background = stroke;
+    $("curHex").textContent = stroke.toUpperCase();
+
+    /* Pixilart offers a handful of fixed nib sizes rather than a slider, and
+       four discrete buttons are also easier for a child to aim at. */
+    const sizes = $("sizes");
+    sizes.innerHTML = "";
+    SIZES.forEach(function (n) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(n === penSize));
+      b.setAttribute("aria-label", String(n));
+      b.title = String(n);
+      const dot = document.createElement("i");
+      dot.style.width = Math.min(14, 3 + n) + "px";
+      dot.style.height = Math.min(14, 3 + n) + "px";
+      b.appendChild(dot);
+      b.onclick = function () { penSize = n; advance("size"); render(); };
+      sizes.appendChild(b);
+    });
+
+    swatchRow($("stroke"), stroke, function (c) { stroke = c; advance("colour"); render(); });
+    swatchRow($("fillc"), fillColour, function (c) { fillColour = c; advance("fillColour"); render(); });
+  }
+
+  $("fill").onchange = function (e) {
+    fillOn = e.target.checked;
+    if (fillOn) advance("fillOn");
+  };
+  $("clear").onclick = function () { ctx.clearRect(0, 0, cv.width, cv.height); };
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      render();
+    };
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

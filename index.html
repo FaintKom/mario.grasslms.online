@@ -1144,6 +1144,13 @@ section[id], article[id], details[id], #services { scroll-margin-top: 72px; }
 .tv-formula .fr i { font-style: normal; }
 .tv-formula .fr i:first-child { border-bottom: 1.5px solid var(--ink); padding: 0 2px; }
 
+/* "Twenty more" line under the demo grid */
+.cases-more {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  margin: 28px 0 0; color: var(--ink-dim); font-size: var(--fs-body, 15px);
+}
+.cases-more .case-cta { margin: 0; }
+
 /* ============ TYPE SCALE ============
    Seven sizes: 11 / 13 / 15 / 18 / 28 / 56 / 96.
    Geist Mono is kept for short uppercase labels (section numbers, kickers,
@@ -1433,7 +1440,110 @@ section[id], article[id], details[id], #services { scroll-margin-top: 72px; }
       <a class="case-cta" href="pipeline/mini-cases/" target="_blank">See the demos <span class="arrow">→</span></a>
     </article>
 
+    <article class="case case--demo" data-demo="true">
+      <a class="demo-shot" href="pipeline/fintech-fraud-triage/" target="_blank" tabindex="-1" aria-hidden="true">
+        <div class="flag-browser"><div class="dots"><span></span><span></span><span></span></div><span class="url">fraud-triage · risk desk</span></div>
+        <img src="previews/d3-fraud-queue.webp" width="960" height="600" loading="lazy" decoding="async" alt="">
+      </a>
+      <div class="case-head">
+        <span class="case-num">D3</span>
+        <span class="case-tag">Fintech simulation</span>
+      </div>
+      <h3>A branching <em>fraud queue</em></h3>
+      <p class="case-desc">A payments risk desk: flagged transactions, a risk score, the rules that fired, and Approve, Decline or Escalate. Every shift is generated fresh, and the model is wrong often enough that you have to read the signals yourself.</p>
+      <a class="case-cta" href="pipeline/fintech-fraud-triage/" target="_blank" rel="noopener">Open the queue <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case case--demo" data-demo="true">
+      <a class="demo-shot" href="pipeline/vishing-call/" target="_blank" tabindex="-1" aria-hidden="true">
+        <div class="flag-browser"><div class="dots"><span></span><span></span><span></span></div><span class="url">vishing · live call</span></div>
+        <img src="previews/d4-vishing-call.webp" width="960" height="600" loading="lazy" decoding="async" alt="">
+      </a>
+      <div class="case-head">
+        <span class="case-num">D4</span>
+        <span class="case-tag">Branching voice call</span>
+      </div>
+      <h3>The caller wants <em>your MFA code</em></h3>
+      <p class="case-desc">An attacker phones posing as IT Security. He is voiced, your replies branch the call, and his pressure adapts: urgency, authority, threat. Four endings.</p>
+      <a class="case-cta" href="pipeline/vishing-call/" target="_blank" rel="noopener">Take the call <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case case--demo" data-demo="true">
+      <a class="demo-shot" href="pipeline/incident-response/" target="_blank" tabindex="-1" aria-hidden="true">
+        <div class="flag-browser"><div class="dots"><span></span><span></span><span></span></div><span class="url">incident · night shift</span></div>
+        <img src="previews/d5-incident-night.webp" width="960" height="600" loading="lazy" decoding="async" alt="">
+      </a>
+      <div class="case-head">
+        <span class="case-num">D5</span>
+        <span class="case-tag">Incident scenario</span>
+      </div>
+      <h3><em>2am</em> on the risk desk</h3>
+      <p class="case-desc">A card-testing attack is running and you are the only analyst on call. Chase the IPs and the bot rotates. Six endings across three live meters: fraud losses, customer impact, leadership trust.</p>
+      <a class="case-cta" href="pipeline/incident-response/" target="_blank" rel="noopener">Run the night <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case case--demo" data-demo="true">
+      <a class="demo-shot" href="pipeline/artefacts/compliance-microlearning/unit-1.html" target="_blank" tabindex="-1" aria-hidden="true">
+        <div class="flag-browser"><div class="dots"><span></span><span></span><span></span></div><span class="url">compliance · unit 1</span></div>
+        <img src="previews/d6-compliance.webp" width="960" height="600" loading="lazy" decoding="async" alt="">
+      </a>
+      <div class="case-head">
+        <span class="case-num">D6</span>
+        <span class="case-tag">Compliance micro-units</span>
+      </div>
+      <h3><em>Boring compliance</em>, rebuilt</h3>
+      <p class="case-desc">Security and privacy awareness, the usual 40-minute deck rebuilt as six self-contained micro-units on a retrieval chain. The case page is the design map; Unit 1 is playable in full, with a 2-minute film, a longread, nine checks and an inbox simulator.</p>
+      <a class="case-cta" href="pipeline/artefacts/compliance-microlearning/unit-1.html" target="_blank" rel="noopener">Play Unit 1 <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case case--demo" data-demo="true">
+      <a class="demo-shot" href="pipeline/kids-interactives/10-cosmodrome/cosmodrome-map-3d.html" target="_blank" tabindex="-1" aria-hidden="true">
+        <div class="flag-browser"><div class="dots"><span></span><span></span><span></span></div><span class="url">kids · cosmodrome</span></div>
+        <img src="previews/d7-cosmodrome.webp" width="960" height="600" loading="lazy" decoding="async" alt="">
+      </a>
+      <div class="case-head">
+        <span class="case-num">D7</span>
+        <span class="case-tag">Kids · 3D game</span>
+      </div>
+      <h3>A spaceport <em>held by a virus</em></h3>
+      <p class="case-desc">Fly round the launch field in 3D and pick a building. Each one is held until the job inside it is done, and all four ask for something different: bin the virus files without binning ours, reconnect four wires, hold a purge down while it fights back, pull a lever and keep it there.</p>
+      <a class="case-cta" href="pipeline/kids-interactives/10-cosmodrome/cosmodrome-map-3d.html" target="_blank" rel="noopener">Take the field back <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case case--demo" data-demo="true">
+      <a class="demo-shot" href="pipeline/kids-interactives/02-motor-skills/clicker-3-modes/index.html" target="_blank" tabindex="-1" aria-hidden="true">
+        <div class="flag-browser"><div class="dots"><span></span><span></span><span></span></div><span class="url">kids · clicker</span></div>
+        <img src="previews/d8-clicker.webp" width="960" height="600" loading="lazy" decoding="async" alt="">
+      </a>
+      <div class="case-head">
+        <span class="case-num">D8</span>
+        <span class="case-tag">Kids · motor skills</span>
+      </div>
+      <h3>Learning to <em>use a mouse</em></h3>
+      <p class="case-desc">Click, double-click, drag, chase. The four movements a six-year-old needs before any of the rest of a computer makes sense, each at three speeds, scored out of three stars. Dressed as a game because a drill dressed as a worksheet gets opened once.</p>
+      <a class="case-cta" href="pipeline/kids-interactives/02-motor-skills/clicker-3-modes/index.html" target="_blank" rel="noopener">Play a round <span class="arrow">→</span></a>
+    </article>
+
+    <article class="case case--demo" data-demo="true">
+      <a class="demo-shot" href="pipeline/kids-interactives/09-vision-ai/nova-vision-gallery/nova-vision-gallery.html" target="_blank" tabindex="-1" aria-hidden="true">
+        <div class="flag-browser"><div class="dots"><span></span><span></span><span></span></div><span class="url">kids · vision gallery</span></div>
+        <img src="previews/d9-vision-rooms.webp" width="960" height="600" loading="lazy" decoding="async" alt="">
+      </a>
+      <div class="case-head">
+        <span class="case-num">D9</span>
+        <span class="case-tag">Kids · vision AI</span>
+      </div>
+      <h3>What the machine <em>sees in a photo</em></h3>
+      <p class="case-desc">Hang a photo in a room and a machine says what it thinks it sees, then decides whether it belongs. The recogniser is MobileNet running inside the page, so there is no account to make and the photo never leaves the computer. It shows its guesses and the score it judged on, so a child can see why it said no.</p>
+      <a class="case-cta" href="pipeline/kids-interactives/09-vision-ai/nova-vision-gallery/nova-vision-gallery.html" target="_blank" rel="noopener">Hang a photo <span class="arrow">→</span></a>
+    </article>
+
   </div>
+
+  <p class="cases-more">
+    Twenty of these live in one place: a Windows file manager, a Chrome tab strip, a Google Docs find-and-replace, a pixel-art canvas.
+    <a class="case-cta" href="pipeline/kids-interactives/" target="_blank">Open the catalogue <span class="arrow">→</span></a>
+  </p>
 </section>
 
 <!-- ============ FLAGSHIP ============ -->
@@ -1449,131 +1559,711 @@ section[id], article[id], details[id], #services { scroll-margin-top: 72px; }
 
   <div class="flag-intro">
     <p>
-      An LMS I built for teachers, with <em>a large library of task types</em> and <em>flexible content tools</em>. Teachers can write every screen themselves or let AI draft it, from a single intro lesson to a personalised practice set for each student. Everything AI drafts stays editable, and the teacher has the last word.
+      A place to run <em>the whole business of teaching</em>, instead of stitching together a video host, a quiz tool and a marking spreadsheet.
     </p>
   </div>
 
   <!-- Screen carousel -->
-  <div class="flag-carousel" role="region" tabindex="0" aria-label="GrassLMS screen examples">
+  <!-- Exercise carousel, ported from grasslms.online. These are the components
+       a teacher actually sets, so they run here instead of being screenshots of
+       themselves. The answer keys sit in the page on purpose: the demo has to
+       work without an account, which is what the note underneath says. -->
+  <style>
+  .gx { margin: 0 0 34px; }
+  .gx-h {
+    margin: 0 0 26px; text-align: center;
+    font-size: clamp(22px, 3.2vw, 32px); font-weight: 700; line-height: 1.18;
+    letter-spacing: -.01em; color: var(--ink); text-wrap: balance;
+  }
 
-    <figure class="flag-frame">
-      <div class="flag-browser">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <span class="url">grasslms.online / lesson / python-loops</span>
-      </div>
-      <div class="flag-screen flag-screen--code">
-        <div class="fs-side">
-          <div class="fs-side-row"><span>1.</span>Loops · for &amp; while</div>
-          <div class="fs-side-row active"><span>2.</span>Practice · 8 tasks</div>
-          <div class="fs-side-row"><span>3.</span>Project · word counter</div>
-          <div class="fs-side-row"><span>4.</span>Quiz</div>
-        </div>
-        <div class="fs-main">
-          <div class="fs-task">Print numbers 1 → 10 that are divisible by 3.</div>
-          <pre class="fs-editor"><span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(1, 11):
-    <span class="kw">if</span> n % 3 == 0:
-        <span class="fn">print</span>(n)</pre>
-          <div class="fs-run">
-            <span class="fs-run-k">Output</span>
-            <span class="fs-run-v">3  6  9 ✓</span>
-          </div>
-        </div>
-      </div>
-      <figcaption>Code lesson · 37-language sandbox + autograder</figcaption>
-    </figure>
+  .gx-stage { display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .gx-arrow {
+    flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--bg-2); border: 1px solid var(--rule); color: var(--ink-dim);
+    cursor: pointer; transition: border-color .15s, color .15s, transform .15s;
+  }
+  .gx-arrow svg { width: 20px; height: 20px; }
+  .gx-arrow:hover { border-color: var(--rule-strong); color: var(--ink); }
+  .gx-arrow:active { transform: translateY(1px); }
+  .gx-arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    <figure class="flag-frame">
-      <div class="flag-browser">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <span class="url">grasslms.online / lesson / robot-grid</span>
-      </div>
-      <div class="flag-screen flag-screen--robot">
-        <div class="fs-robot-grid">
-          <div class="fs-cell fs-cell--start">▶</div>
-          <div class="fs-cell"></div>
-          <div class="fs-cell fs-cell--wall"></div>
-          <div class="fs-cell fs-cell--coin">●</div>
-          <div class="fs-cell"></div>
-          <div class="fs-cell fs-cell--robot">🤖</div>
-          <div class="fs-cell"></div>
-          <div class="fs-cell fs-cell--wall"></div>
-          <div class="fs-cell fs-cell--goal">★</div>
-        </div>
-        <div class="fs-blocks">
-          <span class="fs-block">move →</span>
-          <span class="fs-block">turn ↻</span>
-          <span class="fs-block">repeat 3</span>
-          <span class="fs-block">if coin</span>
-        </div>
-      </div>
-      <figcaption>2D robot puzzle · block + text programming</figcaption>
-    </figure>
+  .gx-card {
+    flex: 1 1 auto; min-width: 0; max-width: 840px; min-height: 470px;
+    display: flex; flex-direction: column; gap: 16px;
+    background: rgba(255, 255, 255, .55);
+    border: 2px solid var(--rule); border-radius: 24px; padding: 24px;
+  }
+  @media (max-width: 640px) {
+    .gx-stage { gap: 8px; }
+    .gx-arrow { width: 38px; height: 38px; }
+    .gx-card { padding: 16px; min-height: 440px; }
+  }
 
-    <figure class="flag-frame">
-      <div class="flag-browser">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <span class="url">grasslms.online / studio / ai-plan</span>
-      </div>
-      <div class="flag-screen flag-screen--ai">
-        <div class="fs-ai-head">
-          <span class="fs-ai-tag">AI · personalised plan</span>
-          <span class="fs-ai-stu">Student: A. Carter · gap: loops</span>
-        </div>
-        <ul class="fs-ai-plan">
-          <li><span class="fs-ai-n">1</span>Intro · what a loop is <span class="fs-ai-ok">teacher-reviewed ✓</span></li>
-          <li><span class="fs-ai-n">2</span>Practice · 6 graded tasks <span class="fs-ai-ai">AI-drafted</span></li>
-          <li><span class="fs-ai-n">3</span>Project · word counter <span class="fs-ai-ai">AI-drafted</span></li>
-          <li><span class="fs-ai-n">4</span>Quiz · 8 questions <span class="fs-ai-ai">AI-drafted</span></li>
-        </ul>
-        <div class="fs-ai-cta">
-          <span class="fs-ai-btn">Edit any step</span>
-          <span class="fs-ai-btn fs-ai-btn--p">Assign to A. Carter</span>
-        </div>
-      </div>
-      <figcaption>AI lesson-set · personalised, fully editable</figcaption>
-    </figure>
+  .gx-eyebrow {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  .gx-prompt { margin: 4px 0 0; font-size: 19px; font-weight: 700; color: var(--ink); }
+  .gx-body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  .gx-hint {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--ink-faint); text-align: center;
+  }
+  .gx-foot {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    border-top: 1px solid var(--rule); padding-top: 16px;
+  }
+  .gx-verdict { flex: 1 1 180px; font-size: 14px; color: var(--ink-dim); }
+  .gx-verdict.is-right { color: var(--green-800); font-weight: 600; }
+  .gx-verdict.is-wrong { color: var(--warn); }
 
-    <figure class="flag-frame">
-      <div class="flag-browser">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <span class="url">grasslms.online / studio / task-library</span>
-      </div>
-      <div class="flag-screen flag-screen--lib">
-        <div class="fs-lib-head">Task types · drop into any lesson</div>
-        <div class="fs-lib-grid">
-          <span class="fs-lib-chip">Code · 37 langs</span>
-          <span class="fs-lib-chip">Math · Desmos</span>
-          <span class="fs-lib-chip">2D robot</span>
-          <span class="fs-lib-chip">3D world</span>
-          <span class="fs-lib-chip">Quiz · MCQ</span>
-          <span class="fs-lib-chip">Fill-in</span>
-          <span class="fs-lib-chip">Matching</span>
-          <span class="fs-lib-chip">Drag-order</span>
-          <span class="fs-lib-chip">Free-text</span>
-          <span class="fs-lib-chip">File upload</span>
-          <span class="fs-lib-chip">Peer review</span>
-          <span class="fs-lib-chip">Project</span>
-        </div>
-      </div>
-      <figcaption>Task library · 11+ interaction types, mix &amp; match</figcaption>
-    </figure>
+  /* The shadow-pop button: a hard offset, never a blur. */
+  .gx-check {
+    margin-left: auto; padding: 13px 34px; border-radius: 14px;
+    font-size: 14px; font-weight: 700; letter-spacing: .28px; text-transform: uppercase;
+    background: var(--bg-3); color: var(--ink-dim);
+    border: 1px solid var(--rule-strong); box-shadow: 0 4px 0 0 var(--rule-strong);
+    cursor: pointer; transition: transform .1s, box-shadow .1s;
+  }
+  .gx-check:hover:not(:disabled) { transform: translateY(1px); box-shadow: 0 3px 0 0 var(--rule-strong); }
+  .gx-check:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--rule-strong); }
+  .gx-check:disabled { opacity: .5; cursor: default; }
+  .gx-check--go { background: var(--accent); color: var(--accent-ink); border-color: var(--green-700); box-shadow: 0 4px 0 0 var(--green-700); }
+  .gx-check--go:hover { box-shadow: 0 3px 0 0 var(--green-700); }
+
+  /* ---- motion knobs, ported from the LMS ----
+     Every duration goes through --mdur and every distance through --mamp, so
+     the whole system dials up or down from two numbers rather than thirty
+     rules. The page already damps prefers-reduced-motion globally. */
+  .gx {
+    --mamp: 1;
+    --mdur: 1;
+    --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --link-color: var(--green-500);
+    --err-bg: var(--coral-50);
+    --err-border: var(--coral-500);
+    --err-fg: var(--coral-700);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gx { --mamp: 0; --mdur: 0.01; }
+  }
+
+  @keyframes gx-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(calc(-7px * var(--mamp))); }
+    40% { transform: translateX(calc(6px * var(--mamp))); }
+    60% { transform: translateX(calc(-4px * var(--mamp))); }
+    80% { transform: translateX(calc(2px * var(--mamp))); }
+  }
+  @keyframes gx-pop {
+    0% { transform: scale(.25); opacity: 0; }
+    60% { transform: scale(calc(1 + .18 * var(--mamp))); }
+    100% { transform: scale(1); }
+  }
+  @keyframes gx-halo {
+    0%, 100% { box-shadow: 0 2px 0 0 var(--rule), 0 0 0 0 color-mix(in oklab, var(--link-color) 30%, transparent); }
+    50% { box-shadow: 0 2px 0 0 var(--rule), 0 0 0 6px color-mix(in oklab, var(--link-color) 14%, transparent); }
+  }
+  @keyframes gx-ripple-g {
+    0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--green-500) 45%, transparent); }
+    100% { box-shadow: 0 0 0 16px color-mix(in oklab, var(--green-500) 0%, transparent); }
+  }
+  @keyframes gx-bucket-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(calc(1 + .03 * var(--mamp))); background: var(--green-50); }
+    100% { transform: scale(1); }
+  }
+  @keyframes gx-dash-flow { to { stroke-dashoffset: -13; } }
+  @keyframes gx-line-draw {
+    from { stroke-dasharray: 0 600; opacity: .4; }
+    to { stroke-dasharray: 600 0; opacity: .85; }
+  }
+
+  /* ---- shared tile ----
+     1 invite (hover lift) · 2 grab (pressed) · 3 guide (candidate/hot)
+     · 4 result (correct ripple / wrong shake) */
+  .gx-tile {
+    position: relative;
+    background: var(--bg-2); border: 2px solid var(--rule); border-radius: 14px;
+    box-shadow: 0 2px 0 0 var(--rule); color: var(--ink);
+    font-size: 15px; font-weight: 600; cursor: pointer; user-select: none;
+    transition: transform 120ms var(--motion-ease), box-shadow 120ms var(--motion-ease),
+                border-color 120ms, background 150ms, color 150ms, opacity 200ms;
+  }
+  /* 1 · invite */
+  .gx-tile:hover:not(:disabled):not(.is-right):not(.is-wrong) {
+    transform: translateY(calc(-2px * var(--mamp)));
+    border-color: var(--green-300);
+    box-shadow: 0 4px 0 0 var(--green-100);
+  }
+  /* 2 · grab */
+  .gx-tile:active:not(:disabled), .gx-tile.is-picked { transform: translateY(2px); box-shadow: 0 0 0 0 var(--rule); }
+  .gx-tile.is-picked {
+    border-color: var(--green-600); background: var(--green-100); color: var(--green-800);
+    box-shadow: 0 0 0 4px var(--green-100);
+  }
+  /* 3 · guide — free tiles pulse, the tile under the pointer magnetises */
+  .gx-tile.is-candidate { animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite; }
+  .gx-tile.is-hot {
+    border-color: var(--link-color);
+    box-shadow: 0 0 0 5px color-mix(in oklab, var(--link-color) 22%, transparent);
+    transform: translateY(calc(-2px * var(--mamp))) scale(1.02);
+    animation: none;
+  }
+  /* 4 · result */
+  .gx-tile.is-right {
+    border-color: var(--green-600); background: var(--green-50); color: var(--green-800); cursor: default;
+    animation: gx-ripple-g calc(.6s * var(--mdur)) ease-out both;
+  }
+  .gx-tile.is-wrong {
+    border-color: var(--err-border); background: var(--err-bg); color: var(--err-fg);
+    animation: gx-shake calc(.4s * var(--mdur)) ease both;
+  }
+  .gx-tile:disabled { cursor: default; }
+
+  /* ---- multiple choice ---- */
+  .gx-opts { display: grid; gap: 10px; width: 100%; max-width: 460px; margin: 0 auto; }
+  .gx-opt {
+    display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+    text-align: left; font-family: var(--mono);
+  }
+  .gx-opt__dot {
+    flex: 0 0 auto; width: 20px; height: 20px; border-radius: 999px;
+    display: grid; place-items: center;
+    background: var(--bg-2); border: 2px solid var(--rule-strong);
+    font-size: 11px; line-height: 1; color: transparent;
+  }
+  .gx-opt__label { flex: 1 1 0; }
+  .gx-opt__n { flex: 0 0 auto; font-family: var(--mono); font-size: 10px; color: var(--rule-strong); }
+  .gx-opt__dot { transition: background 150ms, border-color 150ms, transform 150ms; }
+  .gx-tile.is-picked .gx-opt__dot,
+  .gx-tile.is-right .gx-opt__dot { background: var(--green-600); border-color: var(--green-600); color: #fff; transform: scale(1.1); }
+  .gx-tile.is-wrong .gx-opt__dot { background: var(--err-border); border-color: var(--err-border); color: #fff; }
+  .gx-chip {
+    position: absolute; top: -9px; right: 10px;
+    border-radius: 999px; padding: 3px 8px;
+    font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .08em; color: #fff;
+    animation: gx-pop calc(.36s * var(--mdur)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .gx-chip--ok { background: var(--green-600); }
+  .gx-chip--no { background: var(--err-border); }
+
+  /* ---- matching ---- */
+  .gx-match { position: relative; display: grid; grid-template-columns: 1fr 56px 1fr; gap: 10px; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; }
+  .gx-match__col { display: grid; gap: 10px; }
+  .gx-match svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 5; }
+  .gx-thread--live {
+    stroke: var(--link-color); opacity: .5;
+    stroke-dasharray: 1 12;
+    animation: gx-dash-flow .6s linear infinite;
+  }
+  .gx-thread--done { opacity: .85; }
+  .gx-thread--done.is-fresh { animation: gx-line-draw calc(.45s * var(--mdur)) ease-out both; }
+  .gx-match .gx-tile { padding: 14px 16px; text-align: center; }
+  @media (max-width: 520px) { .gx-match { grid-template-columns: 1fr 28px 1fr; } }
+
+  /* ---- sorting ---- */
+  .gx-bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; min-height: 46px; width: 100%; max-width: 600px; margin: 0 auto; }
+  .gx-bank .gx-tile, .gx-zone .gx-tile { padding: 11px 20px; border-radius: 999px; }
+  .gx-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 600px; margin: 0 auto; }
+  .gx-zone {
+    border: 2px dashed var(--rule-strong); border-radius: 16px; padding: 12px;
+    min-height: 132px; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 150ms, background 150ms, transform 150ms;
+  }
+  .gx-zone.is-target {
+    border-color: var(--green-300); border-style: solid;
+    animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite;
+  }
+  .gx-zone.is-over {
+    border-color: var(--link-color); border-style: solid;
+    background: color-mix(in oklab, var(--link-color) 8%, var(--bg));
+    transform: scale(1.015); animation: none;
+  }
+  .gx-zone.is-catch {
+    border-color: var(--green-500); border-style: solid; animation: none;
+    animation: gx-bucket-pop calc(.4s * var(--mdur)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .gx-zone__head { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--ink); }
+  .gx-zone__dot { width: 9px; height: 9px; border-radius: 50%; }
+  .gx-zone__n {
+    margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+    background: var(--bg-3); border-radius: 7px; padding: 2px 7px;
+  }
+  .gx-zone__drop { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; flex: 1; }
+
+  /* ---- fill in the blanks ---- */
+  .gx-cloze {
+    margin: 0 auto; max-width: 520px; text-align: center; font-size: 18px; line-height: 2.2; color: var(--ink);
+  }
+  .gx-gap {
+    width: 4.5ch; margin: 0 4px; padding: 7px 4px; text-align: center;
+    font: inherit; font-size: 17px; font-weight: 700; color: var(--green-800);
+    background: var(--bg-2); border: 1px solid var(--rule); border-radius: 10px;
+    box-shadow: 0 2px 0 0 var(--rule);
+  }
+  .gx-gap { transition: border-color 150ms, box-shadow 150ms, background 150ms, color 150ms; }
+  .gx-gap:hover:not(:disabled) { border-color: var(--rule-strong); }
+  .gx-gap:focus { outline: none; border-color: var(--green-500); box-shadow: 0 0 0 4px var(--green-100); }
+  .gx-gap.is-empty { animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite; }
+  .gx-gap.is-right {
+    border-color: var(--green-600); background: var(--green-50); color: var(--green-800);
+    animation: gx-ripple-g calc(.6s * var(--mdur)) ease-out both;
+  }
+  .gx-gap.is-wrong {
+    border-color: var(--err-border); background: var(--err-bg); color: var(--err-fg);
+    animation: gx-shake calc(.4s * var(--mdur)) ease both;
+  }
+  .gx-gap:disabled { opacity: 1; }
+
+  /* ---- rail ---- */
+  .gx-rail { display: grid; justify-items: center; gap: 12px; margin-top: 20px; }
+  .gx-now { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ink); }
+  .gx-now svg { width: 17px; height: 17px; color: var(--accent); }
+  .gx-dots { display: flex; gap: 7px; }
+  .gx-dot {
+    width: 7px; height: 7px; border-radius: 99px; padding: 0;
+    background: var(--rule-strong); border: 0; cursor: pointer; transition: width .2s, background .2s;
+  }
+  .gx-dot.is-on { width: 22px; background: var(--accent); }
+  .gx-dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  </style>
+
+  <div class="gx" id="gx">
+    <h3 class="gx-h">Example exercises</h3>
+
+    <div class="gx-stage">
+      <button class="gx-arrow" type="button" id="gxPrev" aria-label="Previous exercise">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="gx-card" id="gxCard"></div>
+      <button class="gx-arrow" type="button" id="gxNext" aria-label="Next exercise">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="gx-rail">
+      <div class="gx-now" id="gxNow"></div>
+      <div class="gx-dots" id="gxDots"></div>
+    </div>
 
   </div>
 
-  <div class="flag-modes">
-    <div class="flag-mode">
-      <span class="fm-k">Manual</span>
-      <span class="fm-v">Author every screen yourself. Pick task types, write the brief, drop in your own assets. Full control.</span>
-    </div>
-    <div class="flag-mode flag-mode--mid">
-      <span class="fm-k">AI · partial</span>
-      <span class="fm-v">Hand AI a topic. Get one intro lesson back, fully editable. Use it as a starting point and polish.</span>
-    </div>
-    <div class="flag-mode flag-mode--full">
-      <span class="fm-k">AI · full personalisation</span>
-      <span class="fm-v">Hand AI a skill gap per student. Get a complete practice set adapted to the learner's level: intro, drills, project and quiz.</span>
-    </div>
-  </div>
+  <script>
+  (function () {
+    var card = document.getElementById("gxCard");
+    if (!card) return;
+
+    function el(tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    }
+    function icon(d) {
+      var s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      s.setAttribute("viewBox", "0 0 24 24");
+      s.setAttribute("fill", "none");
+      s.setAttribute("stroke", "currentColor");
+      s.setAttribute("stroke-width", "1.9");
+      s.setAttribute("stroke-linecap", "round");
+      s.setAttribute("stroke-linejoin", "round");
+      s.innerHTML = d;
+      return s;
+    }
+
+    /* Every exercise gets the same frame: label, prompt, work area, verdict
+       line and one button. Only the middle changes. */
+    function frame(prompt) {
+      var head = el("div");
+      head.append(el("div", "gx-eyebrow", "Sample exercise"), el("h4", "gx-prompt", prompt));
+      var body = el("div", "gx-body");
+      var foot = el("div", "gx-foot");
+      var verdict = el("p", "gx-verdict");
+      var btn = el("button", "gx-check", "Check");
+      btn.type = "button";
+      btn.disabled = true;
+      foot.append(verdict, btn);
+      card.append(head, body, foot);
+      return { body: body, verdict: verdict, btn: btn };
+    }
+    function settle(f, ok, text) {
+      f.verdict.className = "gx-verdict " + (ok ? "is-right" : "is-wrong");
+      f.verdict.textContent = text;
+      f.btn.textContent = "Try again";
+      f.btn.disabled = false;
+      f.btn.onclick = function () { show(at); };
+    }
+
+    /* ---- 1 · multiple choice -------------------------------------------- */
+    function buildMcq() {
+      var f = frame("Which of these numbers is prime?");
+      var OPTS = [
+        { n: "51", why: "51 is 3 × 17." },
+        { n: "61", why: null },
+        { n: "57", why: "57 is 3 × 19." },
+        { n: "63", why: "63 is 7 × 9." }
+      ];
+      var picked = -1, tiles = [];
+      var wrap = el("div", "gx-opts");
+
+      OPTS.forEach(function (o, i) {
+        var b = el("button", "gx-tile gx-opt");
+        b.type = "button";
+        b.setAttribute("role", "radio");
+        b.setAttribute("aria-checked", "false");
+        b.append(el("span", "gx-opt__dot", ""), el("span", "gx-opt__label", o.n), el("span", "gx-opt__n", String(i + 1)));
+        b.onclick = function () {
+          picked = i;
+          tiles.forEach(function (t, j) {
+            t.classList.toggle("is-picked", j === i);
+            t.setAttribute("aria-checked", String(j === i));
+          });
+          f.btn.disabled = false;
+        };
+        wrap.appendChild(b);
+        tiles.push(b);
+      });
+      f.body.appendChild(wrap);
+
+      f.btn.onclick = function () {
+        tiles.forEach(function (t) { t.disabled = true; t.classList.remove("is-picked"); });
+        tiles[1].classList.add("is-right");
+        tiles[1].querySelector(".gx-opt__dot").textContent = "✓";
+        tiles[1].appendChild(el("span", "gx-chip gx-chip--ok", "Correct"));
+        var ok = picked === 1;
+        if (!ok) {
+          tiles[picked].classList.add("is-wrong");
+          tiles[picked].querySelector(".gx-opt__dot").textContent = "✕";
+          tiles[picked].appendChild(el("span", "gx-chip gx-chip--no", "Not this one"));
+        }
+        settle(f, ok, ok ? "Exactly right." : OPTS[picked].why + " 61 is the prime one.");
+      };
+    }
+
+    /* ---- 2 · matching ---------------------------------------------------- */
+    function buildMatch() {
+      var f = frame("Match each country with its capital");
+      var LEFT = ["Peru", "Japan", "France"];
+      var RIGHT = ["Lima", "Paris", "Tokyo"];
+      var KEY = { Peru: "Lima", Japan: "Tokyo", France: "Paris" };
+
+      var wrap = el("div", "gx-match");
+      var lcol = el("div", "gx-match__col");
+      var mid = el("div");
+      var rcol = el("div", "gx-match__col");
+      var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      wrap.append(lcol, mid, rcol, svg);
+      f.body.appendChild(wrap);
+      f.body.appendChild(el("p", "gx-hint", "Connect everything and press check · tap a linked tile to unhook the thread"));
+
+      var links = {}, hue = {}, fresh = {}, armed = null, live = null, lt = {}, rt = {};
+
+      function centre(node, side) {
+        var a = node.getBoundingClientRect(), b = wrap.getBoundingClientRect();
+        return [side === "l" ? a.right - b.left : a.left - b.left, a.top - b.top + a.height / 2];
+      }
+      function curveD(p1, p2) {
+        var mx = (p1[0] + p2[0]) / 2;
+        return "M" + p1[0] + " " + p1[1] + " C" + mx + " " + p1[1] + " " + mx + " " + p2[1] + " " + p2[0] + " " + p2[1];
+      }
+      function thread(d, cls, colour) {
+        var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        path.setAttribute("class", cls);
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke-width", "3");
+        path.setAttribute("stroke-linecap", "round");
+        if (colour) path.setAttribute("stroke", colour);
+        svg.appendChild(path);
+        return path;
+      }
+      function draw() {
+        svg.innerHTML = "";
+        Object.keys(links).forEach(function (k) {
+          var t = thread(curveD(centre(lt[k], "l"), centre(rt[links[k]], "r")),
+            "gx-thread--done" + (fresh[k] ? " is-fresh" : ""), hue[k] || "var(--green-500)");
+          if (fresh[k]) { delete fresh[k]; t.addEventListener("animationend", function () { t.classList.remove("is-fresh"); }); }
+        });
+        if (live) thread(curveD(centre(lt[armed], "l"), live), "gx-thread--live");
+        f.btn.disabled = Object.keys(links).length < LEFT.length;
+      }
+      /* Free tiles pulse so it reads as "these are still open", and the one
+         under the pointer magnetises while a thread is out. */
+      function guide() {
+        LEFT.forEach(function (c) {
+          lt[c].classList.toggle("is-candidate", !armed && !links[c]);
+          lt[c].classList.toggle("is-picked", c === armed || !!links[c]);
+        });
+        RIGHT.forEach(function (c) {
+          var taken = Object.keys(links).some(function (k) { return links[k] === c; });
+          rt[c].classList.toggle("is-candidate", !!armed && !taken);
+          rt[c].classList.toggle("is-picked", taken);
+        });
+      }
+      function unhook(country) {
+        delete links[country];
+        delete hue[country];
+        guide();
+        draw();
+      }
+
+      LEFT.forEach(function (c) {
+        var b = el("button", "gx-tile", c);
+        b.type = "button";
+        b.onclick = function () {
+          if (links[c]) { unhook(c); return; }
+          armed = armed === c ? null : c;
+          if (!armed) live = null;
+          guide();
+          draw();
+        };
+        lt[c] = b;
+        lcol.appendChild(b);
+      });
+
+      RIGHT.forEach(function (c) {
+        var b = el("button", "gx-tile", c);
+        b.type = "button";
+        b.onclick = function () {
+          var owner = Object.keys(links).filter(function (k) { return links[k] === c; })[0];
+          if (owner) { unhook(owner); return; }
+          if (!armed) return;
+          links[armed] = c;
+          fresh[armed] = true;
+          armed = null;
+          live = null;
+          b.classList.remove("is-hot");
+          guide();
+          draw();
+        };
+        b.onpointerenter = function () { if (armed) b.classList.add("is-hot"); };
+        b.onpointerleave = function () { b.classList.remove("is-hot"); };
+        rt[c] = b;
+        rcol.appendChild(b);
+      });
+
+      wrap.addEventListener("pointermove", function (e) {
+        if (!armed) return;
+        var box = wrap.getBoundingClientRect();
+        live = [e.clientX - box.left, e.clientY - box.top];
+        draw();
+      });
+      wrap.addEventListener("pointerleave", function () { live = null; draw(); });
+
+      guide();
+      requestAnimationFrame(draw);
+      setTimeout(draw, 60);
+      window.addEventListener("resize", draw);
+
+      f.btn.onclick = function () {
+        var right = 0;
+        armed = null; live = null;
+        LEFT.forEach(function (c) {
+          var ok = links[c] === KEY[c];
+          if (ok) right++;
+          hue[c] = ok ? "var(--green-500)" : "var(--coral-500)";
+          lt[c].classList.remove("is-picked", "is-candidate");
+          rt[links[c]].classList.remove("is-picked", "is-candidate", "is-hot");
+          lt[c].classList.add(ok ? "is-right" : "is-wrong");
+          rt[links[c]].classList.add(ok ? "is-right" : "is-wrong");
+          lt[c].disabled = rt[links[c]].disabled = true;
+        });
+        draw();
+        settle(f, right === LEFT.length,
+          right === LEFT.length ? "All three, first go."
+            : right + " of 3. Peru goes with Lima, Japan with Tokyo, France with Paris.");
+      };
+    }
+
+    /* ---- 3 · sorting ------------------------------------------------------ */
+    function buildSort() {
+      var f = frame("Sort the animals into groups");
+      var CARDS = [
+        { name: "Dolphin", group: "Mammals" },
+        { name: "Bat", group: "Mammals" },
+        { name: "Penguin", group: "Birds" },
+        { name: "Owl", group: "Birds" }
+      ];
+      var GROUPS = [
+        { name: "Mammals", dot: "var(--accent)" },
+        { name: "Birds", dot: "var(--sun-500)" }
+      ];
+      var placed = {}, armed = null, tiles = {}, drops = {}, counts = {}, zoneEl = {};
+
+      var bank = el("div", "gx-bank");
+      var zones = el("div", "gx-zones");
+      f.body.append(bank, zones);
+      f.body.appendChild(el("p", "gx-hint", "Drag a card — or tap it, then tap its group"));
+
+      function tally() {
+        GROUPS.forEach(function (g) {
+          counts[g.name].textContent = String(CARDS.filter(function (c) { return placed[c.name] === g.name; }).length);
+        });
+        f.btn.disabled = Object.keys(placed).length < CARDS.length;
+      }
+      /* Zones pulse only while a card is in hand, so the invitation appears
+         exactly when it is actionable. */
+      function guide() {
+        var holding = !!armed;
+        GROUPS.forEach(function (g) { zoneEl[g.name].classList.toggle("is-target", holding); });
+      }
+      function put(name, group) {
+        placed[name] = group;
+        armed = null;
+        (group ? drops[group] : bank).appendChild(tiles[name]);
+        Object.keys(tiles).forEach(function (n) { tiles[n].classList.remove("is-picked"); });
+        if (group) {
+          var z = zoneEl[group];
+          z.classList.remove("is-catch");
+          void z.offsetWidth;
+          z.classList.add("is-catch");
+          setTimeout(function () { z.classList.remove("is-catch"); }, 460);
+        }
+        guide();
+        tally();
+      }
+
+      CARDS.forEach(function (c) {
+        var b = el("button", "gx-tile", c.name);
+        b.type = "button";
+        b.draggable = true;
+        b.addEventListener("dragstart", function (e) {
+          e.dataTransfer.setData("text/plain", c.name);
+          e.dataTransfer.effectAllowed = "move";
+          armed = c.name;
+          guide();
+        });
+        b.onclick = function () {
+          if (placed[c.name]) { delete placed[c.name]; put(c.name, null); return; }
+          armed = armed === c.name ? null : c.name;
+          Object.keys(tiles).forEach(function (n) { tiles[n].classList.toggle("is-picked", n === armed); });
+          guide();
+        };
+        b.addEventListener("dragend", function () { armed = null; guide(); });
+        tiles[c.name] = b;
+        bank.appendChild(b);
+      });
+
+      GROUPS.forEach(function (g) {
+        var z = el("div", "gx-zone");
+        var head = el("div", "gx-zone__head");
+        var dot = el("span", "gx-zone__dot");
+        dot.style.background = g.dot;
+        var n = el("span", "gx-zone__n", "0");
+        head.append(dot, el("span", null, g.name), n);
+        var drop = el("div", "gx-zone__drop");
+        z.append(head, drop);
+        z.addEventListener("dragover", function (e) { e.preventDefault(); z.classList.add("is-over"); });
+        z.addEventListener("dragleave", function () { z.classList.remove("is-over"); });
+        z.addEventListener("drop", function (e) {
+          e.preventDefault();
+          z.classList.remove("is-over");
+          put(e.dataTransfer.getData("text/plain"), g.name);
+        });
+        z.addEventListener("pointerenter", function () { if (armed) z.classList.add("is-over"); });
+        z.addEventListener("pointerleave", function () { z.classList.remove("is-over"); });
+        z.addEventListener("click", function () { if (armed) { z.classList.remove("is-over"); put(armed, g.name); } });
+        zoneEl[g.name] = z;
+        counts[g.name] = n;
+        drops[g.name] = drop;
+        zones.appendChild(z);
+      });
+      tally();
+
+      f.btn.onclick = function () {
+        var right = 0;
+        armed = null;
+        GROUPS.forEach(function (g) { zoneEl[g.name].classList.remove("is-target", "is-over"); });
+        CARDS.forEach(function (c) {
+          var ok = placed[c.name] === c.group;
+          if (ok) right++;
+          tiles[c.name].classList.add(ok ? "is-right" : "is-wrong");
+          tiles[c.name].disabled = true;
+          tiles[c.name].draggable = false;
+        });
+        settle(f, right === CARDS.length,
+          right === CARDS.length ? "All four home. A bat flies and is still a mammal."
+            : right + " of 4. A bat flies but feeds milk, and a penguin swims but has feathers.");
+      };
+    }
+
+    /* ---- 4 · fill in the blanks ---------------------------------------- */
+    function buildCloze() {
+      var f = frame("Fill in the gaps");
+      var GAPS = [{ a: "0" }, { a: "100" }];
+      var parts = ["At sea level water freezes at ", " °C and boils at ", " °C."];
+      var line = el("p", "gx-cloze");
+      var inputs = [];
+
+      parts.forEach(function (chunk, i) {
+        line.appendChild(document.createTextNode(chunk));
+        if (i >= GAPS.length) return;
+        var input = el("input", "gx-gap");
+        input.type = "text";
+        input.inputMode = "numeric";
+        input.setAttribute("aria-label", "Gap " + (i + 1));
+        input.maxLength = 4;
+        input.oninput = function () {
+          inputs.forEach(function (x) { x.classList.toggle("is-empty", !x.value.trim()); });
+          f.btn.disabled = inputs.some(function (x) { return !x.value.trim(); });
+        };
+        input.onkeydown = function (e) { if (e.key === "Enter" && !f.btn.disabled) f.btn.click(); };
+        line.appendChild(input);
+        inputs.push(input);
+      });
+      f.body.appendChild(line);
+      inputs.forEach(function (x) { x.classList.add("is-empty"); });
+
+      f.btn.onclick = function () {
+        var right = 0;
+        inputs.forEach(function (input, i) {
+          input.classList.remove("is-empty");
+          var ok = input.value.trim() === GAPS[i].a;
+          if (ok) right++;
+          input.classList.add(ok ? "is-right" : "is-wrong");
+          input.disabled = true;
+        });
+        settle(f, right === GAPS.length,
+          right === GAPS.length
+            ? "Both right. The sentence says at sea level because higher up the boiling point drops."
+            : "Freezing is 0 °C and boiling is 100 °C, and both only at sea level.");
+      };
+    }
+
+    /* ---- carousel --------------------------------------------------------- */
+    var TYPES = [
+      { name: "Multiple choice", build: buildMcq, path: '<circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.4 2.4 4.6-5"/>' },
+      { name: "Matching", build: buildMatch, path: '<circle cx="6" cy="7" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M8.6 7H14a3 3 0 0 1 0 6h-4a3 3 0 0 0 0 6h5.4"/>' },
+      { name: "Sorting", build: buildSort, path: '<rect x="3" y="4" width="7" height="7" rx="1.6"/><rect x="14" y="4" width="7" height="7" rx="1.6"/><rect x="8.5" y="14" width="7" height="7" rx="1.6"/>' },
+      { name: "Fill in the blanks", build: buildCloze, path: '<path d="M4 18h16"/><path d="M6.5 14L14 6.5l3.5 3.5L10 17.5H6.5z"/>' }
+    ];
+    var at = 0;
+    var now = document.getElementById("gxNow");
+    var dots = document.getElementById("gxDots");
+
+    TYPES.forEach(function (t, i) {
+      var d = el("button", "gx-dot");
+      d.type = "button";
+      d.setAttribute("aria-label", t.name);
+      d.onclick = function () { show(i); };
+      dots.appendChild(d);
+    });
+
+    function show(i) {
+      at = (i + TYPES.length) % TYPES.length;
+      card.innerHTML = "";
+      TYPES[at].build();
+      now.innerHTML = "";
+      now.append(icon(TYPES[at].path), el("span", null, TYPES[at].name));
+      [].forEach.call(dots.children, function (d, j) { d.classList.toggle("is-on", j === at); });
+    }
+    document.getElementById("gxPrev").onclick = function () { show(at - 1); };
+    document.getElementById("gxNext").onclick = function () { show(at + 1); };
+    show(0);
+  })();
+  </script>
 
 </section>
 

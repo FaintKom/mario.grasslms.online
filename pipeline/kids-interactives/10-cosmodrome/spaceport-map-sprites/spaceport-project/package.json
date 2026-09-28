@@ -1,0 +1,29 @@
+{
+  "name": "spaceport-virus-quest",
+  "version": "1.0.0",
+  "description": "Космодром: Атака вируса - Educational web application for learning files, graphics, documents, and presentations",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve . -l 3000"
+  },
+  "keywords": [
+    "education",
+    "gamification",
+    "files",
+    "graphics",
+    "documents",
+    "presentations",
+    "kids",
+    "learning"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

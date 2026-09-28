@@ -1,0 +1,11 @@
+/home/claude/space_quest/
+├── task_a1_v2.html    ✅ Верни файлы роботам
+├── task_a2.html       ✅ Найди файл
+├── task_a3.html       ✅ Исправь структуру папок
+├── task_b1_v2.html    ✅ Почини микросхему
+├── task_b2.html       ✅ Сложная микросхема
+├── task_b3.html       ✅ Пиксельный рисунок
+├── task_c1.html       🔲 (не создан)
+├── task_c2.html       🔲 (не создан)
+├── task_c3.html       🔲 (не создан)
+└── task_d1.html       🔲 (не создан)

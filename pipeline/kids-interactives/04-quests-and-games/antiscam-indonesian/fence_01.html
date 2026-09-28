@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Penipuan - Pelatih</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(45deg, #FFD93D 25%, transparent 25%),
+                        linear-gradient(-45deg, #FFD93D 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #FFD93D 75%),
+                        linear-gradient(-45deg, transparent 75%, #FFD93D 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-color: #FFF8DC;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .language-selector {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        .lang-select {
+            background: white;
+            border: 3px solid #000;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 #000;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .lang-select:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .lang-select:focus {
+            outline: none;
+            background: #FFD93D;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            height: calc(100vh - 20px);
+            background: white;
+            border: 5px solid #000;
+            box-shadow: 10px 10px 0 #000;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            background: #FF6B6B;
+            border: 4px solid #000;
+            padding: 15px;
+            box-shadow: 5px 5px 0 #000;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-size: clamp(22px, 4vw, 32px);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: clamp(14px, 2.5vw, 18px);
+            font-weight: 700;
+        }
+
+        .task-description {
+            background: #FFD93D;
+            border: 4px solid #000;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 5px 5px 0 #000;
+            flex-shrink: 0;
+        }
+
+        .task-title {
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .task-text {
+            font-size: clamp(14px, 2.5vw, 16px);
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .warning-text {
+            background: #FF6B6B;
+            border: 3px solid #000;
+            padding: 10px;
+            margin-top: 10px;
+            font-weight: 700;
+            font-size: clamp(12px, 2vw, 14px);
+            text-align: center;
+        }
+
+        .check-button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .check-button {
+            background: #4ECDC4;
+            border: 4px solid #000;
+            padding: 12px 35px;
+            font-size: clamp(16px, 3vw, 22px);
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 #000;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .check-button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 #000;
+        }
+
+        .check-button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .browser-simulator {
+            background: #E8E8E8;
+            border: 4px solid #000;
+            box-shadow: 5px 5px 0 #000;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .browser-header {
+            background: #D0D0D0;
+            border-bottom: 3px solid #000;
+            padding: 8px;
+        }
+
+        .browser-tabs {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .browser-tab {
+            background: #F0F0F0;
+            border: 2px solid #000;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            min-width: 0;
+            transition: background 0.2s;
+            font-size: clamp(11px, 2vw, 13px);
+        }
+
+        .browser-tab.active {
+            background: white;
+            border-bottom: 2px solid white;
+            margin-bottom: -3px;
+        }
+
+        .browser-tab:hover:not(.active) {
+            background: #E0E0E0;
+        }
+
+        .tab-title {
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .tab-close {
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+
+        .tab-close:hover {
+            background: #FF6B6B;
+        }
+
+        .address-bar {
+            background: white;
+            border: 2px solid #000;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(12px, 2vw, 14px);
+        }
+
+        .lock-icon {
+            font-size: 16px;
+        }
+
+        .address-text {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #202124;
+        }
+
+        .browser-content {
+            background: white;
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            min-height: 0;
+        }
+
+        .page-content {
+            display: none;
+            height: 100%;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        /* Scam page styles */
+        .scam-page {
+            padding: 30px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .scam-header {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .scam-logo {
+            font-size: 60px;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .scam-title {
+            font-size: clamp(28px, 6vw, 48px);
+            font-weight: 900;
+            color: #FF6B00;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            animation: pulse 1.5s infinite;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .scam-text {
+            font-size: clamp(18px, 4vw, 24px);
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: #333;
+        }
+
+        .prize-box {
+            background: white;
+            border: 4px solid #FFD700;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px auto;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .prize-image {
+            font-size: 80px;
+            margin: 15px 0;
+        }
+
+        .prize-name {
+            font-size: clamp(22px, 5vw, 32px);
+            font-weight: 900;
+            color: #000;
+            margin: 10px 0;
+        }
+
+        .timer {
+            background: #FF4444;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: clamp(18px, 4vw, 24px);
+            font-weight: 900;
+            margin: 20px auto;
+            max-width: 300px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.7; }
+        }
+
+        .fake-button {
+            background: linear-gradient(135deg, #FF6B00, #FF0000);
+            border: none;
+            border-radius: 50px;
+            padding: 20px 40px;
+            font-size: clamp(18px, 4vw, 24px);
+            font-weight: 900;
+            cursor: not-allowed;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+            display: inline-block;
+            margin: 20px 10px;
+            color: white;
+            text-transform: uppercase;
+            transition: transform 0.2s;
+        }
+
+        .fake-button:hover {
+            transform: scale(1.05);
+        }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: clamp(11px, 2vw, 13px);
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Phishing page styles */
+        .phishing-page {
+            background: #f1f3f4;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .google-header {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .google-logo {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .google-logo .g-blue { color: #4285F4; }
+        .google-logo .g-red { color: #EA4335; }
+        .google-logo .g-yellow { color: #FBBC05; }
+        .google-logo .g-green { color: #34A853; }
+
+        .phishing-content {
+            max-width: 450px;
+            margin: 60px auto;
+            background: white;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .phishing-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #202124;
+        }
+
+        .phishing-subtitle {
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 25px;
+        }
+
+        .profile-circle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .profile-email {
+            font-size: 16px;
+            color: #202124;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .fake-input {
+            width: 100%;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 13px 15px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .fake-input:focus {
+            outline: none;
+            border-color: #4285F4;
+            background: white;
+        }
+
+        .show-password {
+            font-size: 13px;
+            color: #1a73e8;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: not-allowed;
+        }
+
+        .fake-next-button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: not-allowed;
+            float: right;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Safe page styles - Wikipedia */
+        .wiki-page {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .wiki-header {
+            background: white;
+            border-bottom: 1px solid #a2a9b1;
+            padding: 10px 20px;
+        }
+
+        .wiki-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .wiki-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            min-height: calc(100% - 60px);
+        }
+
+        .wiki-title {
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 400;
+            color: #000;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #a2a9b1;
+            font-family: 'Linux Libertine', Georgia, serif;
+        }
+
+        .wiki-text {
+            font-size: clamp(14px, 2.5vw, 16px);
+            line-height: 1.6;
+            color: #202122;
+            margin-bottom: 15px;
+        }
+
+        .wiki-text p {
+            margin-bottom: 15px;
+        }
+
+        .wiki-infobox {
+            background: #f8f9fa;
+            border: 1px solid #a2a9b1;
+            padding: 15px;
+            margin: 0 0 15px 15px;
+            float: right;
+            width: 280px;
+            font-size: 13px;
+        }
+
+        .wiki-section {
+            margin-top: 20px;
+        }
+
+        .wiki-section h3 {
+            font-size: clamp(18px, 4vw, 22px);
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #000;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 5px;
+        }
+
+        /* Safe page styles - Nat Geo Kids */
+        .natgeo-page {
+            background: #fff;
+            height: 100%;
+            overflow-y: auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .natgeo-header {
+            background: #009639;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .natgeo-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .natgeo-logo-square {
+            background: #FFCC00;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 24px;
+            color: #000;
+        }
+
+        .natgeo-logo-text {
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 1.2;
+        }
+
+        .natgeo-logo-text-main {
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .natgeo-logo-text-kids {
+            font-size: 18px;
+            color: #FFCC00;
+            font-weight: 900;
+        }
+
+        .natgeo-nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .natgeo-nav-item {
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .natgeo-content {
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .natgeo-section {
+            margin-bottom: 40px;
+        }
+
+        .natgeo-section-title {
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 900;
+            color: #000;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .natgeo-section-title:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: #FFCC00;
+            margin: 10px auto 0;
+        }
+
+        .natgeo-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .natgeo-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .natgeo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .natgeo-card-image {
+            width: 100%;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .natgeo-card-image.animals {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .natgeo-card-image.facts {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .natgeo-card-image.quiz {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .natgeo-card-title {
+            padding: 15px;
+            font-size: clamp(14px, 3vw, 16px);
+            font-weight: 700;
+            color: #000;
+            text-align: center;
+        }
+
+        .natgeo-intro {
+            font-size: clamp(16px, 3vw, 18px);
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .natgeo-nav {
+                display: none;
+            }
+            
+            .natgeo-cards {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        .message {
+            border: 4px solid #000;
+            padding: 15px;
+            margin: 12px 0;
+            font-weight: 700;
+            font-size: clamp(14px, 2.5vw, 16px);
+            box-shadow: 5px 5px 0 #000;
+            text-align: center;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .message.error {
+            background: #FF6B6B;
+        }
+
+        .message.success {
+            background: #6BCF7F;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 5px solid #000;
+            padding: 30px;
+            box-shadow: 10px 10px 0 #000;
+            z-index: 1000;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .success-modal.active {
+            display: block;
+            animation: popup 0.5s ease;
+        }
+
+        @keyframes popup {
+            from {
+                transform: translate(-50%, -50%) scale(0);
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .modal-title {
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .modal-message {
+            font-size: clamp(14px, 2.5vw, 18px);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .secret-code-display {
+            background: #6BCF7F;
+            border: 4px solid #000;
+            padding: 20px;
+            margin: 15px auto;
+            box-shadow: 5px 5px 0 #000;
+            max-width: 400px;
+        }
+
+        .secret-code-label {
+            font-size: clamp(14px, 3vw, 18px);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .secret-code-text {
+            font-size: clamp(30px, 6vw, 40px);
+            font-weight: 900;
+            letter-spacing: 8px;
+            margin: 12px 0;
+            color: #000;
+        }
+
+        .copy-code-button {
+            background: #4ECDC4;
+            border: 3px solid #000;
+            padding: 10px 20px;
+            font-size: clamp(14px, 2.5vw, 16px);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 #000;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .copy-code-button:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .copy-code-button:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .close-modal-button {
+            background: #FF6B6B;
+            border: 3px solid #000;
+            padding: 10px 20px;
+            font-size: clamp(14px, 2.5vw, 16px);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 #000;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 15px;
+        }
+
+        .close-modal-button:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .close-modal-button:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        @media (max-height: 600px) {
+            .container {
+                padding: 12px;
+            }
+            
+            .header, .task-description {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .wiki-infobox {
+                float: none;
+                width: 100%;
+                margin: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select class="lang-select" id="languageSelect">
+            <option value="id" selected>🇮🇩 ID</option>
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+            <option value="ru">🇷🇺 RU</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Anti-Penipuan</h1>
+            <div class="subtitle">Ujian 2.3: Penjaga Keamanan</div>
+        </div>
+
+        <div class="task-description">
+            <div class="task-title">🎯 Misimu:</div>
+            <div class="task-text">Tutup semua tab berbahaya dan biarkan hanya situs yang aman!</div>
+            <div class="warning-text">⚠️ Periksa alamat dan gembok! Tutup situs dengan klik ✕</div>
+        </div>
+
+        <div class="check-button-container">
+            <button class="check-button" id="checkButton">Periksa</button>
+        </div>
+
+        <div class="message error" id="errorMessage"></div>
+        <div class="message success" id="successMessage"></div>
+
+        <div class="browser-simulator">
+            <div class="browser-header">
+                <div class="browser-tabs" id="browserTabs">
+                    <!-- Tabs will be generated here -->
+                </div>
+                <div class="address-bar" id="addressBar">
+                    <span class="lock-icon" id="lockIcon">🔒</span>
+                    <span class="address-text" id="addressText">https://wikipedia.org</span>
+                </div>
+            </div>
+            <div class="browser-content" id="browserContent">
+                <!-- Page content will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="success-modal" id="successModal">
+        <h2 class="modal-title">🎉 Bagus Sekali!</h2>
+        <div class="modal-message">Kamu telah belajar mengenali situs berbahaya dan menutupnya!</div>
+        
+        <div class="secret-code-display">
+            <div class="secret-code-label">Kode rahasiamu:</div>
+            <div class="secret-code-text">W4R</div>
+            <button class="copy-code-button" id="copyCodeButton">📋 Salin Kode</button>
+        </div>
+        
+        <button class="close-modal-button" id="closeModalButton">Tutup</button>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // Translations with enhanced content
+            const translations = {
+                id: {
+                    title: '🛡️ Anti-Penipuan',
+                    subtitle: 'Ujian 2.3: Penjaga Keamanan',
+                    taskTitle: '🎯 Misimu:',
+                    taskText: 'Tutup semua tab berbahaya dan biarkan hanya situs yang aman!',
+                    warningText: '⚠️ Periksa alamat dan gembok! Tutup situs dengan klik ✕',
+                    checkButton: 'Periksa',
+                    modalTitle: '🎉 Bagus Sekali!',
+                    modalMessage: 'Kamu telah belajar mengenali situs berbahaya dan menutupnya!',
+                    codeLabel: 'Kode rahasiamu:',
+                    copyButton: '📋 Salin Kode',
+                    copiedText: 'Tersalin!',
+                    closeButton: 'Tutup',
+                    errorMessage: 'Ada situs berbahaya yang masih terbuka! Periksa lagi.',
+                    successMessage: 'Sempurna! Semua situs berbahaya ditutup!',
+                    tabs: [
+                        {
+                            title: 'Kamu Menang!',
+                            url: 'win-free-prize.net',
+                            safe: false,
+                            hasLock: false,
+                            content: `
+                                <div class="scam-page">
+                                    <div class="scam-header">
+                                        <div class="scam-logo">🎁</div>
+                                        <div class="scam-title">SELAMAT KAMU MENANG!</div>
+                                        <div class="scam-text">Kamu adalah pengunjung ke-1.000.000!</div>
+                                    </div>
+                                    <div class="prize-box">
+                                        <div class="prize-image">📱</div>
+                                        <div class="prize-name">iPhone 15 Pro Max</div>
+                                        <div class="scam-text" style="color: #666; font-size: 16px;">Nilai: Rp 20.000.000</div>
+                                    </div>
+                                    <div class="timer">⏰ Sisa Waktu: 05:00</div>
+                                    <div class="fake-button">KLAIM HADIAH SEKARANG!</div>
+                                    <div class="trust-badges">
+                                        <div class="badge">✓ 100% Gratis</div>
+                                        <div class="badge">✓ Tanpa Biaya</div>
+                                        <div class="badge">✓ Terpercaya</div>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Google',
+                            url: 'googgle.com',
+                            safe: false,
+                            hasLock: false,
+                            content: `
+                                <div class="phishing-page">
+                                    <div class="google-header">
+                                        <div class="google-logo">
+                                            <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+                                        </div>
+                                    </div>
+                                    <div class="phishing-content">
+                                        <div class="profile-circle">A</div>
+                                        <div class="profile-email">anak@email.com</div>
+                                        <div class="phishing-title">Selamat datang</div>
+                                        <div class="phishing-subtitle">Masukkan kata sandi untuk melanjutkan ke Google</div>
+                                        <input type="password" class="fake-input" placeholder="Masukkan kata sandi" disabled>
+                                        <div class="show-password">
+                                            <input type="checkbox" disabled> Tampilkan kata sandi
+                                        </div>
+                                        <button class="fake-next-button">Berikutnya</button>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Wikipedia',
+                            url: 'wikipedia.org',
+                            safe: true,
+                            hasLock: true,
+                            content: `
+                                <div class="wiki-page">
+                                    <div class="wiki-header">
+                                        <div class="wiki-logo">Wikipedia</div>
+                                    </div>
+                                    <div class="wiki-content">
+                                        <h1 class="wiki-title">Wikipedia</h1>
+                                        <div class="wiki-text">
+                                            <p><strong>Wikipedia</strong> adalah ensiklopedia daring gratis yang ditulis dan dipelihara oleh komunitas sukarelawan melalui model kolaborasi terbuka yang disebut wiki. Didirikan pada 15 Januari 2001 oleh Jimmy Wales dan Larry Sanger.</p>
+                                            <p>Wikipedia telah menjadi salah satu situs web paling populer di dunia dengan lebih dari 60 juta artikel dalam lebih dari 300 bahasa.</p>
+                                        </div>
+                                        <div class="wiki-section">
+                                            <h3>Sejarah</h3>
+                                            <div class="wiki-text">
+                                                <p>Wikipedia dimulai sebagai proyek pelengkap Nupedia, ensiklopedia daring berbahasa Inggris yang ditulis oleh para ahli. Wikipedia tumbuh dengan cepat dan akhirnya menjadi proyek utama.</p>
+                                            </div>
+                                        </div>
+                                        <div class="wiki-section">
+                                            <h3>Cara Kerja</h3>
+                                            <div class="wiki-text">
+                                                <p>Siapa saja dapat mengedit sebagian besar artikel di Wikipedia. Pengguna terdaftar dan anonim dapat mengedit artikel, dan perubahan langsung terlihat.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Nat Geo Kids',
+                            url: 'kids.nationalgeographic.com',
+                            safe: true,
+                            hasLock: true,
+                            content: `
+                                <div class="natgeo-page">
+                                    <div class="natgeo-header">
+                                        <div class="natgeo-logo-container">
+                                            <div class="natgeo-logo-square">▯</div>
+                                            <div class="natgeo-logo-text">
+                                                <div class="natgeo-logo-text-main">NATIONAL<br>GEOGRAPHIC</div>
+                                                <div class="natgeo-logo-text-kids">KIDS</div>
+                                            </div>
+                                        </div>
+                                        <div class="natgeo-nav">
+                                            <div class="natgeo-nav-item">🎮 GAMES</div>
+                                            <div class="natgeo-nav-item">▶ VIDEOS</div>
+                                            <div class="natgeo-nav-item">🐾 ANIMALS</div>
+                                        </div>
+                                    </div>
+                                    <div class="natgeo-content">
+                                        <div class="natgeo-section">
+                                            <h2 class="natgeo-section-title">Jelajahi Dunia Hewan</h2>
+                                            <div class="natgeo-intro">
+                                                Selamat datang di National Geographic Kids! Temukan fakta menakjubkan tentang hewan favorit kamu.
+                                            </div>
+                                            <div class="natgeo-cards">
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🦁</div>
+                                                    <div class="natgeo-card-title">Fakta Tentang Singa</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🐘</div>
+                                                    <div class="natgeo-card-title">Gajah Yang Menakjubkan</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🦈</div>
+                                                    <div class="natgeo-card-title">Dunia Hiu</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="natgeo-section">
+                                            <h2 class="natgeo-section-title">Hal Keren</h2>
+                                            <div class="natgeo-cards">
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image quiz">❓</div>
+                                                    <div class="natgeo-card-title">Kuis Hewan</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image facts">🌍</div>
+                                                    <div class="natgeo-card-title">Fakta Planet Bumi</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image">📚</div>
+                                                    <div class="natgeo-card-title">Cerita Petualangan</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `
+                        }
+                    ]
+                },
+                en: {
+                    title: '🛡️ Anti-Scam',
+                    subtitle: 'Challenge 2.3: Security Guardian',
+                    taskTitle: '🎯 Your Mission:',
+                    taskText: 'Close all dangerous tabs and leave only safe sites!',
+                    warningText: '⚠️ Check address and padlock! Close sites by clicking ✕',
+                    checkButton: 'Check',
+                    modalTitle: '🎉 Great Job!',
+                    modalMessage: 'You have learned to recognize dangerous sites and close them!',
+                    codeLabel: 'Your secret code:',
+                    copyButton: '📋 Copy Code',
+                    copiedText: 'Copied!',
+                    closeButton: 'Close',
+                    errorMessage: 'There are still dangerous sites open! Check again.',
+                    successMessage: 'Perfect! All dangerous sites closed!',
+                    tabs: [
+                        {
+                            title: 'You Won!',
+                            url: 'win-free-prize.net',
+                            safe: false,
+                            hasLock: false,
+                            content: `
+                                <div class="scam-page">
+                                    <div class="scam-header">
+                                        <div class="scam-logo">🎁</div>
+                                        <div class="scam-title">CONGRATULATIONS YOU WON!</div>
+                                        <div class="scam-text">You are visitor #1,000,000!</div>
+                                    </div>
+                                    <div class="prize-box">
+                                        <div class="prize-image">📱</div>
+                                        <div class="prize-name">iPhone 15 Pro Max</div>
+                                        <div class="scam-text" style="color: #666; font-size: 16px;">Value: $1,200</div>
+                                    </div>
+                                    <div class="timer">⏰ Time Left: 05:00</div>
+                                    <div class="fake-button">CLAIM YOUR PRIZE NOW!</div>
+                                    <div class="trust-badges">
+                                        <div class="badge">✓ 100% Free</div>
+                                        <div class="badge">✓ No Cost</div>
+                                        <div class="badge">✓ Trusted</div>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Google',
+                            url: 'googgle.com',
+                            safe: false,
+                            hasLock: false,
+                            content: `
+                                <div class="phishing-page">
+                                    <div class="google-header">
+                                        <div class="google-logo">
+                                            <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+                                        </div>
+                                    </div>
+                                    <div class="phishing-content">
+                                        <div class="profile-circle">K</div>
+                                        <div class="profile-email">kid@email.com</div>
+                                        <div class="phishing-title">Welcome</div>
+                                        <div class="phishing-subtitle">Enter your password to continue to Google</div>
+                                        <input type="password" class="fake-input" placeholder="Enter your password" disabled>
+                                        <div class="show-password">
+                                            <input type="checkbox" disabled> Show password
+                                        </div>
+                                        <button class="fake-next-button">Next</button>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Wikipedia',
+                            url: 'wikipedia.org',
+                            safe: true,
+                            hasLock: true,
+                            content: `
+                                <div class="wiki-page">
+                                    <div class="wiki-header">
+                                        <div class="wiki-logo">Wikipedia</div>
+                                    </div>
+                                    <div class="wiki-content">
+                                        <h1 class="wiki-title">Wikipedia</h1>
+                                        <div class="wiki-text">
+                                            <p><strong>Wikipedia</strong> is a free online encyclopedia created and edited by volunteers around the world and hosted by the Wikimedia Foundation. Founded on January 15, 2001, by Jimmy Wales and Larry Sanger.</p>
+                                            <p>Wikipedia has become one of the most popular websites in the world with over 60 million articles in more than 300 languages.</p>
+                                        </div>
+                                        <div class="wiki-section">
+                                            <h3>History</h3>
+                                            <div class="wiki-text">
+                                                <p>Wikipedia began as a complementary project for Nupedia, a free online English-language encyclopedia written by experts. Wikipedia grew rapidly and eventually became the primary project.</p>
+                                            </div>
+                                        </div>
+                                        <div class="wiki-section">
+                                            <h3>How It Works</h3>
+                                            <div class="wiki-text">
+                                                <p>Anyone can edit most articles on Wikipedia. Registered and anonymous users can edit articles, and changes are immediately visible.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Nat Geo Kids',
+                            url: 'kids.nationalgeographic.com',
+                            safe: true,
+                            hasLock: true,
+                            content: `
+                                <div class="natgeo-page">
+                                    <div class="natgeo-header">
+                                        <div class="natgeo-logo-container">
+                                            <div class="natgeo-logo-square">▯</div>
+                                            <div class="natgeo-logo-text">
+                                                <div class="natgeo-logo-text-main">NATIONAL<br>GEOGRAPHIC</div>
+                                                <div class="natgeo-logo-text-kids">KIDS</div>
+                                            </div>
+                                        </div>
+                                        <div class="natgeo-nav">
+                                            <div class="natgeo-nav-item">🎮 GAMES</div>
+                                            <div class="natgeo-nav-item">▶ VIDEOS</div>
+                                            <div class="natgeo-nav-item">🐾 ANIMALS</div>
+                                        </div>
+                                    </div>
+                                    <div class="natgeo-content">
+                                        <div class="natgeo-section">
+                                            <h2 class="natgeo-section-title">Explore Amazing Animals</h2>
+                                            <div class="natgeo-intro">
+                                                Welcome to National Geographic Kids! Discover incredible facts about your favorite animals.
+                                            </div>
+                                            <div class="natgeo-cards">
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🦁</div>
+                                                    <div class="natgeo-card-title">Lion Facts</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🐘</div>
+                                                    <div class="natgeo-card-title">Amazing Elephants</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🦈</div>
+                                                    <div class="natgeo-card-title">Shark World</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="natgeo-section">
+                                            <h2 class="natgeo-section-title">Cool Stuff</h2>
+                                            <div class="natgeo-cards">
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image quiz">❓</div>
+                                                    <div class="natgeo-card-title">Animal Quizzes</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image facts">🌍</div>
+                                                    <div class="natgeo-card-title">Planet Earth Facts</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image">📚</div>
+                                                    <div class="natgeo-card-title">Adventure Stories</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `
+                        }
+                    ]
+                },
+                es: {
+                    title: '🛡️ Anti-Estafa',
+                    subtitle: 'Desafío 2.3: Guardián de Seguridad',
+                    taskTitle: '🎯 Tu Misión:',
+                    taskText: '¡Cierra todas las pestañas peligrosas y deja solo sitios seguros!',
+                    warningText: '⚠️ ¡Verifica la dirección y el candado! Cierra sitios haciendo clic en ✕',
+                    checkButton: 'Verificar',
+                    modalTitle: '🎉 ¡Excelente Trabajo!',
+                    modalMessage: '¡Has aprendido a reconocer sitios peligrosos y cerrarlos!',
+                    codeLabel: 'Tu código secreto:',
+                    copyButton: '📋 Copiar Código',
+                    copiedText: '¡Copiado!',
+                    closeButton: 'Cerrar',
+                    errorMessage: '¡Todavía hay sitios peligrosos abiertos! Verifica de nuevo.',
+                    successMessage: '¡Perfecto! ¡Todos los sitios peligrosos cerrados!',
+                    tabs: [
+                        {
+                            title: '¡Ganaste!',
+                            url: 'win-free-prize.net',
+                            safe: false,
+                            hasLock: false,
+                            content: `
+                                <div class="scam-page">
+                                    <div class="scam-header">
+                                        <div class="scam-logo">🎁</div>
+                                        <div class="scam-title">¡FELICIDADES GANASTE!</div>
+                                        <div class="scam-text">¡Eres el visitante #1.000.000!</div>
+                                    </div>
+                                    <div class="prize-box">
+                                        <div class="prize-image">📱</div>
+                                        <div class="prize-name">iPhone 15 Pro Max</div>
+                                        <div class="scam-text" style="color: #666; font-size: 16px;">Valor: €1.100</div>
+                                    </div>
+                                    <div class="timer">⏰ Tiempo restante: 05:00</div>
+                                    <div class="fake-button">¡RECLAMA TU PREMIO AHORA!</div>
+                                    <div class="trust-badges">
+                                        <div class="badge">✓ 100% Gratis</div>
+                                        <div class="badge">✓ Sin Costo</div>
+                                        <div class="badge">✓ Confiable</div>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Google',
+                            url: 'googgle.com',
+                            safe: false,
+                            hasLock: false,
+                            content: `
+                                <div class="phishing-page">
+                                    <div class="google-header">
+                                        <div class="google-logo">
+                                            <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+                                        </div>
+                                    </div>
+                                    <div class="phishing-content">
+                                        <div class="profile-circle">N</div>
+                                        <div class="profile-email">nino@email.com</div>
+                                        <div class="phishing-title">Bienvenido</div>
+                                        <div class="phishing-subtitle">Ingresa tu contraseña para continuar a Google</div>
+                                        <input type="password" class="fake-input" placeholder="Ingresa tu contraseña" disabled>
+                                        <div class="show-password">
+                                            <input type="checkbox" disabled> Mostrar contraseña
+                                        </div>
+                                        <button class="fake-next-button">Siguiente</button>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Wikipedia',
+                            url: 'wikipedia.org',
+                            safe: true,
+                            hasLock: true,
+                            content: `
+                                <div class="wiki-page">
+                                    <div class="wiki-header">
+                                        <div class="wiki-logo">Wikipedia</div>
+                                    </div>
+                                    <div class="wiki-content">
+                                        <h1 class="wiki-title">Wikipedia</h1>
+                                        <div class="wiki-text">
+                                            <p><strong>Wikipedia</strong> es una enciclopedia en línea gratuita creada y editada por voluntarios de todo el mundo. Fundada el 15 de enero de 2001 por Jimmy Wales y Larry Sanger.</p>
+                                            <p>Wikipedia se ha convertido en uno de los sitios web más populares del mundo con más de 60 millones de artículos en más de 300 idiomas.</p>
+                                        </div>
+                                        <div class="wiki-section">
+                                            <h3>Historia</h3>
+                                            <div class="wiki-text">
+                                                <p>Wikipedia comenzó como un proyecto complementario de Nupedia, una enciclopedia en línea gratuita en inglés escrita por expertos. Wikipedia creció rápidamente y finalmente se convirtió en el proyecto principal.</p>
+                                            </div>
+                                        </div>
+                                        <div class="wiki-section">
+                                            <h3>Cómo Funciona</h3>
+                                            <div class="wiki-text">
+                                                <p>Cualquiera puede editar la mayoría de los artículos en Wikipedia. Los usuarios registrados y anónimos pueden editar artículos, y los cambios son inmediatamente visibles.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Nat Geo Kids',
+                            url: 'kids.nationalgeographic.com',
+                            safe: true,
+                            hasLock: true,
+                            content: `
+                                <div class="natgeo-page">
+                                    <div class="natgeo-header">
+                                        <div class="natgeo-logo-container">
+                                            <div class="natgeo-logo-square">▯</div>
+                                            <div class="natgeo-logo-text">
+                                                <div class="natgeo-logo-text-main">NATIONAL<br>GEOGRAPHIC</div>
+                                                <div class="natgeo-logo-text-kids">KIDS</div>
+                                            </div>
+                                        </div>
+                                        <div class="natgeo-nav">
+                                            <div class="natgeo-nav-item">🎮 JUEGOS</div>
+                                            <div class="natgeo-nav-item">▶ VIDEOS</div>
+                                            <div class="natgeo-nav-item">🐾 ANIMALES</div>
+                                        </div>
+                                    </div>
+                                    <div class="natgeo-content">
+                                        <div class="natgeo-section">
+                                            <h2 class="natgeo-section-title">Explora Animales Increíbles</h2>
+                                            <div class="natgeo-intro">
+                                                ¡Bienvenido a National Geographic Kids! Descubre datos increíbles sobre tus animales favoritos.
+                                            </div>
+                                            <div class="natgeo-cards">
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🦁</div>
+                                                    <div class="natgeo-card-title">Datos Sobre Leones</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🐘</div>
+                                                    <div class="natgeo-card-title">Elefantes Asombrosos</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🦈</div>
+                                                    <div class="natgeo-card-title">Mundo de Tiburones</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="natgeo-section">
+                                            <h2 class="natgeo-section-title">Cosas Geniales</h2>
+                                            <div class="natgeo-cards">
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image quiz">❓</div>
+                                                    <div class="natgeo-card-title">Cuestionarios de Animales</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image facts">🌍</div>
+                                                    <div class="natgeo-card-title">Datos del Planeta Tierra</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image">📚</div>
+                                                    <div class="natgeo-card-title">Historias de Aventura</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `
+                        }
+                    ]
+                },
+                ru: {
+                    title: '🛡️ Антиобман',
+                    subtitle: 'Испытание 2.3: Страж безопасности',
+                    taskTitle: '🎯 Твоя миссия:',
+                    taskText: 'Закрой все опасные вкладки и оставь только безопасные сайты!',
+                    warningText: '⚠️ Проверяй адрес и замочек! Закрывай сайты кликом на ✕',
+                    checkButton: 'Проверить',
+                    modalTitle: '🎉 Молодец!',
+                    modalMessage: 'Ты научился распознавать опасные сайты и закрывать их!',
+                    codeLabel: 'Твой секретный код:',
+                    copyButton: '📋 Скопировать код',
+                    copiedText: 'Скопировано!',
+                    closeButton: 'Закрыть',
+                    errorMessage: 'Есть опасные сайты, которые всё ещё открыты! Проверь ещё раз.',
+                    successMessage: 'Отлично! Все опасные сайты закрыты!',
+                    tabs: [
+                        {
+                            title: 'Ты выиграл!',
+                            url: 'win-free-prize.net',
+                            safe: false,
+                            hasLock: false,
+                            content: `
+                                <div class="scam-page">
+                                    <div class="scam-header">
+                                        <div class="scam-logo">🎁</div>
+                                        <div class="scam-title">ПОЗДРАВЛЯЕМ ТЫ ВЫИГРАЛ!</div>
+                                        <div class="scam-text">Ты посетитель №1.000.000!</div>
+                                    </div>
+                                    <div class="prize-box">
+                                        <div class="prize-image">📱</div>
+                                        <div class="prize-name">iPhone 15 Pro Max</div>
+                                        <div class="scam-text" style="color: #666; font-size: 16px;">Стоимость: 120.000₽</div>
+                                    </div>
+                                    <div class="timer">⏰ Осталось времени: 05:00</div>
+                                    <div class="fake-button">ПОЛУЧИТЬ ПРИЗ СЕЙЧАС!</div>
+                                    <div class="trust-badges">
+                                        <div class="badge">✓ 100% Бесплатно</div>
+                                        <div class="badge">✓ Без Оплаты</div>
+                                        <div class="badge">✓ Надёжно</div>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Google',
+                            url: 'googgle.com',
+                            safe: false,
+                            hasLock: false,
+                            content: `
+                                <div class="phishing-page">
+                                    <div class="google-header">
+                                        <div class="google-logo">
+                                            <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+                                        </div>
+                                    </div>
+                                    <div class="phishing-content">
+                                        <div class="profile-circle">Р</div>
+                                        <div class="profile-email">rebenok@email.com</div>
+                                        <div class="phishing-title">Добро пожаловать</div>
+                                        <div class="phishing-subtitle">Введите пароль для входа в Google</div>
+                                        <input type="password" class="fake-input" placeholder="Введите пароль" disabled>
+                                        <div class="show-password">
+                                            <input type="checkbox" disabled> Показать пароль
+                                        </div>
+                                        <button class="fake-next-button">Далее</button>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Wikipedia',
+                            url: 'wikipedia.org',
+                            safe: true,
+                            hasLock: true,
+                            content: `
+                                <div class="wiki-page">
+                                    <div class="wiki-header">
+                                        <div class="wiki-logo">Wikipedia</div>
+                                    </div>
+                                    <div class="wiki-content">
+                                        <h1 class="wiki-title">Википедия</h1>
+                                        <div class="wiki-text">
+                                            <p><strong>Википедия</strong> — свободная общедоступная многоязычная универсальная интернет-энциклопедия. Основана 15 января 2001 года Джимми Уэйлсом и Ларри Сэнгером.</p>
+                                            <p>Википедия стала одним из самых популярных веб-сайтов в мире с более чем 60 миллионами статей на более чем 300 языках.</p>
+                                        </div>
+                                        <div class="wiki-section">
+                                            <h3>История</h3>
+                                            <div class="wiki-text">
+                                                <p>Википедия началась как дополнительный проект для Nupedia, бесплатной онлайн-энциклопедии на английском языке, написанной экспертами. Википедия быстро росла и в итоге стала основным проектом.</p>
+                                            </div>
+                                        </div>
+                                        <div class="wiki-section">
+                                            <h3>Как это работает</h3>
+                                            <div class="wiki-text">
+                                                <p>Любой может редактировать большинство статей в Википедии. Зарегистрированные и анонимные пользователи могут редактировать статьи, и изменения сразу становятся видимыми.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Nat Geo Kids',
+                            url: 'kids.nationalgeographic.com',
+                            safe: true,
+                            hasLock: true,
+                            content: `
+                                <div class="natgeo-page">
+                                    <div class="natgeo-header">
+                                        <div class="natgeo-logo-container">
+                                            <div class="natgeo-logo-square">▯</div>
+                                            <div class="natgeo-logo-text">
+                                                <div class="natgeo-logo-text-main">NATIONAL<br>GEOGRAPHIC</div>
+                                                <div class="natgeo-logo-text-kids">KIDS</div>
+                                            </div>
+                                        </div>
+                                        <div class="natgeo-nav">
+                                            <div class="natgeo-nav-item">🎮 ИГРЫ</div>
+                                            <div class="natgeo-nav-item">▶ ВИДЕО</div>
+                                            <div class="natgeo-nav-item">🐾 ЖИВОТНЫЕ</div>
+                                        </div>
+                                    </div>
+                                    <div class="natgeo-content">
+                                        <div class="natgeo-section">
+                                            <h2 class="natgeo-section-title">Исследуй Удивительных Животных</h2>
+                                            <div class="natgeo-intro">
+                                                Добро пожаловать в National Geographic Kids! Узнай невероятные факты о своих любимых животных.
+                                            </div>
+                                            <div class="natgeo-cards">
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🦁</div>
+                                                    <div class="natgeo-card-title">Факты О Львах</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🐘</div>
+                                                    <div class="natgeo-card-title">Удивительные Слоны</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image animals">🦈</div>
+                                                    <div class="natgeo-card-title">Мир Акул</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="natgeo-section">
+                                            <h2 class="natgeo-section-title">Интересное</h2>
+                                            <div class="natgeo-cards">
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image quiz">❓</div>
+                                                    <div class="natgeo-card-title">Викторины О Животных</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image facts">🌍</div>
+                                                    <div class="natgeo-card-title">Факты О Планете Земля</div>
+                                                </div>
+                                                <div class="natgeo-card">
+                                                    <div class="natgeo-card-image">📚</div>
+                                                    <div class="natgeo-card-title">Приключенческие Истории</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `
+                        }
+                    ]
+                }
+            };
+
+            // Game state - ALWAYS start with Indonesian
+            let currentLang = 'id';
+            let openTabs = [];
+            let activeTabIndex = 0;
+
+            // Utility functions
+            function shuffleArray(array) {
+                const shuffled = [...array];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                return shuffled;
+            }
+
+            function getStoredLanguage() {
+                try {
+                    return localStorage.getItem('trainer_language');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function setStoredLanguage(lang) {
+                try {
+                    localStorage.setItem('trainer_language', lang);
+                } catch (e) {
+                    // localStorage not available in iframe - that's okay
+                }
+            }
+
+            // Language management
+            function loadLanguage() {
+                const savedLang = getStoredLanguage();
+                
+                // Prioritize saved language if available, otherwise default to Indonesian
+                if (savedLang && translations[savedLang]) {
+                    currentLang = savedLang;
+                } else {
+                    currentLang = 'id';  // Force Indonesian as default
+                }
+                
+                document.getElementById('languageSelect').value = currentLang;
+                updateAllText();
+            }
+
+            function changeLanguage(lang) {
+                currentLang = lang;
+                setStoredLanguage(lang);
+                updateAllText();
+            }
+
+            function updateAllText() {
+                const t = translations[currentLang];
+                
+                // Update header
+                document.querySelector('h1').textContent = t.title;
+                document.querySelector('.subtitle').textContent = t.subtitle;
+                
+                // Update task description
+                document.querySelector('.task-title').textContent = t.taskTitle;
+                document.querySelector('.task-text').textContent = t.taskText;
+                document.querySelector('.warning-text').textContent = t.warningText;
+                
+                // Update button
+                document.getElementById('checkButton').textContent = t.checkButton;
+                
+                // Update modal
+                document.querySelector('.modal-title').textContent = t.modalTitle;
+                document.querySelector('.modal-message').textContent = t.modalMessage;
+                document.querySelector('.secret-code-label').textContent = t.codeLabel;
+                document.getElementById('copyCodeButton').textContent = t.copyButton;
+                document.getElementById('closeModalButton').textContent = t.closeButton;
+                
+                // Initialize tabs
+                initializeTabs();
+            }
+
+            // Tab management
+            function initializeTabs() {
+                const t = translations[currentLang];
+                
+                // Shuffle tabs
+                openTabs = shuffleArray(t.tabs.map((tab, index) => ({
+                    ...tab,
+                    originalIndex: index,
+                    id: Date.now() + index
+                })));
+                
+                activeTabIndex = 0;
+                renderTabs();
+                renderContent();
+            }
+
+            function renderTabs() {
+                const tabsContainer = document.getElementById('browserTabs');
+                tabsContainer.innerHTML = '';
+                
+                openTabs.forEach((tab, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.className = 'browser-tab' + (index === activeTabIndex ? ' active' : '');
+                    
+                    const tabTitle = document.createElement('span');
+                    tabTitle.className = 'tab-title';
+                    tabTitle.textContent = tab.title;
+                    
+                    const closeButton = document.createElement('button');
+                    closeButton.className = 'tab-close';
+                    closeButton.textContent = '✕';
+                    closeButton.onclick = function(e) {
+                        e.stopPropagation();
+                        closeTab(index);
+                    };
+                    
+                    tabElement.appendChild(tabTitle);
+                    tabElement.appendChild(closeButton);
+                    
+                    tabElement.onclick = function() {
+                        switchTab(index);
+                    };
+                    
+                    tabsContainer.appendChild(tabElement);
+                });
+                
+                updateAddressBar();
+            }
+
+            function renderContent() {
+                const contentContainer = document.getElementById('browserContent');
+                contentContainer.innerHTML = '';
+                
+                openTabs.forEach((tab, index) => {
+                    const pageDiv = document.createElement('div');
+                    pageDiv.className = 'page-content' + (index === activeTabIndex ? ' active' : '');
+                    pageDiv.innerHTML = tab.content;
+                    contentContainer.appendChild(pageDiv);
+                });
+            }
+
+            function updateAddressBar() {
+                if (openTabs.length === 0) {
+                    document.getElementById('lockIcon').textContent = '';
+                    document.getElementById('addressText').textContent = '';
+                    return;
+                }
+                
+                const currentTab = openTabs[activeTabIndex];
+                const lockIcon = document.getElementById('lockIcon');
+                const addressText = document.getElementById('addressText');
+                
+                if (currentTab.hasLock) {
+                    lockIcon.textContent = '🔒';
+                    addressText.textContent = 'https://' + currentTab.url;
+                } else {
+                    lockIcon.textContent = '⚠️';
+                    addressText.textContent = 'http://' + currentTab.url;
+                }
+            }
+
+            function switchTab(index) {
+                activeTabIndex = index;
+                renderTabs();
+                
+                // Update content visibility
+                const pages = document.querySelectorAll('.page-content');
+                pages.forEach((page, idx) => {
+                    page.classList.toggle('active', idx === index);
+                });
+            }
+
+            function closeTab(index) {
+                openTabs.splice(index, 1);
+                
+                if (openTabs.length === 0) {
+                    activeTabIndex = 0;
+                } else if (activeTabIndex >= openTabs.length) {
+                    activeTabIndex = openTabs.length - 1;
+                }
+                
+                renderTabs();
+                renderContent();
+                hideMessages();
+            }
+
+            // Game logic
+            function checkAnswer() {
+                const t = translations[currentLang];
+                
+                // Check if only safe tabs remain
+                const hasUnsafeTabs = openTabs.some(tab => !tab.safe);
+                const allSafeClosed = openTabs.every(tab => tab.safe);
+                
+                if (hasUnsafeTabs) {
+                    showError();
+                } else if (allSafeClosed && openTabs.length > 0) {
+                    showSuccess();
+                    setTimeout(() => {
+                        document.getElementById('overlay').classList.add('active');
+                        document.getElementById('successModal').classList.add('active');
+                    }, 1500);
+                } else {
+                    showError();
+                }
+            }
+
+            function showError() {
+                const t = translations[currentLang];
+                const errorMsg = document.getElementById('errorMessage');
+                errorMsg.textContent = t.errorMessage;
+                errorMsg.classList.add('show');
+                
+                setTimeout(() => {
+                    errorMsg.classList.remove('show');
+                }, 4000);
+            }
+
+            function showSuccess() {
+                const t = translations[currentLang];
+                const successMsg = document.getElementById('successMessage');
+                successMsg.textContent = t.successMessage;
+                successMsg.classList.add('show');
+            }
+
+            function closeModal() {
+                document.getElementById('overlay').classList.remove('active');
+                document.getElementById('successModal').classList.remove('active');
+            }
+
+            function hideMessages() {
+                document.querySelectorAll('.message').forEach(msg => {
+                    msg.classList.remove('show');
+                });
+            }
+
+            function copyCodeToClipboard() {
+                const t = translations[currentLang];
+                const code = 'W4R';
+                
+                // Try modern clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(code).then(() => {
+                        showCopySuccess();
+                    }).catch(() => {
+                        // Fallback for iframe: show code in alert
+                        alert(t.codeLabel + ' ' + code);
+                    });
+                } else {
+                    // Fallback for iframe or older browsers
+                    try {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = code;
+                        textArea.style.position = 'fixed';
+                        textArea.style.left = '-999999px';
+                        textArea.style.top = '-999999px';
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        
+                        const successful = document.execCommand('copy');
+                        textArea.remove();
+                        
+                        if (successful) {
+                            showCopySuccess();
+                        } else {
+                            alert(t.codeLabel + ' ' + code);
+                        }
+                    } catch (err) {
+                        // Final fallback: just show in alert
+                        alert(t.codeLabel + ' ' + code);
+                    }
+                }
+            }
+
+            function showCopySuccess() {
+                const t = translations[currentLang];
+                const btn = document.getElementById('copyCodeButton');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '✓ ' + t.copiedText;
+                btn.style.background = '#6BCF7F';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '#4ECDC4';
+                }, 2000);
+            }
+
+            // Event listeners
+            function initializeEventListeners() {
+                document.getElementById('languageSelect').addEventListener('change', function() {
+                    changeLanguage(this.value);
+                });
+
+                document.getElementById('checkButton').addEventListener('click', checkAnswer);
+
+                document.getElementById('copyCodeButton').addEventListener('click', copyCodeToClipboard);
+
+                document.getElementById('closeModalButton').addEventListener('click', closeModal);
+                
+                document.getElementById('overlay').addEventListener('click', closeModal);
+
+                // Prevent form submission and other default behaviors
+                document.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'BUTTON' && e.target.classList.contains('fake-next-button')) {
+                        e.preventDefault();
+                    }
+                });
+
+                document.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                });
+            }
+
+            // Initialize application
+            function init() {
+                initializeEventListeners();
+                loadLanguage();
+            }
+
+            // Start the application when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+</body>
+</html>

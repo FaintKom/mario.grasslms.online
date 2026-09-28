@@ -12,3 +12,9 @@ _server-*.conf
 # Review-agent scratch files (WebFetch dumps for audit, do not ship)
 _review_*.html
 _review_*.md
+
+# Voiceover build tooling + scratch (local only, do not ship)
+gen_vo.py
+**/_samples/
+voiceover-script.md
+*.wav

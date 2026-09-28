@@ -1,55 +1,41 @@
 # mario.grasslms.online
 
-Static portfolio site. Live at <https://mario.grasslms.online>.
+Static portfolio site, live at <https://mario.grasslms.online>. GitHub Pages serves this repository as is (custom domain in `CNAME`), so a change goes live a minute or two after it lands on `main`. There is no Actions workflow.
 
-## What
+## Local preview
 
-Single-page landing + 5 interactive capability demos:
-- `index.html` — landing with 5 capability cards
-- `block-a-lesson-generation.html` — AI lesson generation pipeline
-- `block-b-lesson-review.html` — Lesson QA pipeline
-- `block-c-interactive-exercises.html` — Interactive exercise formats
-- `block-d-content-tools.html` — Instructional design tooling
-- `block-e-knowledge-rag.html` — Knowledge RAG module (prototype)
-
-All standalone HTML — Manrope + Geist Mono, design tokens inline, no
-build step.
-
-## Stack
-
-- Static HTML / CSS / vanilla JS — no build step
-- Hosted on GitHub Pages
-- Custom domain: `mario.grasslms.online` (per `CNAME`)
-- HTTPS via Let's Encrypt (provisioned by GitHub Pages)
-
-## Local dev
-
-Open `index.html` directly in browser, or:
-
-```bash
-python -m http.server 8094
-# → http://localhost:8094
+```sh
+python -m http.server 8000
 ```
 
-## Deploy
-
-Production: <https://mario.grasslms.online>
-
-Pushes to `main` auto-publish via GitHub Pages (no Actions workflow,
-no servers). Typical propagation: 30–90 seconds after push.
+Then open http://localhost:8000.
 
 ## Structure
 
+| Path | What it is |
+|---|---|
+| `index.html` | Home page: cases, demos, GrassLMS exercise carousel, tools, contact. Styles and scripts are inline |
+| `assets/`, `previews/` | Demo card screenshots and the link preview image |
+| `favicon.svg`, `icon.svg`, `og.png` | Tab icons and the older link preview |
+| `Mario_Becerra_CV.pdf` | CV linked from the hero and the contact block |
+| `pipeline/engagement/` | SDR onboarding: the mini-OS shell and six SCORM modules |
+| `pipeline/mini-cases/` | Three SCORM mini-cases with their own index page |
+| `pipeline/fintech-fraud-triage/`, `vishing-call/`, `incident-response/`, `typing/` | Standalone scenario demos |
+| `pipeline/artefacts/compliance-microlearning/` | Compliance micro-course design map and playable Unit 1 |
+| `pipeline/kids-interactives/` | Catalogue of twenty activities for children |
+| `pipeline/_shared/` | Desktop-only notice for the simulations and the vendored React 18 production build |
+
+## Mini-cases build
+
+The three cases are written in JSX (`pipeline/mini-cases/case-*-app.jsx`). The pages load the compiled `case-*-app.js` next to them, with React and ReactDOM from `pipeline/_shared/vendor/`, so nothing is compiled in the browser and no CDN is needed. After editing a `.jsx` file, rebuild with Node installed:
+
+```sh
+sh pipeline/mini-cases/build.sh
 ```
-.
-├── index.html               ← landing
-├── block-*.html             ← 5 capability demo pages
-├── CNAME                    ← custom domain config for Pages
-├── README.md
-└── .gitignore
-```
+
+Commit the `.jsx` source and the rebuilt `.js` together.
 
 ## Notes
 
-- All demos are sanitized recreations. Production work under NDA.
-- DNS: `mario.grasslms.online` CNAME → `faintkom.github.io`.
+- The demos are built on invented briefs. Client work is described on the home page only.
+- DNS: `mario.grasslms.online` is a CNAME to `faintkom.github.io`.

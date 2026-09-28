@@ -1,0 +1,46 @@
+{
+  "sectors": {
+    "a": {
+      "id": "a",
+      "name": "Файловый архив",
+      "icon": "📁",
+      "theme": "files",
+      "tasks": 3,
+      "code": "FILES-2312",
+      "unlockAfter": null
+    },
+    "b": {
+      "id": "b",
+      "name": "Графическая станция",
+      "icon": "🎨",
+      "theme": "graphics",
+      "tasks": 3,
+      "code": "GRAPHICS-2312",
+      "unlockAfter": "a"
+    },
+    "c": {
+      "id": "c",
+      "name": "Центр документации",
+      "icon": "📄",
+      "theme": "documents",
+      "tasks": 3,
+      "code": "DOCUMENT-2312",
+      "unlockAfter": "b"
+    },
+    "d": {
+      "id": "d",
+      "name": "Командный центр",
+      "icon": "📊",
+      "theme": "presentations",
+      "tasks": 3,
+      "code": "PRESENT-2312",
+      "unlockAfter": "c"
+    }
+  },
+  "settings": {
+    "maxAttempts": 5,
+    "showHintAtAttempts": 2,
+    "maxStudentsPerRoom": 20,
+    "teacherPassword": "23122025"
+  }
+}

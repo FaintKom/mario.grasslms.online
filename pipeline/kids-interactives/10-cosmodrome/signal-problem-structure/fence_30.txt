@@ -1,0 +1,15 @@
+┌─────────────────────────┬─────────────────────────────────────┐
+│      📋 ОБРАЗЕЦ         │         ✏️ ТВОЙ ТЕКСТ               │
+├─────────────────────────┼─────────────────────────────────────┤
+│                         │                                     │
+│  COMPUTER RULES (жирн.) │  [ B ] [ I ] [ U ] [ • ]           │
+│                         │ ┌─────────────────────────────────┐ │
+│  Every user must:       │ │ COMPUTER RULES                  │ │
+│  • Save files           │ │ Every user must:                │ │
+│  • Close programs       │ │ Save files in folders           │ │
+│  • Check websites       │ │ Close programs after use        │ │
+│                         │ │ Check website addresses         │ │
+│  Important (курсив):    │ │ Important: always backup!       │ │
+│  always backup!         │ └─────────────────────────────────┘ │
+│                         │              [ ✓ Проверить ]        │
+└─────────────────────────┴─────────────────────────────────────┘

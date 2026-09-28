@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reef Games Sprite Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  /* One screen on open: a tighter heading block, and the page held to the
+     height of the viewport so the working area can take what is left. */
+  body { padding: var(--page-top) 0 var(--page-bottom); }
+  .wrap { height: calc(100svh - var(--page-pad)); }
+  h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
+  .lede { font-size: var(--t-sm); max-width: 78ch; }
+  .stack--loose { gap: var(--s-4); }
+
+
+  .tabs { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .tabs button {
+    min-height: 44px; padding: var(--s-2) var(--s-4);
+    border: 2px solid var(--color-border-strong); border-radius: var(--radius-pill);
+    background: var(--color-surface); cursor: pointer; font: inherit; font-size: var(--t-sm);
+  }
+  .tabs button[aria-selected="true"] {
+    background: var(--ink-900); color: var(--color-text-inverse); border-color: var(--ink-900);
+  }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: var(--s-3); }
+  .sprite {
+    display: grid; gap: var(--s-2); padding: var(--s-3); text-align: left;
+    border: 2px solid var(--color-border); border-radius: var(--radius-md);
+    background: var(--color-surface); cursor: pointer; font: inherit;
+  }
+  .sprite:hover { border-color: var(--color-border-strong); }
+  .sprite:active { transform: translateY(2px); }
+  .sprite canvas {
+    width: 100%; height: auto; display: block; border-radius: var(--radius-sm);
+    background: var(--lagoon-50);
+  }
+  .sprite__name { font-weight: 700; font-size: var(--t-sm); }
+  .sprite__desc { color: var(--color-text-muted); font-size: var(--t-2xs); }
+
+  .stage { display: grid; place-items: center; }
+  .stage canvas {
+    width: 100%; max-width: 420px; height: auto;
+    border: 3px solid var(--ink-900); border-radius: var(--radius-md);
+    background: var(--lagoon-50);
+  }
+
+  [hidden] { display: none !important; }
+
+  @media (max-height: 760px) {
+    .grid { grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); }
+    .sprite { padding: var(--s-2); }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--wide stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Reef Games · sprite gallery</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">Every creature here</span> <em class="mark" data-t="title2">is a few lines of code</em></h1>
+    <p class="lede" data-t="intro">The whole cast of the Reef Games, plus their props, their backdrops and the interface around them. Not one of these is an image file. Open any of them to watch it move, then save it as a picture or a sprite sheet for a game of your own.</p>
+  </header>
+
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+
+  <section class="stack" id="browse">
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="card stack" id="detail" hidden>
+    <div class="row row--between">
+      <div class="stack stack--tight">
+        <h2 id="detailName">...</h2>
+        <p class="muted" id="detailDesc"></p>
+      </div>
+      <button class="btn btn--ghost" id="back" data-t="back">Back to the gallery</button>
+    </div>
+
+    <div class="stage"><canvas id="stage" width="300" height="200"></canvas></div>
+
+    <div class="row">
+      <button class="btn" id="playPause" data-t="pause">Pause</button>
+      <button class="btn btn--ghost" id="savePng" data-t="savePng">Save this frame</button>
+      <button class="btn btn--ghost" id="saveSheet" data-t="saveSheet">Save a sprite sheet</button>
+    </div>
+    <div id="verdict" hidden></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* The 21 drawing functions below are the original Ocean Day artwork, moved
+     across untouched: each one paints one frame of one sprite onto a 2D
+     context. Only the shell around them is new.
+
+     The original loaded gif.js from three different CDNs and fell back
+     between them. Nothing here needs a network: a single frame saves as PNG,
+     and an animation saves as a sprite sheet, which is what a game engine
+     wants anyway. */
+
+        /* Shared parts, so eight animals do not each repeat the same forty
+           lines of eye and bubble drawing. Every helper paints inside
+           whatever transform the caller has already set up. */
+        function eye(ctx, x, y, r, look) {
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#16283F';
+            ctx.beginPath(); ctx.arc(x + (look || 0), y + r * 0.12, r * 0.52, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath(); ctx.arc(x + (look || 0) - r * 0.22, y - r * 0.24, r * 0.2, 0, Math.PI * 2); ctx.fill();
+        }
+
+        function smile(ctx, x, y, r) {
+            ctx.strokeStyle = '#16283F';
+            ctx.lineWidth = 3; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.arc(x, y, r, 0.18 * Math.PI, 0.82 * Math.PI); ctx.stroke();
+        }
+
+        function blush(ctx, x, y) {
+            ctx.fillStyle = 'rgba(255, 120, 120, .32)';
+            ctx.beginPath(); ctx.ellipse(x, y, 8, 5, 0, 0, Math.PI * 2); ctx.fill();
+        }
+
+        function bubbleTrail(ctx, x, y, frame, count) {
+            for (let i = 0; i < (count || 3); i++) {
+                const p = ((frame * 1.6) + i * 30) % 90;
+                const fade = 1 - p / 90;
+                ctx.fillStyle = 'rgba(255, 255, 255, ' + (0.6 * fade).toFixed(2) + ')';
+                ctx.beginPath();
+                ctx.arc(x + Math.sin((p + i * 25) * 0.07) * 7, y - p, (3 + i) * fade, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        /* The cast of the Reef Games. Every one of them is a different animal
+           on purpose: narwhal, flying fish, pufferfish, turtle, manta, sea
+           horse, jellyfish, otter. Nothing here is an image file — each is a
+           list of arcs and curves painted onto a 2D context, one frame at a
+           time, with `frame` driving whatever moves. */
+        const characters = [
+            {
+                name: 'Nell the Narwhal',
+                desc: 'host',
+                category: 'characters',
+                draw: function (ctx, frame = 0) {
+                    const cx = ctx.canvas.width / 2, cy = ctx.canvas.height / 2;
+                    const bob = Math.sin(frame * 0.08) * 5;
+
+                    ctx.save();
+                    ctx.translate(cx - 22, cy + bob);
+                    ctx.rotate(Math.sin(frame * 0.08) * 0.05);
+
+                    // Tail fluke
+                    ctx.fillStyle = '#41608A';
+                    ctx.beginPath();
+                    ctx.moveTo(-48, 0);
+                    ctx.quadraticCurveTo(-78, -28, -92, -18);
+                    ctx.quadraticCurveTo(-74, 0, -92, 18);
+                    ctx.quadraticCurveTo(-78, 28, -48, 4);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Body
+                    ctx.fillStyle = '#5B7FA6';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, 58, 31, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Pale belly
+                    ctx.fillStyle = '#CBDDEC';
+                    ctx.beginPath();
+                    ctx.ellipse(2, 13, 46, 14, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Speckles along the back
+                    ctx.fillStyle = 'rgba(28, 52, 84, .28)';
+                    [[-34, -11, 5], [-12, -18, 4], [10, -15, 5], [30, -7, 4], [-24, -1, 3]].forEach(function (s) {
+                        ctx.beginPath(); ctx.arc(s[0], s[1], s[2], 0, Math.PI * 2); ctx.fill();
+                    });
+
+                    // Side flipper, paddling
+                    ctx.save();
+                    ctx.translate(-6, 20);
+                    ctx.rotate(0.5 + Math.sin(frame * 0.14) * 0.3);
+                    ctx.fillStyle = '#41608A';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 10, 9, 19, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+
+                    // The tusk: ivory, cut across by the twist of its grooves
+                    ctx.fillStyle = '#F3E7CD';
+                    ctx.beginPath();
+                    ctx.moveTo(52, -11);
+                    ctx.lineTo(120, -3);
+                    ctx.lineTo(120, 1);
+                    ctx.lineTo(52, 1);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(160, 135, 92, .35)';
+                    ctx.lineWidth = 1.5;
+                    for (let i = 1; i < 8; i++) {
+                        const x = 52 + i * 8, top = -10 + i * 1.1;
+                        ctx.beginPath();
+                        ctx.moveTo(x, top);
+                        ctx.lineTo(x + 4, top + (10 - i) * 0.5);
+                        ctx.stroke();
+                    }
+
+                    // A spark on the tip, because the host runs the show
+                    ctx.save();
+                    ctx.translate(124, -2);
+                    ctx.rotate(frame * 0.06);
+                    ctx.fillStyle = '#FFD84D';
+                    for (let i = 0; i < 4; i++) {
+                        ctx.save();
+                        ctx.rotate((Math.PI / 2) * i);
+                        ctx.beginPath();
+                        ctx.moveTo(0, -11); ctx.lineTo(2.5, 0); ctx.lineTo(0, 11); ctx.lineTo(-2.5, 0);
+                        ctx.closePath(); ctx.fill();
+                        ctx.restore();
+                    }
+                    ctx.restore();
+
+                    eye(ctx, 30, -9, 8, 2);
+                    smile(ctx, 42, 3, 9);
+                    blush(ctx, 16, 8);
+
+                    ctx.restore();
+                    bubbleTrail(ctx, cx - 96, cy - 34, frame, 3);
+                }
+            },
+            {
+                name: 'Dart the Flying Fish',
+                desc: 'racer',
+                category: 'characters',
+                draw: function (ctx, frame = 0) {
+                    const cx = ctx.canvas.width / 2, cy = ctx.canvas.height / 2;
+                    const dash = Math.sin(frame * 0.13) * 7;
+                    const flap = Math.sin(frame * 0.26);
+
+                    ctx.save();
+                    ctx.translate(cx - 4 + dash, cy + 4);
+                    ctx.rotate(-0.08);
+
+                    // Speed streaks, sliding backwards
+                    ctx.strokeStyle = 'rgba(120, 180, 220, .5)';
+                    ctx.lineWidth = 4; ctx.lineCap = 'round';
+                    for (let i = 0; i < 3; i++) {
+                        const off = ((frame * 3) + i * 24) % 72;
+                        ctx.beginPath();
+                        ctx.moveTo(-84 - off * 0.4, -14 + i * 15);
+                        ctx.lineTo(-112 - off * 0.4, -14 + i * 15);
+                        ctx.stroke();
+                    }
+
+                    // Forked tail
+                    ctx.fillStyle = '#2F6E9E';
+                    ctx.beginPath();
+                    ctx.moveTo(-44, 0);
+                    ctx.lineTo(-82, -24);
+                    ctx.lineTo(-68, 0);
+                    ctx.lineTo(-82, 24);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Upper wing fin, the thing that makes it a flying fish
+                    ctx.save();
+                    ctx.translate(-4, -12);
+                    ctx.rotate(-0.45 + flap * 0.26);
+                    ctx.fillStyle = 'rgba(122, 196, 233, .92)';
+                    ctx.beginPath();
+                    ctx.ellipse(0, -32, 14, 36, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(47, 110, 158, .55)';
+                    ctx.lineWidth = 1.5;
+                    for (let i = -1; i <= 1; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(i * 6, -4);
+                        ctx.lineTo(i * 9, -62);
+                        ctx.stroke();
+                    }
+                    ctx.restore();
+
+                    // Lower wing fin
+                    ctx.save();
+                    ctx.translate(-4, 12);
+                    ctx.rotate(0.45 - flap * 0.26);
+                    ctx.fillStyle = 'rgba(122, 196, 233, .75)';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 28, 11, 28, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+
+                    // Body
+                    ctx.fillStyle = '#4E97C9';
+                    ctx.beginPath();
+                    ctx.moveTo(-46, 0);
+                    ctx.quadraticCurveTo(-18, -30, 34, -17);
+                    ctx.quadraticCurveTo(60, -9, 60, 0);
+                    ctx.quadraticCurveTo(60, 9, 34, 17);
+                    ctx.quadraticCurveTo(-18, 30, -46, 0);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Silver flank
+                    ctx.fillStyle = '#D9EAF5';
+                    ctx.beginPath();
+                    ctx.ellipse(6, 9, 36, 9, -0.06, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Gill
+                    ctx.strokeStyle = 'rgba(28, 70, 105, .5)';
+                    ctx.lineWidth = 2.5;
+                    ctx.beginPath(); ctx.arc(26, 0, 15, -1.1, 1.1); ctx.stroke();
+
+                    // Race number
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.beginPath(); ctx.arc(-12, -2, 13, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#1D4C72';
+                    ctx.font = 'bold 17px system-ui, sans-serif';
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText('1', -12, -1);
+                    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+                    eye(ctx, 40, -6, 8, 2);
+                    smile(ctx, 48, 4, 8);
+
+                    ctx.restore();
+                }
+            },
+            {
+                name: 'Professor Puffer',
+                desc: 'rules',
+                category: 'characters',
+                draw: function (ctx, frame = 0) {
+                    const cx = ctx.canvas.width / 2, cy = ctx.canvas.height / 2;
+                    // Puffs up and settles again, which is the whole point of a pufferfish
+                    const puff = 1 + Math.sin(frame * 0.06) * 0.11;
+
+                    ctx.save();
+                    ctx.translate(cx + 4, cy + Math.sin(frame * 0.09) * 4);
+                    ctx.scale(puff, puff);
+
+                    // Short blunt spines, kept close to the body so the
+                    // silhouette stays a fish rather than turning into a sun
+                    ctx.fillStyle = '#C98A18';
+                    for (let i = 0; i < 14; i++) {
+                        ctx.save();
+                        ctx.rotate((Math.PI * 2 / 14) * i + 0.2);
+                        ctx.beginPath();
+                        ctx.moveTo(-6, -42); ctx.lineTo(6, -42); ctx.lineTo(0, -52);
+                        ctx.closePath(); ctx.fill();
+                        ctx.restore();
+                    }
+
+                    // Body
+                    ctx.fillStyle = '#E8B441';
+                    ctx.beginPath(); ctx.arc(0, 0, 45, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#F8DE9C';
+                    ctx.beginPath(); ctx.ellipse(0, 18, 34, 22, 0, 0, Math.PI * 2); ctx.fill();
+
+                    // Mottling across the back, the other half of not being a sun
+                    ctx.fillStyle = 'rgba(120, 80, 16, .22)';
+                    [[-30, -22, 7], [-6, -32, 6], [20, -26, 8], [36, -8, 6], [-38, -4, 5]].forEach(function (s) {
+                        ctx.beginPath(); ctx.arc(s[0], s[1], s[2], 0, Math.PI * 2); ctx.fill();
+                    });
+
+                    // Tail, drawn over the spines so it reads as a fin
+                    ctx.fillStyle = '#D89A22';
+                    ctx.beginPath();
+                    ctx.moveTo(-40, -2);
+                    ctx.quadraticCurveTo(-70, -22, -80, -4);
+                    ctx.quadraticCurveTo(-72, 16, -40, 8);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(120, 80, 16, .3)';
+                    ctx.lineWidth = 2;
+                    for (let i = 0; i < 3; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(-46, 0);
+                        ctx.lineTo(-74, -14 + i * 11);
+                        ctx.stroke();
+                    }
+
+                    // Side fin
+                    ctx.save();
+                    ctx.translate(-36, 12);
+                    ctx.rotate(Math.sin(frame * 0.2) * 0.35);
+                    ctx.fillStyle = '#E0A21C';
+                    ctx.beginPath(); ctx.ellipse(0, 0, 14, 8, 0, 0, Math.PI * 2); ctx.fill();
+                    ctx.restore();
+
+                    blush(ctx, -31, 9);
+                    blush(ctx, 33, 9);
+                    eye(ctx, -14, -8, 8, 1);
+                    eye(ctx, 17, -8, 8, 1);
+
+                    // Reading glasses, drawn over the eyes rather than under them
+                    ctx.strokeStyle = '#3B2A12';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath(); ctx.arc(-14, -8, 12, 0, Math.PI * 2); ctx.stroke();
+                    ctx.beginPath(); ctx.arc(17, -8, 12, 0, Math.PI * 2); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-2, -9); ctx.lineTo(5, -9); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-26, -10); ctx.lineTo(-38, -14); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(29, -10); ctx.lineTo(41, -14); ctx.stroke();
+
+                    smile(ctx, 2, 12, 10);
+
+                    ctx.restore();
+                    bubbleTrail(ctx, cx + 74, cy - 36, frame, 2);
+                }
+            },
+            {
+                name: 'Tuck the Sea Turtle',
+                desc: 'steady',
+                category: 'characters',
+                draw: function (ctx, frame = 0) {
+                    const cx = ctx.canvas.width / 2, cy = ctx.canvas.height / 2;
+                    const paddle = Math.sin(frame * 0.11);
+
+                    ctx.save();
+                    ctx.translate(cx - 10, cy + Math.sin(frame * 0.07) * 4);
+
+                    // Back flipper
+                    ctx.fillStyle = '#4F9159';
+                    ctx.beginPath(); ctx.ellipse(-52, 26, 19, 10, -0.4, 0, Math.PI * 2); ctx.fill();
+
+                    // Tail
+                    ctx.beginPath();
+                    ctx.moveTo(-56, 0); ctx.lineTo(-80, -8); ctx.lineTo(-56, 12);
+                    ctx.closePath(); ctx.fill();
+
+                    // Front flipper, the one doing the work
+                    ctx.save();
+                    ctx.translate(30, 14);
+                    ctx.rotate(0.4 + paddle * 0.45);
+                    ctx.fillStyle = '#6FBE7B';
+                    ctx.beginPath(); ctx.ellipse(18, 12, 28, 12, 0.5, 0, Math.PI * 2); ctx.fill();
+                    ctx.restore();
+
+                    // Head
+                    ctx.fillStyle = '#6FBE7B';
+                    ctx.beginPath(); ctx.ellipse(58, -8, 25, 20, -0.15, 0, Math.PI * 2); ctx.fill();
+
+                    // Shell
+                    ctx.fillStyle = '#7A4F27';
+                    ctx.beginPath(); ctx.ellipse(-4, -2, 58, 40, 0, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#A9723A';
+                    ctx.beginPath(); ctx.ellipse(-4, -2, 48, 32, 0, 0, Math.PI * 2); ctx.fill();
+
+                    // Shell plates
+                    ctx.strokeStyle = 'rgba(84, 51, 20, .65)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath(); ctx.ellipse(-4, -2, 24, 16, 0, 0, Math.PI * 2); ctx.stroke();
+                    for (let i = 0; i < 6; i++) {
+                        const a = (Math.PI * 2 / 6) * i + 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(-4 + Math.cos(a) * 24, -2 + Math.sin(a) * 16);
+                        ctx.lineTo(-4 + Math.cos(a) * 48, -2 + Math.sin(a) * 32);
+                        ctx.stroke();
+                    }
+
+                    blush(ctx, 48, 4);
+                    eye(ctx, 62, -14, 7, 2);
+                    smile(ctx, 68, -1, 8);
+
+                    ctx.restore();
+                    bubbleTrail(ctx, cx + 84, cy - 40, frame, 3);
+                }
+            },
+            {
+                name: 'Marlow the Manta Ray',
+                desc: 'judge',
+                category: 'characters',
+                draw: function (ctx, frame = 0) {
+                    const cx = ctx.canvas.width / 2, cy = ctx.canvas.height / 2;
+                    const wing = Math.sin(frame * 0.09);
+                    const lift = wing * 16;
+
+                    ctx.save();
+                    ctx.translate(cx, cy - 14 + wing * 5);
+
+                    // Tail
+                    ctx.strokeStyle = '#2B3F63';
+                    ctx.lineWidth = 5; ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(0, 24);
+                    ctx.quadraticCurveTo(-6, 54, -20 + wing * 8, 74);
+                    ctx.stroke();
+
+                    // Wings in one path, tips rising and falling
+                    ctx.fillStyle = '#3D5886';
+                    ctx.beginPath();
+                    ctx.moveTo(0, -28);
+                    ctx.quadraticCurveTo(-58, -28 - lift, -104, 4 - lift);
+                    ctx.quadraticCurveTo(-56, 6, -28, 30);
+                    ctx.quadraticCurveTo(0, 42, 28, 30);
+                    ctx.quadraticCurveTo(56, 6, 104, 4 - lift);
+                    ctx.quadraticCurveTo(58, -28 - lift, 0, -28);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Pale underside
+                    ctx.fillStyle = 'rgba(214, 231, 245, .92)';
+                    ctx.beginPath(); ctx.ellipse(0, 11, 38, 19, 0, 0, Math.PI * 2); ctx.fill();
+
+                    // The two lobes either side of the mouth
+                    ctx.fillStyle = '#3D5886';
+                    ctx.beginPath(); ctx.ellipse(-20, -26, 7, 15, 0.25, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.ellipse(20, -26, 7, 15, -0.25, 0, Math.PI * 2); ctx.fill();
+
+                    // Spots
+                    ctx.fillStyle = 'rgba(255, 255, 255, .22)';
+                    [[-56, -6], [-38, -16], [46, -8], [30, -18]].forEach(function (s) {
+                        ctx.beginPath(); ctx.arc(s[0], s[1] - lift * 0.4, 6, 0, Math.PI * 2); ctx.fill();
+                    });
+
+                    eye(ctx, -18, -8, 7, 1);
+                    eye(ctx, 18, -8, 7, -1);
+                    smile(ctx, 0, 4, 12);
+
+                    ctx.restore();
+                }
+            },
+            {
+                name: 'Wren the Seahorse',
+                desc: 'announcer',
+                category: 'characters',
+                draw: function (ctx, frame = 0) {
+                    const cx = ctx.canvas.width / 2, cy = ctx.canvas.height / 2;
+
+                    ctx.save();
+                    ctx.translate(cx - 30, cy - 4 + Math.sin(frame * 0.1) * 3);
+                    ctx.rotate(Math.sin(frame * 0.07) * 0.06);
+
+                    // Dorsal fin, fluttering the way a real one never stops doing
+                    ctx.fillStyle = 'rgba(255, 170, 150, .85)';
+                    ctx.beginPath();
+                    ctx.moveTo(-14, -34);
+                    for (let i = 0; i <= 6; i++) {
+                        const y = -34 + i * 11;
+                        ctx.quadraticCurveTo(-30 - Math.sin(frame * 0.4 + i) * 5, y + 5, -14, y + 11);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Curled tail
+                    ctx.strokeStyle = '#F2825E';
+                    ctx.lineWidth = 14; ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(-4, 24);
+                    ctx.quadraticCurveTo(8, 54, -12, 60);
+                    ctx.quadraticCurveTo(-30, 62, -24, 46);
+                    ctx.stroke();
+
+                    // Body
+                    ctx.fillStyle = '#F2825E';
+                    ctx.beginPath();
+                    ctx.moveTo(-16, -30);
+                    ctx.quadraticCurveTo(22, -22, 16, 8);
+                    ctx.quadraticCurveTo(10, 28, -6, 28);
+                    ctx.quadraticCurveTo(-22, 18, -16, -30);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Belly rings
+                    ctx.strokeStyle = 'rgba(180, 70, 40, .38)';
+                    ctx.lineWidth = 2;
+                    for (let i = 0; i < 5; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(-15, -18 + i * 10);
+                        ctx.lineTo(14 - i * 2, -22 + i * 10);
+                        ctx.stroke();
+                    }
+
+                    // Head and long snout
+                    ctx.fillStyle = '#FF9A78';
+                    ctx.beginPath(); ctx.ellipse(-6, -40, 20, 18, -0.2, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath();
+                    ctx.moveTo(4, -47); ctx.lineTo(38, -38); ctx.lineTo(4, -31);
+                    ctx.closePath(); ctx.fill();
+
+                    // Crown spines
+                    ctx.fillStyle = '#E2673F';
+                    for (let i = 0; i < 3; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(-24 + i * 9, -53);
+                        ctx.lineTo(-20 + i * 9, -68);
+                        ctx.lineTo(-16 + i * 9, -53);
+                        ctx.closePath(); ctx.fill();
+                    }
+
+                    eye(ctx, -4, -44, 7, 2);
+
+                    ctx.restore();
+
+                    // The conch it announces through, kept upright so the sway
+                    // of the body does not tip the sound sideways
+                    ctx.save();
+                    ctx.translate(cx + 40, cy - 40);
+                    ctx.fillStyle = '#F6E7CE';
+                    ctx.beginPath();
+                    ctx.moveTo(-18, 6); ctx.lineTo(22, -20); ctx.lineTo(22, 24);
+                    ctx.closePath(); ctx.fill();
+                    ctx.fillStyle = '#E3CFAE';
+                    ctx.beginPath(); ctx.ellipse(22, 2, 5, 22, 0, 0, Math.PI * 2); ctx.fill();
+
+                    ctx.strokeStyle = '#E2673F';
+                    ctx.lineWidth = 3;
+                    for (let i = 0; i < 3; i++) {
+                        const p = ((frame * 2) + i * 20) % 60;
+                        ctx.globalAlpha = 1 - p / 60;
+                        ctx.beginPath();
+                        ctx.arc(28, 2, 8 + p * 0.6, -0.8, 0.8);
+                        ctx.stroke();
+                    }
+                    ctx.globalAlpha = 1;
+                    ctx.restore();
+                }
+            },
+            {
+                name: 'Juno the Jellyfish',
+                desc: 'cheerleader',
+                category: 'characters',
+                draw: function (ctx, frame = 0) {
+                    const cx = ctx.canvas.width / 2, cy = ctx.canvas.height / 2;
+                    // The bell squeezes and opens; the whole animal rises a beat later
+                    const pulse = Math.sin(frame * 0.1);
+                    const rise = Math.sin(frame * 0.1 - 0.9) * 6;
+
+                    ctx.save();
+                    ctx.translate(cx, cy - 26 + rise);
+
+                    // Glow
+                    ctx.fillStyle = 'rgba(190, 140, 240, .16)';
+                    ctx.beginPath(); ctx.arc(0, 4, 66 + pulse * 5, 0, Math.PI * 2); ctx.fill();
+
+                    // Tentacles
+                    ctx.strokeStyle = 'rgba(206, 160, 245, .9)';
+                    ctx.lineWidth = 5; ctx.lineCap = 'round';
+                    for (let i = -3; i <= 3; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(i * 12, 16);
+                        ctx.quadraticCurveTo(
+                            i * 14 + Math.sin(frame * 0.12 + i) * 12, 50,
+                            i * 11 + Math.sin(frame * 0.12 + i + 1) * 16, 82
+                        );
+                        ctx.stroke();
+                    }
+
+                    // Frilly arms under the bell
+                    ctx.strokeStyle = 'rgba(255, 214, 240, .95)';
+                    ctx.lineWidth = 8;
+                    for (let i = -1; i <= 1; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(i * 14, 14);
+                        ctx.quadraticCurveTo(i * 18 + Math.sin(frame * 0.15 + i) * 8, 38, i * 12, 56);
+                        ctx.stroke();
+                    }
+
+                    // Bell
+                    const bw = 54 + pulse * 6, bh = 40 - pulse * 6;
+                    ctx.fillStyle = '#C58CEE';
+                    ctx.beginPath();
+                    ctx.moveTo(-bw, 16);
+                    ctx.quadraticCurveTo(-bw, -bh - 20, 0, -bh - 20);
+                    ctx.quadraticCurveTo(bw, -bh - 20, bw, 16);
+                    ctx.quadraticCurveTo(bw / 2, 6, 0, 16);
+                    ctx.quadraticCurveTo(-bw / 2, 6, -bw, 16);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = 'rgba(255, 255, 255, .3)';
+                    ctx.beginPath(); ctx.ellipse(-20, -24, 17, 11, -0.5, 0, Math.PI * 2); ctx.fill();
+
+                    ctx.fillStyle = 'rgba(150, 90, 200, .45)';
+                    ctx.beginPath(); ctx.ellipse(0, 14, bw * 0.92, 7, 0, 0, Math.PI * 2); ctx.fill();
+
+                    eye(ctx, -16, -12, 8, 1);
+                    eye(ctx, 16, -12, 8, -1);
+                    smile(ctx, 0, -2, 11);
+
+                    // Pom-poms, because somebody has to lead the cheering
+                    [[-72, -4], [72, -4]].forEach(function (p, k) {
+                        ctx.save();
+                        ctx.translate(p[0], p[1] + Math.sin(frame * 0.2 + k * 2) * 10);
+                        ctx.fillStyle = '#FFD84D';
+                        for (let i = 0; i < 8; i++) {
+                            ctx.save();
+                            ctx.rotate((Math.PI * 2 / 8) * i + frame * 0.04);
+                            ctx.beginPath(); ctx.ellipse(0, -11, 5, 10, 0, 0, Math.PI * 2); ctx.fill();
+                            ctx.restore();
+                        }
+                        ctx.fillStyle = '#F5B800';
+                        ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
+                        ctx.restore();
+                    });
+
+                    ctx.restore();
+                }
+            },
+            {
+                name: 'Ollie the Sea Otter',
+                desc: 'timekeeper',
+                category: 'characters',
+                draw: function (ctx, frame = 0) {
+                    const cx = ctx.canvas.width / 2, cy = ctx.canvas.height / 2;
+                    const float = Math.sin(frame * 0.07) * 5;
+
+                    // Water line, because an otter works lying on the surface
+                    ctx.strokeStyle = 'rgba(58, 160, 181, .4)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    for (let x = 0; x <= ctx.canvas.width; x += 6) {
+                        const y = cy + 46 + Math.sin((x + frame * 2) * 0.05) * 4;
+                        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+
+                    ctx.save();
+                    ctx.translate(cx - 6, cy + 12 + float);
+                    ctx.rotate(Math.sin(frame * 0.07) * 0.04);
+
+                    // Tail
+                    ctx.fillStyle = '#6B4429';
+                    ctx.beginPath(); ctx.ellipse(-84, 6, 28, 11, -0.15, 0, Math.PI * 2); ctx.fill();
+
+                    // Back feet, sticking up the way an otter's do
+                    ctx.fillStyle = '#5A3821';
+                    [-40, -18].forEach(function (x, k) {
+                        ctx.save();
+                        ctx.translate(x, -24);
+                        ctx.rotate(-0.3 + Math.sin(frame * 0.12 + k) * 0.12);
+                        ctx.beginPath(); ctx.ellipse(0, 0, 10, 17, 0, 0, Math.PI * 2); ctx.fill();
+                        ctx.restore();
+                    });
+
+                    // Body, floating on its back
+                    ctx.fillStyle = '#8A5A34';
+                    ctx.beginPath(); ctx.ellipse(-20, 4, 60, 29, -0.05, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#C79A6B';
+                    ctx.beginPath(); ctx.ellipse(-18, 12, 45, 16, -0.05, 0, Math.PI * 2); ctx.fill();
+
+                    // Ears, then head over them
+                    ctx.fillStyle = '#6B4429';
+                    ctx.beginPath(); ctx.arc(30, -32, 8, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(58, -34, 8, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#8A5A34';
+                    ctx.beginPath(); ctx.arc(46, -10, 30, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#C79A6B';
+                    ctx.beginPath(); ctx.ellipse(56, -2, 20, 15, 0, 0, Math.PI * 2); ctx.fill();
+
+                    // Nose and whiskers
+                    ctx.fillStyle = '#3B2A1C';
+                    ctx.beginPath(); ctx.ellipse(66, -8, 7, 5, 0, 0, Math.PI * 2); ctx.fill();
+                    ctx.strokeStyle = 'rgba(59, 42, 28, .5)';
+                    ctx.lineWidth = 1.5;
+                    for (let i = -1; i <= 1; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(71, -6 + i * 3);
+                        ctx.lineTo(94, -12 + i * 9);
+                        ctx.stroke();
+                    }
+
+                    eye(ctx, 38, -18, 7, 2);
+                    eye(ctx, 60, -20, 7, 2);
+
+                    // Front paws, holding the shell it times the heats with
+                    ctx.fillStyle = '#6B4429';
+                    ctx.beginPath(); ctx.arc(0, -18, 11, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(26, -14, 11, 0, Math.PI * 2); ctx.fill();
+
+                    ctx.save();
+                    ctx.translate(13, -28);
+                    ctx.fillStyle = '#F6E7CE';
+                    ctx.beginPath(); ctx.arc(0, 0, 17, 0, Math.PI * 2); ctx.fill();
+                    ctx.strokeStyle = '#C9A882';
+                    ctx.lineWidth = 2;
+                    for (let i = 0; i < 7; i++) {
+                        const a = -Math.PI / 2 + i * 0.42 - 0.6;
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.lineTo(Math.cos(a) * 17, Math.sin(a) * 17);
+                        ctx.stroke();
+                    }
+                    ctx.strokeStyle = '#E2552F';
+                    ctx.lineWidth = 3; ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(Math.cos(frame * 0.25 - Math.PI / 2) * 12, Math.sin(frame * 0.25 - Math.PI / 2) * 12);
+                    ctx.stroke();
+                    ctx.restore();
+
+                    ctx.restore();
+                }
+            }
+        ];
+
+        // Объекты и предметы
+        const objects = [
+            {
+                name: 'Кольца для метания',
+                desc: 'Разноцветные кольца',
+                category: 'objects',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    const colors = ['#FF0000', '#0000FF', '#FFD700'];
+                    const positions = [[-50, -10], [0, -5], [50, 0]];
+                    
+                    positions.forEach((pos, i) => {
+                        ctx.save();
+                        ctx.translate(cx + pos[0], cy + pos[1] + Math.sin(frame * 0.1 + i) * 5);
+                        ctx.rotate(Math.sin(frame * 0.05 + i) * 0.1);
+                        
+                        // Тень кольца
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                        ctx.beginPath();
+                        ctx.ellipse(3, 3, 25, 20, 0, 0, Math.PI * 2);
+                        ctx.ellipse(3, 3, 15, 12, 0, 0, Math.PI * 2, true);
+                        ctx.fill();
+                        
+                        // Кольцо
+                        ctx.fillStyle = colors[i];
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, 25, 20, 0, 0, Math.PI * 2);
+                        ctx.ellipse(0, 0, 15, 12, 0, 0, Math.PI * 2, true);
+                        ctx.fill();
+                        
+                        // Блик
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                        ctx.beginPath();
+                        ctx.ellipse(-8, -8, 8, 5, -Math.PI/4, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.restore();
+                    });
+                }
+            },
+            {
+                name: 'Кораллы-мишени',
+                desc: 'Мишени для колец',
+                category: 'objects',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    const corals = [
+                        { x: -60, y: 20, size: 0.8, num: 1 },
+                        { x: 0, y: 10, size: 1, num: 2 },
+                        { x: 60, y: 15, size: 0.9, num: 3 }
+                    ];
+                    
+                    corals.forEach(coral => {
+                        ctx.save();
+                        ctx.translate(cx + coral.x, cy + coral.y);
+                        ctx.scale(coral.size, coral.size);
+                        
+                        // Основание коралла
+                        ctx.fillStyle = '#FF7F50';
+                        ctx.fillRect(-5, 0, 10, 30);
+                        
+                        // Ветви коралла
+                        for (let i = -2; i <= 2; i++) {
+                            ctx.save();
+                            ctx.translate(0, 10 + i * 5);
+                            ctx.rotate(i * 0.3 + Math.sin(frame * 0.05 + i) * 0.05);
+                            
+                            ctx.fillStyle = '#FF6347';
+                            ctx.beginPath();
+                            ctx.moveTo(0, 0);
+                            ctx.lineTo(-15, -10);
+                            ctx.lineTo(-12, -5);
+                            ctx.lineTo(0, 3);
+                            ctx.closePath();
+                            ctx.fill();
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(0, 0);
+                            ctx.lineTo(15, -10);
+                            ctx.lineTo(12, -5);
+                            ctx.lineTo(0, 3);
+                            ctx.closePath();
+                            ctx.fill();
+                            
+                            ctx.restore();
+                        }
+                        
+                        // Номер
+                        ctx.fillStyle = '#FFD700';
+                        ctx.font = 'bold 20px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(coral.num, 0, -15);
+                        
+                        // Свечение
+                        ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(0, -15, 15, 0, Math.PI * 2);
+                        ctx.stroke();
+                        
+                        ctx.restore();
+                    });
+                }
+            },
+            {
+                name: 'Сундук синий',
+                desc: 'Таинственный синий сундук',
+                category: 'objects',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    
+                    // Тень
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                    ctx.fillRect(-45, 35, 90, 10);
+                    
+                    // Основание сундука
+                    ctx.fillStyle = '#1E3A8A';
+                    ctx.fillRect(-40, 0, 80, 40);
+                    
+                    // Крышка
+                    ctx.save();
+                    ctx.translate(0, -5 + Math.sin(frame * 0.1) * 2);
+                    ctx.fillStyle = '#2563EB';
+                    ctx.beginPath();
+                    ctx.moveTo(-45, 5);
+                    ctx.quadraticCurveTo(0, -20, 45, 5);
+                    ctx.lineTo(45, 15);
+                    ctx.quadraticCurveTo(0, -10, -45, 15);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+                    
+                    // Металлические полосы
+                    ctx.fillStyle = '#C0C0C0';
+                    ctx.fillRect(-42, 10, 84, 3);
+                    ctx.fillRect(-42, 27, 84, 3);
+                    
+                    // Замок
+                    ctx.fillStyle = '#FFD700';
+                    ctx.beginPath();
+                    ctx.arc(0, 20, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#B8860B';
+                    ctx.beginPath();
+                    ctx.arc(0, 21, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Таинственное свечение
+                    const glowIntensity = 0.3 + Math.sin(frame * 0.15) * 0.2;
+                    ctx.shadowColor = '#00BFFF';
+                    ctx.shadowBlur = 20;
+                    ctx.strokeStyle = `rgba(0, 191, 255, ${glowIntensity})`;
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(-40, 0, 80, 40);
+                    ctx.shadowBlur = 0;
+                    
+                    ctx.restore();
+                }
+            },
+            {
+                name: 'Сундук зелёный',
+                desc: 'Сундук с водорослями',
+                category: 'objects',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    
+                    // Тень
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                    ctx.fillRect(-45, 35, 90, 10);
+                    
+                    // Основание сундука
+                    ctx.fillStyle = '#14532D';
+                    ctx.fillRect(-40, 0, 80, 40);
+                    
+                    // Крышка
+                    ctx.fillStyle = '#16A34A';
+                    ctx.beginPath();
+                    ctx.moveTo(-45, -5);
+                    ctx.quadraticCurveTo(0, -25, 45, -5);
+                    ctx.lineTo(45, 5);
+                    ctx.quadraticCurveTo(0, -15, -45, 5);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // Водоросли
+                    ctx.strokeStyle = '#0F7938';
+                    ctx.lineWidth = 3;
+                    for (let i = -30; i <= 30; i += 15) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, 5);
+                        ctx.quadraticCurveTo(
+                            i + Math.sin(frame * 0.1 + i) * 5,
+                            -10,
+                            i + Math.sin(frame * 0.15 + i) * 8,
+                            -20
+                        );
+                        ctx.stroke();
+                    }
+                    
+                    // Металлические полосы
+                    ctx.fillStyle = '#A3A3A3';
+                    ctx.fillRect(-42, 10, 84, 3);
+                    ctx.fillRect(-42, 27, 84, 3);
+                    
+                    // Замок
+                    ctx.fillStyle = '#FFD700';
+                    ctx.beginPath();
+                    ctx.arc(0, 20, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#B8860B';
+                    ctx.beginPath();
+                    ctx.arc(0, 21, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                }
+            },
+            {
+                name: 'Жемчужина',
+                desc: 'Сияющая жемчужина',
+                category: 'objects',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    
+                    // Раковина
+                    ctx.fillStyle = '#DDA0DD';
+                    ctx.beginPath();
+                    ctx.moveTo(0, 30);
+                    ctx.quadraticCurveTo(-40, 10, -35, -20);
+                    ctx.quadraticCurveTo(-30, -30, 0, -25);
+                    ctx.quadraticCurveTo(30, -30, 35, -20);
+                    ctx.quadraticCurveTo(40, 10, 0, 30);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // Линии на раковине
+                    ctx.strokeStyle = '#C77FDD';
+                    ctx.lineWidth = 2;
+                    for (let i = -3; i <= 3; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, 30);
+                        ctx.quadraticCurveTo(i * 5, 0, i * 10, -25);
+                        ctx.stroke();
+                    }
+                    
+                    // Жемчужина с анимацией пульсации
+                    const pearlSize = 25 + Math.sin(frame * 0.1) * 3;
+                    
+                    // Свечение жемчужины
+                    const gradient = ctx.createRadialGradient(0, -5, 0, 0, -5, pearlSize * 2);
+                    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+                    gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.3)');
+                    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(0, -5, pearlSize * 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Основа жемчужины
+                    const pearlGradient = ctx.createRadialGradient(-5, -10, 0, 0, -5, pearlSize);
+                    pearlGradient.addColorStop(0, '#FFFFFF');
+                    pearlGradient.addColorStop(0.5, '#F8F8FF');
+                    pearlGradient.addColorStop(1, '#E6E6FA');
+                    ctx.fillStyle = pearlGradient;
+                    ctx.beginPath();
+                    ctx.arc(0, -5, pearlSize, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Радужные переливы
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'overlay';
+                    const rainbowColors = ['#FF69B4', '#87CEEB', '#98FB98', '#FFB6C1'];
+                    rainbowColors.forEach((color, i) => {
+                        ctx.fillStyle = color;
+                        ctx.globalAlpha = 0.2 + Math.sin(frame * 0.1 + i) * 0.1;
+                        ctx.beginPath();
+                        ctx.arc(
+                            Math.cos(i * Math.PI / 2) * 8,
+                            -5 + Math.sin(i * Math.PI / 2) * 8,
+                            pearlSize * 0.6,
+                            0,
+                            Math.PI * 2
+                        );
+                        ctx.fill();
+                    });
+                    ctx.restore();
+                    
+                    // Блик
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    ctx.beginPath();
+                    ctx.ellipse(-8, -15, 8, 5, -Math.PI/4, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                }
+            },
+            {
+                name: 'Золотые монетки',
+                desc: 'Сокровища океана',
+                category: 'objects',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    const coins = [
+                        { x: -40, y: 0, rotation: frame * 0.05 },
+                        { x: -20, y: -10, rotation: frame * 0.07 },
+                        { x: 0, y: 5, rotation: frame * 0.04 },
+                        { x: 20, y: -5, rotation: frame * 0.06 },
+                        { x: 40, y: 10, rotation: frame * 0.08 }
+                    ];
+                    
+                    coins.forEach((coin, i) => {
+                        ctx.save();
+                        ctx.translate(cx + coin.x, cy + coin.y);
+                        ctx.rotate(coin.rotation);
+                        
+                        // Тень монеты
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                        ctx.beginPath();
+                        ctx.ellipse(2, 2, 15, 12, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Монета
+                        const gradient = ctx.createLinearGradient(-15, -15, 15, 15);
+                        gradient.addColorStop(0, '#FFD700');
+                        gradient.addColorStop(0.5, '#FFA500');
+                        gradient.addColorStop(1, '#FFD700');
+                        ctx.fillStyle = gradient;
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, 15, 12, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Обод монеты
+                        ctx.strokeStyle = '#B8860B';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, 13, 10, 0, 0, Math.PI * 2);
+                        ctx.stroke();
+                        
+                        // Якорь на монете
+                        ctx.strokeStyle = '#B8860B';
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.moveTo(0, -5);
+                        ctx.lineTo(0, 5);
+                        ctx.moveTo(-5, -2);
+                        ctx.lineTo(5, -2);
+                        ctx.moveTo(-4, 5);
+                        ctx.quadraticCurveTo(0, 3, 4, 5);
+                        ctx.stroke();
+                        
+                        // Блик
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                        ctx.beginPath();
+                        ctx.ellipse(-5, -5, 5, 3, -Math.PI/4, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.restore();
+                    });
+                    
+                    // Блеск монет
+                    if (frame % 30 < 10) {
+                        const sparkleIndex = Math.floor(frame / 30) % 5;
+                        const sparkle = coins[sparkleIndex];
+                        
+                        ctx.save();
+                        ctx.translate(cx + sparkle.x, cy + sparkle.y);
+                        
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                        ctx.lineWidth = 2;
+                        for (let i = 0; i < 4; i++) {
+                            ctx.save();
+                            ctx.rotate((Math.PI / 2) * i);
+                            ctx.beginPath();
+                            ctx.moveTo(0, -20);
+                            ctx.lineTo(0, -25);
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                        
+                        ctx.restore();
+                    }
+                }
+            },
+            {
+                name: 'Золотая звезда',
+                desc: 'Приз за первое место',
+                category: 'objects',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(Math.sin(frame * 0.05) * 0.05);
+                    
+                    // Сияние
+                    const glowSize = 60 + Math.sin(frame * 0.1) * 10;
+                    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
+                    gradient.addColorStop(0, 'rgba(255, 215, 0, 0.5)');
+                    gradient.addColorStop(0.5, 'rgba(255, 215, 0, 0.2)');
+                    gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Звезда
+                    ctx.fillStyle = '#FFD700';
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+                        const outerX = Math.cos(angle) * 40;
+                        const outerY = Math.sin(angle) * 40;
+                        
+                        const innerAngle = angle + Math.PI / 5;
+                        const innerX = Math.cos(innerAngle) * 20;
+                        const innerY = Math.sin(innerAngle) * 20;
+                        
+                        if (i === 0) {
+                            ctx.moveTo(outerX, outerY);
+                        } else {
+                            ctx.lineTo(outerX, outerY);
+                        }
+                        ctx.lineTo(innerX, innerY);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // Градиент на звезде
+                    const starGradient = ctx.createLinearGradient(-40, -40, 40, 40);
+                    starGradient.addColorStop(0, '#FFEA00');
+                    starGradient.addColorStop(0.5, '#FFD700');
+                    starGradient.addColorStop(1, '#FFA500');
+                    ctx.fillStyle = starGradient;
+                    ctx.fill();
+                    
+                    // Обводка
+                    ctx.strokeStyle = '#B8860B';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    // Цифра 1
+                    ctx.fillStyle = '#8B0000';
+                    ctx.font = 'bold 30px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('1', 0, 0);
+                    
+                    // Искры
+                    ctx.strokeStyle = 'rgba(255, 255, 0, 0.8)';
+                    ctx.lineWidth = 2;
+                    for (let i = 0; i < 8; i++) {
+                        const angle = (Math.PI * 2 / 8) * i + frame * 0.02;
+                        const distance = 50 + Math.sin(frame * 0.2 + i) * 5;
+                        const x = Math.cos(angle) * distance;
+                        const y = Math.sin(angle) * distance;
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(x - 3, y);
+                        ctx.lineTo(x + 3, y);
+                        ctx.moveTo(x, y - 3);
+                        ctx.lineTo(x, y + 3);
+                        ctx.stroke();
+                    }
+                    
+                    ctx.restore();
+                }
+            }
+        ];
+
+        // Фоны
+        const backgrounds = [
+            {
+                name: 'Главная площадь',
+                desc: 'Центр фестиваля',
+                category: 'backgrounds',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    
+                    // Градиент воды
+                    const waterGradient = ctx.createLinearGradient(0, 0, 0, h);
+                    waterGradient.addColorStop(0, '#87CEEB');
+                    waterGradient.addColorStop(0.5, '#4682B4');
+                    waterGradient.addColorStop(1, '#191970');
+                    ctx.fillStyle = waterGradient;
+                    ctx.fillRect(0, 0, w, h);
+                    
+                    // Песчаное дно
+                    ctx.fillStyle = '#F4A460';
+                    ctx.beginPath();
+                    ctx.moveTo(0, h - 60);
+                    for (let x = 0; x <= w; x += 20) {
+                        ctx.lineTo(x, h - 60 + Math.sin(x * 0.02 + frame * 0.05) * 10);
+                    }
+                    ctx.lineTo(w, h);
+                    ctx.lineTo(0, h);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // Праздничные палатки
+                    const tentColors = ['#FF6B6B', '#4ECDC4', '#FFD93D'];
+                    for (let i = 0; i < 3; i++) {
+                        ctx.save();
+                        ctx.translate(100 + i * 150, h - 120);
+                        
+                        // Палатка
+                        ctx.fillStyle = tentColors[i];
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.lineTo(-40, 50);
+                        ctx.lineTo(40, 50);
+                        ctx.closePath();
+                        ctx.fill();
+                        
+                        // Полосы на палатке
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                        ctx.fillRect(-20, 20, 40, 5);
+                        ctx.fillRect(-15, 35, 30, 5);
+                        
+                        // Флажок
+                        ctx.fillStyle = '#FFD700';
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.lineTo(0, -20);
+                        ctx.lineTo(15, -15);
+                        ctx.closePath();
+                        ctx.fill();
+                        
+                        ctx.restore();
+                    }
+                    
+                    // Гирлянды
+                    ctx.strokeStyle = '#FFD700';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 50);
+                    for (let x = 0; x <= w; x += 30) {
+                        ctx.lineTo(x, 50 + Math.sin(x * 0.1 + frame * 0.05) * 10);
+                    }
+                    ctx.stroke();
+                    
+                    // Флажки на гирлянде
+                    for (let x = 15; x < w; x += 60) {
+                        ctx.fillStyle = ['#FF69B4', '#00CED1', '#FFD700'][Math.floor(x / 60) % 3];
+                        ctx.beginPath();
+                        ctx.moveTo(x, 50 + Math.sin(x * 0.1 + frame * 0.05) * 10);
+                        ctx.lineTo(x - 10, 70);
+                        ctx.lineTo(x + 10, 70);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                    
+                    // Пузыри
+                    for (let i = 0; i < 10; i++) {
+                        const x = (i * 73 + frame * 2) % w;
+                        const y = h - (frame * 3 + i * 100) % h;
+                        const size = 5 + i % 3 * 3;
+                        
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.arc(x, y, size, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+                    
+                    // Лучи света
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillStyle = '#FFFACD';
+                    for (let i = 0; i < 3; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(100 + i * 200, 0);
+                        ctx.lineTo(50 + i * 200, h);
+                        ctx.lineTo(150 + i * 200, h);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                    ctx.globalAlpha = 1;
+                }
+            },
+            {
+                name: 'Гоночная трасса',
+                desc: 'Трасса для соревнований',
+                category: 'backgrounds',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    
+                    // Фон океана
+                    const gradient = ctx.createLinearGradient(0, 0, 0, h);
+                    gradient.addColorStop(0, '#00BFFF');
+                    gradient.addColorStop(1, '#1E90FF');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, w, h);
+                    
+                    // Трасса
+                    ctx.strokeStyle = '#FFD700';
+                    ctx.lineWidth = 80;
+                    ctx.lineCap = 'round';
+                    ctx.globalAlpha = 0.3;
+                    ctx.beginPath();
+                    ctx.moveTo(50, h/2);
+                    ctx.quadraticCurveTo(w/3, h/4, w/2, h/2);
+                    ctx.quadraticCurveTo(2*w/3, 3*h/4, w-50, h/2);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                    
+                    // Разметка трассы
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 4;
+                    ctx.setLineDash([20, 10]);
+                    ctx.beginPath();
+                    ctx.moveTo(50, h/2);
+                    ctx.quadraticCurveTo(w/3, h/4, w/2, h/2);
+                    ctx.quadraticCurveTo(2*w/3, 3*h/4, w-50, h/2);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    // Старт
+                    ctx.fillStyle = '#000000';
+                    ctx.fillRect(30, h/2 - 50, 10, 100);
+                    for (let i = 0; i < 5; i++) {
+                        for (let j = 0; j < 2; j++) {
+                            ctx.fillStyle = (i + j) % 2 === 0 ? 'white' : 'black';
+                            ctx.fillRect(40, h/2 - 50 + i * 20, 20, 20);
+                        }
+                    }
+                    
+                    // Финиш
+                    ctx.fillStyle = '#000000';
+                    ctx.fillRect(w - 40, h/2 - 50, 10, 100);
+                    for (let i = 0; i < 5; i++) {
+                        for (let j = 0; j < 2; j++) {
+                            ctx.fillStyle = (i + j) % 2 === 0 ? 'white' : 'black';
+                            ctx.fillRect(w - 60, h/2 - 50 + i * 20, 20, 20);
+                        }
+                    }
+                    
+                    // Кораллы-препятствия
+                    const obstacles = [
+                        { x: w/3, y: h/3 },
+                        { x: w/2, y: 2*h/3 },
+                        { x: 2*w/3, y: h/2 }
+                    ];
+                    
+                    obstacles.forEach(obs => {
+                        ctx.fillStyle = '#FF7F50';
+                        ctx.beginPath();
+                        ctx.moveTo(obs.x, obs.y);
+                        ctx.lineTo(obs.x - 20, obs.y + 40);
+                        ctx.lineTo(obs.x, obs.y + 35);
+                        ctx.lineTo(obs.x + 20, obs.y + 40);
+                        ctx.closePath();
+                        ctx.fill();
+                    });
+                    
+                    // Пузыри потока
+                    for (let i = 0; i < 15; i++) {
+                        const progress = (frame * 0.02 + i * 0.1) % 1;
+                        const x = 50 + progress * (w - 100);
+                        const y = h/2 + Math.sin(progress * Math.PI * 2) * h/4;
+                        
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                        ctx.beginPath();
+                        ctx.arc(x, y, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            },
+            {
+                name: 'Подиум награждения',
+                desc: 'Место вручения призов',
+                category: 'backgrounds',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    
+                    // Фон с градиентом
+                    const gradient = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w/2);
+                    gradient.addColorStop(0, '#4169E1');
+                    gradient.addColorStop(1, '#000080');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, w, h);
+                    
+                    // Прожекторы
+                    ctx.globalAlpha = 0.3;
+                    for (let i = 0; i < 3; i++) {
+                        const x = w/4 + i * w/4;
+                        ctx.fillStyle = '#FFFACD';
+                        ctx.beginPath();
+                        ctx.moveTo(x, 0);
+                        ctx.lineTo(x - 30, h);
+                        ctx.lineTo(x + 30, h);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                    ctx.globalAlpha = 1;
+                    
+                    // Подиум
+                    const podiumData = [
+                        { place: 2, height: 80, x: w/2 - 100, color: '#C0C0C0' },
+                        { place: 1, height: 100, x: w/2, color: '#FFD700' },
+                        { place: 3, height: 60, x: w/2 + 100, color: '#CD7F32' }
+                    ];
+                    
+                    podiumData.forEach(podium => {
+                        // Основание подиума
+                        ctx.fillStyle = podium.color;
+                        ctx.fillRect(podium.x - 40, h - podium.height, 80, podium.height);
+                        
+                        // Градиент на подиуме
+                        const podiumGradient = ctx.createLinearGradient(
+                            podium.x - 40, h - podium.height,
+                            podium.x + 40, h
+                        );
+                        podiumGradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+                        podiumGradient.addColorStop(1, 'rgba(0, 0, 0, 0.3)');
+                        ctx.fillStyle = podiumGradient;
+                        ctx.fillRect(podium.x - 40, h - podium.height, 80, podium.height);
+                        
+                        // Номер места
+                        ctx.fillStyle = 'white';
+                        ctx.font = 'bold 40px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(podium.place, podium.x, h - podium.height/2 + 15);
+                        
+                        // Звезды вокруг первого места
+                        if (podium.place === 1) {
+                            ctx.fillStyle = '#FFD700';
+                            for (let i = 0; i < 5; i++) {
+                                const angle = (Math.PI * 2 / 5) * i + frame * 0.02;
+                                const x = podium.x + Math.cos(angle) * 60;
+                                const y = h - podium.height - 30 + Math.sin(angle) * 20;
+                                
+                                ctx.save();
+                                ctx.translate(x, y);
+                                ctx.rotate(frame * 0.05);
+                                ctx.beginPath();
+                                for (let j = 0; j < 5; j++) {
+                                    const starAngle = (Math.PI * 2 / 5) * j - Math.PI / 2;
+                                    const outerX = Math.cos(starAngle) * 8;
+                                    const outerY = Math.sin(starAngle) * 8;
+                                    const innerAngle = starAngle + Math.PI / 5;
+                                    const innerX = Math.cos(innerAngle) * 4;
+                                    const innerY = Math.sin(innerAngle) * 4;
+                                    
+                                    if (j === 0) ctx.moveTo(outerX, outerY);
+                                    else ctx.lineTo(outerX, outerY);
+                                    ctx.lineTo(innerX, innerY);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                                ctx.restore();
+                            }
+                        }
+                    });
+                    
+                    // Конфетти
+                    for (let i = 0; i < 20; i++) {
+                        const x = Math.random() * w;
+                        const y = (frame * 2 + i * 50) % (h + 50) - 50;
+                        const color = ['#FF69B4', '#00CED1', '#FFD700', '#98FB98'][i % 4];
+                        
+                        ctx.save();
+                        ctx.translate(x, y);
+                        ctx.rotate(frame * 0.1 + i);
+                        ctx.fillStyle = color;
+                        ctx.fillRect(-5, -2, 10, 4);
+                        ctx.restore();
+                    }
+                }
+            }
+        ];
+
+        // UI элементы
+        const uiElements = [
+            {
+                name: 'Кнопка Играть',
+                desc: 'Начать игру',
+                category: 'ui',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    const scale = 1 + Math.sin(frame * 0.1) * 0.05;
+                    
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.scale(scale, scale);
+                    
+                    // Тень кнопки
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                    ctx.beginPath();
+                    ctx.roundRect(-60, -25 + 5, 120, 50, 25);
+                    ctx.fill();
+                    
+                    // Градиент кнопки
+                    const gradient = ctx.createLinearGradient(0, -25, 0, 25);
+                    gradient.addColorStop(0, '#00CED1');
+                    gradient.addColorStop(0.5, '#20B2AA');
+                    gradient.addColorStop(1, '#008B8B');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.roundRect(-60, -25, 120, 50, 25);
+                    ctx.fill();
+                    
+                    // Обводка
+                    ctx.strokeStyle = '#00FFFF';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.roundRect(-60, -25, 120, 50, 25);
+                    ctx.stroke();
+                    
+                    // Треугольник play
+                    ctx.fillStyle = 'white';
+                    ctx.beginPath();
+                    ctx.moveTo(-10, -15);
+                    ctx.lineTo(15, 0);
+                    ctx.lineTo(-10, 15);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // Блик
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.beginPath();
+                    ctx.ellipse(0, -15, 40, 10, 0, 0, Math.PI);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                }
+            },
+            {
+                name: 'Табло очков',
+                desc: 'Отображение счета',
+                category: 'ui',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    
+                    // Рамка табло
+                    const gradient = ctx.createLinearGradient(-80, -40, 80, 40);
+                    gradient.addColorStop(0, '#1E3A8A');
+                    gradient.addColorStop(1, '#2563EB');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.roundRect(-80, -40, 160, 80, 15);
+                    ctx.fill();
+                    
+                    // Внутренний экран
+                    ctx.fillStyle = '#001F3F';
+                    ctx.beginPath();
+                    ctx.roundRect(-70, -30, 140, 60, 10);
+                    ctx.fill();
+                    
+                    // Светодиодная сетка
+                    ctx.globalAlpha = 0.1;
+                    ctx.strokeStyle = '#00FFFF';
+                    ctx.lineWidth = 1;
+                    for (let x = -65; x <= 65; x += 10) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, -25);
+                        ctx.lineTo(x, 25);
+                        ctx.stroke();
+                    }
+                    for (let y = -25; y <= 25; y += 10) {
+                        ctx.beginPath();
+                        ctx.moveTo(-65, y);
+                        ctx.lineTo(65, y);
+                        ctx.stroke();
+                    }
+                    ctx.globalAlpha = 1;
+                    
+                    // Анимированный счет
+                    const score = Math.floor((Math.sin(frame * 0.05) + 1) * 50);
+                    ctx.fillStyle = '#00FFFF';
+                    ctx.font = 'bold 40px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.shadowColor = '#00FFFF';
+                    ctx.shadowBlur = 10;
+                    ctx.fillText(score.toString().padStart(3, '0'), 0, 0);
+                    ctx.shadowBlur = 0;
+                    
+                    // Декоративные светодиоды
+                    for (let i = 0; i < 8; i++) {
+                        const angle = (Math.PI * 2 / 8) * i;
+                        const x = Math.cos(angle) * 90;
+                        const y = Math.sin(angle) * 45;
+                        
+                        ctx.fillStyle = (frame + i * 10) % 20 < 10 ? '#00FF00' : '#FF0000';
+                        ctx.beginPath();
+                        ctx.arc(x, y, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    
+                    ctx.restore();
+                }
+            },
+            {
+                name: 'Счетчик времени',
+                desc: 'Таймер обратного отсчета',
+                category: 'ui',
+                draw: function(ctx, frame = 0) {
+                    const w = ctx.canvas.width;
+                    const h = ctx.canvas.height;
+                    const cx = w/2;
+                    const cy = h/2;
+                    
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    
+                    // Круглая рамка таймера
+                    ctx.strokeStyle = '#2563EB';
+                    ctx.lineWidth = 8;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 60, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // Прогресс таймера
+                    const progress = (frame % 360) / 360;
+                    ctx.strokeStyle = progress < 0.2 ? '#FF0000' : '#00FF00';
+                    ctx.lineWidth = 6;
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 60, -Math.PI/2, -Math.PI/2 + Math.PI * 2 * progress);
+                    ctx.stroke();
+                    
+                    // Фон циферблата
+                    ctx.fillStyle = 'rgba(0, 31, 63, 0.9)';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 50, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Время
+                    const seconds = Math.floor((1 - progress) * 60);
+                    const minutes = Math.floor(seconds / 60);
+                    const secs = seconds % 60;
+                    
+                    ctx.fillStyle = seconds < 10 ? '#FF0000' : '#FFFFFF';
+                    ctx.font = 'bold 30px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(`${minutes}:${secs.toString().padStart(2, '0')}`, 0, 0);
+                    
+                    // Мигающая рамка при малом времени
+                    if (seconds < 10 && frame % 20 < 10) {
+                        ctx.strokeStyle = '#FF0000';
+                        ctx.lineWidth = 3;
+                        ctx.globalAlpha = 0.5;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 65, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.globalAlpha = 1;
+                    }
+                    
+                    // Декоративные метки
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = 2;
+                    for (let i = 0; i < 12; i++) {
+                        const angle = (Math.PI * 2 / 12) * i - Math.PI/2;
+                        const x1 = Math.cos(angle) * 52;
+                        const y1 = Math.sin(angle) * 52;
+                        const x2 = Math.cos(angle) * 48;
+                        const y2 = Math.sin(angle) * 48;
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                    }
+                    
+                    ctx.restore();
+                }
+            }
+        ];
+
+  /* ---- the shell -------------------------------------------------------- */
+  var GROUPS = [
+    { key: "characters",  items: characters },
+    { key: "objects",     items: objects },
+    { key: "backgrounds", items: backgrounds },
+    { key: "ui",          items: uiElements }
+  ];
+
+  /* Display names live here rather than in the drawing code, so the artwork
+     stays untouched and both languages read naturally. Order matches the
+     arrays above. */
+  var NAMES = {
+    en: {
+      characters: [
+        ["Nell the Narwhal", "Runs the show and points with that tusk"],
+        ["Dart the Flying Fish", "The fastest thing in the bay, wing fins and all"],
+        ["Professor Puffer", "Reads the rules out loud, puffs up when nobody listens"],
+        ["Tuck the Sea Turtle", "Slow, steady, carries whatever needs carrying"],
+        ["Marlow the Manta Ray", "Glides above the lanes and sees every finish"],
+        ["Wren the Seahorse", "Announces each race through a conch shell"],
+        ["Juno the Jellyfish", "Glows brighter the louder the crowd gets"],
+        ["Ollie the Sea Otter", "Floats on the surface and times every heat"]
+      ],
+      objects: [
+        ["Throwing rings", "Coloured rings for the ring toss"],
+        ["Coral targets", "What the rings are aimed at"],
+        ["Blue chest", "Nobody knows what is inside"],
+        ["Green chest", "The one covered in seaweed"],
+        ["Pearl", "Glows when the light hits it"],
+        ["Gold coins", "Treasure from the seabed"],
+        ["Gold star", "First place, nothing less"]
+      ],
+      backgrounds: [
+        ["Main square", "Where the festival gathers"],
+        ["Race course", "The lanes for the swimming heats"],
+        ["Winners' podium", "Where the medals are handed out"]
+      ],
+      ui: [
+        ["Play button", "Starts the game"],
+        ["Score board", "Shows how many points"],
+        ["Countdown timer", "Counts the seconds down"]
+      ]
+    },
+    es: {
+      characters: [
+        ["Nell la narval", "Dirige el evento y señala con ese colmillo"],
+        ["Dart el pez volador", "Lo más rápido de la bahía, con aletas de ala"],
+        ["Profesor Globo", "Lee las reglas en voz alta y se hincha si nadie escucha"],
+        ["Tuck la tortuga marina", "Lenta, firme, carga con lo que haga falta"],
+        ["Marlow la manta", "Planea sobre los carriles y ve todas las llegadas"],
+        ["Wren el caballito de mar", "Anuncia cada carrera con una caracola"],
+        ["Juno la medusa", "Brilla más cuanto más grita el público"],
+        ["Ollie la nutria marina", "Flota en la superficie y cronometra cada manga"]
+      ],
+      objects: [
+        ["Aros para lanzar", "Aros de colores para el juego de puntería"],
+        ["Corales diana", "A donde van los aros"],
+        ["Cofre azul", "Nadie sabe qué hay dentro"],
+        ["Cofre verde", "El que está cubierto de algas"],
+        ["Perla", "Brilla cuando le da la luz"],
+        ["Monedas de oro", "Tesoro del fondo del mar"],
+        ["Estrella dorada", "Primer puesto, nada menos"]
+      ],
+      backgrounds: [
+        ["Plaza principal", "Donde se junta el festival"],
+        ["Pista de carreras", "Los carriles de las eliminatorias"],
+        ["Podio de ganadores", "Donde se entregan las medallas"]
+      ],
+      ui: [
+        ["Botón de jugar", "Empieza el juego"],
+        ["Marcador", "Muestra cuántos puntos hay"],
+        ["Cuenta atrás", "Va contando los segundos"]
+      ]
+    }
+  };
+
+  var T = {
+    en: {
+      eyebrow: "Reef Games · sprite gallery",
+      title1: "Every creature here", title2: "is a few lines of code",
+      intro: "The whole cast of the Reef Games, plus their props, their backdrops and the interface around them. Not one of these is an image file. Open any of them to watch it move, then save it as a picture or a sprite sheet for a game of your own.",
+      tabs: { characters: "Characters", objects: "Props", backgrounds: "Backdrops", ui: "Interface" },
+      back: "Back to the gallery", play: "Play", pause: "Pause",
+      savePng: "Save this frame", saveSheet: "Save a sprite sheet",
+      savedPng: "Saved one frame as a PNG.",
+      savedSheet: "Saved a sprite sheet: 12 frames in one picture, left to right.",
+      saveFailed: "This browser would not save the file."
+    },
+    es: {
+      eyebrow: "Juegos del Arrecife · galería de sprites",
+      title1: "Cada criatura de aquí", title2: "son unas líneas de código",
+      intro: "Todo el reparto de los Juegos del Arrecife, con sus objetos, sus fondos y la interfaz que los rodea. Ninguno es un archivo de imagen. Abre el que quieras para verlo moverse y guárdalo como imagen o como hoja de sprites para tu propio juego.",
+      tabs: { characters: "Personajes", objects: "Objetos", backgrounds: "Fondos", ui: "Interfaz" },
+      back: "Volver a la galería", play: "Reproducir", pause: "Pausa",
+      savePng: "Guardar este fotograma", saveSheet: "Guardar hoja de sprites",
+      savedPng: "Guardado un fotograma en PNG.",
+      savedSheet: "Guardada una hoja de sprites: 12 fotogramas en una imagen, de izquierda a derecha.",
+      saveFailed: "Este navegador no ha podido guardar el archivo."
+    }
+  };
+
+  var SHEET_FRAMES = 12;
+  var SHEET_STEP = 5;   /* frames apart, so the sheet spans a whole loop */
+
+  var lang = "en", group = "characters", frame = 0, playing = true;
+  var current = null, thumbs = [];
+
+  function byId(id) { return document.getElementById(id); }
+  function t() { return T[lang]; }
+
+  function say(kind, message) {
+    var v = byId("verdict");
+    v.hidden = false; v.className = "feedback feedback--" + kind; v.textContent = message;
+  }
+  function clearSay() { var v = byId("verdict"); v.hidden = true; v.className = ""; }
+
+  function itemsOf(key) {
+    for (var i = 0; i < GROUPS.length; i++) if (GROUPS[i].key === key) return GROUPS[i].items;
+    return [];
+  }
+
+  function paint(ctx, item, f) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    item.draw(ctx, f);
+  }
+
+  function buildGrid() {
+    var list = itemsOf(group), names = NAMES[lang][group];
+    var grid = byId("grid");
+    grid.innerHTML = "";
+    thumbs = [];
+
+    list.forEach(function (item, i) {
+      var card = document.createElement("button");
+      card.type = "button"; card.className = "sprite";
+
+      var cv = document.createElement("canvas");
+      cv.width = 300; cv.height = 200;
+      card.appendChild(cv);
+
+      var name = document.createElement("span");
+      name.className = "sprite__name";
+      name.textContent = names[i] ? names[i][0] : item.name;
+      var desc = document.createElement("span");
+      desc.className = "sprite__desc";
+      desc.textContent = names[i] ? names[i][1] : "";
+      card.appendChild(name); card.appendChild(desc);
+
+      card.onclick = function () { openDetail(i); };
+      grid.appendChild(card);
+      thumbs.push({ ctx: cv.getContext("2d"), item: item });
+    });
+  }
+
+  function openDetail(i) {
+    var names = NAMES[lang][group];
+    current = { item: itemsOf(group)[i], index: i, group: group };
+    byId("detailName").textContent = names[i] ? names[i][0] : current.item.name;
+    byId("detailDesc").textContent = names[i] ? names[i][1] : "";
+    playing = true;
+    byId("playPause").textContent = t().pause;
+    clearSay();
+    byId("browse").hidden = true;
+    byId("detail").hidden = false;
+  }
+
+  function closeDetail() {
+    current = null;
+    byId("detail").hidden = true;
+    byId("browse").hidden = false;
+  }
+
+  function tick() {
+    if (playing) frame++;
+    thumbs.forEach(function (th) { paint(th.ctx, th.item, frame); });
+    if (current) paint(byId("stage").getContext("2d"), current.item, frame);
+  }
+
+  function fileName(ext) {
+    var names = NAMES[lang][current.group];
+    var base = (names[current.index] ? names[current.index][0] : current.item.name) || "sprite";
+    return base.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") + ext;
+  }
+
+  function saveCanvas(cv, ext, okMessage) {
+    try {
+      var a = document.createElement("a");
+      a.href = cv.toDataURL("image/png");
+      a.download = fileName(ext);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      say("ok", okMessage);
+    } catch (err) {
+      say("no", t().saveFailed);
+    }
+  }
+
+  byId("savePng").onclick = function () {
+    if (!current) return;
+    var cv = document.createElement("canvas");
+    cv.width = 300; cv.height = 200;
+    paint(cv.getContext("2d"), current.item, frame);
+    saveCanvas(cv, ".png", t().savedPng);
+  };
+
+  byId("saveSheet").onclick = function () {
+    if (!current) return;
+    var cv = document.createElement("canvas");
+    cv.width = 300 * SHEET_FRAMES; cv.height = 200;
+    var g = cv.getContext("2d");
+    for (var i = 0; i < SHEET_FRAMES; i++) {
+      var cell = document.createElement("canvas");
+      cell.width = 300; cell.height = 200;
+      paint(cell.getContext("2d"), current.item, i * SHEET_STEP);
+      g.drawImage(cell, i * 300, 0);
+    }
+    saveCanvas(cv, "-sheet.png", t().savedSheet);
+  };
+
+  byId("playPause").onclick = function () {
+    playing = !playing;
+    byId("playPause").textContent = playing ? t().pause : t().play;
+  };
+  byId("back").onclick = closeDetail;
+
+  function render() {
+    var d = t();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (n) {
+      var v = d[n.dataset.t];
+      if (typeof v === "string") n.textContent = v;
+    });
+    byId("playPause").textContent = playing ? d.pause : d.play;
+
+    var tabs = byId("tabs"); tabs.innerHTML = "";
+    GROUPS.forEach(function (gr) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", String(gr.key === group));
+      b.textContent = d.tabs[gr.key];
+      b.onclick = function () { group = gr.key; closeDetail(); render(); };
+      tabs.appendChild(b);
+    });
+
+    buildGrid();
+    if (current) openDetail(current.index);
+  }
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      render();
+    };
+  });
+
+  render();
+  setInterval(tick, 50);
+})();
+</script>
+</body>
+</html>

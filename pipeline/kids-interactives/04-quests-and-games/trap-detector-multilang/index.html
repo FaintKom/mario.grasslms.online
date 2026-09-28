@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trap Detector</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
+<!-- grasslms:begin -->
+<style>
+/* Built from _shared/grasslms.css — edit that file, then run _shared/build.py */
+/* ==========================================================================
+   GrassLMS · Lively v2 — shared layer for standalone kid-facing activities
+   Tokens lifted from lms2.9/frontend/src/app/globals.css (v2.0.0, 2026-08-02)
+   and DESIGN_SPEC.md. Light only, exactly as the spec says.
+   Never a raw hex inside a component — always a token.
+
+   Load order in a page: link this file first, then the page's own style block
+   with only what that one activity genuinely needs on top. Run _shared/build.py
+   to fold this file into each page as a self-contained block.
+
+   Note for future edits: nothing in this file may contain a literal closing
+   style tag, not even inside a CSS comment. The build inlines this text into a
+   style element, and an HTML parser ends that element at the first such tag it
+   sees — comments do not protect it. A stray one dumps the whole stylesheet
+   onto the page as visible text.
+   ========================================================================== */
+
+:root {
+  --green-25:  #f4fbef;
+  --green-50:  #ecf9e7;
+  --green-100: #d4f1c4;
+  --green-200: #b6e69e;
+  --green-300: #8fd770;
+  --green-400: #34a06a;
+  --green-500: #17915e;
+  --green-600: #0a8754;
+  --green-700: #07683f;
+  --green-800: #054d2f;
+  --green-900: #0a3d24;
+
+  --sun-50:  #fffbe5;
+  --sun-100: #fff2b3;
+  --sun-300: #ffe066;
+  --sun-400: #ffd84d;
+  --sun-500: #f5b800;
+  --sun-700: #7a5500;
+
+  --clay-50:  #fdefe7;
+  --clay-100: #fbd8c7;
+  --clay-300: #f6b394;
+  --clay-500: #e2552f;
+  --clay-600: #c1401d;
+  --clay-700: #9e300f;
+
+  --lagoon-50:  #e4f1f4;
+  --lagoon-200: #b9d9e0;
+  --lagoon-400: #3aa0b5;
+  --lagoon-600: #12798f;
+  --lagoon-800: #0a4652;
+
+  --ink-50:  #f3f5ef;
+  --ink-100: #e3e8dd;
+  --ink-200: #c4cdbe;
+  --ink-300: #93a08d;
+  --ink-400: #6a7568;
+  --ink-500: #485444;
+  --ink-700: #232b22;
+  --ink-900: #0d150d;
+
+  --paper:   #fbfcf7;
+  --paper-2: #ffffff;
+
+  /* ---- SEMANTIC — components read these, never the ramps above -------- */
+  --color-bg:            var(--paper);
+  --color-surface:       var(--paper-2);
+  --color-surface-2:     var(--ink-50);
+
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-500);
+  --color-text-subtle:   var(--ink-400);
+  --color-text-inverse:  #ffffff;
+
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+  --color-border-focus:  var(--green-500);
+
+  --color-primary:       var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-primary-soft:  var(--green-100);
+  --color-primary-fg:    #ffffff;
+
+  --color-reward:      var(--sun-400);
+  --color-reward-soft: var(--sun-100);
+  --color-reward-fg:   var(--sun-700);
+
+  --color-success:      var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-success-fg:   var(--green-800);
+
+  --color-danger:      var(--clay-500);
+  --color-danger-soft: var(--clay-50);
+  --color-danger-fg:   var(--clay-700);
+
+  --color-info:      var(--lagoon-600);
+  --color-info-soft: var(--lagoon-50);
+  --color-info-fg:   var(--lagoon-800);
+
+  /* ---- ELEVATION — the pop is a sharp solid offset, never a blur ------ */
+  --shadow-xs: 0 1px 2px rgba(13, 21, 13, .05);
+  --shadow-sm: 0 2px 6px -1px rgba(13, 21, 13, .07);
+  --shadow-md: 0 8px 24px -8px rgba(13, 21, 13, .14);
+  --shadow-lg: 0 18px 50px -20px rgba(13, 21, 13, .20);
+  --ring-focus: 0 0 0 4px var(--green-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+
+  --control-sm: 36px;
+  --control-md: 44px;   /* minimum touch target — a child's finger */
+  --control-lg: 52px;
+
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --t-2xs: 11px; --t-xs: 12px; --t-sm: 13px; --t-base: 15px; --t-md: 17px;
+  --t-lg: 20px;  --t-xl: 24px; --t-2xl: 32px; --t-3xl: 44px; --t-4xl: 60px;
+
+  --tracking-display: -.035em;
+  --tracking-heading: -.025em;
+  --tracking-eyebrow: .12em;
+  --leading-body: 1.65;
+
+  /* Page gutters, as tokens: the activities that pin themselves to the
+     viewport subtract --page-pad, so the two can never drift apart. */
+  --page-top: 16px;
+  --page-bottom: 20px;
+  --page-pad: 36px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2, .8, .3, 1);
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--color-text);          /* headings are never green */
+}
+h1 { font-size: clamp(var(--t-2xl), 5vw, var(--t-3xl)); letter-spacing: var(--tracking-display); }
+h2 { font-size: clamp(var(--t-xl), 3.4vw, var(--t-2xl)); }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+h4 { font-size: var(--t-md); font-weight: 700; }
+p  { margin: 0; }
+
+a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* The one typographic flourish: a sun marker on a single word of a heading.
+   Never a UI background — the spec is explicit about that.
+
+   The colour is pinned, not inherited. The background is always the same
+   yellow, so the ink has to be always the same dark: on a night page the
+   heading colour is near-white, and white on sun-300 cannot be read. */
+.mark {
+  background: var(--sun-300);
+  color: var(--ink-900);
+  padding: 0 var(--s-2);
+  border-radius: var(--s-2);
+  transform: rotate(-1deg);
+  display: inline-block;
+  font-style: normal;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.lede  { font-size: var(--t-md); color: var(--color-text-muted); max-width: 62ch; }
+.muted { color: var(--color-text-muted); }
+.mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- LAYOUT ------------------------------------------------------------ */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 clamp(var(--s-4), 4vw, var(--s-8)); }
+.wrap--narrow { max-width: 680px; }
+.wrap--wide   { max-width: 1180px; }
+.stack { display: flex; flex-direction: column; gap: var(--s-4); }
+.stack--tight { gap: var(--s-2); }
+.stack--loose { gap: var(--s-8); }
+.row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.row--between { justify-content: space-between; }
+.center { display: grid; place-items: center; }
+
+/* ---- BUTTONS — signature shadow-pop physics ---------------------------- */
+.btn {
+  --pop: var(--green-700);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-family: inherit;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--pop);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+.btn:hover:not(:disabled)  { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--pop); background: var(--color-primary-hover); }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--pop); }
+.btn:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn--secondary { --pop: var(--ink-100); background: var(--color-surface); color: var(--color-text); }
+.btn--secondary:hover:not(:disabled) { background: var(--ink-50); }
+.btn--danger { --pop: var(--clay-700); background: var(--color-danger); }
+.btn--danger:hover:not(:disabled) { background: var(--clay-600); }
+.btn--sun { --pop: var(--sun-500); background: var(--sun-400); color: var(--ink-900); }
+.btn--sun:hover:not(:disabled) { background: var(--sun-300); }
+.btn--ink { --pop: var(--ink-900); background: var(--ink-700); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-900); }
+
+.btn--ghost { box-shadow: none; background: transparent; color: var(--ink-700); }
+.btn--ghost:hover:not(:disabled)  { background: var(--ink-50); transform: none; box-shadow: none; }
+.btn--ghost:active:not(:disabled) { transform: none; box-shadow: none; }
+
+.btn--sm { min-height: var(--control-sm); padding: var(--s-2) var(--s-4); font-size: var(--t-xs); border-radius: var(--radius-sm); }
+.btn--lg { min-height: var(--control-lg); padding: var(--s-4) var(--s-6); font-size: var(--t-base); border-radius: var(--radius-lg); }
+.btn--icon  { padding: 0; width: var(--control-md); height: var(--control-md); }
+.btn--block { width: 100%; }
+
+/* ---- SURFACES ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.card--flat { box-shadow: none; }
+.panel { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--s-4); }
+
+/* ---- CHIPS ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--reward  { background: var(--color-reward-soft);  color: var(--color-reward-fg); }
+.chip--success { background: var(--color-success-soft); color: var(--color-success-fg); }
+.chip--danger  { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.chip--info    { background: var(--color-info-soft);    color: var(--color-info-fg); }
+
+/* ---- INPUTS ------------------------------------------------------------ */
+.input, .select, .textarea {
+  width: 100%;
+  min-height: var(--control-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--t-base);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--ring-focus);
+}
+.label { display: block; font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--s-2); }
+
+/* ---- PROGRESS ---------------------------------------------------------- */
+.progress { height: 10px; border-radius: var(--radius-pill); background: var(--ink-100); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--color-primary); border-radius: inherit; transition: width var(--motion-base) var(--motion-ease); }
+
+.steps { display: flex; gap: var(--s-2); }
+.steps > i { flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--ink-100); }
+.steps > i.is-done    { background: var(--color-primary); }
+.steps > i.is-current { background: var(--sun-400); }
+
+/* ---- ACTIVITY PRIMITIVES — what every game here shares ----------------- */
+.hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.hud__score { font-family: var(--font-mono); font-size: var(--t-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.lives { display: inline-flex; gap: var(--s-1); }
+.lives > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.lives > i.is-spent { background: var(--ink-200); }
+
+/* Draggable token and its target, sized for a finger per the tablet rule. */
+.token {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--control-md);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  font-weight: 600;
+}
+.token:active { cursor: grabbing; }
+.token.is-dragging { opacity: .5; }
+
+.dropzone {
+  min-height: var(--control-lg);
+  padding: var(--s-3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.dropzone.is-over { border-color: var(--color-primary); background: var(--color-primary-soft); }
+
+/* Verdict — colour is never the only signal; pair it with a mark or a word. */
+.is-correct { border-color: var(--color-success) !important; background: var(--color-success-soft) !important; }
+.is-wrong   { border-color: var(--color-danger)  !important; background: var(--color-danger-soft)  !important; }
+
+.feedback { display: flex; gap: var(--s-3); padding: var(--s-4); border-radius: var(--radius-md); font-weight: 600; }
+.feedback--ok   { background: var(--color-success-soft); color: var(--color-success-fg); }
+.feedback--no   { background: var(--color-danger-soft);  color: var(--color-danger-fg); }
+.feedback--hint { background: var(--color-info-soft);    color: var(--color-info-fg); font-weight: 500; }
+
+/* ---- OPTION — the tap target for any multiple-choice answer ------------ */
+.option {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;                 /* the tablet rule, written down */
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease);
+}
+.option:hover:not(:disabled) { border-color: var(--color-border-focus); }
+.option:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.option.is-selected { border-color: var(--color-primary); background: var(--color-primary-soft); }
+.option:disabled { cursor: default; }
+
+/* ---- MODAL ------------------------------------------------------------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: var(--s-4);
+  background: rgba(13, 21, 13, .45);
+}
+.modal {
+  width: min(480px, 100%);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+/* ---- LANGUAGE SWITCH — two languages, English first -------------------- */
+.langs { display: inline-flex; gap: var(--s-1); padding: var(--s-1); background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.langs button {
+  min-height: var(--control-sm);
+  padding: 0 var(--s-4);
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit; font-size: var(--t-xs); font-weight: 700;
+  cursor: pointer;
+}
+.langs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-xs); }
+.langs button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+/* ---- A11Y -------------------------------------------------------------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+/* ---- NIGHT ------------------------------------------------------------- */
+/* Not a dark mode. The spec is light-only and stays that way; this is a
+   palette for pages whose subject is genuinely dark — the space scenes, where
+   painting a starfield onto warm paper would fight the picture. Put
+   data-night on <html> or on one section. Only the semantic aliases move; the
+   ramps and every component below them are untouched, so a button keeps the
+   same physics and a card keeps the same radius. */
+[data-night] {
+  --color-bg:            #070d12;
+  --color-surface:       #0e1720;
+  --color-surface-2:     #16222e;
+
+  --color-text:          #eef4f1;
+  --color-text-muted:    #b3c2c9;
+  --color-text-subtle:   #7f929c;
+  --color-text-inverse:  #070d12;
+
+  --color-border:        #23323f;
+  --color-border-strong: #35485a;
+  --color-border-focus:  var(--green-300);
+
+  --color-primary:       var(--green-400);
+  --color-primary-hover: var(--green-300);
+  --color-primary-soft:  #14342a;
+  --color-primary-fg:    #041109;
+
+  --color-reward:      var(--sun-300);
+  --color-reward-soft: #3a3111;
+  --color-reward-fg:   var(--sun-300);
+
+  --color-success:      var(--green-300);
+  --color-success-soft: #12301f;
+  --color-success-fg:   var(--green-300);
+
+  --color-danger:      var(--clay-300);
+  --color-danger-soft: #3a1d13;
+  --color-danger-fg:   var(--clay-300);
+
+  --color-info:      var(--lagoon-400);
+  --color-info-soft: #0d2b33;
+  --color-info-fg:   var(--lagoon-200);
+
+  --ring-focus: 0 0 0 4px #14342a;
+}
+
+/* The pop shadow needs a colour that reads against a dark ground. */
+[data-night] .btn { --pop: #041109; }
+
+/* These two variants name ramp colours directly rather than semantic aliases,
+   so the night palette cannot reach them: a ghost button would be near-black
+   ink on a near-black page, and a secondary button would flash a white panel
+   under white text on hover. */
+[data-night] .btn--ghost { color: var(--color-text-muted); }
+[data-night] .btn--ghost:hover:not(:disabled) { background: rgba(255, 255, 255, .08); }
+[data-night] .btn--secondary { --pop: #23323f; }
+[data-night] .btn--secondary:hover:not(:disabled) { background: var(--color-surface-2); }
+
+/* ---- SHORT SCREENS ------------------------------------------------------ */
+/* A 1366x768 laptop leaves roughly 660px once the browser has taken its share,
+   and every activity here is meant to land whole on one screen. Below 760px of
+   viewport the heading block and the card padding give up some of their air so
+   the working part stays above the fold. Nothing moves, nothing hides — the
+   same layout, breathing a little less. */
+@media (max-height: 760px) {
+  :root { --page-top: 12px; --page-bottom: 14px; --page-pad: 26px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-lg); }
+  .lede { font-size: var(--t-sm); }
+  .stack { gap: var(--s-3); }
+  .stack--loose { gap: var(--s-3); }
+  .stack--tight { gap: var(--s-1); }
+  .card { padding: var(--s-4); }
+  .hud { padding: var(--s-2) var(--s-3); }
+  body { padding-bottom: var(--s-4); }
+}
+
+/* A netbook, a projector, a browser with three toolbars open. Same layout
+   again, one notch tighter. */
+@media (max-height: 700px) {
+  :root { --page-top: 10px; --page-bottom: 10px; --page-pad: 20px; }
+  h1 { font-size: var(--t-lg); }
+  h2 { font-size: var(--t-md); }
+  .lede { font-size: var(--t-xs); }
+  .card { padding: var(--s-3); }
+  .stack, .stack--loose { gap: var(--s-2); }
+  .hud { padding: var(--s-1) var(--s-3); }
+}
+</style>
+<!-- grasslms:end -->
+<style>
+  body { padding: var(--s-6) 0 var(--s-12); }
+
+  .frame {
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+  .frame__bar {
+    display: flex; align-items: center; gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    background: var(--color-surface-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .frame__dots { display: flex; gap: var(--s-1); flex: none; }
+  .frame__dots i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--ink-200); }
+
+  .addr {
+    display: flex; align-items: center; gap: var(--s-2);
+    flex: 1; min-width: 0;
+    padding: var(--s-2) var(--s-3);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    font-family: var(--font-mono); font-size: var(--t-sm);
+    overflow: hidden;
+  }
+  .addr__url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lock--on  { color: var(--color-success-fg); }
+  .lock--off { color: var(--color-danger-fg); }
+  .addr__note { margin-left: auto; font-size: var(--t-2xs); white-space: nowrap; }
+  .addr__note--on  { color: var(--color-success-fg); }
+  .addr__note--off { color: var(--color-danger-fg); }
+
+  .viewport { padding: var(--s-8) var(--s-5); min-height: 200px; display: grid; place-items: center; text-align: center; gap: var(--s-4); }
+  .viewport h2 { font-size: var(--t-xl); }
+  .popup {
+    border: 2px solid var(--color-danger);
+    background: var(--color-danger-soft);
+    color: var(--color-danger-fg);
+    border-radius: var(--radius-md);
+    padding: var(--s-4); font-weight: 700;
+    max-width: 380px;
+  }
+
+  .picks { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+  @media (max-width: 560px) { .picks { grid-template-columns: 1fr; } }
+  .pick {
+    display: grid; place-items: center;
+    min-height: 84px; padding: var(--s-4);
+    border: 1px solid var(--color-border-strong); border-radius: var(--radius-md);
+    background: var(--color-surface); font: inherit; color: var(--color-text); cursor: pointer;
+  }
+  .pick:hover:not(:disabled) { border-color: var(--color-border-focus); }
+  .pick__url { font-family: var(--font-mono); font-size: var(--t-md); font-weight: 700; }
+  .pick.is-right { border-color: var(--color-success); background: var(--color-success-soft); }
+  .pick.is-off   { border-color: var(--color-danger);  background: var(--color-danger-soft); }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-4); text-align: center; }
+  .stats b { display: block; font-family: var(--font-mono); font-size: var(--t-2xl); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .tabstrip { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-3); }
+  .tab { display: inline-flex; align-items: center; gap: var(--s-2); }
+  .tab.is-current { border-color: var(--color-primary); background: var(--color-primary-soft); }
+  .tabx {
+    display: inline-grid; place-items: center; width: 24px; height: 24px;
+    border-radius: var(--radius-pill); color: var(--color-text-subtle); cursor: pointer;
+  }
+  .tabx:hover { background: var(--color-danger-soft); color: var(--color-danger-fg); }
+
+  .ico { width: 18px; height: 18px; display: block; flex: none; }
+  .tabx .ico { width: 14px; height: 14px; }
+  .lock--on { color: var(--green-700); display: inline-flex; }
+  .lock--off { color: var(--clay-600); display: inline-flex; }
+  .tab .ico--lock { color: var(--green-700); }
+  .tab .ico--insecure { color: var(--clay-600); }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap wrap--narrow stack stack--loose">
+
+  <header class="stack stack--tight">
+    <div class="row row--between">
+      <p class="eyebrow" data-t="eyebrow">Ages 9–12 · safe browsing</p>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1><span data-t="title1">Every way a site</span> <em class="mark" data-t="title2">can lie to you</em></h1>
+    <p class="lede" data-t="intro">No padlock. A prize you never entered for. An address one letter off from the real thing. Four levels of it, ending with a browser full of tabs.</p>
+  </header>
+
+  <section class="stack" id="game">
+    <div class="hud">
+      <div class="row">
+        <span class="eyebrow"><span data-t="levelLabel">Level</span> <span id="lv" class="mono">1</span>/4</span>
+      </div>
+      <div class="steps" style="flex:1; min-width:140px;" aria-hidden="true">
+        <i id="s1"></i><i id="s2"></i><i id="s3"></i><i id="s4"></i>
+      </div>
+      <div class="row">
+        <span class="eyebrow" data-t="rightLabel">Right</span>
+        <span class="hud__score" id="score">0</span>
+      </div>
+    </div>
+
+    <p class="muted" id="levelBrief"></p>
+
+    <div class="frame">
+      <div class="frame__bar">
+        <span class="frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="addr" id="addr"></span>
+      </div>
+      <div class="viewport" id="viewport"></div>
+    </div>
+
+    <div id="controls"></div>
+    <div id="verdict" hidden></div>
+    <div class="row">
+      <button class="btn btn--ghost btn--sm" id="hint" data-t="hintBtn">Hint</button>
+      <button class="btn" id="next" data-t="next" hidden>Next</button>
+    </div>
+  </section>
+
+  <section class="card stack" id="over" hidden aria-live="polite">
+    <h2 data-t="doneTitle">Detector calibrated</h2>
+    <div class="stats">
+      <div><b id="fScore">0</b><span class="eyebrow" data-t="rightLabel">Right</span></div>
+      <div><b id="fRate">0%</b><span class="eyebrow" data-t="rateLabel">Accuracy</span></div>
+      <div><b id="fStreak">0</b><span class="eyebrow" data-t="streakLabel">Best run</span></div>
+    </div>
+    <p class="muted" id="doneBody"></p>
+    <div><button class="btn" id="again" data-t="again">Start over</button></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Sites, verdicts and hints carried over from the original trainer. */
+  const TASKS = {
+    l1: [
+      { url: "https://www.google.com", title: "Google", ssl: true, safe: true, hint: "googleHint" },
+      { url: "http://win-iphone-free.fake", title: "YOU WON", ssl: false, safe: false, hint: "prizeHint" },
+      { url: "https://scratch.mit.edu", title: "Scratch", ssl: true, safe: true, hint: "scratchHint" },
+      { url: "http://get-robux-free.scam", title: "Free Robux", ssl: false, safe: false, hint: "robuxHint" },
+      { url: "https://www.wikipedia.org", title: "Wikipedia", ssl: true, safe: true, hint: "wikiHint" }
+    ],
+    l2: [
+      { urls: ["youtube.com", "youtub.com"], right: 0, hint: "youtubeHint" },
+      { urls: ["gooogle.com", "google.com"], right: 1, hint: "googleCompareHint" },
+      { urls: ["minecraft.net", "minecraf.net"], right: 0, hint: "minecraftHint" },
+      { urls: ["roblox.com", "robiox.com"], right: 0, hint: "robloxHint" },
+      { urls: ["amazone.com", "amazon.com"], right: 1, hint: "amazonHint" }
+    ],
+    /* Level four was its own page: four tabs open at once, two of them traps.
+       It is the same skill one step out — you are no longer judging a site
+       someone put in front of you, you are running the browser. The tabs,
+       their addresses and the safe/unsafe split are that page's originals. */
+    l4: [
+      { multi: true, hint: "tabsHint", tabs: [
+        { id: "prize",  url: "win-free-prize.net",           title: "You won!",     ssl: false, safe: false },
+        { id: "fake",   url: "googgle.com",                  title: "Google",       ssl: false, safe: false },
+        { id: "wiki",   url: "wikipedia.org",                title: "Wikipedia",    ssl: true,  safe: true },
+        { id: "natgeo", url: "kids.nationalgeographic.com",  title: "Nat Geo Kids", ssl: true,  safe: true }
+      ] }
+    ],
+    l3: [
+      { url: "https://education.minecraft.net", title: "Minecraft Education", ssl: true, safe: true, hint: "minecraftEduHint" },
+      { url: "http://download-game.exe", title: "Download Game", ssl: false, safe: false, popup: "downloadNow", hint: "downloadHint" },
+      { url: "https://code.org", title: "Code.org", ssl: true, safe: true, hint: "codeOrgHint" },
+      { url: "http://your-bank-security.fake", title: "Bank Security", ssl: false, safe: false, popup: "enterBankPassword", hint: "bankHint" },
+      { url: "https://kahoot.it", title: "Kahoot", ssl: true, safe: true, hint: "kahootHint" }
+    ]
+  };
+
+  const T = {
+    en: {
+      eyebrow: "Ages 9–12 · safe browsing",
+      title1: "Every way a site", title2: "can lie to you",
+      intro: "No padlock. A prize you never entered for. An address one letter off from the real thing. Four levels of it, ending with a browser full of tabs.",
+      levelLabel: "Level", rightLabel: "Right", rateLabel: "Accuracy", streakLabel: "Best run",
+      hintBtn: "Hint", next: "Next", again: "Start over", doneTitle: "Detector calibrated",
+      safeBtn: "Safe", unsafeBtn: "Dangerous",
+      briefs: [
+        "Look at the padlock in the address bar, then decide.",
+        "One of the two is the real address. The other is one letter away from it.",
+        "Padlock, address, and anything that pops up at you. All three at once.",
+        "Four tabs are open at once. Close the dangerous ones and leave the safe ones alone."
+      ],
+      lockOn: "connection is protected",
+      lockOff: "connection is not protected",
+      okSafe: "Right, it is safe. Padlock in place and the address is the real one.",
+      okUnsafe: "Right, that one is dangerous.",
+      noSafe: "This one was safe. It has the padlock and it is the official address.",
+      noUnsafe: "Careful. That one is dangerous: no padlock, or the address is pretending.",
+      tabsClose: "Close this tab", tabsReopen: "open again", tabsDone: "I am done",
+      tabsAllClosed: "Every tab is closed.",
+      tabsStillOpen: function (n) {
+        return n === 1 ? "A dangerous tab is still open. Read the addresses again."
+                       : n + " dangerous tabs are still open. Read the addresses again.";
+      },
+      tabsClosedSafe: "You also closed a safe site. Open it again — a padlock and a correctly spelled address mean it is fine.",
+      tabsWon: "Both traps shut. One promised a prize from a draw you never entered; the other spelled Google with an extra g.",
+      okPick: function (u) { return u + " is the real one."; },
+      noPick: function (u) { return "Not that one. The real address is " + u + "."; },
+      popups: {
+        downloadNow: "DOWNLOAD NOW! Your computer needs this file!",
+        enterBankPassword: "Enter your card number and password to continue"
+      },
+      hints: {
+        googleHint: "This is the official Google. Check the padlock.",
+        prizeHint: "Prize sites are almost always traps. And there is no padlock.",
+        scratchHint: "Scratch belongs to MIT and has the padlock.",
+        robuxHint: "No padlock, and it promises something free.",
+        wikiHint: "Wikipedia with the padlock. A source you can use.",
+        youtubeHint: "The real one ends with an E.",
+        googleCompareHint: "Google has two O's in a row, not three.",
+        minecraftHint: "Read every letter. One of them is missing a T.",
+        robloxHint: "Roblox has an L in it, not an I.",
+        amazonHint: "Amazon has no E on the end.",
+        minecraftEduHint: "Minecraft Education, with the padlock. A real learning site.",
+        downloadHint: "An .exe in the address and a pop-up shouting at you.",
+        codeOrgHint: "A site for learning to code. Safe.",
+        bankHint: "A bank would never ask like this.",
+        kahootHint: "A quiz platform schools use. Safe.",
+        tabsHint: "Two of the four have no padlock. Start there."
+      },
+      done: function (n) {
+        return n >= 14 ? "You caught almost every trap. That is the eye this needs."
+             : n >= 10 ? "Good detector. Look harder at the addresses that are one letter off."
+                       : "Worth another run. The padlock is the fastest tell, start there.";
+      }
+    },
+    es: {
+      eyebrow: "9–12 años · navegación segura",
+      title1: "Todo lo que un sitio", title2: "puede fingir",
+      intro: "Sin candado. Un premio al que nunca te apuntaste. Una dirección con una letra cambiada. Cuatro niveles, y el último te da el navegador entero.",
+      levelLabel: "Nivel", rightLabel: "Aciertos", rateLabel: "Precisión", streakLabel: "Mejor racha",
+      hintBtn: "Pista", next: "Siguiente", again: "Empezar de nuevo", doneTitle: "Detector calibrado",
+      safeBtn: "Seguro", unsafeBtn: "Peligroso",
+      briefs: [
+        "Mira el candado en la barra de direcciones y decide.",
+        "Uno de los dos es la dirección real. El otro está a una letra de distancia.",
+        "Candado, dirección y lo que salte en pantalla. Los tres a la vez.",
+        "Hay cuatro pestañas abiertas. Cierra las peligrosas y deja en paz las seguras."
+      ],
+      lockOn: "la conexión está protegida",
+      lockOff: "la conexión no está protegida",
+      okSafe: "Correcto, es seguro. Tiene candado y la dirección es la real.",
+      okUnsafe: "Correcto, ese es peligroso.",
+      noSafe: "Este era seguro. Tiene candado y es la dirección oficial.",
+      noUnsafe: "Cuidado. Ese es peligroso: sin candado, o la dirección finge ser otra.",
+      tabsClose: "Cerrar esta pestaña", tabsReopen: "abrir otra vez", tabsDone: "Ya está",
+      tabsAllClosed: "Todas las pestañas están cerradas.",
+      tabsStillOpen: function (n) {
+        return n === 1 ? "Todavía hay una pestaña peligrosa abierta. Lee otra vez las direcciones."
+                       : "Todavía hay " + n + " pestañas peligrosas abiertas. Lee otra vez las direcciones.";
+      },
+      tabsClosedSafe: "También cerraste un sitio seguro. Ábrelo otra vez: un candado y una dirección bien escrita quieren decir que está bien.",
+      tabsWon: "Las dos trampas cerradas. Una prometía un premio de un sorteo en el que nunca participaste; la otra escribía Google con una g de más.",
+      okPick: function (u) { return u + " es la buena."; },
+      noPick: function (u) { return "Esa no. La dirección real es " + u + "."; },
+      popups: {
+        downloadNow: "¡DESCARGA YA! ¡Tu ordenador necesita este archivo!",
+        enterBankPassword: "Introduce tu número de tarjeta y contraseña para seguir"
+      },
+      hints: {
+        googleHint: "Este es el Google oficial. Mira el candado.",
+        prizeHint: "Los sitios de premios casi siempre son trampas. Y no hay candado.",
+        scratchHint: "Scratch es del MIT y tiene candado.",
+        robuxHint: "Sin candado, y promete algo gratis.",
+        wikiHint: "Wikipedia con candado. Una fuente que puedes usar.",
+        youtubeHint: "El de verdad termina en E.",
+        googleCompareHint: "Google lleva dos O seguidas, no tres.",
+        minecraftHint: "Lee cada letra. A una le falta la T.",
+        robloxHint: "Roblox lleva una L, no una I.",
+        amazonHint: "Amazon no lleva E al final.",
+        minecraftEduHint: "Minecraft Education, con candado. Sitio de aprendizaje real.",
+        downloadHint: "Un .exe en la dirección y una ventana gritando.",
+        codeOrgHint: "Un sitio para aprender a programar. Seguro.",
+        bankHint: "Un banco nunca lo pediría así.",
+        kahootHint: "Una plataforma de cuestionarios que usan los colegios. Segura.",
+        tabsHint: "Dos de las cuatro no tienen candado. Empieza por ahí."
+      },
+      done: function (n) {
+        return n >= 14 ? "Cazaste casi todas las trampas. Ese es el ojo que hace falta."
+             : n >= 10 ? "Buen detector. Fíjate más en las direcciones con una letra cambiada."
+                       : "Merece otra vuelta. El candado es la pista más rápida, empieza por ahí.";
+      }
+    }
+  };
+
+  var lang = "en", level = 1, idx = 0, score = 0, asked = 0, streak = 0, best = 0, answered = false;
+  var tabsOpen = null, tabsActive = null;
+
+  const $ = function (id) { return document.getElementById(id); };
+  const t = function () { return T[lang]; };
+  const list = function () { return TASKS["l" + level]; };
+  const task = function () { return list()[idx]; };
+
+
+  /* Address-bar icons drawn as SVG rather than emoji: an emoji padlock is a
+     picture of a padlock in whatever style the operating system feels like,
+     and it never looks like the thing sitting in a real address bar. These
+     match what Chrome actually puts there — a closed padlock on https, an
+     information circle on plain http. */
+  const NS = "http://www.w3.org/2000/svg";
+  function icon(kind) {
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("class", "ico ico--" + kind);
+    svg.setAttribute("aria-hidden", "true");
+    const add = function (tag, attrs) {
+      const n = document.createElementNS(NS, tag);
+      Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+      svg.appendChild(n);
+      return n;
+    };
+    if (kind === "lock") {
+      add("path", { d: "M8 10V7.5a4 4 0 0 1 8 0V10", fill: "none", "stroke-width": "2",
+                    stroke: "currentColor", "stroke-linecap": "round" });
+      add("rect", { x: "5", y: "10", width: "14", height: "10", rx: "2.5", fill: "currentColor" });
+      add("circle", { cx: "12", cy: "15", r: "1.6", fill: "var(--color-surface)" });
+    } else if (kind === "insecure") {
+      add("circle", { cx: "12", cy: "12", r: "9", fill: "none", stroke: "currentColor", "stroke-width": "2" });
+      add("path", { d: "M12 11v5.5", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round" });
+      add("circle", { cx: "12", cy: "7.6", r: "1.3", fill: "currentColor" });
+    } else if (kind === "close") {
+      add("path", { d: "M7 7l10 10M17 7L7 17", stroke: "currentColor", "stroke-width": "2",
+                    "stroke-linecap": "round", fill: "none" });
+    }
+    return svg;
+  }
+
+  function paintChrome() {
+    const d = t();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (el) {
+      const v = d[el.dataset.t];
+      if (typeof v === "string") el.textContent = v;
+    });
+    $("lv").textContent = String(level);
+    $("score").textContent = String(score);
+    $("levelBrief").textContent = d.briefs[level - 1];
+    for (var i = 1; i <= 4; i++) {
+      $("s" + i).className = i < level ? "is-done" : i === level ? "is-current" : "";
+    }
+  }
+
+  function say(kind, text) {
+    const v = $("verdict");
+    v.hidden = false;
+    v.className = "feedback feedback--" + kind;
+    v.textContent = text;
+  }
+
+  function tally(ok) {
+    asked++;
+    if (ok) { score++; streak++; if (streak > best) best = streak; }
+    else streak = 0;
+    $("score").textContent = String(score);
+  }
+
+  function render() {
+    const d = t(), q = task();
+    answered = false;
+    $("verdict").hidden = true;
+    $("next").hidden = true;
+    $("hint").hidden = false;
+    paintChrome();
+
+    const addr = $("addr"), view = $("viewport"), ctrl = $("controls");
+    addr.innerHTML = ""; view.innerHTML = ""; ctrl.innerHTML = "";
+
+    if (level === 4) {
+      /* The whole browser at once. Closing every tab is not a pass: the point
+         is telling the two apart, not shutting the machine down. */
+      if (!tabsOpen) {
+        tabsOpen = {};
+        q.tabs.forEach(function (tb) { tabsOpen[tb.id] = true; });
+        tabsActive = q.tabs[0].id;
+      }
+      var live = q.tabs.filter(function (tb) { return tabsOpen[tb.id]; });
+      if (!tabsOpen[tabsActive]) tabsActive = live.length ? live[0].id : null;
+      var shown = null;
+      live.forEach(function (tb) { if (tb.id === tabsActive) shown = tb; });
+
+      if (shown) {
+        var lk = document.createElement("span");
+        lk.className = shown.ssl ? "lock--on" : "lock--off";
+        lk.appendChild(icon(shown.ssl ? "lock" : "insecure"));
+        var uu = document.createElement("span");
+        uu.className = "addr__url";
+        uu.textContent = (shown.ssl ? "https://" : "http://") + shown.url;
+        var nn = document.createElement("span");
+        nn.className = "addr__note " + (shown.ssl ? "addr__note--on" : "addr__note--off");
+        nn.textContent = shown.ssl ? d.lockOn : d.lockOff;
+        addr.append(lk, uu, nn);
+      }
+
+      var strip = document.createElement("div");
+      strip.className = "tabstrip";
+      live.forEach(function (tb) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "token tab" + (tb.id === tabsActive ? " is-current" : "");
+        b.appendChild(icon(tb.ssl ? "lock" : "insecure"));
+        var label = document.createElement("span");
+        label.textContent = tb.title;
+        b.appendChild(label);
+        b.onclick = function () { tabsActive = tb.id; render(); };
+        var x = document.createElement("span");
+        x.className = "tabx";
+        x.setAttribute("role", "button");
+        x.setAttribute("tabindex", "0");
+        x.appendChild(icon("close"));
+        x.setAttribute("aria-label", d.tabsClose + ": " + tb.url);
+        var shut = function (e) { e.stopPropagation(); tabsOpen[tb.id] = false; render(); };
+        x.onclick = shut;
+        x.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); shut(e); } };
+        b.appendChild(x);
+        strip.appendChild(b);
+      });
+      view.appendChild(strip);
+
+      var page = document.createElement("h2");
+      page.textContent = shown ? shown.title : d.tabsAllClosed;
+      view.appendChild(page);
+
+      var closed = q.tabs.filter(function (tb) { return !tabsOpen[tb.id]; });
+      if (closed.length) {
+        var back = document.createElement("div");
+        back.className = "tabstrip";
+        closed.forEach(function (tb) {
+          var b2 = document.createElement("button");
+          b2.type = "button"; b2.className = "token";
+          b2.textContent = tb.title + " · " + d.tabsReopen;
+          b2.onclick = function () { tabsOpen[tb.id] = true; tabsActive = tb.id; render(); };
+          back.appendChild(b2);
+        });
+        view.appendChild(back);
+      }
+
+      var doneBtn = document.createElement("button");
+      doneBtn.type = "button"; doneBtn.className = "btn";
+      doneBtn.textContent = d.tabsDone;
+      doneBtn.onclick = function () {
+        if (answered) return;
+        var badOpen = q.tabs.filter(function (tb) { return tabsOpen[tb.id] && !tb.safe; });
+        var goodShut = q.tabs.filter(function (tb) { return !tabsOpen[tb.id] && tb.safe; });
+        if (badOpen.length) { say("no", d.tabsStillOpen(badOpen.length)); return; }
+        if (goodShut.length) { say("no", d.tabsClosedSafe); return; }
+        answered = true;
+        tally(true);
+        say("ok", d.tabsWon);
+        $("next").hidden = false;
+        $("hint").hidden = true;
+      };
+      ctrl.appendChild(doneBtn);
+      return;
+    }
+
+    if (level === 2) {
+      const u = document.createElement("span");
+      u.className = "addr__url"; u.textContent = "?";
+      addr.appendChild(u);
+
+      const h = document.createElement("h2");
+      h.textContent = d.briefs[1];
+      view.appendChild(h);
+
+      const box = document.createElement("div");
+      box.className = "picks";
+      q.urls.forEach(function (u2, i) {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "pick";
+        const t1 = document.createElement("span");
+        t1.className = "pick__url"; t1.textContent = u2;
+        b.appendChild(t1);
+        b.onclick = function () {
+          if (answered) return;
+          answered = true;
+          Array.prototype.forEach.call(box.children, function (x) { x.disabled = true; });
+          const ok = i === q.right;
+          b.classList.add(ok ? "is-right" : "is-off");
+          if (!ok) box.children[q.right].classList.add("is-right");
+          tally(ok);
+          say(ok ? "ok" : "no", ok ? d.okPick(q.urls[q.right]) : d.noPick(q.urls[q.right]));
+          $("next").hidden = false;
+          $("hint").hidden = true;
+        };
+        box.appendChild(b);
+      });
+      ctrl.appendChild(box);
+      return;
+    }
+
+    const lock = document.createElement("span");
+    lock.className = q.ssl ? "lock--on" : "lock--off";
+    lock.appendChild(icon(q.ssl ? "lock" : "insecure"));
+    const u = document.createElement("span");
+    u.className = "addr__url"; u.textContent = q.url;
+    const note = document.createElement("span");
+    note.className = "addr__note " + (q.ssl ? "addr__note--on" : "addr__note--off");
+    note.textContent = q.ssl ? d.lockOn : d.lockOff;
+    addr.append(lock, u, note);
+
+    const h = document.createElement("h2");
+    h.textContent = q.title;
+    view.appendChild(h);
+    if (q.popup) {
+      const p = document.createElement("div");
+      p.className = "popup"; p.textContent = d.popups[q.popup];
+      view.appendChild(p);
+    }
+
+    const row = document.createElement("div");
+    row.className = "row";
+    const mk = function (label, guessSafe, cls) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "btn" + (cls ? " " + cls : "");
+      b.textContent = label;
+      b.onclick = function () {
+        if (answered) return;
+        answered = true;
+        Array.prototype.forEach.call(row.children, function (x) { x.disabled = true; });
+        const ok = guessSafe === q.safe;
+        tally(ok);
+        say(ok ? "ok" : "no",
+            ok ? (q.safe ? d.okSafe : d.okUnsafe) : (q.safe ? d.noSafe : d.noUnsafe));
+        $("next").hidden = false;
+        $("hint").hidden = true;
+      };
+      return b;
+    };
+    row.append(mk(d.safeBtn, true, ""), mk(d.unsafeBtn, false, "btn--danger"));
+    ctrl.appendChild(row);
+  }
+
+  function step() {
+    idx++;
+    if (idx < list().length) { render(); return; }
+    if (level < 4) { level++; idx = 0; render(); return; }
+    finish();
+  }
+
+  function finish() {
+    const d = t();
+    $("game").hidden = true;
+    $("over").hidden = false;
+    $("fScore").textContent = String(score);
+    $("fRate").textContent = (asked ? Math.round((score / asked) * 100) : 0) + "%";
+    $("fStreak").textContent = String(best);
+    $("doneBody").textContent = d.done(score);
+  }
+
+  function reset() {
+    level = 1; idx = 0; score = 0; asked = 0; streak = 0; best = 0;
+    tabsOpen = null; tabsActive = null;
+    $("game").hidden = false; $("over").hidden = true;
+    render();
+  }
+
+  $("next").onclick = step;
+  $("again").onclick = reset;
+  $("hint").onclick = function () { say("hint", t().hints[task().hint]); };
+
+  document.querySelectorAll(".langs button").forEach(function (b) {
+    b.onclick = function () {
+      lang = b.dataset.lang;
+      document.querySelectorAll(".langs button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      reset();
+    };
+  });
+
+  reset();
+})();
+</script>
+</body>
+</html>

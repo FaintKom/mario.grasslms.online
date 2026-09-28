@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencarian Cerdas - Pelatihan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(45deg, #FFD93D 25%, transparent 25%),
+                        linear-gradient(-45deg, #FFD93D 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #FFD93D 75%),
+                        linear-gradient(-45deg, transparent 75%, #FFD93D 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-color: #FFF8DC;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .language-selector {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        .lang-select {
+            background: white;
+            border: 3px solid #000;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 #000;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .lang-select:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .lang-select:focus {
+            outline: none;
+            background: #FFD93D;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            height: calc(100vh - 20px);
+            background: white;
+            border: 5px solid #000;
+            box-shadow: 10px 10px 0 #000;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            background: #FF6B6B;
+            border: 4px solid #000;
+            padding: 15px;
+            box-shadow: 5px 5px 0 #000;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-size: clamp(22px, 4vw, 32px);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: clamp(14px, 2.5vw, 18px);
+            font-weight: 700;
+        }
+
+        .task-description {
+            background: #FFD93D;
+            border: 4px solid #000;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 5px 5px 0 #000;
+            flex-shrink: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .task-description.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .task-title {
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .task-text {
+            font-size: clamp(14px, 2.5vw, 16px);
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .question-box {
+            background: white;
+            border: 3px solid #000;
+            padding: 12px;
+            margin-top: 10px;
+            font-weight: 700;
+            font-size: clamp(14px, 2.5vw, 16px);
+            text-align: center;
+        }
+
+        .browser-simulator {
+            background: #E8E8E8;
+            border: 4px solid #000;
+            box-shadow: 5px 5px 0 #000;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .browser-simulator.fade-out {
+            opacity: 0;
+            transform: scale(0.98);
+        }
+
+        .browser-header {
+            background: #D0D0D0;
+            border-bottom: 3px solid #000;
+            padding: 8px;
+        }
+
+        .address-bar {
+            background: white;
+            border: 2px solid #000;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(12px, 2vw, 14px);
+            margin-bottom: 8px;
+        }
+
+        .lock-icon {
+            font-size: 16px;
+        }
+
+        .address-text {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #202124;
+        }
+
+        .search-page {
+            background: white;
+            height: 100%;
+            overflow-y: auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            transition: opacity 0.3s ease;
+        }
+
+        .search-page.fade-out {
+            opacity: 0.3;
+        }
+
+        .success-flash {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: #6BCF7F;
+            border: 5px solid #000;
+            padding: 40px 60px;
+            font-weight: 900;
+            font-size: clamp(28px, 6vw, 48px);
+            box-shadow: 10px 10px 0 #000;
+            text-align: center;
+            z-index: 2000;
+            display: none;
+        }
+
+        .success-flash.show {
+            display: block;
+            animation: successPop 0.8s ease;
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(5deg);
+            }
+            70% {
+                transform: translate(-50%, -50%) scale(0.95) rotate(-2deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+        }
+
+        .search-header {
+            padding: 20px 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-logo {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .search-logo .s-blue { color: #4285F4; }
+        .search-logo .s-red { color: #EA4335; }
+        .search-logo .s-yellow { color: #FBBC05; }
+        .search-logo .s-green { color: #34A853; }
+
+        .search-box-container {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .search-box {
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 1px 6px rgba(32,33,36,.28);
+        }
+
+        .search-box:hover {
+            box-shadow: 0 1px 6px rgba(32,33,36,.4);
+        }
+
+        .search-box:focus-within {
+            box-shadow: 0 1px 6px rgba(32,33,36,.4);
+        }
+
+        .search-icon {
+            font-size: 20px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #202124;
+        }
+
+        .search-button {
+            background: #4285F4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .search-button:hover {
+            background: #357ae8;
+        }
+
+        .search-results {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .results-info {
+            font-size: 14px;
+            color: #70757a;
+            margin-bottom: 15px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .no-results-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .no-results-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 10px;
+        }
+
+        .no-results-text {
+            font-size: 14px;
+            color: #70757a;
+            line-height: 1.5;
+        }
+
+        .result-item {
+            margin-bottom: 30px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .result-item:hover {
+            background: #f8f9fa;
+        }
+
+        .result-item.clickable {
+            border: 3px solid transparent;
+        }
+
+        .result-item.clickable:hover {
+            border-color: #4ECDC4;
+        }
+
+        .result-item.selected {
+            background: #E8F5E9;
+            border: 3px solid #4ECDC4;
+        }
+
+        .result-item.ad {
+            border: 1px solid #e8eaed;
+            border-radius: 8px;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .result-item.ad:hover {
+            background: #fafafa;
+            box-shadow: 0 1px 6px rgba(32,33,36,.12);
+        }
+
+        .ad-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #5f6368;
+            border: 1px solid #dadce0;
+            border-radius: 3px;
+            padding: 2px 6px;
+            margin-right: 8px;
+            text-transform: uppercase;
+        }
+
+        .result-url {
+            font-size: 14px;
+            color: #202124;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .result-title {
+            font-size: 20px;
+            color: #1a0dab;
+            margin-bottom: 3px;
+            font-weight: 400;
+        }
+
+        .result-item.ad .result-title {
+            font-size: 18px;
+        }
+
+        .result-title:hover {
+            text-decoration: underline;
+        }
+
+        .result-snippet {
+            font-size: 14px;
+            color: #4d5156;
+            line-height: 1.58;
+        }
+
+        .result-date {
+            font-size: 13px;
+            color: #70757a;
+            margin-top: 3px;
+        }
+
+        .ad-extensions {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ad-extension {
+            font-size: 13px;
+            color: #1a0dab;
+            cursor: pointer;
+        }
+
+        .ad-extension:hover {
+            text-decoration: underline;
+        }
+
+        .check-button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            display: flex;
+            gap: 15px;
+        }
+
+        .check-button {
+            background: #4ECDC4;
+            border: 4px solid #000;
+            padding: 15px 30px;
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 #000;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .check-button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 #000;
+        }
+
+        .check-button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .check-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .show-code-button {
+            background: #6BCF7F;
+            border: 4px solid #000;
+            padding: 15px 30px;
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 #000;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+            display: none;
+            animation: bounce 1s infinite;
+        }
+
+        .show-code-button.show {
+            display: block;
+        }
+
+        .show-code-button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 #000;
+        }
+
+        .show-code-button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 4px solid #000;
+            padding: 20px 30px;
+            font-weight: 700;
+            font-size: clamp(16px, 3vw, 18px);
+            box-shadow: 8px 8px 0 #000;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+            max-width: 400px;
+        }
+
+        .message.show {
+            display: block;
+            animation: popup 0.3s ease;
+        }
+
+        .message.error {
+            background: #FF6B6B;
+        }
+
+        .message.success {
+            background: #6BCF7F;
+        }
+
+        @keyframes popup {
+            from {
+                transform: translate(-50%, -50%) scale(0);
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 5px solid #000;
+            padding: 30px;
+            box-shadow: 10px 10px 0 #000;
+            z-index: 1000;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .success-modal.active {
+            display: block;
+            animation: popup 0.5s ease;
+        }
+
+        .modal-title {
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .modal-message {
+            font-size: clamp(14px, 2.5vw, 18px);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .secret-code-display {
+            background: #6BCF7F;
+            border: 4px solid #000;
+            padding: 20px;
+            margin: 15px auto;
+            box-shadow: 5px 5px 0 #000;
+            max-width: 400px;
+        }
+
+        .secret-code-label {
+            font-size: clamp(14px, 3vw, 18px);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .secret-code-text {
+            font-size: clamp(30px, 6vw, 40px);
+            font-weight: 900;
+            letter-spacing: 8px;
+            margin: 12px 0;
+            color: #000;
+        }
+
+        .copy-code-button {
+            background: #4ECDC4;
+            border: 3px solid #000;
+            padding: 10px 20px;
+            font-size: clamp(14px, 2.5vw, 16px);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 #000;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .copy-code-button:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .copy-code-button:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .close-modal-button {
+            background: #FF6B6B;
+            border: 3px solid #000;
+            padding: 10px 20px;
+            font-size: clamp(14px, 2.5vw, 16px);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 #000;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 15px;
+        }
+
+        .close-modal-button:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .close-modal-button:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .progress-bar {
+            background: #E0E0E0;
+            border: 3px solid #000;
+            height: 30px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #4ECDC4;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            font-size: 14px;
+            color: #000;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .question-counter {
+            text-align: center;
+            font-size: clamp(14px, 2.5vw, 16px);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        @media (max-height: 600px) {
+            .container {
+                padding: 12px;
+            }
+            
+            .header, .task-description {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select class="lang-select" id="languageSelect">
+            <option value="id" selected>🇮🇩 ID</option>
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+            <option value="ru">🇷🇺 RU</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Pencarian Cerdas</h1>
+            <div class="subtitle">Ujian 2.4: Penjaga Keamanan</div>
+        </div>
+
+        <div class="task-description" id="taskDescription">
+            <div class="task-title">🎯 Misimu:</div>
+            <div class="task-text" id="taskText">Ketik pencarian, temukan informasi dan klik hasil BIASA, hindari iklan!</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+                <div class="progress-text" id="progressText">0/3</div>
+            </div>
+            <div class="question-counter" id="questionCounter">Pertanyaan 1 dari 3</div>
+            <div class="question-box" id="currentQuestion">
+                Cari informasi tentang dinosaurus untuk tugas sekolah
+            </div>
+        </div>
+
+        <div class="browser-simulator" id="browserSimulator">
+            <div class="browser-header">
+                <div class="address-bar">
+                    <span class="lock-icon">🔒</span>
+                    <span class="address-text">https://search.google.com</span>
+                </div>
+            </div>
+            
+            <div class="search-page" id="searchPage">
+                <!-- Search results will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="check-button-container">
+        <button class="check-button" id="checkButton" disabled>Periksa</button>
+        <button class="show-code-button" id="showCodeButton">🎁 Tampilkan Kode</button>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="message error" id="errorMessage"></div>
+    <div class="success-flash" id="successFlash">✓ Benar!</div>
+    
+    <div class="success-modal" id="successModal">
+        <h2 class="modal-title">🎉 Bagus Sekali!</h2>
+        <div class="modal-message">Kamu telah belajar mencari informasi yang benar dan menghindari iklan!</div>
+        
+        <div class="secret-code-display">
+            <div class="secret-code-label">Kode rahasiamu:</div>
+            <div class="secret-code-text">S3K</div>
+            <button class="copy-code-button" id="copyCodeButton">📋 Salin Kode</button>
+        </div>
+        
+        <button class="close-modal-button" id="closeModalButton">Tutup</button>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // Translations
+            const translations = {
+                id: {
+                    title: '🔍 Pencarian Cerdas',
+                    subtitle: 'Ujian 2.4: Penjaga Keamanan',
+                    taskTitle: '🎯 Misimu:',
+                    taskText: 'Ketik pencarian, temukan informasi dan klik hasil BIASA, hindari iklan!',
+                    questionCounter: 'Pertanyaan {current} dari {total}',
+                    checkButton: 'Periksa',
+                    showCodeButton: '🎁 Tampilkan Kode',
+                    modalTitle: '🎉 Bagus Sekali!',
+                    modalMessage: 'Kamu telah belajar mencari informasi yang benar dan menghindari iklan!',
+                    codeLabel: 'Kode rahasiamu:',
+                    copyButton: '📋 Salin Kode',
+                    copiedText: 'Tersalin!',
+                    closeButton: 'Tutup',
+                    errorMessage: 'Itu iklan! Cari hasil biasa tanpa iklan.',
+                    successFlash: '✓ Benar!',
+                    resultsInfo: 'Sekitar {count} hasil',
+                    searchPlaceholder: 'Cari di Google...',
+                    searchButton: 'Cari',
+                    noResultsTitle: 'Tidak ada hasil untuk pencarian ini',
+                    noResultsText: 'Coba kata kunci yang berbeda yang cocok dengan pertanyaan',
+                    questions: [
+                        {
+                            question: 'Cari informasi tentang dinosaurus untuk tugas sekolah',
+                            keywords: ['dinosaurus', 'dinosaur', 'dino'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'mainan-dino.com',
+                                    title: 'Mainan Dinosaurus - Diskon 50%!',
+                                    snippet: 'Beli mainan dinosaurus terbaik dengan harga murah! Gratis ongkir untuk pembelian hari ini. T-Rex, Velociraptor, dan banyak lagi!',
+                                    extensions: ['Belanja Sekarang', 'Lihat Katalog', 'Promo Spesial']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'dino-park-jakarta.com',
+                                    title: 'Taman Dinosaurus Jakarta - Tiket Masuk',
+                                    snippet: 'Kunjungi taman dinosaurus terbesar! Pesan tiket online dan dapatkan diskon 30%. Cocok untuk keluarga dan anak-anak.',
+                                    extensions: ['Pesan Tiket', 'Lihat Harga', 'Lokasi']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'wikipedia.org › wiki › Dinosaurus',
+                                    title: 'Dinosaurus - Wikipedia',
+                                    snippet: 'Dinosaurus adalah kelompok hewan purba yang hidup jutaan tahun lalu. Mereka memiliki berbagai ukuran, dari yang kecil hingga sangat besar seperti Brachiosaurus.',
+                                    date: '12 Jan 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'kids.nationalgeographic.com › dinosaurs',
+                                    title: 'Fakta Menarik Tentang Dinosaurus - Nat Geo Kids',
+                                    snippet: 'Pelajari fakta seru tentang dinosaurus! Kapan mereka hidup? Apa yang mereka makan? Temukan jawaban untuk semua pertanyaan tentang dinosaurus.',
+                                    date: '5 Feb 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'science-kids.org › dinosaurs',
+                                    title: 'Jenis-Jenis Dinosaurus dan Karakteristiknya',
+                                    snippet: 'Ada banyak jenis dinosaurus dengan ciri khas masing-masing. T-Rex adalah karnivora, sedangkan Triceratops adalah herbivora.',
+                                    date: '18 Mar 2024'
+                                }
+                            ]
+                        },
+                        {
+                            question: 'Cari informasi tentang hiu untuk presentasi',
+                            keywords: ['hiu', 'shark', 'ikan hiu'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'jakarta-aquarium.com',
+                                    title: 'Akuarium Jakarta - Lihat Hiu Langsung!',
+                                    snippet: 'Pengalaman menakjubkan melihat hiu! Beli tiket sekarang dengan harga spesial. Tersedia paket keluarga dan grup.',
+                                    extensions: ['Beli Tiket', 'Promo Hari Ini', 'Jam Buka']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'film-hiu-terbaru.com',
+                                    title: 'Film Hiu Terbaru - Streaming Sekarang',
+                                    snippet: 'Tonton film hiu terbaik! Aksi mendebarkan dan petualangan laut. Gratis 7 hari pertama. Daftar sekarang!',
+                                    extensions: ['Mulai Nonton', 'Lihat Trailer']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'oceanlife.org › sharks',
+                                    title: 'Hiu - Predator Laut yang Menakjubkan',
+                                    snippet: 'Hiu adalah ikan yang hidup di laut. Ada lebih dari 500 spesies hiu di dunia. Hiu putih besar bisa tumbuh hingga 6 meter panjangnya.',
+                                    date: '8 Jan 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'kids.nationalgeographic.com › sharks',
+                                    title: 'Fakta Hiu untuk Anak - National Geographic',
+                                    snippet: 'Hiu memiliki indera penciuman yang sangat tajam. Mereka bisa mendeteksi setetes darah dari jarak jauh. Kebanyakan hiu tidak berbahaya bagi manusia.',
+                                    date: '15 Feb 2024'
+                                }
+                            ]
+                        },
+                        {
+                            question: 'Cari informasi tentang planet Mars',
+                            keywords: ['mars', 'planet mars'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'planetarium-jakarta.com',
+                                    title: 'Planetarium Jakarta - Pertunjukan Mars',
+                                    snippet: 'Jelajahi Mars di planetarium kami! Pertunjukan khusus setiap akhir pekan. Pesan tiket untuk pertunjukan spesial planet merah.',
+                                    extensions: ['Pesan Tiket', 'Jadwal Pertunjukan']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'toko-teleskop.com',
+                                    title: 'Teleskop Anak - Lihat Mars dari Rumah!',
+                                    snippet: 'Teleskop berkualitas untuk anak-anak. Lihat planet Mars dan bintang dengan jelas. Gratis pengiriman!',
+                                    extensions: ['Belanja', 'Lihat Produk', 'Harga Spesial']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'nasa.gov › mars-for-kids',
+                                    title: 'Mars - Planet Merah - NASA',
+                                    snippet: 'Mars adalah planet keempat dari Matahari. Disebut planet merah karena warna tanahnya yang merah. Mars memiliki dua bulan kecil bernama Phobos dan Deimos.',
+                                    date: '3 Mar 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'space-kids.com › mars-facts',
+                                    title: 'Fakta Menarik Tentang Planet Mars',
+                                    snippet: 'Satu hari di Mars sedikit lebih panjang dari hari di Bumi. Satu tahun di Mars sama dengan 687 hari di Bumi. Robot NASA sedang menjelajahi Mars!',
+                                    date: '22 Mar 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'astronomy-kids.org › mars',
+                                    title: 'Mars: Planet Tetangga Bumi',
+                                    snippet: 'Mars adalah planet terdekat dengan Bumi. Para ilmuwan mempelajari Mars untuk mencari tanda-tanda kehidupan. Mars lebih kecil dari Bumi.',
+                                    date: '10 Apr 2024'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                en: {
+                    title: '🔍 Smart Search',
+                    subtitle: 'Challenge 2.4: Security Guard',
+                    taskTitle: '🎯 Your Mission:',
+                    taskText: 'Type search query, find information and click REGULAR results, avoid ads!',
+                    questionCounter: 'Question {current} of {total}',
+                    checkButton: 'Check',
+                    showCodeButton: '🎁 Show Code',
+                    modalTitle: '🎉 Great Job!',
+                    modalMessage: 'You have learned to find correct information and avoid ads!',
+                    codeLabel: 'Your secret code:',
+                    copyButton: '📋 Copy Code',
+                    copiedText: 'Copied!',
+                    closeButton: 'Close',
+                    errorMessage: 'That\'s an ad! Look for a regular result without ads.',
+                    successFlash: '✓ Correct!',
+                    resultsInfo: 'About {count} results',
+                    searchPlaceholder: 'Search Google...',
+                    searchButton: 'Search',
+                    noResultsTitle: 'No results found for this search',
+                    noResultsText: 'Try different keywords that match the question',
+                    questions: [
+                        {
+                            question: 'Find information about dinosaurs for school project',
+                            keywords: ['dinosaur', 'dinosaurs', 'dino'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'dino-toys-store.com',
+                                    title: 'Dinosaur Toys - 50% Off Today!',
+                                    snippet: 'Buy the best dinosaur toys at amazing prices! Free shipping on all orders. T-Rex, Velociraptor, and more available now!',
+                                    extensions: ['Shop Now', 'View Catalog', 'Special Deals']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'dinosaur-park-tickets.com',
+                                    title: 'Dinosaur Park - Buy Tickets Online',
+                                    snippet: 'Visit the biggest dinosaur park! Book tickets online and get 30% discount. Perfect for families and kids.',
+                                    extensions: ['Book Tickets', 'See Prices', 'Location']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'wikipedia.org › wiki › Dinosaur',
+                                    title: 'Dinosaur - Wikipedia',
+                                    snippet: 'Dinosaurs are ancient animals that lived millions of years ago. They came in many sizes, from small to very large like Brachiosaurus.',
+                                    date: 'Jan 12, 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'kids.nationalgeographic.com › dinosaurs',
+                                    title: 'Amazing Dinosaur Facts - Nat Geo Kids',
+                                    snippet: 'Learn cool facts about dinosaurs! When did they live? What did they eat? Find answers to all your dinosaur questions.',
+                                    date: 'Feb 5, 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'science-kids.org › dinosaurs',
+                                    title: 'Types of Dinosaurs and Their Features',
+                                    snippet: 'There were many types of dinosaurs with unique characteristics. T-Rex was carnivorous, while Triceratops was herbivorous.',
+                                    date: 'Mar 18, 2024'
+                                }
+                            ]
+                        },
+                        {
+                            question: 'Find information about sharks for presentation',
+                            keywords: ['shark', 'sharks'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'city-aquarium.com',
+                                    title: 'City Aquarium - See Real Sharks!',
+                                    snippet: 'Amazing experience seeing sharks up close! Buy tickets now at special price. Family and group packages available.',
+                                    extensions: ['Buy Tickets', 'Today\'s Promo', 'Opening Hours']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'shark-movies-stream.com',
+                                    title: 'Best Shark Movies - Stream Now',
+                                    snippet: 'Watch the best shark movies! Thrilling action and ocean adventures. First 7 days free. Sign up now!',
+                                    extensions: ['Start Watching', 'See Trailer']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'oceanlife.org › sharks',
+                                    title: 'Sharks - Amazing Ocean Predators',
+                                    snippet: 'Sharks are fish that live in the ocean. There are over 500 species of sharks in the world. Great white sharks can grow up to 6 meters long.',
+                                    date: 'Jan 8, 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'kids.nationalgeographic.com › sharks',
+                                    title: 'Shark Facts for Kids - National Geographic',
+                                    snippet: 'Sharks have an incredible sense of smell. They can detect a drop of blood from far away. Most sharks are not dangerous to humans.',
+                                    date: 'Feb 15, 2024'
+                                }
+                            ]
+                        },
+                        {
+                            question: 'Find information about planet Mars',
+                            keywords: ['mars', 'planet mars'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'city-planetarium.com',
+                                    title: 'City Planetarium - Mars Show',
+                                    snippet: 'Explore Mars at our planetarium! Special show every weekend. Book tickets for the red planet special presentation.',
+                                    extensions: ['Book Tickets', 'Show Schedule']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'kids-telescope-shop.com',
+                                    title: 'Kids Telescope - See Mars from Home!',
+                                    snippet: 'Quality telescope for children. See planet Mars and stars clearly. Free shipping on all orders!',
+                                    extensions: ['Shop', 'View Products', 'Special Price']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'nasa.gov › mars-for-kids',
+                                    title: 'Mars - The Red Planet - NASA',
+                                    snippet: 'Mars is the fourth planet from the Sun. Called the red planet because of its red soil. Mars has two small moons named Phobos and Deimos.',
+                                    date: 'Mar 3, 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'space-kids.com › mars-facts',
+                                    title: 'Interesting Facts About Planet Mars',
+                                    snippet: 'One day on Mars is slightly longer than a day on Earth. One year on Mars equals 687 Earth days. NASA robots are exploring Mars!',
+                                    date: 'Mar 22, 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'astronomy-kids.org › mars',
+                                    title: 'Mars: Earth\'s Neighbor Planet',
+                                    snippet: 'Mars is the closest planet to Earth. Scientists study Mars to look for signs of life. Mars is smaller than Earth.',
+                                    date: 'Apr 10, 2024'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                es: {
+                    title: '🔍 Búsqueda Inteligente',
+                    subtitle: 'Desafío 2.4: Guardia de Seguridad',
+                    taskTitle: '🎯 Tu Misión:',
+                    taskText: 'Escribe búsqueda, encuentra información y haz clic en resultados NORMALES, evita anuncios!',
+                    questionCounter: 'Pregunta {current} de {total}',
+                    checkButton: 'Verificar',
+                    showCodeButton: '🎁 Mostrar Código',
+                    modalTitle: '🎉 ¡Excelente Trabajo!',
+                    modalMessage: '¡Has aprendido a encontrar información correcta y evitar publicidad!',
+                    codeLabel: 'Tu código secreto:',
+                    copyButton: '📋 Copiar Código',
+                    copiedText: '¡Copiado!',
+                    closeButton: 'Cerrar',
+                    errorMessage: '¡Ese es un anuncio! Busca un resultado normal sin publicidad.',
+                    successFlash: '✓ ¡Correcto!',
+                    resultsInfo: 'Aproximadamente {count} resultados',
+                    searchPlaceholder: 'Buscar en Google...',
+                    searchButton: 'Buscar',
+                    noResultsTitle: 'No se encontraron resultados',
+                    noResultsText: 'Prueba con palabras clave diferentes que coincidan con la pregunta',
+                    questions: [
+                        {
+                            question: 'Busca información sobre dinosaurios para proyecto escolar',
+                            keywords: ['dinosaurio', 'dinosaurios', 'dino'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'tienda-dinos.com',
+                                    title: 'Juguetes Dinosaurios - ¡50% Descuento!',
+                                    snippet: '¡Compra los mejores juguetes de dinosaurios! Envío gratis en todos los pedidos. T-Rex, Velociraptor y más disponibles.',
+                                    extensions: ['Comprar Ahora', 'Ver Catálogo', 'Ofertas Especiales']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'parque-dinosaurios.com',
+                                    title: 'Parque de Dinosaurios - Compra Entradas',
+                                    snippet: '¡Visita el parque de dinosaurios más grande! Reserva entradas online con 30% descuento. Perfecto para familias.',
+                                    extensions: ['Reservar', 'Ver Precios', 'Ubicación']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'wikipedia.org › wiki › Dinosaurio',
+                                    title: 'Dinosaurio - Wikipedia',
+                                    snippet: 'Los dinosaurios son animales antiguos que vivieron hace millones de años. Venían en muchos tamaños, desde pequeños hasta muy grandes como el Brachiosaurus.',
+                                    date: '12 Ene 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'kids.nationalgeographic.com › dinosaurios',
+                                    title: 'Datos Asombrosos sobre Dinosaurios - Nat Geo Kids',
+                                    snippet: '¡Aprende datos geniales sobre dinosaurios! ¿Cuándo vivieron? ¿Qué comían? Encuentra respuestas a todas tus preguntas.',
+                                    date: '5 Feb 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'science-kids.org › dinosaurios',
+                                    title: 'Tipos de Dinosaurios y sus Características',
+                                    snippet: 'Había muchos tipos de dinosaurios con características únicas. El T-Rex era carnívoro, mientras que el Triceratops era herbívoro.',
+                                    date: '18 Mar 2024'
+                                }
+                            ]
+                        },
+                        {
+                            question: 'Busca información sobre tiburones para presentación',
+                            keywords: ['tiburon', 'tiburones', 'shark'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'acuario-ciudad.com',
+                                    title: 'Acuario - ¡Ve Tiburones Reales!',
+                                    snippet: '¡Experiencia increíble viendo tiburones de cerca! Compra entradas a precio especial. Paquetes familiares disponibles.',
+                                    extensions: ['Comprar', 'Promo Hoy', 'Horarios']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'peliculas-tiburones.com',
+                                    title: 'Mejores Películas de Tiburones - Ver Ahora',
+                                    snippet: '¡Mira las mejores películas de tiburones! Acción emocionante. Primeros 7 días gratis. ¡Regístrate!',
+                                    extensions: ['Empezar', 'Ver Tráiler']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'oceanlife.org › tiburones',
+                                    title: 'Tiburones - Depredadores Marinos Increíbles',
+                                    snippet: 'Los tiburones son peces que viven en el océano. Hay más de 500 especies de tiburones. El tiburón blanco puede crecer hasta 6 metros.',
+                                    date: '8 Ene 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'kids.nationalgeographic.com › tiburones',
+                                    title: 'Datos sobre Tiburones para Niños',
+                                    snippet: 'Los tiburones tienen un sentido del olfato increíble. Pueden detectar una gota de sangre desde lejos. La mayoría no son peligrosos.',
+                                    date: '15 Feb 2024'
+                                }
+                            ]
+                        },
+                        {
+                            question: 'Busca información sobre el planeta Marte',
+                            keywords: ['marte', 'planeta marte', 'mars'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'planetario-ciudad.com',
+                                    title: 'Planetario - Espectáculo de Marte',
+                                    snippet: '¡Explora Marte en nuestro planetario! Espectáculo especial cada fin de semana. Reserva entradas para el planeta rojo.',
+                                    extensions: ['Reservar', 'Ver Horarios']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'telescopio-ninos.com',
+                                    title: 'Telescopio para Niños - ¡Ve Marte!',
+                                    snippet: 'Telescopio de calidad para niños. Ve Marte y estrellas claramente. ¡Envío gratis!',
+                                    extensions: ['Comprar', 'Ver Productos', 'Precio']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'nasa.gov › marte-ninos',
+                                    title: 'Marte - El Planeta Rojo - NASA',
+                                    snippet: 'Marte es el cuarto planeta desde el Sol. Se llama planeta rojo por su suelo rojo. Marte tiene dos lunas pequeñas: Fobos y Deimos.',
+                                    date: '3 Mar 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'space-kids.com › datos-marte',
+                                    title: 'Datos Interesantes sobre Marte',
+                                    snippet: 'Un día en Marte es un poco más largo que en la Tierra. Un año en Marte equivale a 687 días terrestres. ¡Robots de NASA exploran Marte!',
+                                    date: '22 Mar 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'astronomy-kids.org › marte',
+                                    title: 'Marte: Planeta Vecino de la Tierra',
+                                    snippet: 'Marte es el planeta más cercano a la Tierra. Los científicos estudian Marte buscando signos de vida. Marte es más pequeño que la Tierra.',
+                                    date: '10 Abr 2024'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                ru: {
+                    title: '🔍 Умный поиск',
+                    subtitle: 'Испытание 2.4: Охранник безопасности',
+                    taskTitle: '🎯 Твоя миссия:',
+                    taskText: 'Введи запрос, найди информацию и кликай на ОБЫЧНЫЕ результаты, избегай рекламу!',
+                    questionCounter: 'Вопрос {current} из {total}',
+                    checkButton: 'Проверить',
+                    showCodeButton: '🎁 Показать Код',
+                    modalTitle: '🎉 Молодец!',
+                    modalMessage: 'Ты научился находить правильную информацию и не кликать на рекламу!',
+                    codeLabel: 'Твой секретный код:',
+                    copyButton: '📋 Скопировать код',
+                    copiedText: 'Скопировано!',
+                    closeButton: 'Закрыть',
+                    errorMessage: 'Это реклама! Ищи обычный результат без рекламы.',
+                    successFlash: '✓ Правильно!',
+                    resultsInfo: 'Примерно {count} результатов',
+                    searchPlaceholder: 'Поиск в Google...',
+                    searchButton: 'Найти',
+                    noResultsTitle: 'По вашему запросу ничего не найдено',
+                    noResultsText: 'Попробуйте другие ключевые слова, которые подходят к вопросу',
+                    questions: [
+                        {
+                            question: 'Найди информацию про динозавров для школьного проекта',
+                            keywords: ['динозавр', 'динозавры', 'dinosaur', 'dino'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'magazin-dinozavrov.ru',
+                                    title: 'Игрушки Динозавры - Скидка 50%!',
+                                    snippet: 'Купи лучшие игрушки динозавров по отличным ценам! Бесплатная доставка. Т-Рекс, Велоцираптор и многое другое!',
+                                    extensions: ['Купить', 'Смотреть Каталог', 'Акции']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'park-dinozavrov-moscow.ru',
+                                    title: 'Парк Динозавров - Купить Билеты',
+                                    snippet: 'Посети самый большой парк динозавров! Бронируй билеты онлайн со скидкой 30%. Для всей семьи.',
+                                    extensions: ['Забронировать', 'Цены', 'Адрес']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'wikipedia.org › wiki › Динозавры',
+                                    title: 'Динозавры - Википедия',
+                                    snippet: 'Динозавры - это древние животные, которые жили миллионы лет назад. Они были разных размеров, от маленьких до огромных, как Брахиозавр.',
+                                    date: '12 янв 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'kids.nationalgeographic.com › dinosaurs',
+                                    title: 'Удивительные Факты о Динозаврах - Nat Geo Kids',
+                                    snippet: 'Узнай классные факты о динозаврах! Когда они жили? Что ели? Найди ответы на все вопросы о динозаврах.',
+                                    date: '5 фев 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'science-kids.org › dinosaurs',
+                                    title: 'Виды Динозавров и Их Особенности',
+                                    snippet: 'Существовало много видов динозавров с уникальными характеристиками. Т-Рекс был хищником, а Трицератопс травоядным.',
+                                    date: '18 мар 2024'
+                                }
+                            ]
+                        },
+                        {
+                            question: 'Найди информацию про акул для презентации',
+                            keywords: ['акул', 'акула', 'shark'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'moskva-okeanarium.ru',
+                                    title: 'Океанариум Москвы - Увидь Акул!',
+                                    snippet: 'Невероятные впечатления от акул вблизи! Купи билеты по специальной цене. Семейные пакеты доступны.',
+                                    extensions: ['Купить Билеты', 'Акция', 'Часы Работы']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'filmy-pro-akul.ru',
+                                    title: 'Лучшие Фильмы про Акул - Смотреть',
+                                    snippet: 'Смотри лучшие фильмы про акул! Захватывающие приключения. Первые 7 дней бесплатно. Регистрируйся!',
+                                    extensions: ['Начать Смотреть', 'Трейлер']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'oceanlife.org › sharks',
+                                    title: 'Акулы - Удивительные Хищники Океана',
+                                    snippet: 'Акулы - это рыбы, живущие в океане. В мире более 500 видов акул. Большая белая акула может вырастать до 6 метров.',
+                                    date: '8 янв 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'kids.nationalgeographic.com › sharks',
+                                    title: 'Факты об Акулах для Детей',
+                                    snippet: 'У акул невероятное обоняние. Они могут почувствовать каплю крови издалека. Большинство акул не опасны для людей.',
+                                    date: '15 фев 2024'
+                                }
+                            ]
+                        },
+                        {
+                            question: 'Найди информацию про планету Марс',
+                            keywords: ['марс', 'планета марс', 'mars'],
+                            results: [
+                                {
+                                    isAd: true,
+                                    url: 'planetariy-moskva.ru',
+                                    title: 'Планетарий - Шоу про Марс',
+                                    snippet: 'Исследуй Марс в нашем планетарии! Специальное шоу каждые выходные. Бронируй билеты на красную планету.',
+                                    extensions: ['Забронировать', 'Расписание']
+                                },
+                                {
+                                    isAd: true,
+                                    url: 'detskiy-teleskop.ru',
+                                    title: 'Телескоп для Детей - Увидь Марс!',
+                                    snippet: 'Качественный телескоп для детей. Смотри на Марс и звёзды чётко. Бесплатная доставка!',
+                                    extensions: ['Купить', 'Товары', 'Цена']
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'nasa.gov › mars-for-kids',
+                                    title: 'Марс - Красная Планета - NASA',
+                                    snippet: 'Марс - четвёртая планета от Солнца. Называется красной планетой из-за красной почвы. У Марса два маленьких спутника: Фобос и Деймос.',
+                                    date: '3 мар 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'space-kids.com › mars-facts',
+                                    title: 'Интересные Факты о Планете Марс',
+                                    snippet: 'Один день на Марсе немного длиннее земного. Один год на Марсе равен 687 земным дням. Роботы NASA исследуют Марс!',
+                                    date: '22 мар 2024'
+                                },
+                                {
+                                    isAd: false,
+                                    url: 'astronomy-kids.org › mars',
+                                    title: 'Марс: Планета-Сосед Земли',
+                                    snippet: 'Марс - ближайшая к Земле планета. Учёные изучают Марс в поисках признаков жизни. Марс меньше Земли.',
+                                    date: '10 апр 2024'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            };
+
+            // ALWAYS start with Indonesian as default
+            let currentLang = 'id';
+            let currentQuestionIndex = 0;
+            let selectedResult = null;
+            let searchPerformed = false;
+
+            function getStoredLanguage() {
+                try {
+                    return localStorage.getItem('trainer_language');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function setStoredLanguage(lang) {
+                try {
+                    localStorage.setItem('trainer_language', lang);
+                } catch (e) {
+                    // localStorage not available in iframe - that's okay
+                }
+            }
+
+            function loadLanguage() {
+                const savedLang = getStoredLanguage();
+                
+                // Prioritize saved language if available, otherwise default to Indonesian
+                if (savedLang && translations[savedLang]) {
+                    currentLang = savedLang;
+                } else {
+                    currentLang = 'id';  // Force Indonesian as default
+                }
+                
+                document.getElementById('languageSelect').value = currentLang;
+                updateAllText();
+            }
+
+            function changeLanguage(lang) {
+                currentLang = lang;
+                setStoredLanguage(lang);
+                
+                currentQuestionIndex = 0;
+                selectedResult = null;
+                searchPerformed = false;
+                
+                // Reset buttons
+                document.getElementById('checkButton').style.display = 'block';
+                document.getElementById('checkButton').disabled = true;
+                document.getElementById('showCodeButton').classList.remove('show');
+                
+                updateAllText();
+            }
+
+            function updateAllText() {
+                const t = translations[currentLang];
+                
+                document.querySelector('h1').textContent = t.title;
+                document.querySelector('.subtitle').textContent = t.subtitle;
+                document.querySelector('.task-title').textContent = t.taskTitle;
+                document.getElementById('taskText').textContent = t.taskText;
+                document.getElementById('checkButton').textContent = t.checkButton;
+                document.getElementById('showCodeButton').textContent = t.showCodeButton;
+                
+                document.querySelector('.modal-title').textContent = t.modalTitle;
+                document.querySelector('.modal-message').textContent = t.modalMessage;
+                document.querySelector('.secret-code-label').textContent = t.codeLabel;
+                document.getElementById('copyCodeButton').textContent = t.copyButton;
+                document.getElementById('closeModalButton').textContent = t.closeButton;
+                
+                renderQuestion();
+            }
+
+            function renderQuestion() {
+                const t = translations[currentLang];
+                const question = t.questions[currentQuestionIndex];
+                
+                document.getElementById('currentQuestion').textContent = question.question;
+                
+                const counterText = t.questionCounter
+                    .replace('{current}', currentQuestionIndex + 1)
+                    .replace('{total}', t.questions.length);
+                document.getElementById('questionCounter').textContent = counterText;
+                
+                const progress = ((currentQuestionIndex) / t.questions.length) * 100;
+                const progressBar = document.getElementById('progressBar');
+                const progressText = document.getElementById('progressText');
+                
+                progressBar.style.width = progress + '%';
+                progressText.textContent = `${currentQuestionIndex}/${t.questions.length}`;
+                
+                renderSearchInterface();
+                
+                selectedResult = null;
+                searchPerformed = false;
+                document.getElementById('checkButton').disabled = true;
+            }
+
+            function renderSearchInterface() {
+                const t = translations[currentLang];
+                
+                const searchPage = document.getElementById('searchPage');
+                
+                searchPage.innerHTML = `
+                    <div class="search-header">
+                        <div class="search-logo">
+                            <span class="s-blue">G</span><span class="s-red">o</span><span class="s-yellow">o</span><span class="s-blue">g</span><span class="s-green">l</span><span class="s-red">e</span>
+                        </div>
+                        <div class="search-box-container">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" id="searchInput" placeholder="${t.searchPlaceholder}">
+                                <button class="search-button" id="searchSubmitButton">${t.searchButton}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-results" id="searchResultsContainer">
+                        <div class="no-results">
+                            <div class="no-results-icon">🔍</div>
+                            <div class="no-results-title">${t.searchPlaceholder}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Add event listeners for search
+                const searchInput = document.getElementById('searchInput');
+                const searchButton = document.getElementById('searchSubmitButton');
+                
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+                
+                searchButton.addEventListener('click', performSearch);
+                
+                // Focus on search input
+                searchInput.focus();
+            }
+
+            function performSearch() {
+                const t = translations[currentLang];
+                const question = t.questions[currentQuestionIndex];
+                const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+                
+                if (!searchQuery) {
+                    return;
+                }
+                
+                // Check if search query matches keywords using regex
+                const keywordRegex = new RegExp(question.keywords.join('|'), 'i');
+                const isValidSearch = keywordRegex.test(searchQuery);
+                
+                if (isValidSearch) {
+                    // Show results
+                    renderSearchResults(question);
+                    searchPerformed = true;
+                } else {
+                    // Show no results
+                    showNoResults();
+                }
+            }
+
+            function showNoResults() {
+                const t = translations[currentLang];
+                const resultsContainer = document.getElementById('searchResultsContainer');
+                
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">🔍</div>
+                        <div class="no-results-title">${t.noResultsTitle}</div>
+                        <div class="no-results-text">${t.noResultsText}</div>
+                    </div>
+                `;
+            }
+
+            function renderSearchResults(question) {
+                const t = translations[currentLang];
+                const resultsContainer = document.getElementById('searchResultsContainer');
+                
+                const resultsCount = Math.floor(Math.random() * 500000) + 100000;
+                const resultsInfo = t.resultsInfo.replace('{count}', resultsCount.toLocaleString());
+                
+                resultsContainer.innerHTML = `
+                    <div class="results-info">${resultsInfo}</div>
+                    ${question.results.map((result, index) => {
+                        if (result.isAd) {
+                            return `
+                                <div class="result-item ad clickable" data-index="${index}">
+                                    <div class="result-url">
+                                        <span class="ad-badge">Sponsored</span>
+                                        <span>🌐 ${result.url}</span>
+                                    </div>
+                                    <div class="result-title">${result.title}</div>
+                                    <div class="result-snippet">${result.snippet}</div>
+                                    ${result.extensions ? `
+                                        <div class="ad-extensions">
+                                            ${result.extensions.map(ext => `<div class="ad-extension">${ext}</div>`).join('')}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        } else {
+                            return `
+                                <div class="result-item clickable" data-index="${index}">
+                                    <div class="result-url">
+                                        <span>🔒</span>
+                                        ${result.url}
+                                    </div>
+                                    <div class="result-title">${result.title}</div>
+                                    <div class="result-snippet">${result.snippet}</div>
+                                    <div class="result-date">${result.date}</div>
+                                </div>
+                            `;
+                        }
+                    }).join('')}
+                `;
+                
+                document.querySelectorAll('.result-item.clickable').forEach(item => {
+                    item.addEventListener('click', function() {
+                        document.querySelectorAll('.result-item').forEach(r => r.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedResult = parseInt(this.dataset.index);
+                        document.getElementById('checkButton').disabled = false;
+                    });
+                });
+            }
+
+            function checkAnswer() {
+                const t = translations[currentLang];
+                const question = t.questions[currentQuestionIndex];
+                
+                if (selectedResult === null || !searchPerformed) return;
+                
+                const selectedItem = question.results[selectedResult];
+                
+                // Correct if user selected a NON-ad result
+                if (!selectedItem.isAd) {
+                    // Show success flash
+                    const successFlash = document.getElementById('successFlash');
+                    successFlash.textContent = t.successFlash;
+                    successFlash.classList.add('show');
+                    
+                    // Disable check button during transition
+                    document.getElementById('checkButton').disabled = true;
+                    
+                    setTimeout(() => {
+                        successFlash.classList.remove('show');
+                        
+                        // Fade out current content
+                        document.getElementById('taskDescription').classList.add('fade-out');
+                        document.getElementById('browserSimulator').classList.add('fade-out');
+                        
+                        setTimeout(() => {
+                            // Update progress bar BEFORE incrementing
+                            const progress = ((currentQuestionIndex + 1) / t.questions.length) * 100;
+                            const progressBar = document.getElementById('progressBar');
+                            const progressText = document.getElementById('progressText');
+                            
+                            progressBar.style.width = progress + '%';
+                            progressText.textContent = `${currentQuestionIndex + 1}/${t.questions.length}`;
+                            
+                            currentQuestionIndex++;
+                            
+                            if (currentQuestionIndex < t.questions.length) {
+                                // Render new question
+                                renderQuestion();
+                                
+                                // Fade back in
+                                setTimeout(() => {
+                                    document.getElementById('taskDescription').classList.remove('fade-out');
+                                    document.getElementById('browserSimulator').classList.remove('fade-out');
+                                }, 50);
+                            } else {
+                                // All questions completed - show modal AND show button for later
+                                document.getElementById('taskDescription').classList.remove('fade-out');
+                                document.getElementById('browserSimulator').classList.remove('fade-out');
+                                
+                                setTimeout(() => {
+                                    document.getElementById('checkButton').style.display = 'none';
+                                    document.getElementById('showCodeButton').classList.add('show');
+                                    document.getElementById('overlay').classList.add('active');
+                                    document.getElementById('successModal').classList.add('active');
+                                }, 300);
+                            }
+                        }, 400); // Wait for fade-out animation
+                    }, 800); // Show success flash for 800ms
+                } else {
+                    // User clicked on an ad - show error
+                    showError();
+                }
+            }
+
+            function showError() {
+                const t = translations[currentLang];
+                const errorMsg = document.getElementById('errorMessage');
+                const overlay = document.getElementById('overlay');
+                
+                errorMsg.textContent = t.errorMessage;
+                errorMsg.classList.add('show');
+                overlay.classList.add('active');
+                
+                setTimeout(() => {
+                    errorMsg.classList.remove('show');
+                    overlay.classList.remove('active');
+                }, 2000);
+            }
+
+            function closeModal() {
+                document.getElementById('overlay').classList.remove('active');
+                document.getElementById('successModal').classList.remove('active');
+            }
+
+            function copyCodeToClipboard() {
+                const t = translations[currentLang];
+                const code = 'S3K';
+                
+                // Try modern clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(code).then(() => {
+                        showCopySuccess();
+                    }).catch(() => {
+                        // Fallback for iframe
+                        alert(t.codeLabel + ' ' + code);
+                    });
+                } else {
+                    // Fallback for iframe or older browsers
+                    try {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = code;
+                        textArea.style.position = 'fixed';
+                        textArea.style.left = '-999999px';
+                        textArea.style.top = '-999999px';
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        
+                        const successful = document.execCommand('copy');
+                        textArea.remove();
+                        
+                        if (successful) {
+                            showCopySuccess();
+                        } else {
+                            alert(t.codeLabel + ' ' + code);
+                        }
+                    } catch (err) {
+                        // Final fallback
+                        alert(t.codeLabel + ' ' + code);
+                    }
+                }
+            }
+
+            function showCopySuccess() {
+                const t = translations[currentLang];
+                const btn = document.getElementById('copyCodeButton');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '✓ ' + t.copiedText;
+                btn.style.background = '#6BCF7F';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '#4ECDC4';
+                }, 2000);
+            }
+
+            // Event listeners
+            document.getElementById('languageSelect').addEventListener('change', function() {
+                changeLanguage(this.value);
+            });
+
+            document.getElementById('checkButton').addEventListener('click', checkAnswer);
+
+            document.getElementById('showCodeButton').addEventListener('click', () => {
+                document.getElementById('overlay').classList.add('active');
+                document.getElementById('successModal').classList.add('active');
+            });
+
+            document.getElementById('copyCodeButton').addEventListener('click', copyCodeToClipboard);
+
+            document.getElementById('closeModalButton').addEventListener('click', closeModal);
+            
+            document.getElementById('overlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    if (!document.getElementById('successModal').classList.contains('active')) {
+                        closeModal();
+                    }
+                }
+            });
+
+            // Initialize
+            loadLanguage();
+        })();
+    </script>
+</body>
+</html>
