@@ -13,6 +13,7 @@
 
 import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
+import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 
 function closeAppsByName(appIds) {
   if (!state.api?.os?.listWindows) return;
@@ -57,7 +58,7 @@ async function loadAllData() {
   ]);
   state.transcripts = transcripts;
   state.prospects   = prospects;
-  state.quizItems   = quizItems;
+  state.quizItems   = normalizeQuiz(quizItems);
 }
 
 async function start() {
@@ -84,15 +85,15 @@ async function start() {
 start();
 
 const STEPS = [
-  { title: "Buyer pushed back. Rep argued. Buyer hung up.",             handler: stepGainAttention },
-  { title: "By the end · restate before you respond, then wait",        handler: stepStateOutcome },
-  { title: "M1 opens it. M2 saves it. M3 books it.",                    handler: stepRecallPrior },
-  { title: "Watch · M.G. acknowledges Tom's FX objection",              handler: stepWorkedExample },
-  { title: "Your turn · pick the acknowledge for Sven",                 handler: stepCompletionProblem },
-  { title: "Solo · acknowledge Tom's 'We use Brex' before you pitch",   handler: stepSoloProblem },
-  { title: "Your event log · what just happened",                       handler: stepFeedback },
-  { title: "Quick check · 3 questions",                                 handler: stepQuiz },
-  { title: "Key takeaway + your next retrieval drop",                   handler: stepTakeaway },
+  { title: "A rep argued with an objection, and the buyer hung up",     handler: stepGainAttention },
+  { title: "What you'll do: restate before you respond, then wait",     handler: stepStateOutcome },
+  { title: "The three moves on every call",                             handler: stepRecallPrior },
+  { title: "Watch L.D. acknowledge Tom's Brex objection",               handler: stepWorkedExample },
+  { title: "Your turn: pick how to acknowledge Sven",                   handler: stepCompletionProblem },
+  { title: "On your own: acknowledge Tom's 'We use Brex' before you pitch", handler: stepSoloProblem },
+  { title: "J.T.'s review of your restate",                             handler: stepFeedback },
+  { title: "Quick check: 3 questions",                                  handler: stepQuiz },
+  { title: "Takeaway and a 7-day refresher",                            handler: stepTakeaway },
 ];
 
 function runStep(i) {
@@ -121,13 +122,13 @@ function showWelcomeCard(onStart) {
   card.innerHTML = `
     <div class="welcome-card__panel">
       <span class="welcome-card__logo" aria-hidden="true">FTC</span>
-      <div class="welcome-card__kicker">Module 2 &middot; keystone save</div>
+      <div class="welcome-card__kicker">Module 2 &middot; save the call</div>
       <h2 class="welcome-card__title" id="welcome-title">Objection Acknowledge</h2>
       <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
       <p class="welcome-card__lede">
         When the buyer pushes back, restate the objection in their own words
-        before you respond. Two-token overlap minimum. Then wait, and the open
-        follow-up question writes itself.
+        before you respond, reusing at least two of the words they used. Then
+        wait. Their answer points you to the open follow-up question.
       </p>
       <button type="button" class="welcome-card__start" data-action="start">
         Start module &rarr;
@@ -196,11 +197,11 @@ function stepGainAttention(body) {
   body.innerHTML = `
     <blockquote class="peer-quote">
       Buyer: "Too expensive." Rep: "Let me explain the value." Buyer: "Bye."
-      <cite>— Gong sample · GC-11, 14 sec call</cite>
+      <cite>Gong sample, a 14-second call</cite>
     </blockquote>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
-      Bottom-quartile reps argue with objections. Top reps restate them. The
-      buyer needs to hear you've actually listened before any rebuttal lands.
+      Bottom-quartile reps argue with objections, while top reps restate them.
+      The buyer has to hear that you listened before any rebuttal can land.
     </p>
   `;
   state.api.os.openApp("outreach", { highlightLeadId: "L-002" });
@@ -212,8 +213,8 @@ function decorateOutreachForStep1() {
   if (!outreachBody) return;
   mountTaskBanner(outreachBody, {
     id: "m2-s1-pick-tom",
-    label: "Click Tom (Series-B SaaS) — his objection lives in step 4",
-    hint: "We'll set up the Gong worked example next",
+    label: "Click Tom (Series-B SaaS). You'll hear his objection in step 4.",
+    hint: "The Gong example follows",
     state: "active",
   });
   let tries = 0;
@@ -241,11 +242,11 @@ function decorateOutreachForStep1() {
 
 function stepStateOutcome(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">By the end of these 10 min:</p>
+    <p style="font-size:14px;">In the next 10 minutes you'll practise two things:</p>
     <ul style="font-size:13.5px;margin:6px 0 10px 18px;">
-      <li><strong>Restate</strong> the buyer's objection in their own words
-          (≥2 token overlap) before any rebuttal.</li>
-      <li><strong>Then wait.</strong> The open follow-up writes itself.</li>
+      <li><strong>Restate</strong> the buyer's objection in their own words,
+          reusing at least two of them, before any rebuttal.</li>
+      <li><strong>Then wait</strong> and ask the open follow-up their answer points to.</li>
     </ul>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
       Next: confirm you know Tom's top objection.
@@ -257,7 +258,7 @@ function stepStateOutcome(body) {
     mountTaskBanner(outreachBody, {
       id: "m2-s2-confirm",
       label: "Confirm: Tom's top objection is 'We already use Brex.'",
-      hint: "Click the chip below to acknowledge",
+      hint: "Click Got it below to confirm",
       state: "active",
     });
     if (!outreachBody.querySelector("[data-m2-s2-done]")) {
@@ -265,7 +266,7 @@ function stepStateOutcome(body) {
       bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
       bar.innerHTML = `
         <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-          Top objection: <em>"We already use Brex."</em> (per CRM · Tom's notes)
+          Top objection: <em>"We already use Brex."</em> (from Tom's CRM notes)
         </span>
         <button type="button" data-m2-s2-done
                 style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
@@ -288,14 +289,14 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Quick recall of the three keystone moves:</p>
+    <p style="font-size:14px;">Quick recall: the three moves on every call.</p>
     <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
       <li><strong>M1 · Diagnostic.</strong> One sharp question off the profile.</li>
-      <li><strong>M2 · Acknowledge.</strong> ← <em>this module.</em></li>
+      <li><strong>M2 · Acknowledge.</strong> Restate the objection in the buyer's words. <em>This module.</em></li>
       <li><strong>M3 · Close.</strong> Two slots, one invite, during the call.</li>
     </ol>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next: watch M.G.'s worked example in Gong.
+      Next: watch L.D.'s worked example in Gong.
     </p>
   `;
   setTimeout(() => {
@@ -303,8 +304,8 @@ function stepRecallPrior(body) {
     if (outreachBody) {
       mountTaskBanner(outreachBody, {
         id: "m2-s3-open-gong",
-        label: "Open Gong to watch M.G. acknowledge Tom's objection",
-        hint: "Use the button below or the taskbar",
+        label: "Open Gong to watch L.D. acknowledge Tom's objection",
+        hint: "Use the button below",
         state: "active",
       });
       if (!outreachBody.querySelector("[data-m2-s3-open-gong]")) {
@@ -312,7 +313,7 @@ function stepRecallPrior(body) {
         bar.style.cssText = "margin-top:10px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
         bar.innerHTML = `
           <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-            Watch the M2 chip light up when M.G. restates.
+            Look for the M2 chip on the line where L.D. restates.
           </span>
           <button type="button" data-m2-s3-open-gong
                   style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
@@ -345,12 +346,12 @@ function stepRecallPrior(body) {
 function stepWorkedExample(body) {
   body.innerHTML = `
     <p style="font-size:14px;">
-      Watch <strong>M.G.</strong> handle <strong>Tom's "We use Brex"</strong>
-      objection. Note the restate before any rebuttal.
+      Watch <strong>L.D.</strong> handle <strong>Tom's "We already use Brex"</strong>
+      objection. Notice that he restates it before any rebuttal.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Find the <strong>[M2]</strong> chip in the transcript. Click it to mark
-      this watched.
+      Find the <strong>[M2]</strong> chip in the transcript and click it when
+      you've read the call.
     </p>
   `;
   setTimeout(() => {
@@ -358,8 +359,8 @@ function stepWorkedExample(body) {
     if (!gongBody) return;
     mountTaskBanner(gongBody, {
       id: "m2-s4-watch",
-      label: "Watch M.G.'s restate — find the M2 [Acknowledge] chip",
-      hint: "Click any M2 chip OR 'Watched it' below",
+      label: "Read L.D.'s restate and find the [M2] Acknowledge chip",
+      hint: "Click the chip or Watched it below",
       state: "active",
     });
     if (!gongBody.querySelector("[data-m2-s4-done]")) {
@@ -367,7 +368,7 @@ function stepWorkedExample(body) {
       bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
       bar.innerHTML = `
         <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-          M.G. uses 'Brex' + 'speed' — same tokens Tom used. Then asks.
+          L.D. reuses Tom's own word, 'Brex', then asks a question.
         </span>
         <button type="button" data-m2-s4-done
                 style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
@@ -380,8 +381,8 @@ function stepWorkedExample(body) {
         markTaskBannerDone("m2-s4-watch");
         state.api.eventLog?.record?.("step4_worked_example_completed");
         state.timeline.push({
-          label: "Watched M.G.'s restate",
-          detail: "Brex objection · ≥2 token overlap before rebuttal",
+          label: "Watched L.D.'s restate",
+          detail: "Brex objection · Tom's words reused before any rebuttal",
           ts: timestamp(),
         });
         setTimeout(() => runStep(4), 450);
@@ -404,22 +405,22 @@ function stepCompletionProblem(body) {
       <em>"Our accountant won't deal with another tool."</em>
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Pick your acknowledge in the Outreach drawer.
+      Pick how you acknowledge it in the panel under the highlighted row in Outreach.
     </p>
   `;
   const options = [
     { label: "A", result: "anti",
       text: `"FinTechCard integrates with most accounting platforms — it's actually less work for them."`,
-      rationale: "Rebuttal without restate. You skipped the listening step." },
+      rationale: "A rebuttal with no restate. You skipped the listening step." },
     { label: "B", result: "correct",
-      text: `"So your accountant pushes back on new tools — what's the friction usually look like for her?"`,
-      rationale: "Yes. Token overlap ('accountant', 'tool') + open follow-up." },
+      text: `"So your accountant pushes back on new tools — what does the friction usually look like for her?"`,
+      rationale: "Yes. It reuses his words ('accountant', 'tool') and asks an open follow-up." },
     { label: "C", result: "partial",
       text: `"That's fair, accountants are busy. What can I do to help?"`,
-      rationale: "Soft restate but no specifics. Open question is too generic." },
+      rationale: "A soft restate with nothing specific, and the open question is too generic." },
     { label: "D", result: "anti",
       text: `"Most accountants change their mind once they see the demo."`,
-      rationale: "Pre-empts the accountant. Top reps never argue against the absent stakeholder." },
+      rationale: "It argues with the accountant before you've heard her side. Top reps never argue against someone who isn't on the call." },
   ];
   setTimeout(() => mountSvenDrawer(options), 160);
 }
@@ -429,11 +430,11 @@ function mountSvenDrawer(options) {
   if (!outreachBody) return;
   mountTaskBanner(outreachBody, {
     id: "m2-s5-pick-ack",
-    label: "Pick Sven's acknowledge — drawer just opened under his row",
-    hint: "Wrong picks reveal why + flash the correct option",
+    label: "Pick how you acknowledge Sven in the panel that just opened",
+    hint: "A wrong pick shows why it fails and which option is right",
     state: "active",
   });
-  const svenRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /Sven|Emma|Lukas/i.test(r.textContent || "")) || outreachBody.querySelector(".lead-row");
+  const svenRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /\bSven\b/.test(r.textContent || "")) || outreachBody.querySelector(".lead-row");
   if (!svenRow) return;
   svenRow.classList.add("is-warm-highlight");
   outreachBody.querySelector("[data-m2-s5-drawer]")?.remove();
@@ -443,7 +444,7 @@ function mountSvenDrawer(options) {
   drawer.innerHTML = `
     <header class="tom-drawer__head">
       <strong>Sven · live call · 01:14</strong>
-      <span class="tom-drawer__cue">Pick your acknowledge</span>
+      <span class="tom-drawer__cue">Pick how you acknowledge</span>
     </header>
     <p class="tom-drawer__stem">
       <em>"Our accountant won't deal with another tool."</em>
@@ -481,7 +482,7 @@ function mountSvenDrawer(options) {
         state.api.eventLog?.record?.("completion_problem_completed");
         state.timeline.push({
           label: "Picked the correct acknowledge for Sven",
-          detail: "Option B · token overlap + open follow-up",
+          detail: "Option B · his words reused, then an open follow-up",
           ts: timestamp(),
         });
         setTimeout(() => runStep(5), 700);
@@ -496,11 +497,11 @@ function stepSoloProblem(body) {
   const tom = state.prospects.find(p => /tom/i.test(p.name)) ?? state.prospects[0];
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Solo.</strong> ${tom.name} just hit you with:
+      <strong>On your own.</strong> ${tom.name} just said:
       <em>"${tom.top_objection ?? "We already use Brex."}"</em>
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Type your restate. Must include ≥2 tokens from the objection.
+      Type your restate. Use at least two words from his objection.
     </p>
   `;
   setTimeout(() => decorateSoloFlow(tom), 200);
@@ -511,8 +512,8 @@ function decorateSoloFlow(tom) {
   if (!outreachBody) return;
   mountTaskBanner(outreachBody, {
     id: "m2-s6-solo",
-    label: `Restate ${tom.name}'s objection (≥2 token overlap) before any rebuttal`,
-    hint: "Then wait. The open follow-up writes itself",
+    label: `Restate ${tom.name}'s objection with at least two of his words, before any rebuttal`,
+    hint: "Then wait for his answer before you ask the follow-up",
     state: "active",
   });
   if (outreachBody.querySelector("[data-m2-s6-stage]")) return;
@@ -537,7 +538,7 @@ function decorateSoloFlow(tom) {
         Send restate &amp; wait
       </button>
       <span data-m2-status style="font-size:12px; color:var(--ftc-ink-2);">
-        Need ≥2 tokens that overlap with the objection.
+        Use at least two words from the objection.
       </span>
     </div>
   `;
@@ -557,14 +558,14 @@ function decorateSoloFlow(tom) {
     send.style.color = ok ? "#fff" : "#666";
     send.style.cursor = ok ? "pointer" : "not-allowed";
     status.textContent = ok
-      ? `Good. ${overlap} token overlap. Send when ready.`
-      : `Token overlap so far: ${overlap}. Need ≥2 from the objection.`;
+      ? `Good: ${overlap} of his words reused. Send when ready.`
+      : `Words from the objection so far: ${overlap}. You need at least 2.`;
   });
   send.addEventListener("click", () => {
     if (send.disabled) return;
     state.restateOk = true;
     state.timeline.push({
-      label: `Restated ${tom.name}'s objection · token overlap`,
+      label: `Restated ${tom.name}'s objection in his words`,
       detail: ta.value.trim().slice(0, 80),
       ts: timestamp(),
     });
@@ -580,23 +581,23 @@ function stepFeedback(body) {
   keepOnly(["slack"]);
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>J.T.</strong> DM'd the review of your restate.
+      <strong>J.T.</strong> sent you a DM reviewing your restate.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Read it, then mark as read to continue.
+      Read it, then click Mark thread read.
     </p>
   `;
   const dmMessages = [
     { author: "J.T. (pod lead)", initials: "JT", ts: "13:02",
-      body: "Watched your restate. Token overlap landed 👇" },
+      body: "Watched your restate. You used his words 👇" },
     ...state.timeline.map(e => ({
       author: "J.T. (pod lead)", initials: "JT", ts: e.ts,
-      body: `✅ ${e.label} — ${e.detail}`,
+      body: `✅ ${e.label}: ${e.detail}`,
     })),
     { author: "J.T. (pod lead)", initials: "JT", ts: "13:05",
-      body: "Restate first, rebut never. If you must rebut, do it after a question they answered." },
+      body: "Restate first. If you still need to rebut, do it after the buyer has answered a question." },
     { author: "M.G. (peer)", initials: "MG", ts: "13:06",
-      body: "Train the restate reflex and the rebuttal mostly stops being needed. Buyers self-correct." },
+      body: "Practise the restate until it's a reflex. Most of the time you won't need the rebuttal, because buyers correct themselves." },
   ];
   state.api.os.openApp("slack", {
     channel: {
@@ -620,7 +621,7 @@ function stepFeedback(body) {
       const bar = document.createElement("div");
       bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
       bar.innerHTML = `
-        <span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. waits for the read receipt.</span>
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. will see when you've read it.</span>
         <button type="button" data-m2-s7-done
                 style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
           ✓ Mark thread read
@@ -642,8 +643,8 @@ function stepQuiz(body) {
   state.quizIndex = 0;
   state.quizScore = 0;
   body.innerHTML = `
-    <p style="font-size:14px;"><strong>Quick check</strong> · 3 questions from J.T.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Two of three correct advances the module.</p>
+    <p style="font-size:14px;"><strong>Quick check</strong>: 3 questions from J.T. in Slack.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Two of three right is a pass.</p>
   `;
   setTimeout(() => mountQuizInSlack(), 200);
 }
@@ -657,7 +658,7 @@ function mountQuizInSlack() {
   mountTaskBanner(slackBody, {
     id: "m2-s8-quiz",
     label: "Answer the 3 quiz questions J.T. just posted",
-    hint: "Wrong picks reveal the correct answer",
+    hint: "A wrong pick shows the right answer",
     state: "active",
   });
   let thread = slackBody.querySelector("[data-m2-quiz-thread]");
@@ -680,7 +681,7 @@ function renderQuizItemInSlack(host) {
   const item = state.quizItems[state.quizIndex];
   host.innerHTML = `
     <div style="font-size:12px; color:var(--ftc-ink-2); margin-bottom:6px;">
-      Question ${state.quizIndex + 1} of ${state.quizItems.length} · ${item.lo}
+      Question ${state.quizIndex + 1} of ${state.quizItems.length}
     </div>
     <p style="font-size:14px; margin:0 0 10px; color:var(--ftc-ink);">${item.stem}</p>
     <div role="radiogroup" aria-label="Answer choices" style="display:grid; gap:6px;">
@@ -743,11 +744,11 @@ function stepTakeaway(body) {
   const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Module complete.</strong> M.G. pinned the takeaway in your Slack channel.
+      <strong>Last step.</strong> M.G. pinned the takeaway in your Slack channel.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
       Quiz: <strong>${state.quizScore} / ${state.quizItems.length}</strong> (${scorePct}%).
-      Click 'Set +7d retrieval drop' in Slack to finish.
+      Schedule the 7-day refresher in Slack to finish the module.
     </p>
   `;
   setTimeout(() => {
@@ -759,8 +760,8 @@ function stepTakeaway(body) {
     slackBody.querySelector("[data-m2-quiz-thread]")?.remove();
     mountTaskBanner(slackBody, {
       id: "m2-s9-takeaway",
-      label: "Read M.G.'s pinned takeaway, then set the +7d retrieval drop",
-      hint: "One click. Module commits when the drop is scheduled.",
+      label: "Read M.G.'s takeaway, then schedule the refresher",
+      hint: "The module finishes when you schedule it.",
       state: "active",
     });
     if (!slackBody.querySelector("[data-m2-pinned]")) {
@@ -772,17 +773,17 @@ function stepTakeaway(body) {
           📌 Pinned by M.G. (peer · Manchester pod)
         </div>
         <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
-          "Restate before you rebut. Use the buyer's exact words, two tokens
-          minimum. Then ask one open question. The rebuttal is almost never
-          needed after that."
+          "Restate before you rebut, using at least two of the buyer's exact
+          words. Then ask one open question. After that you'll rarely need
+          the rebuttal."
         </p>
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
           <span style="font-size:12.5px; color:var(--ftc-ink-2);">
-            📅 3-item retrieval drop · +7 days in your Sana inbox
+            📅 In 7 days you'll get three short questions on restating objections.
           </span>
           <button type="button" data-m2-s9-finish
                   style="background:var(--brand-green); color:#fff; padding:9px 16px; border:0; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
-            Set +7d retrieval drop &rarr;
+            Schedule refresher &rarr;
           </button>
         </div>
       `;
@@ -800,10 +801,6 @@ function stepTakeaway(body) {
 function finishModule() {
   const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
   state.api.complete(scorePct);
-  document.getElementById("narrative-body").innerHTML = `
-    <p><strong>Module complete.</strong> Score posted to the LMS.</p>
-    <p>See you in Module 3, Calendar Close.</p>
-  `;
   document.getElementById("narrative-next").hidden = true;
   document.getElementById("narrative-back").hidden = true;
   showSummaryCard(scorePct);
@@ -830,12 +827,12 @@ function showSummaryCard(scorePct) {
     <div class="summary-card__panel">
       <div class="summary-card__check" aria-hidden="true">✓</div>
       <div class="summary-card__kicker">Module complete</div>
-      <h2 class="summary-card__title" id="summary-title">Objection Acknowledge · cleared</h2>
+      <h2 class="summary-card__title" id="summary-title">Objection Acknowledge · ${scorePct >= 67 ? "passed" : "completed"}</h2>
       <div class="summary-card__stats">
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Quiz</span>
           <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
-          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below pass"}</span>
+          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below the 67% pass mark"}</span>
         </div>
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Time</span>
@@ -859,7 +856,7 @@ function showSummaryCard(scorePct) {
         </ol>
       </details>
       <div class="summary-card__actions">
-        <a class="summary-card__btn summary-card__btn--ghost" href="../../">&larr; Back to engagement</a>
+        <a class="summary-card__btn summary-card__btn--ghost" href="../">&larr; Back to engagement</a>
         <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">
           Restart module
         </button>

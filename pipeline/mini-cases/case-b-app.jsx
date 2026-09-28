@@ -32,7 +32,8 @@ const BRANCHES = [
   {
     stage: "Listen",
     code: "L",
-    callerTime: "00:08",
+    callerAt: 4,   // scripted call clock, seconds
+    replyAt: 7,
     caller: "This is the third time I've called about this. Nobody's helped me yet.",
     options: [
       {
@@ -51,7 +52,7 @@ const BRANCHES = [
         text:
           "Okay. Let me see what's been going on with your account — can I get your account number?",
         delta: -2,
-        feedback: "Passable. You moved to data without acknowledging the third-call friction. He will comply, and the relational debt stays on the table.",
+        feedback: "Passable. You moved to data without acknowledging that this is his third call. He'll comply, but the resentment is still there.",
       },
       {
         grade: "wrong",
@@ -60,14 +61,15 @@ const BRANCHES = [
         text:
           "Okay, so what's the issue today?",
         delta: 12,
-        feedback: "Worst Listen failure: you treated the call as new. He reads that as the previous two calls being invisible to your system, which confirms his fear that nobody owns this.",
+        feedback: "Worst Listen failure: you treated the call as new. He hears that his previous two calls are invisible to your system, which confirms his fear that no one owns the problem.",
       },
     ],
   },
   {
     stage: "Acknowledge",
     code: "A",
-    callerTime: "00:18",
+    callerAt: 10,
+    replyAt: 14,
     caller:
       "Yeah well last time I called, that woman told me she'd fix it and then I just got billed AGAIN.",
     callerEscalated:
@@ -80,7 +82,7 @@ const BRANCHES = [
         text:
           "That shouldn't have happened — you were told it was resolved, and it wasn't. I'm going to fix it now and make sure you see the credit before we hang up.",
         delta: -12,
-        feedback: "That is Acknowledge done properly. You named the specific failure (\"told it was resolved, and it wasn't\") where a generic \"I understand\" would have slid off. Then you committed to an outcome he can check before the call ends, which is what opens the rest of the conversation.",
+        feedback: "Textbook Acknowledge. You named the specific failure (\"told it was resolved, and it wasn't\") instead of a generic \"I understand\". You also committed to an outcome he can check before the call ends, and that commitment is what turns the call around.",
       },
       {
         grade: "passable",
@@ -89,7 +91,7 @@ const BRANCHES = [
         text:
           "I understand. Let me pull up the account and see what was logged last time.",
         delta: -3,
-        feedback: "\"I understand\" is acknowledgement-shaped without doing the work, because it never names what went wrong. The data move is correct.",
+        feedback: "\"I understand\" sounds like an acknowledgement, but it doesn't name what went wrong. Pulling up the account is the right move.",
       },
       {
         grade: "wrong",
@@ -105,7 +107,8 @@ const BRANCHES = [
   {
     stage: "Explore",
     code: "E",
-    callerTime: "00:34",
+    callerAt: 17,
+    replyAt: 21,
     caller:
       "And I had to take time off work to call about this. I'm losing money sitting on hold.",
     callerEscalated:
@@ -118,7 +121,7 @@ const BRANCHES = [
         text:
           "I hear you — your time matters. While I'm pulling this up, can you tell me whether the duplicate charge hit on the same day or different days? That tells me which system the error came from.",
         delta: -8,
-        feedback: "Best Explore move. You acknowledged the time cost in one beat, then pivoted to a specific diagnostic question. \"Same day vs different days\" is the signal that distinguishes a system-of-record bug from a payment-rail retry.",
+        feedback: "Best Explore move. You acknowledged the time cost in one beat, then pivoted to a specific diagnostic question. \"Same day vs different days\" is exactly the signal that distinguishes a system-of-record bug from a payment-rail retry.",
       },
       {
         grade: "passable",
@@ -127,7 +130,7 @@ const BRANCHES = [
         text:
           "I'll mark this as a priority case so it doesn't get lost again.",
         delta: -1,
-        feedback: "Marking it priority feels responsive and adds no diagnostic signal at all. You are still working blind. One targeted question closes the case faster.",
+        feedback: "Marking it priority feels good, but it tells you nothing new about the fault, so you're still working blind. One targeted question would close the case faster.",
       },
       {
         grade: "wrong",
@@ -136,14 +139,15 @@ const BRANCHES = [
         text:
           "Unfortunately we're not able to compensate for personal time.",
         delta: 15,
-        feedback: "Policy-bot answer to a venting moment. He wasn't actually asking for compensation; he was telling you the stakes. This is the response that makes contact-centre training a meme.",
+        feedback: "A policy-bot answer to a customer who is venting. He wasn't asking for compensation; he was telling you what this is costing him. This is the kind of reply that gives contact-centre training a bad name.",
       },
     ],
   },
   {
     stage: "Respond",
     code: "R",
-    callerTime: "00:48",
+    callerAt: 24,
+    replyAt: 28,
     caller: "Just refund me and let me get on with my day.",
     callerEscalated:
       "Forget it — just give me my money back and stop wasting my time.",
@@ -153,7 +157,7 @@ const BRANCHES = [
         confidence: 98,
         stage: "Concrete close + prevention",
         text:
-          "Done. I've issued the refund for $84.20 — back on your card within 24 hours. I've also locked the duplicate so it can't auto-repeat. Anything else I can take off your plate before I let you go?",
+          "Done. I've issued the refund for £84.20 — back on your card within 24 hours. I've also locked the duplicate so it can't auto-repeat. Anything else I can take off your plate before I let you go?",
         delta: -15,
         feedback: "Strong close: concrete amount, concrete timing, a prevention step, and an open door without dragging the call out. The last question lets him leave clean if he's done.",
       },
@@ -164,7 +168,7 @@ const BRANCHES = [
         text:
           "I'm processing the refund now — you should see it back in a few days.",
         delta: -4,
-        feedback: "\"A few days\" is vague after he's been told once already it was resolved. Specific timing builds trust; vague timing rebuilds doubt.",
+        feedback: "\"A few days\" is vague, and he has already been told once that this was resolved. A specific time gives him a reason to trust you; a vague one brings the doubt back.",
       },
       {
         grade: "wrong",
@@ -173,11 +177,13 @@ const BRANCHES = [
         text:
           "I'll need to transfer you over to billing to process the refund — please hold.",
         delta: 22,
-        feedback: "Worst possible close: a fourth transfer on a call about not being helped. This is the action that erases everything else you did right.",
+        feedback: "Worst possible close: a third transfer on a call about not being helped. This is the action that erases everything else you did right.",
       },
     ],
   },
 ];
+
+const CALL_END_AT = 30;
 
 const TRIGGERS = [
   { kind: "neg", text: "third time" },
@@ -204,6 +210,14 @@ function sentimentLabel(tension) {
   if (tension <= 75) return { word: "Angry",       cls: "neg", color: "#DC2626" };
   return { word: "Disengaging", cls: "neg", color: "#B91C1C" };
 }
+function shuffled(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 function confColor(grade) {
   return grade === "ideal" ? "var(--confidence-hi)" :
          grade === "passable" ? "var(--confidence-mid)" :
@@ -222,15 +236,27 @@ function App() {
   const [tensionHistory, setTensionHistory] = useState([42, 48, 55]); // last 3 ticks for sparkline
   const [decisions, setDecisions] = useState([]);
   const [coachToast, setCoachToast] = useState(null);
-  const [callTime, setCallTime] = useState(8);
+  const [callTime, setCallTime] = useState(2);
+  const [picked, setPicked] = useState(null); // original option index chosen in the current branch
+  // Display order of the three options per branch, shuffled once per session.
+  const [optionOrder] = useState(() => BRANCHES.map((b) => shuffled(b.options.map((_, i) => i))));
   const [showResults, setShowResults] = useState(false);
 
   const scrollRef = useRef(null);
 
-  /* Live call timer */
+  /* Call clock follows the scripted timeline: it ticks in real time but never
+     passes the next scripted event, and jumps to each event when it happens. */
+  const clockCapRef = useRef(0);
+  {
+    const b = BRANCHES[branchIdx];
+    clockCapRef.current = !b ? CALL_END_AT
+      : stage === "caller-typing" ? b.callerAt - 1
+      : stage === "reply-sending" ? (BRANCHES[branchIdx + 1] ? BRANCHES[branchIdx + 1].callerAt - 1 : CALL_END_AT)
+      : b.replyAt - 1;
+  }
   useEffect(() => {
     if (showResults) return;
-    const id = setInterval(() => setCallTime((t) => t + 1), 1000);
+    const id = setInterval(() => setCallTime((t) => Math.min(t + 1, Math.max(t, clockCapRef.current))), 1000);
     return () => clearInterval(id);
   }, [showResults]);
 
@@ -248,6 +274,7 @@ function App() {
     }
 
     if (stage === "caller-speaking") {
+      setCallTime(branch.callerAt);
       const escalated = tension >= 72 && branch.callerEscalated;
       const fullText = escalated ? branch.callerEscalated : branch.caller;
       setCallerChars(0);
@@ -260,7 +287,7 @@ function App() {
           setTimeout(() => {
             setTurns((prev) => [
               ...prev,
-              { who: "caller", text: fullText, branchIdx, time: branch.callerTime, escalated, sentiment: tension >= 65 ? "neg" : "neu" },
+              { who: "caller", text: fullText, branchIdx, time: fmtTime(branch.callerAt), escalated, sentiment: tension >= 65 ? "neg" : "neu" },
             ]);
             setCallerChars(0);
             setStage("options");
@@ -274,6 +301,7 @@ function App() {
     if (stage === "reply-sending") {
       const t = setTimeout(() => {
         setCoachToast(null);
+        setPicked(null);
         setBranchIdx((b) => b + 1);
         setStage("caller-typing");
       }, POST_REPLY_DELAY + 1800);  /* extra time to read coach toast */
@@ -301,10 +329,14 @@ function App() {
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  const choose = (optionIdx) => {
+  // displayIdx is the position on screen (keys 1 to 3); map it to the scripted option.
+  const choose = (displayIdx) => {
     if (stage !== "options") return;
     const branch = BRANCHES[branchIdx];
+    const optionIdx = optionOrder[branchIdx][displayIdx];
     const opt = branch.options[optionIdx];
+    setPicked(optionIdx);
+    setCallTime(branch.replyAt);
 
     setTurns((prev) => [
       ...prev,
@@ -313,7 +345,7 @@ function App() {
         text: opt.text,
         branchIdx,
         grade: opt.grade,
-        time: fmtTime(callTime + 3),
+        time: fmtTime(branch.replyAt),
       },
     ]);
     setDecisions((d) => [...d, {
@@ -342,7 +374,8 @@ function App() {
     setTensionHistory([42, 48, 55]);
     setDecisions([]);
     setCoachToast(null);
-    setCallTime(8);
+    setCallTime(2);
+    setPicked(null);
     setShowResults(false);
   };
 
@@ -534,7 +567,7 @@ function App() {
                 <div>
                   <div className="turn-meta">
                     <span className="turn-name">{CUSTOMER.name}</span>
-                    <span className="turn-time">{branch.callerTime}</span>
+                    <span className="turn-time">{fmtTime(branch.callerAt)}</span>
                   </div>
                   <div className="typing">
                     <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
@@ -549,7 +582,7 @@ function App() {
                 <div>
                   <div className="turn-meta">
                     <span className="turn-name">{CUSTOMER.name}</span>
-                    <span className="turn-time">{branch.callerTime} · live</span>
+                    <span className="turn-time">{fmtTime(branch.callerAt)} · live</span>
                   </div>
                   <div className="turn-bubble">
                     {(tension >= 72 && branch.callerEscalated ? branch.callerEscalated : branch.caller).slice(0, callerChars)}
@@ -563,14 +596,14 @@ function App() {
           <div className="composer">
             <div className="composer-row">
               <div className="composer-input placeholder">
-                {stage === "options" ? "← Pick a suggested reply from the coach, or type your own…" : "…"}
+                {stage === "options" ? "← Pick a suggested reply from the coach…" : "…"}
               </div>
               <button className="sp-btn" title="Voice" style={{ height: 36, width: 36 }}>🎤</button>
               <button className="sp-btn" title="Send" disabled style={{ height: 36, width: 36, opacity: 0.4 }}>↵</button>
             </div>
             <div className="composer-hint">
               <span className="pill"><span className="dot" />VoiceCoach AI</span>
-              {stage === "options" ? <>Three live suggestions ranked by LAER alignment →</> : <>Listening to live transcript…</>}
+              {stage === "options" ? <>The coach suggests three replies →</> : <>Listening to live transcript…</>}
             </div>
           </div>
         </section>
@@ -583,13 +616,13 @@ function App() {
               VoiceCoach · Live coaching
             </div>
             <div className="right-head-title">{branch ? `${branch.stage} stage · LAER ${branch.code}` : "Call ended"}</div>
-            <div className="right-head-sub">AI is listening, sentiment-tracking & ranking responses against the LAER framework in real time.</div>
+            <div className="right-head-sub">The AI listens to the call, tracks how tense the customer is and suggests replies based on LAER.</div>
           </div>
 
           {/* Sentiment */}
           <div className="sentiment">
             <div className="sentiment-row">
-              <span className="sentiment-label">Customer sentiment</span>
+              <span className="sentiment-label">Customer tension</span>
               <span className={`sentiment-val ${sentiment.cls}`}>{sentiment.word} · {Math.round(tension)}</span>
             </div>
             <div className="sentiment-bar">
@@ -617,40 +650,52 @@ function App() {
           </div>
 
           {/* Suggested replies */}
-          {stage === "options" && branch && (
+          {branch && (stage === "options" || (stage === "reply-sending" && picked !== null)) && (
             <div className="ai-suggest">
               <div className="ai-suggest-head">
                 <span className="ai-suggest-title">Suggested reply ({branch.stage})</span>
-                <span className="ai-suggest-meta">Ranked by LAER · confidence</span>
+                <span className="ai-suggest-meta">Coach suggestions</span>
               </div>
-              {branch.options.map((o, i) => (
-                <button
-                  key={i}
-                  className="suggest-card"
-                  onClick={() => choose(i)}
-                  style={{ animationDelay: `${0.06 + i * 0.08}s` }}
-                >
-                  <div className="suggest-head-row">
-                    <span className="suggest-stage">
-                      <span className="suggest-stage-dot" style={{ background: confColor(o.grade) }} />
-                      {o.stage}
-                    </span>
-                    <span className="suggest-confidence">
-                      <span className="conf-bar">
-                        <span
-                          className="conf-bar-fill"
-                          style={{ "--conf-w": `${o.confidence}%`, "--conf-color": confColor(o.grade) }}
-                        />
+              {optionOrder[branchIdx].map((optIdx, i) => {
+                const o = branch.options[optIdx];
+                // Grade cues (dot, confidence, move label) stay hidden until the learner picks.
+                const revealed = picked !== null;
+                const isPicked = picked === optIdx;
+                return (
+                  <button
+                    key={optIdx}
+                    className={`suggest-card ${revealed ? "revealed" : ""} ${isPicked ? "picked" : ""}`}
+                    onClick={() => choose(i)}
+                    disabled={revealed}
+                    aria-pressed={revealed ? isPicked : undefined}
+                    style={{ animationDelay: `${0.06 + i * 0.08}s` }}
+                  >
+                    <div className="suggest-head-row">
+                      <span className="suggest-stage">
+                        {revealed && <span className="suggest-stage-dot" style={{ background: confColor(o.grade) }} />}
+                        {revealed ? o.stage : `Suggestion ${i + 1}`}
                       </span>
-                      {o.confidence}%
-                    </span>
-                  </div>
-                  <div className="suggest-text">"{o.text}"</div>
-                  <div className="suggest-foot">
-                    Press <span className="suggest-kbd">{i + 1}</span> to send · or click
-                  </div>
-                </button>
-              ))}
+                      {revealed && (
+                        <span className="suggest-confidence">
+                          <span className="conf-bar">
+                            <span
+                              className="conf-bar-fill"
+                              style={{ "--conf-w": `${o.confidence}%`, "--conf-color": confColor(o.grade) }}
+                            />
+                          </span>
+                          {o.confidence}%
+                        </span>
+                      )}
+                    </div>
+                    <div className="suggest-text">"{o.text}"</div>
+                    <div className="suggest-foot">
+                      {revealed
+                        ? (isPicked ? "Your reply" : "Not sent")
+                        : <>Press <span className="suggest-kbd">{i + 1}</span> to send · or click</>}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -717,8 +762,8 @@ function App() {
             </div>
             <div className="results-sub">
               {idealCount >= 3
-                ? "You stayed inside LAER under live pressure, and the customer is calm enough to hang up by the end. The replays below show what kept it on the rails."
-                : "Tension climbed whenever the script stepped outside LAER. The replays below show the exact beats, and the ones tagged Off-script are the ones to study."}
+                ? "You kept to LAER while the caller was angry, and by the end he is calm enough to end the call. The replay below shows what kept the call on track."
+                : "Tension climbed when your replies stepped outside LAER. The replay below shows each moment. Study the ones tagged Off-script."}
             </div>
           </div>
 
@@ -728,10 +773,9 @@ function App() {
               <div className="res-meta-row"><span style={{ minWidth: 110, color: "var(--ink-3)" }}>Pass bar</span><b>3 / 4 ideal</b></div>
               <div className="res-meta-row"><span style={{ minWidth: 110, color: "var(--ink-3)" }}>Passable</span><b>{passableCount}</b></div>
               <div className="res-meta-row"><span style={{ minWidth: 110, color: "var(--ink-3)" }}>Off-script</span><b>{wrongCount}</b></div>
-              <div className="res-meta-row"><span style={{ minWidth: 110, color: "var(--ink-3)" }}>FCR target</span><b>+8 pp · escalation −30%</b></div>
             </div>
             <div className="res-end-tension">
-              <div className="res-end-tension-label">End sentiment</div>
+              <div className="res-end-tension-label">End tension</div>
               <div className="res-end-tension-num" style={{ color: sentiment.color }}>{Math.round(tension)}</div>
             </div>
           </div>
@@ -750,7 +794,7 @@ function App() {
                       {d.grade === "ideal" ? "LAER-aligned" : d.grade === "passable" ? "Passable" : "Off-script"}
                       <span style={{ marginLeft: 6, opacity: 0.7 }}>· {d.confidence}% confidence</span>
                     </span>
-                    <div className="res-q">{b.caller}</div>
+                    <div className="res-q">{(turns.find((t) => t.who === "caller" && t.branchIdx === d.branchIdx) || {}).text || b.caller}</div>
                     <div className="res-you">{d.text}</div>
                     <div className="res-fb">{d.feedback}</div>
                   </div>

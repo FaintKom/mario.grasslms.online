@@ -14,6 +14,7 @@
 
 import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
+import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 
 // ---------------------------------------------------------------------------
 // Window-management helpers
@@ -83,7 +84,7 @@ async function loadAllData() {
   ]);
   state.transcripts = transcripts;
   state.prospects   = prospects;
-  state.quizItems   = quizItems;
+  state.quizItems   = normalizeQuiz(quizItems);
 }
 
 // ===========================================================================
@@ -123,15 +124,15 @@ start();
 // ===========================================================================
 
 const STEPS = [
-  { title: "Outreach pings · a warm lead just opened your email", handler: stepGainAttention },
+  { title: "Outreach alert: a warm lead just opened your email",  handler: stepGainAttention },
   { title: "What you'll do in the next 10 minutes",               handler: stepStateOutcome },
-  { title: "M1 opened it. M2 saved it. M3 books it.",             handler: stepRecallPrior },
-  { title: "Watch · M.G. closes Maria in real time",              handler: stepWorkedExample },
-  { title: "Your turn · pick the right close for Tom",            handler: stepCompletionProblem },
-  { title: "Solo · close Emma. Calendar first.",                  handler: stepSoloProblem },
-  { title: "Your event log · what just happened",                 handler: stepFeedback },
-  { title: "Quick check · 3 questions",                           handler: stepQuiz },
-  { title: "Key takeaway + your next retrieval drop",             handler: stepTakeaway },
+  { title: "The three moves on every call",                       handler: stepRecallPrior },
+  { title: "Watch M.G. close Maria in real time",                 handler: stepWorkedExample },
+  { title: "Your turn: pick the right close for Tom",             handler: stepCompletionProblem },
+  { title: "On your own: open Calendar, then close Emma",         handler: stepSoloProblem },
+  { title: "J.T.'s review of your close",                         handler: stepFeedback },
+  { title: "Quick check: 3 questions",                            handler: stepQuiz },
+  { title: "Takeaway and a 7-day refresher",                      handler: stepTakeaway },
 ];
 
 function runStep(i) {
@@ -167,12 +168,12 @@ function showWelcomeCard(onStart) {
   card.innerHTML = `
     <div class="welcome-card__panel">
       <span class="welcome-card__logo" aria-hidden="true">FTC</span>
-      <div class="welcome-card__kicker">Module 3 · keystone close</div>
+      <div class="welcome-card__kicker">Module 3 · book the meeting</div>
       <h2 class="welcome-card__title" id="welcome-title">Calendar Close</h2>
       <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
       <p class="welcome-card__lede">
-        Learn the M3 keystone close in the apps your team actually uses.
-        Calendar in second tab. Two slots. Invite during the call.
+        Practise the M3 close in the apps your team uses. Keep Calendar open
+        in a second window, offer two slots and send the invite during the call.
       </p>
       <button type="button" class="welcome-card__start" data-action="start">
         Start module &rarr;
@@ -257,11 +258,11 @@ function stepGainAttention(body) {
   body.innerHTML = `
     <blockquote class="peer-quote">
       I have lost too many deals to follow-up.
-      <cite>— M.G., Manchester · top-decile rep</cite>
+      <cite>M.G., Manchester, top-decile rep</cite>
     </blockquote>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
-      Do the task in the Outreach window. The narrative panel just
-      describes what you are seeing. The work happens in the apps.
+      Do the task in the Outreach window. This panel only describes what
+      you see. The work happens in the apps.
     </p>
   `;
   state.api.os.openApp("outreach", { highlightLeadId: "L-MARIA" });
@@ -273,8 +274,8 @@ function decorateOutreachForStep1() {
   if (!outreachBody) return;
   mountTaskBanner(outreachBody, {
     id: "m3-s1-pick-warm",
-    label: "Click warm lead (Maria) — she opened your email twice in 15 min",
-    hint: "Look at the green open-signal chip on her row",
+    label: "Click Maria, your warm lead. She opened your email twice in 15 minutes.",
+    hint: "The green chip on her row shows the opens",
     state: "active",
   });
   // Inject an open-signal chip on Maria's row + click-to-complete.
@@ -321,13 +322,13 @@ function stepStateOutcome(body) {
   body.innerHTML = `
     <p style="font-size:14px;">By the end of these 10 minutes:</p>
     <ul style="font-size:14px; margin:6px 0 10px 18px;">
-      <li><strong>Calendar invite goes out during the call</strong>, while they are still on the line.</li>
-      <li><strong>Calendar open in a second tab before every dial</strong>,
-          every time, until it stops being a decision.</li>
+      <li><strong>Send the calendar invite during the call</strong>, not after it.</li>
+      <li><strong>Open Calendar in a second window before every dial</strong>,
+          until you do it without thinking.</li>
     </ul>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next action: confirm the open-signal in Outreach (clicking the chip
-      counts).
+      Next: confirm Maria's email opens in Outreach by clicking the green
+      chip on her row.
     </p>
   `;
   // Replace step-1 banner with step-2 banner inside the same app.
@@ -336,7 +337,7 @@ function stepStateOutcome(body) {
     if (!outreachBody) return;
     mountTaskBanner(outreachBody, {
       id: "m3-s2-read-signal",
-      label: "Read the open-signal chip · Maria opened your email 2× in 15 min",
+      label: "Check the chip: Maria opened your email twice in 15 minutes",
       hint: "Click the green chip on her row to confirm",
       state: "active",
     });
@@ -359,18 +360,18 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Quick recall of the three keystone moves:</p>
+    <p style="font-size:14px;">Quick recall: the three moves on every call.</p>
     <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
       <li><strong>M1 · Diagnostic.</strong> One sharp question off the
         LinkedIn / CH profile. Then silence.</li>
       <li><strong>M2 · Acknowledge.</strong> Restate the buyer's objection
         in their words before you respond.</li>
-      <li><strong>M3 · Close.</strong> ← <em>this module.</em> Two slots,
-        one invite, during the call.</li>
+      <li><strong>M3 · Close.</strong> Two slots, one invite, during the
+        call. <em>This module.</em></li>
     </ol>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next action: open the Calendar app. That is the habit gate, and Dial
-      stays disabled until Calendar is open in a second window.
+      Next: open the Calendar app. Dial stays off until Calendar is open
+      in a second window.
     </p>
   `;
   // Open the Calendar launcher hint in the taskbar + watch for open event.
@@ -379,8 +380,8 @@ function stepRecallPrior(body) {
     if (outreachBody) {
       mountTaskBanner(outreachBody, {
         id: "m3-s3-open-calendar",
-        label: "Open the Calendar app — habit gate",
-        hint: "Use the 'Open Calendar' button or the taskbar",
+        label: "Open the Calendar app before you dial",
+        hint: "Use the Open Calendar button below",
         state: "active",
       });
 
@@ -402,7 +403,7 @@ function stepRecallPrior(body) {
         `;
         outreachBody.appendChild(wrap);
         wrap.querySelector("[data-m3-s3-open-cal]").addEventListener("click", () => {
-          state.api.os.openApp("calendar", { suggestedSlots: ["Tue 11:00", "Thu 14:00"] });
+          state.api.os.openApp("calendar", { suggestedSlots: ["Tue 11:00", "Thu 14:00"], suggestFor: "Maria" });
         });
       }
     }
@@ -430,17 +431,17 @@ function stepWorkedExample(body) {
   body.innerHTML = `
     <p style="font-size:14px;">
       Watch <strong>M.G.</strong> close <strong>Maria R.</strong> in real
-      time. Calendar sits in a second tab from the moment the call starts.
+      time. He has Calendar open in a second window from the start of the call.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Listen for the <strong>M3 [Close]</strong> tag. The invite goes out
-      <em>during</em> the call. The Gong window highlights it.
+      Look for the <strong>[M3] Close</strong> tag. The invite goes out
+      <em>during</em> the call, not after it. The Gong window highlights the line.
     </p>
   `;
 
-  // Open the Gong app on call GC-01 (M.G. + Maria). Default data file
-  // already covers GC-01 / GC-03 — no transcript pass-through needed here.
-  state.api.os.openApp("gong", { activeTranscriptId: "GC-01" });
+  // Open Gong on this module's own calls, starting with GC-01 (M.G. + Maria),
+  // so the "Tuesday 11 or Thursday 2" line the hint names is on screen.
+  state.api.os.openApp("gong", { transcripts: state.transcripts, activeTranscriptId: "GC-01" });
 
   // Then mount the task-banner inside Gong + a 'Watched it' button that
   // advances. Auto-advance on M3 chip click too.
@@ -449,8 +450,8 @@ function stepWorkedExample(body) {
     if (!gongBody) return;
     mountTaskBanner(gongBody, {
       id: "m3-s4-watch",
-      label: "Watch M.G.'s close — find the M3 [Close] tag in the transcript",
-      hint: "Click any M3 chip OR the 'Watched it' button below",
+      label: "Read M.G.'s close and find the [M3] Close tag in the transcript",
+      hint: "Click the chip or Watched it below",
       state: "active",
     });
 
@@ -475,8 +476,8 @@ function stepWorkedExample(body) {
         markTaskBannerDone("m3-s4-watch");
         state.api.eventLog?.record?.("step4_worked_example_completed");
         state.timeline.push({
-          label: "Watched M.G. worked example",
-          detail: "GC-01 · two-slot close pattern observed",
+          label: "Watched M.G.'s close",
+          detail: "Two slots offered in one sentence",
           ts: timestamp(),
         });
         setTimeout(() => runStep(4), 450);
@@ -518,29 +519,28 @@ function stepCompletionProblem(body) {
   // Narrative pane shrinks to single-line framing — drawer lives in Outreach.
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Tom</strong> (Series-B founder · Brex-comparison buyer) is on
+      <strong>Tom</strong> (Series-B founder, comparing you with Brex) is on
       the line. He just said: <em>"Yeah, FX is a real headache. What would a
       demo even look like?"</em>
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Pick your close in the Outreach drawer that just appeared under Tom's
-      row.
+      Pick your close in the panel that just opened under his row in Outreach.
     </p>
   `;
 
   const options = [
     { label: "A", result: "partial",
       text: `"I'll send a calendar invite with some times by email."`,
-      rationale: "Partial credit at best. This is the GC-05 pattern, with the invite delayed past the call window." },
+      rationale: "Partly right at best. The invite goes out after the call has ended." },
     { label: "B", result: "correct",
       text: `"What's the best 20 minutes next week to walk you through the FX-cost-vs-Brex on your last month's spend — Tuesday 11 or Thursday 2?"`,
-      rationale: "Yes. Two specific slots, framed around Tom's actual pain. L.D.'s GC-03 + GC-06 pattern." },
+      rationale: "Yes. Two specific slots, framed around Tom's own pain. This is how L.D. closes." },
     { label: "C", result: "anti",
       text: `"I'll follow up by email next week."`,
-      rationale: "GC-10 and GC-11 anti-pattern. This is where deals die, with no re-engage." },
+      rationale: "This is where deals are lost. In the sample calls, buyers who heard it never re-engaged." },
     { label: "D", result: "anti",
       text: `"Let me check my calendar and get back to you."`,
-      rationale: "GC-19 / GC-22 anti-pattern. Calendar should already be open." },
+      rationale: "A known mistake from the sample calls. Your calendar should already be open." },
   ];
 
   setTimeout(() => mountTomDrawer(options), 160);
@@ -553,8 +553,8 @@ function mountTomDrawer(options) {
 
   mountTaskBanner(outreachBody, {
     id: "m3-s5-pick-close",
-    label: "Pick the right close for Tom — drawer just opened under his row",
-    hint: "Click one of options A / B / C / D. Wrong picks explain why.",
+    label: "Pick the right close for Tom in the panel under his row",
+    hint: "Click A, B, C or D. A wrong pick explains why.",
     state: "active",
   });
 
@@ -618,7 +618,7 @@ function mountTomDrawer(options) {
         state.api.eventLog?.record?.("completion_problem_completed");
         state.timeline.push({
           label: "Picked correct two-slot close for Tom",
-          detail: "Option B · L.D. pattern · GC-03",
+          detail: "Option B · L.D.'s two-slot close",
           ts: timestamp(),
         });
         setTimeout(() => runStep(5), 700);
@@ -636,9 +636,9 @@ function stepSoloProblem(body) {
 
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Solo.</strong> ${emma.name} (${emma.archetype_label}) — warm
-      lead. Calendar gate, then dial, two slots, invite.
-      <code>Next_Step_Booked__c</code> flips during the call.
+      <strong>On your own.</strong> ${emma.name} (${emma.archetype_label}) is
+      a warm lead. Open Calendar, dial, offer two slots and send the invite.
+      <code>Next_Step_Booked__c</code> in Salesforce turns TRUE during the call.
     </p>
     <p id="solo-status" class="retention-note" aria-live="polite">
       Status: Calendar closed · Dial disabled
@@ -657,8 +657,8 @@ function stepSoloProblem(body) {
     if (outreachBody) {
       mountTaskBanner(outreachBody, {
         id: "m3-s6-solo",
-        label: `Run the solo close on ${emma.name} — Calendar first, then dial`,
-        hint: "Habit gate enforces this. Try it cold.",
+        label: `Close ${emma.name} on your own: open Calendar first, then dial`,
+        hint: "Dial stays off until Calendar is open.",
         state: "active",
       });
     }
@@ -697,7 +697,7 @@ function installHabitGate(emma) {
         </button>
       </div>
       <p style="font-size:12px;color:var(--ftc-ink-2);margin:10px 0 0">
-        Habit gate · Calendar must be open before dial.
+        Dial turns on once Calendar is open.
       </p>
     `;
     outreachBody.appendChild(wrap);
@@ -709,7 +709,7 @@ function installHabitGate(emma) {
     const coach = document.createElement("div");
     coach.className = "gate-coach-mark";
     coach.setAttribute("role", "note");
-    coach.textContent = "Open Calendar before dialling, in a second tab. That is the habit.";
+    coach.textContent = "Open Calendar in a second window before you dial. That's the habit.";
     coach.style.top  = "-56px";
     coach.style.left = "0";
     wrap.appendChild(coach);
@@ -717,6 +717,8 @@ function installHabitGate(emma) {
     openCal.addEventListener("click", () => {
       api.os.openApp("calendar", {
         suggestedSlots: ["Tue 11:00", "Thu 14:00"],
+        suggestFor: emma.name,
+        invitee_email: emma.email,
       });
       onCalendarOpened(dialBtn, coach);
     });
@@ -735,10 +737,15 @@ function installHabitGate(emma) {
     api.eventBus.addEventListener("app:opened", (ev) => {
       if (ev.detail?.appId === "calendar") onCalendarOpened(dialBtn, coach);
     });
+    // Calendar may still be open from step 3; opening it again only focuses
+    // the window and fires no app:opened, so check what is on screen now.
+    const calWin = document.querySelector(".os-window.app--calendar");
+    if (calWin && calWin.dataset.minimized !== "true") onCalendarOpened(dialBtn, coach);
   }, 250);
 
   function onCalendarOpened(dialBtn, coach) {
-    if (state.calendarOpened) return;
+    // Gate per step: the step-3 calendar visit must not pre-empt this one.
+    if (dialBtn.getAttribute("aria-disabled") === "false") return;
     state.calendarOpened = true;
     // Telemetry event · spec name `calendar_opened` (LO-M3.1 evidence).
     api.eventBus.dispatchEvent(new CustomEvent("telemetry", {
@@ -746,11 +753,13 @@ function installHabitGate(emma) {
     }));
     state.timeline.push({
       label: "Calendar opened",
-      detail: "Second tab · habit established · LO-M3.1 evidenced",
+      detail: "Open in a second window before the dial",
       ts: timestamp(),
     });
     dialBtn.setAttribute("aria-disabled", "false");
     coach?.remove();
+    // Next action is the dial: bring Outreach back over the Calendar window.
+    setTimeout(() => dialBtn.closest(".os-window")?.dispatchEvent(new MouseEvent("mousedown")), 150);
     if (status) status.textContent = "Status: Calendar open · Dial enabled";
   }
 }
@@ -767,7 +776,7 @@ function onDial(emma) {
   }));
   state.timeline.push({
     label: "Dialled " + emma.name,
-    detail: `calendar_open_before_dial = ${state.calendarOpened}`,
+    detail: `Calendar open before the dial: ${state.calendarOpened ? "yes" : "no"}`,
     ts: timestamp(),
   });
   showInterestLine(emma);
@@ -794,7 +803,7 @@ function showInterestLine(emma) {
       per month."
     </p>
     <p style="margin:0 0 8px;color:#9aa4af;font-size:12px">
-      ↓ Pick exactly two 20-minute slots, then send the invite:
+      Pick exactly two 20-minute slots, then send the invite:
     </p>
     <div class="slot-picker" id="m3-slot-picker">
       ${["Tue 11:00", "Tue 15:30", "Wed 10:00", "Thu 14:00", "Fri 09:30"]
@@ -835,7 +844,7 @@ function showInterestLine(emma) {
         detail: { event_name: "slots_stated", slot_id: slot },
       }));
     } else {
-      status.textContent = "Two slots max. Deselect one first.";
+      status.textContent = "Two slots at most. Deselect one first.";
       return;
     }
     sendBtn.setAttribute("aria-disabled", state.slotsPicked.length === 2 ? "false" : "true");
@@ -859,7 +868,7 @@ function showInterestLine(emma) {
       detail: `${state.slotsPicked.join(" / ")} · ${emma.name}`,
       ts: timestamp(),
     });
-    status.textContent = `Invite sent. ${emma.name}: "Tuesday 11 works. I'll bring my accountant."`;
+    status.textContent = `Invite sent. ${emma.name}: "${spokenSlot(state.slotsPicked[0])} works. I'll bring my accountant."`;
     sendBtn.disabled = true;
     setTimeout(() => openSalesforceModal(emma, endBtn, overlay), 600);
   });
@@ -919,7 +928,7 @@ function openSalesforceModal(emma, endBtn, overlay) {
     }));
     state.timeline.push({
       label: "Salesforce · Next_Step_Booked__c = TRUE",
-      detail: "Set during live call · L4 proxy fired",
+      detail: "Set during the live call",
       ts: timestamp(),
     });
     modal.remove();
@@ -940,11 +949,11 @@ function stepFeedback(body) {
   // Narrative pane shrinks; manager DM thread renders in Slack.
   body.innerHTML = `
     <p style="font-size:14px;">
-      Your manager <strong>J.T.</strong> just pinged you in Slack with the
-      review of what your event log captured during the solo.
+      Your manager <strong>J.T.</strong> sent you a Slack DM reviewing what
+      you did on the solo call.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Read the thread, then mark as read to continue.
+      Read the thread, then click Mark thread read.
     </p>
   `;
 
@@ -954,12 +963,12 @@ function stepFeedback(body) {
       body: "Watched your solo on " + (state.prospects.find(p => p.archetype === "emma")?.name || "Emma") + ". Couple of marks for you 👇" },
     ...state.timeline.map(e => ({
       author: "J.T. (pod lead)", initials: "JT", ts: e.ts,
-      body: `✅ ${e.label} — ${e.detail}`,
+      body: `✅ ${e.label}: ${e.detail}`,
     })),
     { author: "J.T. (pod lead)", initials: "JT", ts: "12:52",
-      body: "Calendar was open before dial. Invite during the call. That is the habit, so keep it." },
+      body: "Calendar was open before you dialled, and the invite went out during the call. That's the habit, so keep it." },
     { author: "M.G. (peer)", initials: "MG", ts: "12:54",
-      body: "Nice. I have my calendar open in a second tab the entire time. Try it on the cold leads too, the habit transfers." },
+      body: "Nice. I keep my calendar open in a second tab the whole time. Try it on cold leads too. The habit carries over." },
   ];
 
   state.api.os.openApp("slack", {
@@ -987,7 +996,7 @@ function stepFeedback(body) {
       bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
       bar.innerHTML = `
         <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-          J.T. waits for you to acknowledge before pinging the next move.
+          J.T. posts the quick check once you've read this.
         </span>
         <button type="button"
                 data-m3-s7-done
@@ -1019,7 +1028,7 @@ function stepQuiz(body) {
       Slack DM. Answer in the thread.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Two correct out of three advances the module.
+      Two of three right is a pass.
     </p>
   `;
   setTimeout(() => mountQuizInSlack(), 200);
@@ -1035,7 +1044,7 @@ function mountQuizInSlack() {
   mountTaskBanner(slackBody, {
     id: "m3-s8-quiz",
     label: "Answer the 3 quiz questions J.T. just posted",
-    hint: "Each click logs in cmi.interactions",
+    hint: "A wrong pick shows the right answer",
     state: "active",
   });
 
@@ -1062,7 +1071,7 @@ function renderQuizItemInSlack(host) {
   const item = state.quizItems[state.quizIndex];
   host.innerHTML = `
     <div style="font-size:12px; color:var(--ftc-ink-2); margin-bottom:6px;">
-      Question ${state.quizIndex + 1} of ${state.quizItems.length} · ${item.lo}
+      Question ${state.quizIndex + 1} of ${state.quizItems.length}
     </div>
     <p style="font-size:14px; margin:0 0 10px; color:var(--ftc-ink);">${item.stem}</p>
     <div role="radiogroup" aria-label="Answer choices" style="display:grid; gap:6px;">
@@ -1136,12 +1145,12 @@ function stepTakeaway(body) {
   // Narrative pane: short context only — pinned message lives in Slack.
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Module complete.</strong> M.G. just pinned the takeaway in
-      your Slack channel so you'll see it every time you open the workspace.
+      <strong>Last step.</strong> M.G. pinned the takeaway in your Slack
+      channel, so you'll see it every time you open the workspace.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
       Quiz: <strong>${state.quizScore} / ${state.quizItems.length}</strong>
-      (${scorePct}%). Click "Set +7d retrieval drop" in Slack to finish.
+      (${scorePct}%). Schedule the 7-day refresher in Slack to finish the module.
     </p>
   `;
 
@@ -1155,8 +1164,8 @@ function stepTakeaway(body) {
     slackBody.querySelector("[data-m3-quiz-thread]")?.remove();
     mountTaskBanner(slackBody, {
       id: "m3-s9-takeaway",
-      label: "Read M.G.'s pinned takeaway, then set the +7d retrieval drop",
-      hint: "One click. Module commits when the drop is scheduled.",
+      label: "Read M.G.'s takeaway, then schedule the refresher",
+      hint: "The module finishes when you schedule it.",
       state: "active",
     });
 
@@ -1170,18 +1179,18 @@ function stepTakeaway(body) {
           📌 Pinned by M.G. (peer · Manchester pod)
         </div>
         <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
-          "Calendar in second tab. Two slots. One invite. Sent before you
-          hang up. 'Follow up' is the failure mode, so make it impossible by
-          sending live."
+          "Keep Calendar open in a second tab, offer two slots and send one
+          invite before you hang up. 'I'll follow up' is how these calls fail.
+          If you send the invite live, you can't end up there."
         </p>
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
           <span style="font-size:12.5px; color:var(--ftc-ink-2);">
-            📅 3-item retrieval drop · +7 days in your Sana inbox
+            📅 In 7 days you'll get three short questions on closing during the call.
           </span>
           <button type="button"
                   data-m3-s9-finish
                   style="background:var(--brand-green); color:#fff; padding:9px 16px; border:0; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
-            Set +7d retrieval drop &rarr;
+            Schedule refresher &rarr;
           </button>
         </div>
       `;
@@ -1200,10 +1209,6 @@ function stepTakeaway(body) {
 function finishModule() {
   const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
   state.api.complete(scorePct);
-  document.getElementById("narrative-body").innerHTML = `
-    <p><strong>Module complete.</strong> Score posted to the LMS.</p>
-    <p>See you in Module 4, ICP buyer fit.</p>
-  `;
   document.getElementById("narrative-next").hidden = true;
   document.getElementById("narrative-back").hidden = true;
   showSummaryCard(scorePct);
@@ -1244,13 +1249,13 @@ function showSummaryCard(scorePct) {
     <div class="summary-card__panel">
       <div class="summary-card__check" aria-hidden="true">✓</div>
       <div class="summary-card__kicker">Module complete</div>
-      <h2 class="summary-card__title" id="summary-title">Calendar Close · cleared</h2>
+      <h2 class="summary-card__title" id="summary-title">Calendar Close · ${scorePct >= 67 ? "passed" : "completed"}</h2>
 
       <div class="summary-card__stats">
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Quiz</span>
           <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
-          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below pass"}</span>
+          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below the 67% pass mark"}</span>
         </div>
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Time</span>
@@ -1276,7 +1281,7 @@ function showSummaryCard(scorePct) {
       </details>
 
       <div class="summary-card__actions">
-        <a class="summary-card__btn summary-card__btn--ghost" href="../../">
+        <a class="summary-card__btn summary-card__btn--ghost" href="../">
           &larr; Back to engagement
         </a>
         <button type="button" class="summary-card__btn summary-card__btn--primary"
@@ -1295,6 +1300,13 @@ function showSummaryCard(scorePct) {
 // ===========================================================================
 // Utilities
 // ===========================================================================
+
+/** "Tue 11:00" → "Tuesday at 11:00", as a buyer would say it back. */
+function spokenSlot(slot) {
+  const DAYS = { Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday" };
+  const [d, t] = String(slot ?? "").split(" ");
+  return DAYS[d] ? `${DAYS[d]} at ${t}` : String(slot ?? "That time");
+}
 
 function timestamp() {
   const ms = Date.now() - state.startedAt;

@@ -22,7 +22,7 @@
   }
   * { box-sizing: border-box; margin: 0; }
   /* Plain dark background — dot grid removed (feedback item 6). */
-  body { background: var(--bg); color: var(--txt); font: 400 15px/1.55 var(--body); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  body { background: var(--bg); color: var(--txt); font: 400 15px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
   #root { max-width: 1000px; margin: 0 auto; padding: 26px 20px 80px; }
   .top { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
   h1 { font: 700 clamp(21px, 6vw, 27px)/1.1 var(--sans); letter-spacing: -.01em; }
@@ -80,6 +80,7 @@
   /* clickable tell hotspots, readable on the light client bg */
   .spot { cursor: pointer; border-radius: 4px; padding: 0 2px; transition: background .15s, box-shadow .2s; position: relative; }
   .spot:hover { background: var(--g-flag-hover); }
+  .spot:focus-visible { outline: 2px solid var(--g-link); outline-offset: 1px; }
   .spot.flag { background: var(--g-flag); box-shadow: inset 0 0 0 1.5px var(--g-flag-border); }
   .spot.hit { background: var(--g-hit-bg); box-shadow: inset 0 0 0 1.5px var(--g-hit-border); }
   .spot.miss { background: transparent; outline: 1.5px dashed var(--g-miss-border); outline-offset: 1px; }
@@ -175,13 +176,13 @@ const MAILS = [
 const CUES = {
   c1:{label:"Sender mismatch: <b>yourcompany-security.net</b> is a look-alike, not your company's domain.", ref:"27002 §8.7"},
   c2:{label:"Manufactured urgency in the subject: ALL CAPS plus a 2-hour deadline you never heard about.", ref:"27002 §8.7"},
-  c3:{label:"Pressure repeated in the body. Unexpected plus urgent is the first tell family.", ref:"27002 §8.7"},
-  c4:{label:"Crown-jewels ask: IT never asks you to confirm a password. They have admin access.", ref:"27002 §5.17"},
+  c3:{label:"Pressure repeated in the body. Unexpected and urgent: tell one.", ref:"27002 §8.7"},
+  c4:{label:"Asks for secrets: IT never asks you to confirm a password. They have admin access.", ref:"27002 §5.17"},
   c5:{label:"Link mismatch: hover shows <b>http://yourcompany-security.net</b>, not your real login page.", ref:"27002 §8.7"},
   c6:{label:"The CEO's name on a <b>personal gmail address</b>. Display name is easy, the domain is the truth.", ref:"27002 §8.7"},
-  c7:{label:"Unavailable by design: 'can't talk' manufactures pressure by blocking verification. Part of the unexpected plus urgent family.", ref:"27002 §6.3"},
-  c8:{label:"Crown-jewels ask: gift-card codes are untraceable cash.", ref:"27002 §8.7"},
-  c9:{label:"'Keep it between us' cuts you off from checking. Manufactured pressure again: the unexpected plus urgent family.", ref:"27002 §6.3"},
+  c7:{label:"Unavailable by design: 'can't talk' manufactures pressure by blocking verification. Part of tell one, unexpected and urgent.", ref:"27002 §6.3"},
+  c8:{label:"Asks for secrets: gift-card codes are untraceable cash.", ref:"27002 §8.7"},
+  c9:{label:"'Keep it between us' cuts you off from checking. Pressure again: tell one, unexpected and urgent.", ref:"27002 §6.3"},
 };
 const DECOYS = {
   d1:"A link to the intranet, your company's real domain, for an event you already knew about. Links are only a tell when they point somewhere that is not your real domain, or arrive with no context.",
@@ -227,7 +228,7 @@ function InboxSim() {
   const gateReady = opened.size === MAILS.length && flags.size > 0;
   let gateMsg;
   if (!checked) {
-    if (opened.size < MAILS.length) gateMsg = <span><b>Read the room first.</b>Open all three messages before you judge them ({opened.size}/3 opened).</span>;
+    if (opened.size < MAILS.length) gateMsg = <span><b>Open all three first.</b> Read each message before you judge it ({opened.size}/3 opened).</span>;
     else if (flags.size === 0) gateMsg = <span><b>Nothing flagged yet.</b>Click the parts of a message that feel off: sender, subject, links, requests.</span>;
     else gateMsg = <span><b>Ready. Press Check.</b>You can still unflag anything before checking.</span>;
   }
@@ -261,11 +262,21 @@ function InboxSim() {
     if (!root) return;
     root.querySelectorAll(".spot").forEach(sp => {
       sp.className = spotClass(sp.dataset.id);
-      sp.onclick = checked ? null : (e) => { e.stopPropagation(); toggleFlag(sp.dataset.id); };
+      // Keyboard and touch: every hotspot is a toggle button; a link inside
+      // one shows its real address on focus or tap, not only on hover.
+      const link = sp.querySelector(".mlink");
+      sp.tabIndex = checked ? -1 : 0;
+      sp.setAttribute("role", "button");
+      sp.setAttribute("aria-pressed", String(flags.has(sp.dataset.id)));
+      sp.onclick = checked ? null : (e) => { e.stopPropagation(); if (link) setStatus(link.dataset.url); toggleFlag(sp.dataset.id); };
+      sp.onkeydown = checked ? null : (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFlag(sp.dataset.id); } };
+      sp.onfocus = link ? () => setStatus(link.dataset.url) : null;
+      sp.onblur = link ? () => setStatus("") : null;
     });
     root.querySelectorAll(".mlink").forEach(a => {
-      a.onmouseenter = () => setStatus(a.dataset.url);
-      a.onmouseleave = () => setStatus("");
+      // Pointer events, mouse only: a tap must not clear the address it just showed.
+      a.onpointerenter = (e) => { if (e.pointerType === "mouse") setStatus(a.dataset.url); };
+      a.onpointerleave = (e) => { if (e.pointerType === "mouse") setStatus(""); };
     });
   });
 
@@ -278,8 +289,8 @@ function InboxSim() {
         <h1>Your inbox, Monday 09:02</h1>
         <span className="flagcount">Flagged: {flags.size}</span>
       </div>
-      <div className="qtext">Flag only the suspicious signs.</div>
-      <div className="qsub">Open all <b>three</b> messages and read each one carefully. Flag <b>only what is genuinely suspicious</b>. Marking safe content counts against you. Check the sender, subject, links and requests, and <b>hover links</b> to see where they really go. One message is a perfectly normal email. This is a spotting drill: find every real tell in the dodgy ones to train your eye. On the job, a single tell is already enough to stop and report.</div>
+      <div className="qtext">Flag every tell, and nothing else.</div>
+      <div className="qsub">Open all <b>three</b> messages. Click each part that looks wrong: sender, subject, request or link. <b>Hover a link</b> (or tap it on a phone) to see where it goes. One message is safe, and flagging safe content counts against you. This is practice for your eye. At work, one tell is enough to stop and report.</div>
 
       <div className="mailapp">
         <div className="mtitle"><span className="appname">Inbox ({unreadCount})</span></div>

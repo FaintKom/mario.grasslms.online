@@ -19,11 +19,11 @@
    keep their existing <link> reference.
    ========================================================================= */
 
-@import "apps/_shared.css?v=20260520ux3";
-@import "apps/outreach.css?v=20260520ux3";
-@import "apps/gong.css?v=20260520ux3";
-@import "apps/salesforce.css?v=20260520ux3";
-@import "apps/linkedin-ch.css?v=20260520ux3";
-@import "apps/calendar.css?v=20260520ux3";
-@import "apps/phone-dialler.css?v=20260520ux3";
-@import "apps/slack.css?v=20260520ux3";
+@import "apps/_shared.css?v=20260927a";
+@import "apps/outreach.css?v=20260927a";
+@import "apps/gong.css?v=20260927a";
+@import "apps/salesforce.css?v=20260927a";
+@import "apps/linkedin-ch.css?v=20260927a";
+@import "apps/calendar.css?v=20260927a";
+@import "apps/phone-dialler.css?v=20260927a";
+@import "apps/slack.css?v=20260927a";

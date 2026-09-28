@@ -13,7 +13,7 @@ const RULES = [
     then: <>If <b>no</b> → <b>Legal & Compliance</b> (vendor-onboarding pack must clear first).</>,
     field: "Vendor status",
     evaluate: (po) => (po.vendor.onboarded ? "yes" : "no"),
-    onNo: { queue: "legal", note: "Vendor not yet onboarded. Legal owns the onboarding pack." },
+    onNo: { queue: "legal", note: "Vendor not yet onboarded — Legal owns the onboarding pack." },
   },
   {
     id: "r2",
@@ -22,16 +22,16 @@ const RULES = [
     then: <>If <b>yes</b> → <b>Legal & Compliance</b> (cross-border terms, data residency, withholding).</>,
     field: "Jurisdiction",
     evaluate: (po) => (po.vendor.jurisdiction !== "DE" ? "yes" : "no"),
-    onYes: { queue: "legal", note: "Foreign jurisdiction. Legal must clear cross-border terms." },
+    onYes: { queue: "legal", note: "Foreign jurisdiction — Legal must clear cross-border terms." },
   },
   {
     id: "r3",
     code: "03",
-    text: <>Is <b>total &gt; €10,000</b> OR category is <b>CapEx</b>?</>,
+    text: <>Is <b>net total &gt; €10,000</b> OR category is <b>CapEx</b>?</>,
     then: <>If <b>yes</b> → <b>Finance review</b> (funding-line check before commitment).</>,
     field: "Amount × category",
     evaluate: (po) => (po.amount > 10000 || po.category === "CapEx" ? "yes" : "no"),
-    onYes: { queue: "finance", note: "Over threshold or CapEx. Finance owns the funding-line check." },
+    onYes: { queue: "finance", note: "Over threshold or CapEx — Finance owns funding-line check." },
   },
   {
     id: "r4",
@@ -66,10 +66,10 @@ const POS = [
     ],
     vendor: { name: "Acme Industrial GmbH", onboarded: true, tier: 2, jurisdiction: "DE", vendorId: "VEN-00482", since: "Aug 2023", contract: "MSA-Acme-2024", paymentTerms: "Net-45", taxId: "DE 8821-4477-90", logo: "AI" },
     correct: "finance",
-    teach: "Two independent gates fire: total (€12,480 > €10K) and category (CapEx). Either one alone routes to Finance, and both together leave no room to argue. The trap is that the vendor looks fine and the amount reads as ordinary. The gates were never about whether the vendor is good. They are about who answers for the funding line.",
+    teach: "Two independent gates fire: the total (€12,480 > €10K) and the category (CapEx). Either one alone routes to Finance, so with both there is no doubt. The trap is that the vendor looks fine and the amount looks \"ordinary\". But these gates are not about how good the vendor is. They are about who answers for the funding line.",
     flow: [
       { rule: "r1", outcome: "yes", note: "Onboarded · Tier-2" },
-      { rule: "r2", outcome: "no",  note: "Jurisdiction DE, domestic" },
+      { rule: "r2", outcome: "no",  note: "Jurisdiction DE — domestic" },
       { rule: "r3", outcome: "yes", note: "€12,480 > €10K and CapEx" },
     ],
     activity: [
@@ -98,7 +98,7 @@ const POS = [
     ],
     vendor: { name: "Globex Cloud Services Inc.", onboarded: false, tier: null, jurisdiction: "US", vendorId: "VEN-NEW", since: "—", contract: "Pending Legal", paymentTerms: "Annual prepaid (no NET terms)", taxId: "US-EIN 88-3300114", logo: "GX" },
     correct: "legal",
-    teach: "Small recurring SaaS is easy to wave through, and that is the trap. The vendor is not on the approved list yet, which routes to Legal on its own. The US jurisdiction would have caught it as well. Two independent gates fire before amount or category matter at all.",
+    teach: "A small recurring SaaS order is easy to wave through, and that is the trap. The vendor isn't on the approved list yet, which on its own routes the order to Legal. The US jurisdiction would have caught it too. Two independent gates fire before amount or category come into play.",
     flow: [
       { rule: "r1", outcome: "no", note: "Vendor not onboarded" },
     ],
@@ -202,7 +202,7 @@ function App() {
     setToast({
       msg: isCorrect
         ? `Routed to ${queueLabel(queueId)}.`
-        : `Routed to ${queueLabel(queueId)}. Re-routing on review.`,
+        : `Routed to ${queueLabel(queueId)}. It will be re-routed on review.`,
       kind: isCorrect ? "success" : "info",
     });
     setTimeout(() => setToast(null), 2300);
@@ -212,12 +212,22 @@ function App() {
     }, 500);
   };
 
+  // Next undecided PO after the current one; null once all are routed.
+  const nextOpenIdx = () => {
+    for (let k = 1; k <= POS.length; k++) {
+      const j = (idx + k) % POS.length;
+      if (!decisions[POS[j].id]) return j;
+    }
+    return null;
+  };
+
   const advance = () => {
+    const next = nextOpenIdx();
     setVerdict(null);
     setTimeout(() => {
       setDrawerOpen(false);
-      if (idx + 1 >= POS.length) setShowResults(true);
-      else setIdx(idx + 1);
+      if (next === null) setShowResults(true);
+      else setIdx(next);
     }, 280);
   };
 
@@ -314,7 +324,7 @@ function App() {
             </div>
           </div>
           <div className="list-col-head">
-            <input type="checkbox" />
+            <input type="checkbox" aria-label="Select all orders" />
             <span>Order</span>
             <span>Amount</span>
           </div>
@@ -330,7 +340,7 @@ function App() {
                 <div
                   key={p.id}
                   className={cls}
-                  onClick={() => { if (!d) setIdx(i); }}
+                  onClick={() => { if (!d && !verdict) setIdx(i); }}
                 >
                   <div className="list-row-check">{d && "✓"}</div>
                   <div>
@@ -376,7 +386,7 @@ function App() {
             <div className="card">
               <div className="summary">
                 <div className="summary-cell">
-                  <div className="summary-label">Total</div>
+                  <div className="summary-label">Net total</div>
                   <div className="summary-val amount">€{fmtEUR(po.amount)}</div>
                   <div className={"summary-sub " + (po.amount > 10000 ? "warn" : "ok")}>
                     {po.amount > 10000 ? "Over €10K threshold" : "Under €10K threshold"}
@@ -445,7 +455,7 @@ function App() {
                   </tr>
                   <tr className="total-row">
                     <td colSpan="4" style={{ fontWeight: 700 }}>Total ({po.currency})</td>
-                    <td className="num" style={{ fontWeight: 700, fontSize: 14 }}>€{fmtEUR(po.amount)}</td>
+                    <td className="num" style={{ fontWeight: 700, fontSize: 14 }}>€{fmtEUR(lineTotal + tax)}</td>
                   </tr>
                 </tbody>
               </table>
@@ -595,7 +605,7 @@ function App() {
             <div className="right-eyebrow">Step · Route</div>
             <div className="right-title">Pick a queue</div>
             <div className="right-sub">
-              The screens move; the rules don't. Route from the rules, and check the Policy reference below if you need to confirm.
+              Route each order by the policy rules, not by the screen layout. Check the Policy reference below if you need to confirm a rule.
             </div>
           </div>
 
@@ -638,11 +648,11 @@ function App() {
               <div className="verdict-title">
                 {verdict.correct
                   ? `Right lane: ${queueLabel(verdict.queue)}.`
-                  : `Procurement will re-route this PO from "${queueLabel(verdict.queue)}" to "${queueLabel(po.correct)}".`}
+                  : `Procurement will re-route this PO from "${queueLabel(verdict.queue)}" to "${queueLabel(verdict.po.correct)}".`}
               </div>
-              <div className="verdict-body">{po.teach}</div>
+              <div className="verdict-body">{verdict.po.teach}</div>
               <button className="verdict-next" onClick={advance}>
-                {idx + 1 >= POS.length ? "See summary →" : "Next PO →"}
+                {nextOpenIdx() === null ? "See summary →" : "Next PO →"}
               </button>
             </div>
           )}
@@ -659,7 +669,7 @@ function App() {
             <div className="drawer-body">
               <div className="drawer-inner">
                 <div style={{ fontSize: 11.5, color: "var(--ink-3)", marginBottom: 10 }}>
-                  Apply rules top-to-bottom. First match owns the routing decision. The UI moves; this list doesn't.
+                  Apply the rules from top to bottom. The first rule that matches decides the route. These rules stay the same when the screens change.
                 </div>
                 {RULES.map((r) => (
                   <div
@@ -689,22 +699,20 @@ function App() {
           <div className="results-head">
             <div className="results-eyebrow">Procurefy · Routing review</div>
             <div className="results-title">
-              {correctCount === POS.length ? "Rules-routed clean." :
+              {correctCount === POS.length ? "Every order routed by the rules." :
                correctCount >= POS.length - 1 ? "Almost there." :
                "Re-take recommended."}
             </div>
             <div className="results-sub">
               {correctCount === POS.length
-                ? "You routed from the rules underneath the screens. Procurement can rebuild the interface next quarter and your decision logic will still hold, because it was never tied to the buttons."
-                : "The UI moves; the rules don't. Walk back through the trace below, because the failure is almost always a gate that fired earlier than you noticed."}
+                ? "You routed each order by the rules, not by the screens. If Procurement rebuilds the screens next quarter, your decisions still hold, because they rest on the rules and not on where the buttons are."
+                : "Walk back through the trace below. The mistake is almost always a gate that fired earlier than you noticed."}
             </div>
           </div>
           <div className="results-score">
             <div className="res-score-num"><b>{correctCount}</b>/{POS.length}</div>
             <div>
               <div className="res-meta-row"><span style={{ minWidth: 130, color: "var(--ink-3)" }}>Pass bar</span><b>3 / 3 correct</b></div>
-              <div className="res-meta-row"><span style={{ minWidth: 130, color: "var(--ink-3)" }}>L3 target</span><b>misrouted POs −50% in 6 weeks</b></div>
-              <div className="res-meta-row"><span style={{ minWidth: 130, color: "var(--ink-3)" }}>L3 target</span><b>hand-edits at finance −60%</b></div>
             </div>
           </div>
           <div>

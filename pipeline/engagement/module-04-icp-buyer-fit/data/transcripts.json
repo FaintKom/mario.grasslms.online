@@ -1,5 +1,27 @@
 [
   {
+    "id": "GC-01",
+    "rep": "M.G.",
+    "prospect_name": "Maria",
+    "prospect_archetype": "storefront",
+    "outcome": "Scored 23/25 · dialled · demo booked",
+    "source_note": "Worked example for step 4: M.G. scores Maria on the 5 ICP criteria before he dials, then runs M1, M2 and M3. Scores match the module rule (below 18 skip, 18 to 21 this week, 22 or more today).",
+    "lines": [
+      { "timestamp_ms": 0,     "speaker": "M.G. (scoring)", "text": "Industry fit: 5. Two-store retail is our core segment.", "m_move_tag": null },
+      { "timestamp_ms": 9000,  "speaker": "M.G. (scoring)", "text": "FTE band: 5. 35 staff across the two shops.", "m_move_tag": null },
+      { "timestamp_ms": 18000, "speaker": "M.G. (scoring)", "text": "Monthly spend: 4. About £25K a month on cards.", "m_move_tag": null },
+      { "timestamp_ms": 30000, "speaker": "M.G. (scoring)", "text": "Decision-maker access: 5. Maria owns the business and signs off spend herself.", "m_move_tag": null },
+      { "timestamp_ms": 44000, "speaker": "M.G. (scoring)", "text": "Intent signal: 4. Companies House shows the second Deansgate site, filed in January.", "m_move_tag": null },
+      { "timestamp_ms": 58000, "speaker": "M.G. (scoring)", "text": "Total 23 out of 25. That's 22 or more, so I dial her today.", "m_move_tag": null },
+      { "timestamp_ms": 92000, "speaker": "M.G.",  "text": "I noticed Two Pines opened a second shop on Deansgate in January — who's currently approving expense reports across both stores, and how long does it take?", "m_move_tag": "M1", "m_move_quality": 5 },
+      { "timestamp_ms": 104000, "speaker": "Maria", "text": "We already use our high-street bank's corporate Visa — why switch?", "m_move_tag": null },
+      { "timestamp_ms": 111000, "speaker": "M.G.",  "text": "So you've got the card-issuing side sorted with the high-street bank — what's not working about how you see spend across the two stores?", "m_move_tag": "M2", "m_move_quality": 5 },
+      { "timestamp_ms": 124000, "speaker": "Maria", "text": "Honestly, the bookkeeper finds out what was spent weeks later.", "m_move_tag": null },
+      { "timestamp_ms": 131000, "speaker": "M.G.",  "text": "Two 20-minute slots: Tuesday 10:00 or Wednesday 10:30 — which works to walk through it with your bookkeeper?", "m_move_tag": "M3", "m_move_quality": 4 },
+      { "timestamp_ms": 139000, "speaker": "Maria", "text": "Wednesday 10:30. Send it over.", "m_move_tag": null }
+    ]
+  },
+  {
     "clip_id": "M4-WE-storefront",
     "archetype": "storefront",
     "who": "Maria · retail SMB owner",
@@ -10,20 +32,20 @@
     "m2_line": "So you've got the card-issuing side sorted with the high-street bank — what's not working about how you see spend across the two stores?",
     "prop_pitch": "Per-store virtual cards with auto-reconciled receipts — your bookkeeper sees both shops in one view.",
     "m3_line": "Two 20-minute slots: Tuesday 10:00 or Wednesday 10:30 — which works to walk through it with your bookkeeper?",
-    "best_prop": 4
+    "best_prop": 1
   },
   {
     "clip_id": "M4-WE-rocket",
     "archetype": "rocket",
     "who": "Tom · Series-B SaaS founder",
     "domain": "Quant anchor · engineering-led",
-    "signal": "LinkedIn: announced $18M Series B (Apr 2026). Hiring 6 engineers + Head of Finance.",
+    "signal": "LinkedIn: announced €15M Series B (Apr 2026). Hiring 6 engineers + Head of Finance.",
     "m1_line": "Saw your Series-B announcement last month — congrats. How are you handling AWS spend visibility now that engineering has more autonomy?",
     "buyer_reply": "We're already on Brex — why would we switch?",
     "m2_line": "Brex covers the issuing side well in the US — what does FX cost you on your EU SaaS subscriptions today?",
     "prop_pitch": "Real-time per-team budgets with hard limits + interbank FX — additive to Brex, not a replacement.",
     "m3_line": "Thursday 16:00 or Friday 09:30 — happy to walk you and your head of finance through a side-by-side with your current Brex setup.",
-    "best_prop": 3
+    "best_prop": 2
   },
   {
     "clip_id": "M4-WE-factory",
@@ -32,10 +54,10 @@
     "domain": "Accountant-sensitive · multi-site",
     "signal": "Companies House: annual accounts filed — turnover up 22% YoY. Hiring shift supervisor.",
     "m1_line": "I saw Brightline's latest filing — looks like you've grown headcount 18% this year. How much time does your bookkeeping team spend re-keying supplier receipts each month?",
-    "buyer_reply": "Our accountant won't deal with another tool — last vendor said Sage sync worked but it broke.",
-    "m2_line": "So the last Sage integration broke and that's the trust question — what specifically failed? Was it the line-level export or the reconciliation?",
-    "prop_pitch": "Per-job-number cards with Sage line-level export and supervisor approval — and a 10-min call with your accountant to walk the sync.",
-    "m3_line": "Could I get 20 minutes with you and your Sage admin Tuesday at 14:00, or Thursday at 11:30?",
+    "buyer_reply": "Our accountant won't deal with another tool — last vendor said Xero sync worked but it broke.",
+    "m2_line": "So the last Xero integration broke and that's the trust question — what specifically failed? Was it the line-level export or the reconciliation?",
+    "prop_pitch": "Per-job-number cards with Xero line-level export and supervisor approval — and a 10-min call with your accountant to walk the sync.",
+    "m3_line": "Could I get 20 minutes with you and your Xero admin Tuesday at 14:00, or Thursday at 11:30?",
     "best_prop": 4
   },
   {
@@ -49,6 +71,6 @@
     "m2_line": "Die Vertrauensfrage ist fair — Gelder werden bei einer regulierten Tier-1-Partnerbank gehalten, Daten in der EU. Was wäre für dich der konkrete Beweis, dass es seriös ist?",
     "prop_pitch": "Per-location Karten mit Echtzeit-Limits + EU-Datensitz + Auto-FX für italienische Lieferanten.",
     "m3_line": "20 Minuten mit dir und deinem zentralen Buchhalter — Donnerstag 10:00 oder Freitag 09:30? Du fragst alle Vertrauensfragen, dann entscheidest du.",
-    "best_prop": 1
+    "best_prop": 2
   }
 ]

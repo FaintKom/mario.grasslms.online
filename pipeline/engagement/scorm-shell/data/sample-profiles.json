@@ -6,7 +6,7 @@
     "archetype": "storefront",
     "industry": "Multi-location retail SMB",
     "fte": 35,
-    "monthly_spend": 18000,
+    "monthly_spend": 25000,
     "stage": "Owner-operator · 2 stores",
     "registered_office": "Unit 4, Northern Way, Manchester M1 3AA",
     "last_touch_at": "2026-04-30T09:00:00Z",
@@ -30,7 +30,7 @@
     "archetype": "rocket",
     "industry": "Series-B SaaS",
     "fte": 22,
-    "monthly_spend": 42000,
+    "monthly_spend": 18000,
     "stage": "Series-B · founder-CEO",
     "registered_office": "20 St Andrew's Square, Edinburgh EH2 1AF",
     "last_touch_at": "2026-05-02T14:00:00Z",
@@ -42,7 +42,7 @@
     "best_pitch_prop": "Real-time per-team budgets with hard limits and SSO category controls.",
     "closing_move": "I have Thursday 16:00 or Friday 09:30 — happy to walk you and your head of finance through a side-by-side with your current Brex setup.",
     "signals": [
-      { "type": "funding",      "source": "linkedin",       "content": "Announced $18M Series B led by Northzone (Apr 2026)." },
+      { "type": "funding",      "source": "linkedin",       "content": "Announced €15M Series B led by Northzone (Apr 2026)." },
       { "type": "hiring",       "source": "linkedin",       "content": "Hiring 6 engineers + Head of Finance." },
       { "type": "filing",       "source": "companieshouse", "content": "Filed allotment of shares — Series B confirmation (Apr 2026)." }
     ]
@@ -54,22 +54,36 @@
     "archetype": "factory",
     "industry": "Manufacturing — precision components",
     "fte": 78,
-    "monthly_spend": 95000,
+    "monthly_spend": 42000,
     "stage": "Family-owned · operations head decision-maker",
     "registered_office": "Brightline House, Sheffield S9 1XU",
     "last_touch_at": "2026-04-28T11:00:00Z",
     "sequence_step": 4,
     "disposition": "voicemail",
     "top_pain": "Procurement card spend across 3 shifts can't be matched to job-numbers — finance manually tags 400+ transactions per month.",
-    "top_objection": "We need it to integrate with Sage — last vendor said they could but it broke.",
+    "top_objection": "We need it to integrate with Xero — last vendor said they could but it broke.",
     "ideal_opener": "I saw Brightline's latest filing — looks like you've grown headcount 18% this year. How is procurement handling card-tagging at that scale?",
-    "best_pitch_prop": "Per-job-number cards with Sage-line-level export and supervisor approval workflow.",
-    "closing_move": "Could I get 20 minutes with you and your Sage admin Tuesday at 14:00, or Thursday at 11:30?",
+    "best_pitch_prop": "Per-job-number cards with Xero line-level export and supervisor approval workflow.",
+    "closing_move": "Could I get 20 minutes with you and your Xero admin Tuesday at 14:00, or Thursday at 11:30?",
     "signals": [
       { "type": "filing",       "source": "companieshouse", "content": "Filed annual accounts — turnover up 22% YoY (Mar 2026)." },
       { "type": "hiring",       "source": "linkedin",       "content": "Hiring shift supervisor + procurement manager." },
       { "type": "post",         "source": "linkedin",       "content": "Operations head shared 'lean manufacturing tools we use' carousel." }
-    ]
+    ],
+    "crm": {
+      "amount": "€60,000 ARR",
+      "close_date": "2026-08-28",
+      "stage": "Discovery",
+      "next_step": "Demo · receipt capture + Xero sync",
+      "industry": "Manufacturing",
+      "annual_revenue": "€14M",
+      "pod": "UK · Manchester",
+      "timeline": [
+        { "ts": "2026-05-15", "type": "email", "text": "Reply to sequence email 3 · \"interesting, talk Friday?\"" },
+        { "ts": "2026-05-12", "type": "email", "text": "Sequence email 3 sent · opened twice" },
+        { "ts": "2026-04-28", "type": "call",  "text": "Outbound call · voicemail" }
+      ]
+    }
   },
   {
     "lead_id": "L-004",
@@ -78,7 +92,7 @@
     "archetype": "forkKnife",
     "industry": "Restaurant group (DE)",
     "fte": 52,
-    "monthly_spend": 38000,
+    "monthly_spend": 31000,
     "stage": "4 locations · founder-operator",
     "registered_office": "Karlstrasse 12, München 80333",
     "last_touch_at": "2026-05-05T08:30:00Z",
@@ -93,6 +107,29 @@
       { "type": "new_location", "source": "linkedin",       "content": "Announced Schwabing opening on Instagram + LinkedIn (Mar 2026)." },
       { "type": "press",        "source": "linkedin",       "content": "Featured in Süddeutsche Zeitung — 'four locations, one menu'." },
       { "type": "filing",       "source": "companieshouse", "content": "Filed Handelsregister-Eintrag for 4th location (Feb 2026)." }
+    ]
+  },
+  {
+    "lead_id": "L-005",
+    "name": "Sven",
+    "company": "Kessler Industriehandel GmbH",
+    "archetype": "factory",
+    "industry": "Industrial wholesale (DE)",
+    "fte": 64,
+    "monthly_spend": 27000,
+    "stage": "Family-owned · operations head decision-maker",
+    "registered_office": "Hafenstrasse 8, 20457 Hamburg",
+    "last_touch_at": "2026-05-06T10:00:00Z",
+    "sequence_step": 2,
+    "disposition": "",
+    "top_pain": "Supplier receipts arrive late, and the bookkeeper re-keys them by hand.",
+    "top_objection": "Our accountant won't deal with another tool.",
+    "ideal_opener": "How much time does your bookkeeping team spend re-keying supplier receipts every month?",
+    "best_pitch_prop": "Receipt capture with accounting sync.",
+    "closing_move": "20 minutes with you and your accountant: Tuesday 10:00 or Thursday 15:00?",
+    "signals": [
+      { "type": "filing", "source": "companieshouse", "content": "Annual accounts filed · 18% growth year on year." },
+      { "type": "hiring", "source": "linkedin",       "content": "Hiring a procurement assistant." }
     ]
   }
 ]

@@ -2,15 +2,15 @@
   {
     "id": "Q1",
     "lo": "LO-M2.1 · classify objection family ≤ 3 s",
-    "stem": "Tom (Series-B SaaS founder): 'We already use Brex — why would we switch?' Which family?",
+    "stem": "Tom (Series-B SaaS founder) says: 'We already use Brex — why would we switch?' What kind of objection is it?",
     "options": [
-      { "id": "A", "text": "bank_visa" },
-      { "id": "B", "text": "competitor_brex" },
-      { "id": "C", "text": "accountant_friction" },
-      { "id": "D", "text": "trust_fintech" }
+      { "id": "A", "text": "They already have a bank card" },
+      { "id": "B", "text": "They already use a competitor (Brex)" },
+      { "id": "C", "text": "Their accountant won't take on another tool" },
+      { "id": "D", "text": "They don't trust fintechs" }
     ],
     "correct": "B",
-    "feedback": "competitor_brex is the §12.2 Tom archetype's top objection (GC-06, L.D. verbatim, §10.2)."
+    "feedback": "A competitor objection. It is the top objection for founders like Tom, and it came up on L.D.'s recorded call with Tom."
   },
   {
     "id": "Q2",
@@ -23,7 +23,7 @@
       { "id": "D", "text": "Have you tried showing your accountant our integration page?" }
     ],
     "correct": "B",
-    "feedback": "B uses Emma's noun (accountant) and reframes her concern (bandwidth-protection) with no rebuttal — pattern from M.G. §10.1. A argues; C dismisses; D deflects (GC-12)."
+    "feedback": "B reuses Emma's word (accountant) and names her concern (protecting the accountant's time) without a rebuttal. This is how M.G. restates. A argues, C brushes her concern aside and D deflects."
   },
   {
     "id": "Q3",
@@ -36,6 +36,6 @@
       { "id": "D", "text": "Most operators feel that way before they try us — fair to share what changed for them?" }
     ],
     "correct": "B",
-    "feedback": "B surfaces the actual broken thing (LO-M2.3, M.G. §10.1). A is M6 regulatory deflection (wrong module). C closes prematurely. D is third-party-proof, not buyer-specific."
+    "feedback": "B asks what actually broke, the way M.G. does. A jumps to regulation, which Module 6 covers. C asks for the meeting too early. D offers other customers' stories instead of asking about Lukas."
   }
 ]

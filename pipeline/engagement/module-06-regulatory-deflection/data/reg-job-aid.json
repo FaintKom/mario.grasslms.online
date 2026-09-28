@@ -32,6 +32,12 @@
       "what_it_means": "EU data protection · where your data lives + what we do with it",
       "rep_response_verbatim": "Your card data lives in the EU. We don't sell it. We don't share it. Here's our DPA — happy to send it over.",
       "escalation_criteria": "Escalate if the buyer asks about specific cross-border transfer mechanisms (SCCs, adequacy decisions for non-EU regions e.g. Switzerland, UK, US Data Privacy Framework), sub-processor lists, DSR (data subject request) timelines for ex-employee histories, or audit-clause language in the DPA."
+    },
+    {
+      "acronym": "Safeguarding",
+      "what_it_means": "How customer money is protected if we fail",
+      "rep_response_verbatim": "Your money sits in a separate safeguarded account at a tier-1 bank, apart from our own funds. If we ever failed, it goes back to you and can't be used to pay our creditors.",
+      "escalation_criteria": "Escalate if the buyer asks which bank holds the funds, how long a return would take, how the insolvency process works, or how safeguarding compares with deposit insurance."
     }
   ],
   "honest_carve_out": {

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Range bookends · 3 SCORM mini-cases · Mario Rafael Becerra Dueñas</title>
+<title>Three SCORM mini-cases · Mario Rafael Becerra Dueñas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -227,25 +227,6 @@
     max-width: 48ch;
   }
   .case-keystone b { color: var(--ink); font-weight: 500; }
-  .case-kpis {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 4px;
-  }
-  .kpi {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 10px;
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    color: var(--ink-2);
-    background: rgba(255,255,255,0.4);
-  }
-  .kpi-label { color: var(--ink-3); }
   .case-actions {
     display: flex;
     gap: 22px;
@@ -474,13 +455,11 @@
   .reveal-7 { animation-delay: 0.7s; }
 
   @media (max-width: 1000px) {
+    .case::before { left: -24px; right: -24px; }
     .nav-inner, .hero, .section-head, .cases, .footer { padding-left: 24px; padding-right: 24px; }
     .hero-sub, .case { grid-template-columns: 1fr; gap: 24px; }
     .case-num { font-size: 22px; padding: 0; }
     .case-preview { aspect-ratio: 16/10; }
-    /* Bleed only as far as the gutter: at 24px padding a 48px bleed pushed
-       the page 24px wide. The tint is hover-only and phones have no hover. */
-    .case::before { left: -24px; right: -24px; }
   }
 </style>
 </head>
@@ -495,18 +474,17 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-eyebrow mono reveal reveal-1">Range bookends · 3 SCORM mini-cases</div>
+  <div class="hero-eyebrow mono reveal reveal-1">3 SCORM mini-cases</div>
   <h1 class="hero-title reveal reveal-2">
-    Nobody learns this<br/><em>from a video.</em>
+    Three short simulations<br/><em>for three industries.</em>
   </h1>
   <div class="hero-sub">
     <div class="hero-sub-left mono reveal reveal-3">
-      <div>v2026.05 · Range</div>
-      <div style="margin-top:6px;">3 builds</div>
+      <div>3 simulations · 3 industries</div>
       <div style="margin-top:6px;">SCORM 1.2 compliant</div>
     </div>
     <div class="hero-sub-right reveal reveal-4">
-      <strong>Phishing at onboarding</strong>, <strong>de-escalation in a call centre</strong>, <strong>an ERP rollout</strong>. Each one drops the learner into the minute that costs the business money.
+      I built three short simulations: one for <strong>phishing compliance</strong>, one for <strong>call-centre soft skills</strong> and one for an <strong>ERP rollout</strong>. Each is a working interaction built around a single moment where the business loses money or time today.
     </div>
   </div>
 </section>
@@ -514,8 +492,7 @@
 <div class="section-head reveal reveal-5">
   <div class="section-head-label mono">Index · three cases</div>
   <div class="section-head-meta mono">
-    <span>01–03</span>
-    <span>Updated · May 2026</span>
+    <span>01 to 03</span>
   </div>
 </div>
 
@@ -528,54 +505,48 @@
     <div class="case-body">
       <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Compliance · security · onboarding</div>
       <h2 class="case-title">Phish-or-Pass</h2>
-      <p class="case-blurb">Day-one inbox triage, built for new-hire onboarding at 8–15 people a month.</p>
+      <p class="case-blurb">A new hire sorts a day-one inbox. I built it for onboarding cohorts of 8 to 15 new hires a month.</p>
       <div class="case-keystone">
-        <b>Keystone.</b> Triage four messages in a simulated inbox with the clock running. One is a <em>trick positive</em>: it teaches when to leave a message alone, which is the half awareness training skips.
-      </div>
-      <div class="case-kpis">
-        <span class="kpi"><span class="kpi-label">L3</span> click-rate 18% → ≤5%</span>
-        <span class="kpi"><span class="kpi-label">L4</span> incidents 2/q → ≤1/yr</span>
-        <span class="kpi"><span class="kpi-label">Cohort</span> 8–15/mo</span>
+        <b>What the learner does:</b> triages a simulated inbox of four messages under soft time pressure. One of them is a <em>trick positive</em>: it looks suspicious but is genuine, and it teaches when <em>not</em> to escalate. Awareness training usually skips that part.
       </div>
       <div class="case-actions">
         <span class="case-cta">Open simulation <span class="case-cta-arrow">→</span></span>
-        <span class="case-secondary">Read brief</span>
       </div>
     </div>
     <div class="case-preview">
-      <div class="preview-corner mono">INBOX — DAY 1</div>
+      <div class="preview-corner mono">INBOX · DAY 1</div>
       <div class="pv-a">
         <div class="pv-a-row">
-          <span class="pv-a-flag amber"></span>
+          <span class="pv-a-flag red"></span>
           <div>
             <div class="pv-a-from">IT Helpdesk</div>
-            <div class="pv-a-sub">Password expires today — verify identity</div>
+            <div class="pv-a-sub">Action required: your password expires today</div>
           </div>
-          <div class="pv-a-time">09:14</div>
+          <div class="pv-a-time">07:58</div>
         </div>
         <div class="pv-a-row">
           <span class="pv-a-flag green"></span>
           <div>
-            <div class="pv-a-from">Sarah Chen, People Ops</div>
-            <div class="pv-a-sub">Welcome — your week-1 checklist</div>
+            <div class="pv-a-from">Sarah Chen</div>
+            <div class="pv-a-sub">Welcome to the team — your week-1 checklist</div>
           </div>
-          <div class="pv-a-time">08:46</div>
+          <div class="pv-a-time">08:22</div>
         </div>
         <div class="pv-a-row">
           <span class="pv-a-flag red"></span>
           <div>
-            <div class="pv-a-from">CEO (external sender)</div>
+            <div class="pv-a-from">Sundar Aravind</div>
             <div class="pv-a-sub">Quick favour — are you at your desk?</div>
           </div>
-          <div class="pv-a-time">08:22</div>
+          <div class="pv-a-time">08:46</div>
         </div>
         <div class="pv-a-row">
           <span class="pv-a-flag"></span>
           <div>
             <div class="pv-a-from">DocuSign</div>
-            <div class="pv-a-sub">Contract awaiting your signature</div>
+            <div class="pv-a-sub">Sarah Chen sent you a document to sign: Employment Agreement</div>
           </div>
-          <div class="pv-a-time">07:58</div>
+          <div class="pv-a-time">09:14</div>
         </div>
       </div>
     </div>
@@ -586,24 +557,18 @@
      style="--accent: var(--b-accent); --accent-tint: var(--b-tint);">
     <div class="case-num">02</div>
     <div class="case-body">
-      <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Customer service · soft skills · LAER</div>
+      <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Customer service · soft skills · de-escalation</div>
       <h2 class="case-title">First-30-Seconds</h2>
-      <p class="case-blurb">Call-centre de-escalation, four-branch decision. Every wrong reply escalates the customer audibly.</p>
+      <p class="case-blurb">Call-centre de-escalation. The call branches at four points. Every wrong reply pushes the caller's anger meter up, and once it runs high, his next line comes back angrier.</p>
       <div class="case-keystone">
-        <b>Keystone.</b> Pick the reply that follows LAER at four points in a call with an angry customer. A memorised script cracks under pressure, and the wrong choices let you hear it crack.
-      </div>
-      <div class="case-kpis">
-        <span class="kpi"><span class="kpi-label">L3</span> FCR +8 pp target</span>
-        <span class="kpi"><span class="kpi-label">L3</span> escalation -30%</span>
-        <span class="kpi"><span class="kpi-label">Score</span> ≥ 3 / 4 branches</span>
+        <b>What the learner does:</b> picks a reply at four points in a call with an angry customer. Each point is one step of the call model: listen, acknowledge, explore, respond. A script learned by heart falls apart under pressure, and the wrong replies show exactly how.
       </div>
       <div class="case-actions">
         <span class="case-cta">Open simulation <span class="case-cta-arrow">→</span></span>
-        <span class="case-secondary">Read brief</span>
       </div>
     </div>
     <div class="case-preview">
-      <div class="preview-corner mono">LIVE CALL — 00:00:14</div>
+      <div class="preview-corner mono">LIVE CALL · 00:00:14</div>
       <div class="pv-b">
         <div class="pv-b-wave" aria-hidden="true">
           <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
@@ -631,18 +596,12 @@
     <div class="case-body">
       <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Tool rollout · ERP · procurement</div>
       <h2 class="case-title">Route-the-PO</h2>
-      <p class="case-blurb">Go-live training that survives the next UI refactor. Rules over screens.</p>
+      <p class="case-blurb">Go-live training for a new procurement system. I teach the routing rules instead of the screens, so the course still works after the next interface redesign.</p>
       <div class="case-keystone">
-        <b>Keystone.</b> Route three purchase orders by the business rules underneath, so the ERP screen stops being the thing you memorise. Screens get redesigned; the rules outlive them.
-      </div>
-      <div class="case-kpis">
-        <span class="kpi"><span class="kpi-label">L3</span> misrouted POs -50% / 6w</span>
-        <span class="kpi"><span class="kpi-label">L3</span> hand-edits -60%</span>
-        <span class="kpi"><span class="kpi-label">Score</span> 3 / 3 correct</span>
+        <b>What the learner does:</b> routes three purchase orders by the company's business rules, not by the ERP screens. Screen layouts change with each interface update, but the rules stay the same, so the rules are what the training teaches.
       </div>
       <div class="case-actions">
         <span class="case-cta">Open simulation <span class="case-cta-arrow">→</span></span>
-        <span class="case-secondary">Read brief</span>
       </div>
     </div>
     <div class="case-preview">
@@ -658,7 +617,7 @@
           <div class="pv-c-dest">
             <div class="pv-c-bucket">Auto-approve <span class="pv-c-bucket-count">—</span></div>
             <div class="pv-c-bucket active">Finance review <span class="pv-c-bucket-count">1</span></div>
-            <div class="pv-c-bucket">Hold for legal <span class="pv-c-bucket-count">—</span></div>
+            <div class="pv-c-bucket">Legal &amp; Compliance review <span class="pv-c-bucket-count">—</span></div>
           </div>
         </div>
       </div>
@@ -669,13 +628,13 @@
 
 <footer class="footer">
   <div class="footer-note">
-    <b>Why these three?</b> Each one is a place training usually fails: a video that gets watched, a script that gets memorised, a UI tour that goes stale. Each build replaces it with the one move the job turns on.
+    <b>Why these three industries?</b> In each of them, the usual training breaks in a familiar place: people watch a video, memorise a script or take a tour of the interface. In each mini-case I replace that with the specific behaviour the business needs from the learner at the moment that matters.
   </div>
-  <a class="footer-link" href="#">Open flagship case <span>→</span></a>
+  <a class="footer-link" href="../engagement/scorm-shell/">Open flagship case <span>→</span></a>
 </footer>
 
 <script>
-  // Parallax on the case previews while scrolling. Small offsets only.
+  // Subtle parallax on case previews while scrolling — sets vibe without being noisy.
   const previews = document.querySelectorAll('.case-preview');
   let ticking = false;
   function update() {

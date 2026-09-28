@@ -21,13 +21,13 @@ import { brandIcon, hydrateBrandIcons } from "./brand-icons.js";
 // Eager-import every app so registerApp() side-effects populate the registry
 // before any consumer calls MiniOS.openApp(). Browsers cache by URL, so
 // re-imports inside individual modules are free.
-import "./apps/outreach.js?v=20260519g";
-import "./apps/gong.js?v=20260519g";
-import "./apps/salesforce.js?v=20260519g";
-import "./apps/linkedin-ch.js?v=20260519g";
-import "./apps/calendar.js?v=20260519g";
-import "./apps/phone-dialler.js?v=20260519g";
-import "./apps/slack.js?v=20260519g";
+import "./apps/outreach.js?v=20260927s1";
+import "./apps/gong.js?v=20260927s1";
+import "./apps/salesforce.js?v=20260927s1";
+import "./apps/linkedin-ch.js?v=20260927s1";
+import "./apps/calendar.js?v=20260927s1";
+import "./apps/phone-dialler.js?v=20260927s1";
+import "./apps/slack.js?v=20260927s1";
 
 /** Shared inter-app + telemetry event bus. */
 export const eventBus = new EventTarget();
@@ -89,7 +89,15 @@ export class MiniOS {
     }
     // Singleton per app id — focus existing if already up.
     const existing = [...this.windows.values()].find(w => w.appId === appId);
-    if (existing) { existing.focus(); return existing; }
+    if (existing) {
+      // Re-opening with new options (another buyer, a new channel) updates the open window.
+      if (options && Object.keys(options).length) {
+        try { existing.api.update?.(options); } catch (e) { console.warn(`[mini-os] update() failed for "${appId}"`, e); }
+      }
+      if (existing.el.dataset.minimized === "true") this._toggleMinimize(this._findWinId(existing));
+      else existing.focus();
+      return existing;
+    }
 
     const winId = `w-${++this._winSeed}`;
     const el = this._buildWindowDom(winId, def);
@@ -244,8 +252,7 @@ export class MiniOS {
     const ratio = w / h;
     const desktop = document.getElementById("desktop");
     const dRect = desktop?.getBoundingClientRect();
-    const maxW = (dRect?.width  ?? 1200);
-    const maxH = (dRect?.height ?? 700);
+    const { w: maxW, h: maxH } = this._workArea();
     const existing = [...this.windows.values()]
       .filter(h => h.el !== el)
       .map(h => h.el.getBoundingClientRect());
@@ -291,6 +298,44 @@ export class MiniOS {
       el.style.left = `${PAD + (idx % 4) * 20}px`;
       el.style.top  = `${PAD + (idx % 4) * 20}px`;
     }
+    this._fitToWorkArea(el);
+  }
+
+  /**
+   * The part of the desktop a window may use: left of the app-icon column
+   * (when it sits on the right) and above the taskbar. Desktop-relative px.
+   */
+  _workArea() {
+    const PAD = 16;
+    const dRect = document.getElementById("desktop")?.getBoundingClientRect();
+    let w = dRect?.width ?? 1200;
+    let h = dRect?.height ?? 700;
+    if (dRect) {
+      // Modules reserve the right edge for the step panel with padding on #desktop.
+      const padR = parseFloat(getComputedStyle(document.getElementById("desktop")).paddingRight) || 0;
+      if (padR) w = Math.min(w, dRect.width - padR);
+      const icons = document.getElementById("desktop-icons");
+      const iRect = icons && icons.offsetParent ? icons.getBoundingClientRect() : null;
+      if (iRect && iRect.width && iRect.left > dRect.left + dRect.width / 2) w = Math.min(w, iRect.left - dRect.left - PAD);
+      const bar = document.getElementById("taskbar");
+      const bRect = bar ? bar.getBoundingClientRect() : null;
+      if (bRect && bRect.height && bRect.top < dRect.bottom) h = Math.min(h, bRect.top - dRect.top - PAD);
+    }
+    return { w: Math.max(w, 320), h: Math.max(h, 240) };
+  }
+
+  /** Shrink and shift a window so it lies inside the work area. */
+  _fitToWorkArea(el) {
+    const { w: maxW, h: maxH } = this._workArea();
+    let left = parseInt(el.style.left || "0", 10);
+    let top  = parseInt(el.style.top  || "0", 10);
+    let w = parseInt(el.style.width)  || el.offsetWidth;
+    let h = parseInt(el.style.height) || el.offsetHeight;
+    w = Math.min(w, maxW - 8);
+    h = Math.min(h, maxH - 8);
+    left = Math.max(8, Math.min(left, maxW - w));
+    top  = Math.max(8, Math.min(top,  maxH - h));
+    Object.assign(el.style, { left: `${left}px`, top: `${top}px`, width: `${w}px`, height: `${h}px` });
   }
 
   /**
@@ -313,13 +358,12 @@ export class MiniOS {
         left: el.style.left, top: el.style.top,
         width: el.style.width, height: el.style.height,
       });
-      const desktop = document.getElementById("desktop");
-      const rect = desktop?.getBoundingClientRect();
+      const area = this._workArea();
       const pad = 8;
       el.style.left = `${pad}px`;
       el.style.top  = `${pad}px`;
-      el.style.width  = `${(rect?.width  ?? 1200) - pad * 2}px`;
-      el.style.height = `${(rect?.height ?? 700)  - pad * 2}px`;
+      el.style.width  = `${area.w - pad}px`;
+      el.style.height = `${area.h - pad}px`;
       el.dataset.maximized = "true";
     }
     this._focusWindow(winId);
@@ -367,8 +411,13 @@ export class MiniOS {
     };
     const onMove = (e) => {
       if (!dragging) return;
-      el.style.left = `${origLeft + (e.clientX - startX)}px`;
-      el.style.top  = `${origTop  + (e.clientY - startY)}px`;
+      // Keep the titlebar on screen so the window can always be grabbed again.
+      const dRect = document.getElementById("desktop")?.getBoundingClientRect();
+      const dw = dRect?.width ?? innerWidth, dh = dRect?.height ?? innerHeight;
+      const left = origLeft + (e.clientX - startX);
+      const top  = origTop  + (e.clientY - startY);
+      el.style.left = `${Math.max(80 - el.offsetWidth, Math.min(left, dw - 80))}px`;
+      el.style.top  = `${Math.max(0, Math.min(top, dh - 48))}px`;
     };
     const onUp = () => { dragging = false; document.removeEventListener("mousemove", onMove); };
     handle.addEventListener("mousedown", onDown);
@@ -390,8 +439,11 @@ export class MiniOS {
     };
     const onMove = (e) => {
       if (!resizing) return;
-      el.style.width  = `${Math.max(minW, origW + (e.clientX - startX))}px`;
-      el.style.height = `${Math.max(minH, origH + (e.clientY - startY))}px`;
+      const dRect = document.getElementById("desktop")?.getBoundingClientRect();
+      const maxW = (dRect?.width ?? innerWidth) - (parseInt(el.style.left || "0", 10));
+      const maxH = (dRect?.height ?? innerHeight) - (parseInt(el.style.top || "0", 10));
+      el.style.width  = `${Math.min(maxW, Math.max(minW, origW + (e.clientX - startX)))}px`;
+      el.style.height = `${Math.min(maxH, Math.max(minH, origH + (e.clientY - startY)))}px`;
     };
     const onUp = () => { resizing = false; document.removeEventListener("mousemove", onMove); };
     grip.addEventListener("mousedown", onDown);
@@ -492,6 +544,9 @@ export class MiniOS {
  * @param {BootConfig} config
  * @returns {BootApi}
  */
+/** Quiz score (percent) a module needs to report "passed". */
+export const PASS_PCT = 67;
+
 export function bootModule(config) {
   if (!config?.moduleId) throw new Error("bootModule: moduleId required");
   scorm.initialize();
@@ -511,9 +566,11 @@ export function bootModule(config) {
   const api = {
     os, scorm, eventLog, eventBus, coachMarks,
     complete(score) {
-      eventLog.record(EVENT.MODULE_COMPLETED, { score: score ?? null });
-      scorm.setStatus("completed");
-      if (typeof score === "number") scorm.setScore(score);
+      const valid = typeof score === "number" && Number.isFinite(score);
+      eventLog.record(EVENT.MODULE_COMPLETED, { score: valid ? score : null });
+      // SCORM 1.2: report passed/failed against the 67% bar when there is a score.
+      scorm.setStatus(valid ? (score >= PASS_PCT ? "passed" : "failed") : "completed");
+      if (valid) scorm.setScore(score);
       scorm.commit();
       config.onComplete?.(api);
     },
@@ -547,6 +604,11 @@ if (typeof document !== "undefined") {
     const os = new MiniOS();
     new EventLog({ moduleId: "preview", eventBus, scorm });
     hydrateBrandIcons(document);
+    document.getElementById("help-button")?.addEventListener("click", () => {
+      os.openApp("slack");
+      const empty = document.getElementById("desktop-empty-state");
+      if (empty) empty.hidden = true;
+    });
     document.querySelectorAll("[data-launch]").forEach(btn => {
       btn.addEventListener("click", () => {
         const id = btn.getAttribute("data-launch");

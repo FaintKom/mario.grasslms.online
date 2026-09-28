@@ -10,6 +10,7 @@
 
 import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
+import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 
 function keepOnly(appIds) { if (!state.api?.os?.listWindows) return; const k = new Set(appIds); for (const w of state.api.os.listWindows()) if (!k.has(w.appId)) state.api.os.closeApp(w); }
 
@@ -27,7 +28,7 @@ async function loadAllData() {
     loadJson("./data/prospects.json"),
     loadJson("./data/quiz.json"),
   ]);
-  state.transcripts = t; state.prospects = p; state.quizItems = q;
+  state.transcripts = t; state.prospects = p; state.quizItems = normalizeQuiz(q);
 }
 
 async function start() {
@@ -47,15 +48,15 @@ async function start() {
 start();
 
 const STEPS = [
-  { title: "Rep wasted 8 min on a non-ICP buyer · gross-margin 0",   handler: stepGainAttention },
-  { title: "By the end · score lead 1-5 on each ICP criterion",     handler: stepStateOutcome },
-  { title: "M1 opens. M2 saves. M3 books. M4 picks who.",           handler: stepRecallPrior },
-  { title: "Watch · M.G. scores Maria 23/25 in 90 seconds",          handler: stepWorkedExample },
-  { title: "Your turn · score Sven for ICP fit",                    handler: stepCompletionProblem },
-  { title: "Solo · score a fresh lead, decide dial or skip",        handler: stepSoloProblem },
-  { title: "Your event log · what just happened",                   handler: stepFeedback },
-  { title: "Quick check · 3 questions",                             handler: stepQuiz },
-  { title: "Key takeaway + your next retrieval drop",               handler: stepTakeaway },
+  { title: "A rep spent 8 minutes on a buyer outside the ICP and closed nothing", handler: stepGainAttention },
+  { title: "What you'll do: score each lead 1 to 5 on every ICP criterion", handler: stepStateOutcome },
+  { title: "Pick the right lead before you use the three moves",     handler: stepRecallPrior },
+  { title: "Watch M.G. score Maria 23/25 in 90 seconds",             handler: stepWorkedExample },
+  { title: "Your turn: score Sven for ICP fit",                      handler: stepCompletionProblem },
+  { title: "On your own: score a new lead, then dial or skip",       handler: stepSoloProblem },
+  { title: "J.T.'s review of your scoring",                          handler: stepFeedback },
+  { title: "Quick check: 4 questions",                               handler: stepQuiz },
+  { title: "Takeaway and a 7-day refresher",                         handler: stepTakeaway },
 ];
 
 function runStep(i) {
@@ -80,12 +81,13 @@ function showWelcomeCard(onStart) {
   card.innerHTML = `
     <div class="welcome-card__panel">
       <span class="welcome-card__logo" aria-hidden="true">FTC</span>
-      <div class="welcome-card__kicker">Module 4 &middot; keystone qualify</div>
+      <div class="welcome-card__kicker">Module 4 &middot; pick the right lead</div>
       <h2 class="welcome-card__title">ICP Buyer Fit</h2>
       <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
       <p class="welcome-card__lede">
-        Score every cold lead 1-5 on five ICP criteria before you dial.
-        Below 18/25 means skip, because your hour is worth more than that.
+        Before you dial, score every cold lead from 1 to 5 on five criteria from
+        the ideal customer profile (ICP). Below 18 out of 25 means skip. Your
+        time is worth more than that call.
       </p>
       <button type="button" class="welcome-card__start" data-action="start">
         Start module &rarr;
@@ -143,10 +145,10 @@ function stepGainAttention(body) {
   body.innerHTML = `
     <blockquote class="peer-quote">
       Spent 8 minutes on a 4-person craft shop with no procurement. Closed nothing.
-      <cite>— Exit interview · rep dropped at month 5</cite>
+      <cite>Exit interview with a rep who left at month 5</cite>
     </blockquote>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
-      Bottom-quartile reps dial every name on the list. Top reps score first.
+      Bottom-quartile reps dial every name on the list, while top reps score each lead first.
     </p>`;
   state.api.os.openApp("outreach", { highlightLeadId: "M4-L-001" });
   setTimeout(() => decorateOutreachForStep1(), 140);
@@ -154,7 +156,7 @@ function stepGainAttention(body) {
 function decorateOutreachForStep1() {
   const ob = document.querySelector(".os-window.app--outreach .os-window-body");
   if (!ob) return;
-  mountTaskBanner(ob, { id: "m4-s1-pick", label: "Click Maria — we'll score her against ICP next", hint: "Two Pines Apparel · 35 FTE retail", state: "active" });
+  mountTaskBanner(ob, { id: "m4-s1-pick", label: "Click Maria. You'll see her scored against the ICP shortly.", hint: "Two Pines Apparel · 35 FTE retail", state: "active" });
   let tries = 0;
   const tick = () => {
     const row = [...ob.querySelectorAll(".lead-row")].find(r => /Maria/i.test(r.textContent || ""));
@@ -174,7 +176,7 @@ function decorateOutreachForStep1() {
 
 function stepStateOutcome(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">By end of 10 min: score every lead on 5 criteria.</p>
+    <p style="font-size:14px;">In the next 10 minutes you'll score leads on 5 criteria:</p>
     <ol style="font-size:13.5px;margin:6px 0 10px 18px;">
       <li>Industry fit · 1-5</li>
       <li>FTE band · 1-5</li>
@@ -183,7 +185,7 @@ function stepStateOutcome(body) {
       <li>Intent signal (recent) · 1-5</li>
     </ol>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Below 18/25 means skip. Above 22/25 means dial today.
+      Below 18/25 means skip. 18 to 21 means dial this week. 22 or more means dial today.
     </p>`;
   setTimeout(() => {
     const ob = document.querySelector(".os-window.app--outreach .os-window-body");
@@ -206,11 +208,11 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Recall: the 3 keystone moves run AFTER you pick the right lead.</p>
+    <p style="font-size:14px;">Quick recall: the three moves only help once you've picked the right lead.</p>
     <ol style="font-size:13.5px;margin:6px 0 8px 18px;">
-      <li><strong>M1 Diagnostic</strong> · M2 Acknowledge · M3 Close.</li>
-      <li>None of them save you if the lead never converted.</li>
-      <li>M4 (this one) is the gate before any of them fire.</li>
+      <li><strong>M1 Diagnostic</strong>, M2 Acknowledge and M3 Close.</li>
+      <li>None of them help if the lead was never going to buy.</li>
+      <li>M4, this module, is the check you run before any of them.</li>
     </ol>
     <p style="font-size:13px;color:var(--ftc-ink-2)">Next: watch M.G. score Maria in Gong.</p>`;
   setTimeout(() => {
@@ -224,7 +226,7 @@ function stepRecallPrior(body) {
           <button type="button" data-m4-s3-open style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">🎙 Open Gong</button>`;
         ob.appendChild(bar);
         bar.querySelector("[data-m4-s3-open]").addEventListener("click", () => {
-          state.api.os.openApp("gong", { transcripts: state.transcripts, activeTranscriptId: state.transcripts[0]?.id });
+          state.api.os.openApp("gong", { transcripts: gongCalls(), activeTranscriptId: gongCalls()[0]?.id });
         });
       }
     }
@@ -243,7 +245,7 @@ function stepRecallPrior(body) {
 function stepWorkedExample(body) {
   body.innerHTML = `
     <p style="font-size:14px;">Watch <strong>M.G.</strong> score Maria 23/25 in 90 seconds.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Click any M-chip in the transcript, or 'Watched it' below.</p>`;
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Click any M chip in the transcript, or Watched it below.</p>`;
   setTimeout(() => {
     const gb = document.querySelector(".os-window.app--gong .os-window-body");
     if (!gb) return;
@@ -251,13 +253,13 @@ function stepWorkedExample(body) {
     if (!gb.querySelector("[data-m4-s4-done]")) {
       const bar = document.createElement("div");
       bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-      bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">Scoring: 5·5·4·5·4 = 23/25. Dial.</span>
+      bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">M.G.'s scores: 5, 5, 4, 5 and 4, so 23/25. He dials.</span>
         <button type="button" data-m4-s4-done style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">✓ Watched it</button>`;
       gb.appendChild(bar);
       const complete = () => {
         if (state.step !== 3) return;
         markTaskBannerDone("m4-s4-watch");
-        state.timeline.push({ label: "Watched scoring pass", detail: "23/25 · dial", ts: timestamp() });
+        state.timeline.push({ label: "Watched M.G. score Maria", detail: "23/25 · dial today", ts: timestamp() });
         setTimeout(() => runStep(4), 450);
       };
       bar.querySelector("[data-m4-s4-done]").addEventListener("click", complete);
@@ -275,12 +277,12 @@ function stepCompletionProblem(body) {
       <strong>Sven</strong> · DE industrial wholesale · 64 FTE · €27K/mo spend.
       Family-owned, ops head decision-maker. Last signal: filed annual accounts.
     </p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Pick his ICP total in the drawer.</p>`;
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Pick his ICP score and verdict in the panel under the highlighted row.</p>`;
   const options = [
-    { label: "A", result: "anti", text: "Skip, too small.", rationale: "Wrong. 64 FTE × €27K/mo = clear ICP." },
-    { label: "B", result: "correct", text: "Dial today · score 21/25.", rationale: "Yes. Industry 5 / FTE 5 / Spend 5 / DM 4 / Intent 2 = 21." },
-    { label: "C", result: "partial", text: "Add to nurture · score 17/25.", rationale: "Close to cutoff but borderline. Actual is 21." },
-    { label: "D", result: "anti", text: "Escalate to AE · enterprise tier.", rationale: "64 FTE is mid-SMB, not enterprise. AE handoff wastes the lead." },
+    { label: "A", result: "anti", text: "Skip, too small.", rationale: "Wrong. With 64 FTE and €27K a month of spend, Sven is clearly inside the ICP." },
+    { label: "B", result: "correct", text: "Dial this week · score 21/25.", rationale: "Yes. Industry 5, FTE 5, spend 5, decision-maker 4, intent 2: 21 in total. That is between 18 and 21, so he goes on this week's dial list." },
+    { label: "C", result: "partial", text: "Add to nurture · score 17/25.", rationale: "Close to the cutoff, but the real score is 21." },
+    { label: "D", result: "anti", text: "Escalate to AE · enterprise tier.", rationale: "64 FTE is a mid-sized SMB, not enterprise. Handing it to an AE wastes the lead." },
   ];
   setTimeout(() => mountSvenDrawer(options), 160);
 }
@@ -289,7 +291,7 @@ function mountSvenDrawer(options) {
   const ob = document.querySelector(".os-window.app--outreach .os-window-body");
   if (!ob) return;
   mountTaskBanner(ob, { id: "m4-s5-pick", label: "Score Sven and pick the verdict", state: "active" });
-  const row = [...ob.querySelectorAll(".lead-row")].find(r => /Sven|Tom|Emma|Lukas/i.test(r.textContent || "")) || ob.querySelector(".lead-row");
+  const row = [...ob.querySelectorAll(".lead-row")].find(r => /\bSven\b/.test(r.textContent || "")) || ob.querySelector(".lead-row");
   if (!row) return;
   row.classList.add("is-warm-highlight");
   ob.querySelector("[data-m4-s5-drawer]")?.remove();
@@ -301,7 +303,7 @@ function mountSvenDrawer(options) {
       <strong>Sven · pre-dial scoring</strong>
       <span class="tom-drawer__cue">Pick the verdict</span>
     </header>
-    <p class="tom-drawer__stem">64 FTE · €27K/mo · ops head DM · CH filing this week</p>
+    <p class="tom-drawer__stem">64 FTE · €27K/mo · ops head decides · Handelsregister filing this week</p>
     <div class="tom-drawer__opts" role="radiogroup">
       ${options.map((o, i) => `<button type="button" class="tom-drawer__opt" role="radio" aria-checked="false" data-result="${o.result}" data-idx="${i}"><span class="tom-drawer__label">${o.label}</span><span class="tom-drawer__text">${o.text}</span></button>`).join("")}
     </div>
@@ -318,7 +320,7 @@ function mountSvenDrawer(options) {
       fb.hidden = false; fb.textContent = opt.rationale;
       if (opt.result === "correct") {
         markTaskBannerDone("m4-s5-pick");
-        state.timeline.push({ label: "Scored Sven correctly", detail: "21/25 · dial", ts: timestamp() });
+        state.timeline.push({ label: "Scored Sven correctly", detail: "21/25 · dial this week", ts: timestamp() });
         setTimeout(() => runStep(5), 700);
       }
     });
@@ -330,15 +332,14 @@ function mountSvenDrawer(options) {
 function stepSoloProblem(body) {
   const lead = state.prospects[2] ?? state.prospects[0];
   body.innerHTML = `
-    <p style="font-size:14px;"><strong>Solo.</strong> Score ${lead.name} (${lead.industry}). 5 criteria · 1-5 each.</p>
-    <p id="solo-status" class="retention-note" aria-live="polite">Status: not yet scored</p>`;
+    <p style="font-size:14px;"><strong>On your own.</strong> Score ${lead.name} (${lead.industry}) from 1 to 5 on each of the 5 criteria.</p>`;
   setTimeout(() => mountScorer(lead), 200);
 }
 
 function mountScorer(lead) {
   const ob = document.querySelector(".os-window.app--outreach .os-window-body");
   if (!ob) return;
-  mountTaskBanner(ob, { id: "m4-s6-solo", label: `Score ${lead.name} on 5 criteria · then dial or skip`, state: "active" });
+  mountTaskBanner(ob, { id: "m4-s6-solo", label: `Score ${lead.name} on 5 criteria, then commit to dial or skip`, state: "active" });
   if (ob.querySelector("[data-m4-s6-stage]")) return;
   const criteria = [
     { k: "industry", label: "Industry fit" },
@@ -352,7 +353,7 @@ function mountScorer(lead) {
   wrap.style.cssText = "margin-top:14px; padding:14px; background:#fff; border:1px solid var(--ftc-border); border-radius:8px;";
   wrap.innerHTML = `
     <div style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--ftc-ink-2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
-      ${escapeHtml(lead.name)} · ${escapeHtml(lead.industry)} · ${lead.fte} FTE · €${lead.monthly_spend?.toLocaleString?.() ?? "?"}/mo
+      ${escapeHtml(lead.name)} · ${escapeHtml(lead.industry)} · ${lead.fte} FTE · ${lead.currency === "GBP" ? "£" : "€"}${lead.monthly_spend?.toLocaleString?.() ?? "?"}/mo
     </div>
     ${criteria.map(c => `
       <div style="display:grid; grid-template-columns:160px 1fr 30px; gap:10px; align-items:center; margin:6px 0;">
@@ -361,7 +362,7 @@ function mountScorer(lead) {
         <output for="m4-${c.k}" id="m4-${c.k}-v" style="font-family:var(--ftc-font-mono); font-size:13px; font-weight:700; text-align:right; color:var(--brand-green-deep);">3</output>
       </div>`).join("")}
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
-      <span data-m4-total style="font-family:var(--ftc-font-mono); font-size:14px; color:var(--ftc-ink);">Total: 15 / 25 · skip (cutoff 18)</span>
+      <span data-m4-total style="font-family:var(--ftc-font-mono); font-size:14px; color:var(--ftc-ink);">Total: 15 / 25 · skip · nurture instead</span>
       <button type="button" data-m4-decide style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Commit verdict</button>
     </div>`;
   ob.appendChild(wrap);
@@ -383,7 +384,7 @@ function mountScorer(lead) {
     let total = 0;
     criteria.forEach(c => total += Number(wrap.querySelector(`#m4-${c.k}`).value));
     state.scoresLogged = true;
-    state.timeline.push({ label: `Scored ${lead.name}`, detail: `Total ${total}/25 · ${total >= 18 ? "DIAL" : "SKIP"}`, ts: timestamp() });
+    state.timeline.push({ label: `Scored ${lead.name}`, detail: `Total ${total}/25 · ${total >= 22 ? "dial today" : total >= 18 ? "dial this week" : "skip"}`, ts: timestamp() });
     markTaskBannerDone("m4-s6-solo");
     setTimeout(() => runStep(6), 600);
   });
@@ -393,12 +394,12 @@ function mountScorer(lead) {
 
 function stepFeedback(body) {
   keepOnly(["slack"]);
-  body.innerHTML = `<p style="font-size:14px;"><strong>J.T.</strong> DM'd the review of your scoring pass.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Mark thread read to continue.</p>`;
+  body.innerHTML = `<p style="font-size:14px;"><strong>J.T.</strong> sent you a DM reviewing your scores.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Read it, then click Mark thread read.</p>`;
   const dm = [
     { author: "J.T. (pod lead)", initials: "JT", ts: "12:48", body: "Scoring discipline 👇" },
-    ...state.timeline.map(e => ({ author: "J.T. (pod lead)", initials: "JT", ts: e.ts, body: `✅ ${e.label} — ${e.detail}` })),
-    { author: "J.T. (pod lead)", initials: "JT", ts: "12:52", body: "If your gut wants to dial below 18, sit on it. The hour you save is the next 5-min closeable." },
+    ...state.timeline.map(e => ({ author: "J.T. (pod lead)", initials: "JT", ts: e.ts, body: `✅ ${e.label}: ${e.detail}` })),
+    { author: "J.T. (pod lead)", initials: "JT", ts: "12:52", body: "If your gut says to dial a lead below 18, wait. Spend that hour on a lead you can close in 5 minutes." },
     { author: "M.G. (peer)", initials: "MG", ts: "12:54", body: "I score before I even open Gong. The non-ICP leads stop feeling tempting after 2 weeks." },
   ];
   state.api.os.openApp("slack", { channel: { channel_id: "dm-jt-podlead", pinned_messages: [{ title: "3-move card", content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: "M4" }], messages: dm } });
@@ -412,7 +413,7 @@ function mountReadCTA(prefix) {
   if (sb.querySelector(`[data-${prefix}-done]`)) return;
   const bar = document.createElement("div");
   bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-  bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. waits for the read receipt.</span>
+  bar.innerHTML = `<span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. will see when you've read it.</span>
     <button type="button" data-${prefix}-done style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">✓ Mark thread read</button>`;
   sb.appendChild(bar);
   bar.querySelector(`[data-${prefix}-done]`).addEventListener("click", () => {
@@ -423,14 +424,15 @@ function mountReadCTA(prefix) {
 
 function stepQuiz(body) {
   state.quizIndex = 0; state.quizScore = 0;
-  body.innerHTML = `<p style="font-size:14px;"><strong>Quick check</strong> · 3 questions.</p>`;
+  body.innerHTML = `<p style="font-size:14px;"><strong>Quick check</strong>: 4 questions from J.T. in Slack.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Three of four right is a pass.</p>`;
   setTimeout(() => mountQuizInSlack("m4"), 200);
 }
 
 function mountQuizInSlack(prefix) {
   const sb = document.querySelector(".os-window.app--slack .os-window-body");
   if (!sb) { state.api.os.openApp("slack"); return setTimeout(() => mountQuizInSlack(prefix), 250); }
-  mountTaskBanner(sb, { id: `${prefix}-quiz`, label: "Answer the 3 quiz questions", state: "active" });
+  mountTaskBanner(sb, { id: `${prefix}-quiz`, label: "Answer the 4 quiz questions", state: "active" });
   sb.querySelector(`[data-${prefix}-quiz-thread]`)?.remove();
   const thread = document.createElement("div");
   thread.setAttribute(`data-${prefix}-quiz-thread`, "");
@@ -444,13 +446,13 @@ function mountQuizInSlack(prefix) {
 function renderQuizItemInSlack(host, prefix) {
   const item = state.quizItems[state.quizIndex];
   host.innerHTML = `
-    <div style="font-size:12px;color:var(--ftc-ink-2);margin-bottom:6px;">Q ${state.quizIndex + 1}/${state.quizItems.length} · ${item.lo}</div>
+    <div style="font-size:12px;color:var(--ftc-ink-2);margin-bottom:6px;">Question ${state.quizIndex + 1} of ${state.quizItems.length}</div>
     <p style="font-size:14px;margin:0 0 10px;color:var(--ftc-ink);">${item.stem}</p>
     <div role="radiogroup" style="display:grid;gap:6px;">
       ${item.options.map((o, i) => `<button type="button" class="tom-drawer__opt" role="radio" aria-checked="false" data-idx="${i}"><span class="tom-drawer__label">${o.label}</span><span class="tom-drawer__text">${o.text}</span></button>`).join("")}
     </div>
     <div class="tom-drawer__fb" id="${prefix}-quiz-fb" hidden></div>
-    <div style="margin-top:10px;text-align:right;"><button type="button" id="${prefix}-quiz-next" disabled style="background:var(--brand-green);color:#fff;padding:6px 14px;border:0;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;opacity:0.5;">${state.quizIndex === state.quizItems.length - 1 ? "Finish" : "Next"}</button></div>`;
+    <div style="margin-top:10px;text-align:right;"><button type="button" id="${prefix}-quiz-next" disabled style="background:var(--brand-green);color:#fff;padding:6px 14px;border:0;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;opacity:0.5;">${state.quizIndex === state.quizItems.length - 1 ? "Finish quiz" : "Next question"}</button></div>`;
   const fb = host.querySelector(`#${prefix}-quiz-fb`);
   const next = host.querySelector(`#${prefix}-quiz-next`);
   host.querySelectorAll(".tom-drawer__opt").forEach(btn => {
@@ -473,23 +475,23 @@ function renderQuizItemInSlack(host, prefix) {
 
 function stepTakeaway(body) {
   const pct = Math.round((state.quizScore / state.quizItems.length) * 100);
-  body.innerHTML = `<p style="font-size:14px;"><strong>Module complete.</strong> M.G. pinned the takeaway.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Quiz: <strong>${state.quizScore}/${state.quizItems.length}</strong> (${pct}%). Click 'Set retrieval drop' to finish.</p>`;
+  body.innerHTML = `<p style="font-size:14px;"><strong>Last step.</strong> M.G. pinned the takeaway in Slack.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Quiz: <strong>${state.quizScore}/${state.quizItems.length}</strong> (${pct}%). Schedule the 7-day refresher in Slack to finish the module.</p>`;
   setTimeout(() => {
     const sb = document.querySelector(".os-window.app--slack .os-window-body");
     if (!sb) { state.api.os.openApp("slack"); return setTimeout(() => stepTakeaway(body), 250); }
     sb.querySelector("[data-m4-quiz-thread]")?.remove();
-    mountTaskBanner(sb, { id: "m4-s9-pin", label: "Read M.G.'s pinned takeaway + set the +7d drop", state: "active" });
+    mountTaskBanner(sb, { id: "m4-s9-pin", label: "Read M.G.'s takeaway, then schedule the refresher", state: "active" });
     if (sb.querySelector("[data-m4-pinned]")) return;
     const pin = document.createElement("div");
     pin.setAttribute("data-m4-pinned", "");
     pin.style.cssText = "margin:14px 0 0; padding:16px 18px; background:linear-gradient(180deg, var(--ftc-green-tint,#ecf9e7) 0%, #ffffff 100%); border:1px solid var(--brand-green); border-left:4px solid var(--brand-green); border-radius:8px; font-family:var(--ftc-font-sans); box-shadow:0 6px 16px -8px rgba(10,26,16,0.12);";
     pin.innerHTML = `
       <div style="font-family:var(--ftc-font-mono);font-size:10px;color:var(--brand-green);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">📌 Pinned by M.G.</div>
-      <p style="font-size:15px;font-style:italic;line-height:1.55;color:var(--ftc-ink);margin:0 0 10px;">"Score every lead 1-5 on industry / FTE / spend / DM access / intent. Cutoff 18. Below that, your hour is worth more than that dial."</p>
+      <p style="font-size:15px;font-style:italic;line-height:1.55;color:var(--ftc-ink);margin:0 0 10px;">"Score every lead from 1 to 5 on industry, FTE, spend, access to the decision-maker and intent. The cutoff is 18. Below that, your time is worth more than the dial."</p>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--ftc-border);">
-        <span style="font-size:12.5px;color:var(--ftc-ink-2);">📅 3-item retrieval drop · +7 days</span>
-        <button type="button" data-m4-fin style="background:var(--brand-green);color:#fff;padding:9px 16px;border:0;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;">Set +7d retrieval drop →</button>
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">📅 In 7 days you'll get three short questions on scoring leads.</span>
+        <button type="button" data-m4-fin style="background:var(--brand-green);color:#fff;padding:9px 16px;border:0;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;">Schedule refresher →</button>
       </div>`;
     (sb.querySelector(".slack-msgs, .slack-messages, .slack-main") || sb).appendChild(pin);
     pin.querySelector("[data-m4-fin]").addEventListener("click", () => { markTaskBannerDone("m4-s9-pin"); finishModule(); });
@@ -517,20 +519,25 @@ function showSummaryCard(pct) {
     <div class="summary-card__panel">
       <div class="summary-card__check">✓</div>
       <div class="summary-card__kicker">Module complete</div>
-      <h2 class="summary-card__title">ICP Buyer Fit · cleared</h2>
+      <h2 class="summary-card__title">ICP Buyer Fit · ${pct >= 67 ? "passed" : "completed"}</h2>
       <div class="summary-card__stats">
-        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}% · ${pct >= 67 ? "pass" : "below pass"}</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}% · ${pct >= 67 ? "pass" : "below the 67% pass mark"}</span></div>
         <div class="summary-card__stat"><span class="summary-card__stat-k">Time</span><span class="summary-card__stat-v">${mm}:${ss}</span><span class="summary-card__stat-sub">target 10:00</span></div>
         <div class="summary-card__stat"><span class="summary-card__stat-k">Steps</span><span class="summary-card__stat-v">${STEPS.length}/${STEPS.length}</span><span class="summary-card__stat-sub">100%</span></div>
       </div>
       <details class="summary-card__recap"><summary>9-step recap</summary><ol class="summary-card__list">${STEPS.map((s, i) => `<li><span class="summary-card__list-n">${i + 1}</span><span class="summary-card__list-label">${s.title}</span></li>`).join("")}</ol></details>
       <div class="summary-card__actions">
-        <a class="summary-card__btn summary-card__btn--ghost" href="../../">← Back to engagement</a>
+        <a class="summary-card__btn summary-card__btn--ghost" href="../">← Back to engagement</a>
         <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">Restart module</button>
       </div>
     </div>`;
   document.body.appendChild(card);
   card.querySelector("[data-action='restart']")?.addEventListener("click", () => location.reload());
+}
+
+/** Calls in Gong format (id, rep, lines). The archetype clips in the same file are reference data. */
+function gongCalls() {
+  return state.transcripts.filter(t => Array.isArray(t.lines));
 }
 
 function timestamp() {

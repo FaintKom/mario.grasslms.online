@@ -26,8 +26,9 @@ registerApp({
   mount(ctx) {
     const { container, options = {} } = ctx;
     /** @type {any[]|null} */
-    let transcripts = Array.isArray(options.transcripts) ? options.transcripts.slice() : null;
+    let transcripts = Array.isArray(options.transcripts) ? options.transcripts.map(normalizeTranscript) : null;
     let activeId = options.activeTranscriptId ?? null;
+    if (transcripts && !transcripts.some(t => t.id === activeId)) activeId = transcripts[0]?.id ?? null;
 
     container.classList.add("app--gong");
     container.innerHTML = renderShell();
@@ -68,7 +69,7 @@ registerApp({
               <div>
                 <div class="transcript" role="region" aria-label="Transcript" data-region="transcript"></div>
                 <div class="rubric-panel" data-region="rubric" hidden>
-                  <h3>L3 rubric (manager view · read-only)</h3>
+                  <h3>Move scores (manager view · read-only)</h3>
                   <div class="rubric-body"></div>
                 </div>
               </div>
@@ -88,8 +89,8 @@ registerApp({
       el.innerHTML = transcripts.map(t => `
         <li role="option" tabindex="0" data-call-id="${escapeAttr(t.id)}" aria-current="${t.id === activeId ? "true" : "false"}">
           <strong>${escapeHtml(t.id)}</strong><br>
-          ${escapeHtml(t.rep)} · ${escapeHtml(t.prospect_archetype)}<br>
-          <span class="outcome">${escapeHtml(t.outcome)}</span>
+          ${escapeHtml([t.rep, t.who].filter(Boolean).join(" · "))}<br>
+          <span class="outcome">${escapeHtml(humanize(t.outcome))}</span>
         </li>
       `).join("");
     }
@@ -108,10 +109,19 @@ registerApp({
 
     /** @param {{timestamp_ms:number,speaker:string,text:string,m_move_tag?:string|null,m_move_quality?:number}} ln */
     function renderLine(ln) {
+      if (typeof ln.silence === "number") {
+        return `
+        <div class="turn turn--silence" aria-label="${ln.silence} seconds of silence">
+          <span class="ts"></span>
+          <span class="speaker"></span>
+          <span class="text">(${ln.silence} seconds of silence)</span>
+        </div>
+      `;
+      }
       const tag = ln.m_move_tag ?? null;
       const moveMeta = tag && MOVE_META[tag];
       const fail = tag === "FAIL";
-      const ts = formatTs(ln.timestamp_ms);
+      const ts = ln.timestamp_ms === null ? "" : formatTs(ln.timestamp_ms);
       const chip = moveMeta
         ? `<span class="m-chip" data-move="${tag}">${icon(moveMeta.iconName, moveMeta.label + " move")}[${tag}]</span>`
         : fail ? `<span class="m-chip" data-move="FAIL">${icon("warning","Failure pattern")}[FAIL]</span>` : "";
@@ -166,7 +176,7 @@ registerApp({
       if (transcripts) return;
       try {
         const res = await fetch(new URL("../../data/sample-gong-transcripts.json", import.meta.url));
-        transcripts = await res.json();
+        transcripts = (await res.json()).map(normalizeTranscript);
         if (!activeId && transcripts.length) activeId = transcripts[0].id;
       } catch (e) {
         console.warn("[gong] could not load sample transcripts", e);
@@ -180,8 +190,15 @@ registerApp({
     return {
       /** Replace the full transcript set. */
       loadTranscripts(list) {
-        transcripts = Array.isArray(list) ? list.slice() : [];
+        transcripts = Array.isArray(list) ? list.map(normalizeTranscript) : [];
         activeId = transcripts[0]?.id ?? null;
+        renderCallList(); renderTranscript();
+      },
+      /** Called when a module re-opens Gong with new options. */
+      update(opts = {}) {
+        if (Array.isArray(opts.transcripts)) transcripts = opts.transcripts.map(normalizeTranscript);
+        if (opts.activeTranscriptId) activeId = opts.activeTranscriptId;
+        if (transcripts && !transcripts.some(t => t.id === activeId)) activeId = transcripts[0]?.id ?? null;
         renderCallList(); renderTranscript();
       },
       /** Make a specific transcript the active one. */
@@ -194,6 +211,52 @@ registerApp({
   },
 });
 
+const ARCHETYPE_LABEL = { storefront: "Retail SMB", rocket: "Series-B SaaS", factory: "Manufacturing", forkKnife: "Restaurant group" };
+const BUYER_NAME = { maria: "Maria", tom: "Tom", emma: "Emma", lukas: "Lukas" };
+
+/**
+ * Accept the transcript shapes the modules ship: {lines, timestamp_ms, m_move_tag}
+ * (shell), {lines, ts:"mm:ss", {silence:n}} (M2) and {turns, rep_initials, m_move} (M3).
+ */
+function normalizeTranscript(t) {
+  const raw = t.lines ?? t.turns ?? [];
+  const prospect = t.prospect_name ?? t.prospect_first_name ?? null;
+  const archetype = t.prospect_archetype ?? t.archetype ?? "";
+  const rep = t.rep ?? t.rep_initials ?? "";
+  const buyer = prospect && prospect !== "buyer" ? prospect : (BUYER_NAME[archetype] ?? null);
+  return {
+    ...t,
+    id: t.id ?? t.gc_id ?? t.clip_id ?? "",
+    rep,
+    who: buyer ?? ARCHETYPE_LABEL[archetype] ?? archetype,
+    outcome: t.outcome ?? "",
+    lines: raw.map(ln => {
+      if (typeof ln.silence === "number") return { silence: ln.silence };
+      let tag = ln.m_move_tag ?? ln.m_move ?? null;
+      if (typeof tag === "string") {
+        if (/-anti$/i.test(tag)) tag = "FAIL";
+        else tag = tag.replace(/-preview$/i, "");
+      }
+      let speaker = ln.speaker ?? "";
+      if (speaker === "Rep" && rep) speaker = rep;
+      if (speaker === "Buyer" && buyer) speaker = buyer;
+      return {
+        ...ln,
+        speaker,
+        timestamp_ms: typeof ln.timestamp_ms === "number" ? ln.timestamp_ms : parseTs(ln.ts),
+        m_move_tag: tag,
+      };
+    }),
+  };
+}
+function parseTs(ts) {
+  const m = /^(\d+):(\d{2})$/.exec(String(ts ?? "").trim());
+  return m ? (Number(m[1]) * 60 + Number(m[2])) * 1000 : null;
+}
+function humanize(s) {
+  const t = String(s ?? "").replace(/_/g, " ").trim();
+  return t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
+}
 function formatTs(ms) {
   if (typeof ms !== "number") return "—";
   const totalSec = Math.floor(ms / 1000);

@@ -800,12 +800,22 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     .gs__toolwrap { padding: 4px 10px 6px; }
   }
 </style>
+<style>
+  /* Way back to the catalogue, same look as its own back link. */
+  .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
+    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+  .back:hover { color: var(--color-text); }
+  .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+</style>
+<script src="../../../_shared/desktop-only.js" data-shot="desktop-task-d1.jpg" data-back="../../index.html" data-back-label="Back to all activities" defer></script>
 </head>
 <body>
 
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
       <p class="eyebrow" data-t="eyebrow">Spaceport · sector D · task 1</p>
       <div class="langs" role="group" aria-label="Language">
@@ -970,10 +980,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       dropHere: "Drop your .pptx here, or tap to choose it",
       check: "Check the deck",
       fixes: [
-        ["Slide 1", "Mission goal — already complete, it just has to come first."],
-        ["Slide 2", "Crew — write who is flying: a pilot, an engineer, a scientist."],
-        ["Slide 3", "Flight route — insert the rocket picture you downloaded."],
-        ["Slide 4", "Mission results — write how the mission went."]
+        ["Slide 1", "Mission goal: already complete, it just has to come first."],
+        ["Slide 2", "Crew: write who is flying (a pilot, an engineer, a scientist)."],
+        ["Slide 3", "Flight route: insert the rocket picture you downloaded."],
+        ["Slide 4", "Mission results: write how the mission went."]
       ],
       wrongType: "That is not a .pptx file. Save your deck as PowerPoint, then bring it back.",
       unreadable: "This file will not open. Save it again as .pptx and try once more.",

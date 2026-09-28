@@ -49,13 +49,13 @@
     "id": "GC-11",
     "rep_initials": "N.W.",
     "archetype": "tom",
-    "outcome": "Re-engaged via Outreach sequence (cold)",
+    "outcome": "Lost · invite sent next morning, no re-engage",
     "close_line": "I'll email you some times tomorrow.",
     "turns": [
       { "ts": "03:08", "speaker": "Buyer", "text": "OK, the FX thing is real. What do we do next?", "m_move": null },
       { "ts": "03:14", "speaker": "Rep",   "text": "I'll email you some times tomorrow morning.", "m_move": "M3-anti" },
       { "ts": "03:18", "speaker": "Buyer", "text": "Alright.", "m_move": null },
-      { "ts": "—",     "speaker": "Note",  "text": "Invite never sent that day. Buyer never replied to follow-up sequence.", "m_move": null }
+      { "ts": "—",     "speaker": "Note",  "text": "Invite went out the next morning. Buyer never replied to it or to the follow-up sequence.", "m_move": null }
     ]
   }
 ]

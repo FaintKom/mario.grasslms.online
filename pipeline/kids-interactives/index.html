@@ -605,14 +605,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="https://mario.grasslms.online/">
+    <a class="back" href="../../">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
       </svg>
       Mario Becerra &middot; learning experience design
     </a>
     <h1>Everything a child can <em class="mark">open and do</em></h1>
-    <p class="lede">Nothing here can be broken. A child can close the wrong tab, delete the wrong file or paint over the whole canvas, and the worst that happens is they start again. The windows are copies of the real ones, so the practice carries over. The mistakes cost nothing, so a child keeps pressing things instead of waiting to be told.</p>
+    <p class="lede">Nothing here can break. A child can close the wrong tab, delete the wrong file or paint over the whole canvas, and then just start again. The windows copy Windows, Chrome and Google Docs, so the practice carries over to the programs themselves. Because a mistake costs nothing, a child keeps trying things instead of waiting to be told what to press.</p>
   </header>
 
   <div id="sections"></div>
@@ -631,13 +631,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   const GROUPS = [
     { id: "cosmo", num: "01", name: "Showpieces", items: [
       { name: "The spaceport from orbit", path: "10-cosmodrome/cosmodrome-map-3d.html", status: "done",
-        what: "Fly around the launch field, look at the buildings, pick a sector to work on. Everything else in the quest hangs off this page.",
+        what: "Fly around the launch field and click a building. Each one holds a short job: bin the virus files, join the wires, hold down the purge, pull the lever.",
         meta: ["EN · ES", "three.js, bundled"] },
       { name: "Take a page apart", path: "06-interactive-sites/htmlcssjs-visual-examples/lesson3-foundations.html", status: "done",
         what: "Switch CSS off and the card's styling goes with it; switch JavaScript off and the button stops answering.",
         meta: ["EN · ES", "Ages 10–13"] },
       { name: "Photo recogniser", path: "09-vision-ai/nova-vision-gallery/nova-vision-gallery.html", status: "done",
-        what: "Hang a photo in a room and a machine looks at it, says what it thinks it sees, and decides whether it belongs there. The recogniser is a neural network running in the page itself, so no photo ever leaves the computer.",
+        what: "Hang a photo in one of five rooms. A neural network inside the page names what it sees and decides whether the photo fits the room. The photo never leaves the computer.",
         meta: ["EN · ES", "Runs on your device"] },
       { name: "Mouse trainer", path: "02-motor-skills/clicker-3-modes/index.html", status: "done",
         what: "Click once, click twice, drag something across, catch what is moving. Four small games for the hand, three speeds each.",
@@ -646,7 +646,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     { id: "sim", num: "02", name: "Interface simulators", items: [
       { name: "Windows Explorer", path: "01-interface-simulators/explorer-context-menu/index.html", status: "done",
-        what: "Everything a real file manager does: new folder, rename, right-click menu, cut and paste. Switch to missions and it hands you a path to walk instead.",
+        what: "Make a folder, rename it, right-click it, cut and paste it. Switch to \"Find the file\" and it gives you a path to follow instead.",
         meta: ["EN · ES", "Ages 8–11"] },
       { name: "Chrome simulator", path: "01-interface-simulators/chrome-browser/index.html", status: "done",
         what: "Ctrl+T opens a tab, Ctrl+Tab moves between them. The cheatsheet quietly marks off each shortcut once you have used it.",
@@ -675,6 +675,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       { name: "Pixel rocket", path: "03-drag-and-drop/cosmodrome-virus/task-b3.html", status: "done",
         what: "Copy a 10×12 pixel plan onto a blank grid. Drag to fill a row; the counter tracks the match.",
         meta: ["EN · ES", "Sector B"] },
+      { name: "File Kingdom", path: "03-drag-and-drop/file-kingdom/index.html", status: "done",
+        what: "Files are scattered across the kingdom. Sort them three ways: by the letters after the dot, by what the name says is inside, and by who needs them.",
+        meta: ["EN · ES", "Ages 8–10"] }
     ]},
 
     { id: "quest", num: "04", name: "Quests and games", items: [
@@ -688,24 +691,33 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         what: "It starts with the padlock and ends with a browser full of tabs. In between sit an address one letter off from the real one, and a popup that wants something from you.",
         meta: ["EN · ES", "Ages 9–12"] },
       { name: "NovaSearch", path: "04-quests-and-games/novasearch-safe-search/index.html", status: "done",
-        what: "A fish that walks on land, the longest anyone has stayed awake, somewhere to build a game for free. Typing the query is half of it; the other half is stepping over the two paid results parked on top of the answer.",
+        what: "A fish that walks on land, the longest anyone has stayed awake, somewhere to build a game for free. First you type the question. Then you skip the two paid results sitting on top of the answer.",
         meta: ["EN · ES", "Ages 9–12"] },
       { name: "Digital driving licence", path: "04-quests-and-games/digital-driver-licence/digital-licence.html", status: "done",
         what: "You finished the browser training, so the licence is yours. Put your name on it, pick a face, and it prints out as a picture you can keep.",
         meta: ["EN · ES", "Ages 8–11"] },
       { name: "Robot builder", path: "04-quests-and-games/robot-constructor/index.html", status: "done",
-        what: "Swap a head, an arm or a set of wheels and the robot redraws while you watch. There are more combinations in here than a class could work through in a term.",
+        what: "Swap a head, an arm or a set of wheels and the robot redraws while you watch. Six parts with four to eight choices each make 16,000 different robots.",
         meta: ["EN · ES", "Ages 7–10"] },
       { name: "Reef Games sprites", path: "04-quests-and-games/reef-games-canvas/reef-games-gallery.html", status: "done",
         what: "A narwhal, a manta ray, a jellyfish with pom-poms, and the props and backdrops they perform in front of. Every one is painted from arcs and curves rather than loaded from a file, and every one saves out as a frame or a sprite sheet.",
-        meta: ["EN · ES", "Asset library"] }
+        meta: ["EN · ES", "Asset library"] },
+      { name: "Five doors", path: "03-drag-and-drop/password-doors-wordy/index.html", status: "done",
+        what: "Five doors stand between you and Codey. Each one asks about the virus hunt: how many copies you found, what tag went on the repaired files, which letters spell the password.",
+        meta: ["EN · ES", "Ages 8–11"] },
+      { name: "Virus Battle", path: "04-quests-and-games/virus-battle-hp-quiz/index.html", status: "done",
+        what: "Five questions about text formatting stand between a virus and the server. A right answer hits the virus. A wrong one costs you 20 HP.",
+        meta: ["EN · ES", "Ages 9–12"] },
+      { name: "Prompt workshop", path: "04-quests-and-games/generator-link-swap-latest/perchance-workshop-v2.html", status: "done",
+        what: "Perchance draws a picture from a description. The workshop explains its buttons and five brushes, then builds a prompt in three steps: who, where, and doing what.",
+        meta: ["EN · ES", "AI images"] }
     ]},
 
   ];
 
 
   /* One stamp per visit: enough to defeat the cache, not so much that a
-     scroll reloads twenty frames. */
+     scroll reloads two dozen frames. */
   const BUILD = String(Date.now());
 
   const $ = function (id) { return document.getElementById(id); };

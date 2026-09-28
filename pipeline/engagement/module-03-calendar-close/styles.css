@@ -996,7 +996,7 @@
   margin-right: 12px;
   font-family: var(--ftc-font-mono);
   font-size: 13px;
-  color: var(--ftc-ink-2, #475467);
+  color: rgba(255,255,255,0.78); /* sits on the dark top bar */
 }
 
 /* ===== Reduced-motion override ========================================== */

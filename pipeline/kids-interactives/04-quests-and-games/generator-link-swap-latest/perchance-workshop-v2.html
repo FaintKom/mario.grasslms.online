@@ -595,12 +595,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   [hidden] { display: none !important; }
 </style>
+<style>
+  /* Way back to the catalogue, same look as its own back link. */
+  .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
+    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+  .back:hover { color: var(--color-text); }
+  .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+</style>
 </head>
 <body>
 
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
       <p class="eyebrow" data-t="eyebrow">AI images · workshop</p>
       <div class="langs" role="group" aria-label="Language">
@@ -609,7 +618,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       </div>
     </div>
     <h1><span data-t="title1">Words in,</span> <em class="mark" data-t="title2">pictures out</em></h1>
-    <p class="lede" data-t="intro">Perchance draws what you describe. The better the description, the better the picture — this workshop shows what the buttons do and how to build a prompt worth typing.</p>
+    <p class="lede" data-t="intro">Perchance draws what you describe. The better the description, the better the picture. This workshop shows what the buttons do and how to build a prompt worth typing.</p>
   </header>
 
   <nav class="tabs" id="tabs" role="tablist"></nav>
@@ -700,7 +709,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     en: {
       eyebrow: "AI images · workshop",
       title1: "Words in,", title2: "pictures out",
-      intro: "Perchance draws what you describe. The better the description, the better the picture — this workshop shows what the buttons do and how to build a prompt worth typing.",
+      intro: "Perchance draws what you describe. The better the description, the better the picture. This workshop shows what the buttons do and how to build a prompt worth typing.",
       tabs: ["The screen", "Brushes", "Build a prompt", "The eraser"],
       p1Title: "The five controls", p2Title: "Five brushes",
       p3Title: "Build a prompt", p4Title: "The magic eraser",
@@ -713,7 +722,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         ["🚫", "Exclude", "The eraser. Whatever you write here stays out of the picture."]
       ],
       tips1: [
-        "Nine pictures come back at once — pick the one you like.",
+        "Nine pictures come back at once. Pick the one you like.",
         "It takes a minute or two. That is normal.",
         "Not what you wanted? Press Draw again; you get nine new ones.",
         "Right-click a picture to save it."
@@ -723,7 +732,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         photo:        ["Photo", "The camera brush. Comes back looking like a photograph.", ["Real animals or places", "Portraits", "Anything that should look true"]],
         illustration: ["Illustration", "The pencil brush. Cartoon, storybook, bright.", ["Fairy-tale characters", "Pictures for a story", "Cartoon heroes"]],
         vector:       ["Vector", "The sharp brush. Flat shapes and clean edges, like a logo.", ["Icons", "Patterns", "Simple, tidy design"]],
-        raw:          ["Raw", "The free brush. No help, no guessing — you decide everything.", ["Mixing styles", "Odd effects", "Experiments"]]
+        raw:          ["Raw", "The free brush. No help, no guessing. You decide everything.", ["Mixing styles", "Odd effects", "Experiments"]]
       },
       levelsTitle: "How far to go",
       levels: [

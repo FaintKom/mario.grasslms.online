@@ -14,6 +14,7 @@
 
 import { registerApp, icon } from "./registry.js";
 import { EVENT } from "../event-log.js";
+import { loadProfiles, findProfile } from "./profiles.js";
 
 const STAGES = ["Prospecting", "Discovery", "Demo", "Negotiation", "Closed Won", "Closed Lost"];
 
@@ -42,9 +43,9 @@ const DEFAULT_RECORD = {
 };
 
 const DEFAULT_TIMELINE = [
-  { ts: "2026-04-30", type: "call",    text: "Outbound call · voicemail · left M3 close pattern" },
+  { ts: "2026-04-30", type: "call",    text: "Outbound call · voicemail · left two demo slots" },
   { ts: "2026-05-02", type: "email",   text: "Follow-up email sent · open + 2 link clicks" },
-  { ts: "2026-05-05", type: "meeting", text: "Demo scheduled · Tue 11:00 (during call · M3 close)" },
+  { ts: "2026-05-05", type: "meeting", text: "Demo scheduled · Tue 11:00 · booked during the call" },
 ];
 
 const TYPE_ICON = {
@@ -69,6 +70,42 @@ registerApp({
     container.innerHTML = renderShell();
     bind();
     renderBody();
+    // Modules name the account with `accountId` ("L-003", "emma", "L-EMMA-001").
+    if (options.accountId) applyAccount(options.accountId);
+
+    async function applyAccount(key) {
+      const p = findProfile(await loadProfiles(), key);
+      if (!p) return;
+      record = { ...recordFromProfile(p), ...(options.record ?? {}) };
+      if (Array.isArray(p.crm?.timeline)) timeline = p.crm.timeline.slice();
+      redrawShell();
+    }
+
+    function recordFromProfile(p) {
+      const crm = p.crm ?? {};
+      return {
+        ...DEFAULT_RECORD,
+        AccountName: p.company,
+        OpportunityName: `${p.company} · Card + Spend Mgmt`,
+        Amount: crm.amount ?? DEFAULT_RECORD.Amount,
+        CloseDate: crm.close_date ?? DEFAULT_RECORD.CloseDate,
+        NextStep: crm.next_step ?? "",
+        Industry: crm.industry ?? p.industry ?? "—",
+        AnnualRevenue: crm.annual_revenue ?? "—",
+        Pod__c: crm.pod ?? DEFAULT_RECORD.Pod__c,
+        Stage: crm.stage ?? DEFAULT_RECORD.Stage,
+        Next_Step_Booked__c: false,
+      };
+    }
+
+    /** Redraw the record chrome in place, keeping anything a module mounted around it. */
+    function redrawShell() {
+      const app = container.querySelector(".brand-app");
+      const tpl = document.createElement("template");
+      tpl.innerHTML = renderShell().trim();
+      if (app && tpl.content.firstElementChild) app.replaceWith(tpl.content.firstElementChild);
+      renderBody();
+    }
 
     function renderShell() {
       return `
@@ -260,6 +297,7 @@ registerApp({
 
     return {
       update(opts) {
+        if (opts?.accountId) applyAccount(opts.accountId);
         if (opts?.record)   { record = { ...record, ...opts.record }; renderBody(); }
         if (opts?.timeline) { timeline = opts.timeline.slice(); renderBody(); }
       },

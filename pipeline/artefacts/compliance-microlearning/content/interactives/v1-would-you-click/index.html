@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head>
+<html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Would you click? · neon cut</title>
@@ -493,8 +493,7 @@ html,body{margin:0;height:100%;background:#0E1116;overflow:hidden}
 <script>
 /* Load VO as a blob so it seeks regardless of server Range support
    (python http.server sends no Range; blob/data URLs seek everywhere, incl. file://). */
-// Prefer edited vo.wav (from the VO editor) if present, else the original vo.mp3.
-fetch('audio/vo.wav').then(r=>r.ok?r:fetch('audio/vo.mp3')).then(r=>r.blob())
+fetch('audio/vo.mp3').then(r=>r.blob())
   .then(b=>{ document.getElementById('vo').src=URL.createObjectURL(b); }).catch(()=>{});
 </script>
 <script type="text/babel">
@@ -1635,17 +1634,6 @@ function Hint({text,y=560,delay=0.6,color=C.dim,size=15}){
     })}
   </div>;
 }
-/* counter roll-up for the "4 out of 10" stat (VO: "four out of ten") */
-function Forty({y,delay}){
-  const {localTime,duration}=useSprite();
-  const p=ez((localTime-delay)/1.5),o=ez((duration-localTime)/0.4);
-  if(localTime<delay)return null;
-  const glow=1+0.25*Math.exp(-(localTime-delay-1.5>0?localTime-delay-1.5:0)*2)*(p>=1?Math.abs(Math.sin((localTime-delay)*3)):0);
-  return <div style={{position:'absolute',left:0,top:y,width:1280,textAlign:'center',opacity:o}}>
-    <span style={{fontFamily:SANS,fontWeight:800,fontSize:52,color:C.red,fontVariantNumeric:'tabular-nums',textShadow:`0 0 ${16*glow}px ${C.red}99,0 0 ${50*glow}px ${C.red}44`}}>{Math.round(4*p)} out of 10</span>
-    <span style={{fontFamily:SANS,fontWeight:800,fontSize:28,letterSpacing:'.18em',textTransform:'uppercase',color:C.blue,marginLeft:22,opacity:ez((localTime-delay-0.9)/0.5),textShadow:`0 0 14px ${C.blue}77`}}>click this one</span>
-  </div>;
-}
 function Ic({k,c=C.blue,s=26,sw=2}){
   const p={fill:'none',stroke:c,strokeWidth:sw,strokeLinecap:'round',strokeLinejoin:'round'};
   const g={filter:`drop-shadow(0 0 5px ${c}88)`};
@@ -1892,7 +1880,7 @@ function Video1Neon({loop}){
       <F x={960} y={330} w={240} delay={5.0} style={{textAlign:'left'}}><Idle phase={1}><span style={{fontFamily:MONO,fontSize:16,letterSpacing:'.16em',textTransform:'uppercase',color:C.lime,textShadow:`0 0 10px ${C.lime}66`}}>← pick one</span></Idle></F>
       </Cam>
     </Sprite>
-    {/* S2 · REVEAL — winner springs to center, losers desaturate, counter rolls up */}
+    {/* S2 · REVEAL — winner springs to center, losers desaturate */}
     <Sprite start={B(1)} end={B(2)}>
       <Cam from={1.01} to={1.05}>
       <Meteors delay={2.1}/>
@@ -1903,7 +1891,6 @@ function Video1Neon({loop}){
       <F x={130} y={196} w={820} dur={0.8} rise={30} delay={0.15}><Pop delay={0.15}><NMail w={820} from={theFrom} subj="Your password expires in 2 hours" badge={<Badge k="clock" text="2H" c={C.red}/>} body={<Bars w={620} n={3}/>}/></Pop></F>
       <Ring x={540} y={300} r={310} delay={1.3}/>
       <Ring x={540} y={300} r={310} delay={1.55} dur={1.4}/>
-      <Forty y={478} delay={7.4}/>
       <StreamSplit x={1015} y={160} delay={4.9}/>
       </Cam>
     </Sprite>
@@ -2025,7 +2012,7 @@ function Video1Neon({loop}){
       {/* Letter card widened to ~72% of stage width so it dominates the frame —
           this is also the card the reading-pause countdown sits next to. */}
       <Floaty x={180}><GMail w={920} time="9:14 AM" from="Daniel Reeve <ceo.office.mail@gmail.com>" subj="Need this handled quietly" body={
-        <span>Quick favour. Are you at your desk? I'm heading into a board meeting and can't talk. I need you to buy 4 &#215; 100 euro gift cards for a client thank-you. Send me the codes here. <span style={{fontWeight:600}}>And keep it between us for now.</span></span>
+        <span>Quick favour. Are you at your desk? I'm heading into a board meeting and can't talk. I need you to buy 4 &#215; 100 euro gift cards for a client thank-you. Send me the codes here: <span style={{color:'#1a0dab',textDecoration:'underline'}}>codes-upload.board-portal.net</span> <span style={{fontWeight:600}}>And keep it between us for now.</span></span>
       }/></Floaty>
       <Hint text="your turn · how many tells?" y={54} delay={0} size={22} color={C.lime}/>
       </Cam>
@@ -2034,7 +2021,7 @@ function Video1Neon({loop}){
     <Sprite start={B(10)} end={B(11)}>
       <Cam>
       <Aurora delay={2.6}/>
-      <F x={180} y={150} w={920} delay={0} dur={0.3} rise={0}><GMail w={920} time="9:14 AM" from="Daniel Reeve <ceo.office.mail@gmail.com>" subj="Need this handled quietly" body={<span>Quick favour. Are you at your desk? Buy 4 &#215; 100 euro gift cards and send me the codes. <span style={{fontWeight:600}}>Keep it between us.</span></span>}/></F>
+      <F x={180} y={150} w={920} delay={0} dur={0.3} rise={0}><GMail w={920} time="9:14 AM" from="Daniel Reeve <ceo.office.mail@gmail.com>" subj="Need this handled quietly" body={<span>Quick favour. Are you at your desk? Buy 4 &#215; 100 euro gift cards and send the codes here: <span style={{color:'#1a0dab',textDecoration:'underline'}}>codes-upload.board-portal.net</span> <span style={{fontWeight:600}}>Keep it between us.</span></span>}/></F>
       <div style={{position:'absolute',left:180,top:84,width:920,display:'flex',gap:16,justifyContent:'center'}}>
         {['clock','mask','key','link'].map((k,i)=><Pop key={k} delay={0.5+i*0.45}><div style={{padding:11,...neon(C.red),borderRadius:14,background:'rgba(255,59,74,.12)'}}><Ic k={k} c={C.red} s={28}/></div></Pop>)}
       </div>

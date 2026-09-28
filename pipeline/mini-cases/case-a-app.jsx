@@ -1,7 +1,7 @@
 const { useState, useEffect, useRef, useMemo, Fragment } = React;
 
 /* ─────────────────────────────────────────────────────
-   Phish-or-Pass · Outlook-immersive simulation
+   Phish-or-Pass — Outlook-immersive simulation
    Day-1 inbox triage with one trick-positive.
    ───────────────────────────────────────────────────── */
 
@@ -14,7 +14,7 @@ const EMAILS = [
     sender: { display: "IT Helpdesk", real: "helpdesk@compan-y-it.com", spoof: true, verification: "Failed authentication" },
     subject: "Action required: your password expires today",
     preview: "Our records show your corporate password expires today at 17:00…",
-    time: "9:14 AM",
+    time: "7:58 AM",
     day: "Today",
     banner: { kind: "danger", title: "Defender for Office 365 marked this message as a potential phishing attempt.", detail: "Sender domain compan-y-it.com fails authentication. Links have been rewritten with Safe Links protection.", action: "Show details" },
     body: ({ urlHover }) => (
@@ -52,19 +52,19 @@ const EMAILS = [
     ),
     correct: "phishing",
     teach: {
-      title: "Credential harvest, and it hides nothing.",
+      title: "A textbook credential-harvest phish.",
       summary:
-        "Display name says IT Helpdesk. The real sender is compan-y-it.com, a look-alike of the company domain, and the reset link rewrites to the same look-alike. Three pressure phrases are stacked in four lines.",
+        "The display name says IT Helpdesk, but the real sender is compan-y-it.com, a look-alike of the company domain. The reset link points to the same look-alike. The email stacks three pressure phrases into four lines.",
       indicators: [
         { kind: "bad", text: "Display name vs sender: \"IT Helpdesk\" claims internal, real domain is external look-alike (compan-y-it.com)." },
         { kind: "bad", text: "Domain authentication failed (Defender banner). SPF/DKIM did not pass." },
-        { kind: "bad", text: "Link text says company.com and resolves to compan-y-it.com. Classic redirect." },
+        { kind: "bad", text: "Link text says company.com, but the link goes to compan-y-it.com. This is a classic redirect." },
         { kind: "bad", text: "Urgency stacking: \"expires today\", \"keep your account active\", \"failure to act\"." },
       ],
-      verdictIfRight: "Reporting this directly is correct: the indicators are conclusive. The Junk-only option also catches it, but it starts a longer triage clock for the SOC team.",
+      verdictIfRight: "Reporting this as phishing is the right call: the indicators are conclusive. Reporting it as Junk would also catch it, but it would wait in the slower IT review queue instead of going to the SOC.",
       verdictIfWrong: {
-        safe: "Marking this safe leaves a credential-harvest URL in production inboxes. This is the easy one. If it slipped past, the next will not be obvious.",
-        junk: "Junk-only is too soft for this signal stack. Authentication-failed + look-alike domain + pressure stacking warrants the phishing report, which routes to the SOC fast-lane.",
+        safe: "Marking this safe leaves a credential-harvest URL in live inboxes. This is the easy one. If it got past you, the next one won't be obvious.",
+        junk: "Junk is too soft for this many warning signs. Failed authentication, a look-alike domain and stacked pressure phrases call for a phishing report, which goes to the SOC's fast lane.",
       },
     },
   },
@@ -76,7 +76,7 @@ const EMAILS = [
     sender: { display: "Sarah Chen", real: "sarah.chen@company.com", spoof: false, match: true, verification: "Verified internal sender" },
     subject: "Welcome to the team — your week-1 checklist",
     preview: "So glad you're with us. I've shared your week-1 checklist below — calendar invites…",
-    time: "8:46 AM",
+    time: "8:22 AM",
     day: "Today",
     banner: null,
     body: () => (
@@ -109,12 +109,12 @@ const EMAILS = [
         { kind: "ok", text: "Display name and real sender domain match (sarah.chen@company.com)." },
         { kind: "ok", text: "Internal verified sender (Defender authentication passed)." },
         { kind: "neutral", text: "No urgency, no payment ask, no out-of-band channel jumping." },
-        { kind: "neutral", text: "Mentions a DocuSign envelope coming in the next hour. Worth remembering." },
+        { kind: "neutral", text: "Mentions a DocuSign envelope coming in the next hour — note this for later." },
       ],
-      verdictIfRight: "Right call. Not every new email needs a Defender escalation. Clean signals get the clean disposition.",
+      verdictIfRight: "Right call. Not every new email needs a Defender escalation. When the signals are clean, keep the message.",
       verdictIfWrong: {
-        junk: "Reporting a verified internal sender as Junk is the noise the SOC training tries to dial down. Junk-rate inflation buries real signal.",
-        phishing: "Reporting your People-Ops contact as phishing is the over-rotation new hires often make after generic awareness training. Calibrate.",
+        junk: "Reporting a verified internal sender as Junk is the kind of noise the SOC training tries to reduce. When Junk reports pile up, real threats get buried.",
+        phishing: "Reporting your People Ops contact as phishing is the overcorrection new hires often make after generic awareness training. Match the report to the evidence.",
       },
     },
   },
@@ -126,7 +126,7 @@ const EMAILS = [
     sender: { display: "Sundar Aravind", real: "ceo.aravind@gmail.com", spoof: true, verification: "External sender · personal mailbox" },
     subject: "Quick favour — are you at your desk?",
     preview: "Are you at your desk? I need a quick favour and I'm stuck in back-to-back meetings…",
-    time: "8:22 AM",
+    time: "8:46 AM",
     day: "Today",
     banner: { kind: "warn", title: "First-time sender. This email looks similar to a previous sender's display name.", detail: "Display name \"Sundar Aravind\" resembles an internal contact. Real sender is a personal gmail.com address.", action: "Show original" },
     body: ({ urlHover }) => (
@@ -148,19 +148,19 @@ const EMAILS = [
     ),
     correct: "phishing",
     teach: {
-      title: "Business Email Compromise, the CEO impersonation pattern.",
+      title: "Business Email Compromise: the CEO impersonation pattern.",
       summary:
         "Display says CEO but the real sender is a personal Gmail. The opener stacks three pressure-isolation moves: \"quick favour\", \"don't loop anyone in\", \"reply from your phone\". The classic follow-up is a gift-card or wire request.",
       indicators: [
         { kind: "bad", text: "Display \"Sundar Aravind\" resembles internal exec; real sender is ceo.aravind@gmail.com." },
         { kind: "bad", text: "External sender flagged by Defender. No prior thread with this address." },
         { kind: "bad", text: "Urgency + channel switch (\"reply from your phone, not email\")." },
-        { kind: "bad", text: "Isolation (\"don't loop anyone in\") keeps the target away from a sanity check." },
+        { kind: "bad", text: "Isolation (\"don't loop anyone in\") stops the target from checking with a colleague." },
       ],
-      verdictIfRight: "Right call. BEC openers like this rarely carry a payload yet. Catch the opener and the wire request never arrives.",
+      verdictIfRight: "Right call. BEC openers like this rarely contain a payload yet. Catch the opener and you never see the wire request.",
       verdictIfWrong: {
-        safe: "Marking safe is the failure mode this whole cohort exists to fix. BEC successfully delivered is six-figure money on average.",
-        junk: "Junk-only sends this to a slower SOC queue. The combined indicators warrant the phishing report and the executive-team alert that comes with it.",
+        safe: "Marking this safe is the mistake this whole cohort exists to fix.",
+        junk: "Junk sends this to the slower IT review queue. The combined indicators call for a phishing report and the executive-team alert that comes with it.",
       },
     },
   },
@@ -174,7 +174,7 @@ const EMAILS = [
     sender: { display: "DocuSign via Sarah Chen", real: "dse_NA8@docusign.net", spoof: false, match: true, verification: "Verified DocuSign sender" },
     subject: "Sarah Chen sent you a document to sign: Employment Agreement",
     preview: "Sarah Chen has sent you a document to sign. Employment Agreement · 7 pages…",
-    time: "7:58 AM",
+    time: "9:14 AM",
     day: "Today",
     banner: { kind: "info", title: "First time you've received mail from this DocuSign envelope.", detail: "DocuSign is a verified sender. The link below has been protected by Safe Links and resolves to docusign.net.", action: "Learn more" },
     body: ({ urlHover }) => (
@@ -192,7 +192,7 @@ const EMAILS = [
           <a
             className="docusign-cta"
             href="#nope"
-            data-real="docusign.net/sign/4f8e21c0-NA8-c734-91ad"
+            data-real="na8.docusign.net/Member/EmailStart.aspx?a=4f8e21c0-NA8-c734-91ad"
             data-bad="0"
             style={{ marginTop: 16, display: "inline-block", textDecoration: "none" }}
             onClick={(e) => e.preventDefault()}
@@ -218,19 +218,19 @@ const EMAILS = [
     ),
     correct: "safe",
     teach: {
-      title: "The trick-positive. Looks transactional, isn't a phish.",
+      title: "The trick positive: it looks transactional, but it isn't a phish.",
       summary:
-        "Real sender is dse_NA8@docusign.net (DocuSign's actual mail domain). The link resolves to docusign.net. Sarah told you in the previous email this envelope was coming. Three independent confirmations.",
+        "Real sender is dse_NA8@docusign.net (DocuSign's actual mail domain). The link resolves to docusign.net. Sarah told you in the previous email this envelope was coming. That makes three independent confirmations.",
       indicators: [
-        { kind: "ok", text: "Sender domain is docusign.net, which is DocuSign's real envelope-sender." },
+        { kind: "ok", text: "Sender domain is docusign.net, the domain DocuSign really sends envelopes from." },
         { kind: "ok", text: "Authentication passed. Defender marked sender as verified." },
-        { kind: "ok", text: "Link resolves to na8.docusign.net (the real DocuSign region for North-America EU envelopes)." },
+        { kind: "ok", text: "Link resolves to na8.docusign.net, DocuSign's North American region for envelopes." },
         { kind: "ok", text: "Context match: the People-Ops email from Sarah explicitly mentioned this envelope was on its way." },
       ],
-      verdictIfRight: "The call the cohort usually misses. Awareness training over-trains for \"report anything transactional\". The restraint you just showed is what good triage looks like.",
+      verdictIfRight: "This is the call the cohort usually misses. Awareness training over-teaches \"report anything transactional\". Holding back when the evidence says a message is genuine is what good triage looks like.",
       verdictIfWrong: {
-        junk: "Most cohorts mark legit DocuSign as Junk because it \"looks transactional\". Over-reporting buries real signals under noise, and the SOC stops trusting alerts from your team.",
-        phishing: "Reporting a verified DocuSign envelope that you were told to expect is exactly the over-rotation we're calibrating away from. Generic awareness training never gets this far.",
+        junk: "Most cohorts mark legitimate DocuSign mail as Junk because it \"looks transactional\". Over-reporting buries real threats under noise, and the SOC stops trusting alerts from your team.",
+        phishing: "Reporting a verified DocuSign envelope that you were told to expect is the overcorrection this training is here to fix. Awareness training usually skips this part.",
       },
     },
   },
@@ -254,6 +254,11 @@ const CHOICES = {
   phishing:  { id: "phishing", label: "Report as Phishing", ribbon: "Report > Phishing",   toast: "Reported to Security. Message moved to Deleted Items and a copy sent to SOC.", toastKind: "success" },
 };
 
+const STANDUP_SECONDS = 180;
+function fmtClock(s) {
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
 /* ─────────────────────────────────────────────────────
    App
    ───────────────────────────────────────────────────── */
@@ -265,6 +270,15 @@ function App() {
   const [reportOpen, setReportOpen] = useState(false);
   const [urlInfo, setUrlInfo] = useState(null);
   const [showResults, setShowResults] = useState(false);
+  const [standupLeft, setStandupLeft] = useState(STANDUP_SECONDS);
+
+  /* Soft time pressure: counts down while the learner triages, stops on results.
+     Reaching zero changes nothing but the label. */
+  useEffect(() => {
+    if (showResults) return;
+    const id = setInterval(() => setStandupLeft((t) => (t > 0 ? t - 1 : 0)), 1000);
+    return () => clearInterval(id);
+  }, [showResults]);
 
   const email = useMemo(() => EMAILS.find((e) => e.id === selectedId), [selectedId]);
   const decided = !!decisions[email?.id];
@@ -272,6 +286,9 @@ function App() {
   const done = Object.keys(decisions).length;
   const correct = Object.values(decisions).filter((d) => d.correct).length;
   const progressPct = Math.round((done / EMAILS.length) * 100);
+  // Pass = at least 3 of 4 correct AND the trick positive (genuine DocuSign) handled correctly.
+  const trickOk = EMAILS.filter((e) => e.trickPositive).every((e) => decisions[e.id]?.correct);
+  const passed = correct >= EMAILS.length - 1 && trickOk;
 
   const urlHover = useMemo(() => ({
     set: (info) => setUrlInfo(info),
@@ -320,6 +337,7 @@ function App() {
     setCoach(null);
     setToast(null);
     setShowResults(false);
+    setStandupLeft(STANDUP_SECONDS);
   };
 
   // Close report menu on outside click
@@ -382,21 +400,21 @@ function App() {
           <button className="rb-btn" disabled={!email || decided}>
             <span className="rb-icon">↪</span>Forward
           </button>
-          <button className="rb-btn" disabled={!email}>
+          <button className="rb-btn rb-delete" disabled={!email}>
             <span className="rb-icon">⌫</span>Delete
           </button>
-          <button className="rb-btn" disabled={!email}>
+          <button className="rb-btn rb-archive" disabled={!email}>
             <span className="rb-icon">▤</span>Archive
           </button>
         </div>
 
-        {/* Triage actions: the real decisions */}
+        {/* Triage actions — the real decisions */}
         <div className="rb-group" style={{ background: decided ? "transparent" : "var(--rail)", borderRadius: 4 }}>
           <button
             className="rb-btn"
             onClick={() => decide("safe")}
             disabled={!email || decided}
-            title="Keep in Inbox, no further action"
+            title="Keep in Inbox. No further action."
           >
             <span className="rb-icon" style={{ color: "var(--ok-fg)" }}>✓</span>
             Looks fine
@@ -436,6 +454,17 @@ function App() {
         <div className="rb-meta">
           <span style={{ color: "var(--ink-3)" }}>CASE A ·</span>
           <span style={{ fontWeight: 600 }}>Phish-or-Pass simulation</span>
+          <div
+            className={`standup-chip ${standupLeft <= 0 ? "over" : standupLeft < 60 ? "low" : ""}`}
+            role="timer"
+            aria-live="off"
+            title="Soft deadline. It does not affect your score."
+          >
+            <span className="standup-icon" aria-hidden="true">◷</span>
+            {standupLeft > 0
+              ? <><span className="standup-word">Standup in </span>{fmtClock(standupLeft)}</>
+              : <><span className="standup-word">Standup </span>started</>}
+          </div>
           <div className="progress-chip">
             <span className="ring" style={{ "--p": `${progressPct}%` }} />
             {done} / {EMAILS.length} triaged · {correct} correct
@@ -495,7 +524,7 @@ function App() {
         <section className="list">
           <div className="list-head">
             <div className="list-title">Inbox</div>
-            <div className="list-sub">{EMAILS.length} items · sorted by date</div>
+            <div className="list-sub">{EMAILS.length} items · oldest on top</div>
             <div className="list-tabs">
               <span className="list-tab active">Focused <span className="count">{EMAILS.length}</span></span>
               <span className="list-tab">Other <span className="count">12</span></span>
@@ -627,7 +656,11 @@ function App() {
           <CoachPanel
             coach={coach}
             onNext={nextEmail}
-            onClose={() => setCoach(null)}
+            onClose={() => {
+              setCoach(null);
+              // Closing the last coach note must not strand the learner before the results.
+              if (done >= EMAILS.length) setTimeout(() => setShowResults(true), 300);
+            }}
             allDone={done >= EMAILS.length}
           />
 
@@ -640,15 +673,16 @@ function App() {
                   Defender for Office 365 · Attack Simulation Training
                 </div>
                 <div className="results-title">
-                  {correct === EMAILS.length ? "Clean triage. Pass-bar cleared." :
-                   correct >= EMAILS.length - 1 ? "Almost there. Pass-bar cleared." :
+                  {correct === EMAILS.length ? "Clean triage. Pass bar cleared." :
+                   passed ? "Almost there. Pass bar cleared." :
+                   correct >= EMAILS.length - 1 ? "Not a pass yet. You reported the genuine DocuSign email." :
                    correct >= EMAILS.length / 2 ? "Worth a re-take." :
                    "Re-take recommended."}
                 </div>
                 <div className="results-sub">
-                  Simulated phish-cohort #14 · 4 messages including one trick-positive. The
-                  pass-bar is 3 of 4 correct triages, including catching the legitimate
-                  message that looks suspicious.
+                  Simulated phishing cohort #14 · 4 messages, one of them a trick positive. To
+                  pass, triage 3 of 4 correctly, including the genuine message that looks
+                  suspicious.
                 </div>
               </div>
               <div className="results-score-row">
@@ -657,14 +691,6 @@ function App() {
                   <div className="res-meta-row">
                     <span style={{ minWidth: 110, color: "var(--ink-3)" }}>Pass bar</span>
                     <b>3 / 4 correct</b>
-                  </div>
-                  <div className="res-meta-row">
-                    <span style={{ minWidth: 110, color: "var(--ink-3)" }}>L3 target</span>
-                    <b>click-rate 18% → ≤ 5%</b>
-                  </div>
-                  <div className="res-meta-row">
-                    <span style={{ minWidth: 110, color: "var(--ink-3)" }}>L4 target</span>
-                    <b>incidents 2/q → ≤ 1/yr</b>
                   </div>
                 </div>
               </div>

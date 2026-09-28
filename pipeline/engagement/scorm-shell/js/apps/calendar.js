@@ -27,7 +27,13 @@ function generateBands() {
 }
 const BANDS = generateBands();
 
-function defaultSlots() {
+const DEFAULT_SUGGESTED = ["Tue 11:00", "Thu 14:00"];
+
+/**
+ * @param {string[]} suggested  slots like "Tue 11:00"
+ * @param {string} who          buyer name for the "Suggest · …" label
+ */
+function defaultSlots(suggested = DEFAULT_SUGGESTED, who = "Maria") {
   const slots = [];
   DAYS.forEach((day) => {
     BANDS.forEach((time) => {
@@ -59,8 +65,10 @@ function defaultSlots() {
     const s = slots.find(x => x.day === day && x.time === time);
     if (s) { s.status = "suggested"; s.label = label; }
   };
-  suggest("Tue", "11:00", "Suggest · Maria");
-  suggest("Thu", "14:00", "Suggest · Maria");
+  suggested.forEach(s => {
+    const [day, time] = String(s).split(" ");
+    suggest(day, time, `Suggest · ${who}`);
+  });
 
   return slots;
 }
@@ -73,7 +81,10 @@ registerApp({
   mount(ctx) {
     const { container, eventBus, options = {} } = ctx;
     /** @type {any[]} */
-    let slots = Array.isArray(options.slots) ? options.slots.slice() : defaultSlots();
+    // Modules pass the buyer's name and the two slots to suggest for this call.
+    const suggestFor = options.suggestFor ?? "Maria";
+    const suggestedIds = new Set((options.suggestedSlots ?? DEFAULT_SUGGESTED).map(s => String(s).replace(" ", "-")));
+    let slots = Array.isArray(options.slots) ? options.slots.slice() : defaultSlots(options.suggestedSlots ?? DEFAULT_SUGGESTED, suggestFor);
     let inviteeEmail = options.invitee_email ?? "";
     const todayIdx = Math.min(Math.max(new Date().getDay() - 1, 0), 4);
 
@@ -171,7 +182,7 @@ registerApp({
       const selected = slots.filter(s => s.status === "selected");
       if (readout) {
         if (selected.length === 0) {
-          readout.textContent = `Tip: read two suggested slots aloud — e.g. "${suggestedSummary()}"`;
+          readout.textContent = `Tip: read the two suggested slots out loud, for example "${suggestedSummary()}"`;
           readout.classList.remove("is-success");
         } else {
           readout.textContent = `Selected: ${selected.map(s => `${s.day} ${s.time}`).join(" + ")} (${selected.length}/2)`;
@@ -199,9 +210,9 @@ registerApp({
           if (!s || s.status === "busy") return;
           const currentlySelected = slots.filter(x => x.status === "selected").length;
           if (s.status === "selected") {
-            const wasSug = /^(Tue-11:00|Thu-14:00)$/.test(s.slot_id);
+            const wasSug = suggestedIds.has(s.slot_id);
             s.status = wasSug ? "suggested" : "free";
-            s.label  = wasSug ? "Suggest · Maria" : "";
+            s.label  = wasSug ? `Suggest · ${suggestFor}` : "";
           } else {
             if (currentlySelected >= 2) return;
             s.status = "selected";

@@ -63,6 +63,8 @@ registerApp({
 
     function dial(prospect) {
       const calendarOpen = Boolean(document.querySelector(".os-window.app--calendar"));
+      // Open the dialler first: it only starts a call when it is already listening.
+      openApp?.("phone-dialler", { prospect });
       eventBus.dispatchEvent(new CustomEvent("phone:dial", { detail: { prospect } }));
       eventBus.dispatchEvent(new CustomEvent("telemetry", {
         detail: {
@@ -72,7 +74,6 @@ registerApp({
           calendar_open_before_dial: calendarOpen,
         },
       }));
-      openApp?.("phone-dialler", { prospect });
     }
 
     function render() {

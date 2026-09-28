@@ -573,7 +573,6 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .file:hover { background: var(--color-surface-2); }
   .file[aria-pressed="true"] { background: var(--color-primary-soft); }
   .file__dot { width: 12px; height: 12px; border-radius: 3px; background: var(--ink-200); }
-  .file.is-bad .file__dot { background: #a855f7; }
   .file__size { color: var(--color-text-subtle); }
   .file.is-gone { opacity: .25; pointer-events: none; text-decoration: line-through; }
 
@@ -584,6 +583,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     width: 46px; height: 30px; border: 2px solid var(--ink-900); border-radius: 5px;
     padding: 0; cursor: grab; touch-action: none;
   }
+  .plug { position: relative; font: 700 19px/1 var(--font-sans, sans-serif); }
+  .plug::after { content: attr(data-shape); color: #fff; text-shadow: 0 1px 0 rgba(0,0,0,.45); }
   .plug.is-done { cursor: default; box-shadow: inset 0 0 0 3px #fff; }
   .wires svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 
@@ -669,12 +670,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   [hidden] { display: none !important; }
 </style>
+<style>
+  /* Way back to the catalogue, same look as its own back link. */
+  .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
+    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+  .back:hover { color: var(--color-text); }
+  .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+</style>
 </head>
 <body>
 
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
+    <a class="back" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
       <p class="eyebrow" data-t="eyebrow">Spaceport · sector map</p>
       <div class="langs" role="group" aria-label="Language">
@@ -696,7 +706,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   <div class="stage" id="stage">
     <canvas id="scene"></canvas>
     <div class="stage__views" id="views"></div>
-    <div class="stage__hint" data-t="hint">Drag to turn · wheel to zoom · click a building</div>
+    <div class="stage__hint" data-t="hint">Drag to turn · scroll to zoom · click a building</div>
     <div class="stage__tip" id="tip" hidden></div>
   </div>
 
@@ -704,7 +714,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   <div class="row">
     <button class="btn btn--ghost btn--sm" id="reset" data-t="reset">Reset progress</button>
-    <span class="muted" style="font-size: var(--t-2xs)" data-t="resetNote">Progress is kept in this browser only, and only on this device.</span>
+    <span class="muted" style="font-size: var(--t-2xs)" data-t="resetNote">Progress is saved only in this browser, on this device.</span>
   </div>
 
   <section class="card stack" id="panel" hidden>
@@ -737,7 +747,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   <section class="card stack" id="won" hidden aria-live="polite">
     <h2 data-t="wonTitle">The spaceport is yours again</h2>
-    <p class="muted" data-t="wonBody">Four sectors clear, the rocket back under your control, and one very quiet virus.</p>
+    <p class="muted" data-t="wonBody">All four sectors are clear, and the rocket is back under your control. The virus has gone very quiet.</p>
     <div><button class="btn btn--ghost" id="again" data-t="again">Play it again</button></div>
   </section>
 
@@ -791,31 +801,31 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     en: {
       jobDone: "This sector is clear. The virus has nothing left in here.",
       jobs: {
-        A: { head: "The virus dropped its own files among ours. Pick out every one that is not ours, then bin the lot.",
+        A: { head: "The virus hid its own files among ours. Click every file that is not ours, then press Delete selected.",
              hint: "Ours have names that say what they are. The virus files do not.",
              action: "Delete selected", pickFirst: "Nothing is picked yet.",
-             oops: "One of those was ours. Everything is back — read the names again.",
+             oops: "One of those files was ours, so nothing was deleted. Read the names again.",
              more: "Good. There are still virus files in here." },
         B: { head: "The colour boards are unplugged. Drag each wire across to the socket of the same colour.",
-             wire: "Wire", socket: "Socket" },
-        C: { head: "Hold the purge down until the meter is full. The virus knocks it back every couple of seconds, so do not let go.",
+             wire: "{c} wire", socket: "{c} socket", colours: ["Red", "Yellow", "Green", "Blue"] },
+        C: { head: "Press and hold the purge button until the bar is full. The virus pushes the bar back every second or so, so keep holding.",
              action: "HOLD TO PURGE" },
         D: { head: "The dish is still taking orders from the virus. Pull the lever all the way down and hold it there.",
              action: "Pull the lever down" }
       },
       eyebrow: "Spaceport · sector map",
       title1: "Four sectors,", title2: "one virus",
-      intro: "The virus is sitting on all four sectors of the spaceport. Drag to walk around the field, click a building, and do the job inside it to push the virus off that sector.",
+      intro: "The virus has taken all four sectors of the spaceport. Drag to look around the field. Click a building and do the job inside to free that sector.",
       clearedLabel: "Sectors clear", close: "Close",
       submit: "Drive the virus out",
       again: "Play it again", sector: "Sector",
       reset: "Reset progress",
-      resetNote: "Progress is kept in this browser only, and only on this device.",
-      hint: "Drag to turn · wheel to zoom · click a building",
+      resetNote: "Progress is saved only in this browser, on this device.",
+      hint: "Drag to turn · scroll to zoom · click a building",
       views: { orbit: "Around", top: "From above", low: "From the pad" },
       infected: "held by the virus", clear: "clear",
       names: {
-        A: ["File archive", "Every folder on the station was tipped out here. The robots cannot find a single thing they need."],
+        A: ["File archive", "Strange files turned up in the archive. The robots cannot tell which ones are theirs."],
         B: ["Graphics station", "The colour has been drained out of the boards, and nothing on this station lights up without them."],
         C: ["Text module", "Every message leaving the spaceport goes through here, and right now every one of them comes out scrambled."],
         D: ["Command centre", "The dish still turns, but it is listening to the virus. Whoever holds this room holds the launch."]
@@ -823,11 +833,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       right: function (id) { return "Sector " + id + " is free."; },
       noWebgl: "This browser cannot draw 3D. Everything still works from the list below.",
       wonTitle: "The spaceport is yours again",
-      wonBody: "Four sectors clear, the rocket back under your control, and one very quiet virus.",
+      wonBody: "All four sectors are clear, and the rocket is back under your control. The virus has gone very quiet.",
       endgame: [
         { face: "😱", line: "NO! ALL FOUR SECTORS?!", sub: "This cannot be happening…", btn: "Keep going" },
         { face: "😈", line: "Wait. WAIT.", sub: "If I cannot have the spaceport, I will take the rocket!", btn: "Stop the virus" },
-        { face: "😰", line: "What are you doing? Leave those wires alone!", sub: "Do not — STOP —", btn: "Cut the wires" },
+        { face: "😰", line: "What are you doing? Leave those wires alone!", sub: "Don't! STOP!", btn: "Cut the wires" },
         { face: "💀", line: "I am… dissolving…", sub: "Goodbyeeee…", btn: "Watch it go" }
       ]
     },
@@ -837,11 +847,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         A: { head: "El virus dejó sus archivos entre los nuestros. Marca todos los que no son nuestros y bórralos.",
              hint: "Los nuestros tienen nombres que dicen qué son. Los del virus no.",
              action: "Borrar lo marcado", pickFirst: "Todavía no has marcado nada.",
-             oops: "Ese era nuestro. Está todo de vuelta: vuelve a leer los nombres.",
+             oops: "Uno de esos archivos era nuestro, así que no se borró nada. Vuelve a leer los nombres.",
              more: "Bien. Todavía quedan archivos del virus." },
         B: { head: "Las placas de color están desenchufadas. Arrastra cada cable al conector de su mismo color.",
-             wire: "Cable", socket: "Conector" },
-        C: { head: "Mantén pulsada la purga hasta llenar la barra. El virus la tira hacia atrás cada dos segundos, así que no sueltes.",
+             wire: "Cable {c}", socket: "Conector {c}", colours: ["rojo", "amarillo", "verde", "azul"] },
+        C: { head: "Mantén pulsada la purga hasta llenar la barra. El virus la tira hacia atrás cada poco, así que no sueltes.",
              action: "MANTÉN PULSADO" },
         D: { head: "La antena sigue obedeciendo al virus. Baja la palanca del todo y mantenla ahí.",
              action: "Baja la palanca" }
@@ -858,7 +868,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       views: { orbit: "Alrededor", top: "Desde arriba", low: "Desde la plataforma" },
       infected: "en manos del virus", clear: "libre",
       names: {
-        A: ["Archivo de ficheros", "Aquí volcaron todas las carpetas de la estación. Los robots no encuentran nada de lo que necesitan."],
+        A: ["Archivo de ficheros", "En el archivo han aparecido ficheros extraños. Los robots no saben cuáles son suyos."],
         B: ["Estación gráfica", "Le han sacado el color a las placas, y sin ellas en esta estación no se enciende nada."],
         C: ["Módulo de texto", "Todos los mensajes que salen del puerto espacial pasan por aquí, y ahora mismo todos salen revueltos."],
         D: ["Centro de mando", "La antena sigue girando, pero escucha al virus. Quien tenga esta sala tiene el lanzamiento."]
@@ -870,7 +880,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       endgame: [
         { face: "😱", line: "¡NO! ¿LOS CUATRO SECTORES?", sub: "Esto no puede estar pasando…", btn: "Seguir" },
         { face: "😈", line: "Un momento. UN MOMENTO.", sub: "Si no puedo tener el puerto espacial, ¡me llevo el cohete!", btn: "Detener al virus" },
-        { face: "😰", line: "¿Qué hacéis? ¡No toquéis esos cables!", sub: "No — PARAD —", btn: "Cortar los cables" },
+        { face: "😰", line: "¿Qué hacéis? ¡No toquéis esos cables!", sub: "¡No! ¡PARAD!", btn: "Cortar los cables" },
         { face: "💀", line: "Me… me estoy disolviendo…", sub: "Adióooos…", btn: "Verlo marchar" }
       ]
     }
@@ -1521,6 +1531,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     var COLS = ["#e2552f", "#f5b800", "#0a8754", "#12798f"];
     var RIGHT = ["#12798f", "#0a8754", "#e2552f", "#f5b800"];
+    /* A shape per colour, so the pairs never depend on colour alone. */
+    var SHAPES = ["\u25CF", "\u25B2", "\u25A0", "\u25C6"];
 
     var wrap = el("div", "wires");
     var left = el("div", "wires__col"), rcol = el("div", "wires__col");
@@ -1557,7 +1569,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       var b = el("button", "plug");
       b.type = "button"; b.style.background = c;
       b.dataset.colour = c;
-      b.setAttribute("aria-label", g.wire);
+      b.dataset.shape = SHAPES[COLS.indexOf(c)];
+      b.setAttribute("aria-label", g.wire.replace("{c}", g.colours[COLS.indexOf(c)]));
+      /* Tap or keyboard: pick the wire now, join it by pressing a socket. */
+      b.addEventListener("click", function () { if (!b.classList.contains("is-done")) from = b; });
       b.addEventListener("pointerdown", function (e) {
         if (b.classList.contains("is-done")) return;
         e.preventDefault();
@@ -1590,7 +1605,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       var b = el("button", "plug");
       b.type = "button"; b.style.background = c;
       b.dataset.colour = c;
-      b.setAttribute("aria-label", g.socket);
+      b.dataset.shape = SHAPES[COLS.indexOf(c)];
+      b.setAttribute("aria-label", g.socket.replace("{c}", g.colours[COLS.indexOf(c)]));
       b.onclick = function () { tryJoin(b); };
       rcol.appendChild(b);
     });
@@ -1682,6 +1698,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     grip.tabIndex = 0;
     grip.setAttribute("role", "slider");
     grip.setAttribute("aria-label", g.action);
+    grip.setAttribute("aria-valuemin", "0");
+    grip.setAttribute("aria-valuemax", "100");
     track.appendChild(fillEl);
     box.append(track, grip);
     host.appendChild(box);
@@ -1692,6 +1710,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     function place() {
       grip.style.top = y + "px";
       fillEl.style.height = Math.round((y / BOT) * 100) + "%";
+      grip.setAttribute("aria-valuenow", String(Math.round((y / BOT) * 100)));
     }
     place();
 
@@ -1824,7 +1843,6 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       byId("panelName").textContent = d.names[open][0];
       byId("panelWhat").textContent = d.names[open][1];
       paintJob();
-      byId("codeWrap").hidden = isClear(open);
     }
 
     byId("endgame").hidden = !(beat >= 0 && beat < d.endgame.length);

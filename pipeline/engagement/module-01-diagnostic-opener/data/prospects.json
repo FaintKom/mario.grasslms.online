@@ -10,11 +10,11 @@
     "stage": "Family-owned · operations head decision-maker · 4 yrs in role",
     "registered_office": "Brightline House, Sheffield S9 1XU",
     "source_note": "Synthetic profile based on brief §12.3 (Emma · manufacturing ops head). Used as the solo-problem buyer to drive variability (different archetype from worked-example Maria). Anonymised; no PII.",
-    "top_pain": "Bookkeeping drudgery — finance manually re-keys ~400 supplier receipts per month; Sage can't read job-numbers off the card transactions.",
+    "top_pain": "Bookkeeping drudgery — finance manually re-keys ~400 supplier receipts per month; Xero can't read job-numbers off the card transactions.",
     "top_objection": "Our accountant won't deal with another tool.",
     "ideal_opener": "I saw Brightline's headcount up 18% this year — who's approving supplier card spend across the 3 shifts now?",
-    "best_pitch_prop": "Receipt capture + Sage line-level export (Prop 4)",
-    "closing_move": "Could I get 20 minutes with you and your Sage admin together — Tuesday 14:00 or Thursday 11:30?",
+    "best_pitch_prop": "Receipt capture + Xero line-level export (Prop 4)",
+    "closing_move": "Could I get 20 minutes with you and your Xero admin together — Tuesday 14:00 or Thursday 11:30?",
     "signals": [
       {
         "type": "filing",
