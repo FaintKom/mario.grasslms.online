@@ -861,7 +861,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     netState = "loading";
     render();
     try {
-      net = await mobilenet.load({ version: 2, alpha: 1.0, modelUrl: MODEL_URL });
+      // A custom modelUrl skips MobileNet's default pixel scaling, so the range
+      // has to be given; without it the model sees washed-out input.
+      net = await mobilenet.load({ version: 2, alpha: 1.0, modelUrl: MODEL_URL, inputRange: [0, 1] });
       netState = "ready";
     } catch (err) {
       netState = "failed";

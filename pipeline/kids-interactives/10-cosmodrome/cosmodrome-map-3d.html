@@ -1824,7 +1824,6 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       byId("panelName").textContent = d.names[open][0];
       byId("panelWhat").textContent = d.names[open][1];
       paintJob();
-      byId("codeWrap").hidden = isClear(open);
     }
 
     byId("endgame").hidden = !(beat >= 0 && beat < d.endgame.length);

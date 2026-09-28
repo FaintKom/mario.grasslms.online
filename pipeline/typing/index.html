@@ -8,7 +8,7 @@
 <link rel="icon" href="../../icon.svg" sizes="any" type="image/svg+xml"/>
 
 <meta property="og:type" content="website"/>
-<meta property="og:title" content="Typing… — a small game about how you decided"/>
+<meta property="og:title" content="Typing… · a small game about how you decided"/>
 <meta property="og:description" content="Monday, 09:41. A client asks four words in a shared channel. Four minutes, four decisions, no score."/>
 <meta property="og:url" content="https://mario.grasslms.online/pipeline/typing/"/>
 
@@ -19,7 +19,7 @@
 <style>
 :root{
   --bg:#fafbf6; --bg-2:#ffffff; --bg-3:#f4f5f1;
-  --ink:#0a1a10; --ink-dim:#4d5a51; --ink-faint:#6b7a70;
+  --ink:#0a1a10; --ink-dim:#4d5a51; --ink-faint:#5f6e64;
   --rule:#e6e8e4; --rule-strong:#c9cec9;
   --accent:#0a8754; --accent-ink:#ffffff;
   --green-25:#f4fbef; --green-50:#ecf9e7; --green-700:#07683f;
@@ -68,18 +68,18 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
 .stage{padding-bottom:34px}
 .app{
   display:grid;grid-template-columns:64px 1fr;
-  height:min(660px,78vh);min-height:480px;
+  height:min(660px,78vh);min-height:480px;grid-template-rows:minmax(0,1fr);
   border:1px solid var(--rule-strong);border-radius:14px;overflow:hidden;
   background:var(--app-bg);box-shadow:var(--shadow-md);position:relative;
 }
 .rail{background:var(--app-rail);color:var(--app-rail-ink);display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0}
 .rail .mark{width:32px;height:32px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;margin-bottom:8px}
-.rail .ch{width:36px;height:32px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-size:13px;opacity:.5}
+.rail .ch{width:36px;height:32px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-size:13px;opacity:.75}
 .rail .ch.on{background:rgba(255,255,255,.14);opacity:1}
 .rail .sp{flex:1}
 .rail .me{width:28px;height:28px;border-radius:8px;background:#43524a;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff}
 
-.pane{display:flex;flex-direction:column;min-width:0}
+.pane{display:flex;flex-direction:column;min-width:0;min-height:0}
 .chead{
   display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--app-line);
   font-weight:700;font-size:15px;flex:none;
@@ -88,7 +88,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
 .chead .sp{flex:1}
 .clock{font-family:var(--mono);font-size:12.5px;color:var(--ink-faint);font-weight:500;font-variant-numeric:tabular-nums}
 
-.feed{flex:1;overflow-y:auto;padding:16px 16px 8px;scroll-behavior:smooth;transition:padding-bottom .2s}
+.feed{flex:1;min-height:0;overflow-y:auto;padding:16px 16px 8px;scroll-behavior:smooth;transition:padding-bottom .2s}
 /* while the note is open the channel keeps scrolling above it, so you can
    read what you just caused and what it is called at the same time */
 .feed.noted{padding-bottom:min(330px,62%)}
@@ -150,7 +150,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
 /* intro + results overlay */
 .veil{
   position:absolute;inset:0;background:rgba(250,251,246,.97);z-index:9;
-  display:flex;flex-direction:column;justify-content:center;
+  display:flex;flex-direction:column;justify-content:safe center;
   padding:clamp(20px,4vw,40px);overflow-y:auto;
 }
 .veil.off{display:none}
@@ -223,7 +223,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
 
   <div class="lede">
     <h1>Typing<span class="dots">…</span></h1>
-    <p>Monday, 09:41. A client asks four words in a shared channel. What happens next depends less on what he wrote than on <em>what you decided it meant</em>.</p>
+    <p>Monday, 09:41. A client posts four words in a shared channel. What happens next depends less on what he wrote than on <em>what you decided it meant</em>.</p>
   </div>
 </div>
 
@@ -277,8 +277,8 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
 
     <!-- results -->
     <div class="veil off" id="out">
-      <div class="meta">Your ladder · 09:41 to 10:04</div>
-      <h2>There is no score here. It would not have helped.</h2>
+      <div class="meta">Your ladder · 09:41 to 09:58</div>
+      <h2 id="outh" tabindex="-1">What was on your screen, and what you took it as</h2>
       <div class="ladder" id="ladder"></div>
       <div class="verdict" id="verdict"></div>
       <div class="row">
@@ -294,13 +294,13 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
   <div class="cols">
     <div>
       <h3>What this is</h3>
-      <p>A scenario that runs inside an interface you have used every working day for a decade. No tutorial, no onboarding, no new vocabulary — the shell explains how to play, so the writing is free to do everything else.</p>
-      <p>Four decisions, each launched from a different height. The game never says a choice was wrong. Afterwards it shows you the sentence that was on your screen, beside the sentence you replaced it with.</p>
+      <p>The scenario runs inside a work messenger, an interface you already use every day. It needs no tutorial, because the messenger already shows how to play. That leaves the writing free to carry the scenario.</p>
+      <p>Each of the four decisions can be made from a different rung of the ladder. The game never says a choice was wrong. Afterwards it shows you the sentence that was on your screen, beside the sentence you replaced it with.</p>
     </div>
     <div>
       <h3>The framework, and whose it is</h3>
-      <p>The rungs are the <b>Ladder of Inference</b> — observable data, selected data, meaning, assumption, conclusion, action. It belongs to <a href="https://en.wikipedia.org/wiki/The_Ladder_of_Inference" rel="noopener">Chris Argyris</a>, developed at Harvard and carried into wider use by Peter Senge.</p>
-      <p>I did not invent it. I made it playable, which is a different job and the only one I am claiming here.</p>
+      <p>The rungs come from the <b>Ladder of Inference</b>: observable data, selected data, meaning, assumption, conclusion, action. It belongs to <a href="https://en.wikipedia.org/wiki/Ladder_of_inference" rel="noopener">Chris Argyris</a>, developed at Harvard and carried into wider use by Peter Senge.</p>
+      <p>I did not invent it. My part was making it playable.</p>
     </div>
     <div>
       <h3>How the feedback behaves</h3>
@@ -308,22 +308,22 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
         <li>Arrives mid-play, never as a report at the end</li>
         <li>About how you decided, never about who you are</li>
         <li>Reframes instead of evaluating</li>
-        <li>Stays tentative — you should need it less next time</li>
+        <li>Stays tentative, so you need it less next time</li>
         <li>No scores, no percentage, no stars</li>
         <li>Every note ends with one thing to try tomorrow</li>
       </ul>
     </div>
     <div>
       <h3>How it was made</h3>
-      <p>One HTML file. No framework, no build step, no dependencies — it will still open in ten years. Claude did most of the typing and I did the arguing, over about a day.</p>
-      <p>The longest part was the dwell on the typing indicator, which is the only reason any of it feels like a room.</p>
+      <p>One HTML file, with no framework and no build step. Claude did most of the typing and I did the arguing.</p>
+      <p>The longest part was tuning how long the typing indicator stays up before each message. That pause is what makes the channel feel like a room.</p>
     </div>
   </div>
 
   <h3 class="sect">Longer things, same instinct</h3>
   <div class="more">
-    <a class="card" href="../fintech-fraud-triage/"><b>RiskDesk</b><span>A payments fraud-review console. A shift clock, a queue, and a real cost to clearing it quickly.</span></a>
-    <a class="card" href="../incident-response/"><b>Night Shift</b><span>A branching fraud incident at 02:00. Every branch survivable, none of them clean.</span></a>
+    <a class="card" href="../fintech-fraud-triage/"><b>RiskDesk</b><span>A payments fraud review queue. Ten cases a shift, each with a risk score you may need to overrule.</span></a>
+    <a class="card" href="../incident-response/"><b>Night Shift</b><span>A card-testing attack at 02:14 with six endings. Only one of them is clean.</span></a>
     <a class="card" href="../mini-cases/"><b>Three mini-cases</b><span>Phish or pass, the first thirty seconds of a support call, and routing a purchase order.</span></a>
   </div>
 </div>
@@ -378,7 +378,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
               "Could be ownership. Could be a flinch. From here the two look identical, and only one of them is cheap.",
               "Tomorrow: read the message a second time before you decide what it is about."] },
 
-        { label:"Take it out of the channel — message Priya: “client's unhappy about the deck, what happened?”", rung:"assum",
+        { label:"Take it out of the channel. Message Priya: “client's unhappy about the deck, what happened?”", rung:"assum",
           took:"he is unhappy and someone here is at fault",
           say:{w:"you", x:"client's unhappy about the deck — what happened?", dm:"Priya"},
           then:[{w:"pri", x:"unhappy how? he said four words", dm:"Priya"},
@@ -418,7 +418,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
           took:"I do not know yet, and I will say so",
           say:{w:"you", x:"Checking now."},
           then:[{w:"tom", x:"it was the folder one. i thought that was the final version"},{w:"pri", x:"it wasn't."}],
-          dm:["Two words with no promises in them. You bought time without spending anything, which is more underrated than it sounds.",
+          dm:["Two words, no promises. You bought time without committing to anything.",
               "Tomorrow: notice you can do the same when you do know, and want a moment anyway."] },
 
         { label:"“The one you sent Friday.”", rung:"mean",
@@ -426,7 +426,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
           say:{w:"you", x:"The one you sent Friday."},
           then:[{w:"pri", x:"It wasn't. I'm looking at the file."},{w:"dev", x:"👀"}],
           dm:["You said a thing you hoped was true in the voice you keep for things you know.",
-              "The cost is not the mistake. It is that the next true thing you say now arrives at a discount.",
+              "The mistake itself is small. The bigger cost is that people will trust your next certain statement a little less.",
               "Tomorrow: put “I think” in front of one sentence out loud. It costs less than it feels like it will."] },
 
         { label:"Message Tom quietly: “did you send the folder version?”", rung:"assum",
@@ -454,7 +454,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
           say:{w:"you", x:"Thanks Tom. Dev — corrected deck with you in ten, and I'll flag exactly what changed."},
           then:[{w:"dev", x:"Ten's fine."},{w:"pri", x:"thank you"}],
           dm:["You let him keep his footing and still moved the thing forward, in one message, in front of the client.",
-              "Tomorrow: notice what it cost you to leave the record uncorrected. That is the muscle, not the sentence."] },
+              "Tomorrow: notice what it cost you to leave the record uncorrected. That restraint is the skill here."] },
 
         { label:"Delete his message.", rung:"assum",
           took:"this is damage, and damage can be removed",
@@ -462,7 +462,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
           then:[{gone:"This message was deleted"},
                 {w:"dev", x:"I read it."},
                 {w:"tom", x:"did i do something wrong", dm:"Tom"}],
-          dm:["It had already been read. What you removed was the record, not the moment.",
+          dm:["It had already been read. Deleting it removed the record, and Dev still saw it.",
               "Tomorrow: when you want to delete something, first write what you would say instead. Often you send that."] },
 
         { label:"Message Tom: “please don't apologise to clients before we've talked.”", rung:"mean",
@@ -471,7 +471,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
           then:[{w:"tom", x:"understood. sorry.", dm:"Tom"},
                 {sys:"Tom does not post again this morning."},
                 {w:"dev", x:"So — ten minutes?"}],
-          dm:["The right note, played into a room he had already left, while the client waited in the one you were both standing in.",
+          dm:["The note was right, but you sent it in private while the client was still waiting in the channel.",
               "Tomorrow: the correction and the cover can be two messages thirty seconds apart. They do not compete."] },
 
         { label:"“Tom's covering for me — I sent that file. Fixed version in ten.”", rung:"belief",
@@ -615,6 +615,8 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
       });
       deck.hidden = false;
       busy = false;
+      deck.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
+      if (opts.firstChild) opts.firstChild.focus({ preventScroll: true });
     });
   }
 
@@ -639,6 +641,7 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
         }).join("");
         dm.classList.add("on");
         feed.classList.add("noted");
+        document.getElementById("dmgo").focus({ preventScroll: true });
         setTimeout(bottom, 240); // after the padding transition, or it lands short
         // the player sets the pace here — a timer would decide for them how
         // long their own decision is worth thinking about
@@ -667,22 +670,24 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
 
     var count = {};
     picks.forEach(function(p){ count[p.rung] = (count[p.rung] || 0) + 1; });
-    var top = Object.keys(count).sort(function(a, b){ return count[b] - count[a]; })[0];
+    // ties go to the lower rung, so the verdict never depends on the order of the picks
+    var LADDER = ["data", "mean", "assum", "belief", "none"];
+    var top = Object.keys(count).sort(function(a, b){ return count[b] - count[a] || LADDER.indexOf(a) - LADDER.indexOf(b); })[0];
 
     var verdict = {
-      data:  ["You spent most of the morning on the bottom rung — the one where the actual words are still in your hand.",
+      data:  ["You spent most of the morning on the bottom rung, where the actual words are still in front of you.",
               "It is slower in the moment, and it is the only place from which someone can talk you out of a mistake.",
               "Tomorrow: notice which situation makes you climb. It will not be the loud one."],
       mean:  ["You mostly acted on your reading of the room, and your reading was often good.",
-              "The part worth keeping hold of is that it was a reading. Right and checked are different states.",
+              "The part worth keeping hold of is that it was a reading. A reading can be right and still unchecked.",
               "Tomorrow: name your reading out loud before you act on it, once, to one person."],
       assum: ["You filled in the missing parts quickly and then treated the filling as the message.",
               "Everyone does this. The difference is whether you can still find the seam afterwards.",
               "Tomorrow: when certainty arrives early, look for the sentence nobody actually wrote."],
       belief:["You worked from what you already believed about the morning rather than from what was in front of you.",
               "It makes for a calmer room and a version of events you then have to maintain.",
-              "Tomorrow: separate the story that helps from the story that holds."],
-      none:  ["You let the room decide more than once, and the room was glad to.",
+              "Tomorrow: before you tell the calm version of events, check that it is also the accurate one."],
+      none:  ["You let the room decide at the first message, and the room was glad to.",
               "Waiting is a real option. It only works when the other people know you have chosen it.",
               "Tomorrow: say that you are waiting."]
     }[top] || [];
@@ -693,6 +698,9 @@ h1 .dots{color:var(--ink-faint);font-weight:500}
     }).join("");
 
     out.classList.remove("off");
+    out.scrollTop = 0;
+    document.getElementById("app").scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" });
+    document.getElementById("outh").focus({ preventScroll: true });
   }
 
   /* ---------- wiring ---------- */
