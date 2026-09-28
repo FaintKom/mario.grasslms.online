@@ -101,8 +101,8 @@ const ITEMS = [
     mail:{ from:'IT Support &lt;it-helpdesk@yourcompany-<span class="redch">security.net</span>&gt;', subj:'ACTION REQUIRED: password expires in 2 hours', time:'Mon 08:58',
       body:'Your network password expires today at 17:00. To avoid losing access, confirm your current password here: <span class="mono">[Verify now]</span>' },
     opts:[
-      { t:'Report', ok:true, fb:'Correct. This one fools about 4 out of 10 people. Three tells: an urgent deadline out of nowhere, a look-alike domain (yourcompany-security.net isn\'t your company), and it asks for your password. IT never asks you to confirm a password by email.' },
-      { t:'Trust', ok:false, fb:'This is the one that gets people. No shame, it\'s built to. A 2-hour deadline you never heard about, a domain that almost matches, and a request for your password. Urgent + mismatch + credentials = stop.' },
+      { t:'Report', ok:true, fb:'Correct. Three tells: an urgent deadline out of nowhere, a look-alike domain (yourcompany-security.net isn\'t your company), and it asks for your password. IT never asks you to confirm a password by email.' },
+      { t:'Trust', ok:false, fb:'This is the one that gets people. No shame, it\'s built to. A 2-hour deadline you never heard about, a domain that almost matches, and a request for your password. Any one of those is reason to stop.' },
     ], ref:'27002 §8.7, §5.17' },
 
   { id:'u1-probe-3', tag:'cold probe · Trust / Report',
@@ -113,25 +113,25 @@ const ITEMS = [
       { t:'Trust', ok:false, fb:'Check the tells: did you expect this invoice? Is supplier-invoices.com a supplier you know? Why a zip file, why 24 hours? Unexpected, urgent and carrying an attachment is the standard malware pattern.' },
     ], ref:'27002 §8.7' },
 
-  { id:'u1-check-1', tag:'check · cue recognition',
-    q:'A message you never expected gives you two hours to act. Which cue family is that?',
+  { id:'u1-check-1', tag:'check · spotting a tell',
+    q:'A message you never expected gives you two hours to act. Which tell is that?',
     opts:[
-      { t:'Look-alike domain', ok:false, fb:'This one is about timing, not content: you didn\'t expect it, and it pushes you to hurry. That combination is cue one: manufactured pressure.' },
-      { t:'Unexpected + urgent', ok:true, fb:'Yes. Pressure out of nowhere exists to make you skip thinking. The pause costs three seconds; nothing legitimate breaks because you verified first.' },
-      { t:'Crown jewels', ok:false, fb:'Not quite. Nothing has been asked for yet. The tell here is timing: unexpected and urgent at once. That is cue one.' },
-      { t:'Link mismatch', ok:false, fb:'No link in play yet. The tell is that it\'s unexpected and pushes you to hurry: cue one, manufactured pressure.' },
+      { t:'Look-alike domain', ok:false, fb:'This one is about timing, not content: you didn\'t expect it, and it pushes you to hurry. That combination is tell one: unexpected and urgent.' },
+      { t:'Unexpected and urgent', ok:true, fb:'Yes. Pressure out of nowhere is there to make you skip thinking. Pause and check. Nothing legitimate breaks because you checked first.' },
+      { t:'Asks for secrets', ok:false, fb:'Not quite. Nothing has been asked for yet. The tell here is timing: unexpected and urgent at once. That is tell one.' },
+      { t:'Link mismatch', ok:false, fb:'No link in play yet. The tell is that it\'s unexpected and pushes you to hurry: tell one, unexpected and urgent.' },
     ], ref:'27002 §8.7' },
 
   { id:'u1-check-2', tag:'check · the rule',
-    q:'How many cues do you need before you slow down and report?',
+    q:'How many tells do you need before you stop and report?',
     opts:[
-      { t:'One is enough: any single tell means stop and check', ok:true, fb:'Right. You never need a second cue. One tell, unexpected timing, a mismatched domain, a request for credentials, is already the reason to stop and report. You don\'t need to be sure it\'s fake; that\'s the security team\'s job.' },
-      { t:'At least two', ok:false, fb:'That\'s too high a bar. Waiting for a second cue lets the first one do its work on you. One tell is already enough to stop and report.' },
-      { t:'All four', ok:false, fb:'Waiting for every tell to line up is how phish win. One cue, on its own, is enough to stop and report.' },
+      { t:'One is enough: any single tell means stop and check', ok:true, fb:'Right. One tell is enough. Unexpected timing, a mismatched domain or a request for a password: any one of them is reason to stop and report. You don\'t need to be sure it\'s fake. Checking is the security team\'s job.' },
+      { t:'At least two', ok:false, fb:'That\'s too high a bar. Waiting for a second tell gives the first one time to work on you. One tell is already enough to stop and report.' },
+      { t:'All four', ok:false, fb:'If you wait for every tell to line up, the phish has more time to work. One tell is enough to stop and report.' },
       { t:'Only when IT confirms', ok:false, fb:'That\'s backwards: you report so IT can confirm. One tell on your side is already enough to send it in.' },
     ], ref:'27002 §8.7, §6.8' },
 
-  { id:'u1-check-3', tag:'check · crown jewels',
+  { id:'u1-check-3', tag:'check · asks for secrets',
     q:'An email from "IT Support" asks you to confirm your current password. What does that tell you?',
     opts:[
       { t:'Routine security practice, comply', ok:false, fb:'No legitimate system asks you to confirm your password by email; IT resets passwords, it doesn\'t collect them.' },
@@ -154,15 +154,15 @@ const ITEMS = [
       body:'I\'m heading into a board meeting and can\'t talk. I need you to buy 4 × €100 gift cards for a client thank-you. Send me the codes here. Keep it between us for now.' },
     opts:[
       { t:'Report', ok:true, fb:'Correct. Authority, urgency, secrecy and gift cards: the full CEO-fraud pattern, from a personal address. Real executives don\'t buy gift cards by email, and "keep it between us" exists to stop you verifying.' },
-      { t:'Trust', ok:false, fb:'The name is real. That\'s what makes it work. Look at the address: gmail, not your company. And the ask: gift-card codes, urgently, in secret. "Don\'t tell anyone" is itself the tell.' },
+      { t:'Trust', ok:false, fb:'The name is real. That\'s what makes it work. Look at the address: gmail, not your company. And the ask: gift-card codes, urgently, in secret. "Keep it between us" is a tell on its own.' },
     ], ref:'27002 §8.7, §6.3' },
 
   { id:'u1-perf-2', tag:'harder · plausible notification',
     mail:{ from:'SharePoint &lt;no-reply@sharepointonline.com&gt;', subj:'Priya Nair shared "Q3-planning.xlsx" with you', time:'Mon 09:45',
-      body:'"Open document" → hover shows <span class="mono" style="color:#d93025">http://docs-share-view.ru/a8f2</span>' },
+      body:'<span style="color:#1a73e8;text-decoration:underline">Open document</span><span class="mono" style="display:block;margin-top:10px;font-size:12px;color:#5f6368">Hover shows: <span style="color:#d93025">http://docs-share-view.ru/a8f2</span></span>' },
     opts:[
       { t:'Report', ok:true, fb:'Right. The only visible tell is the link. The sender looks plausible, the colleague is real, sharing files is normal. But hover shows the destination is a random domain, not your document platform.' },
-      { t:'Trust', ok:false, fb:'Everything looks routine, except where the link actually goes. Hover: docs-share-view.ru is not your document platform. One tell can be the only tell. Unsure? Ask the colleague in chat, not by replying.' },
+      { t:'Trust', ok:false, fb:'Everything looks routine, except where the link actually goes. Hover: docs-share-view.ru is not your document platform. Sometimes there is only one tell. Unsure? Ask the colleague in chat, not by replying to the email.' },
     ], ref:'27002 §8.7' },
 ];
 
@@ -241,7 +241,7 @@ function buildDeck() {
     const scenario = item.mail
       ? renderMailScenario(item.mail)
       : `<div class="qtext">${item.q}</div>`;
-    card.innerHTML = `<div class="eyebrow">Question ${idx + 1} of ${ITEMS.length}</div>${scenario}<div class="opts"></div><div class="fb"></div>`;
+    card.innerHTML = `<div class="eyebrow">Question ${idx + 1} of ${ITEMS.length}</div>${scenario}<div class="opts"></div><div class="fb" role="status"></div>`;
     const optsBox = card.querySelector('.opts');
     const fb = card.querySelector('.fb');
     item.opts.forEach(o => {

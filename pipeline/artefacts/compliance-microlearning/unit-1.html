@@ -80,7 +80,8 @@ body.no-scroll { overflow: hidden; }
         background: var(--panel); border-right: 1px solid var(--line2); box-shadow: 10px 0 44px rgba(0,0,0,.5);
         transform: translateX(-100%); transition: transform .28s cubic-bezier(.2,1,.4,1); }
 .rail.open { transform: none; }
-.step { display: flex; gap: 11px; align-items: flex-start; padding: 11px 12px; border-radius: 12px; cursor: pointer; margin-bottom: 3px; transition: .15s; }
+.step { width: 100%; border: 0; background: none; color: inherit; font: inherit; text-align: left; display: flex; gap: 11px; align-items: flex-start; padding: 11px 12px; border-radius: 12px; cursor: pointer; margin-bottom: 3px; transition: .15s; }
+.step:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 .step:hover { background: rgba(53,182,255,.08); }
 .step.active { background: rgba(53,182,255,.14); box-shadow: inset 0 0 0 1px var(--line2), 0 0 18px rgba(53,182,255,.12); }
 .step.active .s-t { color: var(--blue); }
@@ -129,6 +130,8 @@ iframe { width: 100%; border: 0; display: block; }
 .film16x9 { position: relative; width: 100%; max-width: 820px; aspect-ratio: 16 / 9; max-height: 66vh; margin: 4px auto 0;
             border-radius: 16px; overflow: hidden;
             border: 1px solid var(--line2); box-shadow: 0 0 0 1px rgba(53,182,255,.05), 0 18px 50px rgba(0,0,0,.4); background: #0E1116; }
+.film-turn { display: none; }
+@media (max-width: 600px) { .film-turn { display: block; } }
 .film16x9 iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
 /* longread */
@@ -264,6 +267,7 @@ if(__exports != exports)module.exports = exports;return module.exports}));
 <div class="bar">
   <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="rail" aria-haspopup="true"><span class="ic" aria-hidden="true">&#9776;</span>Steps</button>
   <a class="bar-home" href="../../../">← Portfolio</a>
+  <a class="bar-home" href="index.html">Course map</a>
   <span class="title"></span>
   <span class="quizscore" id="quizScore" hidden></span>
   <div class="prog"><div class="track"><div class="fill" id="fill"></div></div><span class="pct" id="pct">0%</span></div>
@@ -276,7 +280,7 @@ if(__exports != exports)module.exports = exports;return module.exports}));
   <main class="main" id="main"></main>
 </div>
 
-<script>window.PRERENDERED_READING = {"Four tells, every time": "You get dozens of messages a day. Most are fine. The dangerous ones work because they look like the fine ones, and because they land when you're busy.\n\nFilters catch most phishing. The messages that reach you are the ones that slipped past them, so the last control is you. Four tells cover it. Running through them takes under ten seconds, and any single one is enough to stop.\n\n**1. Unexpected + urgent.** Real work is rarely both. A message you didn't expect, pushing you to act *right now*: account closing, invoice overdue, boss needs gift cards before a meeting. The pressure is manufactured. It's there so you skip thinking. Urgency is the attacker's favourite tool because it works on smart, busy people. The fix costs three seconds. Pause. Nothing legitimate breaks because you checked first.\n\n**2. Sender mismatch.** The display name says your bank, your IT team, your CEO. The real address says something else. Tap or hover on the sender and read it. Look-alike domains are the classic move: `yourc0mpany.com`, `yourcompany-support.net`. One character off is all it takes. One glance catches it.\n\n**3. It asks for the crown jewels.** Passwords, MFA codes, payment changes, gift cards. Legitimate systems don't ask you to \"confirm your password\" by email. Your IT team never needs it. They have admin access. Anyone asking for an MFA code is asking to *be you*. This tell alone ends the conversation.\n\n**4. Unexpected link or attachment.** Before you click, hover. The destination shows in the corner. On a phone, long-press the link to preview it. If a \"shared document\" points somewhere other than your document platform, that's the whole story. Attachments you weren't expecting, especially ones that want you to \"enable content,\" are the standard malware route. ISO 27002 puts user awareness at the centre of malware defence (§8.7), because this is where the automated controls run out.\n\nOne tell is reason enough to stop and report it with your **Report Phishing** button. You don't need a second. Reporting a false alarm costs security thirty seconds. Missing a real phish costs weeks.\n\nAnd if you already clicked? Report anyway, now. Speed is what separates an incident from a disaster."};</script>
+<script>window.PRERENDERED_READING = {"Four tells, every time": "You get dozens of messages a day. Most are fine. The dangerous ones work because they look like the fine ones, and because they land when you're busy.\n\nFilters catch most phishing. The messages that reach you are the ones that slipped past them, so the last control is you. Four tells cover almost every case. Checking them is quick, and any one of them is enough reason to stop.\n\n**1. Unexpected and urgent.** Real work is rarely both. A message you didn't expect, pushing you to act *right now*: account closing, invoice overdue, boss needs gift cards before a meeting. The pressure is manufactured. It's there so you skip thinking. Urgency is the attacker's favourite tool because it works on smart, busy people. The fix is to pause. Nothing legitimate breaks because you checked first.\n\n**2. Sender mismatch.** The display name says your bank, your IT team, your CEO. The real address says something else. Tap or hover on the sender and read it. Look-alike domains are the classic move: `yourc0mpany.com`, `yourcompany-support.net`. Often only one character is different, so read the whole address.\n\n**3. Asks for secrets.** Passwords, MFA codes, payment changes, gift cards. Legitimate systems don't ask you to \"confirm your password\" by email. Your IT team never needs it. They have admin access. Anyone asking for an MFA code is asking to *be you*. This tell on its own is reason to stop.\n\n**4. Link mismatch.** Before you click, hover. The destination shows in the corner. On a phone, long-press the link to preview it. If a \"shared document\" points somewhere other than your document platform, don't open it. Attachments you weren't expecting, especially ones that want you to \"enable content,\" are the standard malware route. ISO 27002 (§8.7) pairs technical malware controls with user awareness, because this is where the automated controls stop.\n\nOne tell is reason enough to stop and report it with your **Report Phishing** button. You don't need a second. A false alarm costs the security team a quick look. A missed phish can cost far more.\n\nAnd if you already clicked? Report it now anyway. The sooner security knows, the less damage an attacker can do."};</script>
 <script>
 /* Unit 1 — Would you click? Content module: data + bespoke prose renderers.
    The shell engine (shell/shell.js) boots from this object on DOMContentLoaded. */
@@ -287,20 +291,20 @@ const SRC = 'content/interactives/';
 function introHTML() {
   return `<div class="step-eyebrow">Unit 1 · Security &amp; Privacy Essentials</div>
     <h1>Would you click?</h1>
-    <p class="lead">Phishing gets through the filters when it looks ordinary and lands when you're busy. The last check is you, and it takes under ten seconds. This short unit gives you four of them, plus the one safe thing to do every time.</p>
-    <div class="meta-row"><span class="chip">~10 min</span><span class="chip">self-paced</span><span class="chip g">ISO 27002 §8.7 · §5.17 · §6.3 · §6.8</span></div>
+    <p class="lead">Phishing gets past filters when it looks ordinary and arrives when you're busy. After the filters, the last check is you. This unit gives you four quick checks, and the one safe thing to do every time.</p>
+    <div class="meta-row"><span class="chip">~9 min</span><span class="chip">self-paced</span><span class="chip g">ISO 27002 §8.7 · §5.17 · §6.3 · §6.8</span></div>
     <ul class="objs">
-      <li><span class="ic">1</span><div><b>Spot four tells</b> in any suspicious message: unexpected + urgent, sender mismatch, credential ask, link mismatch.</div></li>
-      <li><span class="ic">2</span><div><b>Know the rule:</b> one tell is enough. Stop and report, no need to wait for a second sign.</div></li>
+      <li><span class="ic">1</span><div><b>Spot four tells</b> in any suspicious message: unexpected and urgent, sender mismatch, asks for secrets, link mismatch.</div></li>
+      <li><span class="ic">2</span><div><b>Know the rule:</b> one tell is enough. Stop and report it. You don't need a second sign.</div></li>
       <li><span class="ic">3</span><div><b>Do the safe move:</b> report, don't just delete.</div></li>
     </ul>`;
 }
 
 function commitHTML() {
   return `<h2>One habit to keep</h2>
-    <p class="lead">"Next time a message is unexpected AND urgent, I'll pause and verify before I click."</p>
+    <p class="lead">"Next time a message is unexpected and urgent, I'll stop and check before I click."</p>
     <div class="callout"><b>Quiet question, just for you:</b> which message this week came closest to fooling you? You don't have to answer here, just notice it.</div>
-    <p style="max-width:680px">That's Unit 1. Next up: the 30-second habit that stops most account takeovers, passwords and MFA.</p>`;
+    <p style="max-width:680px">That's Unit 1. Unit 2 covers passwords and multi-factor sign-in.</p>`;
 }
 
 window.LESSON = {
@@ -308,7 +312,7 @@ window.LESSON = {
   title: 'Would you click?',
   steps: [
     { n:1, t:"Start here", d:"What this unit is", kind:'prose', render: introHTML },
-    { n:2, t:"Watch", d:"Would you click? · 2 min", kind:'embed', fit:'video', src:SRC+"v1-would-you-click/index.html",
+    { n:2, t:"Watch", d:"Would you click? · 2 min", kind:'embed', fit:'film16x9', src:SRC+"v1-would-you-click/index.html",
       gate:"watch", gateHint:"Watch to the end to continue." },
     { n:3, t:"The four tells", d:"Read · 2 min", kind:'reading',
       src:'content/01-security-privacy-essentials.md', section:'Four tells, every time' },
@@ -317,7 +321,7 @@ window.LESSON = {
       gate:"questions", gateHint:"Get at least 7 of 9 right to continue." },
     { n:5, t:"Practice", d:"Your inbox · flag the tells", kind:'embed', fit:'tall', src:SRC+"u1-inbox-simulator.html",
       hint:"Open all three, flag what's off, then Check.",
-      gate:"practice", gateHint:"Flag every tell with no false alarms, then Check. A clean sweep unlocks the next step." },
+      gate:"practice", gateHint:"Flag every tell and nothing else, then press Check. That unlocks the next step." },
     { n:6, t:"Commit", d:"One habit to keep", kind:'prose', render: commitHTML },
   ],
 };
@@ -405,7 +409,10 @@ function boot() {
     rail.appendChild(head);
     STEPS.forEach((s, i) => {
       const locked = i > cur && !reachable(i);
-      const el = document.createElement('div');
+      const el = document.createElement('button');
+      el.type = 'button';
+      if (locked) el.disabled = true;
+      if (i === cur) el.setAttribute('aria-current', 'step');
       el.className = 'step' + (i === cur ? ' active' : '') + (seen.has(i) && i !== cur ? ' done' : '') + (locked ? ' locked' : '');
       const badge = locked ? '🔒' : (seen.has(i) && i < cur ? '✓' : s.n);
       el.innerHTML = `<span class="s-n">${badge}</span><div><div class="s-t">${s.t}</div><div class="s-d">${s.d}</div></div>`;
@@ -442,10 +449,11 @@ function boot() {
 
     embed(s) {
       if (s.fit === 'film16x9') {
-        return `<div class="film16x9"><iframe src="${s.src}" title="${s.t}" loading="lazy" allowfullscreen></iframe></div>`
+        return `<div class="film16x9"><iframe src="${s.src}" title="${s.t}" loading="lazy" allow="autoplay; fullscreen"></iframe></div>`
+          + `<p class="frame-hint film-turn">On a phone, turn it sideways or use the full-screen button.</p>`
           + (s.hint ? `<p class="frame-hint">${s.hint}</p>` : '');
       }
-      return `<div class="frame ${s.fit}"><iframe src="${s.src}" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`
+      return `<div class="frame ${s.fit}"><iframe src="${s.src}" title="${s.t}" loading="lazy" allow="autoplay; fullscreen"></iframe></div>`
         + (s.hint ? `<p class="frame-hint">${s.hint}</p>` : '');
     },
   };
@@ -542,12 +550,14 @@ function boot() {
     if (i > cur && !reachable(i)) return; // gated: finish the current activity first
     setRail(false);
     document.getElementById('quizScore').hidden = true; // score chip is quiz-step-only
-    cur = i; seen.add(i); saveSeen();
+    cur = i; seen.add(i); saveSeen(); store.write('cur', cur);
     if (cur === STEPS.length - 1) store.setFlag('done'); // reaching Finish = lesson done (map reads this)
     buildRail(); render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Resume where the learner left off, if that step is still reachable.
+  { const c = store.read('cur', 0); if (Number.isInteger(c) && c > 0 && c < STEPS.length && reachable(c)) { cur = c; seen.add(c); } }
   document.querySelector('.bar .title').textContent = LESSON.title;
   buildRail();
   render();
