@@ -37,5 +37,4 @@ Commit the `.jsx` source and the rebuilt `.js` together.
 
 ## Notes
 
-- The demos are built on invented briefs. Client work is described on the home page only.
 - DNS: `mario.grasslms.online` is a CNAME to `faintkom.github.io`.
