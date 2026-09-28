@@ -7,7 +7,8 @@
  * Include with:
  *   <script src="../_shared/desktop-only.js" data-shot="shots/case-a.jpg"
  *           data-back="../../" defer></script>
- * data-shot and data-back are resolved against the page URL.
+ * data-shot and data-back are resolved against the page URL. Optional
+ * data-back-label renames the back link (default "Back to portfolio").
  */
 (function () {
   var script = document.currentScript;
@@ -22,6 +23,7 @@
     if (!mq.matches || dismissed() || document.getElementById("desktop-only")) return;
     var shot = script && script.dataset.shot;
     var back = (script && script.dataset.back) || "/";
+    var backLabel = (script && script.dataset.backLabel) || "Back to portfolio";
 
     var css = document.createElement("style");
     css.textContent =
@@ -54,7 +56,7 @@
         (shot ? '<img alt="Screenshot of the simulation on a desktop screen" src="' + new URL(shot, location.href).href + '">' : "") +
         '<div class="do-a">' +
           '<button type="button" class="do-p" data-do="copy">Copy link</button>' +
-          '<a class="do-s" href="' + new URL(back, location.href).href + '">Back to portfolio</a>' +
+          '<a class="do-s" href="' + new URL(back, location.href).href + '">' + backLabel + '</a>' +
           '<button type="button" class="do-t" data-do="stay">Try it here anyway</button>' +
         "</div>" +
       "</div>";

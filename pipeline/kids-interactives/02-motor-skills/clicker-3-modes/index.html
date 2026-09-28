@@ -855,14 +855,23 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   [hidden] { display: none !important; }
 </style>
+<style>
+  /* Way back to the catalogue, same look as its own back link. */
+  .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
+    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+  .back:hover { color: var(--color-text); }
+  .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+</style>
 </head>
 <body class="arcade">
 
 <div class="wrap stack stack--loose">
 
   <header class="stack stack--tight">
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 6–9 · mouse and touch control</p>
+      <p class="eyebrow" data-t="eyebrow">Ages 6 to 9 · mouse and touch control</p>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
@@ -947,9 +956,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   const T = {
     en: {
-      eyebrow: "Ages 6–9 · mouse and touch control",
+      eyebrow: "Ages 6 to 9 · mouse and touch control",
       title1: "Get the", title2: "pointer", title3: "under control",
-      intro: "Four small games for your hand. Each one teaches it something it has to know before the rest of a computer makes any sense.",
+      intro: "Four small games for your hand. Each one practises a move you need for everything else on a computer.",
       pickGame: "Pick a game", pickLevel: "Level", pickLength: "Round length",
       start: "Start", stop: "Stop", again: "Play it again", back: "Pick another game",
       hits: "Hits", misses: "Missed", timeLeft: "Time left", accuracy: "On target",
@@ -957,10 +966,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       levels: { easy: "Easy", medium: "Medium", hard: "Hard" },
       lengths: { 30: "30 seconds", 60: "60 seconds" },
       modes: {
-        single: { name: "One click", note: "Land a single click on the circle before it goes." },
+        single: { name: "One click", note: "Click the circle once before it disappears." },
         double: { name: "Double click", note: "Two clicks, quickly, on the same circle." },
         drag:   { name: "Drag and drop", note: "Hold the circle and pull it into the frame." },
-        dodge:  { name: "Moving targets", note: "The circles will not wait for you. Catch them anyway." }
+        dodge:  { name: "Moving targets", note: "These circles keep moving. Click them anyway." }
       },
       hints: {
         single: "Click the circle.",
@@ -969,17 +978,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         dodge: "Click the circles while they move."
       },
       goal: "Drop here",
-      verdict: function (r) {
-        return r >= 90 ? "Almost every one. Try the next level up."
-             : r >= 70 ? "Solid. A little more speed and you are there."
-             : r >= 40 ? "Getting there. Run it once more."
-                       : "Slow down and aim. Speed comes after.";
+      verdict: function (r, total) {
+        return !total ? "You stopped before the first click. Press Play it again."
+             : r >= 80 ? "Almost every click landed. Try the next level up."
+             : r >= 50 ? "Good aim. Land a few more and you get three stars."
+                       : "Slow down and aim. Speed comes later.";
       }
     },
     es: {
-      eyebrow: "6–9 años · control del ratón y del dedo",
+      eyebrow: "De 6 a 9 años · control del ratón y del dedo",
       title1: "Toma el", title2: "control", title3: "del puntero",
-      intro: "Cuatro juegos pequeños para tu mano. Cada uno le enseña algo que necesita saber antes de que el resto del ordenador tenga sentido.",
+      intro: "Cuatro juegos pequeños para tu mano. Cada uno practica un movimiento que necesitas para todo lo demás en el ordenador.",
       pickGame: "Elige un juego", pickLevel: "Nivel", pickLength: "Duración",
       start: "Empezar", stop: "Parar", again: "Jugar otra vez", back: "Elegir otro juego",
       hits: "Aciertos", misses: "Fallos", timeLeft: "Tiempo", accuracy: "Precisión",
@@ -990,7 +999,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         single: { name: "Un clic", note: "Haz un clic en el círculo antes de que desaparezca." },
         double: { name: "Doble clic", note: "Dos clics seguidos en el mismo círculo." },
         drag:   { name: "Arrastrar y soltar", note: "Sujeta el círculo y llévalo al marco." },
-        dodge:  { name: "Objetivos en movimiento", note: "Los círculos no te esperan. Atrápalos igual." }
+        dodge:  { name: "Objetivos en movimiento", note: "Estos círculos no paran de moverse. Haz clic en ellos igual." }
       },
       hints: {
         single: "Haz clic en el círculo.",
@@ -999,10 +1008,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         dodge: "Haz clic en los círculos mientras se mueven."
       },
       goal: "Suelta aquí",
-      verdict: function (r) {
-        return r >= 90 ? "Casi todos. Prueba el nivel siguiente."
-             : r >= 70 ? "Muy bien. Un poco más de velocidad y ya está."
-             : r >= 40 ? "Vas mejorando. Hazlo otra vez."
+      verdict: function (r, total) {
+        return !total ? "Paraste antes del primer clic. Pulsa Jugar otra vez."
+             : r >= 80 ? "Casi todos los clics acertaron. Prueba el nivel siguiente."
+             : r >= 50 ? "Buena puntería. Acierta unos pocos más y tendrás tres estrellas."
                        : "Ve más despacio y apunta. La velocidad llega después.";
       }
     }
@@ -1101,12 +1110,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     place(el, SIZE, SIZE);
     field.appendChild(el);
 
-    var taps = 0;
+    var taps = 0, firstAt = 0;
     const gone = setTimeout(function () {
       if (el.isConnected) { scored(false, el); el.remove(); spawnTap(dbl); }
     }, life);
 
     el.onclick = function () {
+      /* A double click is two clicks within half a second. A slow second
+         click starts the pair again instead of counting. */
+      const now = performance.now();
+      if (dbl && taps === 1 && now - firstAt > 500) taps = 0;
+      if (taps === 0) firstAt = now;
       taps++;
       if (!dbl || taps >= 2) {
         clearTimeout(gone); scored(true, el); el.remove(); spawnTap(dbl);
@@ -1238,11 +1252,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     $("rHits").textContent = hits;
     $("rMiss").textContent = misses;
     $("rRate").textContent = rate + "%";
-    $("verdict").textContent = t().verdict(rate);
+    $("verdict").textContent = t().verdict(rate, total);
 
     /* Three stars, the way a match-three round ends: one for finishing, one
-       for half the taps landing, one for four in five. */
-    const earned = rate >= 80 ? 3 : rate >= 50 ? 2 : 1;
+       for half the taps landing, one for four in five. No clicks, no stars. */
+    const earned = !total ? 0 : rate >= 80 ? 3 : rate >= 50 ? 2 : 1;
     const box = $("stars");
     box.innerHTML = "";
     for (let i = 0; i < 3; i++) {

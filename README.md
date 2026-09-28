@@ -22,7 +22,7 @@ Then open http://localhost:8000.
 | `pipeline/mini-cases/` | Three SCORM mini-cases with their own index page |
 | `pipeline/fintech-fraud-triage/`, `vishing-call/`, `incident-response/`, `typing/` | Standalone scenario demos |
 | `pipeline/artefacts/compliance-microlearning/` | Compliance micro-course design map and playable Unit 1 |
-| `pipeline/kids-interactives/` | Catalogue of twenty activities for children |
+| `pipeline/kids-interactives/` | Catalogue of twenty-four activities for children |
 | `pipeline/_shared/` | Desktop-only notice for the simulations and the vendored React 18 production build |
 
 ## Mini-cases build

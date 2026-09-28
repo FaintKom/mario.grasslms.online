@@ -552,7 +552,6 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   @media (max-width: 700px)  { .rooms { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .room h3 { font-size: var(--t-base); }
   .room__head p { font-size: var(--t-2xs); }
-  .labels { max-height: 120px; overflow: auto; }
   .room { display: grid; gap: var(--s-3); align-content: start; }
   .room__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-2); }
   .room__n { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); }
@@ -585,12 +584,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   [hidden] { display: none !important; }
 </style>
+<style>
+  /* Way back to the catalogue, same look as its own back link. */
+  .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
+    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+  .back:hover { color: var(--color-text); }
+  .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+</style>
 </head>
 <body>
 
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
       <p class="eyebrow" data-t="eyebrow">Vision AI · gallery</p>
       <div class="langs" role="group" aria-label="Language">
@@ -599,13 +607,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       </div>
     </div>
     <h1><span data-t="title1">Show it a photo.</span> <em class="mark" data-t="title2">It says what it sees</em></h1>
-    <p class="lede" data-t="intro">Each room takes one kind of photo. Put a picture in the frame and a machine looks at it, says what it thinks it sees, and decides whether it belongs in that room.</p>
+    <p class="lede" data-t="intro">Each room takes one kind of photo. Put a picture in a frame. The machine says what it sees and decides whether the photo fits the room.</p>
   </header>
 
   <section class="card stack">
     <h2 data-t="setupTitle">Where the machine lives</h2>
-    <p class="muted" data-t="setupBody">The recogniser is not a website you send photos to. It is a 14 MB file that downloads once and then runs inside this page, on your own machine. Your photos never leave the computer, and there is no key and no account.</p>
-    <div id="netNote" class="feedback feedback--hint">It downloads the first time you use it: 14 MB, once, and then it is yours offline.</div>
+    <p class="muted" data-t="setupBody">The machine is not a website you send photos to. It is a 14 MB file that runs inside this page on your computer. Your photos stay on your computer, and you do not need an account.</p>
+    <div id="netNote" class="feedback feedback--hint">The 14 MB file downloads the first time you add a photo.</div>
   </section>
 
   <div class="hud">
@@ -621,7 +629,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   <section class="card stack" id="over" hidden aria-live="polite">
     <h2 data-t="wonTitle">The gallery is open</h2>
-    <p class="muted" data-t="wonBody">Five rooms, five photos, and a machine that agreed with every one of them.</p>
+    <p class="muted" data-t="wonBody">Every room has a photo, and the machine agreed with all five.</p>
     <div><button class="btn" id="again" data-t="again">Empty the gallery</button></div>
   </section>
 
@@ -654,7 +662,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
      The words are ImageNet's, not Vision's — a thousand class names, four
      hundred of them animals, almost none of them landscapes. That imbalance is
-     why the bars below differ so much from room to room. */
+     why the bars below differ so much from room to room. The bars were checked
+     against 25 open photos from Wikimedia Commons, five per room, with the
+     model reading input in the [0, 1] range. */
   var CATEGORY = {
     animal: {
       need: 0.25,
@@ -707,7 +717,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         "leaf", "branch", "fern", "moss", "cactus", "palm"]
     },
     transport: {
-      need: 0.20,
+      need: 0.15,   /* an airliner seen from below scores ~0.20 */
       keywords: ["car", "convertible", "cab", "taxi", "jeep", "limousine", "minivan",
         "wagon", "pickup", "truck", "trailer", "engine", "van", "ambulance", "bus",
         "trolleybus", "minibus", "scooter", "moped", "motorcycle", "tricycle", "unicycle",
@@ -746,51 +756,61 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     en: {
       eyebrow: "Vision AI · gallery",
       title1: "Show it a photo.", title2: "It says what it sees",
-      intro: "Each room takes one kind of photo. Put a picture in the frame and a machine looks at it, says what it thinks it sees, and decides whether it belongs in that room.",
+      intro: "Each room takes one kind of photo. Put a picture in a frame. The machine says what it sees and decides whether the photo fits the room.",
       setupTitle: "Where the machine lives",
-      setupBody: "The recogniser is not a website you send photos to. It is a 14 MB file that downloads once and then runs inside this page, on your own machine. Your photos never leave the computer, and there is no key and no account.",
-      idle: "It downloads the first time you use it: 14 MB, once, and then it is yours offline.",
-      loading: "Loading the recogniser…",
-      ready: "Ready. It knows a thousand kinds of thing, and four hundred of those are animals.",
-      failed: "The recogniser could not load. Open this page through a web server rather than straight from a folder: a browser will not read a 14 MB file off the disk from a file:// address.",
+      setupBody: "The machine is not a website you send photos to. It is a 14 MB file that runs inside this page on your computer. Your photos stay on your computer, and you do not need an account.",
+      idle: "The 14 MB file downloads the first time you add a photo.",
+      loading: "Loading the machine…",
+      ready: "Ready. It knows 1,000 kinds of things, and about 400 of them are animals.",
+      /* A browser will not read the 14 MB weights from a file:// address, so the page has to come from a web server. */
+      failed: "The machine did not load. Ask an adult to open this page from a web address, not from a file on the computer.",
       hungLabel: "Photos hung", again: "Empty the gallery",
       wonTitle: "The gallery is open",
-      wonBody: "Five rooms, five photos, and a machine that agreed with every one of them.",
+      wonBody: "Every room has a photo, and the machine agreed with all five.",
       rooms: {
         animal:    ["Animals", "Anything alive with fur, feathers or scales."],
-        nature:    ["Nature", "No people, no buildings — sky, water, trees, rock."],
+        nature:    ["Nature", "Sky, water, trees or rocks, with no people or buildings."],
         transport: ["Getting around", "Something that carries people or things."],
         sport:     ["Sport", "A game being played, or the kit for one."],
         food:      ["Food", "Something to eat or drink."]
       },
       dropHere: "Drop a photo here, or tap to choose one",
       thinking: "Looking at the photo…",
-      waiting: "Waiting for the recogniser to finish loading…",
+      waiting: "Waiting for the machine to finish loading…",
       badFile: "That is not an image file.",
+      badFileKept: "That is not an image file. The photo you had stays.",
       failedShot: "Something went wrong looking at that photo.",
       sawTitle: "What it saw",
       tally: function (got, need) { return "Matching guesses came to " + got + "%. This room needs " + need + "%."; },
       noLabels: "The machine saw nothing it could name in that photo.",
-      accepted: "Accepted — it belongs in this room.",
-      rejected: function (cat) { return "Rejected. Nothing in that photo looks like " + cat.toLowerCase() + " to the machine."; },
-      weak: "The machine is not sure enough about that photo. Try a clearer one."
+      accepted: "Accepted. It belongs in this room.",
+      rejected: function (room) {
+        return {
+          animal: "Rejected. The machine found no animal in this photo.",
+          nature: "Rejected. The machine found no nature in this photo.",
+          transport: "Rejected. The machine found nothing that carries people or things.",
+          sport: "Rejected. The machine found no sport in this photo.",
+          food: "Rejected. The machine found no food in this photo."
+        }[room];
+      },
+      weak: "The machine is not sure about this photo. Try a clearer one."
     },
     es: {
       eyebrow: "IA de visión · galería",
       title1: "Enséñale una foto.", title2: "Dice lo que ve",
-      intro: "Cada sala admite un tipo de foto. Pon una imagen en el marco y una máquina la mira, dice qué cree que ve y decide si encaja en esa sala.",
+      intro: "Cada sala admite un tipo de foto. Pon una imagen en un marco. La máquina dice qué ve y decide si la foto encaja en la sala.",
       setupTitle: "Dónde vive la máquina",
-      setupBody: "El reconocedor no es una web a la que mandas fotos. Es un archivo de 14 MB que se descarga una vez y luego funciona dentro de esta página, en tu propio ordenador. Tus fotos no salen de ahí, y no hace falta ni clave ni cuenta.",
-      idle: "Se descarga la primera vez que lo usas: 14 MB, una sola vez, y luego lo tienes sin conexión.",
-      loading: "Cargando el reconocedor…",
-      ready: "Listo. Conoce mil tipos de cosa, y cuatrocientos de ellos son animales.",
-      failed: "El reconocedor no ha podido cargarse. Abre esta página con un servidor web y no directamente desde una carpeta: un navegador no lee un archivo de 14 MB desde una dirección file://.",
+      setupBody: "La máquina no es una web a la que mandas fotos. Es un archivo de 14 MB que funciona dentro de esta página, en tu ordenador. Tus fotos se quedan en tu ordenador y no necesitas ninguna cuenta.",
+      idle: "El archivo de 14 MB se descarga la primera vez que añades una foto.",
+      loading: "Cargando la máquina…",
+      ready: "Listo. Conoce 1000 tipos de cosas, y unos 400 son animales.",
+      failed: "La máquina no se ha cargado. Pide a un adulto que abra esta página desde una dirección web, no desde un archivo del ordenador.",
       hungLabel: "Fotos colgadas", again: "Vaciar la galería",
       wonTitle: "La galería está abierta",
       wonBody: "Cinco salas, cinco fotos y una máquina que estuvo de acuerdo con todas.",
       rooms: {
         animal:    ["Animales", "Cualquier ser vivo con pelo, plumas o escamas."],
-        nature:    ["Naturaleza", "Sin personas ni edificios: cielo, agua, árboles, roca."],
+        nature:    ["Naturaleza", "Cielo, agua, árboles o rocas, sin personas ni edificios."],
         transport: ["Transporte", "Algo que lleva personas o cosas."],
         sport:     ["Deporte", "Un juego en marcha, o el material para jugarlo."],
         food:      ["Comida", "Algo de comer o de beber."]
@@ -799,12 +819,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       thinking: "Mirando la foto…",
       waiting: "Esperando a que termine de cargar el reconocedor…",
       badFile: "Ese archivo no es una imagen.",
+      badFileKept: "Ese archivo no es una imagen. La foto que tenías se queda.",
       failedShot: "Algo ha fallado al mirar esa foto.",
       sawTitle: "Lo que vio",
       tally: function (got, need) { return "Las conjeturas que encajan suman " + got + "%. Esta sala necesita un " + need + "%."; },
       noLabels: "La máquina no supo nombrar nada en esa foto.",
       accepted: "Aceptada: encaja en esta sala.",
-      rejected: function (cat) { return "Rechazada. Nada de esa foto le parece " + cat.toLowerCase() + " a la máquina."; },
+      rejected: function (room) {
+        return {
+          animal: "Rechazada. La máquina no encontró ningún animal en esta foto.",
+          nature: "Rechazada. La máquina no encontró naturaleza en esta foto.",
+          transport: "Rechazada. La máquina no encontró nada que lleve personas o cosas.",
+          sport: "Rechazada. La máquina no encontró deporte en esta foto.",
+          food: "Rechazada. La máquina no encontró comida en esta foto."
+        }[room];
+      },
       weak: "La máquina no está lo bastante segura de esa foto. Prueba con una más clara."
     }
   };
@@ -850,8 +879,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     return { ok: false, why: score > need * 0.45 ? "weak" : "reject", score: score };
   }
 
-  function note(room, kind, message) {
-    state[room].note = { kind: kind, message: message };
+  /* Notes keep the text key, not the text, so a language switch rewrites them. */
+  function note(room, kind, key, arg) {
+    state[room].note = { kind: kind, key: key, arg: arg };
   }
 
   /* The weights are big enough that the download deserves to be visible.
@@ -885,43 +915,43 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     if (netState === "idle") loadNet();
     if (netState === "loading") {
-      note(room, "hint", d.waiting);
+      note(room, "hint", "waiting");
       render();
       while (netState === "loading") await new Promise(function (r) { setTimeout(r, 200); });
     }
-    if (netState === "failed") { note(room, "no", d.failed); s.busy = false; render(); return; }
+    if (netState === "failed") { note(room, "no", "failed"); s.busy = false; render(); return; }
 
     try {
       var img = await loadImage(dataUrl);
       var preds = await net.classify(img, TOP_K);
       s.labels = preds.map(function (pr) { return [pr.className, pr.probability]; });
     } catch (err) {
-      note(room, "no", d.failedShot); s.busy = false; render(); return;
+      note(room, "no", "failedShot"); s.busy = false; render(); return;
     }
 
-    if (!s.labels.length) { note(room, "no", d.noLabels); s.busy = false; render(); return; }
+    if (!s.labels.length) { note(room, "no", "noLabels"); s.busy = false; render(); return; }
 
     var verdict = judge(s.labels, room);
     s.done = verdict.ok;
     s.score = verdict.score;
     s.busy = false;
-    if (verdict.ok) note(room, "ok", d.accepted);
-    else if (verdict.why === "weak") note(room, "no", d.weak);
-    else note(room, "no", d.rejected(d.rooms[room][0]));
+    if (verdict.ok) note(room, "ok", "accepted");
+    else if (verdict.why === "weak") note(room, "no", "weak");
+    else note(room, "no", "rejected", room);
     render();
   }
 
   function take(room, file) {
     var d = t();
     if (!file) return;
-    if (!/^image\//.test(file.type)) { note(room, "no", d.badFile); render(); return; }
+    if (!/^image\//.test(file.type)) { note(room, "no", state[room].done ? "badFileKept" : "badFile"); render(); return; }
 
     var reader = new FileReader();
     reader.onload = function (e) {
       var s = state[room];
       s.img = e.target.result;
       s.labels = null; s.done = false; s.busy = true; s.score = 0;
-      note(room, "hint", d.thinking);
+      note(room, "hint", "thinking");
       render();
       ask(room, s.img);
     };
@@ -995,7 +1025,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         s.labels.forEach(function (l) {
           var row = el("div", "label" + (belongs(l[0], room) ? " is-hit" : ""));
           var left = el("div");
-          left.appendChild(el("div", null, l[0]));
+          left.appendChild(el("div", null, l[0].split(",")[0]));
           var bar = el("div", "bar");
           var fill = el("i");
           fill.style.width = Math.round(l[1] * 100) + "%";
@@ -1011,7 +1041,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       }
 
       if (s.note) {
-        card.appendChild(el("div", "feedback feedback--" + s.note.kind, s.note.message));
+        var msg = d[s.note.key];
+        card.appendChild(el("div", "feedback feedback--" + s.note.kind, typeof msg === "function" ? msg(s.note.arg) : msg));
       }
 
       wrap.appendChild(card);

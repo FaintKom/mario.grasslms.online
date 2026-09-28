@@ -819,12 +819,22 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   [hidden] { display: none !important; }
 </style>
+<style>
+  /* Way back to the catalogue, same look as its own back link. */
+  .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
+    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+  .back:hover { color: var(--color-text); }
+  .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+</style>
+<script src="../../../_shared/desktop-only.js" data-shot="desktop-task-c1.jpg" data-back="../../index.html" data-back-label="Back to all activities" defer></script>
 </head>
 <body>
 
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
       <p class="eyebrow" data-t="eyebrow">Spaceport · sector C · task 1</p>
       <div class="langs" role="group" aria-label="Language">
@@ -982,7 +992,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       triesLabel: "Checks left", fixedLabel: "Fixed", findLabel: "Find and replace",
       findWhat: "Find", replaceWith: "Replace with", replaceAll: "Replace all",
       todoLabel: "Still to fix", check: "Send the message", reset: "Start over",
-      again: "Try again",
+      again: "Try again", playAgain: "Play again",
       shortcut: "Tip: you can also edit the text straight in the box.",
       text: "MISSION LOG\n\nThe rockit is fuelled and standing on pad two. Our astronowt has checked the cabin twice. The shipp will leave Earth and head for the red planit that we watch every night beside the bright starr.\n\nLaunch year: 2157",
       errors: [
@@ -1014,7 +1024,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       triesLabel: "Revisiones", fixedLabel: "Corregidos", findLabel: "Buscar y reemplazar",
       findWhat: "Buscar", replaceWith: "Reemplazar por", replaceAll: "Reemplazar todo",
       todoLabel: "Falta corregir", check: "Enviar el mensaje", reset: "Empezar de nuevo",
-      again: "Intentar otra vez",
+      again: "Intentar otra vez", playAgain: "Jugar otra vez",
       shortcut: "Truco: también puedes escribir directamente en el cuadro.",
       text: "DIARIO DE MISIÓN\n\nEl coete está cargado y espera en la plataforma dos. Nuestra astronowta ha revisado la cabina dos veces. La nabe saldrá de la Tierra hacia el planetta rojo que miramos cada noche junto a la estrela más brillante.\n\nAño de lanzamiento: 2157",
       errors: [
@@ -1120,12 +1130,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       byId("game").hidden = true; byId("over").hidden = false;
       remember();
       byId("overTitle").textContent = d.wonTitle;
+      byId("again").textContent = d.playAgain;
       byId("overBody").textContent = d.wonBody(used);
       return;
     }
     if (used >= TRIES) {
       byId("game").hidden = true; byId("over").hidden = false;
       byId("overTitle").textContent = d.lostTitle;
+      byId("again").textContent = d.again;
       byId("overBody").textContent = d.lostBody;
       return;
     }
