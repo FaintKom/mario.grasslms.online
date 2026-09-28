@@ -9,7 +9,7 @@
   "pains": [
     {
       "id": "PP-01",
-      "statement": "Last quarter there was a $1,200 charge nobody could explain for two weeks.",
+      "statement": "Last quarter there was a £1,200 charge nobody could explain for two weeks.",
       "archetype_label": "Maria · retail SMB (§12.1)",
       "correct_prop": 1,
       "source": "§12.1 — top pain 'who spent what'"

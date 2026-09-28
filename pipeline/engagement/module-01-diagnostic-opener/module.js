@@ -13,6 +13,7 @@
 
 import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
+import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 
 function closeAppsByName(appIds) {
   if (!state.api?.os?.listWindows) return;
@@ -58,7 +59,7 @@ async function loadAllData() {
   ]);
   state.transcripts = transcripts;
   state.prospects   = prospects;
-  state.quizItems   = quizItems;
+  state.quizItems   = normalizeQuiz(quizItems);
 }
 
 async function start() {
@@ -85,15 +86,15 @@ async function start() {
 start();
 
 const STEPS = [
-  { title: "A bottom-quartile rep just launched a pitch in 6 seconds",  handler: stepGainAttention },
-  { title: "By the end · one sharp question, then silence",             handler: stepStateOutcome },
-  { title: "M1 opens it. M2 saves it. M3 books it.",                    handler: stepRecallPrior },
-  { title: "Watch · M.G. opens Maria off a CH filing",                  handler: stepWorkedExample },
-  { title: "Your turn · pick the diagnostic for Tom",                   handler: stepCompletionProblem },
-  { title: "Solo · open Emma cold. Signal first, question second.",     handler: stepSoloProblem },
-  { title: "Your event log · what just happened",                       handler: stepFeedback },
-  { title: "Quick check · 3 questions",                                 handler: stepQuiz },
-  { title: "Key takeaway + your next retrieval drop",                   handler: stepTakeaway },
+  { title: "A bottom-quartile rep pitched in the first 6 seconds",      handler: stepGainAttention },
+  { title: "What you'll do: one sharp question, then silence",          handler: stepStateOutcome },
+  { title: "The three moves on every call",                             handler: stepRecallPrior },
+  { title: "Watch M.G. open Maria's call with a Companies House filing", handler: stepWorkedExample },
+  { title: "Your turn: pick Tom's diagnostic question",                 handler: stepCompletionProblem },
+  { title: "On your own: read Emma's signal, then ask your question",   handler: stepSoloProblem },
+  { title: "J.T.'s review of your opener",                              handler: stepFeedback },
+  { title: "Quick check: 3 questions",                                  handler: stepQuiz },
+  { title: "Takeaway and a 7-day refresher",                            handler: stepTakeaway },
 ];
 
 function runStep(i) {
@@ -122,13 +123,13 @@ function showWelcomeCard(onStart) {
   card.innerHTML = `
     <div class="welcome-card__panel">
       <span class="welcome-card__logo" aria-hidden="true">FTC</span>
-      <div class="welcome-card__kicker">Module 1 &middot; keystone opener</div>
+      <div class="welcome-card__kicker">Module 1 &middot; open the call</div>
       <h2 class="welcome-card__title" id="welcome-title">Diagnostic Opener</h2>
       <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
       <p class="welcome-card__lede">
-        Open every cold call with one specific question pulled off the buyer's
-        LinkedIn or Companies House profile. Then five seconds of silence —
-        that's where the signal lives.
+        Open every cold call with one specific question taken from the buyer's
+        LinkedIn or Companies House profile. Then stay quiet for five seconds.
+        What the buyer says in that pause tells you what hurts.
       </p>
       <button type="button" class="welcome-card__start" data-action="start">
         Start module &rarr;
@@ -197,11 +198,11 @@ function stepGainAttention(body) {
   body.innerHTML = `
     <blockquote class="peer-quote">
       First 6 seconds: pitch. Next 4 seconds: dial tone. Every time.
-      <cite>— J.T., pod lead · reviewing P.B.'s call log</cite>
+      <cite>J.T., pod lead, reviewing P.B.'s call log</cite>
     </blockquote>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
-      A bottom-quartile rep just launched into a pitch in 6 seconds. Maria
-      hung up. Today you'll learn the move top reps share.
+      P.B., a bottom-quartile rep, started pitching 6 seconds into the call,
+      and Maria hung up. In this module you'll learn how top reps open instead.
     </p>
   `;
   state.api.os.openApp("outreach", { highlightLeadId: "L-MARIA" });
@@ -254,16 +255,16 @@ function decorateOutreachForStep1() {
 
 function stepStateOutcome(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">By the end of these 10 min:</p>
+    <p style="font-size:14px;">In the next 10 minutes you'll practise two things:</p>
     <ul style="font-size:13.5px;margin:6px 0 10px 18px;">
-      <li><strong>One specific question</strong> off the buyer's LinkedIn / CH
-          profile in the first 60 seconds.</li>
-      <li><strong>Five seconds of silence</strong> after — that's where the
-          deal happens.</li>
+      <li><strong>One specific question</strong> from the buyer's LinkedIn or
+          Companies House profile in the first 60 seconds.</li>
+      <li><strong>Five seconds of silence</strong> after the question. Let the
+          buyer fill that pause, because that is where the deal starts.</li>
     </ul>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next action: open the LinkedIn / Companies House app to find Maria's
-      signal.
+      Next: find Maria's signal in the LinkedIn / Companies House window
+      that just opened.
     </p>
   `;
   state.api.os.openApp("linkedin-ch", { lookupId: "maria" });
@@ -272,8 +273,8 @@ function stepStateOutcome(body) {
     if (!lchBody) return;
     mountTaskBanner(lchBody, {
       id: "m1-s2-read-signal",
-      label: "Read the Companies House filing card — find Maria's signal",
-      hint: "Click the green chip below to confirm",
+      label: "Find Maria's signal in the Companies House filing",
+      hint: "Then click Got the signal below",
       state: "active",
     });
     if (!lchBody.querySelector("[data-m1-s2-done]")) {
@@ -304,14 +305,14 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Quick recall — three keystone moves:</p>
+    <p style="font-size:14px;">Quick recall: the three moves on every call.</p>
     <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
-      <li><strong>M1 · Diagnostic.</strong> ← <em>this module.</em></li>
+      <li><strong>M1 · Diagnostic.</strong> One sharp question off the profile. <em>This module.</em></li>
       <li><strong>M2 · Acknowledge.</strong> Restate the objection in their words.</li>
       <li><strong>M3 · Close.</strong> Two slots, one invite, during the call.</li>
     </ol>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next action: open the Phone-dialler — you'll dial after the worked example.
+      Next: open the phone dialler. You'll use it later in this module.
     </p>
   `;
   setTimeout(() => {
@@ -319,8 +320,8 @@ function stepRecallPrior(body) {
     if (lchBody) {
       mountTaskBanner(lchBody, {
         id: "m1-s3-open-phone",
-        label: "Open the Phone-dialler — prep for the worked-example call",
-        hint: "Use the button below or the taskbar",
+        label: "Open the phone dialler so it's ready for your call",
+        hint: "Use the button below",
         state: "active",
       });
       if (!lchBody.querySelector("[data-m1-s3-open-phone]")) {
@@ -328,7 +329,7 @@ function stepRecallPrior(body) {
         bar.style.cssText = "margin-top:10px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
         bar.innerHTML = `
           <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-            You'll need the dialler open with the silence-counter visible.
+            You'll call Emma from the dialler later in this module.
           </span>
           <button type="button" data-m1-s3-open-phone
                   style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
@@ -358,12 +359,12 @@ function stepRecallPrior(body) {
 function stepWorkedExample(body) {
   body.innerHTML = `
     <p style="font-size:14px;">
-      Watch <strong>M.G.</strong> open <strong>Maria</strong> with the
-      Companies House filing question. Then wait for the silence.
+      Watch <strong>M.G.</strong> open <strong>Maria</strong>'s call with a
+      question about her Companies House filing. Notice how long he waits after it.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Find the <strong>[M1]</strong> chip in the transcript. Click it to mark
-      this watched.
+      Find the <strong>[M1]</strong> chip in the transcript and click it when
+      you've read the call.
     </p>
   `;
   state.api.os.openApp("gong", {
@@ -375,8 +376,8 @@ function stepWorkedExample(body) {
     if (!gongBody) return;
     mountTaskBanner(gongBody, {
       id: "m1-s4-watch",
-      label: "Watch M.G.'s opener — find the M1 [Diagnostic] chip",
-      hint: "Click any M1 chip OR the 'Watched it' button below",
+      label: "Read M.G.'s opener and find the [M1] Diagnostic chip",
+      hint: "Click the chip or Watched it below",
       state: "active",
     });
     if (!gongBody.querySelector("[data-m1-s4-done]")) {
@@ -384,7 +385,7 @@ function stepWorkedExample(body) {
       bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
       bar.innerHTML = `
         <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-          M.G. asks one specific question off the CH filing. Then waits.
+          M.G. asks one specific question about the Companies House filing, then waits.
         </span>
         <button type="button" data-m1-s4-done
                 style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
@@ -398,7 +399,7 @@ function stepWorkedExample(body) {
         state.api.eventLog?.record?.("step4_worked_example_completed");
         state.timeline.push({
           label: "Watched M.G.'s opener",
-          detail: "GC-01 · CH-filing diagnostic + silence",
+          detail: "A question from the Companies House filing, then silence",
           ts: timestamp(),
         });
         setTimeout(() => runStep(4), 450);
@@ -418,26 +419,26 @@ function stepCompletionProblem(body) {
   body.innerHTML = `
     <p style="font-size:14px;">
       <strong>Tom</strong> (Series-B SaaS · 22 FTE) is your next dial. His
-      LinkedIn shows: <em>"We just raised €4M Series-A — hiring head of ops +
+      LinkedIn shows: <em>"We just raised a €15M Series B — hiring head of ops +
       6 engineers next quarter."</em>
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Pick the diagnostic in the Outreach drawer that just opened under his row.
+      Pick your diagnostic question in the panel that just opened under his row in Outreach.
     </p>
   `;
   const options = [
     { label: "A", result: "anti",
       text: `"Hi Tom — do you have a moment to talk about your corporate spending?"`,
-      rationale: "P.B. anti-pattern. No signal, generic, dies in 6 seconds." },
+      rationale: "This is P.B.'s opener. It has no signal and nothing specific, so the call ends in 6 seconds." },
     { label: "B", result: "correct",
-      text: `"Tom — saw your Series-A close. Who's approving the new hires' card spend before they ramp?"`,
-      rationale: "Yes. Specific signal (Series-A) + specific operational pain (new hires' spend). M.G.'s GC-01 pattern." },
+      text: `"Tom — saw your Series B close. Who's approving the new hires' card spend before they ramp?"`,
+      rationale: "Yes. It names a specific signal (the Series B) and a specific operational question (who approves the new hires' spending). M.G. used the same pattern with Maria." },
     { label: "C", result: "partial",
       text: `"Congrats on the raise! How's it going?"`,
-      rationale: "Acknowledges the signal but doesn't open an operational question. Buyer answers 'good' and the call dies." },
+      rationale: "It mentions the signal but asks nothing about how the business runs. Tom answers 'good' and the call stalls." },
     { label: "D", result: "anti",
       text: `"FinTechCard helps fast-growing SaaS like yours control spend — interested?"`,
-      rationale: "Pitch-launch. Same failure as opening with a feature list." },
+      rationale: "This is a pitch, not a question. It fails the same way a feature list does." },
   ];
   setTimeout(() => mountTomDrawer(options), 160);
 }
@@ -447,8 +448,8 @@ function mountTomDrawer(options) {
   if (!outreachBody) return;
   mountTaskBanner(outreachBody, {
     id: "m1-s5-pick-diag",
-    label: "Pick Tom's diagnostic — drawer just opened under his row",
-    hint: "Wrong picks explain why + reveal the correct option",
+    label: "Pick Tom's diagnostic in the panel under his row",
+    hint: "A wrong pick shows why it fails and which option is right",
     state: "active",
   });
   const tomRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /Tom/i.test(r.textContent || ""));
@@ -464,7 +465,7 @@ function mountTomDrawer(options) {
       <span class="tom-drawer__cue">Pick your diagnostic</span>
     </header>
     <p class="tom-drawer__stem">
-      Signal: <em>"Series-A €4M · hiring 6 engineers + ops head next quarter."</em>
+      Signal: <em>"Series B €15M · hiring 6 engineers + ops head next quarter."</em>
     </p>
     <div class="tom-drawer__opts" role="radiogroup" aria-label="Pick the diagnostic">
       ${options.map((o, i) => `
@@ -499,7 +500,7 @@ function mountTomDrawer(options) {
         state.api.eventLog?.record?.("completion_problem_completed");
         state.timeline.push({
           label: "Picked the correct diagnostic for Tom",
-          detail: "Option B · signal-anchored operational question",
+          detail: "Option B · a question built on his funding news",
           ts: timestamp(),
         });
         setTimeout(() => runStep(5), 700);
@@ -514,11 +515,8 @@ function stepSoloProblem(body) {
   const emma = state.prospects.find(p => /emma/i.test(p.name)) ?? state.prospects[0];
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Solo.</strong> ${emma.name} (${emma.industry}) — cold lead.
-      Read the signal, write your diagnostic, dial, hold the silence.
-    </p>
-    <p id="solo-status" class="retention-note" aria-live="polite">
-      Status: signal not read · dial disabled
+      <strong>On your own.</strong> ${emma.name} (${emma.industry}) is a cold lead.
+      Read the signal, write your diagnostic question, then dial her and hold the silence.
     </p>
   `;
   state.api.os.openApp("linkedin-ch", { lookupId: "emma" });
@@ -530,8 +528,8 @@ function decorateSoloFlow(emma) {
   if (!lchBody) return;
   mountTaskBanner(lchBody, {
     id: "m1-s6-solo",
-    label: `Open ${emma.name}'s profile, write your diagnostic, dial + hold silence`,
-    hint: "All three gates fire on the rep's actions",
+    label: `Read ${emma.name}'s signal, write your question, then dial and hold the silence`,
+    hint: "Dial turns on once your question is at least 30 characters",
     state: "active",
   });
   if (lchBody.querySelector("[data-m1-s6-stage]")) return;
@@ -575,7 +573,10 @@ function decorateSoloFlow(emma) {
   dial.addEventListener("click", () => {
     if (dial.disabled) return;
     state.diagnosticSent = true;
-    state.api.os.openApp("phone-dialler", { prospect: { name: emma.name, company: emma.company, archetype: emma.archetype } });
+    const prospect = { name: emma.name, company: emma.company, archetype: emma.archetype };
+    state.api.os.openApp("phone-dialler", { prospect });
+    // Start the call: the dialler only rings on phone:dial.
+    eventBus.dispatchEvent(new CustomEvent("phone:dial", { detail: { prospect } }));
     state.timeline.push({
       label: `Dialled ${emma.name} with diagnostic written`,
       detail: ta.value.trim().slice(0, 80),
@@ -590,18 +591,19 @@ function triggerSilenceGate(emma) {
   if (!phoneBody) return;
   mountTaskBanner(phoneBody, {
     id: "m1-s6-silence",
-    label: "After the dial connects, hold 5 seconds of silence",
-    hint: "Click 'Silence held' once you've waited",
+    label: "When the call connects, hold 5 seconds of silence",
+    hint: "Click Silence held once you've waited",
     state: "active",
   });
+  // Wait for the call to connect, however long the learner takes; stop if they leave the step.
   const watch = setInterval(() => {
+    if (state.step !== 5) { clearInterval(watch); return; }
     const dialler = document.querySelector(".os-window.app--phone-dialler .dialler");
     if (dialler?.dataset.phase === "on-call" && !phoneBody.querySelector("[data-m1-silence]")) {
       clearInterval(watch);
       mountSilenceButton(phoneBody, emma);
     }
   }, 200);
-  setTimeout(() => clearInterval(watch), 8000);
 }
 
 function mountSilenceButton(phoneBody, emma) {
@@ -609,7 +611,7 @@ function mountSilenceButton(phoneBody, emma) {
   bar.style.cssText = "margin:10px; padding:10px 14px; background:rgba(245,184,0,0.95); color:#1a1a1a; border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
   bar.innerHTML = `
     <span style="font-size:12px; font-family:var(--ftc-font-mono);">
-      Hold the silence · 5s after the buyer's answer.
+      Hold the silence for 5 seconds after your question.
     </span>
     <button type="button" data-m1-silence
             style="background:#0a8754; color:#fff; padding:6px 12px; border:0; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer;">
@@ -624,7 +626,7 @@ function mountSilenceButton(phoneBody, emma) {
     state.api.eventLog?.record?.("solo_problem_completed");
     state.timeline.push({
       label: `Silence held with ${emma.name}`,
-      detail: "5s after diagnostic · LO-M1.3 evidenced",
+      detail: "5 seconds after your question",
       ts: timestamp(),
     });
     setTimeout(() => runStep(6), 600);
@@ -637,10 +639,10 @@ function stepFeedback(body) {
   keepOnly(["slack"]);
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>J.T.</strong> just DM'd you with the review of your solo opener.
+      <strong>J.T.</strong> sent you a DM reviewing the opener you just ran.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Read it, then mark as read to continue.
+      Read it, then click Mark thread read.
     </p>
   `;
   const dmMessages = [
@@ -648,12 +650,12 @@ function stepFeedback(body) {
       body: "Watched your opener. Solid notes 👇" },
     ...state.timeline.map(e => ({
       author: "J.T. (pod lead)", initials: "JT", ts: e.ts,
-      body: `✅ ${e.label} — ${e.detail}`,
+      body: `✅ ${e.label}: ${e.detail}`,
     })),
     { author: "J.T. (pod lead)", initials: "JT", ts: "12:52",
-      body: "The 5s silence is the part bottom-quartile reps blow. You held it. Keep it." },
+      body: "Bottom-quartile reps break the 5-second silence. You held it, so keep doing that." },
     { author: "M.G. (peer)", initials: "MG", ts: "12:54",
-      body: "First-call mute is hard. One diagnostic in muscle memory — repeat it for 10 cold calls. Then swap." },
+      body: "Staying quiet on a first call is hard. Learn one diagnostic question by heart and use it on your next 10 cold calls. Then switch to a new one." },
   ];
   state.api.os.openApp("slack", {
     channel: {
@@ -670,14 +672,14 @@ function stepFeedback(body) {
     mountTaskBanner(slackBody, {
       id: "m1-s7-read-dm",
       label: "Read J.T.'s feedback DM",
-      hint: "'Mark thread read' below to continue",
+      hint: "Click Mark thread read below to continue",
       state: "active",
     });
     if (!slackBody.querySelector("[data-m1-s7-done]")) {
       const bar = document.createElement("div");
       bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
       bar.innerHTML = `
-        <span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. waits for the read receipt.</span>
+        <span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. will see when you've read it.</span>
         <button type="button" data-m1-s7-done
                 style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
           ✓ Mark thread read
@@ -699,8 +701,8 @@ function stepQuiz(body) {
   state.quizIndex = 0;
   state.quizScore = 0;
   body.innerHTML = `
-    <p style="font-size:14px;"><strong>Quick check</strong> · 3 questions from J.T.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Two of three correct advances the module.</p>
+    <p style="font-size:14px;"><strong>Quick check</strong>: 3 questions from J.T. in Slack.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Two of three right is a pass.</p>
   `;
   setTimeout(() => mountQuizInSlack(), 200);
 }
@@ -714,7 +716,7 @@ function mountQuizInSlack() {
   mountTaskBanner(slackBody, {
     id: "m1-s8-quiz",
     label: "Answer the 3 quiz questions J.T. just posted",
-    hint: "Wrong picks reveal the correct answer",
+    hint: "A wrong pick shows the right answer",
     state: "active",
   });
   let thread = slackBody.querySelector("[data-m1-quiz-thread]");
@@ -737,7 +739,7 @@ function renderQuizItemInSlack(host) {
   const item = state.quizItems[state.quizIndex];
   host.innerHTML = `
     <div style="font-size:12px; color:var(--ftc-ink-2); margin-bottom:6px;">
-      Question ${state.quizIndex + 1} of ${state.quizItems.length} · ${item.lo}
+      Question ${state.quizIndex + 1} of ${state.quizItems.length}
     </div>
     <p style="font-size:14px; margin:0 0 10px; color:var(--ftc-ink);">${item.stem}</p>
     <div role="radiogroup" aria-label="Answer choices" style="display:grid; gap:6px;">
@@ -800,11 +802,11 @@ function stepTakeaway(body) {
   const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Module complete.</strong> M.G. pinned the takeaway in your Slack channel.
+      <strong>Last step.</strong> M.G. pinned the takeaway in your Slack channel.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
       Quiz: <strong>${state.quizScore} / ${state.quizItems.length}</strong> (${scorePct}%).
-      Click 'Set +7d retrieval drop' in Slack to finish.
+      Schedule the 7-day refresher in Slack to finish the module.
     </p>
   `;
   setTimeout(() => {
@@ -816,8 +818,8 @@ function stepTakeaway(body) {
     slackBody.querySelector("[data-m1-quiz-thread]")?.remove();
     mountTaskBanner(slackBody, {
       id: "m1-s9-takeaway",
-      label: "Read M.G.'s pinned takeaway, then set the +7d retrieval drop",
-      hint: "One click. Module commits when the drop is scheduled.",
+      label: "Read M.G.'s takeaway, then schedule the refresher",
+      hint: "The module finishes when you schedule it.",
       state: "active",
     });
     if (!slackBody.querySelector("[data-m1-pinned]")) {
@@ -829,17 +831,17 @@ function stepTakeaway(body) {
           📌 Pinned by M.G. (peer · Manchester pod)
         </div>
         <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
-          "One specific question pulled off their LinkedIn or Companies House
-          profile. Then five seconds of silence. The pitch can come later —
-          the silence is where the deal happens."
+          "Ask one specific question from their LinkedIn or Companies House
+          profile, then stay quiet for five seconds. Save the pitch for later.
+          What the buyer says in that silence is what moves the deal."
         </p>
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
           <span style="font-size:12.5px; color:var(--ftc-ink-2);">
-            📅 3-item retrieval drop · +7 days in your Sana inbox
+            📅 In 7 days you'll get three short questions on this opener.
           </span>
           <button type="button" data-m1-s9-finish
                   style="background:var(--brand-green); color:#fff; padding:9px 16px; border:0; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
-            Set +7d retrieval drop &rarr;
+            Schedule refresher &rarr;
           </button>
         </div>
       `;
@@ -857,10 +859,6 @@ function stepTakeaway(body) {
 function finishModule() {
   const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
   state.api.complete(scorePct);
-  document.getElementById("narrative-body").innerHTML = `
-    <p><strong>Module complete.</strong> Score posted to the LMS.</p>
-    <p>See you in Module 2 — Objection Acknowledge.</p>
-  `;
   document.getElementById("narrative-next").hidden = true;
   document.getElementById("narrative-back").hidden = true;
   showSummaryCard(scorePct);
@@ -887,12 +885,12 @@ function showSummaryCard(scorePct) {
     <div class="summary-card__panel">
       <div class="summary-card__check" aria-hidden="true">✓</div>
       <div class="summary-card__kicker">Module complete</div>
-      <h2 class="summary-card__title" id="summary-title">Diagnostic Opener · cleared</h2>
+      <h2 class="summary-card__title" id="summary-title">Diagnostic Opener · ${scorePct >= 67 ? "passed" : "completed"}</h2>
       <div class="summary-card__stats">
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Quiz</span>
           <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
-          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below pass"}</span>
+          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below the 67% pass mark"}</span>
         </div>
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Time</span>
@@ -916,7 +914,7 @@ function showSummaryCard(scorePct) {
         </ol>
       </details>
       <div class="summary-card__actions">
-        <a class="summary-card__btn summary-card__btn--ghost" href="../../">&larr; Back to engagement</a>
+        <a class="summary-card__btn summary-card__btn--ghost" href="../">&larr; Back to engagement</a>
         <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">
           Restart module
         </button>

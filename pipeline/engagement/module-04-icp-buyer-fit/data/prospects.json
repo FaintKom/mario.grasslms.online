@@ -7,12 +7,13 @@
     "industry": "Multi-location retail SMB (apparel)",
     "fte": 35,
     "monthly_spend": 25000,
+    "currency": "GBP",
     "stage": "Owner-operator · 2 stores · 7-yr tenure",
     "registered_office": "Unit 4, Northern Way, Manchester M1 3AA",
     "top_pain": "Last quarter a £1,200 charge nobody could explain for 2 weeks.",
     "top_objection": "We already have a corporate Visa from our bank.",
     "ideal_opener": "Who's currently approving every expense report, and how long does it take?",
-    "best_pitch_prop": 4,
+    "best_pitch_prop": 1,
     "closing_move": "Two 20-minute slots: Tue 10:00 or Wed 10:30 — which works with your bookkeeper?",
     "signals": [
       { "type": "new_location", "source": "companieshouse", "content": "Filed change-of-registered-office for second Deansgate site (Jan 2026)." },
@@ -32,10 +33,10 @@
     "top_pain": "FX on EU SaaS subscriptions + per-employee card issuance speed.",
     "top_objection": "We already use Brex.",
     "ideal_opener": "I see you closed your Series-B last quarter — how are you handling per-employee card issuance for your new hires?",
-    "best_pitch_prop": 3,
+    "best_pitch_prop": 2,
     "closing_move": "Want me to show you the difference in FX cost vs Brex on your last month's spend? 10 minutes.",
     "signals": [
-      { "type": "funding", "source": "linkedin",       "content": "Announced $18M Series B led by Northzone (Apr 2026)." },
+      { "type": "funding", "source": "linkedin",       "content": "Announced €15M Series B led by Northzone (Apr 2026)." },
       { "type": "hiring",  "source": "linkedin",       "content": "Hiring 6 engineers + Head of Finance." },
       { "type": "filing",  "source": "companieshouse", "content": "Filed allotment of shares — Series B confirmation (Apr 2026)." }
     ]
@@ -54,7 +55,7 @@
     "top_objection": "Our accountant won't deal with another tool.",
     "ideal_opener": "How much time does your bookkeeping team spend re-keying supplier receipts every month?",
     "best_pitch_prop": 4,
-    "closing_move": "Let me set up a 10-minute call with your accountant — we'll walk them through the Sage sync.",
+    "closing_move": "Let me set up a 10-minute call with your accountant — we'll walk them through the Xero sync.",
     "signals": [
       { "type": "filing", "source": "companieshouse", "content": "Annual accounts — turnover up 22% YoY (Mar 2026)." },
       { "type": "hiring", "source": "linkedin",       "content": "Hiring shift supervisor + procurement manager." }
@@ -73,7 +74,7 @@
     "top_pain": "Expense fraud last year + multi-currency on Italian supplier deliveries.",
     "top_objection": "I don't trust new fintechs with my money.",
     "ideal_opener": "I noticed you opened a fourth location in Hamburg last month — how are you handling spend visibility across the 4 sites?",
-    "best_pitch_prop": 1,
+    "best_pitch_prop": 2,
     "closing_move": "Funds are held at a regulated tier-1 partner bank — here's the regulator page. Want a 15-min call where you can ask all the trust questions and then decide?",
     "signals": [
       { "type": "new_location", "source": "linkedin",       "content": "Announced Schwabing opening on Instagram + LinkedIn (Mar 2026)." },

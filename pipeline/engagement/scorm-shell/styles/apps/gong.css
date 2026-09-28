@@ -249,3 +249,14 @@
 .app--gong .rubric-row:last-child { border-bottom: none; }
 .app--gong .rubric-q { color: #6b7280; }
 .app--gong .rubric-q strong { color: var(--gg-ink); font-weight: 700; }
+
+/* Silence marker between turns (e.g. {"silence": 3} in module transcripts) */
+.app--gong .transcript .turn--silence {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.app--gong .transcript .turn--silence .text {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 12px;
+}

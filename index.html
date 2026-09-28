@@ -3,10 +3,25 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Mario Rafael Becerra Dueñas — Portfolio</title>
+<title>Mario Rafael Becerra Dueñas · Portfolio</title>
+<meta name="description" content="Learning Experience Designer with 10+ years in EdTech. I've built full curricula for Yandex Practicum, TripleTen and BEAM Institute, and the AI tools that help content teams ship faster.">
+<link rel="canonical" href="https://mario.grasslms.online/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mario.grasslms.online/">
+<meta property="og:title" content="Mario Rafael Becerra Dueñas · Portfolio">
+<meta property="og:description" content="Learning Experience Designer with 10+ years in EdTech. I've built full curricula for Yandex Practicum, TripleTen and BEAM Institute, and the AI tools that help content teams ship faster.">
+<meta property="og:image" content="https://mario.grasslms.online/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<script>
+  // Motion is opt-in: only when JS runs and the visitor hasn't asked for reduced motion.
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion");
+</script>
 <style>
 /* ---------- tokens · GrassLMS Lively (unified with /pipeline/) ---------- */
 :root {
@@ -16,7 +31,7 @@
   --bg-3: #f4f5f1;
   --ink: #0a1a10;
   --ink-dim: #4d5a51;
-  --ink-faint: #6b7a70;
+  --ink-faint: #5f6e64;
   --rule: #e6e8e4;
   --rule-strong: #c9cec9;
   --accent: #0a8754;
@@ -50,7 +65,7 @@ html[data-theme="light"] {
   --bg-3: #f4f5f1;
   --ink: #0a1a10;
   --ink-dim: #4d5a51;
-  --ink-faint: #6b7a70;
+  --ink-faint: #5f6e64;
   --rule: #e6e8e4;
   --rule-strong: #c9cec9;
   --accent: #0a8754;
@@ -97,13 +112,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .sig .dot {
   width: 8px; height: 8px; border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 60%, transparent);
-  animation: pulse 2.4s infinite;
 }
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 50%, transparent); }
-  50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 0%, transparent); }
-}
+.nowrap { white-space: nowrap; }
 .sig b { font-weight: 700; }
 .sig span { color: var(--ink-dim); }
 .topbar nav { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
@@ -113,25 +123,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--ink-dim);
   transition: color .15s, background .15s;
 }
-.navlink:hover { color: var(--ink); background: var(--bg-3); }
-.theme-btn {
-  font-family: var(--mono); font-size: 11px;
-  padding: 6px 10px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 999px;
-  color: var(--ink-dim);
-  display: inline-flex; gap: 6px; align-items: center;
-}
-.theme-btn:hover { color: var(--ink); border-color: var(--ink-dim); }
-.lang-btn {
-  font-family: var(--mono); font-size: 11px;
-  padding: 6px 8px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 6px;
-  color: var(--ink-dim);
-  min-width: 40px;
-}
-.lang-btn b { color: var(--ink); }
+.navlink--cta { background: var(--accent); color: var(--accent-ink); margin-left: 6px; }
 
 /* ---------- hero ---------- */
 .hero {
@@ -140,17 +132,15 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   position: relative;
 }
 .hero-meta {
-  display: grid; grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: 1.4fr 1.2fr 1fr 1fr;
   gap: 8px 16px;
   font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
   color: var(--ink-dim);
-  padding-bottom: 20px;
-  border-bottom: 1px dashed var(--rule);
-  margin-bottom: 28px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--rule);
+  margin-top: 40px;
 }
-@media (max-width: 900px) {
-  .hero-meta { grid-template-columns: 1fr 1fr 1fr; }
-}
+.hero-meta a { border-bottom: 1px solid transparent; transition: color .15s, border-color .15s; }
 @media (max-width: 560px) {
   .hero-meta { grid-template-columns: 1fr 1fr; }
 }
@@ -168,10 +158,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .hero h1 em { font-style: normal; background: var(--sun-300, #ffe066); padding: 0 10px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); color: var(--ink); }
 .hero-sub {
-  display: grid; grid-template-columns: 1fr;
-  gap: 24px;
-  margin-top: 28px;
-  max-width: 720px;
+  display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 32px 64px;
+  align-items: end;
+  margin-top: 32px;
+}
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+@media (max-width: 900px) {
+  .hero-sub { grid-template-columns: 1fr; }
 }
 .hero-lede {
   font-family: var(--sans);
@@ -193,21 +187,20 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   border-bottom: 2px solid var(--accent);
 }
 .hero-stats {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+  border: 1px solid var(--rule);
   background: var(--rule);
-  margin-top: 4px;
 }
 .hero-stats > div {
   background: var(--bg);
-  padding: 14px 16px;
+  padding: 18px 20px;
 }
+.hero-stats > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .hero-stats .n {
   font-family: var(--sans);
   font-size: 30px;
+  font-weight: 800;
   line-height: 1;
-  font-style: italic;
   letter-spacing: -.02em;
   color: var(--ink);
 }
@@ -219,125 +212,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   margin-top: 6px;
   letter-spacing: .06em;
   line-height: 1.3;
-}
-@media (max-width: 720px) {
-  .hero-stats { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* Primary CTA — filled, dominant */
-.hero-pipeline-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 0;
-  padding: 12px 20px;
-  border: 2px solid var(--accent);
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: background 0.15s, transform 0.1s;
-}
-.hero-pipeline-cta:hover {
-  background: var(--ink);
-  border-color: var(--ink);
-  transform: translateY(-1px);
-}
-.hero-pipeline-cta .arrow {
-  font-family: var(--sans); font-weight: 800;
-  font-size: 16px;
-  text-transform: none;
-}
-.hero-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 12px;
-  align-items: flex-start;
-}
-.hero-actions-secondary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-  align-items: center;
-}
-/* Secondary links — borderless ghost, thin row */
-.hero-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: var(--ink-dim);
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: none;
-  text-decoration: none;
-  transition: color 0.15s;
-}
-.hero-link:hover {
-  color: var(--accent);
-  background: transparent;
-}
-.hero-link .arrow {
-  font-family: var(--sans); font-weight: 800;
-  font-size: 13px;
-  text-transform: none;
-  color: var(--accent);
-}
-/* Larger variant — used when the green CTA above is removed and these become primary actions */
-.hero-actions-secondary--large {
-  gap: 28px;
-  margin-top: 4px;
-}
-.hero-actions-secondary--large .hero-link {
-  font-size: 15px;
-  letter-spacing: .02em;
-  gap: 7px;
-  padding: 4px 0;
-  color: var(--ink);
-  font-weight: 500;
-  border-bottom: 1px solid var(--rule);
-}
-.hero-actions-secondary--large .hero-link:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-.hero-actions-secondary--large .hero-link .arrow {
-  font-size: 16px;
-}
-@media (max-width: 640px) {
-  .hero-actions-secondary--large { gap: 16px; }
-  .hero-actions-secondary--large .hero-link { font-size: 14px; }
-}
-
-/* ticker */
-.ticker {
-  margin-top: 48px;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  padding: 10px 0;
-  overflow: hidden;
-  font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
-  white-space: nowrap;
-  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
-}
-.ticker-track {
-  display: inline-block;
-  animation: tick 60s linear infinite;
-}
-.ticker span { margin: 0 24px; }
-.ticker b { color: var(--ink); font-weight: 500; }
-.ticker .sep { color: var(--accent); }
-@keyframes tick {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
 }
 
 /* ---------- section head ---------- */
@@ -359,70 +233,12 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   letter-spacing: -.01em;
   margin: 0;
 }
+.section-head h2 em { font-style: normal; color: var(--accent); }
 .section-head .count {
   font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
   text-transform: uppercase; letter-spacing: .06em;
 }
 
-/* ---------- filters ---------- */
-.filters {
-  display: flex; flex-wrap: wrap; gap: 6px;
-  padding: 18px 0 8px;
-  position: sticky; top: 52px; z-index: 30;
-  background: color-mix(in oklab, var(--bg) 92%, transparent);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px dashed var(--rule);
-}
-.chip {
-  font-family: var(--mono); font-size: 11px;
-  text-transform: uppercase; letter-spacing: .05em;
-  padding: 7px 12px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 999px;
-  color: var(--ink-dim);
-  display: inline-flex; gap: 6px; align-items: center;
-  transition: all .15s;
-}
-.chip:hover { color: var(--ink); border-color: var(--ink-dim); }
-.chip.on {
-  background: var(--accent); color: var(--accent-ink);
-  border-color: var(--accent);
-}
-.chip .n { opacity: .6; font-weight: 400; }
-.chip.on .n { opacity: .8; }
-.search {
-  margin-left: auto;
-  display: inline-flex; align-items: center; gap: 8px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 999px;
-  padding: 5px 12px;
-  font-family: var(--mono); font-size: 12px;
-}
-.search input {
-  background: none; border: none; outline: none; color: var(--ink);
-  font: inherit; width: 180px;
-}
-.search input::placeholder { color: var(--ink-faint); }
-.search svg { width: 12px; height: 12px; color: var(--ink-faint); }
-
-/* ---------- flagship ---------- */
-.flagship {
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  gap: 40px;
-  padding: calc(28px * var(--density)) 0;
-  align-items: stretch;
-  position: relative;
-}
-.flagship-visual {
-  background: var(--bg-2);
-  border: 1px solid var(--rule);
-  border-radius: 14px;
-  overflow: hidden;
-  position: relative;
-  min-height: 520px;
-  display: flex; flex-direction: column;
-}
 .flag-browser {
   display: flex; align-items: center; gap: 6px;
   padding: 10px 14px;
@@ -437,99 +253,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .flag-browser .status { margin-left: auto; color: var(--ok); font-weight: 500; display: inline-flex; gap: 6px; align-items: center; }
 .flag-browser .status::before { content:""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; }
 
-.flag-mock {
-  flex: 1;
-  padding: 24px;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 18px;
-  position: relative;
-  background:
-    linear-gradient(var(--bg-2), var(--bg-2)),
-    repeating-linear-gradient(0deg, var(--rule) 0 1px, transparent 1px 48px);
-  background-blend-mode: multiply;
-}
-.mock-head {
-  display: flex; justify-content: space-between; align-items: start;
-  font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
-}
-.mock-head h3 {
-  font-family: var(--sans); font-weight: 800; font-size: 28px; line-height: 1; margin: 0 0 6px; color: var(--ink);
-}
-.mock-head .badge {
-  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
-  padding: 4px 8px; border-radius: 3px;
-  background: var(--accent); color: var(--accent-ink); font-weight: 700;
-}
-.mock-grade {
-  display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-}
-.mock-grade .cell {
-  background: var(--bg-2);
-  aspect-ratio: 1.4;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 13px;
-  color: var(--ink);
-}
-.mock-grade .cell.hdr { color: var(--ink-faint); font-size: 10px; text-transform: uppercase; }
-.mock-grade .cell.hi { background: color-mix(in oklab, var(--accent) 20%, var(--bg-2)); color: var(--ink); }
-.mock-grade .cell.lo { color: var(--ink-faint); }
-.mock-grade .cell.pass { color: var(--ok); }
-.mock-grade .cell.fail { color: var(--warn); }
-
-.mock-foot {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-}
-.mock-foot .stat {
-  border-top: 1px solid var(--rule);
-  padding-top: 10px;
-}
-.mock-foot .stat .n { font-family: var(--sans); font-weight: 800; font-size: 28px; line-height: 1; }
-.mock-foot .stat .l { font-family: var(--mono); font-size: 10px; color: var(--ink-dim); text-transform: uppercase; margin-top: 3px; }
-
-.flagship-body {
-  display: flex; flex-direction: column;
-  padding: 4px 0;
-}
-.flag-tag {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .06em;
-  text-transform: uppercase; color: var(--accent);
-  display: inline-flex; gap: 8px; align-items: center;
-}
-.flag-tag::before { content:""; width: 20px; height: 1px; background: var(--accent); }
-.flagship h2 {
-  font-family: var(--sans); font-weight: 800;
-  font-size: clamp(40px, 5vw, 72px); line-height: .95;
-  margin: 16px 0 8px; letter-spacing: -.015em;
-}
-.flagship h2 em { font-style: normal; background: var(--sun-300, #ffe066); padding: 0 8px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); color: var(--ink); }
-.flag-role {
-  font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
-  text-transform: uppercase; letter-spacing: .06em;
-  margin-bottom: 24px;
-}
-.flag-desc {
-  font-family: var(--sans); font-weight: 500; font-size: 22px; line-height: 1.35;
-  color: var(--ink);
-  margin: 0 0 24px;
-  max-width: 36ch;
-}
-.flag-stack {
-  display: grid; gap: 14px;
-  border-top: 1px solid var(--rule);
-  padding-top: 18px;
-  font-family: var(--mono); font-size: 12px;
-}
-.flag-stack dt { color: var(--ink-faint); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
-.flag-stack dd { margin: 3px 0 0; color: var(--ink); line-height: 1.55; }
-.flag-stack dd b { color: var(--accent); font-weight: 500; }
-.flag-cta {
-  margin-top: auto;
-  padding-top: 24px;
-  display: flex; gap: 10px; flex-wrap: wrap;
-}
 .btn {
   font-family: var(--sans);
   font-size: 13px;
@@ -547,7 +270,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   box-shadow: 0 4px 0 0 var(--ink-100, #e6e8e4);
   transition: transform 120ms, box-shadow 120ms;
 }
-.btn:hover { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--ink-100, #e6e8e4); }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 0 var(--ink-100, #e6e8e4); transition-duration: 80ms; }
 .btn.primary {
   background: var(--green-600, #0a8754);
   color: white;
@@ -562,9 +285,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   box-shadow: 0 4px 0 0 var(--green-700, #07683f);
   transition: transform 120ms, box-shadow 120ms;
 }
-.btn.primary:hover { transform: translateY(2px); box-shadow: 0 2px 0 0 var(--green-700, #07683f); background: var(--green-600); color: white; }
+.btn.primary:active { transform: translateY(3px); box-shadow: 0 1px 0 0 var(--green-700, #07683f); transition-duration: 80ms; }
 .btn .arr { transition: transform .2s; }
-.btn:hover .arr { transform: translateX(3px); }
 
 /* ---------- flagship · new (carousel + modes) ---------- */
 .flag-intro {
@@ -578,18 +300,22 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .flag-intro em {
   font-style: normal; font-weight: 700;
   background: var(--sun-50, #fffbe5);
-  padding: 0 4px; border-radius: 3px;
+  padding: 0 3px; margin: 0 -3px; border-radius: 3px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
 
 .flag-carousel {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
   margin-bottom: 32px;
 }
+@media (max-width: 1199px) and (min-width: 641px) {
+  .flag-carousel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 640px) {
   .flag-carousel {
-    grid-template-columns: 1fr;
+    grid-template-columns: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     grid-auto-flow: column;
@@ -640,7 +366,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .fs-side-row.active {
   background: var(--accent); color: #fff;
 }
-.fs-side-row.active span { color: rgba(255,255,255,.7); }
+.fs-side-row.active span { color: #fff; }
 .flag-screen--code .fs-main { padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
 .fs-task {
   font-family: var(--sans); font-size: 12px; color: var(--ink);
@@ -654,7 +380,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   white-space: pre;
   color: var(--ink);
   border-radius: 0 3px 3px 0;
-  overflow: hidden;
+  overflow-x: auto;
 }
 .fs-editor .kw { color: #c33d22; font-weight: 600; }
 .fs-editor .fn { color: var(--green-700, #07683f); }
@@ -727,7 +453,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   font-weight: 700; flex-shrink: 0;
 }
 .fs-ai-ok { color: var(--green-700, #07683f); font-size: 10px; margin-left: auto; }
-.fs-ai-ai { color: var(--accent); font-size: 10px; margin-left: auto; font-style: italic; }
+.fs-ai-ai { color: var(--green-700); font-size: 10px; margin-left: auto; font-style: italic; }
 .fs-ai-cta { display: flex; gap: 6px; margin-top: 6px; }
 .fs-ai-btn {
   font-family: var(--mono); font-size: 10px;
@@ -797,44 +523,15 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 
 /* ---------- background · logos + services ---------- */
-.bg-logos {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  margin: 0 0 40px;
-}
-.bg-logo {
-  font-family: var(--mono); font-size: 12px;
-  padding: 8px 14px; border-radius: 4px;
-  background: var(--bg-2, #fff);
-  border: 1px solid var(--rule);
-  color: var(--ink); text-decoration: none;
-  display: inline-flex; align-items: center; gap: 8px;
-  transition: background .15s, border-color .15s, color .15s;
-  letter-spacing: .02em;
-}
-.bg-logo:hover {
-  background: var(--green-50, #ecf9e7);
-  border-color: var(--accent);
-  color: var(--green-700, #07683f);
-}
-.bg-logo--mute {
-  background: transparent; border-style: dashed;
-  color: var(--ink-faint); font-style: italic;
-  cursor: default;
-}
-.bg-logo--mute:hover { background: transparent; border-color: var(--rule); color: var(--ink-faint); }
-.bg-logo-arr { font-size: 10px; opacity: .6; }
-
-.bg-services-head {
-  font-family: var(--sans); font-weight: 800;
-  font-size: 22px; letter-spacing: -0.01em;
-  margin: 0 0 18px;
-}
 .bg-services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--rule);
   border: 1px solid var(--rule);
+}
+@media (max-width: 900px) {
+  .bg-services-grid { grid-template-columns: 1fr; }
 }
 .bg-svc {
   background: var(--bg, #fafbf6);
@@ -857,239 +554,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--ink-dim);
 }
 .bg-svc-d a { color: var(--green-700, #07683f); border-bottom: 1px solid currentColor; text-decoration: none; }
-.bg-svc-d a:hover { color: var(--accent); }
-
-/* ---------- grid ---------- */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  margin-bottom: 24px;
-}
-.card {
-  grid-column: span 6;
-  background: var(--bg);
-  padding: calc(22px * var(--density)) calc(24px * var(--density));
-  display: flex; flex-direction: column;
-  min-height: 320px;
-  cursor: pointer;
-  position: relative;
-  transition: background .2s;
-}
-.card:hover { background: var(--bg-2); }
-.card.hidden { display: none; }
-.card.span-4 { grid-column: span 4; min-height: 260px; }
-.card.span-8 { grid-column: span 8; }
-
-.card-head {
-  display: flex; justify-content: space-between; align-items: start;
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-faint);
-  letter-spacing: .08em; text-transform: uppercase;
-  margin-bottom: 18px;
-}
-.card-head .id { color: var(--ink-dim); }
-.card-status {
-  font-family: var(--mono); font-size: 10px;
-  display: inline-flex; gap: 6px; align-items: center;
-  text-transform: uppercase; letter-spacing: .06em;
-}
-.card-status::before {
-  content: ""; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--ink-faint);
-}
-.card-status.production::before { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
-.card-status.working::before { background: var(--accent); }
-.card-status.prototype::before { background: var(--warn); }
-.card-status.mvp::before { background: var(--accent); }
-.card-status.playable::before { background: var(--ok); }
-.card-status.archive::before, .card-status.research::before, .card-status.hobby::before {
-  background: var(--ink-faint);
-}
-
-.card h3 {
-  font-family: var(--sans); font-weight: 800;
-  font-size: clamp(28px, 3vw, 40px);
-  line-height: .98;
-  margin: 0 0 10px;
-  letter-spacing: -.01em;
-  color: var(--ink);
-}
-.card h3 em { font-style: normal; color: var(--accent); font-weight: 800; }
-.card .role {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-dim); text-transform: uppercase; letter-spacing: .06em;
-  margin-bottom: 14px;
-}
-.card p {
-  font-family: var(--sans); font-size: 14px; line-height: 1.55;
-  color: var(--ink-dim);
-  margin: 0 0 16px;
-  text-wrap: pretty;
-  max-width: 48ch;
-}
-.card-stack {
-  display: flex; flex-wrap: wrap; gap: 4px;
-  margin-top: auto;
-}
-.tag {
-  font-family: var(--mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: .04em;
-  padding: 3px 7px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 3px;
-  color: var(--ink-dim);
-}
-.card:hover .tag { color: var(--ink); border-color: var(--ink-faint); }
-.card-foot {
-  display: flex; justify-content: space-between; align-items: center;
-  padding-top: 16px;
-  margin-top: 16px;
-  border-top: 1px dashed var(--rule);
-  font-family: var(--mono); font-size: 11px;
-  color: var(--ink-dim);
-}
-.card-foot .open {
-  display: inline-flex; gap: 6px; align-items: center;
-  color: var(--ink);
-  letter-spacing: .05em;
-  text-transform: uppercase;
-}
-.card:hover .card-foot .open { color: var(--accent); }
-.card-foot .arr { transition: transform .2s; }
-.card:hover .card-foot .arr { transform: translateX(4px); }
-
-/* little visual motif */
-.card .motif {
-  position: absolute; top: 18px; right: 22px;
-  font-family: var(--sans); font-weight: 800;
-  font-size: 56px;
-  line-height: 1;
-  color: var(--accent);
-  opacity: .15;
-  pointer-events: none;
-}
-
-/* ---------- modal ---------- */
-.scrim {
-  position: fixed; inset: 0;
-  background: rgba(10, 26, 16, 0.55);
-  backdrop-filter: blur(8px);
-  z-index: 100;
-  display: none;
-  align-items: flex-start; justify-content: center;
-  padding: 5vh var(--gutter);
-  overflow-y: auto;
-  opacity: 0;
-  transition: opacity .2s;
-}
-.scrim.on { display: flex; opacity: 1; }
-.modal {
-  background: var(--bg);
-  border: 1px solid var(--rule-strong);
-  max-width: 920px; width: 100%;
-  border-radius: 18px;
-  overflow: hidden;
-  transform: translateY(10px);
-  transition: transform .25s cubic-bezier(.2,.8,.2,1);
-}
-.scrim.on .modal { transform: none; }
-.modal-head {
-  padding: 28px 32px 18px;
-  border-bottom: 1px solid var(--rule);
-  display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start;
-}
-.modal-head .meta {
-  font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
-  text-transform: uppercase; letter-spacing: .06em;
-  margin-bottom: 10px;
-  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
-}
-.modal-head h2 {
-  font-family: var(--sans); font-weight: 800;
-  font-size: 56px; line-height: .95; letter-spacing: -.01em;
-  margin: 0;
-}
-.modal-head h2 em { font-style: normal; background: var(--sun-300, #ffe066); padding: 0 8px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); color: var(--ink); }
-.modal-close {
-  font-family: var(--mono); font-size: 11px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 50%;
-  width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--ink-dim);
-}
-.modal-close:hover { color: var(--ink); border-color: var(--ink); }
-.modal-body { padding: 24px 32px 32px; }
-.modal-body .lede {
-  font-family: var(--sans); font-size: 22px; line-height: 1.35;
-  color: var(--ink);
-  margin: 0 0 24px;
-  max-width: 52ch;
-}
-.modal-body h4 {
-  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
-  letter-spacing: .08em; color: var(--ink-faint);
-  margin: 22px 0 10px;
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
-}
-.modal-body h4:first-of-type { padding-top: 0; border-top: none; margin-top: 0; }
-.modal-body p, .modal-body li {
-  font-size: 14px; line-height: 1.6; color: var(--ink-dim);
-}
-.modal-body p b, .modal-body li b { color: var(--ink); font-weight: 500; }
-.modal-body ul { margin: 0; padding-left: 18px; }
-.modal-body .stack {
-  display: flex; flex-wrap: wrap; gap: 5px;
-}
-.modal-body .stack .tag { font-size: 11px; padding: 4px 8px; }
-.modal-body .links {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-/* ---------- footer ---------- */
-.foot {
-  border-top: 1px solid var(--rule);
-  padding: calc(80px * var(--density)) 0 40px;
-  margin-top: calc(60px * var(--density));
-}
-.foot h2 {
-  font-family: var(--sans); font-weight: 800;
-  font-size: clamp(48px, 8vw, 128px); line-height: .9;
-  letter-spacing: -.02em; margin: 0 0 32px;
-}
-.foot h2 em { font-style: normal; background: var(--sun-300, #ffe066); padding: 0 8px; border-radius: 8px; display: inline-block; transform: rotate(-1deg); color: var(--ink); }
-.foot-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
-  background: var(--rule);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-.foot-grid > a, .foot-grid > div {
-  background: var(--bg);
-  padding: 24px;
-  display: flex; flex-direction: column; gap: 4px;
-  transition: background .15s;
-}
-.foot-grid a:hover { background: var(--bg-2); color: var(--accent); }
-.foot-grid .k {
-  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
-  color: var(--ink-faint); letter-spacing: .08em;
-}
-.foot-grid .v {
-  font-family: var(--sans); font-weight: 800; font-size: 22px;
-}
-.foot-legal {
-  display: flex; justify-content: space-between; align-items: center;
-  padding-top: 30px;
-  font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
-  letter-spacing: .04em;
-}
 
 /* ---------- case studies ---------- */
 .cases {
@@ -1100,6 +564,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   border: 1px solid var(--rule);
   margin-bottom: 28px;
 }
+/* odd card out spans the row instead of leaving an empty grey cell */
+.cases > :last-child:nth-child(odd),
+.services > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+.cases > :last-child:nth-child(odd) .case-desc { max-width: 72ch; }
 @media (max-width: 640px) {
   .cases { grid-template-columns: 1fr; }
 }
@@ -1124,7 +592,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 }
 .band-v { color: var(--ink-dim); font-weight: 500; text-transform: none; letter-spacing: .02em; font-size: 12px; }
 .band-v a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink-dim); font-weight: 700; transition: color .15s, border-color .15s; }
-.band-v a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .band-arr { font-size: 10px; opacity: .6; }
 
 .demos-lede,
@@ -1139,16 +606,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--ink-faint);
 }
 .demos-lede a,
-.cases-foot a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; font-style: normal; }
+.cases-foot a { color: var(--green-700); text-decoration: none; border-bottom: 1px solid currentColor; font-style: normal; }
 .case {
   background: var(--bg);
   padding: calc(32px * var(--density)) calc(28px * var(--density));
-  display: grid;
-  grid-template-rows: auto auto auto auto 1fr auto auto;
+  display: flex; flex-direction: column;
   gap: 14px;
   transition: background .25s;
 }
-.case:hover { background: var(--bg-2); }
 .case-head {
   display: flex; align-items: baseline; gap: 12px;
 }
@@ -1171,10 +636,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   letter-spacing: .02em;
   padding: 3px 8px;
   background: var(--sun-300);
-  justify-self: start;
+  align-self: flex-start;
   border-radius: 2px;
 }
-.case h3 {
+.case :is(h3, h4) {
   font-family: var(--sans); font-weight: 800; font-size: clamp(24px, 2.4vw, 32px);
   line-height: 1.05;
   letter-spacing: -0.01em;
@@ -1182,7 +647,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   text-wrap: balance;
   margin: 0;
 }
-.case h3 em { font-style: normal; color: var(--accent); font-weight: 800; }
+.case :is(h3, h4) em { font-style: normal; color: var(--accent); font-weight: 800; }
 .case-period {
   font-family: var(--mono);
   font-size: 11px;
@@ -1205,7 +670,6 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   font-size: 10px;
   color: var(--ink-faint);
   letter-spacing: .04em;
-  text-transform: lowercase;
 }
 .case-tags span:not(:last-child)::after {
   content: " · ";
@@ -1215,16 +679,47 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .case-cta {
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--accent);
+  color: var(--green-700);
   text-transform: uppercase;
   letter-spacing: .06em;
   display: inline-flex; align-items: center; gap: 6px;
   border-top: 1px solid var(--rule);
   padding-top: 12px;
-  transition: gap .2s;
 }
-.case-cta:hover { gap: 10px; }
-.case-cta .arrow { font-size: 14px; }
+.case-cta + .case-cta { border-top: 0; padding-top: 6px; }
+.case-cta .arrow { font-size: 14px; transition: transform var(--t-fast) var(--ease-out); }
+
+/* demo cards: compact, horizontal. Thumbnail left, text right, so the
+   synthetic demos stay quieter than GrassLMS and the real cases. */
+.cases--demos { grid-template-columns: 1fr; }
+.case--demo {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  column-gap: 36px; row-gap: 12px;
+  padding-top: calc(24px * var(--density)); padding-bottom: calc(24px * var(--density));
+  align-content: start;
+}
+.case--demo > * { grid-column: 2; }
+.case--demo > .demo-shot { grid-column: 1; grid-row: 1 / span 7; align-self: start; }
+.case--demo .case-employer { justify-self: start; }
+.case--demo :is(h3, h4) em { white-space: nowrap; }
+.demo-shot {
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+.demo-shot .flag-browser { padding: 7px 12px; font-size: 10px; }
+.demo-shot img {
+  display: block; width: 100%; height: auto;
+  aspect-ratio: 16 / 9; object-fit: cover; object-position: top left;
+  transition: transform 250ms var(--ease-out, ease-out);
+}
+@media (max-width: 760px) {
+  .case--demo { grid-template-columns: 1fr; }
+  .case--demo > *, .case--demo > .demo-shot { grid-column: 1; grid-row: auto; }
+}
 
 /* ---------- services ---------- */
 .services {
@@ -1247,12 +742,11 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   transition: background .25s;
   cursor: default;
 }
-.service:hover { background: var(--bg-2); }
 .service-head {
   display: flex; align-items: baseline; gap: 12px;
   grid-column: 2;
 }
-.service > h3, .service > .service-desc, .service > .service-proof, .service > .service-metric { grid-column: 2; }
+.service > h4, .service > .service-desc, .service > .service-proof, .service > .service-metric { grid-column: 2; }
 .service-num {
   grid-column: 1;
   grid-row: 1 / 4;
@@ -1271,16 +765,18 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--ink-faint);
   text-transform: uppercase;
 }
-.service h3 {
-  font-family: var(--sans);
+.service h4 {
+  margin: 0;
+  font-family: var(--sans); font-weight: 800;
   font-size: clamp(28px, 3vw, 40px);
   line-height: 1;
   letter-spacing: -0.01em;
   color: var(--ink);
   text-wrap: balance;
 }
-.service h3 em { font-style: normal; color: var(--accent); font-weight: 800; }
+.service h4 em { font-style: normal; color: var(--accent); font-weight: 800; }
 .service-desc {
+  margin: 0;
   font-size: 15px; line-height: 1.5;
   color: var(--ink-dim);
   text-wrap: pretty;
@@ -1301,6 +797,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .service-proof ul {
   display: grid; gap: 4px;
   list-style: none;
+  margin: 0; padding: 0;
 }
 .service-proof li {
   font-family: var(--mono);
@@ -1313,1033 +810,61 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--accent);
   font-size: 11px;
 }
+/* result chip, top-right; the tag row reserves room for it */
 .service-metric {
   position: absolute;
-  top: calc(28px * var(--density)); right: calc(28px * var(--density));
-  font-family: var(--sans);
-  font-size: 52px;
-  line-height: 0.9;
-  color: var(--ink);
-  opacity: 0.12;
-  pointer-events: none;
-  transition: opacity .25s;
+  top: calc(32px * var(--density)); right: calc(28px * var(--density));
+  font-family: var(--mono); font-size: 13px; font-weight: 600;
+  line-height: 1;
+  color: var(--green-700);
+  background: var(--green-50);
+  padding: 5px 8px; border-radius: 4px;
+  white-space: nowrap;
 }
-.service:hover .service-metric { opacity: 0.35; }
+.service-metric .unit { font-weight: 400; margin-left: 4px; }
+.service:has(.service-metric) .service-head { padding-right: 150px; }
 
-/* ============ Lesson Review Toolkit pipeline demo (card 03) ============ */
-.lrt-demo {
-  grid-column: 2;
-  margin: 12px 0 14px;
-  padding: 14px 16px;
-  background: var(--bg-3, #f4f5f1);
-  border: 1px solid var(--ink-100, #e6e8e4);
-  border-left: 3px solid var(--accent, #0a8754);
-  border-radius: 4px;
-}
-.lrt-cap {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink-500, #4d5a51);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin: 0 0 10px;
-}
-.lrt-flow {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr auto auto auto 1fr;
-  gap: 8px;
-  align-items: center;
-  min-height: 92px;
-}
-.lrt-col {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 8px 10px;
-  background: #fff;
-  border: 1px solid var(--ink-100, #e6e8e4);
-  border-radius: 4px;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-700, #1a2a1f);
-  line-height: 1.45;
-}
-.lrt-sources span { white-space: nowrap; }
-.lrt-processor {
-  border-color: var(--accent, #0a8754);
-  background: #ecf9e7;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: var(--green-700, #07683f);
-  font-size: 11px;
-  padding: 12px 14px;
-}
-.lrt-sink {
-  border-color: var(--ink-900, #0a1a10);
-  background: var(--ink-900, #0a1a10);
-  color: #fff;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 11px;
-  padding: 12px 14px;
-}
-.lrt-arrow {
-  font-family: var(--mono);
-  font-size: 18px;
-  color: var(--ink-400, #6b7a70);
-  text-align: center;
-  user-select: none;
-}
-.lrt-dot {
-  position: absolute;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--accent, #0a8754);
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  pointer-events: none;
-  box-shadow: 0 0 0 4px rgba(10, 135, 84, 0.18);
-  animation: lrt-dot-flow 4.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-}
-.lrt-dot--2 {
-  animation-delay: 2.1s;
-}
-@keyframes lrt-dot-flow {
-  0%   { left: 4%;   opacity: 0; }
-  10%  { opacity: 1; }
-  45%  { left: 48%;  opacity: 1; }
-  55%  { left: 48%;  opacity: 1; }
-  90%  { left: 96%;  opacity: 1; }
-  100% { left: 96%;  opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .lrt-dot { animation: none; opacity: 0; }
-}
-@media (max-width: 720px) {
-  .lrt-flow {
+/* Tools on wide screens: three columns on a 6-track grid. A last row of
+   two cards splits it in halves, a lone last card takes the full row, so
+   there are never empty cells. The number moves above the title. */
+@media (min-width: 1100px) {
+  .services { grid-template-columns: repeat(6, 1fr); }
+  .services > .service,
+  .services > .service:last-child:nth-child(odd) { grid-column: span 2; }
+  .services > .service:nth-last-child(2):nth-child(3n+1),
+  .services > .service:last-child:nth-child(3n+2) { grid-column: span 3; }
+  .services > .service:last-child:nth-child(3n+1) { grid-column: 1 / -1; }
+  .service {
     grid-template-columns: 1fr;
-    gap: 6px;
+    grid-template-rows: auto;
+    padding: calc(28px * var(--density)) calc(24px * var(--density));
+    align-content: start;
   }
-  .lrt-arrow { transform: rotate(90deg); }
-  .lrt-dot { display: none; }
+  .services .service > * { grid-column: 1; }
+  .service-num { grid-row: auto; font-size: 32px; padding-top: 0; }
+  .service h4 { font-size: clamp(24px, 2vw, 30px); }
+  .service-desc { max-width: none; }
+  .service-metric { top: calc(28px * var(--density)); right: calc(24px * var(--density)); }
+  .service:has(.service-metric) .service-head { padding-right: 0; }
 }
-.service-metric .unit {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-style: normal;
-  display: block;
-  text-align: right;
-  margin-top: 4px;
-  letter-spacing: .05em;
-}
-
-/* ---------- tweaks panel ---------- */
-.tweaks {
-  position: fixed; right: 20px; bottom: 20px;
-  z-index: 50;
-  background: var(--bg-2);
-  border: 1px solid var(--rule-strong);
-  border-radius: 10px;
-  padding: 14px;
-  font-family: var(--mono); font-size: 11px;
-  min-width: 240px;
-  display: none;
-  box-shadow: var(--shadow-md, 0 8px 24px -8px rgba(10,26,16,0.12));
-}
-.tweaks.on { display: block; }
-.tweaks h5 {
-  margin: 0 0 12px;
-  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
-  color: var(--ink-dim);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.tweak-row { margin-bottom: 12px; }
-.tweak-row:last-child { margin-bottom: 0; }
-.tweak-row .l {
-  font-size: 10px; text-transform: uppercase; color: var(--ink-faint);
-  letter-spacing: .06em; margin-bottom: 5px;
-  display: flex; justify-content: space-between;
-}
-.seg {
-  display: grid; grid-auto-flow: column; gap: 2px;
-  background: var(--rule);
-  border-radius: 4px;
-  padding: 2px;
-}
-.seg button {
-  font-family: var(--mono); font-size: 10px;
-  padding: 5px 8px;
-  border-radius: 3px;
-  color: var(--ink-dim);
-  text-transform: uppercase;
-}
-.seg button.on { background: var(--bg); color: var(--ink); }
-.swatches { display: flex; gap: 5px; }
-.sw {
-  width: 22px; height: 22px; border-radius: 50%;
-  border: 2px solid var(--rule);
-  cursor: pointer;
-}
-.sw.on { border-color: var(--ink); }
 
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
   .services { grid-template-columns: 1fr; }
-  .service-metric { font-size: 40px; }
   .hero-meta { grid-template-columns: 1fr 1fr; }
-  .hero-sub { grid-template-columns: 1fr; gap: 24px; }
-  .flagship { grid-template-columns: 1fr; }
-  .flagship-visual { min-height: 360px; }
   .section-head { grid-template-columns: 1fr; gap: 6px; }
-  .card, .card.span-4, .card.span-8 { grid-column: span 12; min-height: 240px; }
-  .modal-head h2 {font-weight: 800;  font-size: 40px; }
-  .modal-head { padding: 22px 22px 16px; }
-  .modal-body { padding: 20px 22px 28px; }
-  .foot-grid { grid-template-columns: repeat(2, 1fr); }
-  .search { display: none; }
+}
+@media (max-width: 640px) {
+  .service { grid-template-columns: 1fr; }
+  .service > * { grid-column: 1 !important; }
+  .service-num { grid-row: auto; font-size: 32px; padding-top: 0; }
+  .service-metric { position: static; justify-self: start; }
+  .service:has(.service-metric) .service-head { padding-right: 0; }
 }
 
-/* ---------- engagement (§02) ---------- */
-.engagement {
-  border: 1px solid var(--rule);
-  background: var(--bg-2);
-  border-radius: 14px;
-  overflow: hidden;
-  position: relative;
-}
-.engagement::before {
-  content: "";
-  position: absolute; inset: 0;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in oklab, var(--accent) 5%, transparent) 14px 15px);
-  opacity: .6;
-}
-.eng-head {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 22px 28px;
-  border-bottom: 1px solid var(--rule);
-  background: var(--bg-3);
-  gap: 16px; flex-wrap: wrap;
-  position: relative;
-}
-.eng-brand { display: flex; align-items: center; gap: 14px; }
-.eng-mark {
-  width: 46px; height: 46px; border-radius: 50%;
-  background: var(--accent);
-  color: var(--accent-ink);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--sans); font-weight: 800; font-size: 28px;
-  line-height: 1;
-  font-weight: 400;
-}
-.eng-name { font-family: var(--sans); font-weight: 800; font-size: 26px; letter-spacing: -.01em; color: var(--ink); line-height: 1; }
-.eng-kind { font-family: var(--mono); font-size: 11px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: .06em; margin-top: 5px; }
-.eng-badges { display: flex; gap: 6px; flex-wrap: wrap; }
-.eng-badge {
-  font-family: var(--mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: .08em;
-  padding: 5px 10px; border-radius: 999px;
-  border: 1px solid var(--rule-strong);
-  color: var(--ink-dim);
-  display: inline-flex; align-items: center; gap: 6px;
-}
-.eng-badge.current { color: var(--ink); border-color: var(--accent); }
-.eng-badge.current .d { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-.eng-badge.nda { color: var(--warn); border-color: color-mix(in oklab, var(--warn) 50%, var(--rule-strong)); }
-
-.eng-body { padding: 32px 28px 28px; position: relative; }
-.eng-role {
-  display: inline-flex; gap: 10px; align-items: baseline;
-  padding: 7px 12px;
-  border: 1px dashed var(--rule-strong);
-  border-radius: 999px;
-  margin-bottom: 22px;
-}
-.eng-role-k { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .08em; }
-.eng-role-v { font-family: var(--mono); font-size: 12px; color: var(--ink); text-transform: uppercase; letter-spacing: .06em; }
-
-.eng-lede {
-  font-family: var(--sans); font-weight: 500; font-size: clamp(22px, 2.2vw, 30px);
-  line-height: 1.3;
-  color: var(--ink);
-  max-width: 46ch;
-  margin: 0 0 28px;
-  text-wrap: pretty;
-}
-.eng-lede em { font-style: normal; color: var(--accent); font-weight: 700; }
-
-.eng-metrics {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1px; background: var(--rule);
-  border: 1px solid var(--rule);
-  margin-bottom: 32px;
-}
-.eng-metric { background: var(--bg); padding: 20px 20px 22px; }
-.eng-metric .n {
-  font-family: var(--sans); font-weight: 800;
-  font-size: 68px; line-height: 1;
-  letter-spacing: -.02em; color: var(--ink);
-}
-.eng-metric .n .u {
-  font-size: 26px; color: var(--accent); font-style: normal; margin-left: 2px;
-  font-family: var(--sans);
-}
-.eng-metric .l {
-  font-family: var(--mono); font-size: 11px;
-  color: var(--ink-dim); line-height: 1.45;
-  text-transform: uppercase; letter-spacing: .04em;
-  margin-top: 10px;
-}
-
-.eng-artefacts-head {
-  font-family: var(--mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: .08em;
-  color: var(--ink-faint);
-  padding-top: 16px;
-  border-top: 1px solid var(--rule);
-  margin-bottom: 14px;
-}
-.eng-art-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-}
-.eng-art {
-  background: var(--bg);
-  padding: 16px 16px 18px;
-  text-align: left;
-  display: grid; gap: 6px; align-content: start;
-  min-height: 140px;
-  cursor: pointer;
-  transition: background .15s;
-  position: relative;
-}
-.eng-art:hover { background: var(--bg-2); }
-.eng-art:hover .eng-art-t {font-weight: 700;  color: var(--accent); }
-.eng-art-n {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-faint); letter-spacing: .1em;
-}
-.eng-art-t {
-  font-family: var(--sans); font-weight: 700; font-size: 18px; line-height: 1.15;
-  color: var(--ink); letter-spacing: -.005em;
-  transition: color .15s;
-}
-.eng-art-d {
-  font-family: var(--sans); font-size: 12px;
-  color: var(--ink-dim); line-height: 1.4;
-  text-wrap: pretty;
-}
-
-.eng-foot {
-  margin-top: 28px;
-  padding-top: 16px;
-  border-top: 1px dashed var(--rule);
-  font-family: var(--mono); font-size: 11px;
-  color: var(--ink-dim);
-  display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline;
-}
-.eng-foot-k { color: var(--ink-faint); text-transform: uppercase; letter-spacing: .08em; font-size: 10px; }
-.eng-foot-v { max-width: 72ch; }
-
-/* ---------- background (§05) ---------- */
-.bg-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  margin-bottom: 32px;
-}
-.bg-col h3 {
-  font-family: var(--mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: .08em;
-  color: var(--ink-faint);
-  margin: 0 0 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--rule);
-}
-.timeline { list-style: none; padding: 0; margin: 0; }
-.tl-row {
-  display: block;
-  padding: 14px 0;
-  border-bottom: 1px dashed var(--rule);
-}
-.tl-row:last-child { border-bottom: none; }
-.tl-yr { display: none; } /* Mario rule 2026-05-20: roles + companies only, no years */
-.tl-body .co {
-  font-family: var(--sans); font-weight: 800; font-size: 20px;
-  color: var(--ink); line-height: 1.1;
-  letter-spacing: -.005em;
-}
-.tl-body .role {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-dim); text-transform: uppercase;
-  letter-spacing: .06em;
-  margin-top: 4px;
-}
-.tl-body .note {
-  font-family: var(--sans); font-size: 13px;
-  color: var(--ink-dim); line-height: 1.5;
-  margin-top: 6px;
-  text-wrap: pretty;
-}
-.tl-row.cur .co::after {
-  content: "·"; color: var(--accent);
-  font-size: 32px; margin-left: 8px; vertical-align: middle;
-}
-
-.edu-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  margin-top: 40px;
-}
-.edu-cell {
-  background: var(--bg);
-  padding: 22px 20px;
-  min-height: 90px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.edu-k {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-faint); text-transform: uppercase;
-  letter-spacing: .08em;
-}
-.edu-t {
-  font-family: var(--sans); font-weight: 800; font-size: 18px; line-height: 1.15;
-  color: var(--ink); letter-spacing: -.005em;
-}
-.edu-v {
-  font-family: var(--sans); font-size: 13px;
-  color: var(--ink-dim); line-height: 1.4;
-  margin-top: auto;
-}
-
-.certs {
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid var(--rule);
-  display: flex; gap: 8px; flex-wrap: wrap;
-}
-.cert {
-  font-family: var(--mono); font-size: 11px;
-  padding: 7px 12px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 999px;
-  color: var(--ink);
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-.cert.hot { border-color: var(--accent); color: var(--accent); }
-
-.langs {
-  margin-top: 32px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-}
-.lang-cell {
-  background: var(--bg);
-  padding: 16px 18px;
-  display: flex; justify-content: space-between; align-items: baseline;
-  gap: 10px;
-}
-.lang-l { font-family: var(--sans); font-weight: 800; font-size: 20px; color: var(--ink); letter-spacing: -.005em; }
-.lang-v { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
-
-@media (max-width: 900px) {
-  .eng-metrics { grid-template-columns: 1fr; }
-  .eng-metric .n {font-weight: 800;  font-size: 54px; }
-  .eng-art-grid { grid-template-columns: 1fr 1fr; }
-  .bg-grid { grid-template-columns: 1fr; gap: 32px; }
-  .edu-grid { grid-template-columns: 1fr 1fr; }
-  .langs { grid-template-columns: 1fr 1fr; }
-}
-
-
-/* ---------- card schematics (living systems) ---------- */
-.card-schematic{
-  position: absolute;
-  top: 14px; right: 14px;
-  width: 110px; height: 70px;
-  pointer-events: none;
-  overflow: hidden;
-  opacity: .92;
-}
-.card-schematic svg{ width: 100%; height: 100%; display: block; overflow: visible; }
-.card-schematic .wire{
-  fill: none;
-  stroke: color-mix(in oklab, var(--accent) 30%, var(--rule-strong));
-  stroke-width: 1;
-}
-.card-schematic .wire-faint{
-  fill: none;
-  stroke: color-mix(in oklab, var(--accent) 12%, var(--rule-strong));
-  stroke-width: .8;
-  stroke-dasharray: 2 3;
-}
-.card-schematic .node{
-  fill: var(--bg);
-  stroke: var(--accent);
-  stroke-width: 1;
-}
-.card-schematic .node-faint{
-  fill: var(--bg);
-  stroke: var(--rule-strong);
-  stroke-width: .8;
-}
-.card-schematic .node-core{
-  fill: var(--accent);
-}
-.card-schematic .particle{
-  width: 4px; height: 4px; border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 4px var(--accent);
-  position: absolute; top: 0; left: 0;
-}
-.card-schematic .particle.warm{ background: var(--warn); box-shadow: 0 0 4px var(--warn); }
-.card-schematic .particle.cool{ background: var(--ok); box-shadow: 0 0 4px var(--ok); }
-.card-schematic .particle.tiny{ width: 3px; height: 3px; opacity: .8; }
-
-/* hub */
-.card-schematic.hub .pulse-core{ transform-origin:center; animation:cs-pulse 2.4s ease-in-out infinite; }
-.card-schematic.hub .pulse-ring{ fill:none; stroke:var(--accent); stroke-width:.8; transform-origin:center; animation:cs-ring 2.4s ease-out infinite; }
-.card-schematic.hub .particle{ animation: cs-flow 3.2s linear infinite; offset-rotate:0deg; }
-
-/* pipeline */
-.card-schematic.pipeline .stage-flash{ fill:var(--accent); opacity:0; animation:cs-flash 4s linear infinite; }
-.card-schematic.pipeline .particle{ animation: cs-pipe 4s cubic-bezier(.4,0,.2,1) infinite; offset-rotate:0deg; }
-
-/* loop */
-.card-schematic.loop .particle{ animation: cs-loop 5s linear infinite; offset-rotate:0deg; }
-
-/* fanin */
-.card-schematic.fanin .core-glow{ transform-origin:center; animation:cs-breath 2s ease-in-out infinite; }
-.card-schematic.fanin .particle{ animation: cs-fan 4.5s cubic-bezier(.4,0,.2,1) infinite; offset-rotate:0deg; }
-
-/* circuit */
-.card-schematic.circuit .pad{ animation: cs-pad 2s ease-in-out infinite; }
-.card-schematic.circuit .trace{ stroke-dasharray:4 200; animation: cs-trace 3.5s linear infinite; }
-
-@keyframes cs-pulse{
-  0%,100%{ filter:drop-shadow(0 0 2px var(--accent)); }
-  50%{ filter:drop-shadow(0 0 8px var(--accent)); }
-}
-@keyframes cs-ring{
-  0%{ r:8; opacity:.6; }
-  100%{ r:32; opacity:0; }
-}
-@keyframes cs-flow{
-  0%{ offset-distance:0%; opacity:0; }
-  10%{ opacity:1; }
-  90%{ opacity:1; }
-  100%{ offset-distance:100%; opacity:0; }
-}
-@keyframes cs-flash{
-  0%,100%{ opacity:0; }
-  25%{ opacity:.9; }
-  35%{ opacity:0; }
-}
-@keyframes cs-pipe{
-  0%{ offset-distance:0%; opacity:0; transform:scale(.8); }
-  8%{ opacity:1; transform:scale(1); }
-  92%{ opacity:1; transform:scale(1); }
-  100%{ offset-distance:100%; opacity:0; transform:scale(.6); }
-}
-@keyframes cs-loop{
-  0%{ offset-distance:0%; opacity:1; }
-  100%{ offset-distance:100%; opacity:1; }
-}
-@keyframes cs-breath{
-  0%,100%{ filter:drop-shadow(0 0 4px var(--accent)); }
-  50%{ filter:drop-shadow(0 0 12px var(--accent)); }
-}
-@keyframes cs-fan{
-  0%{ offset-distance:0%; opacity:0; }
-  10%{ opacity:1; }
-  90%{ opacity:1; }
-  100%{ offset-distance:100%; opacity:0; }
-}
-@keyframes cs-pad{
-  0%,100%{ filter:drop-shadow(0 0 0 var(--accent)); }
-  50%{ filter:drop-shadow(0 0 4px var(--accent)); }
-}
-@keyframes cs-trace{
-  to{ stroke-dashoffset:-204; }
-}
-
-/* --- modal large schematic --- */
-.modal-schematic{
-  position: relative;
-  width: 100%;
-  height: 220px;
-  margin: 0 0 24px;
-  background: var(--bg-3, #f4f5f1);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.modal-schematic::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--accent) 6%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--accent) 6%, transparent) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
-  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
-}
-.modal-schematic svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
-.modal-schematic .wire{ fill:none; stroke:color-mix(in oklab, var(--accent) 30%, var(--rule-strong)); stroke-width:1.2; }
-.modal-schematic .node{ fill:var(--bg); stroke:var(--accent); stroke-width:1.2; }
-.modal-schematic .node-faint{ fill:var(--bg); stroke:var(--rule-strong); stroke-width:1; }
-.modal-schematic .node-core{ fill:var(--accent); }
-.modal-schematic .node-label{ font-family:var(--mono); font-size:9px; fill:var(--ink-dim); text-transform:uppercase; letter-spacing:.06em; }
-.modal-schematic .node-label-strong{ font-family:var(--mono); font-size:10px; fill:var(--ink); text-transform:uppercase; letter-spacing:.06em; font-weight:500; }
-.modal-schematic .node-tag{ font-family:var(--mono); font-size:8px; fill:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; }
-.modal-schematic .particle{ width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 6px var(--accent); position:absolute; top:0; left:0; }
-.modal-schematic .particle.warm{ background:var(--warn); box-shadow:0 0 6px var(--warn); }
-.modal-schematic .particle.cool{ background:var(--ok); box-shadow:0 0 6px var(--ok); }
-.modal-schematic .particle.tiny{ width:4px; height:4px; opacity:.8; }
-.modal-schematic .stage-flash{ fill:var(--accent); opacity:0; }
-.modal-schematic .pulse-core{ transform-origin:center; animation:cs-pulse 2.4s ease-in-out infinite; }
-.modal-schematic .pulse-ring{ fill:none; stroke:var(--accent); stroke-width:1; transform-origin:center; animation:cs-ring-big 2.4s ease-out infinite; }
-@keyframes cs-ring-big{
-  0%{ r:18; opacity:.7; }
-  100%{ r:60; opacity:0; }
-}
-.modal-schematic .core-glow{ transform-origin:center; animation:cs-breath 2s ease-in-out infinite; }
-.modal-schematic .pad{ animation: cs-pad 2s ease-in-out infinite; }
-.modal-schematic .trace{ stroke-dasharray:4 200; animation: cs-trace 3.5s linear infinite; }
-.modal-schematic .particle{ animation-iteration-count:infinite; }
-
-/* hide motif when there's a schematic */
-.card.has-schematic .motif { display: none; }
-.card.has-schematic .card-head { padding-right: 130px; }
-.card.has-schematic h3 { padding-right: 110px; }
-
-@media (prefers-reduced-motion: reduce){
-  .card-schematic *, .modal-schematic *{
-    animation: none !important;
-  }
-}
-
-
-/* ============ STICKY CTA ============ */
-.sticky-cta{
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 80;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 20px 14px 22px;
-  background: var(--accent);
-  color: var(--bg);
-  border-radius: 999px;
-  text-decoration: none;
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: .04em;
-  box-shadow:
-    0 12px 36px -12px color-mix(in oklab, var(--accent) 70%, transparent),
-    0 2px 8px -2px rgba(0,0,0,.4);
-  transform: translateY(0);
-  opacity: 1;
-  transition: transform .25s cubic-bezier(.4,0,.2,1), opacity .25s, filter .15s, box-shadow .25s;
-}
-.sticky-cta:hover{
-  transform: translateY(-2px);
-  filter: brightness(1.05);
-  box-shadow:
-    0 18px 44px -12px color-mix(in oklab, var(--accent) 80%, transparent),
-    0 4px 12px -2px rgba(0,0,0,.5);
-}
-.sticky-cta:active{ transform: translateY(0); }
-.sticky-cta.hidden{
-  opacity: 0;
-  transform: translateY(20px) scale(.92);
-  pointer-events: none;
-}
-.sticky-cta.deferred{
-  opacity: 0;
-  transform: translateY(40px);
-  pointer-events: none;
-}
-.sticky-cta-label{
-  display: flex; flex-direction: column; align-items: flex-start;
-  line-height: 1.1;
-}
-.sticky-cta-label b{
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-}
-.sticky-cta-label em{
-  font-family: var(--sans); font-weight: 800;
-  font-size: 11.5px;
-  letter-spacing: 0;
-  opacity: .82;
-  text-transform: none;
-  font-weight: 400;
-  margin-top: 2px;
-}
-.sticky-cta-pulse{
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--bg);
-  position: relative;
-  flex-shrink: 0;
-}
-.sticky-cta-pulse::before{
-  content: "";
-  position: absolute; inset: -4px;
-  border-radius: 50%;
-  border: 1.5px solid var(--bg);
-  opacity: .6;
-  animation: sticky-pulse 1.8s ease-out infinite;
-}
-@keyframes sticky-pulse{
-  0%{ transform: scale(.6); opacity: .8; }
-  100%{ transform: scale(2.2); opacity: 0; }
-}
-@media (max-width: 720px){
-  .sticky-cta{
-    right: 16px; bottom: 16px;
-    padding: 12px 16px 12px 18px;
-    font-size: 11px;
-  }
-  .sticky-cta-label em{ display: none; }
-}
-@media (prefers-reduced-motion: reduce){
-  .sticky-cta-pulse::before{ animation: none; }
-  .sticky-cta{ transition: opacity .15s; }
-}
-
-/* ============ LOGO STRIP ============ */
-.logo-strip{
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: calc(48px * var(--density));
-  padding: 4px 0;
-  background: color-mix(in oklab, var(--bg) 96%, var(--ink));
-  overflow: hidden;
-}
-.logo-strip-track{
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-}
-.logo-cell{
-  display: flex; align-items: center; justify-content: center;
-  min-height: 78px;
-  padding: 18px 24px;
-  border-right: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  position: relative;
-  transition: background .18s, color .18s;
-}
-.logo-cell:nth-child(5n){ border-right: none; }
-.logo-cell:nth-last-child(-n+5){ border-bottom: none; }
-.logo-cell:hover{
-  background: color-mix(in oklab, var(--accent) 8%, var(--bg));
-}
-.logo-wm{
-  font-family: var(--mono);
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--ink-faint);
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  text-align: center;
-  line-height: 1.2;
-  filter: grayscale(1);
-  opacity: .75;
-  transition: opacity .18s, color .18s, filter .18s;
-}
-.logo-cell:hover .logo-wm{
-  color: var(--ink);
-  opacity: 1;
-  filter: grayscale(0);
-}
-@media (max-width: 880px){
-  .logo-strip-track{ grid-template-columns: repeat(2, 1fr); }
-  .logo-cell:nth-child(5n){ border-right: 1px solid var(--rule); }
-  .logo-cell:nth-child(2n){ border-right: none; }
-  .logo-cell:nth-last-child(-n+5){ border-bottom: 1px solid var(--rule); }
-  .logo-cell:nth-last-child(-n+2){ border-bottom: none; }
-}
-
-/* ============ WHY ME ============ */
-.why{
-  border-top: 1px solid var(--rule);
-  padding-bottom: calc(80px * var(--density));
-}
-.why-grid{
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-  border-top: 1px solid var(--rule);
-}
-.why-card{
-  border-right: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  padding: calc(36px * var(--density)) calc(32px * var(--density));
-  display: flex; flex-direction: column;
-  min-height: 280px;
-}
-.why-card:nth-child(2n){ border-right: none; }
-.why-num{
-  font-family: var(--mono); font-size: 11px;
-  color: var(--accent); letter-spacing: .12em;
-  margin-bottom: calc(20px * var(--density));
-}
-.why-h{
-  font-family: var(--sans); font-size: clamp(22px, 2.2vw, 30px);
-  font-weight: 400; line-height: 1.15;
-  color: var(--ink-dim);
-  letter-spacing: -.01em;
-  margin: 0 0 calc(14px * var(--density));
-  font-style: italic;
-}
-.why-p{
-  font-family: var(--sans); font-size: 15.5px; line-height: 1.55;
-  color: var(--ink-dim);
-  margin: 0 0 auto;
-  text-wrap: pretty;
-}
-.why-p[data-placeholder]{
-  color: var(--ink-faint);
-  font-style: italic;
-}
-.why-proof{
-  margin-top: calc(20px * var(--density));
-  padding-top: calc(16px * var(--density));
-  border-top: 1px dashed var(--rule);
-  display: grid; grid-template-columns: 110px 1fr; gap: 12px;
-}
-.why-proof .why-k{
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-faint); text-transform: uppercase;
-  letter-spacing: .08em;
-}
-.why-proof .why-v{
-  font-family: var(--mono); font-size: 11px;
-  color: var(--ink-faint);
-}
-
-/* ============ BOOKING ============ */
-.booking{
-  border-top: 1px solid var(--rule);
-  padding-bottom: calc(60px * var(--density));
-}
-.booking-grid{
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-.booking-side{
-  border-right: 1px solid var(--rule);
-  padding: calc(36px * var(--density)) calc(28px * var(--density));
-  background: color-mix(in oklab, var(--bg) 96%, var(--ink));
-  display: flex; flex-direction: column;
-  gap: calc(28px * var(--density));
-}
-.booking-side-block .bs-k{
-  display: block;
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-faint); text-transform: uppercase;
-  letter-spacing: .1em;
-  margin-bottom: 12px;
-}
-.booking-side-block.alt{
-  margin-top: auto;
-  padding-top: calc(20px * var(--density));
-  border-top: 1px dashed var(--rule);
-}
-.bs-list{
-  list-style: none; padding: 0; margin: 0;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.bs-list li{
-  font-family: var(--sans); font-size: 13.5px; line-height: 1.45;
-  color: var(--ink-faint); font-style: italic;
-  padding-left: 16px; position: relative;
-}
-.bs-list li::before{
-  content: "→";
-  position: absolute; left: 0; top: 0;
-  font-family: var(--mono); font-size: 11px;
-  color: var(--accent); font-style: normal;
-}
-.bs-direct{
-  display: block;
-  font-family: var(--mono); font-size: 12px;
-  color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px solid var(--rule);
-  padding: 8px 0;
-}
-.bs-direct:hover{ color: var(--ink); }
-.bs-direct:last-child{ border-bottom: none; }
-
-.booking-form{
-  padding: calc(36px * var(--density)) calc(32px * var(--density));
-  display: flex; flex-direction: column;
-  gap: calc(28px * var(--density));
-}
-.bf-row{
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: calc(24px * var(--density));
-}
-.bf-field{
-  display: flex; flex-direction: column;
-  gap: 8px;
-  border: none; padding: 0; margin: 0;
-}
-.bf-k, legend.bf-k{
-  font-family: var(--mono); font-size: 10px;
-  color: var(--ink-faint); text-transform: uppercase;
-  letter-spacing: .1em;
-  display: flex; align-items: baseline; gap: 8px;
-  padding: 0;
-}
-.bf-k i{
-  font-style: normal;
-  color: var(--accent);
-  font-size: 9px;
-}
-.bf-k em{
-  font-style: normal;
-  color: var(--ink-faint);
-  text-transform: none;
-  letter-spacing: 0;
-  margin-left: 4px;
-  font-size: 10px;
-}
-.bf-field input[type="text"],
-.bf-field input[type="email"],
-.bf-field textarea{
-  font-family: var(--sans); font-size: 15px;
-  color: var(--ink);
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--rule-strong);
-  padding: 8px 0 10px;
-  outline: none;
-  width: 100%;
-  transition: border-color .15s;
-  resize: vertical;
-}
-.bf-field input:focus,
-.bf-field textarea:focus{
-  border-bottom-color: var(--accent);
-}
-.bf-field input::placeholder,
-.bf-field textarea::placeholder{
-  color: var(--ink-faint);
-  font-style: italic;
-}
-.bf-chips, .bf-radios{
-  display: flex; flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
-}
-.bf-chip, .bf-radio{
-  position: relative;
-  cursor: pointer;
-}
-.bf-chip input, .bf-radio input{
-  position: absolute; opacity: 0;
-  width: 1px; height: 1px;
-}
-.bf-chip span, .bf-radio span{
-  display: inline-block;
-  font-family: var(--mono); font-size: 11.5px;
-  color: var(--ink-dim);
-  padding: 8px 14px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 999px;
-  letter-spacing: .02em;
-  transition: all .12s;
-  user-select: none;
-}
-.bf-chip:hover span, .bf-radio:hover span{
-  border-color: var(--accent);
-  color: var(--ink);
-}
-.bf-chip input:checked + span, .bf-radio input:checked + span{
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--bg);
-}
-.bf-chip input:focus-visible + span, .bf-radio input:focus-visible + span{
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.bf-foot{
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 24px;
-  padding-top: calc(8px * var(--density));
-  border-top: 1px dashed var(--rule);
-  flex-wrap: wrap;
-}
-.bf-submit{
-  display: inline-flex; align-items: center; gap: 10px;
-  background: var(--accent);
-  color: var(--bg);
-  border: none;
-  padding: 14px 22px;
-  font-family: var(--mono); font-size: 12px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  font-weight: 600;
-  border-radius: 2px;
-  transition: transform .12s, filter .12s;
-}
-.bf-submit:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-.bf-submit:active{ transform: translateY(0); }
-.bf-note{
-  font-family: var(--mono); font-size: 10.5px;
-  color: var(--ink-faint);
-  letter-spacing: .04em;
-  flex: 1;
-  text-align: right;
-  min-width: 200px;
-}
-.bf-success{
-  margin-top: 12px;
-  padding: 18px 20px;
-  background: color-mix(in oklab, var(--accent) 12%, var(--bg));
-  border: 1px solid var(--accent);
-  border-radius: 3px;
-  font-family: var(--sans); font-size: 14px;
-  color: var(--ink);
-  line-height: 1.5;
-}
-.bf-success strong{
-  font-family: var(--sans); font-weight: 800;
-  font-size: 17px;
-  color: var(--accent);
-  display: block;
-  margin-bottom: 4px;
-}
 .foot-legal{
   display: flex; justify-content: space-between;
-  padding: calc(28px * var(--density)) 0 8px;
+  padding-block: calc(28px * var(--density)) 8px;
   font-family: var(--mono); font-size: 10px;
   color: var(--ink-faint);
   text-transform: uppercase;
@@ -2348,75 +873,49 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   margin-top: calc(28px * var(--density));
   flex-wrap: wrap; gap: 12px;
 }
-
 @media (max-width: 880px){
-  .why-grid{ grid-template-columns: 1fr; }
-  .why-card{ border-right: none !important; }
-  .booking-grid{ grid-template-columns: 1fr; }
-  .booking-side{ border-right: none; border-bottom: 1px solid var(--rule); }
-  .bf-row{ grid-template-columns: 1fr; }
   .foot-legal{ flex-direction: column; align-items: flex-start; }
 }
 
-/* ============ MINI-INDEX (§ 01 quick-jump) ============ */
-.case-jumper {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 12px;
-  padding: 14px 16px;
-  margin: 0 0 18px;
-  background: var(--bg-2);
+/* ---------- contact (closing block) ---------- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
   border: 1px solid var(--rule);
-  border-radius: 6px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .04em;
 }
-.case-jumper .cj-k {
-  color: var(--ink-faint);
-  font-size: 9.5px;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  margin-right: 4px;
+.contact-cell {
+  background: var(--bg);
+  padding: 24px 22px;
+  display: grid; gap: 8px;
+  grid-template-columns: 1fr auto;
+  align-content: start;
+  transition: background .2s;
 }
-.case-jumper a {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  padding: 2px 4px;
-  color: var(--ink);
-  border-bottom: 1px solid transparent;
-  transition: color .12s, border-color .12s;
+.contact-cell .k {
+  grid-column: 1 / -1;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-faint);
 }
-.case-jumper a i {
-  font-style: normal;
-  color: var(--ink-dim);
-  font-weight: 400;
+.contact-cell .v {
+  font-family: var(--sans); font-weight: 700; font-size: 16px;
+  color: var(--ink); overflow-wrap: break-word; min-width: 0;
 }
-.case-jumper a:hover { color: var(--accent); border-bottom-color: var(--accent); }
-.case-jumper a:hover i { color: var(--accent); }
-.case-jumper a.cj-cur {
-  color: var(--accent);
-  font-weight: 600;
+.contact-cell .arr { color: var(--accent); font-weight: 800; transition: transform .2s; }
+.contact-cell--main { background: var(--accent); }
+.contact-cell--main .k { color: var(--accent-ink); }
+.contact-cell--main .v { color: var(--accent-ink); }
+.contact-cell--main .arr { color: var(--accent-ink); }
+@media (max-width: 1199px) {
+  .contact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-.case-jumper a.cj-cur i { color: var(--accent); }
-.case-jumper .cj-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 60%, transparent);
-  animation: pulse 2.4s infinite;
-  display: inline-block;
-  margin-left: 2px;
-  align-self: center;
-}
-.case-jumper .cj-sep { color: var(--rule-strong); user-select: none; }
-@media (max-width: 600px) {
-  .case-jumper { font-size: 10.5px; padding: 12px 14px; }
-  .case-jumper .cj-sep { display: none; }
+@media (max-width: 560px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .hero-meta { grid-template-columns: 1fr; }
 }
 
-/* ============ SERVICE proof line (§ 05) ============ */
+/* ============ SERVICES (inside § 05 Contact) ============ */
 .bg-svc { grid-template-rows: auto auto 1fr auto; }
 .bg-svc-p {
   margin-top: 10px;
@@ -2425,40 +924,276 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: .04em;
-  color: var(--accent);
+  color: var(--green-700);
   text-transform: uppercase;
 }
 
 /* ============ DEMO card treatment (§ 04) ============ */
-.case-tag--demo {
-  background: var(--sun-300, #ffe066);
-  color: var(--ink, #0a1a10);
-  font-family: var(--mono);
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 2px;
-  letter-spacing: .06em;
-}
-.syn-pill {
-  display: inline-block;
-  margin-left: 8px;
-  padding: 2px 8px;
-  font-family: var(--mono);
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--coral-700, #c33d22);
-  background: var(--coral-50, #fff0eb);
-  border: 1px solid color-mix(in oklab, var(--coral-700, #c33d22) 30%, transparent);
-  border-radius: 2px;
-  vertical-align: 2px;
-}
-.case--demo .case-employer { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
 
+/* ============ GLOBAL: focus, anchors, mobile top bar, reduced motion ============ */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+html { scroll-behavior: smooth; }
+section[id], article[id], details[id], #services { scroll-margin-top: 72px; }
+#services { margin-bottom: 24px; }
+
+@media (max-width: 720px) {
+  .topbar-inner { gap: 10px; padding-top: 10px; padding-bottom: 10px; }
+  .sig span { display: none; }
+  .topbar nav {
+    flex-wrap: nowrap; min-width: 0; gap: 0;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .topbar nav::-webkit-scrollbar { display: none; }
+  .navlink { white-space: nowrap; padding: 6px 7px; }
+  .navlink--cta { margin-left: 2px; }
+}
+
+/* ============ MOTION ============
+   One easing and three durations for the whole page:
+   fast 200ms (hover, nav), base 500ms (reveals), slow 900ms (counters).
+   Everything here is gated by html.motion, which the head script sets only
+   when the visitor has not asked for reduced motion. Without JS the page is
+   fully static and complete. */
+:root {
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --t-fast: 200ms;
+  --t-base: 500ms;
+}
+
+/* hero: staged entrance on load */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.motion .hero h1,
+.motion .hero-main,
+.motion .hero-stats,
+.motion .hero-meta { animation: rise var(--t-base) var(--ease-out) both; }
+.motion .hero-main  { animation-delay: 120ms; }
+.motion .hero-stats { animation-delay: 220ms; }
+.motion .hero-meta  { animation-delay: 320ms; }
+.hero-stats .n { font-variant-numeric: tabular-nums; }
+
+/* scroll reveal: cards rise in, staggered within their grid */
+.motion .reveal {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+.motion .reveal.in { opacity: 1; transform: none; }
+
+/* hover: accent rule on top of cards instead of a full background swap */
+.case, .service { box-shadow: inset 0 2px 0 transparent; transition: background .25s, box-shadow var(--t-fast) var(--ease-out); }
+
+/* nav: pill slides to the section in view */
+.topbar nav { position: relative; }
+.navlink { position: relative; z-index: 1; }
+.nav-ind {
+  position: absolute; left: 0; top: 50%;
+  height: 26px; margin-top: -13px; width: 0;
+  border-radius: 999px; background: var(--bg-3);
+  opacity: 0; pointer-events: none;
+  transition: transform 250ms var(--ease-out), width 250ms var(--ease-out), opacity var(--t-fast);
+}
+.nav-ind.on { opacity: 1; }
+.navlink.is-active { color: var(--ink); }
+.navlink--cta.is-active { color: var(--accent-ink); }
+
+/* GrassLMS mockups: each plays once when it scrolls into view */
+/* armed state (set up on load) → .play-* on the frame starts the sequence */
+.fs-editor .ln { display: block; overflow: hidden; }
+.motion .fs-editor .ln { max-width: 0; }
+.motion .play-code .fs-editor .ln {
+  animation: type-line calc(var(--n) * 28ms) steps(var(--n)) forwards;
+  animation-delay: var(--d);
+}
+@keyframes type-line { from { max-width: 0; } to { max-width: calc(var(--n) * 1ch + 1ch); } }
+.motion .flag-screen--code .fs-run { opacity: 0; }
+.motion .play-code .fs-run { animation: rise 300ms var(--ease-out) forwards; animation-delay: var(--run-d, 1.6s); }
+
+.fs-robot-grid { position: relative; }
+.fs-robot-sprite {
+  position: absolute; left: 0; top: 0;
+  width: 38px; height: 38px; border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent); color: #fff; font-size: 16px;
+}
+.play-robot .fs-robot-sprite { animation: robot-walk 2.4s var(--ease-out) .3s both; }
+@keyframes robot-walk {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(41px, 0); }
+  50%  { transform: translate(41px, 41px); }
+  75%  { transform: translate(82px, 41px); }
+  100% { transform: translate(82px, 82px); }
+}
+.fs-block.run { animation: block-run 600ms var(--ease-out) both; }
+@keyframes block-run { 40% { transform: translateY(-3px); box-shadow: 0 3px 0 var(--green-700); } }
+.fs-cell--goal.hit { animation: goal-hit 500ms var(--ease-out); }
+@keyframes goal-hit { 50% { transform: scale(1.15); } }
+
+.motion .flag-screen--ai .fs-ai-plan li { opacity: 0; }
+.motion .play-ai .fs-ai-plan li { animation: rise 350ms var(--ease-out) forwards; animation-delay: calc(200ms + var(--i) * 220ms); }
+.motion .play-ai .fs-ai-btn--p { animation: btn-nudge 500ms var(--ease-out) 1.4s both; }
+@keyframes btn-nudge { 50% { transform: scale(1.06); } }
+
+.motion .flag-screen--lib .fs-lib-chip { opacity: 0; }
+.motion .play-lib .fs-lib-chip { animation: chip-pop 300ms var(--ease-out) forwards; animation-delay: calc(var(--i) * 45ms); }
+@keyframes chip-pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+
+/* tool visuals: parts arrive in order when the card scrolls into view */
+.motion .tv [data-step] { opacity: 0; }
+.motion .tv.play-tv [data-step] { animation: chip-pop 320ms var(--ease-out) forwards; animation-delay: calc(150ms + var(--i) * 60ms); }
+.motion .tv-graph [data-step] { transform-box: fill-box; transform-origin: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* ============ TOOL VISUALS (§ 03) ============ */
+/* a small picture of what each tool does; decorative, aria-hidden */
+@media (max-width: 1099px) { .service > .tv { grid-column: 2; } }
+.tv{height:104px;border:1px solid var(--rule);border-radius:8px;background:var(--bg-2);padding:10px 12px;overflow:hidden;position:relative;font:11px/1.3 var(--mono);color:var(--ink-dim)}
+.tv .a,.tv .ok{color:var(--accent)}
+.tv-form{display:grid;gap:5px;align-content:center}
+.tv-form .f{display:flex;justify-content:space-between;border:1px solid var(--rule);border-radius:4px;padding:3px 8px;background:#fff}
+.tv-form .tag{position:absolute;right:8px;top:-1px;font-style:normal;font-size:9px;color:var(--accent)}
+.tv-chat{display:grid;gap:5px;align-content:center}
+.tv-chat p{margin:0;padding:4px 9px;border-radius:10px;max-width:70%;background:#fff;border:1px solid var(--rule)}
+.tv-chat .me{justify-self:end;background:var(--green-50);border-color:transparent;color:var(--green-700)}
+.tv-slide1{display:flex;gap:8px;align-items:stretch}
+.tv-slide1 .sl{flex:1;position:relative;background:#fff;border:1px solid var(--rule);border-radius:4px;display:flex;align-items:center;justify-content:center}
+.tv-slide1 .bar,.tv-json .deck i.a{background:var(--accent)}
+.tv-slide1 .bar{position:absolute;left:0;right:0;top:0;height:6px;border-radius:3px 3px 0 0}
+.tv-slide1 .fx{font:600 18px var(--sans);color:var(--ink)} .tv-slide1 .fx b{color:var(--accent)}
+.tv-slide1 .side{width:44px;display:grid;gap:5px} .tv-slide1 .side i{border:1px solid var(--rule);border-radius:3px;background:#fff}
+.tv-json{display:flex;align-items:center;gap:10px}
+.tv-json pre{margin:0;flex:1;background:var(--bg-3);padding:8px;border-radius:4px;color:var(--ink);font-size:10.5px}
+.tv-json .ar,.tv-pipe .ar{color:var(--accent);font-weight:800}
+.tv-json .deck{flex:1;position:relative;height:70px}
+.tv-json .deck i{position:absolute;width:78%;height:56px;border:1px solid var(--rule-strong);border-radius:4px;background:#fff}
+.tv-json .deck i:nth-child(2){left:8%;top:6px}.tv-json .deck i:nth-child(3){left:16%;top:12px;border-top:6px solid var(--accent);background:#fff}
+.tv-board{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background-image:radial-gradient(var(--rule-strong) 1px,transparent 1px);background-size:10px 10px}
+.tv-board i{border-radius:3px;background:#fff;border:1px solid var(--rule)} .tv-board i.a{background:var(--green-50);border-color:var(--accent)}
+.tv-graph svg{width:100%;height:100%}
+.tv-graph .e path{stroke:var(--rule-strong);stroke-width:1.5;fill:none}
+.tv-graph .n circle{fill:#fff;stroke:var(--rule-strong);stroke-width:1.5}
+.tv-graph .n .on{fill:var(--accent);stroke:var(--accent)} .tv-graph .n .cur{fill:#fff;stroke:var(--accent);stroke-width:3}
+.tv-table{display:grid;gap:4px;align-content:center}
+.tv-table div{display:flex;justify-content:space-between;border-bottom:1px solid var(--rule);padding:3px 2px}
+.tv-table .st{font-weight:500;padding:1px 6px;border-radius:3px;font-size:10px}
+.tv-table .r{background:var(--green-50);color:var(--green-700)} .tv-table .v{background:var(--bg-3);color:var(--ink)} .tv-table .d{color:var(--ink-faint)}
+.tv-pipe{display:flex;align-items:center;gap:10px}
+.tv-pipe .src{display:grid;grid-template-columns:1fr 1fr;gap:4px;flex:1}
+.tv-pipe .src span{border:1px solid var(--rule);border-radius:3px;padding:3px 6px;background:#fff;text-align:center}
+.tv-pipe .db{flex:1;display:grid;gap:4px} .tv-pipe .db i{height:12px;border-radius:2px;background:var(--rule)} .tv-pipe .db i.a{background:var(--accent)}
+
+/* ============ QUIET ACCENTS ============ */
+/* green marks section headings, GrassLMS, tool visuals, metrics and CTAs; cards stay neutral */
+.case :is(h3, h4) em, #tools .service h4 em { color: inherit; }
+.case-num, .service-num { color: var(--ink-faint); }
+.band-k { background: transparent; color: var(--green-700); border: 1px solid currentColor; }
+.case-employer { background: var(--bg-3); }
+.bg-svc-n { color: var(--ink-faint); }
+
+.motion :is(.cases, .services, .flag-modes, .contact-grid, .bg-services-grid):not(.grid-in) { background: transparent; border-color: transparent; }
+.motion :is(.cases, .services, .flag-modes, .contact-grid, .bg-services-grid) { transition: background var(--t-base) var(--ease-out), border-color var(--t-base) var(--ease-out); }
+
+/* ============ CASE LIST (compact rows) ============ */
+.case-list { border-top: 1px solid var(--rule); margin-bottom: 8px; }
+.case-row { border-bottom: 1px solid var(--rule); }
+.case-row > summary, .case-row--static {
+  display: grid; grid-template-columns: 40px minmax(0, 1fr) auto 20px;
+  gap: 16px; align-items: baseline; padding: 16px 4px; list-style: none;
+}
+.case-row > summary { cursor: pointer; }
+.case-row > summary::-webkit-details-marker { display: none; }
+.case-row > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cr-title { font-family: var(--sans); font-weight: 700; font-size: var(--fs-lede); color: var(--ink); line-height: 1.35; }
+.cr-meta { font-family: var(--mono); font-size: var(--fs-label); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); text-align: right; }
+.cr-toggle { position: relative; width: 12px; height: 12px; align-self: center; }
+.cr-toggle::before, .cr-toggle::after { content: ""; position: absolute; left: 0; top: 5px; width: 12px; height: 2px; background: var(--ink-dim); transition: transform var(--t-fast) var(--ease-out); }
+.cr-toggle::after { transform: rotate(90deg); }
+.case-row[open] .cr-toggle::after { transform: rotate(0deg); }
+.cr-body { display: grid; gap: 12px; padding: 0 4px 22px 60px; max-width: 80ch; }
+.cr-body .case-desc { margin: 0; }
+.cr-body .case-tags { border-top: 0; padding-top: 0; }
+.cr-body a { color: var(--green-700); }
+@media (max-width: 720px) {
+  .case-row > summary, .case-row--static { grid-template-columns: 28px minmax(0, 1fr) 16px; gap: 4px 12px; }
+  .cr-meta { grid-column: 2; grid-row: 2; text-align: left; }
+  .cr-toggle { grid-column: 3; grid-row: 1; }
+  .cr-body { padding-left: 44px; }
+}
+
+/* formula image generator visual */
+.tv-formula { display: flex; align-items: center; gap: 10px; }
+.tv-formula .fx-in { flex: 1; display: grid; gap: 6px; }
+.tv-formula .fx-in > span:first-child { background: var(--bg-3); color: var(--ink); padding: 6px 8px; border-radius: 4px; font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tv-formula .fx-set { display: flex; gap: 4px; }
+.tv-formula .fx-set span { border: 1px solid var(--rule); border-radius: 3px; padding: 1px 6px; background: #fff; }
+.tv-formula .ar { color: var(--accent); font-weight: 800; }
+.tv-formula .fx-out { flex: 1; height: 64px; display: flex; align-items: center; justify-content: center; gap: 6px; background: #fff; border: 1px solid var(--rule-strong); border-radius: 4px; font: 600 16px var(--sans); color: var(--ink); }
+.tv-formula .fr { display: inline-grid; text-align: center; line-height: 1.05; }
+.tv-formula .fr i { font-style: normal; }
+.tv-formula .fr i:first-child { border-bottom: 1.5px solid var(--ink); padding: 0 2px; }
+
+/* ============ TYPE SCALE ============
+   Seven sizes: 11 / 13 / 15 / 18 / 28 / 56 / 96.
+   Geist Mono is kept for short uppercase labels (section numbers, kickers,
+   tags, captions); text people read as text is Manrope. */
+:root { --fs-label: 11px; --fs-small: 13px; --fs-body: 15px; --fs-lede: 18px; --fs-title: 28px; }
+
+/* labels: one size, one tracking */
+.case-num, .case-tag, .service-tag, .service-proof .pl, .band-k, .navlink, .section-head .num,
+.section-head .count, .hero-meta .k, .contact-cell .k, .hero-stats .l, .flag-frame figcaption,
+.fm-k, .bg-svc-n, .bg-svc-p, .case-cta, .foot-legal, .foot-legal a {
+  font-size: var(--fs-label); letter-spacing: .06em;
+}
+
+/* read as text, so set in Manrope */
+.case-tags, .case-tags span, .service-proof li, .band-v, .band-v a, .band-arr,
+.case-period, .case-employer, .hero-meta .v, .hero-meta .v a {
+  font-family: var(--sans); font-size: var(--fs-small); letter-spacing: 0; text-transform: none;
+}
+.hero-meta .v { font-weight: 600; }
+
+.case-desc, .service-desc, .fm-v, .bg-svc-d, .cases-foot, .demos-lede, .flag-mode p, .case-meta, .contact-cell .v { font-size: var(--fs-body); }
+.sig { font-size: var(--fs-label); }
+.flag-intro p { font-size: var(--fs-lede); }
+.bg-svc-t { font-size: var(--fs-lede); }
+.case :is(h3, h4), .service h4 { font-size: var(--fs-title); letter-spacing: -.01em; }
+.service-num, .hero-stats .n { font-size: var(--fs-title); }
+
+/* hover effects only where a real pointer hovers (no sticky hover on touch) */
+@media (hover: hover) and (pointer: fine) {
+  .navlink:hover { color: var(--ink); background: var(--bg-3); }
+  .navlink--cta:hover { background: var(--green-700); color: var(--accent-ink); }
+  .hero-meta a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .btn:hover { transform: translateY(1px); box-shadow: 0 3px 0 0 var(--ink-100, #e6e8e4); }
+  .btn.primary:hover { transform: translateY(1px); box-shadow: 0 3px 0 0 var(--green-700, #07683f); background: var(--green-600); color: white; }
+  .btn:hover .arr { transform: translateX(3px); }
+  .bg-svc-d a:hover { color: var(--accent); }
+  .band-v a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .case:hover { background: var(--bg-2); }
+  .case-cta:hover .arrow { transform: translateX(4px); }
+  .demo-shot:hover img { transform: scale(1.02); }
+  .service:hover { background: var(--bg-2); }
+  .foot-legal a:hover { color: var(--accent); }
+  .contact-cell:hover { background: var(--bg-2); }
+  .contact-cell:hover .arr { transform: translateX(3px); }
+  .contact-cell--main:hover { background: var(--green-700); }
+  .case:hover, .service:hover { box-shadow: inset 0 2px 0 var(--accent); }
+}
 </style>
 </head>
-<body>
+<body id="top">
 
 <!-- ============ TOP BAR ============ -->
 <header class="topbar">
@@ -2469,125 +1204,100 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     </a>
     <nav>
       <a class="navlink" href="#cases">Cases</a>
-      <a class="navlink" href="#services">Tools</a>
-      <a class="navlink" href="#flagship">GrassLMS</a>
       <a class="navlink" href="#demos">Demos</a>
-      <a class="navlink" href="#background">Services</a>
+      <a class="navlink" href="#flagship">GrassLMS</a>
+      <a class="navlink" href="#tools">Tools</a>
+      <a class="navlink navlink--cta" href="#contact">Contact</a>
     </nav>
   </div>
 </header>
 
-<main class="wrap" id="top">
+<main>
+<div class="wrap">
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <div class="hero-meta">
-    <div><span class="k">Location</span><span class="v">Türkiye · ready to relocate to Spain · Remote EU</span></div>
-    <div><span class="k">Phone</span><span class="v"><a href="tel:+905059412268" style="color:inherit; text-decoration:none;">+90 505 941 22 68</a></span></div>
-    <div><span class="k">LinkedIn</span><span class="v"><a href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">in/mario-rafael-id-lxd ↗</a></span></div>
-    <div><span class="k">Email</span><span class="v"><a href="mailto:mrbecerraduenias@gmail.com" style="color:inherit; text-decoration:none;">mrbecerraduenias@gmail.com</a></span></div>
-    <div><span class="k">CV</span><span class="v"><a href="Mario_Becerra_CV.pdf" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">Mario_Becerra_CV.pdf ↓</a></span></div>
-  </div>
-
-  <h1>Mario Rafael<br>Becerra Dueñas<em>.</em></h1>
+  <h1>Mario Rafael<br>Becerra <span class="nowrap">Dueñas<em>.</em></span></h1>
 
   <div class="hero-sub">
+    <div class="hero-main">
     <p class="hero-lede">
-      <b>Learning Experience Designer</b> with 10+ years in EdTech. End-to-end curricula at Yandex Practicum, TripleTen and BEAM Institute — plus the AI tooling that lets a content team ship faster: 4C/ID pipelines, internal automations, an LMS shipped solo.
+      <b>Learning Experience Designer</b> with 10+ years in EdTech. I've built full curricula for Yandex Practicum, TripleTen and BEAM Institute. I also build the tools around them: AI content pipelines, automations for content teams, and an LMS I wrote on my own.
     </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">Message me on LinkedIn <span class="arr">↗</span></a>
+        <a class="btn" href="Mario_Becerra_CV.pdf" download>Download CV <span>↓</span></a>
+      </div>
+    </div>
     <div class="hero-stats">
       <div><div class="n">10+</div><div class="l">yrs in EdTech</div></div>
       <div><div class="n">50+</div><div class="l">courses designed</div></div>
-      <div><div class="n">60–85%</div><div class="l">content time saved · AI pipelines</div></div>
-      <div><div class="n">80+</div><div class="l">features in own LMS</div></div>
+      <div><div class="n">60%</div><div class="l">content time saved with AI pipelines</div></div>
     </div>
+  </div>
+
+  <div class="hero-meta">
+    <div><span class="k">Location</span><span class="v">Türkiye · ready to relocate to Spain · Remote EU</span></div>
+    <div><span class="k">Email</span><span class="v"><a href="mailto:mrbecerraduenias@gmail.com">mrbecerraduenias@gmail.com</a></span></div>
+    <div><span class="k">LinkedIn</span><span class="v"><a href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">in/mario-rafael-id-lxd ↗</a></span></div>
+    <div><span class="k">Phone</span><span class="v"><a href="tel:+905059412268">+90 505 941 22 68</a></span></div>
   </div>
 </section>
 
-<!-- ============ TICKER ============ -->
-<div class="ticker">
-  <div class="ticker-track" id="tickerTrack">
-    <!-- populated by JS -->
-  </div>
-</div>
 
-</main>
+</div>
 
 <!-- ============ REAL CLIENT WORK ============ -->
 <section class="wrap" id="cases">
   <div class="section-head">
     <span class="num">§ 01 / CASES</span>
     <h2>Recent <em>programs</em></h2>
-    <span class="count">real client work · selected · 50+ shipped total</span>
+    <span class="count">client work · a selection from 50+ shipped courses</span>
   </div>
 
-  <!-- Mini-index · quick-jump within §01 -->
-  <nav class="case-jumper" aria-label="Jump to a case">
-    <span class="cj-k">Jump</span>
-    <a href="#c01">01 <i>UX/UI</i></a>
-    <a href="#c02">02 <i>Graphic</i></a>
-    <a href="#c03">03 <i>Marketing</i></a>
-    <span class="cj-sep">·</span>
-    <a href="#c04">04 <i>Mgmt</i></a>
-    <a href="#c05">05 <i>Backend</i></a>
-    <a href="#c06">06 <i>AI</i></a>
-    <span class="cj-sep">·</span>
-    <a href="#c07">07 <i>Data Gov</i></a>
-    <a href="#c08">08 <i>AI for PMs</i></a>
-    <span class="cj-sep">·</span>
-    <a href="#c09" class="cj-cur">09 <i>Algonova</i> <span class="cj-dot"></span></a>
-  </nav>
 
   <!-- Yandex Practicum band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://practicum.yandex.ru/" target="_blank" rel="noopener">Yandex Practicum&nbsp;<span class="band-arr">↗</span></a> · career-change &amp; level-up programs</span></h3>
+    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://practicum.yandex.ru/" target="_blank" rel="noopener">Yandex Practicum&nbsp;<span class="band-arr">↗</span></a> · career-change and level-up programs</span></h3>
   </div>
 
-  <div class="cases">
-
-    <article class="case" id="c01">
-      <div class="case-head">
-        <span class="case-num">— 01</span>
-        <span class="case-tag">UX / UI · career-change + level-up</span>
+  <div class="case-list">
+    <details class="case-row" id="c01">
+      <summary>
+        <span class="case-num">01</span>
+        <span class="cr-title">UX/UI design curriculum planned from employers' hiring requirements</span>
+        <span class="cr-meta">UX / UI · career-change + level-up</span>
+        <span class="cr-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="cr-body">
+        <p class="case-desc">I built two tracks: a full one for career changers and a shorter one for working designers. I worked with designers, developers and reviewers as one production line, so a new cohort could start every 4 to 6 weeks, on schedule. I matched each learning outcome to a skill employers check when they hire.</p>
+        <div class="case-tags"><span>career change</span><span>level-up</span><span>production line</span></div>
       </div>
-      <div class="case-employer">Yandex Practicum</div>
-      <h3>UX/UI design curriculum,<br><em>reverse-designed</em> from hiring requirements</h3>
-      <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">End-to-end UX/UI curriculum — full career-change track and a shorter level-up track for working designers. Cohorts launched on schedule every 4–6 weeks via a cross-functional pipeline of designers, developers and reviewers. Outcomes aligned to current industry hiring criteria.</p>
-      <div class="case-tags">
-        <span>4C/ID</span><span>career-change</span><span>level-up</span><span>cross-functional</span>
+    </details>
+    <details class="case-row" id="c02">
+      <summary>
+        <span class="case-num">02</span>
+        <span class="cr-title">Graphic design career switch built around the portfolio</span>
+        <span class="cr-meta">Graphic design · career-change</span>
+        <span class="cr-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="cr-body">
+        <p class="case-desc">I built a graphic design curriculum for career changers and ordered it around the pieces that go into a portfolio: brand identity, editorial layout, packaging and social media. Learners got critique every week and reviews from industry experts. I ended the track with a portfolio defence judged against the criteria employers hire by.</p>
+        <div class="case-tags"><span>portfolio</span><span>weekly critique</span><span>expert reviews</span><span>career change</span></div>
       </div>
-      <a class="case-cta" href="pipeline/artefacts/addie-case-yandex/" target="_blank">ADDIE walk-through <span class="arrow">→</span></a>
-    </article>
-
-    <article class="case" id="c02">
-      <div class="case-head">
-        <span class="case-num">— 02</span>
-        <span class="case-tag">Graphic design · career-change</span>
+    </details>
+    <details class="case-row" id="c03">
+      <summary>
+        <span class="case-num">03</span>
+        <span class="cr-title">Digital marketing taught through client briefs</span>
+        <span class="cr-meta">Marketing · career-change</span>
+        <span class="cr-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="cr-body">
+        <p class="case-desc">I built a marketing curriculum for career changers on real client briefs in performance, content, lifecycle and analytics. Every practice task ended in a funnel number learners could measure. I modelled the assessments on tasks that partner companies give their junior marketers.</p>
+        <div class="case-tags"><span>client briefs</span><span>funnel metrics</span><span>partner companies</span><span>career change</span></div>
       </div>
-      <div class="case-employer">Yandex Practicum</div>
-      <h3>Graphic design,<br><em>portfolio-first</em> career switch</h3>
-      <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Career-switcher graphic-design curriculum sequenced around portfolio-worthy deliverables: brand identity, editorial layout, packaging, social. Weekly critique rituals, SME-led reviews, and an end-of-track portfolio defence built around target hiring criteria.</p>
-      <div class="case-tags">
-        <span>portfolio-led</span><span>critique cycles</span><span>SME reviews</span><span>career-change</span>
-      </div>
-    </article>
-
-    <article class="case" id="c03">
-      <div class="case-head">
-        <span class="case-num">— 03</span>
-        <span class="case-tag">Marketing · career-change</span>
-      </div>
-      <div class="case-employer">Yandex Practicum</div>
-      <h3>Digital marketing,<br><em>brief-driven</em> practice</h3>
-      <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Career-switcher marketing curriculum built around real client briefs: performance, content, lifecycle, analytics. Practice tied to measurable funnel outcomes; assessments mirrored junior-marketing tasks from partner companies.</p>
-      <div class="case-tags">
-        <span>brief-driven</span><span>funnel metrics</span><span>partner companies</span><span>career-change</span>
-      </div>
-    </article>
-
+    </details>
   </div>
 
   <!-- TripleTen band -->
@@ -2595,87 +1305,54 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <h3 class="band-head"><span class="band-k">B2B</span><span class="band-v"><a href="https://tripleten.com/" target="_blank" rel="noopener">TripleTen (Nebius Group)&nbsp;<span class="band-arr">↗</span></a> · microcourses assembled per client</span></h3>
   </div>
 
-  <div class="cases">
-
-    <article class="case" id="c04">
-      <div class="case-head">
-        <span class="case-num">— 04</span>
-        <span class="case-tag">Management · B2B microcourses</span>
-      </div>
-      <div class="case-employer">TripleTen (Nebius Group)</div>
-      <h3>Management microcourses,<br><em>assembled</em> per client</h3>
-      <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Short B2B management courses assembled from the master TripleTen management curriculum and adapted to each client's role-profile and business context. Localised for LatAm markets where relevant; HeyGen AI-avatar scripts for video segments.</p>
-      <div class="case-tags">
-        <span>microcourses</span><span>assembled-from-base</span><span>HeyGen scripts</span><span>B2B</span>
-      </div>
-    </article>
-
-    <article class="case" id="c05">
-      <div class="case-head">
-        <span class="case-num">— 05</span>
-        <span class="case-tag">Backend · B2B microcourses</span>
-      </div>
-      <div class="case-employer">TripleTen (Nebius Group)</div>
-      <h3>Backend microcourses,<br><em>scoped</em> to engineering teams</h3>
-      <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Backend-development microcourses adapted from TripleTen's long-form backend program for B2B engineering audiences. Scoped per client around the specific stack and seniority profile; assessments built around real codebases where possible.</p>
-      <div class="case-tags">
-        <span>microcourses</span><span>stack-scoped</span><span>code assessments</span><span>B2B</span>
-      </div>
-    </article>
-
-    <article class="case" id="c06">
-      <div class="case-head">
-        <span class="case-num">— 06</span>
-        <span class="case-tag">AI · B2B microcourses</span>
-      </div>
-      <div class="case-employer">TripleTen (Nebius Group)</div>
-      <h3>AI microcourses,<br><em>practice-led</em> for non-tech roles</h3>
-      <p class="case-period">Learning Experience Designer</p>
-      <p class="case-desc">Generative-AI microcourses for B2B clients — prompt engineering, role-specific AI workflows, responsible-use guardrails. Adapted from TripleTen's AI curriculum and tuned to each client's tooling and policies.</p>
-      <div class="case-tags">
-        <span>prompt eng</span><span>role-specific</span><span>responsible AI</span><span>B2B</span>
-      </div>
-    </article>
-
+  <div class="case-list">
+    <div class="case-row case-row--static" id="c04">
+      <span class="case-num">04</span>
+      <span class="cr-title">Management microcourses</span>
+      <span class="cr-meta">assembled per client</span>
+    </div>
+    <div class="case-row case-row--static" id="c05">
+      <span class="case-num">05</span>
+      <span class="cr-title">Backend microcourses</span>
+      <span class="cr-meta">scoped to engineering teams</span>
+    </div>
+    <div class="case-row case-row--static" id="c06">
+      <span class="case-num">06</span>
+      <span class="cr-title">AI microcourses</span>
+      <span class="cr-meta">practice-led for non-tech roles</span>
+    </div>
   </div>
 
   <!-- BEAM band -->
   <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://beam.education/" target="_blank" rel="noopener">BEAM Institute&nbsp;<span class="band-arr">↗</span></a> · career-change tracks built from scratch with industry SMEs</span></h3>
+    <h3 class="band-head"><span class="band-k">B2C</span><span class="band-v"><a href="https://beam.education/" target="_blank" rel="noopener">BEAM Institute&nbsp;<span class="band-arr">↗</span></a> · tracks built from scratch with industry SMEs</span></h3>
   </div>
 
-  <div class="cases">
-
-    <article class="case" id="c07">
-      <div class="case-head">
-        <span class="case-num">— 07</span>
-        <span class="case-tag">Data Governance · from scratch</span>
+  <div class="case-list">
+    <details class="case-row" id="c07">
+      <summary>
+        <span class="case-num">07</span>
+        <span class="cr-title">Data Governance course built with Billigence SMEs</span>
+        <span class="cr-meta">Data Governance · from scratch · freelance</span>
+        <span class="cr-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="cr-body">
+        <p class="case-desc">I ran the whole build from scratch with subject-matter experts from Billigence, a data governance consultancy: needs analysis, curriculum structure, content and QA. I worked with practitioners in the field to keep the regulatory content up to date.</p>
+        <div class="case-tags"><span>regulated content</span><span>SMEs</span><span>full build</span><span>career change</span></div>
       </div>
-      <div class="case-employer">BEAM Institute of Technology</div>
-      <h3>Data Governance course built<br>with <em>Billigence</em> SMEs</h3>
-      <p class="case-period">Learning Experience Designer · Freelance · project-based</p>
-      <p class="case-desc">Full instructional-design cycle from scratch at BEAM with subject-matter experts from Billigence (data-governance consultancy): needs analysis, curriculum architecture, content development, QA. Coordinated with industry practitioners to keep regulatory content current.</p>
-      <div class="case-tags">
-        <span>regulated content</span><span>SME-driven</span><span>full ID cycle</span><span>career-change</span>
+    </details>
+    <details class="case-row" id="c08">
+      <summary>
+        <span class="case-num">08</span>
+        <span class="cr-title">AI for Project Managers, built with practitioner SMEs</span>
+        <span class="cr-meta">AI for PMs · from scratch · freelance</span>
+        <span class="cr-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="cr-body">
+        <p class="case-desc">I built an upskilling track that teaches practising project managers to use AI in discovery, planning and delivery. I made it from scratch with industry SMEs. Learners practise on the documents PMs write at work, such as briefs, roadmaps and retros, and bring AI into how they make them.</p>
+        <div class="case-tags"><span>upskilling</span><span>SMEs</span><span>PM workflows</span><span>full build</span></div>
       </div>
-    </article>
-
-    <article class="case" id="c08">
-      <div class="case-head">
-        <span class="case-num">— 08</span>
-        <span class="case-tag">AI for PMs · from scratch</span>
-      </div>
-      <div class="case-employer">BEAM Institute of Technology</div>
-      <h3>AI for Project Managers,<br><em>built</em> with practitioner SMEs</h3>
-      <p class="case-period">Learning Experience Designer · Freelance · project-based</p>
-      <p class="case-desc">Career-change track teaching practising PMs to integrate AI into discovery, planning and delivery. Built from scratch with industry SMEs; practice tasks mirror real PM artefacts (briefs, roadmaps, retros) augmented with AI workflows.</p>
-      <div class="case-tags">
-        <span>career-change</span><span>SME-driven</span><span>PM workflows</span><span>full ID cycle</span>
-      </div>
-    </article>
-
+    </details>
   </div>
 
   <!-- Algonova consulting band -->
@@ -2683,198 +1360,81 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     <h3 class="band-head"><span class="band-k">Consulting · L&amp;D</span><span class="band-v"><a href="https://algonova.com/" target="_blank" rel="noopener">Algonova&nbsp;<span class="band-arr">↗</span></a> · current engagement</span></h3>
   </div>
 
-  <div class="cases">
-
-    <article class="case" id="c09">
-      <div class="case-head">
-        <span class="case-num">— 09</span>
-        <span class="case-tag">Consulting · L&amp;D · current</span>
+  <div class="case-list">
+    <details class="case-row" id="c09">
+      <summary>
+        <span class="case-num">09</span>
+        <span class="cr-title">AI consulting &amp; L&amp;D for an EdTech ID team</span>
+        <span class="cr-meta">Consulting · L&amp;D · current</span>
+        <span class="cr-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="cr-body">
+        <p class="case-desc">I advise and train the instructional design team of an AI-personalised K-3 math platform. I run workshops on using AI in content design and mentor designers on prompt engineering and review pipelines. The tools I built there are in <a href="#tools">Tools</a>.</p>
+        <div class="case-tags"><span>AI consulting</span><span>L&amp;D for IDs</span><span>workshops</span><span>internal tools</span></div>
       </div>
-      <div class="case-employer">Algonova</div>
-      <h3>AI consulting &amp; L&amp;D<br>for an <em>EdTech</em> ID team</h3>
-      <p class="case-period">AI Consulting · L&amp;D · Internal Tooling · Freelance · current</p>
-      <p class="case-desc">Internal AI consulting and L&amp;D for the instructional-design team of an AI-personalised K-3 math platform: workshops on AI use in content design, mentoring on prompt engineering and review pipelines, plus internal tools — slide / board generators, autofill userscripts, lesson-review pipeline, adaptive curriculum knowledge graph.</p>
-      <div class="case-tags">
-        <span>AI consulting</span><span>L&amp;D for IDs</span><span>workshops</span><span>internal tooling</span>
-      </div>
-    </article>
-
+    </details>
   </div>
 
   <p class="cases-foot">
-    Recent work, selected — across 10+ years I've shipped 50+ courses for many more clients.
+    This is a selection of recent work. Over 10+ years I've shipped 50+ courses for many more clients.
   </p>
 </section>
 
-<!-- ============ TOOLS ============ -->
-<section class="wrap" id="services">
+<!-- ============ PORTFOLIO DEMOS ============ -->
+<section class="wrap" id="demos">
   <div class="section-head">
-    <span class="num">§ 02 / TOOLS</span>
-    <h2>Tools I built<br>for <em>instructional</em> teams</h2>
-    <span class="count">focused · pipeline</span>
+    <span class="num">§ 02 / DEMOS</span>
+    <h2><em>Demos</em> I built<br>to show the whole process</h2>
+    <span class="count">portfolio pieces · fictional clients</span>
   </div>
 
-  <!-- Focused tools band -->
-  <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">Focused</span><span class="band-v">One problem · time saved · drop-in</span></h3>
-  </div>
+  <p class="demos-lede">
+    I built these from start to finish on fictional briefs, so you can see every step: analysis, design, build and evaluation. They are not client work. The client programs are in <a href="#cases">§ 01</a>.
+  </p>
 
-  <div class="services">
+  <div class="cases cases--demos">
 
-    <article class="service">
-      <span class="service-num">01</span>
-      <div class="service-head">
-        <span class="service-tag">Userscript · autofill</span>
+    <article class="case case--demo" data-demo="true">
+      <a class="demo-shot" href="pipeline/engagement/scorm-shell/" target="_blank" tabindex="-1" aria-hidden="true">
+        <div class="flag-browser"><div class="dots"><span></span><span></span><span></span></div><span class="url">mini-os · SDR onboarding</span></div>
+        <img src="assets/demos/mini-os.jpg" width="960" height="540" loading="lazy" decoding="async" alt="">
+      </a>
+      <div class="case-head">
+        <span class="case-num">D1</span>
+        <span class="case-tag">Mini-OS shell</span>
       </div>
-      <h3>Teacher autofill<br><em>userscript</em></h3>
-      <p class="service-desc">Flask backend + Tampermonkey userscripts that fill matching, categorisation and fill-in-the-blank tests across teacher-training platforms. Cuts hours of routine clicking per week per instructional designer.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Flask + Tampermonkey</li>
-          <li>Matching · categorisation · fill-in</li>
-          <li>~5h / wk saved per ID</li>
-        </ul>
+      <div class="case-employer">SDR onboarding</div>
+      <h3>Custom <em>mini-OS</em> for scenario‑based onboarding</h3>
+      <p class="case-period">Self-contained shell · runs in any LMS or standalone</p>
+      <p class="case-desc">A mini-OS I built that recreates a sales development rep's workspace: Outreach, Gong, Salesforce, LinkedIn, Calendar, a phone dialler and Slack, each in its own window on a desktop. Six SCORM modules run inside it. In each one the learner does the job in these apps instead of clicking through slides.</p>
+      <div class="case-tags">
+        <span>mini-OS</span><span>7 apps</span><span>SCORM</span><span>6 modules</span>
       </div>
-      <div class="service-metric">~5<span class="unit">h/wk ↓</span></div>
+      <a class="case-cta" href="pipeline/engagement/scorm-shell/" target="_blank" rel="noopener">Open the mini-OS <span class="arrow">→</span></a>
+      <a class="case-cta" href="pipeline/engagement/" target="_blank" rel="noopener">Try the six modules <span class="arrow">→</span></a>
     </article>
 
-    <article class="service">
-      <span class="service-num">02</span>
-      <div class="service-head">
-        <span class="service-tag">Telegram bot</span>
+    <article class="case case--demo" data-demo="true">
+      <a class="demo-shot" href="pipeline/mini-cases/" target="_blank" tabindex="-1" aria-hidden="true">
+        <div class="flag-browser"><div class="dots"><span></span><span></span><span></span></div><span class="url">scorm · mini-cases</span></div>
+        <img src="assets/demos/mini-cases.jpg" width="960" height="540" loading="lazy" decoding="async" alt="">
+      </a>
+      <div class="case-head">
+        <span class="case-num">D2</span>
+        <span class="case-tag">SCORM mini-cases</span>
       </div>
-      <h3>Homework <em>bot</em><br>on Telegram</h3>
-      <p class="service-desc">Telegram bot that pushes homework prompts, collects submissions and surfaces them in a triage view for instructors. Replaces a chat-thread mess with structured tracking, without forcing learners onto a new platform.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Telegram Bot API</li>
-          <li>Submission triage view</li>
-          <li>No new platform for learners</li>
-        </ul>
+      <div class="case-employer">Three mini-briefs</div>
+      <h3>Three short SCORM <em>cases</em></h3>
+      <p class="case-period">Portfolio pieces · designed and built solo</p>
+      <p class="case-desc">Spotting phishing on a new hire's first day, calming an angry caller in the first 30 seconds, and routing purchase orders in a new ERP. I started each from an analysis brief and turned it into one scene where the learner makes the decisions that matter and sees what each choice costs.</p>
+      <div class="case-tags">
+        <span>SCORM</span><span>microlearning</span><span>feedback on every choice</span>
       </div>
-    </article>
-
-    <article class="service">
-      <span class="service-num">03</span>
-      <div class="service-head">
-        <span class="service-tag">Google Slides add-on</span>
-      </div>
-      <h3>Math Slides<br><em>add-on</em></h3>
-      <p class="service-desc">Google Slides add-on with branded template, layout catalogue and custom math font. Drops the cost of producing a maths deck from ~2 hours to ~15 minutes per deck while keeping brand integrity.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Branded template + layouts</li>
-          <li>Custom math font</li>
-          <li>2h → 15 min per deck</li>
-        </ul>
-      </div>
-      <div class="service-metric">85%<span class="unit">time ↓</span></div>
-    </article>
-
-    <article class="service">
-      <span class="service-num">04</span>
-      <div class="service-head">
-        <span class="service-tag">JSON → slides</span>
-      </div>
-      <h3>Presentation <em>generator</em><br>from JSON</h3>
-      <p class="service-desc">Takes a lesson-plan JSON and emits a branded-template Google Slides deck. Used by instructional designers to skip the layout step entirely — the deck arrives ready for content polish.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>JSON → branded deck</li>
-          <li>Layouts &amp; brand pre-applied</li>
-          <li>Pairs with lesson-plan output</li>
-        </ul>
-      </div>
-      <div class="service-metric">2h → 15m<span class="unit">per deck</span></div>
-    </article>
-
-    <article class="service">
-      <span class="service-num">05</span>
-      <div class="service-head">
-        <span class="service-tag">JSON → Miro / Figma</span>
-      </div>
-      <h3>Board <em>generator</em><br>for Miro &amp; Figma</h3>
-      <p class="service-desc">Python tool that takes structured input and generates branded Miro / Figma boards via API — for workshops, lesson canvases, retros. Brand config + layout templates baked in so output stays consistent across teams.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Python + Miro / Figma APIs</li>
-          <li>Brand config + layouts</li>
-          <li>Workshop / lesson canvases</li>
-        </ul>
-      </div>
-    </article>
-
-  </div>
-
-  <!-- Pipeline tools band -->
-  <div class="cases-band">
-    <h3 class="band-head"><span class="band-k">Pipeline</span><span class="band-v">Multi-step systems · data → decision → artefact</span></h3>
-  </div>
-
-  <div class="services">
-
-    <article class="service">
-      <span class="service-num">06</span>
-      <div class="service-head">
-        <span class="service-tag">Adaptive curriculum · knowledge graph</span>
-      </div>
-      <h3>Adaptive curriculum<br><em>knowledge graph</em></h3>
-      <p class="service-desc">Curriculum spine for an AI-personalised K-3 math platform. Knowledge graph of skills + observable action-level objectives drives diagnostic assessment, BKT mastery estimation and adaptive lesson assembly per learner.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>45 modules · 212 topics</li>
-          <li>~200 skills (G1–G3)</li>
-          <li>BKT · lesson assembly</li>
-        </ul>
-      </div>
-      <div class="service-metric">212<span class="unit">topics</span></div>
-    </article>
-
-    <article class="service">
-      <span class="service-num">07</span>
-      <div class="service-head">
-        <span class="service-tag">ID dashboard</span>
-      </div>
-      <h3>Instructional designer<br><em>dashboard</em> for Algorithmika</h3>
-      <p class="service-desc">Internal dashboard for a CS-curriculum team of instructional designers: catalogues lesson assets, tracks review state, surfaces methodology references, and exposes MCP-server endpoints so AI tools plug in directly to the same source of truth.</p>
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Lesson asset catalogue</li>
-          <li>Review-state pipeline</li>
-          <li>MCP endpoints for AI tools</li>
-        </ul>
-      </div>
-    </article>
-
-    <article class="service">
-      <span class="service-num">08</span>
-      <div class="service-head">
-        <span class="service-tag">Lesson QA · transcription pipeline</span>
-      </div>
-      <h3>Lesson QA<br><em>pipeline</em></h3>
-      <p class="service-desc">Multi-step pipeline that ingests Slack threads, Notion comments, mentor rubric forms and post-cohort survey CSVs, transcribes recorded lessons, then normalises everything into a triage-ready issue DB for the QA team.</p>
-
-      <div class="service-proof">
-        <span class="pl">highlights</span>
-        <ul>
-          <li>Sources → normalise → DB</li>
-          <li>Transcription of recorded lessons</li>
-          <li>Triage-ready for QA team</li>
-        </ul>
-      </div>
+      <a class="case-cta" href="pipeline/mini-cases/" target="_blank">See the demos <span class="arrow">→</span></a>
     </article>
 
   </div>
 </section>
-
-
 
 <!-- ============ FLAGSHIP ============ -->
 <section class="wrap" id="flagship">
@@ -2889,12 +1449,12 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
   <div class="flag-intro">
     <p>
-      A teacher-first LMS built around <em>a huge library of task types</em> and <em>flexible content tools</em>. Teachers can author every screen by hand, or hand the wheel to AI — from a single intro lesson to a full personalised skill-practice set per student. Content always stays editable, so the teacher's craft is preserved.
+      An LMS I built for teachers, with <em>a large library of task types</em> and <em>flexible content tools</em>. Teachers can write every screen themselves or let AI draft it, from a single intro lesson to a personalised practice set for each student. Everything AI drafts stays editable, and the teacher has the last word.
     </p>
   </div>
 
   <!-- Screen carousel -->
-  <div class="flag-carousel" aria-label="GrassLMS screen examples">
+  <div class="flag-carousel" role="region" tabindex="0" aria-label="GrassLMS screen examples">
 
     <figure class="flag-frame">
       <div class="flag-browser">
@@ -3011,891 +1571,469 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
     </div>
     <div class="flag-mode flag-mode--full">
       <span class="fm-k">AI · full personalisation</span>
-      <span class="fm-v">Hand AI a skill gap per student. Get a complete practice set — intro · drills · project · quiz — adapted to the learner's level.</span>
+      <span class="fm-v">Hand AI a skill gap per student. Get a complete practice set adapted to the learner's level: intro, drills, project and quiz.</span>
     </div>
   </div>
 
 </section>
 
-<!-- ============ PORTFOLIO DEMOS ============ -->
-<section class="wrap" id="demos">
+<!-- ============ TOOLS ============ -->
+<section class="wrap" id="tools">
   <div class="section-head">
-    <span class="num">§ 04 / PORTFOLIO DEMOS</span>
-    <h2>End-to-end <em>demos</em><br>built as portfolio pieces</h2>
-    <span class="count">illustrative · synthetic clients</span>
+    <span class="num">§ 04 / TOOLS</span>
+    <h2>Tools I built<br>for <em>instructional</em> teams</h2>
+    <span class="count">focused · pipeline</span>
   </div>
 
-  <p class="demos-lede">
-    Built end-to-end on synthetic briefs so the full pipeline is visible — analysis, design, build, eval. Useful for showing how I think; not real client work. Real client programs are in <a href="#cases">§ 01</a>.
-  </p>
+  <!-- Focused tools band -->
+  <div class="cases-band">
+    <h3 class="band-head"><span class="band-k">Focused</span><span class="band-v">Small tools, one job each</span></h3>
+  </div>
 
-  <div class="cases">
+  <div class="services">
 
-    <article class="case case--demo" data-demo="true">
-      <div class="case-head">
-        <span class="case-num">— D1</span>
-        <span class="case-tag case-tag--demo">DEMO · mini-OS shell</span>
+    <article class="service">
+      <span class="service-num">01</span>
+      <div class="service-head">
+        <span class="service-tag">Userscript · autofill</span>
       </div>
-      <div class="case-employer">SDR onboarding <span class="syn-pill">synthetic brief</span></div>
-      <h3>Custom <em>mini-OS</em><br>for scenario-based onboarding</h3>
-      <p class="case-period">Self-contained shell · runs in any LMS or standalone</p>
-      <p class="case-desc">A custom mini-OS shell simulating the SDR's real workspace — Outreach, Gong, Salesforce, LinkedIn, Calendar, phone-dialler, Slack — each as its own draggable window on a desktop. Click any app to explore. Shows how scripted SCORM modules could drop a learner into a believable working environment instead of a slide deck.</p>
-      <div class="case-tags">
-        <span>mini-OS sim</span><span>7 simulated apps</span><span>SCORM-ready</span><span>shell only</span>
+      <h4>Teacher autofill<br><em>userscript</em></h4>
+      <div aria-hidden="true" class="tv tv-form"><div class="f"><span>Match: 3/4 ÷ 3/8</span><b class="ok">= 2 ✓</b></div><div class="f"><span>Category: fractions</span><b class="ok">✓</b></div><div class="f"><span>Fill in: ___ tenths</span><b class="ok">7 ✓</b></div><em class="tag">auto</em></div>
+      <p class="service-desc">Flask backend and Tampermonkey userscripts that fill in matching, categorisation, quiz and fill-in-the-blank tasks while an author builds them in a teacher-training LMS, so nobody types every item by hand. Saves about 5 hours a week per instructional designer.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Flask + Tampermonkey</li>
+          <li>Matching · categorisation · fill-in</li>
+        </ul>
       </div>
-      <a class="case-cta" href="pipeline/engagement/scorm-shell/" target="_blank">Open the mini-OS <span class="arrow">→</span></a>
+      <div class="service-metric">~5<span class="unit">h/wk ↓</span></div>
     </article>
 
-    <article class="case case--demo" data-demo="true">
-      <div class="case-head">
-        <span class="case-num">— D2</span>
-        <span class="case-tag case-tag--demo">DEMO · SCORM mini-cases</span>
+    <article class="service">
+      <span class="service-num">02</span>
+      <div class="service-head">
+        <span class="service-tag">Telegram bot</span>
       </div>
-      <div class="case-employer">Three mini-briefs <span class="syn-pill">synthetic</span></div>
-      <h3>Three small SCORM<br><em>shipped</em> end-to-end</h3>
-      <p class="case-period">Built end-to-end as portfolio pieces · single-LXD</p>
-      <p class="case-desc">Three tightly-scoped SCORM 1.2 packages built to show short-form delivery: security onboarding, call-centre de-escalation, ERP procurement rollout. Each: analysis brief → microlearning sequence → quizzes → SCORM package ready to drop into an LMS.</p>
-      <div class="case-tags">
-        <span>SCORM 1.2</span><span>microlearning</span><span>quiz interactions</span>
+      <h4>Homework <em>bot</em><br>on Telegram</h4>
+      <div aria-hidden="true" class="tv tv-chat"><p class="bot">Task 4 · due Fri</p><p class="me">📎 hw4_anna.pdf</p><p class="bot">Received ✓ · in review</p></div>
+      <p class="service-desc">A Telegram bot that sends homework, collects submissions and puts them in one view where instructors sort them. Before it, homework got lost in chat threads. Learners stay in Telegram and don't need another platform.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Telegram Bot API</li>
+          <li>Submission triage view</li>
+          <li>No new platform for learners</li>
+        </ul>
       </div>
-      <a class="case-cta" href="pipeline/mini-cases/" target="_blank">See the demos <span class="arrow">→</span></a>
+    </article>
+
+    <article class="service">
+      <span class="service-num">03</span>
+      <div class="service-head">
+        <span class="service-tag">Google Slides add-on</span>
+      </div>
+      <h4>Math Slides<br><em>add-on</em></h4>
+      <div aria-hidden="true" class="tv tv-slide1"><div class="sl"><i class="bar"></i><span class="fx">¾ + ⅛ = <b>⅞</b></span></div><div class="side"><i></i><i></i><i></i></div></div>
+      <p class="service-desc">Google Slides add-on with a branded 3rd-grade template, a layout catalogue, a custom math font and a math-formula editor. Built so an AI pipeline can pour math lessons straight into the template.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Branded template + layouts</li>
+          <li>Custom math font</li>
+          <li>Math-formula editor</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="service">
+      <span class="service-num">04</span>
+      <div class="service-head">
+        <span class="service-tag">JSON → slides</span>
+      </div>
+      <h4>Presentation <em>generator</em><br>from JSON</h4>
+      <div aria-hidden="true" class="tv tv-json"><pre>{ "title": "Fractions",
+  "slides": 6 }</pre><span class="ar">→</span><div class="deck"><i></i><i></i><i class="a"></i></div></div>
+      <p class="service-desc">Turns a lesson plan in JSON into a Google Slides deck in the brand template. Instructional designers skip layout and start from a deck that only needs content edits.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>JSON → branded deck</li>
+          <li>Layouts &amp; brand pre-applied</li>
+          <li>Pairs with lesson-plan output</li>
+        </ul>
+      </div>
+      <div class="service-metric">2h → 15m<span class="unit">per deck</span></div>
+    </article>
+
+    <article class="service">
+      <span class="service-num">05</span>
+      <div class="service-head">
+        <span class="service-tag">JSON → Miro / Figma</span>
+      </div>
+      <h4>Board <em>generator</em><br>for Miro &amp; Figma</h4>
+      <div aria-hidden="true" class="tv tv-board"><i></i><i></i><i class="a"></i><i></i><i></i><i></i><i></i><i class="a"></i></div>
+      <p class="service-desc">A Python tool that builds branded Miro and Figma boards through their APIs from structured input. Teams use it for workshops, lesson canvases and retros. Brand settings and layout templates are built in, so every team's boards look the same.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Python + Miro / Figma APIs</li>
+          <li>Brand config + layouts</li>
+          <li>Workshop / lesson canvases</li>
+        </ul>
+      </div>
+    </article>
+
+
+    <article class="service">
+      <span class="service-num">06</span>
+      <div class="service-head">
+        <span class="service-tag">Image generator</span>
+      </div>
+      <h4>Math formula<br><em>image</em> generator</h4>
+      <div aria-hidden="true" class="tv tv-formula"><div class="fx-in"><span>\frac{3}{4} + \frac{1}{8}</span><span class="fx-set"><span>48 px</span><span>PNG</span></span></div><span class="ar">→</span><div class="fx-out"><span class="fr"><i>3</i><i>4</i></span> + <span class="fr"><i>1</i><i>8</i></span></div></div>
+      <p class="service-desc">The Algonova content team types a formula, sets size, colour and format, and gets a ready image for slides and tasks. Before it, they assembled formulas from stock images and cropped them by hand.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Formula in, image out</li>
+          <li>Size, colour and format settings</li>
+          <li>No manual cropping</li>
+        </ul>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Pipeline tools band -->
+  <div class="cases-band">
+    <h3 class="band-head"><span class="band-k">Pipeline</span><span class="band-v">Systems that take raw data through several steps to a finished result</span></h3>
+  </div>
+
+  <div class="services">
+
+    <article class="service">
+      <span class="service-num">07</span>
+      <div class="service-head">
+        <span class="service-tag">Adaptive curriculum · knowledge graph</span>
+      </div>
+      <h4>Adaptive curriculum<br><em>knowledge graph</em></h4>
+      <div aria-hidden="true" class="tv tv-graph"><svg viewBox="0 0 300 90"><g class="e"><path d="M30 45L110 18M30 45L110 72M110 18L190 45M110 72L190 45M190 45L270 20M190 45L270 70"/></g><g class="n"><circle cx="30" cy="45" r="8" class="on"/><circle cx="110" cy="18" r="8" class="on"/><circle cx="110" cy="72" r="8" class="on"/><circle cx="190" cy="45" r="8" class="cur"/><circle cx="270" cy="20" r="8"/><circle cx="270" cy="70" r="8"/></g></svg></div>
+      <p class="service-desc">The curriculum core of an AI-personalised K-3 math platform. A graph links skills to objectives written as actions you can see a child do. The platform uses it to run the diagnostic, estimate mastery with Bayesian knowledge tracing (BKT) and assemble each learner's lessons.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>45 modules</li>
+          <li>~200 skills (G1–G3)</li>
+          <li>BKT · lesson assembly</li>
+        </ul>
+      </div>
+      <div class="service-metric">212<span class="unit">topics</span></div>
+    </article>
+
+    <article class="service">
+      <span class="service-num">08</span>
+      <div class="service-head">
+        <span class="service-tag">ID dashboard</span>
+      </div>
+      <h4>Instructional designer<br><em>dashboard</em> for Algonova</h4>
+      <div aria-hidden="true" class="tv tv-table"><div><span>L12 · Loops</span><b class="st r">ready</b></div><div><span>L13 · Lists</span><b class="st v">review</b></div><div><span>L14 · Dicts</span><b class="st d">draft</b></div></div>
+      <p class="service-desc">An internal dashboard for Algonova's computer science curriculum team. It catalogues lesson assets, shows where each one is in review and links to the methodology references. MCP server endpoints let AI tools connect to the same data the team works from.</p>
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Lesson asset catalogue</li>
+          <li>Review-state pipeline</li>
+          <li>MCP endpoints for AI tools</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="service">
+      <span class="service-num">09</span>
+      <div class="service-head">
+        <span class="service-tag">Lesson QA · transcription pipeline</span>
+      </div>
+      <h4>Lesson QA<br><em>pipeline</em></h4>
+      <div aria-hidden="true" class="tv tv-pipe"><div class="src"><span>Slack</span><span>Notion</span><span>CSV</span><span>Rec</span></div><span class="ar">→</span><div class="db"><i></i><i></i><i class="a"></i></div></div>
+      <p class="service-desc">A pipeline that collects feedback from Slack threads, Notion comments, mentor rubric forms and post-cohort survey CSVs, and transcribes recorded lessons. It turns all of it into one issue database the QA team can sort and work through.</p>
+
+      <div class="service-proof">
+        <span class="pl">highlights</span>
+        <ul>
+          <li>Sources → normalise → DB</li>
+          <li>Transcription of recorded lessons</li>
+          <li>Triage-ready for QA team</li>
+        </ul>
+      </div>
     </article>
 
   </div>
 </section>
 
-<!-- ============ SERVICES I OFFER ============ -->
-<section class="wrap" id="background">
-  <div class="section-head">
-    <span class="num">§ 05 / SERVICES</span>
-    <h2>What I <em>offer</em></h2>
-    <span class="count">10+ years · EdTech</span>
-  </div>
 
-  <!-- Services I currently ship -->
-  <div class="bg-services">
+
+
+<!-- ============ CONTACT ============ -->
+<section class="wrap" id="contact">
+  <div class="section-head">
+    <span class="num">§ 05 / CONTACT</span>
+    <h2>Let's <em>talk</em></h2>
+    <span class="count">Full-time or freelance · remote EU · ready to relocate to Spain</span>
+  </div>
+  <div class="bg-services" id="services">
     <div class="bg-services-grid">
       <div class="bg-svc">
         <span class="bg-svc-n">01</span>
         <span class="bg-svc-t">AI content-generation pipelines</span>
-        <span class="bg-svc-d">Brief → generate → judge → publish. LLM-as-judge eval loop, rubric scoring, retries, drift detection.</span>
-        <span class="bg-svc-p">60–85% content time ↓</span>
+        <span class="bg-svc-d">Pipelines that take a brief, generate the content, have a second model score it against a rubric and publish what passes. They retry what fails and flag when quality starts to drift.</span>
+        <span class="bg-svc-p">60% less content time</span>
       </div>
       <div class="bg-svc">
         <span class="bg-svc-n">02</span>
-        <span class="bg-svc-t">Focused tools for ID teams</span>
-        <span class="bg-svc-d">Userscripts, slide/board generators, autofill, Telegram bots — single-problem tools that save hours per week.</span>
-        <span class="bg-svc-p">~5h / wk per ID</span>
-      </div>
-      <div class="bg-svc">
-        <span class="bg-svc-n">03</span>
-        <span class="bg-svc-t">Adaptive curriculum architecture</span>
-        <span class="bg-svc-d">Skill graphs, observable objectives, BKT mastery models. The spine that makes adaptive lesson assembly possible.</span>
-        <span class="bg-svc-p">212 topics · ~200 skills</span>
-      </div>
-      <div class="bg-svc">
-        <span class="bg-svc-n">04</span>
         <span class="bg-svc-t">AI consulting &amp; L&amp;D for ID teams</span>
-        <span class="bg-svc-d">Workshops, mentoring, prompt-engineering systems. Helping IDs use AI without losing craft.</span>
+        <span class="bg-svc-d">Workshops and mentoring for instructional designers, plus prompt systems they can reuse. Designers use AI and still make the design calls themselves.</span>
         <span class="bg-svc-p">current at Algonova</span>
       </div>
       <div class="bg-svc">
-        <span class="bg-svc-n">05</span>
-        <span class="bg-svc-t">End-to-end ID engagements</span>
-        <span class="bg-svc-d">ADDIE / 4C/ID full cycle: analysis → design → build → eval. Solo or with SMEs.</span>
-        <span class="bg-svc-p">9 programs · Yandex / TripleTen / BEAM</span>
-      </div>
-      <div class="bg-svc">
-        <span class="bg-svc-n">06</span>
-        <span class="bg-svc-t">Full-stack EdTech platforms</span>
-        <span class="bg-svc-d">LMS / course platforms shipped solo — DB, backend, frontend, billing, deploy. <a href="https://grasslms.online" target="_blank" rel="noopener">GrassLMS</a> is the reference.</span>
-        <span class="bg-svc-p">80+ features · shipped solo</span>
+        <span class="bg-svc-n">03</span>
+        <span class="bg-svc-t">Full course builds</span>
+        <span class="bg-svc-d">Whole courses, from analysis and design to build and evaluation. I work alone or with your subject-matter experts.</span>
+        <span class="bg-svc-p">8 programs · Yandex / TripleTen / BEAM</span>
       </div>
     </div>
   </div>
-
+  <div class="contact-grid">
+    <a class="contact-cell contact-cell--main" href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">
+      <span class="k">LinkedIn</span><span class="v">Message me on LinkedIn</span><span class="arr">↗</span>
+    </a>
+    <a class="contact-cell" href="mailto:mrbecerraduenias@gmail.com">
+      <span class="k">Email</span><span class="v">mrbecerraduenias@gmail.com</span><span class="arr">→</span>
+    </a>
+    <a class="contact-cell" href="tel:+905059412268">
+      <span class="k">Phone</span><span class="v">+90 505 941 22 68</span><span class="arr">→</span>
+    </a>
+    <a class="contact-cell" href="Mario_Becerra_CV.pdf" download>
+      <span class="k">CV</span><span class="v">Download PDF</span><span class="arr">↓</span>
+    </a>
+  </div>
 </section>
 
-<!-- ============ CONSULTATION FORM ============ -->
+</main>
+
 <footer class="wrap foot-legal">
   <span>© 2026 · Mario Rafael Becerra Dueñas</span>
   <span>Hand-built in HTML, CSS, JS · Manrope + Geist Mono</span>
+  <a href="#top">Back to top ↑</a>
 </footer>
 
-<!-- ============ MODAL ============ -->
-<div class="scrim" id="scrim" onclick="if(event.target===this)closeModal()">
-  <article class="modal" id="modal"></article>
-</div>
-
-<!-- ============ TWEAKS ============ -->
-<aside class="tweaks" id="tweaks">
-  <h5>Tweaks <span id="tweakHint" style="color:var(--ink-faint);font-weight:400">⌘</span></h5>
-  <div class="tweak-row">
-    <div class="l"><span>Theme</span></div>
-    <div class="seg" id="segTheme">
-      <button data-theme="dark" class="on">Dark</button>
-      <button data-theme="paper">Paper</button>
-      <button data-theme="light">Light</button>
-    </div>
-  </div>
-  <div class="tweak-row">
-    <div class="l"><span>Accent</span></div>
-    <div class="swatches" id="swatches">
-      <div class="sw on" data-c="#0a8754" style="background:#0a8754"></div>
-      <div class="sw" data-c="#ffe066" style="background:#ffe066"></div>
-      <div class="sw" data-c="#ff7a5c" style="background:#ff7a5c"></div>
-      <div class="sw" data-c="#f5b800" style="background:#f5b800"></div>
-      <div class="sw" data-c="#3fb04b" style="background:#3fb04b"></div>
-      <div class="sw" data-c="#07683f" style="background:#07683f"></div>
-    </div>
-  </div>
-  <div class="tweak-row">
-    <div class="l"><span>Density</span></div>
-    <div class="seg" id="segDensity">
-      <button data-d="0.75">Tight</button>
-      <button data-d="1" class="on">Normal</button>
-      <button data-d="1.25">Roomy</button>
-    </div>
-  </div>
-  <div class="tweak-row">
-    <div class="l"><span>Card style</span></div>
-    <div class="seg" id="segCard">
-      <button data-card="classic" class="on">Index</button>
-      <button data-card="numbered">Numbered</button>
-      <button data-card="poster">Poster</button>
-    </div>
-  </div>
-</aside>
-
-<!-- ============ DEFAULTS ============ -->
 <script>
-  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-    "theme": "dark",
-    "accent": "#7af0b0",
-    "density": 1.25,
-    "cardStyle": "poster",
-    "language": "en"
-  }/*EDITMODE-END*/;
-</script>
+(() => {
+  const nav = document.querySelector(".topbar nav");
+  const links = [...nav.querySelectorAll(".navlink")];
 
-<script>
-// ============ PROJECT DATA ============
-window.PROJECTS = [
-  {
-    id: "sat-math-pro",
-    n: "12",
-    schematic: "circuit",
-    title: "SAT Math Pro",
-    role: { ru: "Личный проект для GrassLMS · Курс + widget-генератор · Python + JSON", en: "Personal build for GrassLMS · Course + widget generator · Python + JSON" },
-    category: "edtech",
-    status: "working",
-    motif: "Σ",
-    short: {
-      ru: "Курс подготовки к SAT Math: 4C/ID-структура, Python-генератор интерактивных widget-задач, 675 KB JSON контента.",
-      en: "SAT Math prep course: 4C/ID structure, Python widget generator for interactive tasks, 675 KB of JSON content.",
-    },
-    stack: ["Python", "4C/ID", "JSON", "Desmos", "HTML widgets"],
-    sections: [
-      { h: { ru: "Структура", en: "Structure" }, p: { ru: "Курс подготовки к SAT Math, собранный по 4C/ID. Модуль Heart of Algebra как starter, далее Problem Solving, Advanced Math, Additional Topics.", en: "SAT Math prep course built with 4C/ID. Heart of Algebra as the starter module, then Problem Solving, Advanced Math, Additional Topics." } },
-      { h: { ru: "Widget-генератор", en: "Widget generator" }, p: { ru: "sat_math_widgets.py — Python-генератор интерактивных виджетов (Desmos, графики, формулы) для каждой задачи. 63KB кода.", en: "sat_math_widgets.py — Python generator for interactive widgets (Desmos, graphs, formulas) per task. 63KB of code." } },
-      { h: { ru: "Объём контента", en: "Content volume" }, list: { ru: ["sat_math_pro_course.json — 86 KB", "sat_math_pro_course_4cid.json — 185 KB", "sat_math_pro_course_html.json — 675 KB"], en: ["sat_math_pro_course.json — 86 KB", "sat_math_pro_course_4cid.json — 185 KB", "sat_math_pro_course_html.json — 675 KB"] } },
-      { h: { ru: "Пайплайн", en: "Pipeline" }, p: { ru: "fix_interactive.py + fix_theory_final.py + fix_desmos.py — скрипты нормализации и пост-обработки widget-контента перед заливкой в LMS.", en: "fix_interactive.py + fix_theory_final.py + fix_desmos.py — normalization and post-processing scripts for widget content before LMS upload." } },
-    ],
-  },
-  {
-    id: "presentation-generator",
-    n: "15",
-    schematic: "pipeline",
-    title: "Presentation Generator",
-    role: { ru: "JSON → slides · Google Apps Script", en: "JSON → slides · Google Apps Script" },
-    category: "edtech",
-    status: "production",
-    motif: "◇",
-    short: {
-      ru: "Generator that turns a structured JSON input into a fully branded slide deck — 2h → 15min per presentation.",
-      en: "Generator that turns a structured JSON input into a fully branded slide deck — 2h → 15min per presentation.",
-    },
-    stack: ["JSON", "Google Apps Script", "Branded templates"],
-    sections: [
-      { h: { ru: "Context", en: "Context" }, p: { ru: "Part of the AI math platform engagement. Instructional Designers were spending roughly two hours per lesson deck formatting slides against a branded template. The generator takes structured lesson content as JSON input and emits a fully laid-out deck in the template, ready for review.", en: "Part of the AI math platform engagement. Instructional Designers were spending roughly two hours per lesson deck formatting slides against a branded template. The generator takes structured lesson content as JSON input and emits a fully laid-out deck in the template, ready for review." } },
-      { h: { ru: "Impact", en: "Impact" }, p: { ru: "Slide production time dropped from ~2 hours to ~15 minutes per deck — a 60–85% cut depending on deck complexity. Instructional Designers can now focus on pedagogy rather than layout.", en: "Slide production time dropped from ~2 hours to ~15 minutes per deck — a 60–85% cut depending on deck complexity. Instructional Designers can now focus on pedagogy rather than layout." } },
-    ],
-  },
-  {
-    id: "miro-board-creator",
-    n: "16",
-    schematic: "pipeline",
-    title: "Miro Board Creator",
-    role: { ru: "Python · AI-assisted board generation", en: "Python · AI-assisted board generation" },
-    category: "edtech",
-    status: "working",
-    motif: "◐",
-    short: {
-      ru: "Python tool for AI-assisted Miro board generation with brand config and automated layout.",
-      en: "Python tool for AI-assisted Miro board generation with brand config and automated layout.",
-    },
-    stack: ["Python", "Miro API", "LLM", "JSON"],
-    sections: [
-      { h: { ru: "About", en: "About" }, p: { ru: "Companion to the presentation generator. Instructional Designers feed structured content in, the tool produces a brand-consistent Miro board with the right layout primitives — session boards, retros, workshops. Saves another chunk of weekly routine.", en: "Companion to the presentation generator. Instructional Designers feed structured content in, the tool produces a brand-consistent Miro board with the right layout primitives — session boards, retros, workshops. Saves another chunk of weekly routine." } },
-    ],
-  },
-  {
-    id: "cs-course-9-11",
-    n: "17",
-    schematic: "circuit",
-    title: "Computer Literacy Course (ages 9–11)",
-    role: { ru: "36-lesson curriculum · storyline + simulators", en: "36-lesson curriculum · storyline + simulators" },
-    category: "edtech",
-    status: "production",
-    motif: "◈",
-    short: {
-      ru: "36-lesson computer literacy curriculum designed from scratch for children ages 9–11 — original storyline, characters, interactive simulators, quest-based progression.",
-      en: "36-lesson computer literacy curriculum designed from scratch for children ages 9–11 — original storyline, characters, interactive simulators, quest-based progression.",
-    },
-    stack: ["Curriculum design", "Storytelling", "Simulators", "4C/ID"],
-    sections: [
-      { h: { ru: "What", en: "What" }, p: { ru: "A full 36-lesson computer literacy course for children aged 9–11, built from scratch. The course has an original storyline and characters that run through every lesson, giving kids a narrative thread to follow as concepts stack up.", en: "A full 36-lesson computer literacy course for children aged 9–11, built from scratch. The course has an original storyline and characters that run through every lesson, giving kids a narrative thread to follow as concepts stack up." } },
-      { h: { ru: "Approach", en: "Approach" }, list: { ru: ["Quest-based lesson progression", "Interactive program simulators for hands-on practice", "Original characters as consistent scaffolding across modules", "Age-appropriate pedagogy (ages 9–11)"], en: ["Quest-based lesson progression", "Interactive program simulators for hands-on practice", "Original characters as consistent scaffolding across modules", "Age-appropriate pedagogy (ages 9–11)"] } },
-    ],
-  },
-];
-
-window.CATEGORIES = [
-  { id: "all", label: { ru: "Все", en: "All" } },
-  { id: "edtech", label: { ru: "EdTech", en: "EdTech" } },
-];
-
-</script>
-<script>
-// ============ STATE ============
-const state = { ...window.TWEAK_DEFAULTS };
-let activeCat = "all";
-let query = "";
-
-// ============ LANG ============
-const T = {
-  ru: {
-    proj_count: (n) => `${n} / ${window.PROJECTS.length - 1}`,
-  },
-  en: {
-    proj_count: (n) => `${n} / ${window.PROJECTS.length - 1}`,
-  },
-};
-const pick = (v) => (typeof v === "object" && v !== null && v.ru) ? v[state.language] : v;
-
-function applyLang() {
-  document.documentElement.lang = "en";
-  renderFilters();
-  renderCards();
-}
-
-// ============ THEME / ACCENT / DENSITY ============
-function applyTheme() {
-  document.documentElement.setAttribute("data-theme", state.theme);
-  const lbl = document.getElementById("themeLbl");
-  if (lbl) lbl.textContent = state.theme.toUpperCase();
-  document.querySelectorAll("#segTheme button").forEach((b) => {
-    b.classList.toggle("on", b.dataset.theme === state.theme);
-  });
-}
-function applyAccent() {
-  document.documentElement.style.setProperty("--accent", state.accent);
-  // compute contrasting accent-ink
-  const hex = state.accent.replace("#", "");
-  const r = parseInt(hex.slice(0,2), 16), g = parseInt(hex.slice(2,4), 16), b = parseInt(hex.slice(4,6), 16);
-  const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
-  document.documentElement.style.setProperty("--accent-ink", lum > 0.6 ? "#0a1a10" : "#ffffff");
-  document.querySelectorAll("#swatches .sw").forEach((s) => {
-    s.classList.toggle("on", s.dataset.c === state.accent);
-  });
-}
-function applyDensity() {
-  document.documentElement.style.setProperty("--density", state.density);
-  document.querySelectorAll("#segDensity button").forEach((b) => {
-    b.classList.toggle("on", parseFloat(b.dataset.d) === state.density);
-  });
-}
-function applyCardStyle() {
-  document.body.setAttribute("data-card-style", state.cardStyle);
-  document.querySelectorAll("#segCard button").forEach((b) => {
-    b.classList.toggle("on", b.dataset.card === state.cardStyle);
-  });
-  renderCards();
-}
-
-// ============ TICKER ============
-function renderTicker() {
-  const items = window.PROJECTS.flatMap((p) => p.stack);
-  const unique = [...new Set(items)];
-  const bits = [
-    `<b>Stack</b>`,
-    ...unique.map((s) => `<span>${s}</span>`),
-    `<span class="sep">✦</span>`,
-    `<b>Authoring</b>`,
-    `<span>Articulate Rise</span><span>Storyline</span><span>iSpring</span><span>SCORM 1.2</span><span>xAPI</span>`,
-    `<span class="sep">✦</span>`,
-    `<b>ID frameworks</b>`,
-    `<span>4C/ID</span><span>ADDIE</span><span>Bloom</span><span>Kirkpatrick L1–L4</span><span>JTBD</span><span>BKT</span>`,
-    `<span class="sep">✦</span>`,
-    `<b>Python</b><span>3.12</span>`,
-    `<span class="sep">✦</span>`,
-    `<b>17</b><span>public projects</span>`,
-    `<span class="sep">✦</span>`,
-    `<b>2021→</b><span>shipping solo</span>`,
-    `<span class="sep">✦</span>`,
-  ];
-  const full = bits.join(" · ");
-  document.getElementById("tickerTrack").innerHTML = full + " · " + full;
-}
-
-// ============ FILTERS ============
-function renderFilters() {
-  const el = document.getElementById("filters");
-  if (!el) return; // Recent Builds section removed
-  const search = el.querySelector(".search");
-  const chips = window.CATEGORIES.map((c) => {
-    const n = c.id === "all"
-      ? window.PROJECTS.filter(p => !p.flagship).length
-      : window.PROJECTS.filter((p) => p.category === c.id && !p.flagship).length;
-    return `<button class="chip ${activeCat === c.id ? "on" : ""}" data-cat="${c.id}">
-      <span>${c.label[state.language]}</span>
-      <span class="n">${n}</span>
-    </button>`;
-  }).join("");
-  el.innerHTML = chips + search.outerHTML;
-  el.querySelectorAll(".chip").forEach((b) => {
-    b.addEventListener("click", () => {
-      activeCat = b.dataset.cat;
-      renderFilters();
-      renderCards();
-    });
-  });
-  const inp = el.querySelector("#searchInput");
-  if (inp) {
-    inp.value = query;
-    inp.addEventListener("input", (e) => {
-      query = e.target.value.toLowerCase();
-      renderCards();
-    });
-  }
-}
-
-// ============ CARDS ============
-const STATUS_LABEL = {
-  production: { ru: "Production", en: "Production" },
-  working: { ru: "Working", en: "Working" },
-  prototype: { ru: "Prototype", en: "Prototype" },
-  mvp: { ru: "MVP", en: "MVP" },
-  playable: { ru: "Playable", en: "Playable" },
-  archive: { ru: "Archive", en: "Archive" },
-  research: { ru: "Research", en: "Research" },
-  hobby: { ru: "Hobby", en: "Hobby" },
-};
-
-function matches(p) {
-  if (p.flagship) return false;
-  if (activeCat !== "all" && p.category !== activeCat) return false;
-  if (!query) return true;
-  const hay = [pick(p.title), pick(p.short), ...(p.stack || []), pick(p.role)].join(" ").toLowerCase();
-  return hay.includes(query);
-}
-
-function renderCards() {
-  const wrap = document.getElementById("cardGrid");
-  if (!wrap) return; // Recent Builds section removed — short-circuit
-  const projects = window.PROJECTS.filter((p) => !p.flagship);
-  const shown = projects.filter(matches);
-  const countEl = document.getElementById("countN");
-  if (countEl) countEl.textContent = shown.length;
-
-  // Group by category
-  const cats = activeCat === "all"
-    ? window.CATEGORIES.filter((c) => c.id !== "all")
-    : window.CATEGORIES.filter((c) => c.id === activeCat);
-
-  let html = "";
-  cats.forEach((cat, ci) => {
-    const inCat = shown.filter((p) => p.category === cat.id);
-    if (!inCat.length) return;
-    if (activeCat === "all") {
-      const num = String(ci + 3).padStart(2, "0");
-      html += `
-        <div class="section-head" style="padding-top:${ci === 0 ? "24px" : "48px"}">
-          <span class="num">§ 06.${String(ci + 1).padStart(2, "0")} / ${cat.label[state.language].toUpperCase()}</span>
-          <h2 style="font-size: clamp(24px, 3.2vw, 40px);">${cat.label[state.language]}</h2>
-          <span class="count">${inCat.length}</span>
-        </div>`;
+  // ---------- nav: highlight the section in view (runs with or without motion) ----------
+  const ind = document.createElement("span");
+  ind.className = "nav-ind";
+  nav.prepend(ind);
+  let current = null;
+  function setActive(id) {
+    if (id === current) return;
+    current = id;
+    const link = links.find((a) => a.getAttribute("href") === "#" + id);
+    links.forEach((a) => a.classList.toggle("is-active", a === link));
+    if (!link || link.classList.contains("navlink--cta")) { ind.classList.remove("on"); return; }
+    ind.style.width = link.offsetWidth + "px";
+    ind.style.transform = `translateX(${link.offsetLeft}px)`;
+    ind.classList.add("on");
+    // keep the active link visible in the scrollable phone nav
+    if (nav.scrollWidth > nav.clientWidth) {
+      nav.scrollTo({ left: link.offsetLeft - 16, behavior: "smooth" });
     }
-    html += `<div class="grid">`;
-    inCat.forEach((p, i) => {
-      const span =
-        state.cardStyle === "poster" ? (i === 0 ? "span-8" : "span-4")
-        : (p.featured ? "span-8" : "span-6");
-      const title = pick(p.title);
-      const short = pick(p.short);
-      const role = pick(p.role);
-      const statusLabel = STATUS_LABEL[p.status][state.language];
-      const tags = (p.stack || []).slice(0, 5).map((t) => `<span class="tag">${t}</span>`).join("");
-      const motif = p.motif ? `<span class="motif">${p.motif}</span>` : "";
-      const numbered = state.cardStyle === "numbered";
-      const sch = p.schematic ? schematicCard(p.schematic) : "";
-      html += `
-        <article class="card ${span} ${p.schematic ? 'has-schematic' : ''}" data-id="${p.id}"
-                 role="button" tabindex="0" aria-label="Open ${title}">
-          ${motif}
-          ${sch}
-          <div class="card-head">
-            <span class="id">№ ${p.n}</span>
-            <span class="card-status ${p.status}">${statusLabel}</span>
-          </div>
-          <h3>${numbered ? `<em>${p.n}.</em> ` : ""}${title}</h3>
-          <div class="role">${role}</div>
-          <p>${short}</p>
-          <div class="card-stack">${tags}</div>
-          <div class="card-foot">
-            <span>${(p.stack || []).length} <span>techs</span></span>
-            <span class="open">
-              <span>Open</span>
-              <span class="arr">→</span>
-            </span>
-          </div>
-        </article>`;
-    });
-    html += `</div>`;
-  });
-
-  if (!shown.length) {
-    html = `<div style="padding: 80px 0; text-align: center; color: var(--ink-faint); font-family: var(--mono); font-size: 12px;">
-      <div style="font-family: var(--sans); font-weight: 800; font-size: 48px; color: var(--ink-dim); margin-bottom: 8px;">∅</div>
-      <div>"nothing found"</div>
-    </div>`;
   }
+  const sections = links
+    .map((a) => document.querySelector(a.getAttribute("href")))
+    .filter(Boolean);
+  const visible = new Set();
+  const atBottom = () => innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
+  const update = () => {
+    // the closing section is too short to reach the band, so the page bottom selects it
+    if (atBottom()) return setActive(sections[sections.length - 1].id);
+    const first = sections.find((s) => visible.has(s));
+    setActive(first ? first.id : null);
+  };
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+    update();
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  sections.forEach((s) => spy.observe(s));
+  let queued = false;
+  addEventListener("scroll", () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; update(); });
+  }, { passive: true });
+  addEventListener("resize", () => { const id = current; current = null; setActive(id); });
 
-  wrap.innerHTML = html;
-  wrap.querySelectorAll(".card").forEach((c) => {
-    c.addEventListener("click", () => openModal(c.dataset.id));
-    c.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openModal(c.dataset.id);
-      }
+  // A link to #c01…#c09 opens that case row.
+  const openFromHash = () => {
+    const row = location.hash && document.querySelector(`details.case-row${location.hash}`);
+    if (row) row.open = true;
+  };
+  openFromHash();
+  addEventListener("hashchange", openFromHash);
+
+  // The GrassLMS carousel is a tab stop only while it actually scrolls (phones).
+  const carousel = document.querySelector(".flag-carousel");
+  const syncCarousel = () => {
+    if (!carousel) return;
+    if (carousel.scrollWidth > carousel.clientWidth + 1) carousel.setAttribute("tabindex", "0");
+    else carousel.removeAttribute("tabindex");
+  };
+  syncCarousel();
+  addEventListener("resize", syncCarousel);
+
+  if (!document.documentElement.classList.contains("motion")) return;
+
+  // ---------- scroll reveal ----------
+  const revealSel = ".section-head, .flag-intro, .flag-frame, .flag-mode, .case, .case-row, .service, .bg-svc, .contact-cell, .demos-lede";
+  const sideScrolled = (el) => el.parentElement.scrollWidth > el.parentElement.clientWidth;
+  // frames in the phone carousel sit off to the side, so they would rise in mid-swipe
+  const revealEls = [...document.querySelectorAll(revealSel)]
+    .filter((el) => !el.closest(".hero") && !(el.matches(".flag-frame") && sideScrolled(el)));
+  revealEls.forEach((el) => {
+    const idx = [...el.parentElement.children].filter((c) => c.matches(revealSel)).indexOf(el);
+    el.style.setProperty("--i", Math.min(idx, 5));
+    el.classList.add("reveal");
+  });
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      el.classList.add("in");
+      revealIO.unobserve(el);
+      // Grids draw their 1px rules with a grey background; show it once the cells are in.
+      const grid = el.parentElement;
+      if (grid && ![...grid.children].some((c) => c.classList.contains("reveal") && !c.classList.contains("in"))) grid.classList.add("grid-in");
+      // once it has risen in, hand the element back its own hover transitions
+      el.addEventListener("transitionend", function done(ev) {
+        if (ev.target !== el || ev.propertyName !== "transform") return;
+        el.classList.remove("reveal", "in");
+        el.removeEventListener("transitionend", done);
+      });
     });
+  }, { rootMargin: "0px 0px -8% 0px" });
+  revealEls.forEach((el) => revealIO.observe(el));
+
+  // ---------- hero counters: every number in the stat counts up together ----------
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
+  document.querySelectorAll(".hero-stats .n").forEach((el, k) => {
+    const final = el.textContent;
+    const nums = final.match(/\d+/g) || [];
+    const t0 = performance.now() + 250 + k * 80;
+    const tick = (now) => {
+      const t = Math.min(Math.max((now - t0) / 900, 0), 1);
+      let i = 0;
+      el.textContent = final.replace(/\d+/g, () => Math.round(nums[i++] * ease(t)));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
   });
 
-  // Re-apply data-ru/data-en on new content
-  wrap.querySelectorAll("[data-ru],[data-en]").forEach((el) => {
-    const val = el.getAttribute("data-" + state.language);
-    if (val) el.innerHTML = val;
+  // ---------- GrassLMS mockups: set up, then play once on first view ----------
+  const frames = document.querySelectorAll(".flag-frame");
+  const setup = {
+    "flag-screen--code"(screen) {
+      const pre = screen.querySelector(".fs-editor");
+      let delay = 400;
+      pre.innerHTML = pre.innerHTML.split("\n").map((line) => {
+        const tmp = document.createElement("span");
+        tmp.innerHTML = line;
+        const n = Math.max(tmp.textContent.length, 1);
+        const html = `<span class="ln" style="--n:${n};--d:${delay}ms">${line}</span>`;
+        delay += n * 28 + 120;
+        return html;
+      }).join("");
+      screen.style.setProperty("--run-d", delay + 100 + "ms");
+      return "play-code";
+    },
+    "flag-screen--robot"(screen) {
+      const grid = screen.querySelector(".fs-robot-grid");
+      const blocks = [...screen.querySelectorAll(".fs-block")];
+      const cell = grid.querySelector(".fs-cell--robot");
+      if (cell) { cell.classList.remove("fs-cell--robot"); cell.textContent = ""; }
+      const bot = document.createElement("div");
+      bot.className = "fs-robot-sprite";
+      bot.textContent = "🤖";
+      bot.setAttribute("aria-hidden", "true");
+      grid.append(bot);
+      return ["play-robot", () => {
+        blocks.forEach((b, i) => setTimeout(() => b.classList.add("run"), 300 + i * 600));
+        bot.addEventListener("animationend", () => {
+          grid.querySelector(".fs-cell--goal")?.classList.add("hit");
+        }, { once: true });
+      }];
+    },
+    "flag-screen--ai"(screen) {
+      screen.querySelectorAll(".fs-ai-plan li").forEach((li, i) => li.style.setProperty("--i", i));
+      return "play-ai";
+    },
+    "flag-screen--lib"(screen) {
+      screen.querySelectorAll(".fs-lib-chip").forEach((c, i) => c.style.setProperty("--i", i));
+      return "play-lib";
+    },
+  };
+  const players = new Map();
+  frames.forEach((frame) => {
+    const screen = frame.querySelector(".flag-screen");
+    const kind = Object.keys(setup).find((k) => screen.classList.contains(k));
+    if (!kind) return;
+    const r = setup[kind](screen);
+    const [cls, run] = Array.isArray(r) ? r : [r, null];
+    players.set(frame, () => { frame.classList.add(cls); run && run(); });
   });
-}
-
-
-// ============ SCHEMATICS (living systems) ============
-function schematicCard(type){
-  switch(type){
-    case "hub": return `
-      <div class="card-schematic hub">
-        <svg viewBox="0 0 220 120" preserveAspectRatio="xMidYMid meet">
-          <path class="wire" d="M 110 60 L 30 25"/>
-          <path class="wire" d="M 110 60 L 30 60"/>
-          <path class="wire" d="M 110 60 L 30 95"/>
-          <path class="wire" d="M 110 60 L 190 25"/>
-          <path class="wire" d="M 110 60 L 190 60"/>
-          <path class="wire" d="M 110 60 L 190 95"/>
-          <circle class="pulse-ring" cx="110" cy="60" r="0"/>
-          <g class="pulse-core">
-            <circle class="node" cx="110" cy="60" r="9"/>
-            <circle class="node-core" cx="110" cy="60" r="3.5"/>
-          </g>
-          <circle class="node-faint" cx="30" cy="25" r="4"/>
-          <circle class="node-faint" cx="30" cy="60" r="4"/>
-          <circle class="node-faint" cx="30" cy="95" r="4"/>
-          <circle class="node-faint" cx="190" cy="25" r="4"/>
-          <circle class="node-faint" cx="190" cy="60" r="4"/>
-          <circle class="node-faint" cx="190" cy="95" r="4"/>
-        </svg>
-        <div class="particle tiny" style="offset-path:path('M 110 60 L 30 25'); animation-delay:0s"></div>
-        <div class="particle tiny" style="offset-path:path('M 110 60 L 30 60'); animation-delay:.4s"></div>
-        <div class="particle tiny warm" style="offset-path:path('M 30 95 L 110 60'); animation-delay:1.5s"></div>
-        <div class="particle tiny" style="offset-path:path('M 110 60 L 190 60'); animation-delay:1.1s"></div>
-        <div class="particle tiny cool" style="offset-path:path('M 190 95 L 110 60'); animation-delay:2s"></div>
-      </div>`;
-
-    case "pipeline": return `
-      <div class="card-schematic pipeline">
-        <svg viewBox="0 0 220 120" preserveAspectRatio="xMidYMid meet">
-          <path class="wire" d="M 20 60 L 200 60"/>
-          <rect class="node" x="8" y="48" width="24" height="24" rx="2"/>
-          <rect class="node-faint" x="80" y="50" width="20" height="20" rx="2" fill="none"/>
-          <rect class="node-faint" x="116" y="50" width="20" height="20" rx="2" fill="none"/>
-          <rect class="stage-flash" x="80" y="50" width="20" height="20" rx="2" style="animation-delay:0s"/>
-          <rect class="stage-flash" x="116" y="50" width="20" height="20" rx="2" style="animation-delay:1s"/>
-          <rect class="node" x="188" y="48" width="24" height="24" rx="2"/>
-        </svg>
-        <div class="particle tiny" style="offset-path:path('M 20 60 L 200 60'); animation-delay:0s"></div>
-        <div class="particle tiny" style="offset-path:path('M 20 60 L 200 60'); animation-delay:1.3s"></div>
-      </div>`;
-
-    case "loop": return `
-      <div class="card-schematic loop">
-        <svg viewBox="0 0 220 120" preserveAspectRatio="xMidYMid meet">
-          <path class="wire" d="M 70 30 L 150 30 Q 185 30 185 60 Q 185 90 150 90 L 70 90 Q 35 90 35 60 Q 35 30 70 30 Z"/>
-          <circle class="node" cx="70" cy="30" r="6"/>
-          <circle class="node" cx="150" cy="30" r="6"/>
-          <circle class="node" cx="150" cy="90" r="6"/>
-          <circle class="node" cx="70" cy="90" r="6"/>
-        </svg>
-        <div class="particle tiny" style="offset-path:path('M 70 30 L 150 30 Q 185 30 185 60 Q 185 90 150 90 L 70 90 Q 35 90 35 60 Q 35 30 70 30 Z'); animation-delay:0s"></div>
-        <div class="particle tiny warm" style="offset-path:path('M 70 30 L 150 30 Q 185 30 185 60 Q 185 90 150 90 L 70 90 Q 35 90 35 60 Q 35 30 70 30 Z'); animation-delay:1.7s"></div>
-      </div>`;
-
-    case "fanin": return `
-      <div class="card-schematic fanin">
-        <svg viewBox="0 0 220 120" preserveAspectRatio="xMidYMid meet">
-          <path class="wire" d="M 25 30 C 80 30 90 60 110 60"/>
-          <path class="wire" d="M 25 60 C 80 60 90 60 110 60"/>
-          <path class="wire" d="M 25 90 C 80 90 90 60 110 60"/>
-          <path class="wire" d="M 110 60 C 140 30 150 30 195 30"/>
-          <path class="wire" d="M 110 60 C 140 60 150 60 195 60"/>
-          <path class="wire" d="M 110 60 C 140 90 150 90 195 90"/>
-          <g class="core-glow">
-            <circle class="node" cx="110" cy="60" r="11"/>
-            <circle class="node-core" cx="110" cy="60" r="5"/>
-          </g>
-          <circle class="node-faint" cx="25" cy="30" r="4"/>
-          <circle class="node-faint" cx="25" cy="60" r="4"/>
-          <circle class="node-faint" cx="25" cy="90" r="4"/>
-          <circle class="node-faint" cx="195" cy="30" r="4"/>
-          <circle class="node-faint" cx="195" cy="60" r="4"/>
-          <circle class="node-faint" cx="195" cy="90" r="4"/>
-        </svg>
-        <div class="particle tiny" style="offset-path:path('M 25 30 C 80 30 90 60 110 60'); animation-delay:0s"></div>
-        <div class="particle tiny" style="offset-path:path('M 25 90 C 80 90 90 60 110 60'); animation-delay:.7s"></div>
-        <div class="particle tiny cool" style="offset-path:path('M 110 60 C 140 60 150 60 195 60'); animation-delay:1.8s"></div>
-        <div class="particle tiny cool" style="offset-path:path('M 110 60 C 140 90 150 90 195 90'); animation-delay:2.4s"></div>
-      </div>`;
-
-    case "circuit": return `
-      <div class="card-schematic circuit">
-        <svg viewBox="0 0 220 120" preserveAspectRatio="xMidYMid meet">
-          <g class="pad"><rect class="node" x="20" y="20" width="22" height="14" rx="2"/></g>
-          <g class="pad" style="animation-delay:.3s"><rect class="node" x="100" y="20" width="22" height="14" rx="2"/></g>
-          <g class="pad" style="animation-delay:.6s"><rect class="node" x="180" y="20" width="22" height="14" rx="2"/></g>
-          <g class="pad" style="animation-delay:.9s"><rect class="node" x="20" y="86" width="22" height="14" rx="2"/></g>
-          <g class="pad" style="animation-delay:1.2s"><rect class="node" x="100" y="86" width="22" height="14" rx="2"/></g>
-          <g class="pad" style="animation-delay:1.5s"><rect class="node" x="180" y="86" width="22" height="14" rx="2"/></g>
-          <path class="wire trace" d="M 42 27 L 80 27 L 80 60 L 142 60 L 142 27 L 122 27"/>
-          <path class="wire trace" d="M 202 27 L 210 27 L 210 93 L 202 93"/>
-          <path class="wire trace" d="M 180 93 L 142 93 L 142 60"/>
-          <path class="wire trace" d="M 100 93 L 80 93 L 80 60"/>
-          <path class="wire trace" d="M 20 93 L 10 93 L 10 27 L 20 27"/>
-        </svg>
-      </div>`;
-  }
-  return "";
-}
-
-function schematicModal(type){
-  switch(type){
-    case "hub": return `
-      <div class="modal-schematic hub">
-        <svg viewBox="0 0 760 220" preserveAspectRatio="xMidYMid meet">
-          <path class="wire" d="M 380 110 L 100 50"/>
-          <path class="wire" d="M 380 110 L 100 110"/>
-          <path class="wire" d="M 380 110 L 100 170"/>
-          <path class="wire" d="M 380 110 L 660 50"/>
-          <path class="wire" d="M 380 110 L 660 110"/>
-          <path class="wire" d="M 380 110 L 660 170"/>
-          <circle class="pulse-ring" cx="380" cy="110" r="0"/>
-          <g class="pulse-core">
-            <circle class="node" cx="380" cy="110" r="22"/>
-            <circle class="node-core" cx="380" cy="110" r="6"/>
-          </g>
-          <text class="node-label-strong" x="380" y="160" text-anchor="middle">core</text>
-          <circle class="node-faint" cx="100" cy="50" r="9"/>
-          <circle class="node-faint" cx="100" cy="110" r="9"/>
-          <circle class="node-faint" cx="100" cy="170" r="9"/>
-          <circle class="node-faint" cx="660" cy="50" r="9"/>
-          <circle class="node-faint" cx="660" cy="110" r="9"/>
-          <circle class="node-faint" cx="660" cy="170" r="9"/>
-        </svg>
-        <div class="particle" style="offset-path:path('M 380 110 L 100 50'); animation:cs-flow 3.2s linear infinite; animation-delay:0s"></div>
-        <div class="particle tiny" style="offset-path:path('M 380 110 L 100 50'); animation:cs-flow 3.2s linear infinite; animation-delay:1.6s"></div>
-        <div class="particle" style="offset-path:path('M 380 110 L 100 110'); animation:cs-flow 3.2s linear infinite; animation-delay:.4s"></div>
-        <div class="particle" style="offset-path:path('M 380 110 L 100 170'); animation:cs-flow 3.2s linear infinite; animation-delay:.8s"></div>
-        <div class="particle warm" style="offset-path:path('M 100 170 L 380 110'); animation:cs-flow 3.2s linear infinite; animation-delay:2.2s"></div>
-        <div class="particle" style="offset-path:path('M 380 110 L 660 50'); animation:cs-flow 3.2s linear infinite; animation-delay:.2s"></div>
-        <div class="particle tiny" style="offset-path:path('M 660 50 L 380 110'); animation:cs-flow 3.2s linear infinite; animation-delay:1.7s"></div>
-        <div class="particle" style="offset-path:path('M 380 110 L 660 110'); animation:cs-flow 3.2s linear infinite; animation-delay:1.1s"></div>
-        <div class="particle cool" style="offset-path:path('M 660 170 L 380 110'); animation:cs-flow 3.2s linear infinite; animation-delay:1.4s"></div>
-      </div>`;
-
-    case "pipeline": return `
-      <div class="modal-schematic pipeline">
-        <svg viewBox="0 0 760 220" preserveAspectRatio="xMidYMid meet">
-          <path class="wire" d="M 60 110 L 700 110"/>
-          <rect class="node" x="20" y="85" width="80" height="50" rx="3"/>
-          <text class="node-label-strong" x="60" y="115" text-anchor="middle">input</text>
-          <rect class="node-faint" x="240" y="95" width="40" height="30" rx="2"/>
-          <rect class="stage-flash" x="240" y="95" width="40" height="30" rx="2" style="animation:cs-flash 4s linear infinite;animation-delay:0s"/>
-          <text class="node-label" x="260" y="80" text-anchor="middle">stage 1</text>
-          <rect class="node-faint" x="360" y="95" width="40" height="30" rx="2"/>
-          <rect class="stage-flash" x="360" y="95" width="40" height="30" rx="2" style="animation:cs-flash 4s linear infinite;animation-delay:1s"/>
-          <text class="node-label" x="380" y="80" text-anchor="middle">stage 2</text>
-          <rect class="node-faint" x="480" y="95" width="40" height="30" rx="2"/>
-          <rect class="stage-flash" x="480" y="95" width="40" height="30" rx="2" style="animation:cs-flash 4s linear infinite;animation-delay:2s"/>
-          <text class="node-label" x="500" y="80" text-anchor="middle">stage 3</text>
-          <rect class="node" x="660" y="85" width="80" height="50" rx="3"/>
-          <text class="node-label-strong" x="700" y="115" text-anchor="middle">output</text>
-        </svg>
-        <div class="particle" style="offset-path:path('M 60 110 L 700 110'); animation:cs-pipe 4s cubic-bezier(.4,0,.2,1) infinite; animation-delay:0s"></div>
-        <div class="particle" style="offset-path:path('M 60 110 L 700 110'); animation:cs-pipe 4s cubic-bezier(.4,0,.2,1) infinite; animation-delay:1.3s"></div>
-        <div class="particle tiny" style="offset-path:path('M 60 110 L 700 110'); animation:cs-pipe 4s cubic-bezier(.4,0,.2,1) infinite; animation-delay:2.6s"></div>
-      </div>`;
-
-    case "loop": return `
-      <div class="modal-schematic loop">
-        <svg viewBox="0 0 760 220" preserveAspectRatio="xMidYMid meet">
-          <path class="wire" d="M 200 60 L 560 60 Q 620 60 620 110 Q 620 160 560 160 L 200 160 Q 140 160 140 110 Q 140 60 200 60 Z"/>
-          <circle class="node" cx="200" cy="60" r="14"/>
-          <circle class="node" cx="560" cy="60" r="14"/>
-          <circle class="node" cx="560" cy="160" r="14"/>
-          <circle class="node" cx="200" cy="160" r="14"/>
-          <text class="node-label-strong" x="200" y="40" text-anchor="middle">step 1</text>
-          <text class="node-label-strong" x="560" y="40" text-anchor="middle">step 2</text>
-          <text class="node-label-strong" x="560" y="190" text-anchor="middle">step 3</text>
-          <text class="node-label-strong" x="200" y="190" text-anchor="middle">step 4</text>
-        </svg>
-        <div class="particle" style="offset-path:path('M 200 60 L 560 60 Q 620 60 620 110 Q 620 160 560 160 L 200 160 Q 140 160 140 110 Q 140 60 200 60 Z'); animation:cs-loop 5s linear infinite; animation-delay:0s"></div>
-        <div class="particle warm" style="offset-path:path('M 200 60 L 560 60 Q 620 60 620 110 Q 620 160 560 160 L 200 160 Q 140 160 140 110 Q 140 60 200 60 Z'); animation:cs-loop 5s linear infinite; animation-delay:1.7s"></div>
-        <div class="particle cool" style="offset-path:path('M 200 60 L 560 60 Q 620 60 620 110 Q 620 160 560 160 L 200 160 Q 140 160 140 110 Q 140 60 200 60 Z'); animation:cs-loop 5s linear infinite; animation-delay:3.3s"></div>
-      </div>`;
-
-    case "fanin": return `
-      <div class="modal-schematic fanin">
-        <svg viewBox="0 0 760 220" preserveAspectRatio="xMidYMid meet">
-          <path class="wire" d="M 80 50 C 200 50, 280 90, 380 110"/>
-          <path class="wire" d="M 80 110 C 220 110, 300 110, 380 110"/>
-          <path class="wire" d="M 80 170 C 200 170, 280 140, 380 110"/>
-          <path class="wire" d="M 380 110 C 480 90, 560 50, 680 50"/>
-          <path class="wire" d="M 380 110 C 540 110, 600 110, 680 110"/>
-          <path class="wire" d="M 380 110 C 480 140, 560 170, 680 170"/>
-          <rect class="node" x="20" y="35" width="60" height="30" rx="2"/>
-          <rect class="node" x="20" y="95" width="60" height="30" rx="2"/>
-          <rect class="node" x="20" y="155" width="60" height="30" rx="2"/>
-          <text class="node-label-strong" x="50" y="55" text-anchor="middle">input</text>
-          <text class="node-label-strong" x="50" y="115" text-anchor="middle">input</text>
-          <text class="node-label-strong" x="50" y="175" text-anchor="middle">input</text>
-          <g class="core-glow">
-            <circle class="node" cx="380" cy="110" r="32"/>
-            <circle class="node-core" cx="380" cy="110" r="14"/>
-          </g>
-          <text class="node-label-strong" x="380" y="170" text-anchor="middle">normalise</text>
-          <rect class="node-faint" x="680" y="35" width="60" height="30" rx="2"/>
-          <rect class="node-faint" x="680" y="95" width="60" height="30" rx="2"/>
-          <rect class="node-faint" x="680" y="155" width="60" height="30" rx="2"/>
-        </svg>
-        <div class="particle" style="offset-path:path('M 80 50 C 200 50, 280 90, 380 110'); animation:cs-fan 4.5s cubic-bezier(.4,0,.2,1) infinite; animation-delay:0s"></div>
-        <div class="particle" style="offset-path:path('M 80 110 C 220 110, 300 110, 380 110'); animation:cs-fan 4.5s cubic-bezier(.4,0,.2,1) infinite; animation-delay:.7s"></div>
-        <div class="particle" style="offset-path:path('M 80 170 C 200 170, 280 140, 380 110'); animation:cs-fan 4.5s cubic-bezier(.4,0,.2,1) infinite; animation-delay:1.4s"></div>
-        <div class="particle cool" style="offset-path:path('M 380 110 C 480 90, 560 50, 680 50'); animation:cs-fan 4.5s cubic-bezier(.4,0,.2,1) infinite; animation-delay:2.2s"></div>
-        <div class="particle cool" style="offset-path:path('M 380 110 C 540 110, 600 110, 680 110'); animation:cs-fan 4.5s cubic-bezier(.4,0,.2,1) infinite; animation-delay:2.9s"></div>
-        <div class="particle cool" style="offset-path:path('M 380 110 C 480 140, 560 170, 680 170'); animation:cs-fan 4.5s cubic-bezier(.4,0,.2,1) infinite; animation-delay:3.5s"></div>
-      </div>`;
-
-    case "circuit": return `
-      <div class="modal-schematic circuit">
-        <svg viewBox="0 0 760 220" preserveAspectRatio="xMidYMid meet">
-          <g class="pad"><rect class="node" x="40" y="30" width="40" height="22" rx="2"/></g>
-          <g class="pad" style="animation-delay:.3s"><rect class="node" x="180" y="30" width="40" height="22" rx="2"/></g>
-          <g class="pad" style="animation-delay:.6s"><rect class="node" x="320" y="30" width="40" height="22" rx="2"/></g>
-          <g class="pad" style="animation-delay:.9s"><rect class="node" x="460" y="30" width="40" height="22" rx="2"/></g>
-          <g class="pad" style="animation-delay:1.2s"><rect class="node" x="600" y="30" width="40" height="22" rx="2"/></g>
-          <g class="pad" style="animation-delay:1.5s"><rect class="node" x="40" y="170" width="40" height="22" rx="2"/></g>
-          <g class="pad" style="animation-delay:1.8s"><rect class="node" x="180" y="170" width="40" height="22" rx="2"/></g>
-          <g class="pad" style="animation-delay:2.1s"><rect class="node" x="320" y="170" width="40" height="22" rx="2"/></g>
-          <g class="pad" style="animation-delay:2.4s"><rect class="node" x="460" y="170" width="40" height="22" rx="2"/></g>
-          <g class="pad" style="animation-delay:2.7s"><rect class="node" x="600" y="170" width="40" height="22" rx="2"/></g>
-          <path class="wire trace" d="M 80 41 L 130 41 L 130 100 L 250 100 L 250 41 L 220 41"/>
-          <path class="wire trace" d="M 360 41 L 410 41 L 410 120 L 540 120 L 540 41 L 500 41"/>
-          <path class="wire trace" d="M 640 41 L 700 41 L 700 140 L 700 181 L 640 181"/>
-          <path class="wire trace" d="M 460 181 L 410 181 L 410 120"/>
-          <path class="wire trace" d="M 320 181 L 290 181 L 290 120 L 250 120 L 250 100"/>
-          <path class="wire trace" d="M 180 181 L 130 181 L 130 120 L 130 100"/>
-          <path class="wire trace" d="M 80 181 L 30 181 L 30 41 L 40 41"/>
-        </svg>
-      </div>`;
-  }
-  return "";
-}
-window.schematicCard = schematicCard;
-window.schematicModal = schematicModal;
-
-// ============ MODAL ============
-function openModal(id) {
-  const p = window.PROJECTS.find((x) => x.id === id);
-  if (!p) return;
-  const title = pick(p.title);
-  const role = pick(p.role);
-  const lede = pick(p.lede || p.short);
-  const statusLabel = STATUS_LABEL[p.status][state.language];
-  const cat = window.CATEGORIES.find(c => c.id === p.category);
-  const tags = (p.stack || []).map((t) => `<span class="tag">${t}</span>`).join("");
-
-  const body = (p.sections || []).map((s) => {
-    const h = pick(s.h);
-    let inner = "";
-    if (s.p) inner += `<p>${pick(s.p)}</p>`;
-    if (s.list) inner += `<ul>${pick(s.list).map((x) => `<li>${x}</li>`).join("")}</ul>`;
-    return `<h4>${h}</h4>${inner}`;
-  }).join("");
-
-  const links = (p.links || []).map((l) => {
-    const lbl = pick(l.label);
-    return `<a class="btn ${l.primary ? "primary" : ""}" href="${l.href}" target="_blank" rel="noopener">${lbl} <span class="arr">→</span></a>`;
-  }).join("");
-
-  document.getElementById("modal").innerHTML = `
-    <header class="modal-head">
-      <div>
-        <div class="meta">
-          <span>№ ${p.n}</span>
-          <span>·</span>
-          <span>${cat ? cat.label[state.language] : ""}</span>
-          <span>·</span>
-          <span class="card-status ${p.status}">${statusLabel}</span>
-        </div>
-        <h2>${title}</h2>
-        <div class="role" style="margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.06em">${role}</div>
-      </div>
-      <button class="modal-close" onclick="closeModal()" aria-label="close">×</button>
-    </header>
-    <div class="modal-body">
-      ${p.schematic ? schematicModal(p.schematic) : ""}
-      <p class="lede">${lede}</p>
-      <h4>Stack</h4>
-      <div class="stack">${tags}</div>
-      ${body}
-      ${links ? `<h4>Links</h4><div class="links">${links}</div>` : ""}
-    </div>
-  `;
-  document.getElementById("scrim").classList.add("on");
-  document.body.style.overflow = "hidden";
-}
-function closeModal() {
-  document.getElementById("scrim").classList.remove("on");
-  document.body.style.overflow = "";
-}
-window.openModal = openModal;
-window.closeModal = closeModal;
-
-// ============ TWEAKS HOST PROTOCOL ============
-let tweaksOn = false;
-window.addEventListener("message", (e) => {
-  if (!e.data || !e.data.type) return;
-  if (e.data.type === "__activate_edit_mode") {
-    tweaksOn = true;
-    document.getElementById("tweaks").classList.add("on");
-  }
-  if (e.data.type === "__deactivate_edit_mode") {
-    tweaksOn = false;
-    document.getElementById("tweaks").classList.remove("on");
-  }
-});
-try {
-  window.parent.postMessage({ type: "__edit_mode_available" }, "*");
-} catch (e) {}
-
-function persistEdit(edits) {
-  try {
-    window.parent.postMessage({ type: "__edit_mode_set_keys", edits }, "*");
-  } catch (e) {}
-  try {
-    localStorage.setItem("mb_portfolio_tweaks", JSON.stringify(state));
-  } catch (e) {}
-}
-
-// ============ BIND TWEAKS ============
-function bindTweaks() {
-  document.querySelectorAll("#segTheme button").forEach((b) => {
-    b.addEventListener("click", () => {
-      state.theme = b.dataset.theme;
-      applyTheme();
-      persistEdit({ theme: state.theme });
+  const playIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      players.get(e.target)();
+      playIO.unobserve(e.target);
     });
-  });
-  document.querySelectorAll("#swatches .sw").forEach((s) => {
-    s.addEventListener("click", () => {
-      state.accent = s.dataset.c;
-      applyAccent();
-      persistEdit({ accent: state.accent });
+  }, { threshold: 0.5 });
+  players.forEach((_, frame) => playIO.observe(frame));
+
+  // ---------- tool visuals: same idea, one short sequence per card ----------
+  const steps = {
+    "tv-form": ".f",
+    "tv-chat": "p",
+    "tv-slide1": ".sl, .side i",
+    "tv-json": "pre, .ar, .deck i",
+    "tv-board": "i",
+    "tv-graph": ".n circle",
+    "tv-table": ".tv-table > div",
+    "tv-pipe": ".src span, .ar, .db i",
+    "tv-formula": ".fx-in > span:first-child, .fx-set span, .ar, .fx-out",
+  };
+  const tvIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("play-tv");
+      tvIO.unobserve(e.target);
     });
-  });
-  document.querySelectorAll("#segDensity button").forEach((b) => {
-    b.addEventListener("click", () => {
-      state.density = parseFloat(b.dataset.d);
-      applyDensity();
-      persistEdit({ density: state.density });
+  }, { threshold: 0.6 });
+  document.querySelectorAll(".tv").forEach((tv) => {
+    const kind = Object.keys(steps).find((k) => tv.classList.contains(k));
+    if (!kind) return;
+    tv.querySelectorAll(steps[kind]).forEach((el, i) => {
+      el.dataset.step = "";
+      el.style.setProperty("--i", i);
     });
+    // graph edges appear with the second node, so the nodes are never floating alone
+    const edges = tv.querySelector(".e");
+    if (edges) { edges.dataset.step = ""; edges.style.setProperty("--i", 1); }
+    tvIO.observe(tv);
   });
-  document.querySelectorAll("#segCard button").forEach((b) => {
-    b.addEventListener("click", () => {
-      state.cardStyle = b.dataset.card;
-      applyCardStyle();
-      persistEdit({ cardStyle: state.cardStyle });
-    });
-  });
-}
-
-// ============ TOP CONTROLS ============
-function bindTopControls() {
-  // Theme button removed — Lively is single-light by design (kept applyTheme as a no-op shim for legacy persisted state)
-}
-
-// ============ INIT ============
-function init() {
-  // Restore from localStorage if present
-  try {
-    const saved = JSON.parse(localStorage.getItem("mb_portfolio_tweaks") || "{}");
-    Object.assign(state, saved);
-  } catch (e) {}
-  // Guardrails against corrupt saved state
-  // Lively migration: all 3 theme variants resolve to the same paper bg;
-  // default to "light" so the cycle starts with the correct label.
-  if (!["dark","paper","light"].includes(state.theme)) state.theme = "light";
-  if (state.theme === "dark") state.theme = "light";
-  state.language = "en";  // EN-only site
-  if (typeof state.density !== "number") state.density = 1;
-  // v2 Lively palette — invalidate any legacy accent saved in localStorage
-  const validAccents = ["#0a8754","#ffe066","#ff7a5c","#f5b800","#3fb04b","#07683f"];
-  if (!validAccents.includes(state.accent)) state.accent = "#0a8754";
-  if (!state.cardStyle) state.cardStyle = "classic";
-
-  applyTheme();
-  applyAccent();
-  applyDensity();
-  applyCardStyle();
-  applyLang();
-  renderTicker();
-  renderFilters();
-  renderCards();
-  bindTweaks();
-  bindTopControls();
-  // Wire engagement artefact cards to openModal
-  document.querySelectorAll(".eng-art[data-open]").forEach((el) => {
-    el.addEventListener("click", () => openModal(el.dataset.open));
-  });
-
-  // Esc closes modal
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal();
-  });
-}
-
-init();
-
+})();
 </script>
-
 
 
 </body>

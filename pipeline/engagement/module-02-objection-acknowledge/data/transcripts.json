@@ -31,7 +31,7 @@
       { "ts": "01:14", "speaker": "Maria", "text": "We already have a Visa from our bank." },
       { "ts": "01:18", "speaker": "M.G.",  "text": "So you've got the card-issuing side sorted.", "m_move_tag": "M2", "move_label": "buyer-words restate" },
       { "silence": 3 },
-      { "ts": "01:24", "speaker": "Maria", "text": "Yeah — but the controls are a mess. We had a $1,200 charge nobody could explain for 2 weeks last quarter." },
+      { "ts": "01:24", "speaker": "Maria", "text": "Yeah — but the controls are a mess. We had a £1,200 charge nobody could explain for 2 weeks last quarter." },
       { "ts": "01:42", "speaker": "M.G.",  "text": "Got it — visibility is the broken thing, not the card. What does your bookkeeper do when a charge shows up that nobody recognises?", "m_move_tag": "M2", "move_label": "follow-up question" },
       { "ts": "02:00", "speaker": "Maria", "text": "She emails everyone and waits. Sometimes it takes two weeks." }
     ]

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Phish-or-Pass · Inbox — Outlook</title>
+<title>Phish-or-Pass · Outlook inbox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
@@ -98,7 +98,7 @@
   }
   .m365-app {
     font-weight: 400;
-    opacity: 0.85;
+    color: #fff;
   }
   .m365-app b { font-weight: 600; opacity: 1; }
 
@@ -108,16 +108,16 @@
     align-items: center;
     gap: 10px;
     padding: 0 12px;
-    background: rgba(255,255,255,0.18);
+    background: rgba(0,0,0,0.18);
     border-radius: 4px;
-    color: rgba(255,255,255,0.92);
+    color: #fff;
     font-size: 13px;
     max-width: 720px;
     margin: 0 auto;
     width: 100%;
     transition: background .15s;
   }
-  .m365-search:hover { background: rgba(255,255,255,0.24); }
+  .m365-search:hover { background: rgba(0,0,0,0.26); }
   .m365-search-icon {
     width: 14px; height: 14px;
     border: 1.5px solid currentColor;
@@ -1011,15 +1011,44 @@
     height: 26px;
     border-radius: 13px;
     background: var(--blue-bg);
-    color: var(--blue);
+    color: #0a4f8f;
     font-size: 12px;
     font-weight: 600;
+    white-space: nowrap;
   }
   .progress-chip .ring {
     width: 14px; height: 14px;
     border-radius: 50%;
     background: conic-gradient(var(--blue) var(--p, 0%), rgba(15, 108, 189, 0.2) 0);
     display: inline-block;
+  }
+
+  /* Soft deadline chip in ribbon (non-blocking; never changes the score) */
+  .standup-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    height: 26px;
+    border-radius: 13px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-2);
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    transition: background .3s, color .3s, border-color .3s;
+  }
+  .standup-chip .standup-icon { font-size: 13px; line-height: 1; opacity: 0.8; }
+  .standup-chip.low,
+  .standup-chip.over {
+    background: var(--warn-bg);
+    border-color: var(--warn-bd);
+    color: #7A4F00;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .standup-chip { transition: none; }
   }
 
   /* ───────── Final results overlay ───────── */
@@ -1184,19 +1213,40 @@
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  /* ≤1199px: narrower panes; the case label gives way so the progress chip stays visible */
+  @media (max-width: 1199px) {
+    .main { grid-template-columns: 200px 320px minmax(0, 1fr); }
+  }
+  /* Narrower ribbons: the decorative Delete/Archive buttons go first, then the case label,
+     and only below 1100px does the timer drop its words (kept for screen readers). */
+  @media (max-width: 1259px) {
+    .rb-archive, .rb-delete { display: none; }
+  }
+  @media (max-width: 1099px) {
+    .standup-chip .standup-icon { display: none; }
+    .standup-chip .standup-word {
+      position: absolute; width: 1px; height: 1px; overflow: hidden;
+      clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+    }
+  }
+  .rb-meta > span { white-space: nowrap; }
+  @media (max-width: 1599px) {
+    .rb-meta > span { display: none; }
+  }
 </style>
+<script src="../_shared/desktop-only.js" data-shot="shots/case-a.jpg" data-back="../../" defer></script>
 </head>
 <body>
-<div class="portfolio-back-bar" style="position:fixed;top:8px;left:8px;z-index:9999;font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;">
+<div class="portfolio-back-bar" style="position:fixed;bottom:12px;left:12px;z-index:9999;font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;">
   <a href="../../" style="background:rgba(11,11,14,.8);color:#fff;padding:6px 12px;border-radius:14px;text-decoration:none;backdrop-filter:blur(6px);">&larr; Portfolio</a>
 </div>
 
 <div id="app"></div>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel" src="case-a-app.jsx"></script>
+<script src="../_shared/vendor/react.production.min.js"></script>
+<script src="../_shared/vendor/react-dom.production.min.js"></script>
+<script src="case-a-app.js"></script>
 
 </body>
 </html>

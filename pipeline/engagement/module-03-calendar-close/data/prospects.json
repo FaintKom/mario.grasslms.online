@@ -4,8 +4,8 @@
     "name": "Emma B.",
     "archetype": "emma",
     "archetype_label": "Manufacturing operations head · warmed by prior touch",
-    "company": "Becker Industrieteile GmbH (synthetic)",
-    "email": "emma.b@becker-industrieteile.example",
+    "company": "Brightline Components Ltd",
+    "email": "emma.b@brightline-components.example",
     "fte": 78,
     "monthly_spend_eur": 42000,
     "stage": "SMB · 3 sites",
@@ -37,7 +37,7 @@
     "last_touch_iso": "2026-05-17T08:48:00Z",
     "sequence_step": 4,
     "warmth": "very_warm",
-    "top_pain": "\"Who spent what\" — last quarter a £1 200 charge nobody could explain for 2 weeks",
+    "top_pain": "\"Who spent what\" — last quarter a £1,200 charge nobody could explain for 2 weeks",
     "ideal_close_line": "What's the best 20 minutes next week to walk you through the SMB version with both your stores in mind?"
   },
   {

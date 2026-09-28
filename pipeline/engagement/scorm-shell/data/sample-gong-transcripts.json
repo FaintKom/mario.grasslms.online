@@ -33,14 +33,14 @@
     "id": "GC-03",
     "rep": "M.G.",
     "prospect_archetype": "factory",
-    "outcome": "demo_booked_with_sage_admin",
+    "outcome": "demo_booked_with_xero_admin",
     "lines": [
       { "timestamp_ms": 2000,  "speaker": "M.G.",  "text": "Hi Emma — saw Brightline's latest filing, headcount up 18% this year. How is procurement handling card-tagging at that scale?", "m_move_tag": "M1", "m_move_quality": 5 },
-      { "timestamp_ms": 14000, "speaker": "Emma",  "text": "Badly. Finance tags four hundred transactions a month by hand. Sage doesn't see the job-numbers.", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 24000, "speaker": "M.G.",  "text": "So you've got 400 manual tags landing on finance every month because Sage can't read job-numbers off the card transactions — that's the bottleneck.", "m_move_tag": "M2", "m_move_quality": 5 },
-      { "timestamp_ms": 36000, "speaker": "Emma",  "text": "Exactly. We tried two vendors. Both promised Sage line-level export. Both broke it.", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 44000, "speaker": "M.G.",  "text": "Fair. Could I get 20 minutes with you and your Sage admin together — Tuesday 14:00 or Thursday 11:30 — to show you the actual export against a real Sage file?", "m_move_tag": "M3", "m_move_quality": 4 },
-      { "timestamp_ms": 56000, "speaker": "Emma",  "text": "Thursday 11:30. I'll bring our Sage admin.", "m_move_tag": null, "m_move_quality": null }
+      { "timestamp_ms": 14000, "speaker": "Emma",  "text": "Badly. Finance tags four hundred transactions a month by hand. Xero doesn't see the job-numbers.", "m_move_tag": null, "m_move_quality": null },
+      { "timestamp_ms": 24000, "speaker": "M.G.",  "text": "So you've got 400 manual tags landing on finance every month because Xero can't read job-numbers off the card transactions — that's the bottleneck.", "m_move_tag": "M2", "m_move_quality": 5 },
+      { "timestamp_ms": 36000, "speaker": "Emma",  "text": "Exactly. We tried two vendors. Both promised Xero line-level export. Both broke it.", "m_move_tag": null, "m_move_quality": null },
+      { "timestamp_ms": 44000, "speaker": "M.G.",  "text": "Fair. Could I get 20 minutes with you and your Xero admin together — Tuesday 14:00 or Thursday 11:30 — to show you the actual export against a real Xero file?", "m_move_tag": "M3", "m_move_quality": 4 },
+      { "timestamp_ms": 56000, "speaker": "Emma",  "text": "Thursday 11:30. I'll bring our Xero admin.", "m_move_tag": null, "m_move_quality": null }
     ]
   }
 ]

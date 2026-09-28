@@ -2,62 +2,62 @@
   {
     "id": "M3-Q1",
     "lo": "LO-M3.2",
-    "stem": "Maria R. (retail SMB owner) just said: \"Yeah, that does sound interesting. Send me something?\" You have Calendar open in your second tab. Which close fires the L4 proxy <code>Next_Step_Booked__c = TRUE</code> during this call?",
+    "stem": "Maria R. (retail SMB owner) just said: \"Yeah, that does sound interesting. Send me something?\" You have Calendar open in a second window. Which close sets <code>Next_Step_Booked__c = TRUE</code> in Salesforce during this call?",
     "options": [
       {
         "label": "A",
         "text": "\"I'll send a calendar invite by email later today.\"",
         "correct": false,
-        "rationale": "Partial · GC-05 pattern. The flag will not flip until you actually send it, and \"later today\" is where the deal slips. Top reps send during the call."
+        "rationale": "Partly right. The flag won't change until you send the invite, and \"later today\" is where the deal slips. Top reps send during the call."
       },
       {
         "label": "B",
         "text": "\"What's the best 20 minutes next week to walk you through the SMB version — Tuesday 11 or Thursday 2?\"",
         "correct": true,
-        "rationale": "Yes. Two specific slots, one sentence, sent during the call. M.G.'s GC-01 pattern · Salesforce flag flips before you hang up."
+        "rationale": "Yes. Two specific slots in one sentence, sent during the call. This is M.G.'s close, and the Salesforce flag changes before you hang up."
       },
       {
         "label": "C",
         "text": "\"Let me know which day works best for you.\"",
         "correct": false,
-        "rationale": "Open-ended close. Puts the work on the buyer · no two-slot anchor · GC-21 pattern."
+        "rationale": "An open-ended close. It puts the work on the buyer and gives no two slots to choose from."
       },
       {
         "label": "D",
         "text": "\"I'll follow up next week with some options.\"",
         "correct": false,
-        "rationale": "GC-10 / GC-22 anti-pattern. \"Follow up\" is where deals go to die. No re-engage in the sample data."
+        "rationale": "\"Follow up\" is where these deals were lost. None of the buyers in the sample calls re-engaged."
       }
     ]
   },
   {
     "id": "M3-Q2",
     "lo": "LO-M3.3",
-    "stem": "A peer rep tells you: \"I always pick the slots after the call ends — I want to double-check my own calendar first.\" What is the cost of that habit in the Gong + Salesforce data?",
+    "stem": "A peer rep tells you: \"I always pick the slots after the call ends — I want to double-check my own calendar first.\" What does that habit cost, going by the Gong and Salesforce data?",
     "options": [
       {
         "label": "A",
-        "text": "None — the buyer accepted, so the booking is the same.",
+        "text": "Nothing. The buyer accepted, so the booking is the same.",
         "correct": false,
-        "rationale": "No. The booking may eventually happen, but the same-call <code>Next_Step_Booked__c</code> flag stays FALSE, and re-engage drops to the GC-10 / GC-11 base rate (low)."
+        "rationale": "No. The booking may still happen, but the <code>Next_Step_Booked__c</code> flag stays FALSE on the day of the call, and buyers re-engage about as rarely as they do after \"I'll follow up\"."
       },
       {
         "label": "B",
-        "text": "The Salesforce flag stays FALSE that day, and re-engage drops to the GC-10 / GC-11 base rate.",
+        "text": "The Salesforce flag stays FALSE that day, and buyers re-engage about as rarely as after \"I'll follow up\".",
         "correct": true,
-        "rationale": "Yes. \"After the call\" is the failure mode by another name. The L4 proxy is binary — set during call, or not at all."
+        "rationale": "Yes. \"After the call\" is the same mistake under another name. The flag has two states: set during the call, or not set."
       },
       {
         "label": "C",
         "text": "It is fine if the rep sends the invite within 24 hours.",
         "correct": false,
-        "rationale": "Not according to the Gong sample. GC-11 sent the invite the next morning and still never re-engaged."
+        "rationale": "Not according to the Gong sample. In one recorded call the rep sent the invite the next morning, and the buyer never re-engaged."
       },
       {
         "label": "D",
-        "text": "It is better — checking the calendar twice prevents double-booking.",
+        "text": "It is better. Checking the calendar twice prevents double-booking.",
         "correct": false,
-        "rationale": "Calendar conflicts can be resolved by re-sending. Cold re-engage cannot. The cost is asymmetric."
+        "rationale": "You can fix a calendar clash by sending a new invite. You can't fix a buyer who has gone cold, so the second cost is far bigger."
       }
     ]
   },
@@ -68,21 +68,21 @@
     "options": [
       {
         "label": "A",
-        "text": "Thank them and end the call — confirmation by email tomorrow.",
+        "text": "Thank them and end the call. Confirm by email tomorrow.",
         "correct": false,
-        "rationale": "Anti-pattern. Confirmation must happen now · the buyer's acceptance is the cue to send, not delay."
+        "rationale": "A mistake. Confirm now: the buyer's yes is your cue to send the invite, not to wait."
       },
       {
         "label": "B",
         "text": "Click \"Send invite\" in Calendar and watch <code>Next_Step_Booked__c</code> flip to TRUE in Salesforce.",
         "correct": true,
-        "rationale": "Yes. Send → flag flips → confirm with the buyer that the invite is in their inbox. All three steps before you hang up."
+        "rationale": "Yes. Send the invite, check that the flag changes, then confirm with the buyer that the invite is in their inbox. Do all three before you hang up."
       },
       {
         "label": "C",
         "text": "Ask whether they want a reminder 1 day before.",
         "correct": false,
-        "rationale": "Reminder cadence is nice-to-have. The send-during-call is non-negotiable · order matters."
+        "rationale": "A reminder is a nice extra. Sending during the call is not optional, and it comes first."
       },
       {
         "label": "D",

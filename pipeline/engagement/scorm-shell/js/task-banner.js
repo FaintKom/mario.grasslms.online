@@ -63,6 +63,10 @@ export function mountTaskBanner(hostBody, cfg) {
 
   hostBody.prepend(el);
   REGISTRY.set(cfg.id, el);
+  // The step's task lives in this window: bring it to the front and into view.
+  const win = hostBody.closest(".os-window");
+  if (win && win.dataset.minimized !== "true") win.dispatchEvent(new MouseEvent("mousedown"));
+  el.scrollIntoView({ block: "nearest" });
   return el;
 }
 

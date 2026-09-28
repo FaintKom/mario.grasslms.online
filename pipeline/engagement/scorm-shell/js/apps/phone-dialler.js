@@ -173,7 +173,7 @@ registerApp({
       clearInterval(timerId);
       clearSilence();
       const r = reason ?? "hangup";
-      setText("meta", `Call ended · ${r} · pick disposition →`);
+      setText("meta", `Call ended (${r}). Pick a disposition below.`);
       setPhase("ended");
       call = null;
     }

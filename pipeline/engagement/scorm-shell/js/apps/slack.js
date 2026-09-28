@@ -15,18 +15,18 @@ import { registerApp, icon } from "./registry.js";
 const DEFAULT_CHANNEL = {
   channel_id: "sdr-pod-uk-manchester",
   pinned_messages: [
-    { title: "3-move card",      content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: "pre-training" },
-    { title: "ICP archetype card", content_md: "Maria (retail) · Tom (SaaS) · Emma (mfg) · Lukas (restaurant)", related_module: "pre-training" },
-    { title: "4-prop decision card", content_md: "Pain → Prop quick reference", related_module: "M5" },
-    { title: "§19 reg deflection table", content_md: "KYC · AML · SCA · PSD2 · GDPR — escalate row", related_module: "M6" },
+    { title: "3-move card",      content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: ["pre-training", "M1", "M2", "M3"] },
+    { title: "ICP archetype card", content_md: "Maria (retail) · Tom (SaaS) · Emma (mfg) · Lukas (restaurant)", related_module: "M4" },
+    { title: "4-prop decision card", content_md: "Which prop answers which pain", related_module: "M5" },
+    { title: "Regulation job aid", content_md: "KYC · AML · SCA · PSD2 · GDPR, and when to escalate", related_module: "M6" },
   ],
   messages: [
     { author: "J.T. (pod lead)", initials: "JT", ts: "09:15", body: "Cadence check — log every dial in SF, no shortcuts." },
     { author: "Sam (peer)",       initials: "SM", ts: "09:42", body: "M.G. nailed an M3 on the Two Pines call this morning — anyone want a debrief at lunch?" },
     { author: "J.T. (pod lead)", initials: "JT", ts: "10:01", body: "Reminder: Maria archetype = retail SMB; opener is location-signal, not price." },
     { author: "M.G. (peer)",      initials: "MG", ts: "10:08", body: "Used the CH filing signal — they liked it. Will share the transcript in #gong-clips later." },
-    { author: "Sam (peer)",       initials: "SM", ts: "10:15", body: "Anyone got a clean §19 deflection example for SCA? Manager flagged my last one." },
-    { author: "J.T. (pod lead)", initials: "JT", ts: "10:17", body: "Pinned — §19 table top of channel. If it's not in the table → escalate. No improvising on compliance." },
+    { author: "Sam (peer)",       initials: "SM", ts: "10:15", body: "Anyone got a clean example of answering an SCA question from the job aid? Manager flagged my last one." },
+    { author: "J.T. (pod lead)", initials: "JT", ts: "10:17", body: "Pinned the job aid at the top of the channel. If it's not in the job aid, escalate. No improvising on compliance." },
   ],
 };
 
@@ -37,18 +37,26 @@ registerApp({
   defaultSize: { w: 720, h: 560 },
   mount(ctx) {
     const { container, options = {} } = ctx;
-    const channel = { ...DEFAULT_CHANNEL, ...(options.channel ?? {}) };
-    const highlightModule = options.highlightModule ?? null;
+    let channel = { ...DEFAULT_CHANNEL, ...(options.channel ?? {}) };
+    let highlightModule = options.highlightModule ?? null;
 
     container.classList.add("app--slack");
     container.innerHTML = render();
 
+    /** A card can serve several modules: related_module is a string or an array. */
+    function matches(p, mod) {
+      if (!mod) return false;
+      const rel = Array.isArray(p.related_module) ? p.related_module : [p.related_module];
+      return rel.includes(mod);
+    }
+
     function render() {
-      const pinned = (channel.pinned_messages ?? []).map(p => {
-        const force = highlightModule && p.related_module === highlightModule;
+      const pinned = (channel.pinned_messages ?? []).map((p, i) => {
+        const force = matches(p, highlightModule);
+        const rel = Array.isArray(p.related_module) ? p.related_module.join(" ") : (p.related_module ?? "");
         return `
-          <div class="pinned-card" data-module="${escapeAttr(p.related_module ?? "")}" ${force ? `data-forced="true"` : ""}>
-            <div class="pin-label">Pinned${force ? " · forced visible" : ""}</div>
+          <div class="pinned-card" data-pin="${i}" data-module="${escapeAttr(rel)}" ${force ? `data-forced="true"` : ""}>
+            <div class="pin-label">Pinned${force ? " · for this step" : ""}</div>
             <strong>${escapeHtml(p.title)}</strong><br>
             <span>${escapeHtml(p.content_md)}</span>
           </div>
@@ -121,7 +129,31 @@ registerApp({
       `;
     }
 
-    return { destroy() {} };
+    /** Mark the pinned card(s) for a module without redrawing the feed. */
+    function highlight(mod) {
+      highlightModule = mod ?? null;
+      container.querySelectorAll(".pinned-card[data-pin]").forEach(el => {
+        const p = channel.pinned_messages?.[Number(el.getAttribute("data-pin"))];
+        const force = Boolean(p && matches(p, highlightModule));
+        if (force) el.setAttribute("data-forced", "true"); else el.removeAttribute("data-forced");
+        const label = el.querySelector(".pin-label");
+        if (label) label.textContent = force ? "Pinned · for this step" : "Pinned";
+      });
+      container.querySelector(".pinned-card[data-forced]")?.scrollIntoView?.({ block: "nearest" });
+    }
+
+    return {
+      update(opts = {}) {
+        if (opts.channel) {
+          channel = { ...DEFAULT_CHANNEL, ...opts.channel };
+          highlightModule = opts.highlightModule ?? null;
+          container.innerHTML = render();
+        } else if ("highlightModule" in opts) {
+          highlight(opts.highlightModule);
+        }
+      },
+      destroy() {},
+    };
   },
 });
 

@@ -11,7 +11,7 @@
 <style>
 :root {
   --bg: #fafbf6; --paper: #ffffff;
-  --ink: #0a1a10; --ink-dim: #4d5a51; --ink-faint: #6b7a70;
+  --ink: #0a1a10; --ink-dim: #4d5a51; --ink-faint: #5f6e64;
   --ink-200: #c9cec9; --ink-100: #e6e8e4; --ink-50: #f4f5f1;
   --rule: #e6e8e4;
   --accent: #0a8754; --green-700: #07683f; --green-300: #8fd770; --green-50: #ecf9e7;
@@ -41,7 +41,7 @@ body {
 }
 .topbar .brand { display: flex; align-items: center; gap: 12px; color: var(--ink-dim); }
 .topbar .brand .mark {
-  font-family: var(--mono); font-weight: 700; color: var(--accent); font-size: 12px;
+  font-family: var(--mono); font-weight: 700; color: var(--green-700); font-size: 12px;
 }
 .topbar .brand .crumb { color: var(--ink-faint); }
 .topbar .actions { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -154,6 +154,7 @@ main.sheet code {
   color: var(--green-700);
 }
 main.sheet pre {
+  max-width: 100%;
   background: var(--ink-50); padding: 16px 20px;
   border-left: 3px solid var(--accent);
   overflow-x: auto; font-size: 12.5px; line-height: 1.55;
@@ -191,6 +192,14 @@ footer.foot a { color: var(--green-700); text-decoration: none; border-bottom: 1
 footer.foot a:hover { color: var(--accent); }
 @media (max-width: 720px) {
   footer.foot { padding: 24px 18px 0; }
+}
+
+/* Keep wide code blocks and tables scrolling inside the page on phones */
+main.sheet { min-width: 0; overflow-wrap: break-word; }
+main.sheet pre, main.sheet pre code { overflow-wrap: normal; }
+@media (max-width: 720px) {
+  main.sheet table { display: block; overflow-x: auto; }
+  main.sheet th, main.sheet td { min-width: 9em; }
 }
 </style>
 </head>
@@ -367,7 +376,7 @@ footer.foot a:hover { color: var(--accent); }
 
 <footer class="foot">
   <span>Built by <strong style="color:var(--ink-dim);">Mario Rafael Becerra Dueñas</strong> · pipeline/engagement/03-develop\module-05-product-prop-mapping/design-log.md</span>
-  <span><a href="../../../../">mario.grasslms.online</a></span>
+  <span><a href="../../../">mario.grasslms.online</a></span>
 </footer>
 
 </body>

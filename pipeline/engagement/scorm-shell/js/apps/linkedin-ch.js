@@ -13,6 +13,7 @@
  */
 
 import { registerApp, icon } from "./registry.js";
+import { loadProfiles, findProfile } from "./profiles.js";
 
 registerApp({
   id: "linkedin-ch",
@@ -24,6 +25,8 @@ registerApp({
     /** @type {any[]} */
     let profiles = Array.isArray(options.profiles) ? options.profiles.slice() : [];
     let activeId = options.activeProfileId ?? null;
+    // Modules name the buyer with `lookupId` ("maria", "emma", "L-003").
+    let lookupKey = options.lookupId ?? null;
 
     container.classList.add("app--linkedin-ch");
     container.innerHTML = renderShell();
@@ -77,7 +80,7 @@ registerApp({
       if (!el) return;
       const p = profiles.find(x => x.lead_id === activeId);
       if (!p) {
-        el.innerHTML = `<p class="empty">Search to load a profile — or use the Outreach queue to populate one.</p>`;
+        el.innerHTML = `<p class="empty">Search for a company to load its profile.</p>`;
         return;
       }
       const liSignals = (p.signals ?? []).filter(s => s.source === "linkedin");
@@ -87,7 +90,7 @@ registerApp({
           <section class="lch-panel linkedin" aria-label="LinkedIn snapshot">
             <h3>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/><path d="M10 9h4v2c.7-1.2 2-2 4-2 4 0 5 2.5 5 6v6h-4v-5c0-1.5 0-3.5-2-3.5s-2.5 1.5-2.5 3.5V21H10z"/></svg>
-              ${escapeHtml(p.company)} — LinkedIn
+              ${escapeHtml(p.company)} · LinkedIn
             </h3>
             <div class="meta">${escapeHtml(p.industry)} · ${p.fte} FTE · ${escapeHtml(p.stage ?? "—")}</div>
             ${liSignals.map(renderSignal).join("") || "<p class='empty'>No recent posts.</p>"}
@@ -95,7 +98,7 @@ registerApp({
           <section class="lch-panel ch" aria-label="Companies House filings">
             <h3>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6a9 9 0 0 1-8 9 9 9 0 0 1-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
-              ${escapeHtml(p.company)} — Companies House
+              ${escapeHtml(p.company)} · Companies House
             </h3>
             <div class="meta">Reg. office: ${escapeHtml(p.registered_office ?? "—")}</div>
             ${chSignals.map(renderSignal).join("") || "<p class='empty'>No recent filings.</p>"}
@@ -132,21 +135,17 @@ registerApp({
     }
 
     async function ensureProfiles() {
-      if (profiles.length) return;
-      try {
-        const res = await fetch(new URL("../../data/sample-profiles.json", import.meta.url));
-        profiles = await res.json();
-        if (!activeId && profiles.length) activeId = profiles[0].lead_id;
-      } catch (e) {
-        console.warn("[linkedin-ch] could not load sample-profiles", e);
-      }
+      if (!profiles.length) profiles = await loadProfiles();
+      if (lookupKey) activeId = findProfile(profiles, lookupKey)?.lead_id ?? activeId;
+      if (!activeId && profiles.length) activeId = profiles[0].lead_id;
     }
 
     bindSearch();
     (async () => { await ensureProfiles(); renderResult(); })();
 
     return {
-      loadProfile(id) { activeId = id; renderResult(); },
+      async loadProfile(id) { lookupKey = id; await ensureProfiles(); renderResult(); },
+      update(opts = {}) { if (opts.lookupId) this.loadProfile(opts.lookupId); },
       destroy() {},
     };
   },
