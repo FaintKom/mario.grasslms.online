@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RiskDesk · payments fraud-review console (e-learning sim) · Mario Rafael Becerra Dueñas</title>
-<meta name="description" content="Interactive HTML5 e-learning sample modelled on a real payments fraud-review case manager (Stripe Radar / Sift style): review queue, risk score, rules triggered, approve / decline / escalate." />
+<title>RiskDesk · payments fraud review · Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="A payments fraud review queue. Each case shows a risk score and the rules that fired, and you approve, decline or escalate it." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-  /* GrassLMS Lively, canonical: Manrope + Geist Mono, green-600 brand. Console layout, Stripe-Radar-style. */
+  /* GrassLMS Lively, canonical: Manrope + Geist Mono, green-600 brand. Console layout. */
   :root{
     --green-25:#f4fbef; --green-50:#ecf9e7; --green-100:#d4f1c4; --green-200:#b6e69e;
     --green-300:#8fd770; --green-400:#6bc44d; --green-500:#3fb04b; --green-600:#0a8754;
     --green-700:#07683f; --green-800:#054d2f; --green-900:#0a3d24;
     --sun-50:#fffbe5; --sun-100:#fff2b3; --sun-300:#ffe066; --sun-400:#ffd84d; --sun-500:#f5b800; --sun-700:#7a5500;
     --coral-50:#fff0eb; --coral-300:#ffae9a; --coral-500:#ff7a5c; --coral-700:#c33d22;
-    --ink-900:#0a1a10; --ink-700:#1a2a1f; --ink-500:#4d5a51; --ink-400:#6b7a70;
+    --ink-900:#0a1a10; --ink-700:#1a2a1f; --ink-500:#4d5a51; --ink-400:#5f6e64;
     --ink-300:#9aa39d; --ink-200:#c9cec9; --ink-100:#e6e8e4; --ink-50:#f4f5f1;
     --paper:#fafbf6; --paper-2:#ffffff;
     --shadow-sm:0 2px 6px -1px rgba(10,26,16,.07);
@@ -81,7 +81,7 @@
   .qrow .qamt{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--ink-700);text-align:right;}
   .qrow.cur{background:var(--green-25);}
   .qrow.cur::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green-600);}
-  .qrow.done{opacity:.62;}
+  .qrow.done{background:var(--paper);}
   .qtag{font-family:var(--font-mono);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
     padding:2px 6px;border-radius:var(--r-pill);}
   .qtag.approve{background:var(--green-100);color:var(--green-800);}
@@ -103,12 +103,12 @@
   .gauge .glabel{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin-bottom:6px;}
   .gauge .grow{display:flex;align-items:center;gap:10px;justify-content:flex-end;}
   .gauge .gnum{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1;width:54px;text-align:center;}
-  .gauge .gnum.low{color:var(--green-600);} .gauge .gnum.mid{color:var(--sun-500);} .gauge .gnum.high{color:var(--coral-500);}
+  .gauge .gnum.low{color:var(--green-600);} .gauge .gnum.mid{color:var(--sun-700);} .gauge .gnum.high{color:var(--coral-700);}
   .gauge .gtrack{width:120px;height:8px;border-radius:var(--r-pill);overflow:hidden;position:relative;
     background:linear-gradient(90deg,var(--green-400) 0%,var(--sun-400) 55%,var(--coral-500) 100%);opacity:.28;}
   .gauge .gwrap{position:relative;width:120px;}
   .gauge .gmark{position:absolute;top:-3px;width:3px;height:14px;border-radius:2px;background:var(--ink-900);transition:left .5s cubic-bezier(.2,.7,.2,1);}
-  .gauge .gscale{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:8.5px;color:var(--ink-300);margin-top:3px;width:120px;}
+  .gauge .gscale{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:8.5px;color:var(--ink-400);margin-top:3px;width:120px;}
 
   /* panels */
   .panel{border:1px solid var(--ink-100);border-radius:var(--r-md);background:var(--paper-2);margin-bottom:14px;overflow:hidden;}
@@ -136,11 +136,11 @@
     background:linear-gradient(180deg,rgba(244,245,241,0),var(--ink-50) 32%);}
   .act{padding:13px 10px;border-radius:var(--r-md);font-weight:800;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:3px;
     transition:transform .12s,box-shadow .12s,background .2s;}
-  .act .key{font-family:var(--font-mono);font-size:10px;font-weight:500;opacity:.72;}
+  .act .key{font-family:var(--font-mono);font-size:10px;font-weight:500;}
   .act.approve{background:var(--green-600);color:#fff;box-shadow:var(--shadow-pop);}
   .act.approve:hover{background:var(--green-700);}
-  .act.decline{background:var(--coral-500);color:#fff;box-shadow:0 3px 0 0 var(--coral-700);}
-  .act.decline:hover{background:var(--coral-700);}
+  .act.decline{background:var(--coral-700);color:#fff;box-shadow:0 3px 0 0 #8a2a17;}
+  .act.decline:hover{background:#a3321b;}
   .act.review{background:var(--sun-300);color:var(--ink-900);box-shadow:0 3px 0 0 var(--sun-500);}
   .act.review:hover{background:var(--sun-400);}
   .act:active{transform:translateY(3px);box-shadow:none;}
@@ -156,7 +156,7 @@
   .fb-h{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13.5px;margin-bottom:4px;}
   .fb-h .badge{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:var(--r-pill);}
   .fb.right .badge{background:var(--green-200);color:var(--green-900);}
-  .fb.wrong .badge{background:var(--coral-300);color:var(--coral-700);}
+  .fb.wrong .badge{background:var(--coral-50);color:var(--coral-700);}
   .fb-why{font-size:12.5px;color:var(--ink-700);}
   .fb-money{font-family:var(--font-mono);font-size:11.5px;margin-top:7px;color:var(--ink-500);}
   .fb-money b{font-weight:700;} .fb-money .pos{color:var(--green-700);} .fb-money .neg{color:var(--coral-700);}
@@ -171,7 +171,7 @@
   .kstat{margin-bottom:14px;}
   .kstat .n{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;}
   .kstat .l{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-top:3px;}
-  .kstat .n .small{font-size:14px;color:var(--ink-300);}
+  .kstat .n .small{font-size:14px;color:var(--ink-400);}
   .streak{display:inline-flex;align-items:center;gap:5px;}
   .streak .flame{filter:grayscale(1);opacity:.35;transition:.3s;}
   .streak.on .flame{filter:none;opacity:1;}
@@ -179,7 +179,7 @@
   .kxp > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green-400),var(--green-600));transition:width .5s cubic-bezier(.2,.7,.2,1);}
 
   /* ===== Results overlay ===== */
-  .results{position:fixed;inset:0;background:rgba(10,26,16,.42);display:none;align-items:center;justify-content:center;padding:20px;z-index:80;}
+  .results{position:fixed;inset:0;background:rgba(10,26,16,.42);display:none;align-items:center;justify-content:center;padding:20px;z-index:110;}
   .results.show{display:flex;animation:fade .25s ease;}
   @keyframes fade{from{opacity:0;}to{opacity:1;}}
   .res-card{background:var(--paper-2);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);max-width:560px;width:100%;
@@ -242,12 +242,13 @@
   @media (max-width:400px){ .who span:first-child{display:none;} }
   @media (prefers-reduced-motion:reduce){ *{animation:none !important;transition:none !important;} }
 </style>
+<script src="../_shared/desktop-only.js" data-shot="../../previews/d3-fraud-queue.webp" data-back="../../" defer></script>
 </head>
 <body>
 
 <div class="app">
   <!-- left rail -->
-  <nav class="rail" aria-label="primary">
+  <nav class="rail" aria-hidden="true">
     <div class="logo">R</div>
     <div class="nav active" title="Review queue">▤</div>
     <div class="nav" title="Cases">◳</div>
@@ -263,7 +264,7 @@
       <div class="crumb">RiskDesk <span>· Review queue</span></div>
       <span class="pill">Manual review</span>
       <div class="spacer"></div>
-      <div class="who"><span>Risk analyst — your shift</span><span class="av">M</span></div>
+      <div class="who"><span>Risk analyst, on shift</span><span class="av">M</span></div>
       <a class="back" href="../../">↩ Portfolio</a>
     </header>
 
@@ -277,7 +278,7 @@
       </aside>
 
       <!-- CASE DETAIL -->
-      <section class="case" aria-live="polite">
+      <section class="case">
         <div class="case-hd">
           <div>
             <div class="cid mono" id="cId">TXN-0000</div>
@@ -312,7 +313,7 @@
         </div>
 
         <!-- inline feedback -->
-        <div class="fb" id="cFb" role="status">
+        <div class="fb" id="cFb" role="status" aria-live="polite">
           <div class="fb-h"><span class="badge" id="fbBadge"></span><span id="fbTitle"></span></div>
           <div class="fb-why" id="fbWhy"></div>
           <div class="fb-money" id="fbMoney"></div>
@@ -334,7 +335,7 @@
           <div class="kxp" title="Shift progress"><i id="kXp"></i></div></div>
         <div class="kstat"><div class="n streak" id="kStreakWrap"><span class="flame">🔥</span><span id="kStreak">0</span></div><div class="l">Streak</div></div>
         <div class="kstat"><div class="n" id="kAcc">—</div><div class="l">Accuracy</div></div>
-        <div class="kstat"><div class="n" id="kDone">0<span class="small">/8</span></div><div class="l">Cases reviewed</div></div>
+        <div class="kstat"><div class="n" id="kDone">0<span class="small">/10</span></div><div class="l">Cases reviewed</div></div>
         <div class="kstat"><div class="n" id="kNet" style="font-size:20px">€0</div><div class="l">Net impact</div></div>
       </aside>
 
@@ -345,10 +346,10 @@
 <!-- intro -->
 <div class="intro" id="intro">
   <div class="intro-card">
-    <p class="eyebrow">Interactive HTML5 · simulation · gamified · fintech</p>
+    <p class="eyebrow">Payments fraud review · 10 cases</p>
     <h1>You're on the <em>payments risk desk</em></h1>
-    <p>Flagged transactions are waiting in your review queue. Open each case, read the rules that fired, and clear it quickly. Over-blocking good customers costs the business as much as letting fraud through.</p>
-    <p style="font-size:12.5px;color:var(--ink-500);margin-top:-4px;">The model gives you a <b style="color:var(--ink-700)">risk score you are allowed to overrule</b>. On some cases it points the wrong way, and reading the signals underneath it is the job. Every shift is generated fresh, so the queue never repeats.</p>
+    <p>Ten flagged payments are waiting in your queue. Open each case, read the rules that fired, and decide. Blocking a good customer costs money too, not only letting fraud through.</p>
+    <p style="font-size:12.5px;color:var(--ink-500);margin-top:-4px;">Each case has a <b style="color:var(--ink-700)">risk score from the model, and you can overrule it</b>. On some cases the score points the wrong way, and the signals below it show why. Each shift builds a new queue.</p>
     <div class="rules-mini">
       <div class="rmini"><span class="tag approve">Approve</span><span>Signals look clean. Release the payment.</span></div>
       <div class="rmini"><span class="tag decline">Decline</span><span>Clear fraud pattern. Block before it settles.</span></div>
@@ -362,7 +363,7 @@
 <!-- results -->
 <div class="results" id="results">
   <div class="res-card">
-    <h2>Shift complete.</h2>
+    <h2 id="rHead" tabindex="-1">Shift complete.</h2>
     <p class="sub" id="rSub">Cases cleared. Here's how your decisions landed.</p>
     <div class="grade">
       <span class="g" id="rGrade">A</span>
@@ -371,7 +372,7 @@
     <div class="matrix">
       <div class="cell good"><div class="n" id="rApproveGood">0</div><div class="l">Good payments approved</div></div>
       <div class="cell good"><div class="n" id="rFraudCaught">0</div><div class="l">Fraud caught / escalated</div></div>
-      <div class="cell bad"><div class="n" id="rFraudLeaked">0</div><div class="l">Fraud let through</div></div>
+      <div class="cell bad"><div class="n" id="rFraudLeaked">0</div><div class="l">Fraud let through or escalated too late</div></div>
       <div class="cell bad"><div class="n" id="rGoodBlocked">0</div><div class="l">Good customers over-blocked</div></div>
     </div>
     <div class="netbar"><span class="nl">Net impact to the business</span><span class="nv" id="rNet">€0</span></div>
@@ -379,9 +380,9 @@
     <div class="debrief">
       <h3>What a senior analyst reads first</h3>
       <ul>
-        <li><b>Velocity beats amount.</b> A tiny charge after five declines in two minutes is card testing. Block it, cheap as it is.</li>
-        <li><b>Mismatch &gt; single red flag.</b> One foreign IP isn't fraud. IP, BIN country and address all disagreeing is.</li>
-        <li><b>Ambiguous ≠ decline.</b> When good and bad signals tie, <em>Escalate</em> is correct. Snapping to Decline quietly bleeds real revenue.</li>
+        <li><b>Check velocity before amount.</b> A tiny charge after several declined cards in two minutes is card testing. Decline it even though it is cheap.</li>
+        <li><b>Count the mismatches.</b> A foreign IP alone is not fraud. When the IP, the card's country and the shipping address all disagree, it probably is.</li>
+        <li><b>Mixed signals mean escalate.</b> When good and bad signals balance, send the case to a senior analyst. A reflex decline loses good customers.</li>
       </ul>
     </div>
     <div class="res-actions">
@@ -400,7 +401,7 @@
   //  archetype's ground truth, never the model risk score. Two
   //  archetypes are deliberately MISALIGNED (score disagrees with the
   //  right call) so the learner has to read the signals underneath the score.
-  //  All data synthetic. signals: [severity, RULE_CODE, label].
+  //  signals: [severity, RULE_CODE, label].
   // ============================================================
   const R = {
     pick:a=>a[Math.floor(Math.random()*a.length)],
@@ -409,11 +410,14 @@
     last4:()=>String(R.int(1000,9999)),
     method:()=>R.pick(["Visa credit","Visa debit","Mastercard credit","Mastercard debit"])
   };
+  const ord = n => n+(n%100>=11&&n%100<=13?"th":({1:"st",2:"nd",3:"rd"}[n%10]||"th"));
+  const days = n => n+(n===1?" day":" days");
   const P = {
     es:["Valencia, ES","Madrid, ES","Barcelona, ES","Sevilla, ES","Málaga, ES"],
     eu:["Berlin, DE","Paris, FR","Lisbon, PT","Milan, IT","Warsaw, PL","Amsterdam, NL"],
     far:["Manila, PH","Lagos, NG","Jakarta, ID","Karachi, PK","Nairobi, KE","São Paulo, BR"],
     esBin:["Spain","Germany","France","Italy","Portugal"],
+    country:{ES:"Spain",DE:"Germany",FR:"France",PT:"Portugal",IT:"Italy",PL:"Poland",NL:"Netherlands",PH:"Philippines",NG:"Nigeria",ID:"Indonesia",PK:"Pakistan",KE:"Kenya",BR:"Brazil"},
     sub:["StreamPass","CloudNote Pro","FitFlow+","NewsLine Daily","MailRoom Pro","TuneVault"],
     game:["PixelForge Games","NovaArcade","QuestRealm","BitByte Games","HyperLoot"],
     resale:["LuxWatchHub","GadgetVault","SneakerPit","PhoneMart XL","CameraKing"],
@@ -424,10 +428,10 @@
 
   const ARCHS = [
     { key:"cleanSub", weight:3, build(){
-        const amt=R.amt(6,60), loc=R.pick(P.es), visits=R.int(8,30), prior=R.int(9,40), bin=R.pick(P.esBin), y=R.int(1,4), m=R.int(0,11);
+        const amt=R.amt(6,60), loc=R.pick(P.es), visits=R.int(8,30), prior=R.int(9,40), bin="Spain", y=R.int(1,4), m=R.int(0,11);
         return { arch:"cleanSub", merchant:R.pick(P.sub), cat:"Subscription renewal", amount:amt, score:R.int(4,16), best:"approve",
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Subscription"]],
-          dev:[["IP location",loc],["Device","Recognised — "+visits+"th visit"],["Account age",y+" yr "+m+" mo"],["Velocity","Normal"]],
+          dev:[["IP location",loc],["Device","Recognised — "+ord(visits)+" visit"],["Account age",y+" yr "+m+" mo"],["Velocity","Normal"]],
           signals:[["good","HISTORY_CLEAN",prior+" prior good charges, same card"],["good","GEO_MATCH","IP = billing country"],["good","DEVICE_KNOWN","Returning trusted device"]],
           fb:{ approve:{ok:true, why:"Known device, matching geography, "+prior+" clean prior charges. Nothing here needs a human. Approve and keep the revenue.", money:+amt},
                decline:{ok:false, why:"You blocked a loyal subscriber over nothing. That is churn plus lost revenue, and it never shows up in the fraud numbers.", money:-amt},
@@ -435,10 +439,10 @@
       } },
 
     { key:"cleanGaming", weight:2, build(){
-        const amt=R.amt(5,45), loc=R.pick(P.eu), visits=R.int(3,18), bin=R.pick(P.esBin);
+        const amt=R.amt(5,45), loc=R.pick(P.eu), visits=R.int(3,18), bin=P.country[loc.slice(-2)];
         return { arch:"cleanGaming", merchant:R.pick(P.game), cat:"In-app top-up", amount:amt, score:R.int(6,18), best:"approve",
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Gaming top-up"]],
-          dev:[["IP location",loc],["Device","Recognised — "+visits+"th visit"],["Account age",R.int(2,18)+" mo"],["Velocity","Normal"]],
+          dev:[["IP location",loc],["Device","Recognised — "+ord(visits)+" visit"],["Account age",R.int(2,18)+" mo"],["Velocity","Normal"]],
           signals:[["good","GEO_MATCH","Device + geo match"],["good","AMOUNT_LOW","Low amount, low-risk category"],["good","CARD_SEEN","Card used here before"]],
           fb:{ approve:{ok:true, why:"Clean and low-risk: known device, matching country, small top-up. Approve and move on.", money:+amt},
                decline:{ok:false, why:"Nothing here is suspicious. Declining low-value traffic frustrates good players and inflates your false-positive rate.", money:-amt},
@@ -460,7 +464,7 @@
         const amt=R.amt(800,3000), orders=R.int(2,4), loc=R.pick(P.far);
         return { arch:"giftCashout", merchant:R.pick(P.gift), cat:"Prepaid gift cards", amount:amt, score:R.int(90,99), best:"decline",
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",R.pick(["United States","United Kingdom"])],["Category","Prepaid / cash-out"]],
-          dev:[["IP location",loc+" — VPN"],["Device","New — VPN detected"],["Account age",R.int(1,9)+" hr"],["Velocity",orders+(orders>1?"rd":"st")+" large order today"]],
+          dev:[["IP location",loc+" — VPN"],["Device","New — VPN detected"],["Account age",R.int(1,9)+" hr"],["Velocity",ord(orders)+" large order today"]],
           signals:[["bad","CASHOUT_GIFTCARD","Untraceable prepaid gift cards"],["bad","IP_VPN_MISMATCH","VPN + IP ≠ BIN country"],["bad","VELOCITY_HIGH",orders+" large orders in one day"],["bad","DEVICE_NEW","Brand-new device"]],
           fb:{ approve:{ok:false, why:"Every signal is red: untraceable gift cards, masked location, escalating order size. Approving is a direct loss plus chargeback fees.", money:-amt},
                decline:{ok:true, why:"Correct and decisive. Gift-card cash-out, a VPN, a geo mismatch and rising order size read as fraud with no benign explanation.", money:0},
@@ -468,10 +472,10 @@
       } },
 
     { key:"highValueMismatch", weight:2, build(){
-        const amt=R.amt(400,1200), loc=R.pick(P.far.concat(P.eu)), bin=R.pick(["United Kingdom","United States","Germany"]);
+        const amt=R.amt(400,1200), bin=R.pick(["United Kingdom","United States","Germany"]), loc=R.pick(P.far.concat(P.eu).filter(c=>P.country[c.slice(-2)]!==bin));
         return { arch:"highValueMismatch", merchant:R.pick(P.resale), cat:"Electronics / high-resale", amount:amt, score:R.int(55,72), best:"review",
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","High-resale"]],
-          dev:[["IP location",loc],["Device","New — first seen"],["Account age",R.int(1,4)+" day"],["Velocity","Normal"]],
+          dev:[["IP location",loc],["Device","New — first seen"],["Account age",days(R.int(1,4))],["Velocity","Normal"]],
           signals:[["bad","GEO_MISMATCH","IP country ≠ BIN country"],["warn","CATEGORY_RESALE","High-resale goods"],["warn","DEVICE_NEW","First-time device"],["good","AVS_PASS","Address verification passed"]],
           fb:{ approve:{ok:false, why:"Geo mismatch, high-resale goods and a new device make a classic stolen-card profile. AVS did pass, so a real traveller is possible, but that is too much doubt to wave through.", money:-amt},
                decline:{ok:false, why:"Plausible fraud, except AVS passed and people do travel. A hard decline may kill a genuine high-value sale. Don't guess on a mixed signal.", money:-amt},
@@ -479,9 +483,9 @@
       } },
 
     { key:"atoGrey", weight:1, build(){
-        const amt=R.amt(30,150), loc=R.pick(P.far.concat(P.eu)), yrs=R.int(2,4);
+        const amt=R.amt(30,150), yrs=R.int(2,4), abin=R.pick(["Poland","Spain","Germany"]), loc=R.pick(P.far.concat(P.eu).filter(c=>P.country[c.slice(-2)]!==abin));
         return { arch:"atoGrey", merchant:R.pick(P.wallet), cat:"iGaming deposit", amount:amt, score:R.int(46,64), best:"review",
-          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",R.pick(["Poland","Spain","Germany"])],["Category","Gaming wallet"]],
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",abin],["Category","Gaming wallet"]],
           dev:[["IP location",loc],["Device","New device, returning account"],["Account age",yrs+" yr (clean)"],["Velocity","Normal"]],
           signals:[["warn","DEVICE_NEW_ACCT","New device on an existing account"],["warn","GEO_MISMATCH","IP ≠ BIN country"],["good","ACCOUNT_AGED",yrs+"-year clean account"],["good","AMOUNT_TYPICAL","Deposit in normal range"]],
           fb:{ approve:{ok:false, why:"This could be the real owner on a new phone abroad. It could equally be an account takeover, and on a gaming wallet a wrong approve funds a cash-out.", money:-amt},
@@ -494,7 +498,7 @@
         const amt=R.amt(120,600), loc=R.pick(P.eu), visits=R.int(6,20), yrs=R.int(2,5);
         return { arch:"travelerOverride", merchant:R.pick(P.travel), cat:"Travel booking", amount:amt, score:R.int(52,68), best:"approve",
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country","Spain"],["Category","Travel"]],
-          dev:[["IP location",loc+" (roaming)"],["Device","Recognised — "+visits+"th visit"],["Account age",yrs+" yr"],["Velocity","Normal"]],
+          dev:[["IP location",loc+" (roaming)"],["Device","Recognised — "+ord(visits)+" visit"],["Account age",yrs+" yr"],["Velocity","Normal"]],
           signals:[["warn","GEO_SOFT","IP country ≠ billing (roaming)"],["good","DEVICE_KNOWN","Known device, long history"],["good","TRAVEL_CONSISTENT","Purchase matches roaming pattern"]],
           fb:{ approve:{ok:true, why:"The model flagged the geo 'mismatch'. It is a Spanish customer booking travel from "+loc.split(",")[0]+", and the known device plus "+yrs+" years of history confirm it. You read past the score.", money:+amt},
                decline:{ok:false, why:"You trusted a mid-high score and blocked a real customer mid-trip. The device and the history both say it is them. Expensive false positive.", money:-amt},
@@ -504,13 +508,13 @@
     // ---- MISALIGNED: model score LOW but the right call is DECLINE ----
     { key:"subtleFraud", weight:2, build(){
         const amt=R.amt(60,260), loc=R.pick(P.eu), bin=R.pick(["Germany","France","Italy"]);
-        return { arch:"subtleFraud", merchant:R.pick(P.resale.concat(P.game)), cat:"Electronics", amount:amt, score:R.int(14,29), best:"decline",
-          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","General retail"]],
+        return { arch:"subtleFraud", merchant:R.pick(P.resale), cat:"Electronics", amount:amt, score:R.int(14,29), best:"decline",
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Electronics"]],
           dev:[["IP location",loc],["Device","New — first seen"],["Account age",R.int(1,6)+" hr"],["Velocity","Normal"]],
           signals:[["warn","ACCOUNT_FRESH","Account created hours ago"],["warn","SHIP_BILL_DIFF","Shipping ≠ billing address"],["warn","DEVICE_NEW","First-time device"],["warn","EMAIL_DISPOSABLE","Disposable email domain"]],
-          fb:{ approve:{ok:false, why:"The model scored this low, and the combination tells a different story: an account hours old, a disposable email, shipping that does not match billing, a new device. Fresh rings are exactly what the model under-weights.", money:-amt},
+          fb:{ approve:{ok:false, why:"The model scored this low, and the combination tells a different story: an account hours old, a disposable email, shipping that does not match billing, a new device. Models tend to score new fraud rings low.", money:-amt},
                decline:{ok:true, why:"Correct, and you read past a low score. No single flag is damning. A brand-new account, a disposable email and an address mismatch together are a setup.", money:0},
-               review:{ok:true, why:"Defensible. Escalating a low-score case that smells wrong is far better than approving it. Decline was cleaner, but you refused to trust the number, and that is the habit worth having.", money:0} } };
+               review:{ok:true, why:"Defensible. Escalating a low-score case that looks wrong is far better than approving it. Decline was the cleaner call, but you did not trust the low score, and that was the point of this case.", money:0} } };
       } }
   ];
 
@@ -577,7 +581,7 @@
     $("kStreakWrap").classList.toggle("on", streak>0);
     $("kDone").innerHTML = reviewed+'<span class="small">/'+TOTAL+'</span>';
     $("kXp").style.width = Math.round((reviewed/TOTAL)*100)+"%";
-    const acc = reviewed? Math.round(((tally.approveGood+tally.fraudCaught)/reviewed)*100) : null;
+    const acc = reviewed? Math.round((decisions.filter(d=>d&&d.ok).length/reviewed)*100) : null;
     $("kAcc").textContent = acc===null? "—" : acc+"%";
     const netEl=$("kNet"); netEl.textContent = money(netMoney).replace("−","-");
     netEl.style.color = netMoney>=0? "var(--green-700)" : "var(--coral-700)";
@@ -618,9 +622,11 @@
     netMoney+=r.money; reviewed+=1;
     decisions[i]={act, ok:correct};
 
-    if(t.best==="approve"){ act==="approve"?tally.approveGood++:tally.goodBlocked++; }
-    else if(t.best==="decline"){ act==="approve"?tally.fraudLeaked++:tally.fraudCaught++; }
-    else { act==="review"?tally.fraudCaught++ : act==="decline"?tally.goodBlocked++ : tally.fraudLeaked++; }
+    // Buckets follow whether the call was right, so a late escalation of clear
+    // fraud is not counted as a catch.
+    if(correct){ t.best==="approve"?tally.approveGood++:tally.fraudCaught++; }
+    else if(t.best==="approve" || act==="decline"){ tally.goodBlocked++; }
+    else { tally.fraudLeaked++; }
 
     const fb=$("cFb");
     fb.className="fb show "+(correct?"right":"wrong");
@@ -645,10 +651,10 @@
   }
 
   function grade(){
-    const correct=tally.approveGood+tally.fraudCaught, pct=correct/TOTAL;
-    if(pct>=0.875) return {g:"A",cls:"",label:"Senior-ready"};
-    if(pct>=0.625) return {g:"B",cls:"b",label:"Solid, grey zone needs work"};
-    if(pct>=0.5)   return {g:"C",cls:"c",label:"Over-snapping the calls"};
+    const correct=decisions.filter(d=>d&&d.ok).length, pct=correct/TOTAL;
+    if(pct>=0.875) return {g:"A",cls:"",label:"Strong shift"};
+    if(pct>=0.625) return {g:"B",cls:"b",label:"Solid, check the mixed-signal cases"};
+    if(pct>=0.5)   return {g:"C",cls:"c",label:"Several costly calls"};
     return {g:"D",cls:"d",label:"Re-read the signals"};
   }
 
@@ -666,13 +672,13 @@
     const misTotal = misIdx.length;
     const misRight = misIdx.filter(o=>decisions[o.idx] && decisions[o.idx].ok).length;
     addTrained(reviewed);
-    $("rSub").textContent = TOTAL+" cases cleared · "+trainedTotal()+" reviewed in training so far.";
+    $("rSub").textContent = "You reviewed "+TOTAL+" cases this shift and "+trainedTotal()+" in total on this device.";
     $("rNote").innerHTML = misTotal
-      ? "On <b>"+misTotal+"</b> case"+(misTotal>1?"s":"")+" the model risk score pointed the wrong way, and you read past it on <b>"+misRight+"/"+misTotal+"</b>. Knowing when to overrule the number is the job."
+      ? "On <b>"+misTotal+"</b> case"+(misTotal>1?"s":"")+" the risk score pointed the wrong way. You made the right call on <b>"+misRight+"</b> of them."
       : "";
 
     $("results").classList.add("show");
-    $("btnReplay").focus();
+    $("rHead").focus();
   }
 
   function reset(){
@@ -691,6 +697,7 @@
   $("btnReplay").addEventListener("click",reset);
 
   document.addEventListener("keydown",e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey) return;
     const playing = $("intro").classList.contains("hide") && !$("results").classList.contains("show");
     if(playing && !locked){
       const k=e.key.toLowerCase();
