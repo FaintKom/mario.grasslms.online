@@ -113,7 +113,7 @@ const EMAILS = [
       verdictIfRight: "Every tell in this message is clean, and there is nothing to report. A report would only have added work for the security team.",
       verdictIfWrong: {
         junk: "A Junk report on a verified colleague adds to the pile the security team sorts through. When reports like this accumulate, real threats are harder to spot.",
-        phishing: "New hires often report their People Operations contact as phishing after general awareness training. Here the address, the verified sender and the content are all ordinary.",
+        phishing: "Sarah is your People Operations contact, and the address, the verified sender and the content of her email are all ordinary. A phishing report on it adds work for the security team without protecting anyone.",
       },
     },
   },
@@ -226,9 +226,9 @@ const EMAILS = [
         { kind: "ok", text: "The link leads to na8.docusign.net, the address DocuSign uses for envelopes in North America." },
         { kind: "neutral", text: "Without Sarah's email, the safe move would have been to open the envelope from docusign.com with its access code instead of clicking the link." },
       ],
-      verdictIfRight: "Most people taking this course report this one, because awareness training teaches them to distrust anything transactional. Keeping it when the evidence says it is genuine is harder, and it is correct.",
+      verdictIfRight: "Sarah announced this envelope, and the sender domain and the link both check out. Keeping a message that looks transactional when the evidence says it is genuine is the harder call, and it is the correct one.",
       verdictIfWrong: {
-        junk: "Genuine DocuSign mail is often reported as Junk because it looks transactional. When a team keeps doing that, the security team stops trusting its reports.",
+        junk: "The envelope looks transactional, and that is what makes Junk tempting. When genuine mail like this keeps landing in Junk reports, the security team stops trusting them.",
         phishing: "You were told to expect this envelope. Reporting it as phishing is the overreaction this course sets out to correct, and awareness training rarely covers it.",
       },
     },
@@ -590,7 +590,7 @@ function App() {
         </section>
 
         {/* Reader */}
-        <section className="reader" id="reader">
+        <section className={`reader ${coach ? "coach-open" : ""}`} id="reader">
           {!email ? (
             <div className="reader-empty">Select an item to read.</div>
           ) : (

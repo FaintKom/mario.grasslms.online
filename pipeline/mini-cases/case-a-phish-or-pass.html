@@ -44,6 +44,8 @@
     --teach: #5C2E91;     /* Microsoft purple — Viva / Attack Sim branding accent */
     --teach-bg: #F4EFFA;
     --teach-bd: #D9C7EE;
+
+    --coach-w: 360px;
   }
 
   * { box-sizing: border-box; }
@@ -839,10 +841,10 @@
   /* ───── Decision toast & Coach panel ───── */
   .toast {
     position: absolute;
-    top: 16px;
-    left: calc((100% - 360px) / 2);
-    max-width: calc(100% - 400px);
-    transform: translateX(-50%) translateY(-20px);
+    bottom: 20px;
+    left: calc((100% - var(--coach-w)) / 2);
+    max-width: calc(100% - var(--coach-w) - 40px);
+    transform: translateX(-50%) translateY(20px);
     background: var(--ink);
     color: #fff;
     padding: 10px 16px;
@@ -868,7 +870,7 @@
   .coach {
     position: absolute;
     top: 0; right: 0; bottom: 0;
-    width: 360px;
+    width: var(--coach-w);
     background: var(--surface);
     border-left: 1px solid var(--line);
     box-shadow: -16px 0 40px -20px rgba(0,0,0,0.12);
@@ -879,6 +881,9 @@
     flex-direction: column;
   }
   .coach.show { transform: translateX(0); }
+  /* While the coach panel is open the message moves left instead of sitting underneath it */
+  .read-card { transition: margin-right .45s cubic-bezier(.2,.7,.2,1); }
+  .reader.coach-open .read-card { margin-right: calc(var(--coach-w) + 16px); }
   .coach-head {
     padding: 18px 20px 14px;
     border-bottom: 1px solid var(--line);
@@ -1219,6 +1224,11 @@
   }
 
   /* ≤1199px: narrower panes; the case label gives way so the progress chip stays visible */
+  /* 1200-1499px (1366 and 1440 laptops): narrower list and coach so the message keeps a readable width */
+  @media (max-width: 1499px) {
+    :root { --coach-w: 320px; }
+    .main { grid-template-columns: 210px 320px minmax(0, 1fr); }
+  }
   @media (max-width: 1199px) {
     .main { grid-template-columns: 200px 320px minmax(0, 1fr); }
   }
