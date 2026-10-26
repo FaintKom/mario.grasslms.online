@@ -153,13 +153,13 @@ const ALL = [
       { t:'Deleting would break the reply chain', ok:false, fb:"Deleting leaves the reply chain as it was. Reporting matters because security can then warn the next person who gets the message." },
     ], ref:'27002 §6.8, §8.7' },
 
-  { id:'u1-perf-1', tag:'harder · authority pressure',
+  { id:'u1-perf-1', tag:'harder · payment fraud',
     mail:{ from:'Mark Ellis (CFO) &lt;m.ellis@yourcompany-finance.com&gt;', subj:'Supplier payment — needs to go today', time:'Mon 09:32',
       body:'I\'m on a flight and offline until tonight. Northwind changed banks, so pay their open invoice to the new account before 15:00 or we miss the payment run. Details attached. No need to loop in Accounts Payable, I\'ll sign it off when I land. <span class="mono">[northwind_new_bank_details.pdf]</span>' },
     opts:[
       { t:'Trust', ok:false, fb:"The name is right and the message reads like a note from a busy finance lead. The address, yourcompany-finance.com, isn't your company's. It also asks you to move money today without the people who would normally check it." },
-      { t:'Report', ok:true, fb:"It combines a look-alike domain, a same-day deadline, a change of bank details and a push to leave out Accounts Payable, which is CEO fraud under another name. \"Offline until tonight\" is there so you can't check. Confirm any change of bank details by calling the supplier on a number you already have." },
-    ], ref:'27002 §8.7, §6.3' },
+      { t:'Report', ok:true, fb:"A look-alike domain, a same-day deadline, new bank details and a push to leave out Accounts Payable together make up the usual pattern of payment fraud by email. \"Offline until tonight\" is there so you can't check with him. Confirm any change of bank details by calling the supplier on a number you already have, never one from the email or its attachment." },
+    ], ref:'27002 §6.3, §6.8' },
 
   { id:'u1-perf-2', tag:'harder · plausible notification',
     mail:{ from:'SharePoint &lt;no-reply@sharepointonline.com&gt;', subj:'Priya Nair shared "Q3-planning.xlsx" with you', time:'Mon 09:45',

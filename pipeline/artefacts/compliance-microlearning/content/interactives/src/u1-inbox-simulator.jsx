@@ -43,7 +43,7 @@ const CUES = {
   c3:{label:"The body repeats the deadline, and a deadline in a message you weren't expecting is the first tell.", ref:"27002 §8.7"},
   c4:{label:"It asks you to confirm your current password. IT has admin access and never needs it.", ref:"27002 §5.17"},
   c5:{label:"Hovering over the link shows <b>http://yourcompany-security.net</b>, which is not your company's real sign-in page.", ref:"27002 §8.7"},
-  c6:{label:"The CEO's name sits on a <b>personal Gmail address</b>. Anyone can type a display name, so trust the domain.", ref:"27002 §8.7"},
+  c6:{label:"The CEO's name sits on a <b>personal Gmail address</b>. Anyone can type a display name, so judge the sender by the address.", ref:"27002 §8.7"},
   c7:{label:"Saying he is in a meeting and can't talk stops you from checking with him.", ref:"27002 §6.3"},
   c8:{label:"He asks you to buy gift cards and send him the codes. Gift-card codes work like cash that nobody can trace.", ref:"27002 §8.7"},
   c9:{label:"\"Keep it between us\" is there to cut you off from anyone who might check.", ref:"27002 §6.3"},
@@ -54,7 +54,7 @@ const DECOYS = {
   d3:"This is your company's own domain and the team that runs the town hall.",
   d4:"The subject is about an event you already knew about, with no deadline and no request.",
   d5:"Anyone can type a sign-off, so it proves nothing either way.",
-  d6:"A phone signature is normal for someone who is travelling and says nothing either way.",
+  d6:"Real colleagues send this line from their phones every day, so it says nothing about who wrote the message.",
 };
 const TOTAL = Object.keys(CUES).length;
 // One hotspot can span several elements (sender name + address), so dedupe.
