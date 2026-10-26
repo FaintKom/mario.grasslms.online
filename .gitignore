@@ -26,3 +26,8 @@ tasks/
 .impeccable/mocks/
 .impeccable/questions/
 .impeccable/decision-payload.json
+
+# Provenance sidecars for images (local only)
+*.webp.json
+*.jpg.json
+*.png.json
