@@ -596,7 +596,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--narrow stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
+    <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
     <div class="row row--between">
       <p class="eyebrow" data-t="eyebrow">Ages 8–11 · what you found out</p>
       <div class="langs" role="group" aria-label="Language">
@@ -644,6 +644,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
      the password START, the command centre, and the three pairs. */
   const T = {
     en: {
+      toMap: "Back to the map",
       eyebrow: "Ages 8–11 · what you found out",
       title1: "Five doors between you and", title2: "Andy",
       intro: "You already did the detective work. Each door asks about something you saw, and answering it opens the next one.",
@@ -677,6 +678,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
             no: "One of those pairs is off. Take another look." }
     },
     es: {
+      toMap: "Volver al mapa",
       eyebrow: "8–11 años · lo que descubriste",
       title1: "Cinco puertas entre tú y", title2: "Andy",
       intro: "El trabajo de detective ya está hecho. Cada puerta pregunta por algo que viste, y responder abre la siguiente.",

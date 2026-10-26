@@ -598,7 +598,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
+    <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
     <div class="row row--between">
       <p class="eyebrow" data-t="eyebrow">Spaceport · sector B</p>
       <div class="langs" role="group" aria-label="Language">
@@ -731,6 +731,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
+      toMap: "Back to the map",
       eyebrow: "Spaceport · sector B",
       title1: "The virus took", title2: "the colours away",
       intro: "Every part on the board went grey. The chart on the left says which colour each numbered one should be: pick a colour, then tap the part. Get the small board right and a bigger one comes up.",
@@ -756,6 +757,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       lostBody: "The chart is the answer. On the small board: 1 red, 2 blue, 3 yellow, 4 green. On the big one the chart is a rainbow in order."
     },
     es: {
+      toMap: "Volver al mapa",
       eyebrow: "Puerto espacial · sector B",
       title1: "El virus se llevó", title2: "los colores",
       intro: "Todas las piezas de la placa se quedaron grises. El esquema de la izquierda dice de qué color va cada una: elige un color y toca la pieza. Acierta la placa pequeña y saldrá otra más grande.",

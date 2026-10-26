@@ -585,7 +585,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--narrow stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
+    <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
     <div class="row row--between">
       <p class="eyebrow" data-t="eyebrow">Ages 9–12 · text formatting</p>
       <div class="langs" role="group" aria-label="Language">
@@ -693,6 +693,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   const T = {
     en: {
+      toMap: "Back to the map",
       eyebrow: "Ages 9–12 · text formatting",
       title1: "The server is", title2: "under attack",
       intro: "Five questions stand between the virus and the server. Every right answer hits it. Every wrong one hits you.",
@@ -708,6 +709,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       partBody: function (n) { return "You got " + n + " of 5. Each miss cost you 20 HP."; }
     },
     es: {
+      toMap: "Volver al mapa",
       eyebrow: "9–12 años · formato de texto",
       title1: "El servidor está", title2: "bajo ataque",
       intro: "Cinco preguntas separan al virus del servidor. Cada acierto le hace daño. Cada fallo te lo hace a ti.",

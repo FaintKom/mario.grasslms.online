@@ -600,7 +600,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
+    <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
     <div class="row row--between">
       <p class="eyebrow" data-t="eyebrow">Spaceport · sector B · task 3</p>
       <div class="langs" role="group" aria-label="Language">
@@ -708,6 +708,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
+      toMap: "Back to the map",
       eyebrow: "Spaceport · sector B · task 3",
       title1: "Copy the rocket,", title2: "square by square",
       intro: "The small picture on the left is the plan. Copy it onto the big grid: pick a colour, then paint. Drag across squares to fill a row quickly.",
@@ -726,6 +727,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       wonBody: "The rocket is drawn exactly as planned."
     },
     es: {
+      toMap: "Volver al mapa",
       eyebrow: "Puerto espacial · sector B · tarea 3",
       title1: "Copia el cohete,", title2: "cuadro a cuadro",
       intro: "El dibujo pequeño de la izquierda es el plano. Cópialo en la cuadrícula grande: elige un color y pinta. Arrastra por los cuadros para llenar una fila rápido.",
