@@ -432,7 +432,7 @@ function Video1Neon({loop}){
       </div></F>
       <Ring x={640} y={400} r={260} delay={2.9} dur={1.3} c={C.red}/>
       <Ring x={640} y={400} r={290} delay={3.4} dur={1.5} c={C.lime}/>
-      <Hint text="stop and report as soon as you see one" y={545} delay={4.4}/>
+      <Hint text="if even one thing feels off, stop" y={545} delay={4.4}/>
       </Cam>
     </Sprite>
     {/* S7 · THE SAFE MOVE — one email card, report button pressed, dominates the

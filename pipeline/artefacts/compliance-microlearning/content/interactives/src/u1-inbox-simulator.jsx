@@ -121,7 +121,7 @@ function InboxSim() {
     const fpText = fps.length ? ` and flagged ${fps.length} normal part${fps.length > 1 ? "s" : ""} by mistake` : "";
     if (hits.length === TOTAL && fps.length === 0) {
       vClass = "ok"; vIcon = "✓";
-      vNote = "All nine and no false alarms. At work any one of them would be enough to report the message.";
+      vNote = "All nine and no false alarms. At work any one of them would be reason to stop and check the message.";
     } else if (hits.length >= 6 && fps.length <= 1) {
       vClass = "mid"; vIcon = "!";
       vNote = `You found ${hits.length} of ${TOTAL}${fpText}.` + (missed.length

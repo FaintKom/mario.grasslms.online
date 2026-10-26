@@ -127,12 +127,12 @@ const ALL = [
     ], ref:'27002 §8.7' },
 
   { id:'u1-check-2', tag:'check · the rule',
-    q:"How many tells does a message need before you stop and report it?",
+    q:"How many tells does a message need before you stop and check it?",
     opts:[
-      { t:'At least two, to be sure', ok:false, fb:"Waiting for a second tell gives the first one time to work on you. One is already enough." },
+      { t:'At least two, to be sure', ok:false, fb:"Waiting for a second tell gives the first one time to work on you. One is already enough to stop and check." },
       { t:'All four, to be certain', ok:false, fb:"Asking for all four sets the bar so high that a message with one clear tell would get through." },
-      { t:'Only once IT confirms it', ok:false, fb:"IT can only check a message after someone reports it." },
-      { t:"A single tell is enough", ok:true, fb:"Any one tell is reason to stop and report, whether it is unexpected timing, a mismatched domain or a request for a password. Checking whether the message is fake is the security team's job." },
+      { t:'Only once IT confirms it', ok:false, fb:"Stopping to check doesn't need IT. One tell is enough to pause and check the message through another channel." },
+      { t:"A single tell is enough", ok:true, fb:"Any one tell is reason to stop and check the message through another channel. Report it when the tells point to phishing or the check doesn't confirm the sender." },
     ], ref:'27002 §8.7, §6.8' },
 
   { id:'u1-check-3', tag:'check · asks for secrets',
