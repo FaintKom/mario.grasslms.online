@@ -1,7 +1,7 @@
 {
   "_doc": "Regulatory questions job aid: six rows. The rep reads the row's line out loud as written, does not paraphrase and does not improvise. `escalation_criteria` says when the row is not enough and the question goes to compliance. Point-of-use support (Rossett & Schafer, 2007): the objective is performance with the aid, not memorisation.",
   "version": "v1.0",
-  "source": "FinTechCard sales job aid (fictional company)",
+  "source": "FinTechCard sales job aid",
   "rows": [
     {
       "acronym": "KYC",

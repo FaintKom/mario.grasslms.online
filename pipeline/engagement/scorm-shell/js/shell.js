@@ -20,13 +20,13 @@ import { brandIcon, hydrateBrandIcons } from "./brand-icons.js";
 // Eager-import every app so registerApp() side-effects populate the registry
 // before any consumer calls MiniOS.openApp(). Browsers cache by URL, so
 // re-imports inside individual modules are free.
-import "./apps/outreach.js?v=20261026c";
-import "./apps/gong.js?v=20261026c";
-import "./apps/salesforce.js?v=20261026c";
-import "./apps/linkedin-ch.js?v=20261026c";
-import "./apps/calendar.js?v=20261026c";
-import "./apps/phone-dialler.js?v=20261026c";
-import "./apps/slack.js?v=20261026c";
+import "./apps/outreach.js?v=20261026d";
+import "./apps/gong.js?v=20261026d";
+import "./apps/salesforce.js?v=20261026d";
+import "./apps/linkedin-ch.js?v=20261026d";
+import "./apps/calendar.js?v=20261026d";
+import "./apps/phone-dialler.js?v=20261026d";
+import "./apps/slack.js?v=20261026d";
 
 /** Shared inter-app + telemetry event bus. */
 export const eventBus = new EventTarget();

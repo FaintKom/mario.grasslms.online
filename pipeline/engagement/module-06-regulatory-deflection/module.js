@@ -90,6 +90,16 @@ const STEPS = [
 
 // --- Shell plumbing ----------------------------------------------------------
 
+/** Continue stays off until the step's task is done in the apps. A step done once stays open after Back. */
+const doneSteps = new Set();
+function setNextEnabled(on) {
+  const next = document.getElementById("narrative-next");
+  next.disabled = !on;
+  next.setAttribute("aria-disabled", String(!on));
+  next.title = on ? "" : "Finish the task in the apps to continue";
+}
+function markDone(i) { doneSteps.add(i); if (state.step === i) setNextEnabled(true); }
+
 function runStep(i) {
   state.step = i;
   document.querySelectorAll("[data-m6-injected]").forEach(el => el.remove());
@@ -102,10 +112,11 @@ function runStep(i) {
   const next = document.getElementById("narrative-next");
   next.hidden = false;
   next.textContent = i === STEPS.length - 1 ? "Finish module" : "Continue";
-  next.disabled = false; next.setAttribute("aria-disabled", "false");
+  setNextEnabled(doneSteps.has(i));
   STEPS[i].handler(body);
 }
 function advanceFrom(stepIdx, delay = 600) {
+  markDone(stepIdx);
   setTimeout(() => { if (state.step === stepIdx) runStep(stepIdx + 1); }, delay);
 }
 function logDone(key, label, detail, ok = true) {
@@ -194,15 +205,14 @@ function updateProgressBar(c) {
 
 function wireNarrativeButtons() {
   document.getElementById("narrative-next").addEventListener("click", () => {
+    if (!doneSteps.has(state.step)) return;
     if (state.step >= STEPS.length - 1) return finishModule();
     runStep(state.step + 1);
   });
   document.getElementById("narrative-back").addEventListener("click", () => { if (state.step > 0) runStep(state.step - 1); });
   document.getElementById("narrative-redo")?.addEventListener("click", () => runStep(state.step));
-  document.getElementById("narrative-skip")?.addEventListener("click", () => {
-    if (state.step >= STEPS.length - 1) return finishModule();
-    runStep(state.step + 1);
-  });
+  // No Skip: every task can be finished (a wrong answer shows the right one), and the summary only counts finished work.
+  document.getElementById("narrative-skip")?.remove();
 }
 function wireHelpButton() {
   document.getElementById("help-button").addEventListener("click", () => openJobAid());
