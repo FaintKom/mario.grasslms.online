@@ -627,7 +627,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       </div>
     </div>
     <h1><span data-t="title1">Repaint the</span> <em class="mark" data-t="title2">circuit board</em></h1>
-    <p class="lede" data-t="intro">The virus has turned every part on the board grey, but the colour code is still there and gives each job its own colour. Think about what each numbered part does, then pick that job's colour and tap the part. When the small board is right, a bigger one appears.</p>
+    <p class="lede" data-t="intro">The virus has turned every part on the board grey, but the board's own colour code is still there and gives each job its own colour. Think about what each numbered part does, then pick that job's colour and tap the part. When the small board is right, a bigger one appears.</p>
   </header>
 
   <div class="hud">
@@ -650,7 +650,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     <div class="lab">
       <div class="stack">
         <div class="stack stack--tight">
-          <p class="eyebrow" data-t="chartLabel">Colour code</p>
+          <p class="eyebrow" data-t="chartLabel">This board's colour code</p>
           <div class="legend" id="legend"></div>
         </div>
         <div class="stack stack--tight">
@@ -708,8 +708,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
      two of the same task. The old version printed the answer in its chart
      ("Part 1 · Red"), so the task was copying. Now the chart is a colour
      code by job, the parts are named by what they do, and the child has to
-     decide each part's job before the colour follows. Board drawings, hex
-     values and the five-try budget are the originals.
+     decide each part's job before the colour follows. The code is the
+     board's own and presented as such: no ground or earth job, so nothing in
+     it borrows (or contradicts) real wiring colours, and every part belongs
+     to exactly one job (a microphone hears, a speaker makes the sound).
+     Board drawings, hex values and the five-try budget are the originals.
 
      The boards are drawn from data rather than written into the markup, which
      is what made keeping two of them cheap. */
@@ -730,15 +733,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   ];
 
   /* The colour code: one colour per job. */
-  var CODE = { power: "red", data: "blue", ground: "green", output: "yellow" };
-  var JOBS = ["power", "data", "ground", "output"];
+  var CODE = { power: "red", senses: "blue", memory: "green", output: "yellow" };
+  var JOBS = ["power", "senses", "memory", "output"];
 
   var LEVELS = [
     {
       name: "ROB-2000", w: 350, h: 300, grid: 15,
-      jobs: ["power", "data", "ground"],
-      parts: { 1: { name: "battery", job: "power" }, 2: { name: "memory", job: "data" },
-               3: { name: "earth", job: "ground" },  4: { name: "antenna", job: "data" } },
+      jobs: ["power", "senses", "memory"],
+      parts: { 1: { name: "battery", job: "power" },    2: { name: "memory", job: "memory" },
+               3: { name: "microphone", job: "senses" }, 4: { name: "thermometer", job: "senses" } },
       traces: ["M 85 70 L 85 112 L 175 112", "M 265 70 L 265 112 L 175 112",
                "M 175 112 L 175 188",
                "M 85 230 L 85 188 L 175 188", "M 265 230 L 265 188 L 175 188"],
@@ -749,9 +752,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     },
     {
       name: "MAIN-CTRL-3000", w: 400, h: 320, grid: 16,
-      jobs: ["power", "data", "ground", "output"],
-      parts: { 1: { name: "charger", job: "power" },  2: { name: "camera", job: "data" },
-               3: { name: "returnWire", job: "ground" }, 4: { name: "speaker", job: "output" },
+      jobs: ["power", "senses", "memory", "output"],
+      parts: { 1: { name: "charger", job: "power" },  2: { name: "camera", job: "senses" },
+               3: { name: "chip", job: "memory" },    4: { name: "speaker", job: "output" },
                5: { name: "solar", job: "power" },    6: { name: "lamp", job: "output" } },
       traces: ["M 70 65 L 70 110 L 200 110", "M 200 65 L 200 110", "M 330 65 L 330 110 L 200 110",
                "M 200 110 L 200 210",
@@ -770,9 +773,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     en: {
       allActivities: "All activities", toMap: "Back to the map",
       title1: "Repaint the", title2: "circuit board",
-      intro: "The virus has turned every part on the board grey, but the colour code is still there and gives each job its own colour. Think about what each numbered part does, then pick that job's colour and tap the part. When the small board is right, a bigger one appears.",
+      intro: "The virus has turned every part on the board grey, but the board's own colour code is still there and gives each job its own colour. Think about what each numbered part does, then pick that job's colour and tap the part. When the small board is right, a bigger one appears.",
       boardLabel: "Board", triesLabel: "Tries left", nowLabel: "Colour on your brush",
-      chartLabel: "Colour code", partsLabel: "Parts on this board", paletteLabel: "Colours",
+      chartLabel: "This board's colour code", partsLabel: "Parts on this board", paletteLabel: "Colours",
       check: "Check the board", reset: "Start over", again: "Play again",
       nothing: "no colour yet", erase: "Scrape off", part: "Part",
       colours: {
@@ -781,13 +784,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       },
       jobs: {
         power:  ["Power",  "Parts that give the board its energy."],
-        data:   ["Data",   "Anything that takes in, keeps or sends information."],
-        ground: ["Ground", "The ground wire, where the current flows back."],
-        output: ["Output", "Lights, sounds and anything else you can see or hear."]
+        senses: ["Senses", "Parts that notice what is around the robot, the way your eyes and ears do."],
+        memory: ["Memory", "Parts that keep information so the robot does not forget it."],
+        output: ["Light and sound", "Parts that make a light or a sound for people to see or hear."]
       },
       names: {
-        battery: "Battery", memory: "Memory card", earth: "Ground wire", antenna: "Antenna",
-        charger: "Charging port", camera: "Camera", returnWire: "Ground wire",
+        battery: "Battery", memory: "Memory card", microphone: "Microphone", thermometer: "Thermometer",
+        charger: "Charging port", camera: "Camera", chip: "Memory chip",
         speaker: "Speaker", solar: "Solar panel", lamp: "LED lamp"
       },
       pickFirst: "Choose a colour first, and then tap the part you want to paint.",
@@ -801,7 +804,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           ? "One part has the wrong colour and is outlined in red. Look at what it does and find that job in the colour code."
           : n + " parts have the wrong colour and are outlined in red. Look at what each one does and find that job in the colour code.";
       },
-      levelDone: "ROB-2000 is working again. The bigger board has a fourth job in its code, for parts that you can see or hear.",
+      levelDone: "ROB-2000 is working again. The bigger board's code has a fourth job, for parts that make light or sound.",
       wonTitle: "Both boards are working again",
       wonBody: function (n) { return "You painted all ten parts on the two boards with " + n + " of your " + TRIES + " tries."; },
       lostTitle: "You have used all your tries",
@@ -810,9 +813,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     es: {
       allActivities: "Todas las actividades", toMap: "Volver al mapa",
       title1: "Pinta de nuevo", title2: "la placa del circuito",
-      intro: "El virus ha dejado grises todas las piezas de la placa, pero el código de colores sigue ahí y da a cada trabajo su propio color. Piensa qué hace cada pieza numerada, elige el color de ese trabajo y toca la pieza. Cuando la placa pequeña esté bien, aparecerá otra más grande.",
+      intro: "El virus ha dejado grises todas las piezas de la placa, pero el código de colores propio de la placa sigue ahí y da a cada trabajo su propio color. Piensa qué hace cada pieza numerada, elige el color de ese trabajo y toca la pieza. Cuando la placa pequeña esté bien, aparecerá otra más grande.",
       boardLabel: "Placa", triesLabel: "Intentos que quedan", nowLabel: "Color del pincel",
-      chartLabel: "Código de colores", partsLabel: "Piezas de esta placa", paletteLabel: "Colores",
+      chartLabel: "El código de colores de esta placa", partsLabel: "Piezas de esta placa", paletteLabel: "Colores",
       check: "Comprobar la placa", reset: "Empezar de nuevo", again: "Jugar otra vez",
       nothing: "ningún color todavía", erase: "Rascar", part: "Pieza",
       colours: {
@@ -820,14 +823,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         purple: "Morado", pink: "Rosa", cyan: "Celeste", white: "Blanco", black: "Negro"
       },
       jobs: {
-        power:  ["Energía", "Las piezas que dan energía a la placa."],
-        data:   ["Datos",   "Todo lo que recoge, guarda o envía información."],
-        ground: ["Tierra",  "El cable de tierra, por donde vuelve la corriente."],
-        output: ["Salida",  "Luces, sonidos y cualquier otra cosa que se pueda ver u oír."]
+        power:  ["Energía",  "Las piezas que dan energía a la placa."],
+        senses: ["Sentidos", "Las piezas que notan lo que hay alrededor del robot, como tus ojos y tus oídos."],
+        memory: ["Memoria",  "Las piezas que guardan información para que el robot no la olvide."],
+        output: ["Luz y sonido", "Las piezas que dan una luz o un sonido para que la gente lo vea o lo oiga."]
       },
       names: {
-        battery: "Batería", memory: "Tarjeta de memoria", earth: "Cable de tierra", antenna: "Antena",
-        charger: "Puerto de carga", camera: "Cámara", returnWire: "Cable de tierra",
+        battery: "Batería", memory: "Tarjeta de memoria", microphone: "Micrófono", thermometer: "Termómetro",
+        charger: "Puerto de carga", camera: "Cámara", chip: "Chip de memoria",
         speaker: "Altavoz", solar: "Panel solar", lamp: "Luz LED"
       },
       pickFirst: "Elige primero un color y después toca la pieza que quieres pintar.",
@@ -841,7 +844,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           ? "Una pieza tiene el color equivocado y está marcada en rojo. Mira qué hace y busca ese trabajo en el código de colores."
           : n + " piezas tienen el color equivocado y están marcadas en rojo. Mira qué hace cada una y busca ese trabajo en el código de colores.";
       },
-      levelDone: "ROB-2000 vuelve a funcionar. La placa grande tiene un cuarto trabajo en su código, para las piezas que se ven o se oyen.",
+      levelDone: "ROB-2000 vuelve a funcionar. El código de la placa grande tiene un cuarto trabajo, para las piezas que dan luz o sonido.",
       wonTitle: "Las dos placas vuelven a funcionar",
       wonBody: function (n) { return "Has pintado las diez piezas de las dos placas con " + n + " de tus " + TRIES + " intentos."; },
       lostTitle: "Has gastado todos los intentos",

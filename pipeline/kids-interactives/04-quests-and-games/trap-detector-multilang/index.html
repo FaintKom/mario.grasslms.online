@@ -709,14 +709,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   /* Sites, verdicts and hints carried over from the original trainer, with
      one correction. The original taught "padlock = safe", and that is wrong:
-     the padlock only says the connection is encrypted, and most phishing
-     pages have one. Chrome dropped the padlock icon in 2023 for exactly that
-     reason. So every level now has at least one trap with https and a padlock,
-     and the address is what decides. */
+     the padlock only says the connection is encrypted, and a phishing page can
+     have one as easily as a real site. So most traps here have https and a
+     padlock (every level except the address comparison, which has no address
+     bar), and the address is what decides. */
   const TASKS = {
     l1: [
       { url: "https://www.google.com", title: "Google", ssl: true, safe: true, hint: "googleHint" },
-      { url: "http://win-iphone-free.fake", title: "YOU WON", ssl: false, safe: false, hint: "prizeHint" },
+      { url: "https://win-iphone-free.fake", title: "YOU WON", ssl: true, safe: false, hint: "prizeHint" },
       { url: "https://roblox.com.free-gift.net", title: "Roblox free gift", ssl: true, safe: false, hint: "subdomainHint" },
       { url: "https://scratch.mit.edu", title: "Scratch", ssl: true, safe: true, hint: "scratchHint" },
       { url: "http://get-robux-free.scam", title: "Free Robux", ssl: false, safe: false, hint: "robuxHint" },
@@ -734,16 +734,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       { url: "http://download-game.exe", title: "Download Game", ssl: false, safe: false, popup: "downloadNow", hint: "downloadHint" },
       { url: "https://g00gle-account-check.com", title: "Google account check", ssl: true, safe: false, popup: "keepAccount", hint: "accountHint" },
       { url: "https://code.org", title: "Code.org", ssl: true, safe: true, hint: "codeOrgHint" },
-      { url: "http://your-bank-security.fake", title: "Bank Security", ssl: false, safe: false, popup: "enterBankPassword", hint: "bankHint" },
+      { url: "https://your-bank-security.fake", title: "Bank Security", ssl: true, safe: false, popup: "enterBankPassword", hint: "bankHint" },
       { url: "https://kahoot.it", title: "Kahoot", ssl: true, safe: true, hint: "kahootHint" }
     ],
     /* Level four was its own page: four tabs open at once, two of them traps.
        It is the same skill one step out — you are no longer judging a site
        someone put in front of you, you are running the browser. The fake
-       Google tab now has a padlock too, so the address has to be read. */
+       Google tab and the prize tab both have a padlock, so the addresses have to
+     be read. */
     l4: [
       { multi: true, hint: "tabsHint", tabs: [
-        { id: "prize",  url: "win-free-prize.net",           title: "You won!",     ssl: false, safe: false },
+        { id: "prize",  url: "win-free-prize.net",           title: "You won!",     ssl: true,  safe: false },
         { id: "fake",   url: "googgle.com",                  title: "Google",       ssl: true,  safe: false },
         { id: "wiki",   url: "wikipedia.org",                title: "Wikipedia",    ssl: true,  safe: true },
         { id: "natgeo", url: "kids.nationalgeographic.com",  title: "Nat Geo Kids", ssl: true,  safe: true }
@@ -778,7 +779,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                        : n + " dangerous tabs are still open. Read the addresses again.";
       },
       tabsClosedSafe: "You also closed a safe site. Its address is real and spelled correctly, so open it again.",
-      tabsWon: "Both traps are closed. One promised a prize from a draw you never entered, and the other spelled Google with an extra g behind a padlock.",
+      tabsWon: "Both traps are closed, although both had a padlock. One promised a prize from a draw you never entered, and the other spelled Google with an extra g.",
       okPick: function (u) { return u + " is the real address."; },
       noPick: function (u) { return "That one is the copy. The real address is " + u + "."; },
       popups: {
@@ -800,9 +801,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         amazonHint: "Amazon has no e at the end.",
         minecraftEduHint: "education.minecraft.net is the site Minecraft runs for schools.",
         downloadHint: "An address ending in .exe points to a program file, and the pop-up is pushing you to download it.",
-        accountHint: "The address has zeros where Google has o's. No real site asks for your password in a pop-up.",
+        accountHint: "The address has zeros where Google has o's. A page that says your account closes today is rushing you to type your password before you check where you are.",
         codeOrgHint: "code.org is a site where children learn to code.",
-        bankHint: "A bank would never ask for your card number and password in a window like this.",
+        bankHint: "No bank uses this address, and the padlock in front of it does not make it a bank. A page that asks for your card number and your password together is after your money.",
         kahootHint: "kahoot.it is the quiz site many schools use.",
         tabsHint: "Read each address letter by letter. One tab promises a prize, and another misspells a famous name."
       },
@@ -838,7 +839,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                        : "Todavía hay " + n + " pestañas peligrosas abiertas. Vuelve a leer las direcciones.";
       },
       tabsClosedSafe: "También cerraste una web segura. Su dirección es la de verdad y está bien escrita, así que ábrela otra vez.",
-      tabsWon: "Las dos trampas están cerradas. Una prometía un premio de un sorteo en el que nunca participaste, y la otra escribía Google con una g de más detrás de un candado.",
+      tabsWon: "Las dos trampas están cerradas, aunque las dos tenían candado. Una prometía un premio de un sorteo en el que nunca participaste, y la otra escribía Google con una g de más.",
       okPick: function (u) { return u + " es la dirección de verdad."; },
       noPick: function (u) { return "Esa es la copia. La dirección de verdad es " + u + "."; },
       popups: {
@@ -860,9 +861,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         amazonHint: "Amazon no lleva e al final.",
         minecraftEduHint: "education.minecraft.net es la web que Minecraft tiene para los colegios.",
         downloadHint: "Una dirección que termina en .exe lleva a un archivo de programa, y la ventana te empuja a descargarlo.",
-        accountHint: "La dirección lleva ceros donde Google lleva oes. Ninguna web de verdad te pide la contraseña en una ventana emergente.",
+        accountHint: "La dirección lleva ceros donde Google lleva oes. Una página que dice que tu cuenta se cierra hoy te mete prisa para que escribas la contraseña sin mirar dónde estás.",
         codeOrgHint: "code.org es una web donde los niños aprenden a programar.",
-        bankHint: "Un banco nunca te pediría el número de tarjeta y la contraseña en una ventana como esta.",
+        bankHint: "Ningún banco usa esta dirección, y el candado que lleva delante no la convierte en un banco. Una página que te pide a la vez el número de tarjeta y la contraseña va a por tu dinero.",
         kahootHint: "kahoot.it es la web de cuestionarios que usan muchos colegios.",
         tabsHint: "Lee cada dirección letra a letra. Una pestaña promete un premio, y otra escribe mal un nombre famoso."
       },

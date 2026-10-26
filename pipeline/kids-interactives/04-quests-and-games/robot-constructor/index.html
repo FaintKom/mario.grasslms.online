@@ -695,7 +695,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   const BRIEFS = [
     { id: "stairs", icon: "🏢", needs: [
       { slot: "legs", ok: ["normal", "spider", "springs"] },
-      { slot: "arms", ok: ["strong", "claws", "mechanical"] }
+      { slot: "arms", ok: ["strong", "claws", "tentacles", "mechanical"] }
     ] },
     { id: "reef", icon: "🪸", needs: [
       { slot: "arms", ok: ["claws", "tentacles"] },
@@ -703,7 +703,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     ] },
     { id: "night", icon: "🌙", needs: [
       { slot: "legs", ok: ["wheels"] },
-      { slot: "antenna", ok: ["satellite", "double"] }
+      { slot: "antenna", ok: ["single", "double", "satellite"] }
     ] },
     { id: "race", icon: "🏁", needs: [
       { slot: "legs", ok: ["wheels", "rocket"] },
@@ -742,8 +742,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                   no: { wheels: "Wheels roll well on the flat, and the first step stops them.",
                         rocket: "Rockets would lift the robot, and nobody fires rockets inside a block of flats." } },
           arms: { yes: "These arms can hold a heavy bag all the way up.",
-                  no: { normal: "Plain arms are thin. A full shopping bag needs strong arms, claws or jointed arms.",
-                        tentacles: "Tentacles bend every way, and a heavy bag slides off them." } } },
+                  no: { normal: "Plain arms are thin, and a full shopping bag needs arms that grip or lift harder." } } },
         reef: { name: "Reef cleaner",
           text: "Dive down to the coral reef and pick up the rubbish people have dropped there.",
           arms: { yes: "These can grab small things on the sea floor.",
@@ -760,8 +759,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         springs: "Springs bounce noisily, and they are hard to stop quickly.",
                         rocket: "Rockets are loud and burn fuel, and a night shift indoors is long." } },
           antenna: { yes: "That antenna can send a message back to the base.",
-                     no: { single: "One small antenna does not reach far enough. A dish or two antennas can call the base.",
-                           lightning: "The bolt looks great but cannot send messages.",
+                     no: { lightning: "The bolt looks great but cannot send messages.",
                            none: "Without an antenna the robot cannot call the base at all." } } },
         race: { name: "Racer",
           text: "Win a race on a long, flat track.",
@@ -804,8 +802,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                   no: { wheels: "Las ruedas van bien por lo llano, y el primer escalón las para.",
                         rocket: "Los cohetes subirían el robot, y nadie enciende cohetes dentro de un bloque de pisos." } },
           arms: { yes: "Estos brazos pueden sujetar una bolsa pesada hasta arriba.",
-                  no: { normal: "Los brazos normales son finos. Una bolsa llena de compra pide brazos fuertes, pinzas o brazos articulados.",
-                        tentacles: "Los tentáculos se doblan hacia todos lados, y una bolsa pesada se les escurre." } } },
+                  no: { normal: "Los brazos normales son finos, y una bolsa llena de compra pide unos brazos que agarren o levanten con más fuerza." } } },
         reef: { name: "Limpia-arrecifes",
           text: "Bucea hasta el arrecife de coral y recoge la basura que la gente ha tirado allí.",
           arms: { yes: "Con esto se pueden agarrar cosas pequeñas en el fondo del mar.",
@@ -822,8 +819,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         springs: "Los muelles botan con mucho ruido, y cuesta pararlos rápido.",
                         rocket: "Los cohetes hacen ruido y gastan combustible, y una noche entera bajo techo es muy larga." } },
           antenna: { yes: "Esa antena puede mandar un mensaje a la base.",
-                     no: { single: "Una antena pequeña no llega lo bastante lejos. Una parabólica o dos antenas sí pueden llamar a la base.",
-                           lightning: "El rayo queda genial, pero no puede mandar mensajes.",
+                     no: { lightning: "El rayo queda genial, pero no puede mandar mensajes.",
                            none: "Sin antena el robot no tiene forma de llamar a la base." } } },
         race: { name: "Corredor",
           text: "Gana una carrera en una pista larga y llana.",

@@ -695,7 +695,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   <section class="card stack" data-panel="exclude" id="panel-exclude" role="tabpanel" hidden>
     <h2 data-t="p4Title">Leaving things out</h2>
-    <p class="lede" data-t="excludeIntro">Perchance itself advises against writing "no blue", because the word blue stays in your description and the picture pays attention to it. Describe the picture you do want instead.</p>
+    <p class="lede" data-t="excludeIntro">Writing "no blue" seldom works, because the word blue is still in your description and the picture pays attention to it. Describe the picture you do want instead.</p>
     <div class="examples" id="excludeEx"></div>
     <div class="panel stack stack--tight">
       <p class="eyebrow" data-t="whenTitle">Other ways to steer the picture</p>
@@ -754,13 +754,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 (function () {
   "use strict";
 
-  /* Checked against the live page (perchance.org/ai-text-to-image-generator,
-     October 2026). Its controls are 📝 Description, 🎨 Art Style (a menu of
+  /* Checked against the generator's own source (perchance.org/api/
+     downloadGenerator?generatorName=ai-text-to-image-generator, 27 October
+     2026). Its controls are 📝 Description, 🎨 Art Style (a menu of
      dozens of styles), 🖼️ Shape (Square, Portrait, Landscape), 🔢 How many?
      (2 to 32) and ✨ generate; Shape and How many? appear after the first go.
-     It is free with no login, and a batch takes seconds. The page has no box
-     for things to leave out, and Perchance's own tip warns against writing
-     "no blue", so the eraser tab now teaches describing what you do want.
+     It is free with no login, and a batch takes seconds. The Anti-Description
+     box is commented out in that source, so the page has no box for things to
+     leave out, and the eraser tab now teaches describing what you do want.
      The style is picked from the menu, never typed, so the builder no longer
      writes it into the description. The tips about (brackets), {a|b|c} and
      the info icon are Perchance's own prompt tips. */
@@ -795,7 +796,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       brushes: {
         illustration: ["Illustration", "Illustration looks like a page from a storybook and is a good first choice for story characters."],
         casualPhoto:  ["Casual Photo", "Pictures in Casual Photo look like snapshots taken with a phone, which suits real animals and places."],
-        pixelArt:     ["Pixel Art", "Pixel Art builds everything out of little squares, like an old video game or the rocket you copied square by square."],
+        pixelArt:     ["Pixel Art", "Pixel Art builds everything out of little squares, the way pictures looked in old video games."],
         flatIcon:     ["Flat Style Icon", "With Flat Style Icon you get flat shapes and clean edges, the way an app icon looks."],
         noStyle:      ["No style", "No style adds nothing to your words, so you see what your description does on its own."]
       },
@@ -820,7 +821,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       copied: "Copied. Paste it into the 📝 Description box on Perchance.",
       copyByHand: "This browser would not copy the text. Select it in the dark box and copy it yourself.",
       nothingYet: "There is nothing to copy yet. Fill in at least the first field.",
-      excludeIntro: "Perchance itself advises against writing \"no blue\", because the word blue stays in your description and the picture pays attention to it. Describe the picture you do want instead.",
+      excludeIntro: "Writing \"no blue\" seldom works, because the word blue is still in your description and the picture pays attention to it. Describe the picture you do want instead.",
       excludeEx: [
         ["a beach with no sun", "a beach at night under the stars"],
         ["a dragon without wings", "a dragon that walks like a giant lizard"],
@@ -862,7 +863,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       brushes: {
         illustration: ["Illustration", "Illustration parece la página de un libro de cuentos y es una buena primera elección para personajes de una historia."],
         casualPhoto:  ["Casual Photo", "Las imágenes de Casual Photo parecen fotos hechas con el móvil, y van bien para animales y lugares reales."],
-        pixelArt:     ["Pixel Art", "Pixel Art lo construye todo con cuadraditos, como un videojuego antiguo o el cohete que copiaste cuadro a cuadro."],
+        pixelArt:     ["Pixel Art", "Pixel Art lo construye todo con cuadraditos, como las imágenes de los videojuegos antiguos."],
         flatIcon:     ["Flat Style Icon", "Con Flat Style Icon salen formas planas y bordes limpios, como el icono de una app."],
         noStyle:      ["No style", "No style no añade nada a tus palabras, así que ves qué hace tu descripción por sí sola."]
       },
@@ -887,7 +888,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       copied: "Copiado. Pégalo en el campo 📝 Description de Perchance.",
       copyByHand: "Este navegador no ha podido copiar el texto. Selecciónalo en el recuadro oscuro y cópialo tú.",
       nothingYet: "Todavía no hay nada que copiar. Rellena al menos el primer campo.",
-      excludeIntro: "El propio Perchance aconseja no escribir \"no blue\" (sin azul), porque la palabra azul sigue en tu descripción y la imagen le hace caso. Describe mejor la imagen que sí quieres.",
+      excludeIntro: "Escribir \"no blue\" (sin azul) casi nunca funciona, porque la palabra azul sigue en tu descripción y la imagen le hace caso. Describe mejor la imagen que sí quieres.",
       excludeEx: [
         ["una playa sin sol", "una playa de noche bajo las estrellas"],
         ["un dragón sin alas", "un dragón que camina como un lagarto gigante"],
