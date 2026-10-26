@@ -202,7 +202,7 @@
 .gx{--bg:#fafbf6;--bg-2:#fff;--bg-3:#f4f5f1;--ink:#0a1a10;--ink-dim:#4d5a51;--ink-faint:#5f6e64;--rule:#e6e8e4;--rule-strong:#c9cec9;
   --accent:#0a8754;--accent-ink:#fff;--warn:#c33d22;--green-25:#f4fbef;--green-50:#ecf9e7;--green-100:#d4f1c4;--green-300:#8fd770;--green-500:#3fb04b;
   --green-600:#0a8754;--green-700:#07683f;--green-800:#054d2f;--sun-500:#f5b800;--coral-50:#fff0eb;--coral-500:#ff7a5c;--coral-700:#c33d22;
-  --mono:ui-monospace,Menlo,monospace;font-family:var(--body)}
+  --edge:#0d150d;--edge-soft:#c4cdbe;--lift:0 6px 14px -8px rgba(13,21,13,.35);font-family:var(--body)}
   .gx { margin: 0 0 34px; }
   .gx-h {
     margin: 0 0 26px; text-align: center;
@@ -214,19 +214,20 @@
   .gx-arrow {
     flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%;
     display: grid; place-items: center;
-    background: var(--bg-2); border: 1px solid var(--rule); color: var(--ink-dim);
+    background: var(--bg-2); border: 2px solid var(--edge); color: var(--ink);
     cursor: pointer; transition: border-color .15s, color .15s, transform .15s;
   }
   .gx-arrow svg { width: 20px; height: 20px; }
-  .gx-arrow:hover { border-color: var(--rule-strong); color: var(--ink); }
+  .gx-arrow:hover { background: var(--bg-3); }
   .gx-arrow:active { transform: translateY(1px); }
   .gx-arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   .gx-card {
     flex: 1 1 auto; min-width: 0; max-width: 840px; min-height: 470px;
     display: flex; flex-direction: column; gap: 16px;
-    background: rgba(255, 255, 255, .55);
-    border: 2px solid var(--rule); border-radius: 24px; padding: 24px;
+    background: var(--bg-2);
+    border: 2px solid var(--edge); border-radius: 6px; padding: 24px;
+    box-shadow: 0 18px 40px -26px rgba(13,21,13,.45);
   }
   @media (max-width: 640px) {
     .gx-stage { gap: 8px; }
@@ -234,37 +235,27 @@
     .gx-card { padding: 16px; min-height: 440px; }
   }
 
-  .gx-eyebrow {
-    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
-    text-transform: uppercase; color: var(--ink-faint);
-  }
   .gx-prompt { margin: 4px 0 0; font-size: 19px; font-weight: 700; color: var(--ink); }
   .gx-body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
-  .gx-hint {
-    font-family: var(--mono); font-size: 10px; letter-spacing: .07em;
-    text-transform: uppercase; color: var(--ink-faint); text-align: center;
-  }
+  .gx-hint { font-size: 14px; line-height: 1.45; color: var(--ink-dim); text-align: center; margin: 0; }
   .gx-foot {
     display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-    border-top: 1px solid var(--rule); padding-top: 16px;
+    border-top: 2px solid var(--rule); padding-top: 16px;
   }
   .gx-verdict { flex: 1 1 180px; font-size: 14px; color: var(--ink-dim); }
   .gx-verdict.is-right { color: var(--green-800); font-weight: 600; }
   .gx-verdict.is-wrong { color: var(--warn); }
 
-  /* The shadow-pop button: a hard offset, never a blur. */
+  /* Same pill as the page's buttons: ink when it can be pressed, quiet while it waits. */
   .gx-check {
-    margin-left: auto; padding: 13px 34px; border-radius: 14px;
-    font-size: 14px; font-weight: 700; letter-spacing: .28px; text-transform: uppercase;
-    background: var(--bg-3); color: var(--ink-dim);
-    border: 1px solid var(--rule-strong); box-shadow: 0 4px 0 0 var(--rule-strong);
-    cursor: pointer; transition: transform .1s, box-shadow .1s;
+    margin-left: auto; padding: 12px 26px; border-radius: 999px;
+    font: 800 15px/1 var(--body);
+    background: var(--edge); color: #ffd84d; border: 2px solid var(--edge);
+    cursor: pointer; transition: transform .2s cubic-bezier(.16,1,.3,1);
   }
-  .gx-check:hover:not(:disabled) { transform: translateY(1px); box-shadow: 0 3px 0 0 var(--rule-strong); }
-  .gx-check:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 0 var(--rule-strong); }
-  .gx-check:disabled { opacity: .5; cursor: default; }
-  .gx-check--go { background: var(--accent); color: var(--accent-ink); border-color: var(--green-700); box-shadow: 0 4px 0 0 var(--green-700); }
-  .gx-check--go:hover { box-shadow: 0 3px 0 0 var(--green-700); }
+  .gx-check:hover:not(:disabled) { transform: translateY(-2px); }
+  .gx-check:active:not(:disabled) { transform: translateY(0); }
+  .gx-check:disabled { background: var(--bg-2); color: var(--ink-faint); border-color: var(--edge-soft); cursor: default; }
 
   /* ---- motion knobs, ported from the LMS ----
      Every duration goes through --mdur and every distance through --mamp, so
@@ -296,8 +287,8 @@
     100% { transform: scale(1); }
   }
   @keyframes gx-halo {
-    0%, 100% { box-shadow: 0 2px 0 0 var(--rule), 0 0 0 0 color-mix(in oklab, var(--link-color) 30%, transparent); }
-    50% { box-shadow: 0 2px 0 0 var(--rule), 0 0 0 6px color-mix(in oklab, var(--link-color) 14%, transparent); }
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--link-color) 30%, transparent); }
+    50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--link-color) 14%, transparent); }
   }
   @keyframes gx-ripple-g {
     0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--green-500) 45%, transparent); }
@@ -319,8 +310,8 @@
      · 4 result (correct ripple / wrong shake) */
   .gx-tile {
     position: relative;
-    background: var(--bg-2); border: 2px solid var(--rule); border-radius: 14px;
-    box-shadow: 0 2px 0 0 var(--rule); color: var(--ink);
+    background: var(--bg-2); border: 2px solid var(--edge-soft); border-radius: 6px;
+    color: var(--ink); font-family: var(--body);
     font-size: 15px; font-weight: 600; cursor: pointer; user-select: none;
     transition: transform 120ms var(--motion-ease), box-shadow 120ms var(--motion-ease),
                 border-color 120ms, background 150ms, color 150ms, opacity 200ms;
@@ -328,11 +319,11 @@
   /* 1 · invite */
   .gx-tile:hover:not(:disabled):not(.is-right):not(.is-wrong) {
     transform: translateY(calc(-2px * var(--mamp)));
-    border-color: var(--green-300);
-    box-shadow: 0 4px 0 0 var(--green-100);
+    border-color: var(--edge);
+    box-shadow: var(--lift);
   }
   /* 2 · grab */
-  .gx-tile:active:not(:disabled), .gx-tile.is-picked { transform: translateY(2px); box-shadow: 0 0 0 0 var(--rule); }
+  .gx-tile:active:not(:disabled), .gx-tile.is-picked { transform: translateY(1px); box-shadow: none; }
   .gx-tile.is-picked {
     border-color: var(--green-600); background: var(--green-100); color: var(--green-800);
     box-shadow: 0 0 0 4px var(--green-100);
@@ -360,7 +351,7 @@
   .gx-opts { display: grid; gap: 10px; width: 100%; max-width: 460px; margin: 0 auto; }
   .gx-opt {
     display: flex; align-items: center; gap: 14px; padding: 16px 20px;
-    text-align: left; font-family: var(--mono);
+    text-align: left;
   }
   .gx-opt__dot {
     flex: 0 0 auto; width: 20px; height: 20px; border-radius: 999px;
@@ -369,19 +360,11 @@
     font-size: 11px; line-height: 1; color: transparent;
   }
   .gx-opt__label { flex: 1 1 0; }
-  .gx-opt__n { flex: 0 0 auto; font-family: var(--mono); font-size: 10px; color: var(--rule-strong); }
+  .gx-opt__n { flex: 0 0 auto; font-size: 13px; font-weight: 600; color: var(--ink-faint); }
   .gx-opt__dot { transition: background 150ms, border-color 150ms, transform 150ms; }
   .gx-tile.is-picked .gx-opt__dot,
   .gx-tile.is-right .gx-opt__dot { background: var(--green-600); border-color: var(--green-600); color: #fff; transform: scale(1.1); }
   .gx-tile.is-wrong .gx-opt__dot { background: var(--err-border); border-color: var(--err-border); color: #fff; }
-  .gx-chip {
-    position: absolute; top: -9px; right: 10px;
-    border-radius: 999px; padding: 3px 8px;
-    font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .08em; color: #fff;
-    animation: gx-pop calc(.36s * var(--mdur)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  }
-  .gx-chip--ok { background: var(--green-600); }
-  .gx-chip--no { background: var(--err-border); }
 
   /* ---- matching ---- */
   .gx-match { position: relative; display: grid; grid-template-columns: 1fr 56px 1fr; gap: 10px; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; }
@@ -399,10 +382,10 @@
 
   /* ---- sorting ---- */
   .gx-bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; min-height: 46px; width: 100%; max-width: 600px; margin: 0 auto; }
-  .gx-bank .gx-tile, .gx-zone .gx-tile { padding: 11px 20px; border-radius: 999px; }
+  .gx-bank .gx-tile, .gx-zone .gx-tile { padding: 10px 18px; border-radius: 999px; }
   .gx-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 600px; margin: 0 auto; }
   .gx-zone {
-    border: 2px dashed var(--rule-strong); border-radius: 16px; padding: 12px;
+    border: 2px dashed var(--edge-soft); border-radius: 6px; padding: 12px;
     min-height: 132px; display: flex; flex-direction: column; gap: 10px;
     transition: border-color 150ms, background 150ms, transform 150ms;
   }
@@ -422,10 +405,7 @@
   .gx-zone:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .gx-zone__head { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--ink); }
   .gx-zone__dot { width: 9px; height: 9px; border-radius: 50%; }
-  .gx-zone__n {
-    margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
-    background: var(--bg-3); border-radius: 7px; padding: 2px 7px;
-  }
+  .gx-zone__n { margin-left: auto; font-size: 14px; font-weight: 600; color: var(--ink-faint); }
   .gx-zone__drop { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; flex: 1; }
 
   /* ---- fill in the blanks ---- */
@@ -435,11 +415,10 @@
   .gx-gap {
     width: 4.5ch; margin: 0 4px; padding: 7px 4px; text-align: center;
     font: inherit; font-size: 17px; font-weight: 700; color: var(--green-800);
-    background: var(--bg-2); border: 1px solid var(--rule); border-radius: 10px;
-    box-shadow: 0 2px 0 0 var(--rule);
+    background: var(--bg-2); border: 2px solid var(--edge-soft); border-radius: 6px;
   }
   .gx-gap { transition: border-color 150ms, box-shadow 150ms, background 150ms, color 150ms; }
-  .gx-gap:hover:not(:disabled) { border-color: var(--rule-strong); }
+  .gx-gap:hover:not(:disabled) { border-color: var(--edge); }
   .gx-gap:focus { outline: none; border-color: var(--green-500); box-shadow: 0 0 0 4px var(--green-100); }
   .gx-gap.is-empty { animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite; }
   .gx-gap.is-right {
@@ -462,7 +441,7 @@
     background: var(--rule-strong); border: 0; cursor: pointer; transition: width .2s, background .2s;
   }
   .gx-dot.is-on { width: 22px; background: var(--accent); }
-  .gx-dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .gx-dot:focus-visible { outline: 3px solid #12798f; outline-offset: 3px; }
 </style>
   <div class="gx" id="gx">
 
@@ -576,12 +555,10 @@
         tiles.forEach(function (t) { t.disabled = true; t.classList.remove("is-picked"); });
         tiles[1].classList.add("is-right");
         tiles[1].querySelector(".gx-opt__dot").textContent = "✓";
-        tiles[1].appendChild(el("span", "gx-chip gx-chip--ok", "Correct"));
         var ok = picked === 1;
         if (!ok) {
           tiles[picked].classList.add("is-wrong");
           tiles[picked].querySelector(".gx-opt__dot").textContent = "✕";
-          tiles[picked].appendChild(el("span", "gx-chip gx-chip--no", "Not this one"));
         }
         settle(f, ok, ok ? "61 is prime, because nothing divides it except 1 and itself." : OPTS[picked].why + " The prime one is 61.");
       };
