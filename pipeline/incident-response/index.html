@@ -237,7 +237,7 @@
     investigate:{ clock:"T+03:10",
       onEnter:{loss:+1900},
       log:[{t:"02:17", x:"Pattern: micro-auths, 1 BIN range, 2 datacenter ASNs", s:"bad"}],
-      body:"The detail view shows hundreds of <b>€0.50 to €2 authorisation attempts</b> against one <span class='mono'>5xxxxx</span> BIN range, from brand-new device fingerprints and <b>two datacenter ASNs</b>. A bot is checking which stolen cards still work. About <b>€1,900</b> in network fees has already gone.",
+      body:"The detail view shows more than ten thousand <b>€0.50 to €2 authorisation attempts</b> against one <span class='mono'>5xxxxx</span> BIN range, from brand-new device fingerprints and <b>two datacenter ASNs</b>. A bot is checking which stolen cards still work. About <b>€1,900</b> has already gone in per-attempt processing fees.",
       choices:[
         {k:1, lab:"Add a velocity limit and block that BIN range and the two datacenter ASNs.", eff:{loss:+600, impact:+3, trust:+6}, note:"The control hits exactly what the attack depends on and leaves genuine traffic alone.", to:"contain"},
         {k:2, lab:"Hit the kill switch and pause all card payments on the site.", eff:{impact:+80, trust:-4}, note:"The bot stops, and so does every genuine checkout on the site. The attack has turned into an outage.", to:"end_shutdown"},
@@ -282,7 +282,7 @@
     contain:{ clock:"T+10:40",
       body:"Within a minute, authorisation attempts from those ASNs and that BIN range fall to almost nothing, and genuine traffic carries on as normal. <b>Containment is holding.</b> What is left is deciding who needs to know and how to tell them.",
       choices:[
-        {k:1, lab:"Post an incident note in #risk-oncall with the data and actions, page the lead and recommend keeping the rules for 24 hours.", eff:{trust:+12}, note:"A clear, factual note with actions in it means your lead wakes up to an incident that is already handled.", to:"end_textbook",
+        {k:1, lab:"Post an incident note in #risk-oncall with the data and actions, tag your lead and recommend keeping the rules for 24 hours.", eff:{trust:+12}, note:"A clear, factual note with actions in it means your lead wakes up to an incident that is already handled.", to:"end_textbook",
           // after a late containment the note is still the right close, but it cannot buy back the minutes
           noteLate:"The note has the facts and the actions in it. It cannot buy back the minutes before containment, and those are already on the bill.",
           labLead:"Post an incident note in #risk-oncall, walk your lead through it and recommend keeping the rules for 24 hours.",
@@ -305,8 +305,8 @@
     end_overblock_hold:{ end:true, title:"You kept the blanket block on all night",
       verdict:"The blanket block held all night and kept fraud losses small. It also turned away a large number of genuine customers and loaded up support. The revenue gap is bigger than anything the bot would have taken, and finance will find it later." },
     end_shutdown:{ end:true, title:"You paused all card payments to stop the attack",
-      verdict:"Pausing all card payments stopped the bot and every genuine sale on the platform with it. The post-mortem will be about taking the whole checkout down over a targeted card-testing wave." },
-    end_costly:{ end:true, title:"You contained the attack, but late",
+      verdict:"Pausing all card payments stopped the bot and every genuine sale on the platform with it. The post-mortem will be about taking the whole checkout down over a card-testing wave that a BIN block and a velocity limit would have stopped. A full pause is for an attack that narrower rules cannot hold." },
+    end_costly:{ end:true, title:"The attack was contained, but late",
       verdict:"By the time the attack was contained, the night had cost more than it needed to, in losses, in blocked customers or in both. The fix was always the same few rules. The cost came from the minutes spent on other moves first." }
   };
 

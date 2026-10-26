@@ -200,11 +200,7 @@
     <h1>An unexpected call about your account</h1>
     <p>You work on the payments team. A man calls to say that someone is taking over your login right now and that he needs your help to stop it.</p>
     <p>He sounds calm, knows a few things about you and is in a hurry. You cannot see who is on the line, so all you have is what he says and what you say back.</p>
-    <div class="ov-rules">
-      <div class="ov-r"><span>You did not call anyone. Before you do anything he asks, check who he is on a number you already trust.</span></div>
-      <div class="ov-r"><span>Never read out a one-time code, give a password or approve a push you did not start. Real IT never asks for any of them.</span></div>
-      <div class="ov-r"><span>Rushing you, pulling rank and threatening you are part of the attack. Say no, end the call and report it.</span></div>
-    </div>
+    <p>You have not called IT today, and the official IT number is in the company directory. Answer him the way you would at your own desk.</p>
     <p style="font-size:12.5px;color:var(--ink-500)">You will hear the caller's voice, and the transcript is there if you would rather read along. Keys <span class="mono">1</span>, <span class="mono">2</span> and <span class="mono">3</span> choose a reply.</p>
     <div style="display:flex;justify-content:flex-end;"><button class="btn-primary" id="btnStart">Answer the call</button></div>
   </div>
@@ -229,7 +225,7 @@
         <li>Hang up and call IT back on a number you already have, never on one the caller gives you. A real team never minds the check.</li>
         <li>Never read out a one-time code or approve a push you did not start. IT will never ask for either.</li>
         <li>Treat pressure as the warning sign. Urgency, authority and threats are there to make you skip the check.</li>
-        <li>If you do slip, report it at once. Security can then cancel the code or end the session before it is used.</li>
+        <li>If you do slip, report it at once. Security can then end the attacker's session and reset your login before he does any harm.</li>
       </ul>
     </div>
     <div class="res-actions">
@@ -297,7 +293,7 @@
     leak_otp:{ time:"00:52", callEnded:true,
       body:"…got it. Perfect. You've been really helpful. <span class='sd'>(A short pause, then the line goes dead.)</span>",
       choices:[
-        {k:1, lab:"Call IT on the directory number now and report the code.", good:true, eff:{exposure:-25}, note:"The code is out, but security can still cancel it and lock the session if you report within seconds.", to:"end_leaked_but_reported"},
+        {k:1, lab:"Call IT on the directory number now and report the code.", good:true, eff:{exposure:-25}, note:"He has probably used the code already, but security can still end his session and reset your login if you report it now.", to:"end_leaked_but_reported"},
         {k:2, lab:"Shrug it off, it was probably IT.", good:false, eff:{}, note:"The thanks and the dead line were the attacker leaving with what he came for. Assuming it was fine turns a slip into a breach.", to:"end_compromised"}
       ] },
 
@@ -314,7 +310,7 @@
     end_resist_win:{ end:true, gradeFixed:"B", title:"You refused and reported the call, but did not call back",
       verdict:"The authority, the urgency and the personal details did not move you. You refused to hand anything over and reported the call. The cleaner version is to hang up and call back on a trusted number before you engage at all, and the checklist below marks that step as missed." },
     end_leaked_but_reported:{ end:true, gradeFixed:"C", title:"You gave him what he asked for, then reported it at once",
-      verdict:"You gave the attacker what he asked for. Realising it straight away and reporting it let security cancel the code or end the session before he used it. Fast reporting turns a breach back into a near miss, though the aim is still never to hand it over." },
+      verdict:"You gave the attacker what he asked for. Because you realised it straight away and reported it, security ended his session and reset your login before he reached the payments tools. Fast reporting turns a breach back into a near miss, though the aim is still never to hand it over." },
     end_compromised:{ end:true, gradeFixed:"D", title:"The attacker took over your account",
       verdict:"You gave an unverified caller the one thing that gets past your MFA and then assumed it was fine. By the time anyone notices, he will have been inside the payments tools for hours. The authority, the urgency, the threat and the offer to help were all part of the attack." }
   };

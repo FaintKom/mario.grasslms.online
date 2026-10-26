@@ -170,9 +170,9 @@ const EMAILS = [
     avatarClass: "docusign",
     senderShort: "DocuSign",
     trickPositive: true,
-    sender: { display: "DocuSign via Sarah Chen", real: "dse_NA8@docusign.net", external: true, verification: "External sender" },
-    subject: "Sarah Chen sent you a document to sign: Employment Agreement",
-    preview: "Sarah Chen has sent you a document to sign. Employment Agreement · 7 pages…",
+    sender: { display: "Sarah Chen via DocuSign", real: "dse_NA3@docusign.net", external: true, verification: "External sender" },
+    subject: "Complete with DocuSign: Employment Agreement",
+    preview: "Sarah Chen sent you a document to review and sign. Employment Agreement · 7 pages…",
     time: "9:14 AM",
     day: "Today",
     banner: null,
@@ -180,35 +180,39 @@ const EMAILS = [
       <>
         <p className="salute">Hello,</p>
         <p>
-          Sarah Chen has sent you a new DocuSign document to review and sign.
+          Sarah Chen sent you a document to review and sign.
         </p>
         <div className="docusign-card">
           <div className="ds-logo"><b>Docu</b>Sign<sup style={{ fontSize: 8, marginLeft: 2 }}>®</sup></div>
           <div style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", marginTop: 4 }}>Employment Agreement</div>
           <div style={{ fontSize: 12.5, color: "var(--ink-3)", marginTop: 4 }}>
-            7 pages · Envelope ID: 4f8e21c0-NA8-c734-91ad
+            7 pages · Envelope ID: 4F8E21C0-7B3A-4C73-91AD-2E6F0B9D8C14
           </div>
           <a
             className="docusign-cta"
             href="#nope"
-            data-real="na8.docusign.net/Member/EmailStart.aspx?a=4f8e21c0-NA8-c734-91ad"
+            data-real="na3.docusign.net/Member/EmailStart.aspx?a=4f8e21c0-7b3a-4c73-91ad-2e6f0b9d8c14"
             data-bad="0"
             style={{ marginTop: 16, display: "inline-block", textDecoration: "none" }}
             onClick={(e) => e.preventDefault()}
             onMouseEnter={() => urlHover.set({
-              display: "Review and sign",
-              real: "na8.docusign.net/Member/EmailStart.aspx?a=4f8e21c0-NA8…",
+              display: "Review document",
+              real: "na3.docusign.net/Member/EmailStart.aspx?a=4f8e21c0-7b3a…",
               bad: false,
             })}
             onMouseLeave={() => urlHover.clear()}
           >
-            Review and sign
+            Review document
           </a>
         </div>
         <p style={{ color: "var(--ink-3)", fontSize: 12.5, marginTop: 14 }}>
           This email was sent on behalf of <b>Sarah Chen</b> from Company. If you have
           questions about this document, contact the sender directly. To stop receiving
           this email, click here.
+        </p>
+        <p style={{ color: "var(--ink-3)", fontSize: 12.5, marginTop: 10 }}>
+          <b>Alternate signing method:</b> visit docusign.com, click Access Documents and
+          enter the security code 4F8E21C07B3A4C7391AD2E6F0B9D8C141.
         </p>
         <p style={{ color: "var(--ink-3)", fontSize: 11.5, marginTop: 14 }}>
           DocuSign, Inc. · 221 Main St., San Francisco, CA 94105
@@ -219,12 +223,12 @@ const EMAILS = [
     teach: {
       title: "A genuine DocuSign envelope that looks suspicious",
       summary:
-        "The sender is dse_NA8@docusign.net and the link leads to docusign.net. On their own these prove less than they seem, because attackers can send envelopes through real DocuSign accounts too. What settles it is Sarah's earlier email saying this envelope was on its way.",
+        "The sender is dse_NA3@docusign.net and the link leads to docusign.net. On their own these prove less than they seem, because attackers can send envelopes through real DocuSign accounts too. What settles it is Sarah's earlier email saying this envelope was on its way.",
       indicators: [
         { kind: "ok", text: "Sarah's welcome email said this envelope would arrive within the hour. That is the tell that decides it." },
         { kind: "ok", text: "The sender domain is docusign.net, which DocuSign does use for envelopes. A correct domain would not be enough on its own." },
-        { kind: "ok", text: "The link leads to na8.docusign.net, the address DocuSign uses for envelopes in North America." },
-        { kind: "neutral", text: "Without Sarah's email, the safe move would have been to open the envelope from docusign.com with its access code instead of clicking the link." },
+        { kind: "ok", text: "The link leads to na3.docusign.net, one of the addresses DocuSign uses for envelopes in North America." },
+        { kind: "neutral", text: "Without Sarah's email, the safe move would have been to go to docusign.com yourself and enter the security code printed at the bottom of the email instead of clicking the link." },
       ],
       verdictIfRight: "Sarah announced this envelope, and the sender domain and the link both check out. Keeping a message that looks transactional when the evidence says it is genuine is the harder call, and it is the correct one.",
       verdictIfWrong: {

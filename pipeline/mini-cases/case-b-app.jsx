@@ -117,11 +117,11 @@ const BRANCHES = [
       {
         grade: "ideal",
         confidence: 92,
-        stage: "Checks the fault itself",
+        stage: "Asks a diagnostic question",
         text:
-          "I hear you. Your time matters, and I won't make you repeat anything. I'm checking the dates on both £84.20 charges now. Same day or different days tells me which system the error came from.",
+          "I hear you, and I won't make you go through the whole story again. I only need one thing from you so I fix the right fault this time. Did you pay the £84.20 yourself, or did both payments go out on auto-pay?",
         delta: -8,
-        feedback: "You acknowledged the time he has lost in a few words, then checked the fault yourself instead of asking him. Whether both charges fell on the same day tells a billing-system error apart from a retried payment.",
+        feedback: "You acknowledged the time he has lost in a few words and then asked the one thing your screen cannot tell you. A payment he made by hand on top of auto-pay is a different fault from auto-pay charging him twice, and his answer tells you which one to fix.",
       },
       {
         grade: "passable",
@@ -130,7 +130,7 @@ const BRANCHES = [
         text:
           "I'll mark this as a priority case so it doesn't get lost again.",
         delta: -1,
-        feedback: "Marking the case as a priority feels helpful, but it tells you nothing new about the fault. One targeted question would have closed the case sooner.",
+        feedback: "Marking the case as a priority feels helpful, but it tells you nothing new about the fault. One question about how he paid would have pointed you to it.",
       },
       {
         grade: "wrong",
@@ -151,13 +151,17 @@ const BRANCHES = [
     caller: "Just refund me and let me get on with my day.",
     callerEscalated:
       "Forget it — just give me my money back and stop wasting my time.",
+    // Used when the agent asked the Explore question: he answers it first.
+    callerAnswering: "Auto-pay, both times. I never paid it myself. Just refund me and let me get on with my day.",
+    callerAnsweringEscalated:
+      "Auto-pay, both of them! Just give me my money back and stop wasting my time.",
     options: [
       {
         grade: "ideal",
         confidence: 98,
         stage: "Specific close",
         text:
-          "Done. The £84.20 refund is issued and I'm emailing you the reference now. It shows as pending today and lands on your card in 3 to 5 working days. I've also locked the duplicate so it can't auto-repeat. Anything else before I let you go?",
+          "Done. I've issued the £84.20 refund, and I'm emailing you the reference now. It'll be back on your Visa in 3 to 5 working days. I've also locked the duplicate so it can't auto-repeat. Anything else before I let you go?",
         delta: -15,
         feedback: "He hears the amount, gets a reference he can quote and a timeline you can keep, and learns the duplicate cannot repeat. The last question lets him end the call when he is ready.",
       },
@@ -251,6 +255,14 @@ function App() {
 
   const scrollRef = useRef(null);
 
+  /* The caller's line for a branch. After an ideal Explore reply he answers the question first. */
+  const callerLine = (b, escalated) => {
+    const prev = decisions[decisions.length - 1];
+    const answered = !!b.callerAnswering && prev && prev.grade === "ideal" && BRANCHES[prev.branchIdx].code === "E";
+    if (answered) return escalated ? b.callerAnsweringEscalated : b.callerAnswering;
+    return escalated ? b.callerEscalated : b.caller;
+  };
+
   /* Call clock follows the scripted timeline: it ticks in real time but never
      passes the next scripted event, and jumps to each event when it happens. */
   const clockCapRef = useRef(0);
@@ -284,7 +296,7 @@ function App() {
       setCallTime(branch.callerAt);
       const escalated = tension >= ESCALATE_AT && !!branch.callerEscalated;
       const mood = sentimentLabel(tension);
-      const fullText = escalated ? branch.callerEscalated : branch.caller;
+      const fullText = callerLine(branch, escalated);
       setCallerChars(0);
       let i = 0;
       const tick = () => {
@@ -469,7 +481,7 @@ function App() {
               <div>
                 <div className="cust-name">{CUSTOMER.name}</div>
                 <div className="cust-id">Account · {CUSTOMER.acct}</div>
-                <div className="cust-pill">Identity verified · CRM</div>
+                <div className="cust-pill">Identity verified · IVR</div>
               </div>
             </div>
             <div className="cust-row">
@@ -617,7 +629,7 @@ function App() {
                     <span className="turn-time">{fmtTime(branch.callerAt)} · live</span>
                   </div>
                   <div className="turn-bubble">
-                    {(tension >= ESCALATE_AT && branch.callerEscalated ? branch.callerEscalated : branch.caller).slice(0, callerChars)}
+                    {callerLine(branch, tension >= ESCALATE_AT && !!branch.callerEscalated).slice(0, callerChars)}
                     <span style={{ opacity: 0.35 }}>▍</span>
                   </div>
                 </div>

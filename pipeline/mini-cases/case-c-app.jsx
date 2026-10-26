@@ -19,7 +19,7 @@ const RULES = [
     id: "r2",
     code: "02",
     text: <>Is the vendor based <b>outside Germany</b>?</>,
-    then: <>If it is, the order goes to <b>Legal & Compliance</b>, which checks cross-border terms, data residency and withholding.</>,
+    then: <>If it is, the order goes to <b>Legal & Compliance</b>, which checks the terms that change across a border, such as governing law and tax treatment.</>,
     field: "Jurisdiction",
     evaluate: (po) => (po.vendor.jurisdiction !== "DE" ? "yes" : "no"),
     onYes: { queue: "legal", note: "The vendor is outside Germany, so Legal has to clear the cross-border terms." },
@@ -51,6 +51,7 @@ const POS = [
     line: "Rack-mount server replacement · Quote QT-9088",
     amount: 12480,
     category: "CapEx",
+    supply: "goods",
     department: "Platform Engineering",
     departmentCode: "ENG-PLT-12",
     requestedBy: "Anouk Mehta",
@@ -64,7 +65,7 @@ const POS = [
       { desc: "Installation labour", sub: "Per-rack install + cable management", account: "ENG-CAPEX-450", qty: 6, unit: 120, total: 720 },
       { desc: "Shipping & handling", sub: "Frankfurt warehouse → Berlin DC1", account: "ENG-OPEX-110", qty: 1, unit: 240, total: 240 },
     ],
-    vendor: { name: "Acme Industrial GmbH", onboarded: true, tier: 2, jurisdiction: "DE", vendorId: "VEN-00482", since: "Aug 2023", contract: "MSA-Acme-2024", paymentTerms: "Net-45", taxId: "DE 8821-4477-90", logo: "AI" },
+    vendor: { name: "Acme Industrial GmbH", onboarded: true, tier: 2, jurisdiction: "DE", vendorId: "VEN-00482", since: "Aug 2023", contract: "MSA-Acme-2024", paymentTerms: "Net-45", taxId: "DE882144778", logo: "AI" },
     correct: "finance",
     teach: "Acme is onboarded and based in Germany, so rules 01 and 02 do not apply. Rule 03 matches twice, because the total of €12,480 is above €10K and the category is CapEx. Either fact alone would send the order to Finance. A good vendor and an ordinary-looking amount make it tempting to wave the order through. Rule 03 is about who answers for the funding line, and the vendor's quality has nothing to do with it.",
     flow: [
@@ -84,6 +85,7 @@ const POS = [
     line: "Log analytics SaaS · 12-month annual",
     amount: 2400,
     category: "OpEx",
+    supply: "services",
     department: "Security Operations",
     departmentCode: "SEC-OPS-04",
     requestedBy: "Jules Tanaka",
@@ -95,7 +97,7 @@ const POS = [
     items: [
       { desc: "Globex Cloud — Pro tier · 12 months", sub: "Up to 250 GB / day log retention, single region", account: "SEC-OPEX-220", qty: 1, unit: 2400, total: 2400 },
     ],
-    vendor: { name: "Globex Cloud Services Inc.", onboarded: false, tier: null, jurisdiction: "US", vendorId: "VEN-NEW", since: "—", contract: "Pending Legal", paymentTerms: "Annual prepaid (no NET terms)", taxId: "US-EIN 88-3300114", logo: "GX" },
+    vendor: { name: "Globex Cloud Services Inc.", onboarded: false, tier: null, jurisdiction: "US", vendorId: "VEN-NEW", since: "—", contract: "Pending Legal", paymentTerms: "Annual prepaid (no NET terms)", taxId: "EIN 88-3300114", logo: "GX" },
     correct: "legal",
     teach: "A small yearly SaaS order is easy to wave through. The vendor is not yet on the approved list, and that alone sends the order to Legal under rule 01. The US jurisdiction would have sent it there under rule 02 as well, before the amount or the category is even considered.",
     flow: [
@@ -109,10 +111,11 @@ const POS = [
   },
   {
     id: "PO-2026-0343",
-    name: "Office Depot Deutschland",
+    name: "Kontor Bürobedarf GmbH",
     line: "Q2 office supplies · standard catalogue",
     amount: 847,
     category: "OpEx",
+    supply: "goods",
     department: "Office Management",
     departmentCode: "FAC-OFF-01",
     requestedBy: "Karim Voss",
@@ -128,7 +131,7 @@ const POS = [
       { desc: "Coffee · whole bean · single-origin", sub: "8 kg · break-room stock", account: "FAC-OPEX-110", qty: 8, unit: 28.60, total: 228.80 },
       { desc: "Cleaning supplies, sundry", sub: "Restock per facilities checklist", account: "FAC-OPEX-110", qty: 1, unit: 160.20, total: 160.20 },
     ],
-    vendor: { name: "Office Depot Deutschland AG", onboarded: true, tier: 1, jurisdiction: "DE", vendorId: "VEN-00031", since: "Jan 2018", contract: "MSA-OD-2024", paymentTerms: "Net-30", taxId: "DE 4421-7790-11", logo: "OD" },
+    vendor: { name: "Kontor Bürobedarf GmbH", onboarded: true, tier: 1, jurisdiction: "DE", vendorId: "VEN-00031", since: "Jan 2018", contract: "MSA-Kontor-2024", paymentTerms: "Net-30", taxId: "DE442177909", logo: "KB" },
     correct: "auto",
     teach: "This is routine catalogue spend from an approved Tier-1 vendor in Germany. It is OpEx and well under the threshold, so no rule before 04 matches and the order belongs in the auto-approve queue. Sending orders like this to Finance clogs its queue and makes the reviews that matter arrive late.",
     flow: [
@@ -150,6 +153,7 @@ const POS = [
     line: "Warehouse label-printer line upgrade · Quote NW-2231",
     amount: 18960,
     category: "CapEx",
+    supply: "goods",
     department: "Warehouse Operations",
     departmentCode: "OPS-WH-07",
     requestedBy: "Lena Brandt",
@@ -163,7 +167,7 @@ const POS = [
       { desc: "Print-and-apply module", sub: "One per printer, conveyor mount", account: "OPS-CAPEX-300", qty: 4, unit: 690, total: 2760 },
       { desc: "Commissioning & operator training", sub: "On site, one day", account: "OPS-OPEX-120", qty: 1, unit: 800, total: 800 },
     ],
-    vendor: { name: "Nordwerk Automation GmbH", onboarded: true, tier: 2, jurisdiction: "AT", vendorId: "VEN-00317", since: "Nov 2022", contract: "MSA-Nordwerk-2023", paymentTerms: "Net-30", taxId: "ATU 6620-4418", logo: "NA" },
+    vendor: { name: "Nordwerk Automation GmbH", onboarded: true, tier: 2, jurisdiction: "AT", vendorId: "VEN-00317", since: "Nov 2022", contract: "MSA-Nordwerk-2023", paymentTerms: "Net-30", taxId: "ATU66204412", logo: "NA" },
     correct: "legal",
     teach: "Everything about the money points to Finance, because €18,960 is over the threshold and the order is CapEx. The rules are applied from the top, and the first one that matches decides. Nordwerk is onboarded, so rule 01 does not apply. Rule 02 then matches because the vendor is in Austria. The order goes to Legal & Compliance before anyone looks at the amount.",
     flow: [
@@ -179,6 +183,19 @@ const POS = [
 ];
 
 const COUNTRY = { DE: "Germany", US: "United States", AT: "Austria" };
+
+/* VAT as a German buyer sees it. A German vendor charges 19%. A vendor in another
+   EU country invoices net and the buyer self-assesses the 19% (intra-EU acquisition
+   of goods, §1a UStG; reverse charge on services, §13b UStG). From outside the EU,
+   services are reverse-charged and goods bear import VAT at customs. */
+const EU = new Set(["AT","BE","BG","CY","CZ","DK","EE","ES","FI","FR","GR","HR","HU","IE","IT","LT","LU","LV","MT","NL","PL","PT","RO","SE","SI","SK"]);
+function vatLine(po, net) {
+  const j = po.vendor.jurisdiction;
+  if (j === "DE") return { label: "VAT 19%", amount: +(net * 0.19).toFixed(2) };
+  if (EU.has(j)) return { label: "VAT 0% · intra-EU, we self-assess 19%", amount: 0 };
+  if (po.supply === "services") return { label: "VAT 0% · reverse charge, we self-assess 19%", amount: 0 };
+  return { label: "VAT 0% · import VAT is paid at customs", amount: 0 };
+}
 
 const QUEUES = [
   { id: "auto", kind: "auto", name: "Auto-approve queue", icon: "01", sub: "On-policy spend · approved vendor · under threshold", meta: ["Same-day", "No human touch"] },
@@ -304,9 +321,8 @@ function App() {
   });
 
   const lineTotal = po.items.reduce((a, i) => a + i.total, 0);
-  // German VAT only on domestic vendors; cross-border purchases are reverse-charged.
-  const domestic = po.vendor.jurisdiction === "DE";
-  const tax = domestic ? +(lineTotal * 0.19).toFixed(2) : 0;
+  const vat = vatLine(po, lineTotal);
+  const tax = vat.amount;
 
   return (
     <>
@@ -493,7 +509,7 @@ function App() {
                     <td className="num">€{fmtEUR(lineTotal)}</td>
                   </tr>
                   <tr>
-                    <td colSpan="4" style={{ color: "var(--ink-3)" }}>{domestic ? "VAT (19%)" : "VAT (reverse charge)"}</td>
+                    <td colSpan="4" style={{ color: "var(--ink-3)" }}>{vat.label}</td>
                     <td className="num" style={{ color: "var(--ink-3)" }}>€{fmtEUR(tax)}</td>
                   </tr>
                   <tr className="total-row">

@@ -361,7 +361,7 @@
     <div class="rules-mini">
       <div class="rmini"><span class="tag approve">Approve</span><span>when the signals are clean and the payment should go through.</span></div>
       <div class="rmini"><span class="tag decline">Decline</span><span>when the pattern is clearly fraud and the payment must stop before it settles.</span></div>
-      <div class="rmini"><span class="tag review">Escalate</span><span>when the signals disagree. A senior analyst then checks with the cardholder through 3DS or a call-back.</span></div>
+      <div class="rmini"><span class="tag review">Escalate</span><span>when the signals disagree. The order is held while a senior analyst confirms the payment with the cardholder.</span></div>
     </div>
     <p style="font-size:12.5px;color:var(--ink-500)">You can also press <span class="mono">A</span> to approve, <span class="mono">D</span> to decline or <span class="mono">E</span> to escalate.</p>
     <div style="display:flex;justify-content:flex-end;"><button class="btn-primary" id="btnStart">Start the shift</button></div>
@@ -388,7 +388,7 @@
     <div class="debrief">
       <h3>What an experienced analyst looks at first</h3>
       <ul>
-        <li>Velocity tells you more than the amount. A tiny charge after several declined cards within two minutes is card testing, and it should be declined even though it costs almost nothing.</li>
+        <li>Velocity tells you more than the amount. A tiny charge after several declined cards within a couple of minutes is card testing, and it should be declined even though it costs almost nothing.</li>
         <li>A foreign IP address alone is not fraud, because people travel. Several soft flags together are a different matter, such as an account a few hours old, a new device and shipping that differs from billing.</li>
         <li>When good and bad signals balance each other, escalate the payment. Declining on reflex loses customers who did nothing wrong.</li>
       </ul>
@@ -423,8 +423,11 @@
   // A wrong decline loses that margin plus the expected value of a customer who may leave.
   // Missed fraud loses the full amount plus the chargeback fee.
   // An escalation the case did not need costs analyst time; a needed one is part of the job.
-  // A card test is booked at the exposure to the fraud
-  // it enables, because its own charge is a couple of euros.
+  // A card test is booked at what the attack goes on to cost this business once
+  // the bot knows the checkout passes its cards: per-attempt fees on the rest of
+  // the run, chargebacks on the cards it then uses here, and scheme penalties.
+  // Its own charge is a couple of euros. An escalation lets the run go on for
+  // as long as the case waits, so it is booked at half.
   const ECON = { MARGIN:0.20, CUSTOMER_LOSS:25, CHARGEBACK_FEE:20, REVIEW_COST:8, CT_EXPOSURE:250 };
   const CT_EXPOSURE = ECON.CT_EXPOSURE;
   const cents = v => Math.round(v*100)/100;
@@ -477,9 +480,9 @@
           pay:[["Method","Mixed cards"],["Card","•••• rotating"],["BIN country",R.pick(["Brazil","Indonesia","Nigeria","Vietnam"])],["Category","Verification"],["Shipping","None"]],
           dev:[["IP location","Datacenter, "+R.pick(["NL","DE","US"])],["Device","New, first seen"],["Account age","minutes"],["Velocity",n+" attempts / "+secs+"s"]],
           signals:[["bad","VELOCITY_TEST",n+" declined cards in "+secs+" seconds"],["bad","IP_DATACENTER","Datacenter / proxy IP"],["warn","AMOUNT_MICRO","Tiny 'test' amount"]],
-          fb:{ approve:{ok:false, why:"This is card testing. A bot runs stolen cards through tiny charges to find the ones that still work, and this desk books an approved test as €"+CT_EXPOSURE+" of exposure to the fraud that follows.", money:-CT_EXPOSURE},
+          fb:{ approve:{ok:false, why:"This is card testing, in which a bot runs stolen cards through tiny charges to find the ones that still work. Once a test goes through, the bot knows this checkout passes its cards and keeps going. The desk books that at €"+CT_EXPOSURE+" for the attempt fees, the chargebacks and the scheme penalties that follow.", money:-CT_EXPOSURE},
                decline:{ok:true, why:"The low amount makes the case look harmless. The velocity gives it away, with "+n+" cards tried in "+secs+" seconds from a datacenter IP.", money:0},
-               review:{ok:false, why:"The attack is running right now, and the bot keeps testing cards while the case waits for a senior analyst. The pattern was clear enough to decline straight away.", money:-CT_EXPOSURE/2} } };
+               review:{ok:false, why:"The attack is running right now, and the bot keeps testing cards for as long as the case waits for a senior analyst. The desk books that delay at half the €"+CT_EXPOSURE+" of an approved test, although the pattern was clear enough to decline straight away.", money:-CT_EXPOSURE/2} } };
       } },
 
     { key:"giftCashout", weight:1, build(){
@@ -501,7 +504,7 @@
           signals:[["bad","GEO_MISMATCH","IP country ≠ BIN country"],["warn","CATEGORY_RESALE","High-resale goods"],["warn","DEVICE_NEW","First-time device"],["good","AVS_PASS","Address verification passed"]],
           fb:{ approve:{ok:false, why:"The location does not match the card, the goods resell easily and the device is new. The passed address check leaves room for a genuine traveller, but that is too much doubt for an order this size.", money:fraudLoss(amt)},
                decline:{ok:false, why:"Fraud is plausible here, yet the address check passed and people do shop while they travel. A hard decline could lose a genuine high-value sale.", money:lostSale(amt)},
-               review:{ok:true, why:"The signals contradict each other on a large order. A senior analyst can settle it with 3DS or a call-back to the cardholder instead of guessing.", money:0} } };
+               review:{ok:true, why:"The signals contradict each other on a large order. A senior analyst can hold it and settle the question with the cardholder instead of guessing.", money:0} } };
       } },
 
     { key:"atoGrey", weight:1, build(){
@@ -530,9 +533,10 @@
     // ---- MISALIGNED: model score LOW but the right call is DECLINE ----
     { key:"subtleFraud", weight:2, build(){
         const amt=R.amt(60,260), loc=R.pick(P.eu), bin=R.pick(["Germany","France","Italy"]),
+              billing=P.eu.find(c=>P.country[c.slice(-2)]===bin),
               ship=R.pick(P.eu.filter(c=>P.country[c.slice(-2)]!==bin));
         return { arch:"subtleFraud", merchant:R.pick(P.resale), cat:"Electronics", amount:amt, score:R.int(14,29), best:"decline",
-          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Electronics"],["Shipping",ship+" (billing: "+bin+")"]],
+          pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Electronics"],["Shipping",ship+" (billing address "+billing+")"]],
           dev:[["IP location",loc],["Device","New, first seen"],["Account age",R.int(1,6)+" hr"],["Velocity","Normal"]],
           signals:[["warn","ACCOUNT_FRESH","Account created hours ago"],["warn","SHIP_BILL_DIFF","Shipping ≠ billing address"],["warn","DEVICE_NEW","First-time device"],["warn","EMAIL_DISPOSABLE","Disposable email domain"]],
           fb:{ approve:{ok:false, why:"The model scored this case low, and models often miss new fraud rings. An account a few hours old, a disposable email, shipping that differs from billing and a new device add up to a setup.", money:fraudLoss(amt)},
@@ -680,6 +684,7 @@
     const pct=decisions.filter(d=>d&&d.ok).length/TOTAL;
     // An A also needs the shift to end in profit: one costly miss outweighs nine good calls.
     if(pct>=0.9 && netMoney<0) return {g:"B",cls:"b",label:"Almost every decision was right. The one that went wrong cost more than the shift earned."};
+    if(pct===1) return {g:"A",cls:"",label:"Every decision was right."};
     if(pct>=0.9) return {g:"A",cls:"",label:"Almost every decision was right."};
     if(pct>=0.7) return {g:"B",cls:"b",label:"Most decisions were right. Look again at the cases where the signals disagreed."};
     if(pct>=0.5) return {g:"C",cls:"c",label:"Several decisions cost the business money."};
