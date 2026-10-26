@@ -1,126 +1,96 @@
-/* compliance-microlearning · GrassLMS Lively · A4 portrait
-   Base styles from ../_shared/system.css
-   This file contains only artefact-specific styles. */
+/* Course design map for Security and Privacy Essentials.
+   Shell (top bar, type, colours, .btn, footer) comes from assets/shell.css;
+   this file holds only what the design map adds on top of it. */
 
-code { font-family: var(--font-mono); font-size: 0.92em; background: var(--ink-50); padding: 1px 6px; border-radius: 4px; color: var(--green-700); }
+/* shell.css leaves room for the home page's floor plan; this page has none. */
+body { padding-bottom: 0; }
 
-.meta-row {
+/* Sections run full width; their content sits in one centred column. */
+.map-intro, .part-in { max-width: 1180px; margin-left: auto; margin-right: auto; box-sizing: content-box; }
+
+/* ---------- Intro ---------- */
+.map-intro { padding: clamp(32px, 5vw, 64px) var(--gutter) clamp(28px, 4vw, 48px); }
+.map-intro h1 { font-size: clamp(32px, 4.2vw, 56px); max-width: 20ch; margin-bottom: 28px; }
+.map-intro-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
-  margin: 14px 0 22px;
-  padding: 12px 14px;
-  background: var(--green-50);
-  border-radius: var(--r-md);
-  border-left: 4px solid var(--green-600);
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+  gap: 32px;
+  align-items: start;
 }
-.meta-row .k { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-700); font-weight: 600; }
-.meta-row .v { font-size: 12.5px; font-weight: 700; color: var(--ink-900); margin-top: 2px; }
-
-.block {
-  margin: 22px 0;
-  padding: 16px 18px;
-  border: 1px solid var(--ink-100);
-  border-radius: var(--r-md);
-  background: var(--paper);
-  border-left: 4px solid var(--green-600);
-  page-break-inside: avoid;
-}
-.block.sun   { border-left-color: var(--sun-500); }
-.block.coral { border-left-color: var(--coral-500); }
-
-.block .bl-head {
+.lede { font-size: 19px; line-height: 1.6; max-width: 62ch; }
+.play-card {
+  background: var(--sun-400);
+  border: var(--line);
+  border-radius: 6px;
+  padding: 24px;
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 14px;
-  margin: 0 0 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  box-shadow: 0 18px 40px -26px rgba(13, 21, 13, .45);
 }
-.block .bl-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-500);
-  font-weight: 700;
-  margin: 0;
+.play-card p { font-size: 17px; line-height: 1.5; }
+.play-card .btn, .play-row .btn { font-size: 17px; padding: 14px 22px; }
+.about {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px solid var(--ink-900);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink-700);
+  max-width: 78ch;
 }
-.block h2 { font-size: 18px; font-weight: 800; letter-spacing: -0.015em; margin: 0; }
-.block h3 { font-size: 13px; font-weight: 800; margin: 14px 0 6px; }
-.block p { font-size: 12.5px; color: var(--ink-700); margin: 0 0 8px; line-height: 1.55; }
-.block p strong { color: var(--ink-900); }
-.block ul { padding-left: 18px; margin: 4px 0 8px; }
-.block li { font-size: 12.5px; color: var(--ink-700); line-height: 1.55; margin-bottom: 4px; }
 
-/* Tables scroll inside their own box on narrow screens. */
-.tbl-wrap { overflow-x: auto; margin: 6px 0 10px;
-  /* Edge shadows appear only while there is more table to scroll to. */
-  background:
-    linear-gradient(to right, var(--paper) 30%, transparent) left / 32px 100% no-repeat local,
-    linear-gradient(to left, var(--paper) 30%, transparent) right / 32px 100% no-repeat local,
-    radial-gradient(farthest-side at 0 50%, rgba(10,26,16,.18), transparent) left / 12px 100% no-repeat scroll,
-    radial-gradient(farthest-side at 100% 50%, rgba(10,26,16,.18), transparent) right / 12px 100% no-repeat scroll; }
-table.grid {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11px;
-  min-width: 520px;
-}
+/* ---------- Parts of the design ---------- */
+.part { padding: clamp(40px, 5vw, 72px) var(--gutter); border-top: var(--line); }
+.part--tint { background: var(--ink-50); }
+.part--sun { background: var(--green-50); }
+.part-in > h2 { font-size: clamp(26px, 2.8vw, 40px); margin-bottom: 20px; max-width: 26ch; }
+.part-in > h3 { font-size: 22px; margin: 32px 0 12px; }
+.part-in > p, .part-in > ul { font-size: 17px; line-height: 1.65; max-width: 74ch; }
+.part-in > p + p { margin-top: 14px; }
+.part-in > ul { padding-left: 22px; margin: 16px 0; }
+.part-in li { margin-bottom: 10px; }
+.part-in strong { font-weight: 800; }
+
+.play-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin: 24px 0 8px; }
+.play-row span { font-size: 16px; color: var(--ink-500); max-width: 40ch; }
+
+/* ---------- Tables ---------- */
+.tbl-wrap { margin: 24px 0; border: 2px solid var(--ink-900); border-radius: 6px; overflow-x: auto; background: var(--paper); }
+table.grid { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
 table.grid th {
   text-align: left;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--green-700);
-  border-bottom: 2px solid var(--green-100);
-  padding: 6px 8px 5px;
+  font: 800 15px/1.3 var(--body);
+  background: var(--ink-900);
+  color: var(--paper);
+  padding: 12px 14px;
   vertical-align: bottom;
 }
-table.grid td {
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--ink-100);
-  color: var(--ink-700);
-  vertical-align: top;
-  line-height: 1.45;
-}
-table.grid td.u { font-family: var(--font-mono); font-weight: 700; color: var(--green-700); white-space: nowrap; }
-@media (max-width: 640px) { table.grid td.u { white-space: normal; min-width: 7em; } }
-table.grid tr.built td { background: var(--green-50); }
-table.grid td strong { color: var(--ink-900); }
+table.grid td { padding: 12px 14px; border-top: 1px solid var(--ink-200); vertical-align: top; color: var(--ink-700); }
+table.grid td.u { font-family: var(--display); font-stretch: 105%; font-weight: 800; color: var(--ink-900); }
+table.grid tr.built td { background: #fff4bf; }
 
-.pillrow { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
-.pill {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  background: var(--ink-50);
-  border: 1px solid var(--ink-100);
-  color: var(--ink-500);
-  padding: 3px 8px;
-  border-radius: var(--r-pill);
+/* Phones: each row becomes a card with its column names inline, so the page never scrolls sideways. */
+@media (max-width: 760px) {
+  .map-intro-row { grid-template-columns: 1fr; gap: 20px; }
+  .play-card { order: -1; }   /* the way into Unit 1 stays on the first screen */
+  .lede { font-size: 17px; }
+  .tbl-wrap { border: 0; background: none; overflow: visible; }
+  table.grid, table.grid tbody, table.grid tr, table.grid td { display: block; width: 100%; }
+  table.grid thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  table.grid tr { border-top: var(--line); padding: 6px 0 14px; }
+  table.grid td { padding: 6px 0; font-size: 16px; border-top: 0; }
+  /* label in a left column; the cell keeps its inline text flow */
+  table.grid td:not(.u) { position: relative; padding-left: 36%; }
+  table.grid td.u { font-size: 18px; padding-top: 10px; }
+  table.grid tr.built td { background: none; }
+  table.grid tr.built td.u { background: var(--sun-400); padding-left: 10px; }
+  table.grid td:not(.u)::before { content: attr(data-label); position: absolute; left: 0; top: 7px; width: calc(36% - 12px); font-weight: 800; color: var(--ink-900); font-size: 14px; line-height: 1.4; }
+  .play-card .btn, .play-row .btn { width: 100%; justify-content: center; }
 }
 
-.cta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  margin: 8px 0 0;
+@media print {
+  .top, .play-card .btn, .play-row .btn { display: none; }
+  .part { break-inside: avoid; }
 }
-.cta a.play {
-  background: var(--green-600);
-  color: #fff;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 12.5px;
-  padding: 10px 18px;
-  border-radius: var(--r-sm);
-  box-shadow: var(--shadow-pop-sm);
-}
-.cta.cta-top { margin: 14px 0 0; }
-.cta a.play:hover { background: var(--green-700); color: #fff; }
-.cta .note { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; color: #5f6e64; }
-
-@media print { .cta a.play { box-shadow: none; } }

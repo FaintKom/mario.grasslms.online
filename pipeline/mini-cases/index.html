@@ -1,657 +1,89 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Three SCORM mini-cases · Mario Rafael Becerra Dueñas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three short SCORM cases · Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="Three short SCORM cases, each built around one decision: sorting a new hire's inbox, the third call from a customer charged twice, and routing purchase orders in a new procurement system.">
+<link rel="canonical" href="https://mario.grasslms.online/pipeline/mini-cases/">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mario.grasslms.online/pipeline/mini-cases/">
+<meta property="og:title" content="Three short SCORM cases · Mario Rafael Becerra Dueñas">
+<meta property="og:description" content="Three short SCORM cases, each built around one decision, and each one opens in the browser.">
+<meta property="og:image" content="https://mario.grasslms.online/previews/d2-scorm-shorts.webp">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../../assets/shell.css">
 <style>
-  :root {
-    --bone: #F4F1EA;
-    --paper: #FAF8F3;
-    --ink: #0B0B0E;
-    --ink-2: #2A2A2F;
-    --ink-3: #5A5A60;
-    --rule: rgba(11, 11, 14, 0.12);
-    --rule-2: rgba(11, 11, 14, 0.06);
-
-    /* Per-case accents */
-    --a-accent: #2563EB;  /* security */
-    --a-tint: #DFE9FF;
-    --b-accent: #C2410C;  /* call centre */
-    --b-tint: #FBE7D3;
-    --c-accent: #0F766E;  /* erp */
-    --c-tint: #D5EBE6;
-  }
-
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--bone);
-    color: var(--ink);
-    font-family: 'Geist', -apple-system, sans-serif;
-    font-feature-settings: 'ss01', 'cv11';
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    overflow-x: hidden;
-  }
-  a { color: inherit; text-decoration: none; }
-
-  .mono { font-family: 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.01em; }
-  .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
-
-  /* ───────── Nav ───────── */
-  .nav {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    backdrop-filter: blur(20px) saturate(1.2);
-    -webkit-backdrop-filter: blur(20px) saturate(1.2);
-    background: rgba(244, 241, 234, 0.78);
-    border-bottom: 1px solid var(--rule-2);
-  }
-  .nav-inner {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 18px 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 12.5px;
-    letter-spacing: 0.02em;
-  }
-  .nav-left { display: flex; gap: 28px; align-items: baseline; }
-  .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 500; }
-  .nav-logo-dot {
-    width: 8px; height: 8px; border-radius: 2px;
-    background: var(--ink);
-    transform: rotate(45deg);
-  }
-  .nav-eyebrow { color: var(--ink-3); }
-  .nav-right { display: flex; gap: 24px; color: var(--ink-3); }
-  .nav-right a { transition: color .2s; }
-  .nav-right a:hover { color: var(--ink); }
-
-  /* ───────── Hero ───────── */
-  .hero {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 120px 48px 80px;
-  }
-  .hero-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    color: var(--ink-3);
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 36px;
-  }
-  .hero-eyebrow::before {
-    content: "";
-    width: 28px; height: 1px;
-    background: var(--ink);
-  }
-  .hero-title {
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-weight: 400;
-    font-size: clamp(56px, 9vw, 132px);
-    line-height: 0.92;
-    letter-spacing: -0.025em;
-    margin: 0;
-    max-width: 14ch;
-  }
-  .hero-title em {
-    font-style: italic;
-    color: var(--ink-3);
-  }
-  .hero-sub {
-    margin-top: 48px;
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 80px;
-    align-items: start;
-  }
-  .hero-sub-left {
-    font-size: 13px;
-    color: var(--ink-3);
-    line-height: 1.6;
-  }
-  .hero-sub-right {
-    font-size: 19px;
-    line-height: 1.45;
-    max-width: 56ch;
-    color: var(--ink-2);
-  }
-  .hero-sub-right strong { color: var(--ink); font-weight: 500; }
-
-  /* ───────── Cases section ───────── */
-  .section-head {
-    max-width: 1320px;
-    margin: 80px auto 0;
-    padding: 0 48px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 18px;
-  }
-  .section-head-label {
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-  }
-  .section-head-meta { font-size: 12px; color: var(--ink-3); display: flex; gap: 18px; }
-
-  .cases {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 0 48px 120px;
-  }
-  .case {
-    display: grid;
-    grid-template-columns: 80px 1fr 1.1fr;
-    gap: 48px;
-    align-items: start;
-    padding: 56px 0 64px;
-    border-bottom: 1px solid var(--rule);
-    position: relative;
-    cursor: pointer;
-    transition: padding 0.5s cubic-bezier(.2,.7,.2,1);
-  }
-  .case::before {
-    content: "";
-    position: absolute;
-    left: -48px; right: -48px; top: 0; bottom: 0;
-    background: var(--accent-tint, transparent);
-    opacity: 0;
-    transition: opacity 0.45s ease;
-    pointer-events: none;
-    z-index: -1;
-  }
-  .case:hover::before { opacity: 0.5; }
-
-  .case-num {
-    font-family: 'Instrument Serif', serif;
-    font-size: 28px;
-    color: var(--ink-3);
-    line-height: 1;
-    padding-top: 4px;
-    font-style: italic;
-  }
-
-  .case-body { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
-  .case-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--ink-3);
-    text-transform: uppercase;
-  }
-  .case-eyebrow-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--accent);
-    transition: transform .4s ease;
-  }
-  .case:hover .case-eyebrow-dot { transform: scale(1.6); }
-  .case-title {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(40px, 5vw, 64px);
-    font-weight: 400;
-    line-height: 0.96;
-    letter-spacing: -0.02em;
-    margin: 0;
-    color: var(--ink);
-  }
-  .case-blurb {
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--ink-2);
-    max-width: 44ch;
-  }
-  .case-keystone {
-    margin-top: 4px;
-    padding: 12px 14px;
-    border-left: 2px solid var(--accent);
-    background: rgba(11,11,14,0.025);
-    font-size: 13.5px;
-    line-height: 1.5;
-    color: var(--ink-2);
-    max-width: 48ch;
-  }
-  .case-keystone b { color: var(--ink); font-weight: 500; }
-  .case-actions {
-    display: flex;
-    gap: 22px;
-    margin-top: 14px;
-    align-items: center;
-  }
-  .case-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13.5px;
-    font-weight: 500;
-    color: var(--ink);
-    padding: 10px 14px;
-    border-radius: 4px;
-    background: var(--ink);
-    color: var(--paper);
-    transition: transform .3s ease, background .25s ease;
-  }
-  .case-cta:hover {
-    background: var(--accent);
-    transform: translateX(2px);
-  }
-  .case-cta-arrow { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
-  .case-cta:hover .case-cta-arrow { transform: translateX(4px); }
-  .case-secondary {
-    font-size: 12.5px;
-    color: var(--ink-3);
-    border-bottom: 1px solid transparent;
-    padding-bottom: 1px;
-    transition: color .2s, border-color .2s;
-  }
-  .case-secondary:hover { color: var(--ink); border-color: var(--ink); }
-
-  /* Preview panel */
-  .case-preview {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    border-radius: 8px;
-    background: linear-gradient(180deg, #fff 0%, #FAF8F3 100%);
-    border: 1px solid var(--rule);
-    overflow: hidden;
-    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 20px 40px -20px rgba(11,11,14,0.08);
-    transition: transform .55s cubic-bezier(.2,.7,.2,1), box-shadow .55s;
-  }
-  .case:hover .case-preview {
-    transform: translateY(-4px);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 30px 60px -25px rgba(11,11,14,0.18);
-  }
-  .preview-corner {
-    position: absolute;
-    top: 12px; right: 14px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    color: var(--ink-3);
-    letter-spacing: 0.06em;
-  }
-
-  /* ─── Case A preview: inbox rows ─── */
-  .pv-a { padding: 38px 22px 22px; }
-  .pv-a-row {
-    display: grid;
-    grid-template-columns: 14px 1fr 60px;
-    gap: 10px;
-    align-items: center;
-    padding: 10px 8px;
-    border-bottom: 1px solid var(--rule-2);
-    font-size: 11px;
-    color: var(--ink-2);
-    transition: transform .5s cubic-bezier(.2,.7,.2,1), opacity .4s;
-  }
-  .pv-a-row:nth-child(1) { transition-delay: 0s; }
-  .pv-a-row:nth-child(2) { transition-delay: .06s; }
-  .pv-a-row:nth-child(3) { transition-delay: .12s; }
-  .pv-a-row:nth-child(4) { transition-delay: .18s; }
-  .pv-a-flag { width: 10px; height: 10px; border-radius: 2px; background: var(--ink-3); }
-  .pv-a-flag.red { background: #DC2626; }
-  .pv-a-flag.amber { background: #D97706; }
-  .pv-a-flag.green { background: #16A34A; }
-  .pv-a-from { font-weight: 500; color: var(--ink); }
-  .pv-a-sub { color: var(--ink-3); font-size: 10.5px; margin-top: 2px; }
-  .pv-a-time { font-family: 'Geist Mono', monospace; font-size: 10px; color: var(--ink-3); text-align: right; }
-  .case:hover .pv-a-row { transform: translateX(4px); }
-  .case:hover .pv-a-row:nth-child(2) { background: var(--a-tint); border-radius: 4px; }
-
-  /* ─── Case B preview: waveform + transcript ─── */
-  .pv-b { padding: 38px 22px 22px; display: flex; flex-direction: column; gap: 14px; }
-  .pv-b-wave { display: flex; align-items: end; gap: 3px; height: 56px; }
-  .pv-b-bar {
-    flex: 1;
-    background: linear-gradient(180deg, var(--b-accent), #F97316);
-    border-radius: 2px;
-    opacity: 0.85;
-    animation: pulse 1.8s ease-in-out infinite;
-  }
-  .case:hover .pv-b-bar { animation-duration: 0.9s; }
-  @keyframes pulse {
-    0%, 100% { transform: scaleY(0.3); }
-    50% { transform: scaleY(1); }
-  }
-  .pv-b-bar:nth-child(1) { animation-delay: 0s; }
-  .pv-b-bar:nth-child(2) { animation-delay: 0.1s; }
-  .pv-b-bar:nth-child(3) { animation-delay: 0.05s; }
-  .pv-b-bar:nth-child(4) { animation-delay: 0.2s; }
-  .pv-b-bar:nth-child(5) { animation-delay: 0.15s; }
-  .pv-b-bar:nth-child(6) { animation-delay: 0.3s; }
-  .pv-b-bar:nth-child(7) { animation-delay: 0.05s; }
-  .pv-b-bar:nth-child(8) { animation-delay: 0.25s; }
-  .pv-b-bar:nth-child(9) { animation-delay: 0.1s; }
-  .pv-b-bar:nth-child(10) { animation-delay: 0.18s; }
-  .pv-b-bar:nth-child(11) { animation-delay: 0.32s; }
-  .pv-b-bar:nth-child(12) { animation-delay: 0.08s; }
-  .pv-b-bar:nth-child(13) { animation-delay: 0.22s; }
-  .pv-b-bar:nth-child(14) { animation-delay: 0.14s; }
-  .pv-b-bar:nth-child(15) { animation-delay: 0.27s; }
-  .pv-b-line {
-    display: flex; gap: 10px; align-items: start;
-    font-size: 11.5px; line-height: 1.4; color: var(--ink-2);
-  }
-  .pv-b-who {
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    flex-shrink: 0;
-    width: 56px;
-    padding-top: 1px;
-  }
-  .pv-b-text { font-style: italic; font-family: 'Instrument Serif', serif; font-size: 14px; line-height: 1.3; color: var(--ink); }
-
-  /* ─── Case C preview: PO routing ─── */
-  .pv-c { padding: 38px 22px 22px; }
-  .pv-c-grid {
-    display: grid;
-    grid-template-columns: 1fr 14px 1fr;
-    gap: 6px;
-    align-items: center;
-    height: 100%;
-  }
-  .pv-c-card {
-    padding: 10px;
-    border: 1px solid var(--rule);
-    border-radius: 6px;
-    background: #fff;
-    font-size: 10px;
-  }
-  .pv-c-card-id { font-family: 'Geist Mono', monospace; color: var(--ink-3); font-size: 9.5px; }
-  .pv-c-card-name { font-weight: 500; margin-top: 4px; color: var(--ink); font-size: 11px; }
-  .pv-c-card-meta { color: var(--ink-3); font-size: 10px; margin-top: 4px; }
-  .pv-c-arrow {
-    color: var(--c-accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform .5s cubic-bezier(.2,.7,.2,1);
-  }
-  .case:hover .pv-c-arrow { transform: translateX(2px); }
-  .pv-c-dest {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .pv-c-bucket {
-    padding: 8px 10px;
-    border: 1px dashed var(--rule);
-    border-radius: 6px;
-    font-size: 10px;
-    color: var(--ink-3);
-    background: rgba(255,255,255,0.4);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .pv-c-bucket.active {
-    border-style: solid;
-    border-color: var(--c-accent);
-    background: var(--c-tint);
-    color: var(--ink);
-  }
-  .pv-c-bucket-count {
-    font-family: 'Geist Mono', monospace;
-    background: rgba(15,118,110,0.15);
-    color: var(--c-accent);
-    padding: 2px 6px;
-    border-radius: 999px;
-    font-size: 10px;
-  }
-
-  /* ───────── Footer ───────── */
-  .footer {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 60px 48px 80px;
-    border-top: 1px solid var(--rule);
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 40px;
-    color: var(--ink-3);
-    font-size: 13px;
-    line-height: 1.5;
-  }
-  .footer-note { max-width: 60ch; }
-  .footer-note b { color: var(--ink); font-weight: 500; }
-  .footer-link {
-    display: inline-flex; align-items: center; gap: 8px;
-    color: var(--ink);
-    border-bottom: 1px solid var(--ink);
-    padding-bottom: 2px;
-  }
-
-  /* Reveal animation */
-  .reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: reveal 0.9s cubic-bezier(.2,.7,.2,1) forwards;
-  }
-  @keyframes reveal {
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .reveal-1 { animation-delay: 0.05s; }
-  .reveal-2 { animation-delay: 0.18s; }
-  .reveal-3 { animation-delay: 0.28s; }
-  .reveal-4 { animation-delay: 0.42s; }
-  .reveal-5 { animation-delay: 0.5s; }
-  .reveal-6 { animation-delay: 0.6s; }
-  .reveal-7 { animation-delay: 0.7s; }
-
-  @media (max-width: 1000px) {
-    .case::before { left: -24px; right: -24px; }
-    .nav-inner, .hero, .section-head, .cases, .footer { padding-left: 24px; padding-right: 24px; }
-    .hero-sub, .case { grid-template-columns: 1fr; gap: 24px; }
-    .case-num { font-size: 22px; padding: 0; }
-    .case-preview { aspect-ratio: 16/10; }
-  }
+  /* This landing has no floor plan at the bottom, so the space shell.css keeps for it goes. */
+  body{padding-bottom:0}
+  .entrance{padding-bottom:clamp(40px,6vw,80px)}
+  .wall{margin-bottom:clamp(28px,4vw,48px)}
+  .wall p+p{color:var(--ink-900);font-size:18px}
+  .exhibit .placard p+p{margin-top:-2px}
+  .screen a{display:block;width:100%;height:100%}
+  .screen img{object-position:top left}
+  footer a{color:inherit}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
 
-<nav class="nav">
-  <div class="nav-inner">
-    <div class="nav-left">
-      <a class="nav-logo" href="../../" style="text-decoration:none;color:inherit;"><span class="nav-logo-dot"></span>← Portfolio</a>
+<header class="top">
+  <a class="brand" href="../../">Mario Rafael Becerra Dueñas</a>
+  <nav class="links" aria-label="Contact"><a href="../../Mario_Becerra_CV.pdf" download>CV</a><a href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">LinkedIn</a></nav>
+</header>
+
+<main id="top">
+<div class="entrance">
+  <div class="wall">
+    <h1>Three short SCORM cases, each built around one decision</h1>
+    <div>
+      <p>Each case started from a problem that a slide course would not fix. Each one puts the learner in the software where the decision is made: an email inbox, an agent desktop on a live call and a procurement system.</p>
+      <p>I built them as short SCORM courses for an LMS, and on this page each one opens straight in the browser.</p>
     </div>
   </div>
-</nav>
 
-<section class="hero">
-  <div class="hero-eyebrow mono reveal reveal-1">3 SCORM mini-cases</div>
-  <h1 class="hero-title reveal reveal-2">
-    Three short simulations<br/><em>for three industries.</em>
-  </h1>
-  <div class="hero-sub">
-    <div class="hero-sub-left mono reveal reveal-3">
-      <div>3 simulations · 3 industries</div>
-      <div style="margin-top:6px;">SCORM 1.2 compliant</div>
+  <article class="exhibit" id="case-a" aria-labelledby="ca">
+    <div class="plinth plinth--lagoon"><div class="screen"><a href="case-a-phish-or-pass.html" tabindex="-1" aria-hidden="true"><img src="shots/case-a.jpg" alt="" width="1600" height="1000"></a></div></div>
+    <div class="placard">
+      <h2 id="ca">Phish-or-Pass, a new hire’s first inbox</h2>
+      <p>I wrote this for new hires in their first week, who join in onboarding cohorts of 8 to 15 a month. Their general awareness training taught them to report anything that looks transactional. They report genuine mail as readily as real attacks, and the security team ends up sorting noise.</p>
+      <p>I want them to judge each message on its tells: the display name against the real address, the link under the cursor, and whether the message was expected.</p>
+      <p>The case runs in a copy of the Outlook inbox, where that decision is made. One of the four messages is a genuine DocuSign envelope that Sarah from People Operations announced an hour earlier, and nobody passes without keeping it.</p>
+      <div class="actions"><a class="btn btn--ink" href="case-a-phish-or-pass.html">Open the case <svg class="ico"><use href="#i-arrow"/></svg></a></div>
     </div>
-    <div class="hero-sub-right reveal reveal-4">
-      I built three short simulations: one for <strong>phishing compliance</strong>, one for <strong>call-centre soft skills</strong> and one for an <strong>ERP rollout</strong>. Each is a working interaction built around a single moment where the business loses money or time today.
-    </div>
-  </div>
-</section>
+  </article>
 
-<div class="section-head reveal reveal-5">
-  <div class="section-head-label mono">Index · three cases</div>
-  <div class="section-head-meta mono">
-    <span>01 to 03</span>
-  </div>
+  <article class="exhibit flip" id="case-b" aria-labelledby="cb">
+    <div class="plinth plinth--clay"><div class="screen"><a href="case-b-first-30-seconds.html" tabindex="-1" aria-hidden="true"><img src="shots/case-b.jpg" alt="" width="1600" height="1000" loading="lazy"></a></div></div>
+    <div class="placard">
+      <h2 id="cb">First-30-Seconds, the third call from a customer charged twice</h2>
+      <p>This case is for contact-centre agents who take escalated billing calls. The caller, Marcus Webb, is on his third call about a duplicate £84.20 charge that two earlier agents marked as resolved. Agents who follow a memorised script treat him as a new caller, explain the charge away or transfer him again.</p>
+      <p>I wanted them to keep to LAER while he is angry: show they can see his history, name the specific failure, check the fault themselves, and close with an amount, a reference and a timeline they can keep.</p>
+      <p>At each of the four steps the learner picks one of three suggested replies, and the grades stay hidden until the choice is made. A tension meter rises with every off-script reply and makes his next line angrier.</p>
+      <div class="actions"><a class="btn btn--ink" href="case-b-first-30-seconds.html">Open the case <svg class="ico"><use href="#i-arrow"/></svg></a></div>
+    </div>
+  </article>
+
+  <article class="exhibit" id="case-c" aria-labelledby="cc">
+    <div class="plinth plinth--green"><div class="screen"><a href="case-c-route-the-po.html" tabindex="-1" aria-hidden="true"><img src="shots/case-c.jpg" alt="" width="1600" height="1000" loading="lazy"></a></div></div>
+    <div class="placard">
+      <h2 id="cc">Route-the-PO, purchase orders in a new procurement system</h2>
+      <p>I wrote this for requesters and buyers going live on a new procurement system. Their usual go-live training is a tour of the screens, and it stops being accurate as soon as the interface changes.</p>
+      <p>The course teaches four routing rules applied from the top, and the first rule that matches decides the queue. The learner routes four orders on a screen that shows only raw data, starting with a €12,480 order from Acme Industrial.</p>
+      <p>In the fourth order the amount points to Finance while an earlier rule sends it to Legal, and that is how the case checks that the order of the rules has been understood.</p>
+      <div class="actions"><a class="btn btn--ink" href="case-c-route-the-po.html">Open the case <svg class="ico"><use href="#i-arrow"/></svg></a></div>
+    </div>
+  </article>
 </div>
+</main>
 
-<section class="cases">
-
-  <!-- ─────────── CASE A ─────────── -->
-  <a class="case reveal reveal-6" href="case-a-phish-or-pass.html"
-     style="--accent: var(--a-accent); --accent-tint: var(--a-tint);">
-    <div class="case-num">01</div>
-    <div class="case-body">
-      <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Compliance · security · onboarding</div>
-      <h2 class="case-title">Phish-or-Pass</h2>
-      <p class="case-blurb">A new hire sorts a day-one inbox. I built it for onboarding cohorts of 8 to 15 new hires a month.</p>
-      <div class="case-keystone">
-        <b>What the learner does:</b> triages a simulated inbox of four messages under soft time pressure. One of them is a <em>trick positive</em>: it looks suspicious but is genuine, and it teaches when <em>not</em> to escalate. Awareness training usually skips that part.
-      </div>
-      <div class="case-actions">
-        <span class="case-cta">Open simulation <span class="case-cta-arrow">→</span></span>
-      </div>
-    </div>
-    <div class="case-preview">
-      <div class="preview-corner mono">INBOX · DAY 1</div>
-      <div class="pv-a">
-        <div class="pv-a-row">
-          <span class="pv-a-flag red"></span>
-          <div>
-            <div class="pv-a-from">IT Helpdesk</div>
-            <div class="pv-a-sub">Action required: your password expires today</div>
-          </div>
-          <div class="pv-a-time">07:58</div>
-        </div>
-        <div class="pv-a-row">
-          <span class="pv-a-flag green"></span>
-          <div>
-            <div class="pv-a-from">Sarah Chen</div>
-            <div class="pv-a-sub">Welcome to the team — your week-1 checklist</div>
-          </div>
-          <div class="pv-a-time">08:22</div>
-        </div>
-        <div class="pv-a-row">
-          <span class="pv-a-flag red"></span>
-          <div>
-            <div class="pv-a-from">Sundar Aravind</div>
-            <div class="pv-a-sub">Quick favour — are you at your desk?</div>
-          </div>
-          <div class="pv-a-time">08:46</div>
-        </div>
-        <div class="pv-a-row">
-          <span class="pv-a-flag"></span>
-          <div>
-            <div class="pv-a-from">DocuSign</div>
-            <div class="pv-a-sub">Sarah Chen sent you a document to sign: Employment Agreement</div>
-          </div>
-          <div class="pv-a-time">09:14</div>
-        </div>
-      </div>
-    </div>
-  </a>
-
-  <!-- ─────────── CASE B ─────────── -->
-  <a class="case reveal reveal-7" href="case-b-first-30-seconds.html"
-     style="--accent: var(--b-accent); --accent-tint: var(--b-tint);">
-    <div class="case-num">02</div>
-    <div class="case-body">
-      <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Customer service · soft skills · de-escalation</div>
-      <h2 class="case-title">First-30-Seconds</h2>
-      <p class="case-blurb">Call-centre de-escalation. The call branches at four points. Every wrong reply pushes the caller's anger meter up, and once it runs high, his next line comes back angrier.</p>
-      <div class="case-keystone">
-        <b>What the learner does:</b> picks a reply at four points in a call with an angry customer. Each point is one step of the call model: listen, acknowledge, explore, respond. A script learned by heart falls apart under pressure, and the wrong replies show exactly how.
-      </div>
-      <div class="case-actions">
-        <span class="case-cta">Open simulation <span class="case-cta-arrow">→</span></span>
-      </div>
-    </div>
-    <div class="case-preview">
-      <div class="preview-corner mono">LIVE CALL · 00:00:14</div>
-      <div class="pv-b">
-        <div class="pv-b-wave" aria-hidden="true">
-          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
-          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
-          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
-          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
-          <span class="pv-b-bar"></span><span class="pv-b-bar"></span><span class="pv-b-bar"></span>
-        </div>
-        <div class="pv-b-line">
-          <div class="pv-b-who">Caller</div>
-          <div class="pv-b-text">"This is the third time I've called about this."</div>
-        </div>
-        <div class="pv-b-line">
-          <div class="pv-b-who">You</div>
-          <div class="pv-b-text" style="color: var(--ink-3); font-style: normal; font-family: 'Geist Mono', monospace; font-size: 11px;">[choose your opener]</div>
-        </div>
-      </div>
-    </div>
-  </a>
-
-  <!-- ─────────── CASE C ─────────── -->
-  <a class="case" href="case-c-route-the-po.html"
-     style="--accent: var(--c-accent); --accent-tint: var(--c-tint);">
-    <div class="case-num">03</div>
-    <div class="case-body">
-      <div class="case-eyebrow"><span class="case-eyebrow-dot"></span>Tool rollout · ERP · procurement</div>
-      <h2 class="case-title">Route-the-PO</h2>
-      <p class="case-blurb">Go-live training for a new procurement system. I teach the routing rules instead of the screens, so the course still works after the next interface redesign.</p>
-      <div class="case-keystone">
-        <b>What the learner does:</b> routes three purchase orders by the company's business rules, not by the ERP screens. Screen layouts change with each interface update, but the rules stay the same, so the rules are what the training teaches.
-      </div>
-      <div class="case-actions">
-        <span class="case-cta">Open simulation <span class="case-cta-arrow">→</span></span>
-      </div>
-    </div>
-    <div class="case-preview">
-      <div class="preview-corner mono">PO-2026-0341 · ROUTE</div>
-      <div class="pv-c">
-        <div class="pv-c-grid">
-          <div class="pv-c-card">
-            <div class="pv-c-card-id">PO-2026-0341</div>
-            <div class="pv-c-card-name">Acme Industrial</div>
-            <div class="pv-c-card-meta">€ 12,480 · CapEx · Vendor T2</div>
-          </div>
-          <div class="pv-c-arrow">→</div>
-          <div class="pv-c-dest">
-            <div class="pv-c-bucket">Auto-approve <span class="pv-c-bucket-count">—</span></div>
-            <div class="pv-c-bucket active">Finance review <span class="pv-c-bucket-count">1</span></div>
-            <div class="pv-c-bucket">Legal &amp; Compliance review <span class="pv-c-bucket-count">—</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </a>
-
-</section>
-
-<footer class="footer">
-  <div class="footer-note">
-    <b>Why these three industries?</b> In each of them, the usual training breaks in a familiar place: people watch a video, memorise a script or take a tour of the interface. In each mini-case I replace that with the specific behaviour the business needs from the learner at the moment that matters.
-  </div>
-  <a class="footer-link" href="../engagement/scorm-shell/">Open flagship case <span>→</span></a>
-</footer>
-
-<script>
-  // Subtle parallax on case previews while scrolling — sets vibe without being noisy.
-  const previews = document.querySelectorAll('.case-preview');
-  let ticking = false;
-  function update() {
-    const vh = window.innerHeight;
-    previews.forEach(p => {
-      const r = p.getBoundingClientRect();
-      const center = r.top + r.height / 2;
-      const t = (center - vh / 2) / vh; // -ish range
-      p.style.setProperty('transform', `translateY(${Math.max(-8, Math.min(8, t * -8))}px)`);
-    });
-    ticking = false;
-  }
-  window.addEventListener('scroll', () => {
-    if (!ticking) { requestAnimationFrame(update); ticking = true; }
-  }, { passive: true });
-  update();
-</script>
-
+<footer><span>© 2026 Mario Rafael Becerra Dueñas</span><a href="../../">Back to the portfolio</a></footer>
 </body>
 </html>

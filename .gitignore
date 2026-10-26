@@ -18,3 +18,11 @@ gen_vo.py
 **/_samples/
 voiceover-script.md
 *.wav
+
+# Working notes and design-review scratch (local only, not part of the site)
+tasks/
+.claude/
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/questions/
+.impeccable/decision-payload.json
