@@ -958,11 +958,6 @@
 
 <script>
 (function () {
-  var live = document.querySelector(".screen--live");
-  var frame = live && live.querySelector("iframe");
-  function fit() { if (frame) frame.style.transform = "scale(" + live.clientWidth / 1280 + ")"; }
-  addEventListener("resize", fit); fit();
-
   // floor plan: the yellow block slides to whichever part of the page is in view
   var here = document.querySelector(".plan .here");
   var links = {};

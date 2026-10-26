@@ -128,7 +128,6 @@ footer{display:flex;justify-content:space-between;gap:16px;padding:24px var(--gu
 @media (max-width:760px){
   body{font-size:16px}
   .top{gap:12px}
-  .screen--live iframe{display:none}
   .client{grid-template-columns:1fr;gap:12px}
   footer{flex-direction:column}
 }
