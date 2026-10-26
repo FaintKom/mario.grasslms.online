@@ -1,10 +1,10 @@
 {
-  "$schema_note": "M5 D5 drill bank. 6 pain statements drawn verbatim/paraphrased from §12 archetypes; each maps to one of 4 props (§13.1). Distractors included for solo-problem hint affordance.",
+  "$schema_note": "Pain statements for M5. Each maps to one of the 4 props. Buyers are the course buyers in scorm-shell/data/sample-profiles.json, plus S.K., Tom's finance lead (data/prospects.json). Distractors are objections, not pains.",
   "props_reference": {
     "1": "Real-time spend control",
-    "2": "Multi-user cards · per-card limits",
-    "3": "Auto-FX at interbank",
-    "4": "Receipt capture + accounting sync"
+    "2": "Team cards with per-card limits",
+    "3": "Interbank-rate FX",
+    "4": "Receipt capture with accounting sync"
   },
   "pains": [
     {
@@ -16,21 +16,21 @@
     },
     {
       "id": "PP-02",
-      "statement": "We just hired 12 engineers — I'm Slack-pinging finance every time someone needs a card.",
+      "statement": "We're hiring six engineers this quarter, and I'm Slack-pinging finance every time someone needs a card.",
       "archetype_label": "Tom · Series-B founder (§12.2)",
       "correct_prop": 2,
       "source": "§12.2 — per-employee card issuance speed"
     },
     {
       "id": "PP-03",
-      "statement": "On €60K/mo of EUR-USD SaaS subscriptions we're leaking ~2.4% to FX spread.",
-      "archetype_label": "S.K. · finance lead (synthetic, §12.2 pairing)",
+      "statement": "On about €80K a month of USD payments for SaaS, AWS and contractors, we're leaking around 2.4% to the FX spread.",
+      "archetype_label": "S.K. · Tom's finance lead",
       "correct_prop": 3,
       "source": "§12.2 + §13.1 prop 3"
     },
     {
       "id": "PP-04",
-      "statement": "Our bookkeeper spends 3–4 days every month re-keying supplier receipts into Xero.",
+      "statement": "Finance tags 400-plus supplier card transactions a month by hand, because Xero can't read our job numbers.",
       "archetype_label": "Emma · manufacturing ops (§12.3)",
       "correct_prop": 4,
       "source": "§12.3 — bookkeeping drudgery"
@@ -60,8 +60,8 @@
     {
       "id": "PP-D-02",
       "statement": "Our accountant won't deal with another tool.",
-      "archetype_label": "Emma · manufacturing ops (§12.3)",
-      "note": "Stakeholder-friction objection — the answer is to bring the bookkeeper onto the call (Class 5), not to pick a prop."
+      "archetype_label": "Sven · industrial wholesale",
+      "note": "Stakeholder-friction objection (M2). The answer is to restate it and bring the accountant onto the call, not to pick a prop."
     },
     {
       "id": "PP-D-03",

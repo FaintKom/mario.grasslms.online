@@ -235,14 +235,11 @@
   font-size: 12.5px;
 }
 
-/* Footer pain summary */
-.app--linkedin-ch .lch-summary {
-  margin-top: 14px;
-  padding: 12px 14px;
-  background: #ffffff;
-  border: 1px solid var(--li-rule);
-  border-radius: 8px;
-  font-size: 12.5px;
-  color: var(--li-ink-2);
-}
-.app--linkedin-ch .lch-summary strong { color: var(--li-ink); font-weight: 600; }
+/* Signals a module asks the rep to pick */
+.app--linkedin-ch .signal.is-pickable { cursor: pointer; }
+.app--linkedin-ch .signal.is-pickable:hover,
+.app--linkedin-ch .signal.is-pickable:focus-visible { outline: 2px solid var(--li-blue, #0a66c2); outline-offset: 2px; }
+.app--linkedin-ch .signal.is-picked,
+.app--linkedin-ch .signal.is-pickable.is-picked { outline: 2px solid #0a8754; outline-offset: 2px; }
+.app--linkedin-ch .signal.is-wrong,
+.app--linkedin-ch .signal.is-pickable.is-wrong { outline: 2px dashed #b42318; outline-offset: 2px; }

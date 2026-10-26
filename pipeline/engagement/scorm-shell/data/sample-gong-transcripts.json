@@ -2,45 +2,309 @@
   {
     "id": "GC-01",
     "rep": "M.G.",
+    "prospect_name": "Maria",
     "prospect_archetype": "storefront",
     "outcome": "demo_booked",
+    "duration_seconds": 770,
     "lines": [
-      { "timestamp_ms": 2000,  "speaker": "M.G.",   "text": "Hi Maria — got 90 seconds? I'll be quick.", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 7500,  "speaker": "Maria",  "text": "Yeah, go ahead.", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 12000, "speaker": "M.G.",   "text": "I noticed Two Pines opened a second location on Deansgate in January — congrats. How are you splitting card spend between the two right now?", "m_move_tag": "M1", "m_move_quality": 4 },
-      { "timestamp_ms": 22000, "speaker": "Maria",  "text": "Honestly? Same card. We reconcile end of month and it's a mess.", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 28000, "speaker": "M.G.",   "text": "So end-of-month reconciliation across both stores is eating bookkeeper time — sounds painful.", "m_move_tag": "M2", "m_move_quality": 4 },
-      { "timestamp_ms": 35000, "speaker": "Maria",  "text": "She's at it six hours a week, easy.", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 40000, "speaker": "M.G.",   "text": "Got it. Two 20-minute slots: Tuesday 10:00 or Wednesday 10:30 — which works to walk through it with your bookkeeper?", "m_move_tag": "M3", "m_move_quality": 5 },
-      { "timestamp_ms": 50000, "speaker": "Maria",  "text": "Wednesday 10:30. Send the invite.", "m_move_tag": null, "m_move_quality": null }
+      {
+        "timestamp_ms": 2000,
+        "speaker": "M.G.",
+        "text": "Hi Maria, it's M.G. from FinTechCard. Quick one.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 5000,
+        "speaker": "M.G.",
+        "text": "I noticed on Companies House you opened a second store on Deansgate in January. Who's approving card spend across both stores now?",
+        "m_move_tag": "M1",
+        "m_move_quality": 5
+      },
+      {
+        "silence": 5
+      },
+      {
+        "timestamp_ms": 18000,
+        "speaker": "Maria",
+        "text": "Well, my bookkeeper does, but honestly she's drowning. Receipts pile up, and she spends about six hours a week reconciling the two stores.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 38000,
+        "speaker": "M.G.",
+        "text": "So your bookkeeper is drowning in receipts from both stores.",
+        "m_move_tag": "M2",
+        "m_move_quality": 4
+      },
+      {
+        "timestamp_ms": 708000,
+        "speaker": "Maria",
+        "text": "We already have a corporate Visa from our bank, though.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 715000,
+        "speaker": "M.G.",
+        "text": "So you already have a corporate Visa from your bank.",
+        "m_move_tag": "M2",
+        "m_move_quality": 5
+      },
+      {
+        "silence": 3
+      },
+      {
+        "timestamp_ms": 722000,
+        "speaker": "Maria",
+        "text": "Yeah, but the controls are a mess. Last quarter a £1,200 charge sat there for two weeks and nobody could say whose it was.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 734000,
+        "speaker": "M.G.",
+        "text": "Got it: seeing who spent what is the broken thing, not the card. Two 20-minute slots: Tuesday 10:00 or Wednesday 10:30. Which works to walk through it with your bookkeeper?",
+        "m_move_tag": "M3",
+        "m_move_quality": 5
+      },
+      {
+        "timestamp_ms": 744000,
+        "speaker": "Maria",
+        "text": "Wednesday 10:30.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 750000,
+        "speaker": "M.G.",
+        "text": "[Calendar invite \"Maria + bookkeeper · Two Pines demo\" sent during the call]",
+        "m_move_tag": "M3",
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 760000,
+        "speaker": "Maria",
+        "text": "Got it. I'll forward it to my bookkeeper.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 766000,
+        "speaker": "M.G.",
+        "text": "Perfect. Talk Wednesday.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      }
     ]
   },
   {
     "id": "GC-02",
     "rep": "Sam",
+    "prospect_name": "Tom",
     "prospect_archetype": "rocket",
     "outcome": "no_meeting_argued_objection",
     "lines": [
-      { "timestamp_ms": 1500,  "speaker": "Sam", "text": "Tom — quick question, you on Brex?", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 6000,  "speaker": "Tom", "text": "Yeah, we are. Why?", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 9000,  "speaker": "Sam", "text": "Well, our per-team budgets are way better than Brex's — way more granular controls and the SSO is cleaner.", "m_move_tag": "FAIL", "m_move_quality": 1 },
-      { "timestamp_ms": 17000, "speaker": "Tom", "text": "OK, well, we just rolled out Brex three months ago. Not changing.", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 22000, "speaker": "Sam", "text": "Sure, but our AWS-spend visibility is actually real-time, not 30-day lagged like Brex.", "m_move_tag": "FAIL", "m_move_quality": 1 },
-      { "timestamp_ms": 30000, "speaker": "Tom", "text": "Look, I have to go. Send me an email if you want.", "m_move_tag": null, "m_move_quality": null }
+      {
+        "timestamp_ms": 1500,
+        "speaker": "Sam",
+        "text": "Tom — quick question, you on Brex?",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 6000,
+        "speaker": "Tom",
+        "text": "Yeah, we are. Why?",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 9000,
+        "speaker": "Sam",
+        "text": "Well, our per-team budgets are way better than Brex's — way more granular controls and the SSO is cleaner.",
+        "m_move_tag": "FAIL",
+        "m_move_quality": 1
+      },
+      {
+        "timestamp_ms": 17000,
+        "speaker": "Tom",
+        "text": "OK, well, we just rolled out Brex three months ago. Not changing.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 22000,
+        "speaker": "Sam",
+        "text": "Sure, but our AWS-spend visibility is actually real-time, not 30-day lagged like Brex.",
+        "m_move_tag": "FAIL",
+        "m_move_quality": 1
+      },
+      {
+        "timestamp_ms": 30000,
+        "speaker": "Tom",
+        "text": "Look, I have to go. Send me an email if you want.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      }
     ]
   },
   {
     "id": "GC-03",
     "rep": "M.G.",
+    "prospect_name": "Emma",
     "prospect_archetype": "factory",
     "outcome": "demo_booked_with_xero_admin",
     "lines": [
-      { "timestamp_ms": 2000,  "speaker": "M.G.",  "text": "Hi Emma — saw Brightline's latest filing, headcount up 18% this year. How is procurement handling card-tagging at that scale?", "m_move_tag": "M1", "m_move_quality": 5 },
-      { "timestamp_ms": 14000, "speaker": "Emma",  "text": "Badly. Finance tags four hundred transactions a month by hand. Xero doesn't see the job-numbers.", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 24000, "speaker": "M.G.",  "text": "So you've got 400 manual tags landing on finance every month because Xero can't read job-numbers off the card transactions — that's the bottleneck.", "m_move_tag": "M2", "m_move_quality": 5 },
-      { "timestamp_ms": 36000, "speaker": "Emma",  "text": "Exactly. We tried two vendors. Both promised Xero line-level export. Both broke it.", "m_move_tag": null, "m_move_quality": null },
-      { "timestamp_ms": 44000, "speaker": "M.G.",  "text": "Fair. Could I get 20 minutes with you and your Xero admin together — Tuesday 14:00 or Thursday 11:30 — to show you the actual export against a real Xero file?", "m_move_tag": "M3", "m_move_quality": 4 },
-      { "timestamp_ms": 56000, "speaker": "Emma",  "text": "Thursday 11:30. I'll bring our Xero admin.", "m_move_tag": null, "m_move_quality": null }
+      {
+        "timestamp_ms": 2000,
+        "speaker": "M.G.",
+        "text": "Hi Emma — saw Brightline's latest filing, headcount up 18% this year. How is procurement handling card-tagging at that scale?",
+        "m_move_tag": "M1",
+        "m_move_quality": 5
+      },
+      {
+        "timestamp_ms": 14000,
+        "speaker": "Emma",
+        "text": "Badly. Finance tags four hundred transactions a month by hand. Xero doesn't see the job numbers.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 24000,
+        "speaker": "M.G.",
+        "text": "So you've got 400 manual tags landing on finance every month because Xero can't read job numbers off the card transactions — that's the bottleneck.",
+        "m_move_tag": "M2",
+        "m_move_quality": 5
+      },
+      {
+        "timestamp_ms": 36000,
+        "speaker": "Emma",
+        "text": "Exactly. The last vendor promised Xero line-level export, and it broke.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 44000,
+        "speaker": "M.G.",
+        "text": "Fair. Could I get 20 minutes with you and your Xero admin together — Tuesday 14:00 or Thursday 11:30 — to show you the actual export against a real Xero file?",
+        "m_move_tag": "M3",
+        "m_move_quality": 4
+      },
+      {
+        "timestamp_ms": 56000,
+        "speaker": "Emma",
+        "text": "Thursday 11:30. I'll bring our Xero admin.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      }
+    ]
+  },
+  {
+    "id": "GC-06",
+    "rep": "L.D.",
+    "prospect_name": "Tom",
+    "prospect_archetype": "rocket",
+    "outcome": "booked_fx_review",
+    "lines": [
+      {
+        "timestamp_ms": 29000,
+        "speaker": "L.D.",
+        "text": "Saw your Series B in April — congrats. How are you handling per-employee card issuance for the six engineers you're hiring?",
+        "m_move_tag": "M1",
+        "m_move_quality": 4
+      },
+      {
+        "timestamp_ms": 36000,
+        "speaker": "Tom",
+        "text": "We already use Brex. We're fine.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 42000,
+        "speaker": "L.D.",
+        "text": "So you already use Brex, and the card side is fine.",
+        "m_move_tag": "M2",
+        "m_move_quality": 5
+      },
+      {
+        "silence": 3
+      },
+      {
+        "timestamp_ms": 52000,
+        "speaker": "Tom",
+        "text": "Yeah. Finance does moan about the FX on our AWS bill, but that's it.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 58000,
+        "speaker": "L.D.",
+        "text": "What does the FX on AWS and your SaaS subscriptions cost you in a month?",
+        "m_move_tag": "M2",
+        "m_move_quality": 4
+      },
+      {
+        "timestamp_ms": 70000,
+        "speaker": "Tom",
+        "text": "Honestly, no idea. Probably a lot.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 76000,
+        "speaker": "L.D.",
+        "text": "Can I show you the FX cost against Brex on last month's spend? 20 minutes, Tuesday at 11:00 or Thursday at 14:00?",
+        "m_move_tag": "M3",
+        "m_move_quality": 5
+      },
+      {
+        "timestamp_ms": 86000,
+        "speaker": "L.D.",
+        "text": "[Calendar invite \"Tom + L.D. · FX cost vs Brex\" sent during the call]",
+        "m_move_tag": "M3",
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 90000,
+        "speaker": "Tom",
+        "text": "Tuesday 11. Send it.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      }
+    ]
+  },
+  {
+    "id": "GC-19",
+    "rep": "P.B.",
+    "prospect_name": "Maria",
+    "prospect_archetype": "storefront",
+    "outcome": "hung_up_pitch_launch",
+    "duration_seconds": 8,
+    "lines": [
+      {
+        "timestamp_ms": 1000,
+        "speaker": "P.B.",
+        "text": "Hi, this is P. calling from FinTechCard. Do you have a moment to talk about your corporate spending?",
+        "m_move_tag": "FAIL",
+        "m_move_quality": 1
+      },
+      {
+        "timestamp_ms": 7000,
+        "speaker": "Maria",
+        "text": "No.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      },
+      {
+        "timestamp_ms": 8000,
+        "speaker": "—",
+        "text": "Call ended.",
+        "m_move_tag": null,
+        "m_move_quality": null
+      }
     ]
   }
 ]

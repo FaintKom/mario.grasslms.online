@@ -738,16 +738,27 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 </svg>
 <!-- part:gslides:end -->
 <style>
-  /* One screen on open: the deck window takes whatever the fixed rows leave. */
+  /* The deck window has a fixed body height: squeezed into whatever the page
+     had left, its toolbar slid out of view and the status strip landed on top
+     of the slide. The strip scrolls; the slide keeps 16:9 inside the stage. */
   body { padding: var(--page-top) 0 var(--page-bottom); }
-  .wrap { height: calc(100svh - var(--page-pad)); }
+  .wrap { height: auto; }
   h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
   .lede { font-size: var(--t-sm); max-width: 78ch; }
   .stack--loose { gap: var(--s-4); }
 
-  .gs { flex: 1 1 0; min-height: 240px; display: flex; flex-direction: column; }
-  .gs__body { flex: 1 1 0; min-height: 0; }
-  .gs__strip { max-height: 100%; }
+  .gs { display: flex; flex-direction: column; }
+  .gs__body { height: 320px; }
+  .gs__strip { height: 100%; max-height: none; }
+  .gs__stage { height: 100%; min-height: 0; padding: 14px; }
+  .gs__slide { height: 100%; width: auto; max-width: 100%; }
+  /* Every thumbnail as wide as the strip, whatever its slide holds. */
+  .gs-thumb { width: 100%; }
+  @media (max-width: 720px) {
+    .gs__body { height: auto; }
+    .gs__strip { height: auto; }
+    .gs__stage { height: 240px; }
+  }
 
   /* The three steps run across the bottom rather than as three stacked cards:
      stacked, they pushed the deck itself off the screen. */
@@ -765,8 +776,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .step h3 { font-size: var(--t-md); }
 
   .fixlist { margin: 0; padding: 0; display: grid; gap: var(--s-2); }
-  .fixlist li { list-style: none; display: grid; grid-template-columns: auto 1fr; gap: var(--s-2); font-size: var(--t-sm); }
-  .fixlist b { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); white-space: nowrap; }
+  .fixlist li { list-style: none; display: grid; grid-template-columns: 6.6em 1fr; gap: var(--s-2); font-size: var(--t-sm); }
+  .fixlist b { font-size: var(--t-xs); color: var(--color-text-muted); white-space: nowrap; }
 
   .drop {
     display: grid; place-items: center; gap: var(--s-1);
@@ -791,11 +802,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .result.is-bad .result__mark { color: var(--color-danger-fg); }
   .result__why { color: var(--color-text-muted); font-size: var(--t-2xs); }
 
+  .step__body { font-size: var(--t-sm); }
+  /* For a grown-up checking the checker, not for the child: kept quiet. */
+  .example { font-size: var(--t-xs); color: var(--color-text-subtle); }
+  .example:hover { color: var(--color-text); }
+
   [hidden] { display: none !important; }
 
   /* The last notch, for a screen with barely 660px of room. */
   @media (max-height: 700px) {
-    .gs { min-height: 170px; }
     .gs__stage { padding: 10px; }
     .gs__toolwrap { padding: 4px 10px 6px; }
   }
@@ -803,10 +818,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <style>
   /* Way back to the catalogue, same look as its own back link. */
   .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+  /* Section labels in plain sentence case at body size, not small capitals. */
+  .tag { margin: 0; font-size: var(--t-sm); font-weight: 700; color: var(--color-text-muted); }
 </style>
 <script src="../../../_shared/desktop-only.js" data-shot="desktop-task-d1.jpg" data-back="../../index.html" data-back-label="Back to all activities" defer></script>
 </head>
@@ -815,16 +832,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Spaceport · sector D · task 1</p>
+      <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">The deck is in</span> <em class="mark" data-t="title2">the wrong order</em></h1>
-    <p class="lede" data-t="intro">Download the mission deck, fix it in whatever slide program you use, and bring it back here. This page opens the file and checks it slide by slide. Nothing is uploaded anywhere.</p>
+    <h1><span data-t="title1">Fixing a</span> <em class="mark" data-t="title2">slide deck</em></h1>
+    <p class="lede" data-t="intro">Download the mission deck and fix it in whichever slide program you use. Then open it here, and the page will check it slide by slide without sending it anywhere.</p>
   </header>
 
   <div class="gs">
@@ -873,7 +889,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     </div>
 
     <div class="gs__status">
-      <span data-t="deckState">Four slides, as they came</span>
+      <span data-t="deckState">The deck as it arrives, before any fixes</span>
       <b id="slidePos"></b>
     </div>
   </div>
@@ -883,10 +899,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       <div class="step">
         <span class="steps__n">1</span>
         <div class="stack stack--tight">
-          <h3 data-t="step1">Take the files</h3>
+          <h3 data-t="step1">Download the files</h3>
+          <p class="muted step__body" data-t="step1body">The four slides are in the wrong order, two of them are missing their text, and one is missing its picture.</p>
           <div class="row">
             <a class="btn btn--sm" id="deck" href="mission_template_en.pptx" download data-t="getDeck">Mission deck (.pptx)</a>
-            <a class="btn btn--sm btn--ghost" href="rocket.svg" download data-t="getRocket">Rocket picture (.svg)</a>
+            <a class="btn btn--sm btn--ghost" href="rocket.png" download data-t="getRocket">Rocket picture (.png)</a>
+            <a class="btn btn--sm btn--ghost" href="rocket.svg" download data-t="getRocketSvg">Same picture as .svg</a>
           </div>
         </div>
       </div>
@@ -896,7 +914,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       <div class="step">
         <span class="steps__n">2</span>
         <div class="stack stack--tight">
-          <h3 data-t="step2">Fix four things</h3>
+          <h3 data-t="step2">Fix the four slides</h3>
           <ul class="fixlist" id="fixlist"></ul>
         </div>
       </div>
@@ -906,7 +924,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       <div class="step">
         <span class="steps__n">3</span>
         <div class="stack stack--tight">
-          <h3 data-t="step3">Bring it back</h3>
+          <h3 data-t="step3">Open the fixed deck here</h3>
           <div class="drop" id="drop" tabindex="0" role="button">
             <span class="drop__icon" aria-hidden="true">📊</span>
             <span data-t="dropHere">Drop your .pptx here, or tap to choose it</span>
@@ -915,6 +933,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           <input type="file" id="file" accept=".pptx" hidden>
           <div id="verdict" hidden></div>
           <div><button class="btn btn--sm" id="check" data-t="check" disabled>Check the deck</button></div>
+          <a class="example" id="example" href="mission_example_en.pptx" download data-t="getExample">Download a finished example to test the checker</a>
         </div>
       </div>
     </section>
@@ -951,91 +970,102 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
      with DecompressionStream, so the page still works from a file:// path or
      inside a frameBox with no network. */
 
-  var KEYWORDS = {
-    goal:       ["goal", "objetivo", "цель", "tujuan"],
-    crew:       ["crew", "tripulaci", "экипаж", "kru"],
-    route:      ["route", "ruta", "маршрут", "rute"],
-    results:    ["result", "resultado", "итог", "hasil"],
-    crewText:   ["pilot", "engineer", "scientist", "piloto", "ingenier", "cient", "инженер", "учён", "insinyur", "ilmuwan"],
-    resultText: ["success", "completed", "éxito", "exito", "completada", "успешно", "выполнен", "berhasil"]
+  /* ---- deck reader: begin ---------------------------------------------- */
+
+  /* Which slide is which, told apart by the words of its own title. */
+  var ORDER = ["goal", "crew", "route", "results"];
+  var TITLE_WORDS = {
+    goal:    ["goal", "objetivo"],
+    crew:    ["crew", "tripulaci"],
+    route:   ["route", "ruta"],
+    results: ["result", "resultado"]
   };
+
+  /* Everything the template itself already says on the two slides the child
+     writes on, in both languages. Whatever words are left over are the
+     child's own, so names, jobs or a sentence about the mission all count,
+     and leaving the yellow "write here" note alone does not. */
+  var TEMPLATE_WORDS = {
+    crew: "crew write the crew members names here tripulación escribe los nombres de la tripulación aquí",
+    results: "mission results write the mission result here resultados de la misión escribe el resultado de la misión aquí"
+  };
+
+  function words(text) { return text.toLowerCase().match(/[\p{L}\p{N}]+/gu) || []; }
 
   var T = {
     en: {
-      toMap: "Back to the map",
       deckName: "Mission deck", share: "Share", present: "Slideshow",
       mFile: "File", mEdit: "Edit", mView: "View", mInsert: "Insert",
       mFormat: "Format", mSlide: "Slide", mHelp: "Help",
       newSlide: "New slide", layout: "Layout", theme: "Theme", transition: "Transition",
-      deckState: "Four slides, exactly as they came",
-      addText: "Click to add text", addImage: "The picture is missing",
+      deckState: "The deck as it arrives, before any fixes",
       slideOf: function (n, all) { return "Slide " + n + " of " + all; },
-      eyebrow: "Spaceport · sector D · task 1",
-      title1: "The deck is in", title2: "the wrong order",
-      intro: "Download the mission deck, fix it in whatever slide program you use, and bring it back here. This page opens the file and checks it slide by slide. Nothing is uploaded anywhere.",
-      step1: "Take the files",
-      step1body: "The deck has four slides in the wrong order, two slides missing their text, and one slide missing its picture.",
-      getDeck: "Mission deck (.pptx)", getRocket: "Rocket picture (.svg)",
-      step2: "Fix four things",
-      step3: "Bring it back",
+      allActivities: "All activities", toMap: "Back to the map",
+      title1: "Fixing a", title2: "slide deck",
+      intro: "Download the mission deck and fix it in whichever slide program you use. Then open it here, and the page will check it slide by slide without sending it anywhere.",
+      step1: "Download the files",
+      step1body: "The four slides are in the wrong order, two of them are missing their text, and one is missing its picture.",
+      getDeck: "Mission deck (.pptx)", getRocket: "Rocket picture (.png)", getRocketSvg: "Same picture as .svg",
+      getExample: "Download a finished example to test the checker",
+      step2: "Fix the four slides",
+      step3: "Open the fixed deck here",
       dropHere: "Drop your .pptx here, or tap to choose it",
       check: "Check the deck",
       fixes: [
-        ["Slide 1", "Mission goal: already complete, it just has to come first."],
-        ["Slide 2", "Crew: write who is flying (a pilot, an engineer, a scientist)."],
+        ["Slide 1", "Mission goal: this slide is already complete and only needs to move to the front."],
+        ["Slide 2", "Crew: write who is flying, either by name or by job, for example a pilot, an engineer and a scientist."],
         ["Slide 3", "Flight route: insert the rocket picture you downloaded."],
-        ["Slide 4", "Mission results: write how the mission went."]
+        ["Slide 4", "Mission results: write a sentence about how the mission went."]
       ],
-      wrongType: "That is not a .pptx file. Save your deck as PowerPoint, then bring it back.",
+      wrongType: "That is not a .pptx file. Save your deck in PowerPoint format and try again.",
       unreadable: "This file will not open. Save it again as .pptx and try once more.",
-      slideNames: ["Slide 1 — Mission goal", "Slide 2 — Crew", "Slide 3 — Flight route", "Slide 4 — Mission results"],
+      slideNames: ["Slide 1, mission goal", "Slide 2, crew", "Slide 3, flight route", "Slide 4, mission results"],
       why: {
         missing: "This slide is not in the deck.",
         order:   "A different slide is in this position.",
         text:    "The slide is in place, but its text is still missing.",
         image:   "The slide is in place, but the picture is missing."
       },
-      allGood: "Everything checks out",
-      allGoodBody: "Four slides, right order, nothing missing.",
+      allGood: "The deck is ready",
+      allGoodBody: "All four slides are in the right order, and nothing is missing from any of them.",
       someBad: function (n) { return n === 1 ? "One slide still needs work" : n + " slides still need work"; }
     },
     es: {
-      toMap: "Volver al mapa",
       deckName: "Presentación de la misión", share: "Compartir", present: "Presentar",
       mFile: "Archivo", mEdit: "Editar", mView: "Ver", mInsert: "Insertar",
       mFormat: "Formato", mSlide: "Diapositiva", mHelp: "Ayuda",
       newSlide: "Nueva diapositiva", layout: "Diseño", theme: "Tema", transition: "Transición",
-      deckState: "Cuatro diapositivas, tal como llegaron",
-      addText: "Haz clic para añadir texto", addImage: "Falta la imagen",
+      deckState: "La presentación tal como llega, sin arreglar",
       slideOf: function (n, all) { return "Diapositiva " + n + " de " + all; },
-      eyebrow: "Puerto espacial · sector D · tarea 1",
-      title1: "La presentación está", title2: "en mal orden",
-      intro: "Descarga la presentación, arréglala en el programa de diapositivas que uses y tráela de vuelta aquí. Esta página abre el archivo y lo revisa diapositiva a diapositiva: no se sube a ningún sitio.",
-      step1: "Llévate los archivos",
-      step1body: "La presentación tiene cuatro diapositivas en mal orden, dos sin su texto y una sin su imagen.",
-      getDeck: "Presentación (.pptx)", getRocket: "Imagen del cohete (.svg)",
-      step2: "Arregla cuatro cosas",
-      step3: "Tráela de vuelta",
+      allActivities: "Todas las actividades", toMap: "Volver al mapa",
+      title1: "Arreglar una", title2: "presentación",
+      intro: "Descarga la presentación de la misión y arréglala en el programa de diapositivas que uses. Después ábrela aquí, y la página la revisará diapositiva a diapositiva sin enviarla a ningún sitio.",
+      step1: "Descarga los archivos",
+      step1body: "Las cuatro diapositivas están en mal orden, a dos les falta el texto y a una le falta la imagen.",
+      getDeck: "Presentación (.pptx)", getRocket: "Imagen del cohete (.png)", getRocketSvg: "La misma imagen en .svg",
+      getExample: "Descarga un ejemplo terminado para probar el comprobador",
+      step2: "Arregla las cuatro diapositivas",
+      step3: "Abre aquí la presentación arreglada",
       dropHere: "Suelta aquí tu .pptx, o toca para elegirlo",
       check: "Comprobar la presentación",
       fixes: [
-        ["Diapositiva 1", "Objetivo de la misión: ya está completa, solo tiene que ir primero."],
-        ["Diapositiva 2", "Tripulación: escribe quién va — un piloto, una ingeniera, un científico."],
-        ["Diapositiva 3", "Ruta de vuelo: inserta la imagen del cohete que descargaste."],
-        ["Diapositiva 4", "Resultados: escribe cómo salió la misión."]
+        ["Diapositiva 1", "Objetivo de la misión: esta diapositiva ya está completa y solo hay que ponerla la primera."],
+        ["Diapositiva 2", "Tripulación: escribe quién va en la nave, con su nombre o con su oficio, por ejemplo un piloto, una ingeniera y un científico."],
+        ["Diapositiva 3", "Ruta de vuelo: inserta la imagen del cohete que has descargado."],
+        ["Diapositiva 4", "Resultados de la misión: escribe una frase sobre cómo salió la misión."]
       ],
-      wrongType: "Ese no es un archivo .pptx. Guarda tu presentación como PowerPoint y tráela otra vez.",
-      unreadable: "Este archivo no se abre. Guárdalo otra vez como .pptx e inténtalo de nuevo.",
-      slideNames: ["Diapositiva 1 — Objetivo", "Diapositiva 2 — Tripulación", "Diapositiva 3 — Ruta de vuelo", "Diapositiva 4 — Resultados"],
+      wrongType: "Ese archivo no es un .pptx. Guarda la presentación en formato PowerPoint y vuelve a intentarlo.",
+      unreadable: "Este archivo no se abre. Guárdalo otra vez como .pptx y vuelve a intentarlo.",
+      slideNames: ["Diapositiva 1, objetivo", "Diapositiva 2, tripulación", "Diapositiva 3, ruta de vuelo", "Diapositiva 4, resultados"],
       why: {
         missing: "Esta diapositiva no está en la presentación.",
         order:   "En esta posición hay otra diapositiva.",
         text:    "La diapositiva está en su sitio, pero le falta el texto.",
         image:   "La diapositiva está en su sitio, pero le falta la imagen."
       },
-      allGood: "Todo correcto",
-      allGoodBody: "Cuatro diapositivas, en orden, sin nada que falte.",
-      someBad: function (n) { return n === 1 ? "Falta arreglar una diapositiva" : "Faltan arreglar " + n + " diapositivas"; }
+      allGood: "La presentación está lista",
+      allGoodBody: "Las cuatro diapositivas están en el orden correcto, y a ninguna le falta nada.",
+      someBad: function (n) { return n === 1 ? "Queda una diapositiva por arreglar" : "Quedan " + n + " diapositivas por arreglar"; }
     }
   };
 
@@ -1096,41 +1126,109 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     return new TextDecoder().decode(out);
   }
 
+  function attr(tag, name) {
+    var m = tag.match(new RegExp("\\s" + name + "=\"([^\"]*)\""));
+    return m ? m[1] : null;
+  }
+
+  function unescapeXml(s) {
+    return s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&apos;/g, "'")
+      .replace(/&#x([0-9a-f]+);/gi, function (_, h) { return String.fromCodePoint(parseInt(h, 16)); })
+      .replace(/&#(\d+);/g, function (_, n) { return String.fromCodePoint(+n); })
+      .replace(/&amp;/g, "&");
+  }
+
+  /* The order a slide program shows is the list in presentation.xml, not the
+     numbers in the file names: a program is free to keep slide1.xml for a
+     slide it has moved to the end. File names are only the fallback. */
+  async function slideParts(zip) {
+    var pres = await readText(zip, "ppt/presentation.xml");
+    var rels = await readText(zip, "ppt/_rels/presentation.xml.rels");
+    var list = [], m, re;
+    if (pres && rels) {
+      var target = {};
+      re = /<Relationship\b[^>]*>/g;
+      while ((m = re.exec(rels)) !== null) {
+        var id = attr(m[0], "Id"), to = attr(m[0], "Target");
+        if (id && to) target[id] = to.charAt(0) === "/" ? to.slice(1) : "ppt/" + to;
+      }
+      re = /<p:sldId\b[^>]*>/g;
+      while ((m = re.exec(pres)) !== null) {
+        var part = target[attr(m[0], "r:id")];
+        if (part && zip.entries[part]) list.push(part);
+      }
+    }
+    if (!list.length) {
+      for (var i = 1; i <= 40 && zip.entries["ppt/slides/slide" + i + ".xml"]; i++) {
+        list.push("ppt/slides/slide" + i + ".xml");
+      }
+    }
+    return list;
+  }
+
+  /* Runs inside one paragraph are glued back together without a gap: a
+     program may split one word over two runs, and "pi lot" is not "pilot". */
   function slideText(xml) {
-    var out = [], re = /<a:t>([^<]*)<\/a:t>/g, m;
-    while ((m = re.exec(xml)) !== null) out.push(m[1]);
-    return out.join(" ").toLowerCase();
+    return unescapeXml(xml.split(/<\/a:p>|<a:br\b/).map(function (para) {
+      var out = "", re = /<a:t(?:\s[^>]*)?>([^<]*)<\/a:t>/g, m;
+      while ((m = re.exec(para)) !== null) out += m[1];
+      return out;
+    }).join(" ")).toLowerCase();
   }
 
-  function hasAny(text, list) {
-    return list.some(function (k) { return text.indexOf(k) !== -1; });
+  /* The earliest title word wins: the title comes before anything written
+     underneath it, so a crew line that mentions the results does not turn
+     the crew slide into the results slide. */
+  function kindOf(text) {
+    var best = null, at = Infinity;
+    ORDER.forEach(function (k) {
+      TITLE_WORDS[k].forEach(function (w) {
+        var i = text.indexOf(w);
+        if (i !== -1 && i < at) { at = i; best = k; }
+      });
+    });
+    return best;
   }
 
-  function judge(slides, hasImage) {
+  function hasOwnWords(text, kind) {
+    var known = {};
+    words(TEMPLATE_WORDS[kind]).forEach(function (w) { known[w] = true; });
+    return words(text).some(function (w) { return !known[w] && /\p{L}.*\p{L}/u.test(w); });
+  }
+
+  /* A picture counts when it is on the route slide itself: a picture
+     element, or an image the slide links to. */
+  async function hasPicture(zip, part, xml) {
+    if (/<p:pic[\s>]/.test(xml)) return true;
+    var slash = part.lastIndexOf("/");
+    var rels = await readText(zip, part.slice(0, slash) + "/_rels/" + part.slice(slash + 1) + ".rels");
+    return !!rels && /relationships\/image"/.test(rels) && /r:embed="/.test(xml);
+  }
+
+  async function readDeck(zip) {
+    var parts = await slideParts(zip), slides = [];
+    for (var i = 0; i < parts.length; i++) {
+      var xml = await readText(zip, parts[i]);
+      if (xml === null) continue;
+      var text = slideText(xml), kind = kindOf(text);
+      slides.push({ text: text, kind: kind, pic: kind === "route" ? await hasPicture(zip, parts[i], xml) : false });
+    }
+    return slides;
+  }
+
+  function judge(slides) {
     var w = t().why;
-    var out = [];
-
-    if (slides.length < 1) out.push({ ok: false, why: w.missing });
-    else if (!hasAny(slides[0], KEYWORDS.goal)) out.push({ ok: false, why: w.order });
-    else out.push({ ok: true });
-
-    if (slides.length < 2) out.push({ ok: false, why: w.missing });
-    else if (!hasAny(slides[1], KEYWORDS.crew)) out.push({ ok: false, why: w.order });
-    else if (!hasAny(slides[1], KEYWORDS.crewText)) out.push({ ok: false, why: w.text });
-    else out.push({ ok: true });
-
-    if (slides.length < 3) out.push({ ok: false, why: w.missing });
-    else if (!hasAny(slides[2], KEYWORDS.route)) out.push({ ok: false, why: w.order });
-    else if (!hasImage) out.push({ ok: false, why: w.image });
-    else out.push({ ok: true });
-
-    if (slides.length < 4) out.push({ ok: false, why: w.missing });
-    else if (!hasAny(slides[3], KEYWORDS.results)) out.push({ ok: false, why: w.order });
-    else if (!hasAny(slides[3], KEYWORDS.resultText)) out.push({ ok: false, why: w.text });
-    else out.push({ ok: true });
-
-    return out;
+    return ORDER.map(function (want, i) {
+      if (!slides.some(function (s) { return s.kind === want; })) return { ok: false, why: w.missing };
+      var s = slides[i];
+      if (!s || s.kind !== want) return { ok: false, why: w.order };
+      if ((want === "crew" || want === "results") && !hasOwnWords(s.text, want)) return { ok: false, why: w.text };
+      if (want === "route" && !s.pic) return { ok: false, why: w.image };
+      return { ok: true };
+    });
   }
+
+  /* ---- deck reader: end ------------------------------------------------ */
 
   async function check() {
     var d = t();
@@ -1138,19 +1236,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     byId("report").hidden = true;
     try {
       var zip = openZip(await picked.arrayBuffer());
-      var slides = [];
-      for (var i = 1; i <= 40; i++) {
-        var xml = await readText(zip, "ppt/slides/slide" + i + ".xml");
-        if (xml === null) break;
-        slides.push(slideText(xml));
-      }
+      var slides = await readDeck(zip);
       if (!slides.length) { say("no", d.unreadable); return; }
 
-      var hasImage = Object.keys(zip.entries).some(function (n) {
-        return n.indexOf("ppt/media/") === 0;
-      });
-
-      var verdicts = judge(slides, hasImage);
+      var verdicts = judge(slides);
       var bad = verdicts.filter(function (v) { return !v.ok; }).length;
 
       var list = byId("results"); list.innerHTML = "";
@@ -1169,8 +1258,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
       byId("reportTitle").textContent = bad ? d.someBad(bad) : d.allGood;
       byId("report").hidden = false;
-      remember();
-      if (!bad) say("ok", d.allGoodBody);
+      /* Only a clean deck counts as done on the sector map. */
+      if (!bad) { remember(); say("ok", d.allGoodBody); }
     } catch (err) {
       say("no", d.unreadable);
     }
@@ -1200,21 +1289,22 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   byId("file").addEventListener("change", function (e) { take(e.target.files[0]); });
   byId("check").addEventListener("click", check);
 
-  /* The deck as it arrives: the goal slide is not first, two slides have no
-     text yet and the route slide has no picture. Showing it before the child
-     downloads anything makes the four faults visible rather than described. */
+  /* The deck as it arrives, slide for slide the same as the .pptx the child
+     downloads: results first, the goal last, two yellow "write here" notes
+     and an empty picture box. Showing it before the download makes the four
+     faults visible rather than described. */
   var DECK = {
     en: [
-      { title: "Crew" },
-      { title: "Mission goal", body: "Land on the red planet and bring back one rock." },
-      { title: "Flight route", pic: true },
-      { title: "Mission results" }
+      { title: "Mission Results", ph: "Write the mission result here" },
+      { title: "Flight Route", body: "Earth → Moon → Mars", ph: "Insert the rocket image here", pic: true },
+      { title: "Crew", ph: "Write the crew members names here" },
+      { title: "Mission Goal", body: "Explore planet Mars and find traces of water" }
     ],
     es: [
-      { title: "Tripulación" },
-      { title: "Objetivo de la misión", body: "Aterrizar en el planeta rojo y traer una roca." },
-      { title: "Ruta de vuelo", pic: true },
-      { title: "Resultados de la misión" }
+      { title: "Resultados de la Misión", ph: "Escribe el resultado de la misión aquí" },
+      { title: "Ruta de Vuelo", body: "Tierra → Luna → Marte", ph: "Inserta la imagen del cohete aquí", pic: true },
+      { title: "Tripulación", ph: "Escribe los nombres de la tripulación aquí" },
+      { title: "Objetivo de la Misión", body: "Explorar el planeta Marte y encontrar rastros de agua" }
     ]
   };
   var slideAt = 0;
@@ -1242,7 +1332,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         var fb = document.createElement("span");
         fb.className = "gs-thumb__b"; fb.textContent = sl.body;
         face.appendChild(fb);
-      } else {
+      }
+      if (sl.ph) {
         var ph = document.createElement("span");
         ph.className = "gs-thumb__ph";
         face.appendChild(ph);
@@ -1261,7 +1352,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     if (cur.body) {
       var p2 = document.createElement("p"); p2.textContent = cur.body;
       stage.appendChild(p2);
-    } else {
+    }
+    if (cur.ph) {
       var box = document.createElement("div");
       box.className = "gs__ph";
       var wrap = document.createElement("span");
@@ -1274,7 +1366,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         wrap.appendChild(svg);
       }
       var label = document.createElement("span");
-      label.textContent = cur.pic ? d.addImage : d.addText;
+      label.textContent = cur.ph;
       wrap.appendChild(label);
       box.appendChild(wrap);
       stage.appendChild(box);
@@ -1291,6 +1383,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       if (typeof v === "string") el.textContent = v;
     });
     byId("deck").href = "mission_template_" + lang + ".pptx";
+    byId("example").href = "mission_example_" + lang + ".pptx";
 
     paintDeck();
 

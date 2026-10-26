@@ -577,8 +577,25 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     background: var(--color-surface); font: inherit; font-weight: 600; font-size: var(--t-sm);
     color: var(--color-text); cursor: pointer; text-align: left;
   }
+  .pair { display: flex; align-items: center; gap: var(--s-2); }
   .pair[aria-pressed="true"] { border-color: var(--color-primary); background: var(--color-primary-soft); }
-  .pair.is-linked { border-color: var(--color-success); background: var(--color-success-soft); cursor: default; }
+  /* Joined but not yet checked: neutral, numbered, and still tappable to
+     undo. Green is kept for after the check, so a wrong pair never looks
+     right just because it is joined. */
+  .pair.is-linked { border-style: dashed; border-color: var(--ink-400); background: var(--color-surface-2); }
+  .pair.is-right { border-style: solid; border-color: var(--color-success); background: var(--color-success-soft); cursor: default; }
+  .pair__n {
+    flex: none; width: 24px; height: 24px; display: grid; place-items: center;
+    border-radius: var(--radius-pill); background: var(--ink-700); color: #ffffff;
+    font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 700;
+  }
+
+  .source { font-size: var(--t-xs); color: var(--color-text-subtle); }
+  .source a { color: var(--color-info); }
+
+  /* Small labels in plain sentence case, not spaced capitals. */
+  .eyebrow { font-family: var(--font-sans); font-size: var(--t-sm); font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--color-text-muted); }
+  .row--between > .back { align-self: center; }
 
   [hidden] { display: none !important; }
 </style>
@@ -596,16 +613,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--narrow stack stack--loose">
 
   <header class="stack stack--tight">
-    <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 8–11 · what you found out</p>
+      <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
+
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
     <h1><span data-t="title1">Five doors between you and</span> <em class="mark" data-t="title2">Andy</em></h1>
-    <p class="lede" data-t="intro">You already did the detective work. Each door asks about something you saw, and answering it opens the next one.</p>
+    <p class="lede" data-t="intro">The virus has locked Andy, the spaceport's helper robot, behind five doors. Each door asks about one of the spaceport tasks you have played, and when you answer it, the next door opens.</p>
   </header>
 
   <section class="card stack" id="game">
@@ -616,20 +633,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     <div class="doors" id="doors" aria-hidden="true"></div>
 
     <div class="speaker">
-      <div class="speaker__face" aria-hidden="true">🤖</div>
+      <div class="speaker__face" aria-hidden="true">🔒</div>
       <p class="speaker__line" id="say">…</p>
     </div>
+    <p class="source" id="source"></p>
 
     <div id="body"></div>
     <div id="verdict" hidden></div>
     <div class="row">
       <button class="btn" id="check" data-t="check" hidden>Check</button>
-      <button class="btn" id="next" data-t="next" hidden>Next door</button>
+      <button class="btn" id="next" data-t="next" hidden>Go to the next door</button>
     </div>
   </section>
 
   <section class="card stack" id="over" hidden aria-live="polite">
-    <h2 data-t="wonTitle">Andy is out</h2>
+    <h2 data-t="wonTitle">Andy is free</h2>
     <p class="muted" id="wonBody"></p>
     <div><button class="btn" id="again" data-t="again">Play again</button></div>
   </section>
@@ -640,85 +658,126 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 (function () {
   "use strict";
 
-  /* Every answer matches the original activity: eight viruses, SAFE-OK,
-     the password START, the command centre, and the three pairs. */
+  /* Every door asks about a task that is in the catalogue, so a visitor who
+     has played them can answer and one who has not can go and look: each
+     door names its task and links to it. Facts come from those pages:
+     2157 is the impossible launch year in Find and replace (task-c1), START
+     and MARTE are decoded words in The secret cipher (task-c2), the
+     cancelled spacewalk is struck through in Format the report (task-c3),
+     royal-song.mp3 goes to Audio in File Kingdom, and the pairs come from
+     the folder tree (task-a3), the pixel rocket (task-b3) and task-c1.
+
+     Answers are stored as values, never as positions: the options, the
+     letters and the right-hand column are shuffled when a door opens. */
+  const BASE = "../../01-interface-simulators/html-editor-find-replace/";
+  const TASKS = {
+    c1: { href: BASE + "task-c1.html", en: "Find and replace", es: "Buscar y reemplazar" },
+    c2: { href: BASE + "task-c2.html", en: "The secret cipher", es: "La clave secreta" },
+    c3: { href: BASE + "task-c3.html", en: "Format the report", es: "Formatear el informe" },
+    fk: { href: "../file-kingdom/index.html", en: "File Kingdom", es: "Reino de Archivos" },
+    a3: { href: "../cosmodrome-virus/task-a3.html", en: "Rebuild the folder tree", es: "Reconstruir el árbol de carpetas" },
+    b3: { href: "../cosmodrome-virus/task-b3.html", en: "Pixel rocket", es: "Cohete de píxeles" }
+  };
+  const SOURCES = { 1: ["c1"], 2: ["c2"], 3: ["c3"], 4: ["fk"], 5: ["a3", "b3", "c1"] };
+
   const T = {
     en: {
-      toMap: "Back to the map",
-      eyebrow: "Ages 8–11 · what you found out",
+      allActivities: "All activities", toMap: "Back to the map",
       title1: "Five doors between you and", title2: "Andy",
-      intro: "You already did the detective work. Each door asks about something you saw, and answering it opens the next one.",
-      doorLabel: "Door", check: "Check", next: "Next door", again: "Play again",
-      wonTitle: "Andy is out",
+      intro: "The virus has locked Andy, the spaceport's helper robot, behind five doors. Each door asks about one of the spaceport tasks you have played, and when you answer it, the next door opens.",
+      doorLabel: "Door", check: "Check", next: "Go to the next door", again: "Play again",
+      wonTitle: "Andy is free",
+      from: "This door asks about",
+      undo: "Take back the last letter", restartPairs: "Undo all the pairs",
       wonBody: function (n) {
         return n === 5
-          ? "Five doors, five right answers, no second guesses."
-          : "You opened all five. " + n + " of them first time.";
+          ? "You opened all five doors, each one on your first answer."
+          : "You opened all five doors, and " + n + " of them opened on your first answer.";
       },
-      d1: { say: "First door. How many copies of VIRUS3000 did you find?",
-            options: ["6", "7", "8", "9"], right: 2,
-            ok: "Eight. That matches the log.",
-            no: "Not quite. The log says eight." },
-      d2: { say: "The virus is bragging that we never found the cure. What did we write in place of ERROR-X?",
-            options: ["ERROR-X", "VIRUS3000", "SAFE-OK", "DELETE-ALL"], right: 2,
-            ok: "SAFE-OK. Every repaired file carries it now.",
-            no: "It was SAFE-OK, the tag we put on every repaired file." },
-      d3: { say: "Third door wants a password. Put the letters in order. It is the English word for the beginning of something.",
-            letters: ["R", "T", "S", "A", "T"], answer: "START",
-            ok: "START. The door opens.",
-            no: "Not that order. It is the word you say before a race." },
-      d4: { say: "Fourth door. Where did we corner the main virus?",
-            options: ["Server room", "Archive", "Command centre", "Documents"], right: 2,
-            ok: "The command centre. That is where it was hiding.",
-            no: "It was the command centre." },
-      d5: { say: "Last door. Join each thing you did to what came out of it.",
-            left: ["Hunt for the virus", "Repair the files", "Build the password"],
-            right: ["A magnifying glass", "A green tick", "The word START"],
-            ok: "All three joined. That is the whole case in one line.",
-            no: "One of those pairs is off. Take another look." }
+      d1: { say: "When you fixed the mission log with Find and replace, one launch year was impossible. Which year was it?",
+            options: ["2157", "2030", "2026", "2036"], answer: "2157",
+            ok: "2157 is much too far in the future for a rocket that is already waiting on the launch pad.",
+            no: "That year could still happen. Look for the one that is much too far in the future." },
+      d2: { say: "The password for this door is the second word you decoded in the secret cipher. Put its letters in the right order.",
+            answer: "START",
+            ok: "START opens the door.",
+            no: "Those letters do not make the word yet. Think of the word a race begins with." },
+      d3: { say: "In the mission report, Mission Control asked you to change the line about the cancelled spacewalk. What did you do to that line?",
+            options: ["Struck it through", "Made it bold", "Coloured it blue", "Made it bigger"], answer: "Struck it through",
+            ok: "A line through the text shows that the spacewalk was cancelled, and everyone can still read it.",
+            no: "That change would not show that the plan was cancelled. Think about what people do on paper to a plan they drop." },
+      d4: { say: "In the File Kingdom, which room does royal-song.mp3 belong in?",
+            options: ["Audio", "Documents", "Pictures", "Video"], answer: "Audio",
+            ok: "The .mp3 at the end of the name means it is a sound file, so it goes to Audio.",
+            no: "That room takes another kind of file. Look again at the letters after the dot." },
+      d5: { say: "This is the last door. Join each task to what you did in it by tapping a task on the left and then its partner on the right.",
+            left: ["Rebuild the folder tree", "Copy the pixel rocket", "Fix the mission log"],
+            right: ["Put the Pilots folder inside Crew", "Paint a plan square by square", "Swap wrong words with Replace all"],
+            ok: "All three pairs match, and the last door opens.",
+            no: "One pair does not match yet. The pairs have been undone, and you can try again." }
     },
     es: {
-      toMap: "Volver al mapa",
-      eyebrow: "8–11 años · lo que descubriste",
+      allActivities: "Todas las actividades", toMap: "Volver al mapa",
       title1: "Cinco puertas entre tú y", title2: "Andy",
-      intro: "El trabajo de detective ya está hecho. Cada puerta pregunta por algo que viste, y responder abre la siguiente.",
-      doorLabel: "Puerta", check: "Comprobar", next: "Siguiente puerta", again: "Jugar otra vez",
+      intro: "El virus ha encerrado a Andy, el robot que ayuda en el puerto espacial, detrás de cinco puertas. Cada puerta pregunta por una de las tareas del puerto espacial que ya has jugado, y cuando la respondes, se abre la siguiente.",
+      doorLabel: "Puerta", check: "Comprobar", next: "Ir a la siguiente puerta", again: "Jugar otra vez",
       wonTitle: "Andy está libre",
+      from: "Esta puerta pregunta por",
+      undo: "Quitar la última letra", restartPairs: "Deshacer todas las parejas",
       wonBody: function (n) {
         return n === 5
-          ? "Cinco puertas, cinco aciertos, sin dudar."
-          : "Abriste las cinco. " + n + " a la primera.";
+          ? "Abriste las cinco puertas, cada una con tu primera respuesta."
+          : "Abriste las cinco puertas, y " + n + " de ellas se abrieron con tu primera respuesta.";
       },
-      d1: { say: "Primera puerta. ¿Cuántas copias de VIRUS3000 encontraste?",
-            options: ["6", "7", "8", "9"], right: 2,
-            ok: "Ocho. Coincide con el registro.",
-            no: "No del todo. El registro dice ocho." },
-      d2: { say: "El virus presume de que nunca dimos con la cura. ¿Qué escribimos en lugar de ERROR-X?",
-            options: ["ERROR-X", "VIRUS3000", "SAFE-OK", "DELETE-ALL"], right: 2,
-            ok: "SAFE-OK. Cada archivo reparado lo lleva ahora.",
-            no: "Era SAFE-OK, la etiqueta que pusimos en cada archivo reparado." },
-      d3: { say: "La tercera puerta pide una contraseña. Ordena las letras. Es la palabra inglesa para el comienzo de algo.",
-            letters: ["R", "T", "S", "A", "T"], answer: "START",
-            ok: "START. La puerta se abre.",
-            no: "Ese orden no. Es la palabra que se dice antes de una carrera." },
-      d4: { say: "Cuarta puerta. ¿Dónde acorralamos al virus principal?",
-            options: ["Sala de servidores", "Archivo", "Centro de mando", "Documentos"], right: 2,
-            ok: "El centro de mando. Ahí estaba escondido.",
-            no: "Fue el centro de mando." },
-      d5: { say: "Última puerta. Une cada cosa que hiciste con lo que salió de ella.",
-            left: ["Buscar el virus", "Reparar los archivos", "Formar la contraseña"],
-            right: ["Una lupa", "Una marca verde", "La palabra START"],
-            ok: "Las tres unidas. Ese es el caso entero en una línea.",
-            no: "Uno de los pares no encaja. Míralo otra vez." }
+      d1: { say: "Cuando arreglaste el diario de misión con Buscar y reemplazar, había un año de lanzamiento imposible. ¿Qué año era?",
+            options: ["2157", "2030", "2026", "2036"], answer: "2157",
+            ok: "2157 queda demasiado lejos en el futuro para un cohete que ya espera en la plataforma.",
+            no: "Ese año todavía podría ser. Busca el que queda demasiado lejos en el futuro." },
+      d2: { say: "La contraseña de esta puerta es la primera palabra que descifraste en la clave secreta. Pon sus letras en el orden correcto.",
+            answer: "MARTE",
+            ok: "MARTE abre la puerta.",
+            no: "Esas letras todavía no forman la palabra. Piensa en el planeta rojo." },
+      d3: { say: "En el informe de misión, Control de Misión te pidió cambiar la línea del paseo espacial cancelado. ¿Qué le hiciste a esa línea?",
+            options: ["La tachaste", "La pusiste en negrita", "La pusiste en azul", "La hiciste más grande"], answer: "La tachaste",
+            ok: "Una raya encima del texto muestra que el paseo espacial se canceló, y todos pueden seguir leyéndolo.",
+            no: "Ese cambio no mostraría que el plan se canceló. Piensa qué se hace en un papel con un plan que ya no va." },
+      d4: { say: "En el Reino de Archivos, ¿en qué sala va cancion-real.mp3?",
+            options: ["Audio", "Documentos", "Imágenes", "Vídeo"], answer: "Audio",
+            ok: "El .mp3 del final del nombre significa que es un archivo de sonido, así que va a Audio.",
+            no: "Esa sala es para otro tipo de archivo. Vuelve a mirar las letras que van después del punto." },
+      d5: { say: "Esta es la última puerta. Une cada tarea con lo que hiciste en ella tocando una tarea a la izquierda y después su pareja a la derecha.",
+            left: ["Reconstruir el árbol de carpetas", "Copiar el cohete de píxeles", "Arreglar el diario de misión"],
+            right: ["Meter la carpeta Pilotos dentro de Tripulacion", "Pintar un plano cuadro a cuadro", "Cambiar palabras mal con Reemplazar todo"],
+            ok: "Las tres parejas encajan, y la última puerta se abre.",
+            no: "Una pareja todavía no encaja. Se han deshecho las parejas y puedes volver a intentarlo." }
     }
   };
 
-  var lang = "en", door = 1, score = 0, firstTry = true, solved = 0;
+  var lang = "en", door = 1, score = 0, firstTry = true, solved = 0, passed = false;
   var slots = [], usedLetters = [], links = [], pendingLeft = null;
+  var perm = null, finishTimer = null, over = false;
 
   const $ = function (id) { return document.getElementById(id); };
   const t = function () { return T[lang]; };
   const spec = function () { return t()["d" + door]; };
+
+  /* A shuffled list of the indices 0..n-1. With avoidIdentity it never comes
+     back in the original order, which for letters would be the answer and
+     for pairs would put every partner straight across. */
+  function shuffled(n, avoidIdentity) {
+    var a = [], i, tries = 0;
+    for (i = 0; i < n; i++) a.push(i);
+    do {
+      for (i = n - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var x = a[i]; a[i] = a[j]; a[j] = x;
+      }
+      tries++;
+    } while (avoidIdentity && n > 1 && tries < 50 && a.every(function (v, k) { return v === k; }));
+    return a;
+  }
+
+  function lettersOf(word) { return word.split(""); }
 
   function paintChrome() {
     const d = t();
@@ -733,10 +792,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     db.innerHTML = "";
     for (var i = 1; i <= 5; i++) {
       const x = document.createElement("i");
-      if (i < door) x.className = "is-open";
+      if (i < door || (i === door && passed)) x.className = "is-open";
       else if (i === door) x.className = "is-now";
       db.appendChild(x);
     }
+
+    const src = $("source");
+    src.innerHTML = "";
+    src.appendChild(document.createTextNode(d.from + " "));
+    /* Read as a sentence: "…about A, B and C." */
+    var list = SOURCES[door];
+    list.forEach(function (key, i) {
+      if (i) src.appendChild(document.createTextNode(i === list.length - 1 ? (lang === "es" ? " y " : " and ") : ", "));
+      const a = document.createElement("a");
+      a.href = TASKS[key].href; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = TASKS[key][lang];
+      src.appendChild(a);
+    });
+    src.appendChild(document.createTextNode("."));
   }
 
   function say(kind, text) {
@@ -749,6 +822,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   function pass(text) {
     solved++;
     if (firstTry) score++;
+    passed = true;
     say("ok", text);
     $("check").hidden = true;
     $("next").hidden = door >= 5;
@@ -756,9 +830,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     if (door >= 5) finish();
   }
 
-  function renderDoor() {
+  /* fresh: a new door, so shuffle and forget the old answers. Not fresh:
+     the same door redrawn in the other language, keeping its shuffle, its
+     first-try flag and whether it is already open. */
+  function renderDoor(fresh) {
     const s = spec();
-    firstTry = true; pendingLeft = null;
+    if (fresh) {
+      firstTry = true; passed = false;
+      var n = s.options ? s.options.length : s.left ? s.left.length : 0;
+      perm = s.options ? shuffled(n, false)
+           : s.left ? shuffled(n, true)
+           : null;
+    }
+    pendingLeft = null;
     slots = []; usedLetters = []; links = [];
     $("verdict").hidden = true;
     $("next").hidden = true;
@@ -772,12 +856,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     if (s.options) {
       const box = document.createElement("div");
       box.className = "answers" + (door === 4 ? " answers--grid" : "");
-      s.options.forEach(function (label, i) {
+      perm.forEach(function (i) {
+        const label = s.options[i];
         const b = document.createElement("button");
         b.type = "button"; b.className = "option"; b.textContent = label;
+        b.disabled = passed;
+        if (passed && label === s.answer) b.classList.add("is-right");
         b.onclick = function () {
           if (b.disabled) return;
-          if (i === s.right) {
+          if (label === s.answer) {
             b.classList.add("is-right");
             Array.prototype.forEach.call(box.children, function (x) { x.disabled = true; });
             pass(s.ok);
@@ -789,10 +876,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         box.appendChild(b);
       });
       body.appendChild(box);
+      if (passed) { say("ok", s.ok); $("next").hidden = door >= 5; }
       return;
     }
 
-    if (s.letters) {
+    if (!s.left) {
+      /* The letters door. The shuffle is redrawn per language, because the
+         word itself changes with the language. */
+      const word = s.answer;
+      if (fresh || !perm || perm.length !== word.length) perm = shuffled(word.length, true);
+      const letters = perm.map(function (i) { return word[i]; });
+
       const wrap = document.createElement("div");
       wrap.className = "stack";
       const slotRow = document.createElement("div"); slotRow.className = "slots";
@@ -800,30 +894,33 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
       const paint = function () {
         slotRow.innerHTML = "";
-        for (var i = 0; i < s.answer.length; i++) {
+        for (var i = 0; i < word.length; i++) {
           const sl = document.createElement("div");
-          sl.className = "slot" + (slots[i] ? " is-filled" : "");
-          sl.textContent = slots[i] || "";
+          const shown = passed ? word[i] : slots[i];
+          sl.className = "slot" + (shown ? " is-filled" : "");
+          sl.textContent = shown || "";
           slotRow.appendChild(sl);
         }
         letterRow.innerHTML = "";
-        s.letters.forEach(function (L, i) {
+        letters.forEach(function (L, i) {
           const b = document.createElement("button");
           b.type = "button"; b.className = "letter"; b.textContent = L;
-          b.disabled = usedLetters.indexOf(i) >= 0;
+          b.disabled = passed || usedLetters.indexOf(i) >= 0;
           b.onclick = function () {
-            if (slots.length >= s.answer.length) return;
+            if (slots.length >= word.length) return;
             slots.push(L); usedLetters.push(i); paint();
           };
           letterRow.appendChild(b);
         });
-        $("check").hidden = slots.length !== s.answer.length;
+        $("check").hidden = passed || slots.length !== word.length;
       };
 
       const undo = document.createElement("button");
       undo.type = "button"; undo.className = "btn btn--ghost btn--sm";
       undo.textContent = "←";
-      undo.setAttribute("aria-label", "undo last letter");
+      undo.setAttribute("aria-label", t().undo);
+      undo.title = t().undo;
+      undo.hidden = passed;
       undo.onclick = function () { slots.pop(); usedLetters.pop(); paint(); };
 
       wrap.append(slotRow, letterRow, undo);
@@ -831,71 +928,107 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       paint();
 
       $("check").onclick = function () {
-        if (slots.join("") === s.answer) {
-          Array.prototype.forEach.call(letterRow.children, function (x) { x.disabled = true; });
+        if (slots.join("") === word) {
           pass(s.ok);
+          undo.hidden = true;
+          paint();
         } else {
           firstTry = false; say("no", s.no);
           slots = []; usedLetters = []; paint();
         }
       };
+      if (passed) { say("ok", s.ok); $("next").hidden = door >= 5; }
       return;
     }
 
-    if (s.left) {
-      const grid = document.createElement("div");
-      grid.className = "pairs";
-      const colL = document.createElement("div"); colL.className = "col";
-      const colR = document.createElement("div"); colR.className = "col";
+    /* The pairs door. perm[j] is the original index of the item shown in
+       right-hand row j; a link is right when that index equals the left one. */
+    const grid = document.createElement("div");
+    grid.className = "pairs";
+    const colL = document.createElement("div"); colL.className = "col";
+    const colR = document.createElement("div"); colR.className = "col";
 
-      const paint = function () {
-        colL.innerHTML = ""; colR.innerHTML = "";
-        s.left.forEach(function (label, i) {
-          const b = document.createElement("button");
-          b.type = "button"; b.className = "pair"; b.textContent = label;
-          const linked = links.some(function (l) { return l.l === i; });
-          if (linked) b.classList.add("is-linked");
-          b.setAttribute("aria-pressed", String(pendingLeft === i));
-          b.disabled = linked;
-          b.onclick = function () { pendingLeft = pendingLeft === i ? null : i; paint(); };
-          colL.appendChild(b);
-        });
-        s.right.forEach(function (label, j) {
-          const b = document.createElement("button");
-          b.type = "button"; b.className = "pair"; b.textContent = label;
-          const linked = links.some(function (l) { return l.r === j; });
-          if (linked) b.classList.add("is-linked");
-          b.disabled = linked;
-          b.onclick = function () {
-            if (pendingLeft === null) return;
-            links.push({ l: pendingLeft, r: j });
-            pendingLeft = null;
-            paint();
-          };
-          colR.appendChild(b);
-        });
-        $("check").hidden = links.length !== s.left.length;
-      };
+    const numberOf = function (side, i) {
+      for (var k = 0; k < links.length; k++) if (links[k][side] === i) return k + 1;
+      return 0;
+    };
+    const tag = function (b, n, text) {
+      b.innerHTML = "";
+      if (n) {
+        const badge = document.createElement("span");
+        badge.className = "pair__n"; badge.textContent = String(n);
+        b.appendChild(badge);
+      }
+      b.appendChild(document.createTextNode(text));
+    };
 
-      const reset = document.createElement("button");
-      reset.type = "button"; reset.className = "btn btn--ghost btn--sm";
-      reset.textContent = "↺";
-      reset.setAttribute("aria-label", "start the pairs again");
-      reset.onclick = function () { links = []; pendingLeft = null; paint(); };
+    const paint = function () {
+      colL.innerHTML = ""; colR.innerHTML = "";
+      s.left.forEach(function (label, i) {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "pair";
+        const n = passed ? i + 1 : numberOf("l", i);
+        tag(b, n, label);
+        if (passed) b.classList.add("is-right");
+        else if (n) b.classList.add("is-linked");
+        b.setAttribute("aria-pressed", String(pendingLeft === i));
+        b.disabled = passed;
+        b.onclick = function () {
+          if (n) { links = links.filter(function (l) { return l.l !== i; }); pendingLeft = null; }
+          else pendingLeft = pendingLeft === i ? null : i;
+          paint();
+        };
+        colL.appendChild(b);
+      });
+      perm.forEach(function (orig, j) {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "pair";
+        const n = passed ? orig + 1 : numberOf("r", j);
+        tag(b, n, s.right[orig]);
+        if (passed) b.classList.add("is-right");
+        else if (n) b.classList.add("is-linked");
+        b.disabled = passed;
+        b.onclick = function () {
+          if (n) { links = links.filter(function (l) { return l.r !== j; }); paint(); return; }
+          if (pendingLeft === null) return;
+          links.push({ l: pendingLeft, r: j });
+          pendingLeft = null;
+          paint();
+        };
+        colR.appendChild(b);
+      });
+      $("check").hidden = passed || links.length !== s.left.length;
+    };
 
-      grid.append(colL, colR);
-      body.append(grid, reset);
-      paint();
+    const restart = document.createElement("button");
+    restart.type = "button"; restart.className = "btn btn--ghost btn--sm";
+    restart.textContent = "↺";
+    restart.setAttribute("aria-label", t().restartPairs);
+    restart.title = t().restartPairs;
+    restart.hidden = passed;
+    restart.onclick = function () { links = []; pendingLeft = null; paint(); };
 
-      $("check").onclick = function () {
-        const ok = links.length === 3 && links.every(function (l) { return l.l === l.r; });
-        if (ok) pass(s.ok);
-        else { firstTry = false; say("no", s.no); links = []; paint(); }
-      };
-      return;
-    }
+    grid.append(colL, colR);
+    body.append(grid, restart);
+    paint();
+
+    $("check").onclick = function () {
+      const ok = links.length === s.left.length && links.every(function (l) { return perm[l.r] === l.l; });
+      if (ok) { pass(s.ok); restart.hidden = true; paint(); }
+      else { firstTry = false; say("no", s.no); links = []; paint(); }
+    };
+    if (passed) say("ok", s.ok);
   }
 
+  function paintOver() {
+    $("game").hidden = over;
+    $("over").hidden = !over;
+    if (over) $("wonBody").textContent = t().wonBody(score);
+  }
+
+  /* The end card waits a moment so the last green answer can be seen. The
+     timer is kept so a restart can cancel it; a language switch does not
+     touch the game state any more, so the card it opens is always right. */
   const TASK_ID = "five-doors";
   /* Progress. One shared key, so the spaceport map knows this one is done.
      try/catch: a private window or blocked site data makes localStorage throw. */
@@ -910,20 +1043,22 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   function finish() {
     remember();
-    setTimeout(function () {
-      $("game").hidden = true;
-      $("over").hidden = false;
-      $("wonBody").textContent = t().wonBody(score);
+    clearTimeout(finishTimer);
+    finishTimer = setTimeout(function () {
+      finishTimer = null;
+      over = true;
+      paintOver();
     }, 1400);
   }
 
   function reset() {
-    door = 1; score = 0; solved = 0;
-    $("game").hidden = false; $("over").hidden = true;
-    renderDoor();
+    clearTimeout(finishTimer); finishTimer = null;
+    door = 1; score = 0; solved = 0; over = false;
+    paintOver();
+    renderDoor(true);
   }
 
-  $("next").onclick = function () { door++; renderDoor(); };
+  $("next").onclick = function () { door++; renderDoor(true); };
   $("again").onclick = reset;
 
   document.querySelectorAll(".langs button").forEach(function (b) {
@@ -932,7 +1067,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       document.querySelectorAll(".langs button").forEach(function (x) {
         x.setAttribute("aria-pressed", String(x === b));
       });
-      reset();
+      renderDoor(false);
+      paintOver();
     };
   });
 

@@ -15,18 +15,40 @@ import { registerApp, icon } from "./registry.js";
 const DEFAULT_CHANNEL = {
   channel_id: "sdr-pod-uk-manchester",
   pinned_messages: [
-    { title: "3-move card",      content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: ["pre-training", "M1", "M2", "M3"] },
-    { title: "ICP archetype card", content_md: "Maria (retail) · Tom (SaaS) · Emma (mfg) · Lukas (restaurant)", related_module: "M4" },
-    { title: "4-prop decision card", content_md: "Which prop answers which pain", related_module: "M5" },
-    { title: "Regulation job aid", content_md: "KYC · AML · SCA · PSD2 · GDPR, and when to escalate", related_module: "M6" },
+    { title: "The three moves of a call",
+      content_md: [
+        "Open with one specific question about the buyer's LinkedIn or Companies House profile. Then stay quiet for five seconds.",
+        "When the buyer objects, repeat the objection with at least two of their words. Wait for the answer before you ask an open question.",
+        "Close by offering two times in one sentence, and send the invite before you hang up.",
+      ].join("\n"),
+      related_module: ["pre-training", "M1", "M2", "M3"] },
+    { title: "How to score a lead",
+      content_md: [
+        "Score each lead from 1 to 5 on five things and add the scores up: industry fit, company size, monthly card spend, access to the decision-maker and recent intent.",
+        "Under 18 out of 25, skip the lead. With 18 to 21 it goes on this week's list, and with 22 or more it gets a call today.",
+        "A company with 20 to 99 people scores 5 on size. With 180 or more it scores 1 and goes to the mid-market team.",
+        "Card spend of €30K a month or more scores 5. Anything under €10K is below our floor.",
+      ].join("\n"),
+      related_module: "M4" },
+    { title: "Which product answers which pain",
+      content_md: [
+        "Prop 1, real-time spend control: for a buyer who can't see who spent what, or wants to freeze a card at once.",
+        "Prop 2, team cards with per-card limits: for a buyer who hands out cards by hand, or wants a limit per person or site.",
+        "Prop 3, interbank-rate FX: for a buyer who loses money every time they pay in another currency.",
+        "Prop 4, receipt capture with accounting sync: for a team where someone types receipts into the books by hand.",
+      ].join("\n"),
+      related_module: "M5" },
+    { title: "Job aid for regulatory questions",
+      content_md: "The job aid has a row for KYC, AML, SCA, PSD2, GDPR and safeguarding; read the row's line as written, and book the compliance team for anything it doesn't cover.",
+      related_module: "M6" },
   ],
   messages: [
-    { author: "J.T. (pod lead)", initials: "JT", ts: "09:15", body: "Cadence check — log every dial in SF, no shortcuts." },
-    { author: "Sam (peer)",       initials: "SM", ts: "09:42", body: "M.G. nailed an M3 on the Two Pines call this morning — anyone want a debrief at lunch?" },
-    { author: "J.T. (pod lead)", initials: "JT", ts: "10:01", body: "Reminder: Maria archetype = retail SMB; opener is location-signal, not price." },
-    { author: "M.G. (peer)",      initials: "MG", ts: "10:08", body: "Used the CH filing signal — they liked it. Will share the transcript in #gong-clips later." },
-    { author: "Sam (peer)",       initials: "SM", ts: "10:15", body: "Anyone got a clean example of answering an SCA question from the job aid? Manager flagged my last one." },
-    { author: "J.T. (pod lead)", initials: "JT", ts: "10:17", body: "Pinned the job aid at the top of the channel. If it's not in the job aid, escalate. No improvising on compliance." },
+    { author: "J.T. (pod lead)", initials: "JT", ts: "09:15", body: "Log every dial in Salesforce the same day, please. The cadence report only counts what's logged." },
+    { author: "Sam (peer)",       initials: "SM", ts: "09:42", body: "M.G. booked the Two Pines demo with Maria still on the line this morning. Debrief at lunch if anyone wants it." },
+    { author: "J.T. (pod lead)", initials: "JT", ts: "10:01", body: "With retail owners like Maria, lead with the new store you found. Every time I've opened with price they've hung up on me." },
+    { author: "M.G. (peer)",      initials: "MG", ts: "10:08", body: "Opened with the Companies House filing on my last call and the buyer warmed up straight away. I'll drop the transcript in #gong-clips later." },
+    { author: "Sam (peer)",       initials: "SM", ts: "10:15", body: "Anyone got a clean SCA answer from the job aid? J.T. flagged my last one." },
+    { author: "J.T. (pod lead)", initials: "JT", ts: "10:17", body: "Job aid is pinned at the top of the channel. If a compliance question isn't in it, book the compliance team. Don't improvise." },
   ],
 };
 
@@ -56,15 +78,15 @@ registerApp({
         const rel = Array.isArray(p.related_module) ? p.related_module.join(" ") : (p.related_module ?? "");
         return `
           <div class="pinned-card" data-pin="${i}" data-module="${escapeAttr(rel)}" ${force ? `data-forced="true"` : ""}>
-            <div class="pin-label">Pinned${force ? " · for this step" : ""}</div>
+            <div class="pin-label">Pinned${force ? " for this step" : ""}</div>
             <strong>${escapeHtml(p.title)}</strong><br>
-            <span>${escapeHtml(p.content_md)}</span>
+            <span>${escapeHtml(p.content_md).split("\n").join("<br>")}</span>
           </div>
         `;
       }).join("");
       const msgs = (channel.messages ?? []).map(m => `
         <div class="slack-msg">
-          <div class="avatar" aria-hidden="true">${escapeHtml(m.initials)}</div>
+          <div class="avatar" data-who="${escapeHtml(m.initials)}" aria-hidden="true">${escapeHtml(m.initials)}</div>
           <div>
             <div class="meta">
               <span class="author">${escapeHtml(m.author)}</span>
@@ -137,7 +159,7 @@ registerApp({
         const force = Boolean(p && matches(p, highlightModule));
         if (force) el.setAttribute("data-forced", "true"); else el.removeAttribute("data-forced");
         const label = el.querySelector(".pin-label");
-        if (label) label.textContent = force ? "Pinned · for this step" : "Pinned";
+        if (label) label.textContent = force ? "Pinned for this step" : "Pinned";
       });
       container.querySelector(".pinned-card[data-forced]")?.scrollIntoView?.({ block: "nearest" });
     }

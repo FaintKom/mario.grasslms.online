@@ -788,13 +788,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   /* One screen on open: the document desk takes whatever the fixed rows
      leave over. */
   body { padding: var(--page-top) 0 var(--page-bottom); }
-  .wrap { height: calc(100svh - var(--page-pad)); }
+  /* The report has to be readable whole while it is being formatted, so
+     the page grows with it instead of squeezing the document into whatever
+     height is left under the toolbar (on a laptop that was a blank strip). */
+  .wrap { height: auto; }
   h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
   .lede { font-size: var(--t-sm); max-width: 78ch; }
   .stack--loose { gap: var(--s-4); }
 
-  .gd { flex: 1 1 0; min-height: 220px; display: flex; flex-direction: column; }
-  .gd__desk { flex: 1 1 0; max-height: none; }
+  .gd { display: flex; flex-direction: column; }
+  .gd__desk { flex: none; max-height: none; padding: 14px 16px 16px; }
+  .gd__page { min-height: 0; padding: 22px 40px; }
   .gd__page[contenteditable]:focus { outline: 2px solid #a8c7fa; outline-offset: 4px; }
 
   .todo {
@@ -814,15 +818,28 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
   .todo li.is-done::before { content: "●"; color: var(--color-success-fg); }
 
+  /* The warm-up: the sample sits on its own panel so the formatting reads
+     as the question, and the table gets its cell lines back. */
+  .sample {
+    padding: var(--s-4) var(--s-5);
+    background: var(--color-surface-2); border-radius: var(--radius-md);
+    font-size: var(--t-md);
+  }
+  .sample table { border-collapse: collapse; }
+  .sample td { border: 1px solid var(--color-border-strong); padding: var(--s-2) var(--s-4); background: var(--color-surface); }
+  .options { display: grid; gap: var(--s-2); }
+
   [hidden] { display: none !important; }
 </style>
 <style>
   /* Way back to the catalogue, same look as its own back link. */
   .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+  /* Section labels in plain sentence case at body size, not small capitals. */
+  .tag { margin: 0; font-size: var(--t-sm); font-weight: 700; color: var(--color-text-muted); }
 </style>
 </head>
 <body>
@@ -830,28 +847,27 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Spaceport · sector C · task 3</p>
+      <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Nobody can read</span> <em class="mark" data-t="title2">this report yet</em></h1>
-    <p class="lede" data-t="intro">Mission Control will only accept a report that is formatted properly. First a few questions to check you can spot formatting, then the report itself: select a line, press a button on the toolbar, and the list ticks itself as you go.</p>
+    <h1><span data-t="title1">Formatting a</span> <em class="mark" data-t="title2">mission report</em></h1>
+    <p class="lede" data-t="intro">Mission Control only accepts a report that can be read at a glance. First you will answer five short questions about formatting you can see on the screen. Then you will format the report yourself by selecting a line and pressing a toolbar button, and the list under the document ticks off each change.</p>
   </header>
 
   <div class="hud" id="hud">
     <div class="row">
-      <span class="eyebrow" data-t="doneLabel">Formatting done</span>
+      <span class="tag" data-t="doneLabel">Changes made</span>
       <span class="hud__score" id="score">0</span>
     </div>
   </div>
 
   <section class="card stack" id="quiz">
     <div class="row row--between">
-      <p class="eyebrow" data-t="quizTag">Warm-up: read the formatting</p>
+      <p class="tag" data-t="quizTag">Warm-up questions</p>
       <span class="hud__score" id="qNo">1</span>
     </div>
     <h2 id="qText">…</h2>
@@ -915,7 +931,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     </div>
 
     <div class="stack stack--tight">
-      <p class="eyebrow" data-t="todoLabel">What Mission Control wants</p>
+      <p class="tag" data-t="todoLabel">What Mission Control asks for</p>
       <ul class="todo" id="todo"></ul>
     </div>
 
@@ -962,41 +978,45 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   /* The warm-up used to be a separate page: a five-question quiz about
      spotting formatting. It asked about the very thing this task then makes
      you do, so it reads better as the first half than as its own card. The
-     questions and their samples are the originals. */
+     questions and their samples are the originals. Two changes: the table
+     cells are named the spreadsheet way (letter = column, number = row), and
+     the Spanish options name the format without a shortcut, because Spanish
+     Word uses other letters (Ctrl+N, Ctrl+K, Ctrl+S); the search question
+     says Google Docs, where Ctrl+F is right in both languages. */
   var Q = {
     en: [
-      { text: "Look at this text. What formatting is on it?",
+      { text: "What formatting does this text have?",
         sample: "<b>Protection system</b> activated",
         answers: ["Bold, Ctrl+B", "Italic, Ctrl+I", "Underline, Ctrl+U", "No formatting"], right: 0 },
       { text: "How is this line aligned?",
         sample: '<div style="text-align:center">ANTIVIRUS 3000</div>',
         answers: ["Left", "Centre", "Right", "Justified"], right: 1 },
-      { text: "You need every mention of VIRUS3000 in a long document. Which shortcut opens search?",
+      { text: "If you needed every mention of VIRUS3000 in a long document, which shortcut would open the search in Google Docs?",
         sample: "VIRUS3000 … VIRUS3000 … VIRUS3000",
         answers: ["Ctrl+F", "Ctrl+H", "Ctrl+S", "Ctrl+B"], right: 0 },
       { text: "How many cells does this table have?",
-        sample: "<table><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></table>",
+        sample: "<table><tr><td>A1</td><td>B1</td></tr><tr><td>A2</td><td>B2</td></tr></table>",
         answers: ["2", "3", "4", "6"], right: 2 },
-      { text: "And what formatting is on this one?",
+      { text: "What formatting does this line have?",
         sample: "<i>Protection system</i> working",
         answers: ["Bold, Ctrl+B", "Italic, Ctrl+I", "Underline, Ctrl+U", "No formatting"], right: 1 }
     ],
     es: [
-      { text: "Mira este texto. ¿Qué formato tiene?",
+      { text: "¿Qué formato tiene este texto?",
         sample: "<b>Sistema de protección</b> activado",
-        answers: ["Negrita, Ctrl+B", "Cursiva, Ctrl+I", "Subrayado, Ctrl+U", "Sin formato"], right: 0 },
+        answers: ["Negrita", "Cursiva", "Subrayado", "Sin formato"], right: 0 },
       { text: "¿Cómo está alineada esta línea?",
         sample: '<div style="text-align:center">ANTIVIRUS 3000</div>',
         answers: ["A la izquierda", "Centrada", "A la derecha", "Justificada"], right: 1 },
-      { text: "Necesitas cada mención de VIRUS3000 en un documento largo. ¿Qué atajo abre la búsqueda?",
+      { text: "Si necesitaras encontrar cada mención de VIRUS3000 en un documento largo, ¿qué atajo abriría la búsqueda en Google Docs?",
         sample: "VIRUS3000 … VIRUS3000 … VIRUS3000",
         answers: ["Ctrl+F", "Ctrl+H", "Ctrl+S", "Ctrl+B"], right: 0 },
       { text: "¿Cuántas celdas tiene esta tabla?",
-        sample: "<table><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></table>",
+        sample: "<table><tr><td>A1</td><td>B1</td></tr><tr><td>A2</td><td>B2</td></tr></table>",
         answers: ["2", "3", "4", "6"], right: 2 },
-      { text: "¿Y qué formato tiene este?",
+      { text: "¿Qué formato tiene esta línea?",
         sample: "<i>Sistema de protección</i> funcionando",
-        answers: ["Negrita, Ctrl+B", "Cursiva, Ctrl+I", "Subrayado, Ctrl+U", "Sin formato"], right: 1 }
+        answers: ["Negrita", "Cursiva", "Subrayado", "Sin formato"], right: 1 }
     ]
   };
 
@@ -1005,25 +1025,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
-      toMap: "Back to the map",
       docName: "Mission report", share: "Share",
       mFile: "File", mEdit: "Edit", mView: "View", mInsert: "Insert",
       mFormat: "Format", mTools: "Tools", mHelp: "Help",
       normalText: "Normal text", docWords: "Mission report", docPages: "Page 1 of 1",
-      eyebrow: "Spaceport · sector C · task 3",
-      title1: "Nobody can read", title2: "this report yet",
-      intro: "Mission Control will only accept a report that is formatted properly. First a few questions to check you can spot formatting, then the report itself: select a line, press a button on the toolbar, and the list ticks itself as you go.",
-      doneLabel: "Formatting done", todoLabel: "What Mission Control wants",
-      quizTag: "Warm-up: read the formatting",
-      quizRight: "Right. Next one.",
-      quizWrong: function (a) { return "Not that one. It was: " + a; },
-      quizDone: "That is the reading part. Now do it yourself.",
+      allActivities: "All activities", toMap: "Back to the map",
+      title1: "Formatting a", title2: "mission report",
+      intro: "Mission Control only accepts a report that can be read at a glance. First you will answer five short questions about formatting you can see on the screen. Then you will format the report yourself by selecting a line and pressing a toolbar button, and the list under the document ticks off each change.",
+      doneLabel: "Changes made", todoLabel: "What Mission Control asks for",
+      quizTag: "Warm-up questions",
+      quizRight: "Right, here comes the next one.",
+      quizWrong: function (a) { return "Not that one. The right answer was " + a + "."; },
+      quizDone: "Now that you can spot formatting, select a line in the report and use the toolbar to format it yourself.",
       check: "File the report", reset: "Start over", again: "Format it again",
       lines: {
         title:     "Mission report: flight 14",
         date:      "Date: 15 March 2030",
         crew:      "Crew: Nadia Petrova, Kim Okafor, Sam Ruiz",
-        cancelled: "Spacewalk on day three — cancelled",
+        cancelled: "Spacewalk on day three, cancelled",
         discovery: "We found water ice under the crater floor.",
         note:      "Full readings are attached to this report."
       },
@@ -1035,31 +1054,30 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         cancelledStrike: "Strike through the cancelled spacewalk",
         discoveryBig:    "Make the discovery line bigger"
       },
-      selectFirst: "Select some text in the report first, then press a toolbar button.",
-      left: function (n) { return n === 1 ? "One item left on the list." : n + " items left on the list."; },
-      wonTitle: "Report filed",
-      wonBody: "Mission Control can read it at a glance now."
+      selectFirst: "Select some text in the report first. The toolbar buttons only change selected text.",
+      left: function (n) { return n === 1 ? "One change on the list has no tick yet." : n + " changes on the list have no tick yet."; },
+      wonTitle: "The report has been sent",
+      wonBody: "Mission Control has received your formatted report."
     },
     es: {
-      toMap: "Volver al mapa",
       docName: "Informe de misión", share: "Compartir",
       mFile: "Archivo", mEdit: "Editar", mView: "Ver", mInsert: "Insertar",
       mFormat: "Formato", mTools: "Herramientas", mHelp: "Ayuda",
       normalText: "Texto normal", docWords: "Informe de misión", docPages: "Página 1 de 1",
-      eyebrow: "Puerto espacial · sector C · tarea 3",
-      title1: "Nadie puede leer", title2: "todavía este informe",
-      intro: "El Control de Misión solo acepta informes bien formateados. Primero unas preguntas para ver si reconoces el formato, y luego el informe: selecciona una línea, pulsa un botón de la barra y la lista se marca sola.",
-      doneLabel: "Formato hecho", todoLabel: "Lo que pide el Control de Misión",
-      quizTag: "Calentamiento: reconoce el formato",
-      quizRight: "Bien. Siguiente.",
-      quizWrong: function (a) { return "Esa no. Era: " + a; },
-      quizDone: "Eso era leerlo. Ahora hazlo tú.",
+      allActivities: "Todas las actividades", toMap: "Volver al mapa",
+      title1: "Dar formato a un", title2: "informe de misión",
+      intro: "El Control de Misión solo acepta informes que se puedan leer de un vistazo. Primero responderás cinco preguntas cortas sobre el formato que se ve en la pantalla. Después, dale formato tú mismo al informe seleccionando una línea y pulsando un botón de la barra, y la lista que hay debajo del documento marcará cada cambio.",
+      doneLabel: "Cambios hechos", todoLabel: "Lo que pide el Control de Misión",
+      quizTag: "Preguntas de calentamiento",
+      quizRight: "¡Bien! Ahí va la siguiente.",
+      quizWrong: function (a) { return "Esa no. La respuesta correcta era " + a + "."; },
+      quizDone: "Ahora que sabes reconocer el formato, selecciona una línea del informe y dale formato tú con la barra de herramientas.",
       check: "Enviar el informe", reset: "Empezar de nuevo", again: "Formatear otra vez",
       lines: {
         title:     "Informe de misión: vuelo 14",
         date:      "Fecha: 15 de marzo de 2030",
         crew:      "Tripulación: Nadia Petrova, Kim Okafor, Sam Ruiz",
-        cancelled: "Paseo espacial del tercer día — cancelado",
+        cancelled: "Paseo espacial del tercer día, cancelado",
         discovery: "Encontramos hielo de agua bajo el cráter.",
         note:      "Las mediciones completas van adjuntas al informe."
       },
@@ -1071,14 +1089,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         cancelledStrike: "Tacha el paseo espacial cancelado",
         discoveryBig:    "Haz más grande la línea del hallazgo"
       },
-      selectFirst: "Selecciona primero un texto del informe y luego pulsa un botón.",
-      left: function (n) { return n === 1 ? "Queda una cosa en la lista." : "Quedan " + n + " cosas en la lista."; },
-      wonTitle: "Informe enviado",
-      wonBody: "Ahora el Control de Misión lo lee de un vistazo."
+      selectFirst: "Primero selecciona un texto del informe. Los botones de la barra solo cambian el texto seleccionado.",
+      left: function (n) { return n === 1 ? "Un cambio de la lista todavía no tiene marca." : "Todavía hay " + n + " cambios de la lista sin marca."; },
+      wonTitle: "El informe se ha enviado",
+      wonBody: "El Control de Misión ha recibido tu informe con formato."
     }
   };
 
-  var lang = "en", qAt = 0, qLocked = false;
+  var lang = "en", qAt = 0, qLocked = false, qTimer = null;
 
   function showQuiz() {
     var d = t(), list = Q[lang];
@@ -1127,7 +1145,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       note.className = "feedback feedback--no";
       note.textContent = d.quizWrong(q.answers[q.right]);
     }
-    setTimeout(function () { qAt++; showQuiz(); }, 1200);
+    qTimer = setTimeout(function () { qTimer = null; qAt++; showQuiz(); }, 1200);
   }
 
   function byId(id) { return document.getElementById(id); }
@@ -1211,11 +1229,27 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     paintTodo();
   }
 
-  document.querySelectorAll(".tool").forEach(function (b) {
+  /* Alignment belongs to the whole line, so it is set on the line itself.
+     execCommand("justify…") can split or re-create the line's div when the
+     selection reaches into its neighbour, and the check would lose track of
+     which div is the title. */
+  function alignLines(value) {
+    var sel = window.getSelection();
+    Array.prototype.forEach.call(byId("doc").querySelectorAll("[data-line]"), function (el) {
+      if (sel.containsNode(el, true)) el.style.textAlign = value;
+    });
+  }
+  var ALIGN = { justifyLeft: "left", justifyCenter: "center" };
+
+  /* Only the buttons that carry a command are live; the rest of the toolbar
+     is scenery and keeps tabindex="-1". */
+  document.querySelectorAll(".gd-t[data-cmd], .gd-t[data-size], .gd-t[data-colour]").forEach(function (b) {
     /* mousedown would clear the selection before the command runs */
     b.addEventListener("mousedown", function (e) { e.preventDefault(); });
     b.addEventListener("click", function () {
-      if (b.dataset.cmd) {
+      if (ALIGN[b.dataset.cmd]) {
+        apply(function () { alignLines(ALIGN[b.dataset.cmd]); });
+      } else if (b.dataset.cmd) {
         apply(function () { document.execCommand(b.dataset.cmd, false, null); });
       } else if (b.dataset.size) {
         apply(function () { document.execCommand("fontSize", false, b.dataset.size); });
@@ -1256,6 +1290,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       div.textContent = d.lines[name];
       doc.appendChild(div);
     });
+    /* A language switch inside the pause after an answer must not let the
+       old timer step past the first question of the new run. */
+    if (qTimer) { clearTimeout(qTimer); qTimer = null; }
     qAt = 0;
     byId("quiz").hidden = false;
     byId("game").hidden = true;

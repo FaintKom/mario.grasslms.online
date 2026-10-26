@@ -602,6 +602,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     .kid, .crowd.is-happy .spark circle, .crowd.is-puzzled .wonder { animation: none; }
   }
 
+  /* The review at the end: each missed moment with the better choice. */
+  .review { display: grid; gap: var(--s-1); padding: var(--s-3) var(--s-4); border-left: 4px solid var(--color-danger); background: var(--color-surface-2); border-radius: var(--radius-sm); }
+  .review b { font-size: var(--t-sm); }
+  .review span { font-size: var(--t-sm); color: var(--color-text-muted); }
+
+  /* Plain labels for counters and controls: same size as the UI text,
+     no capitals and no monospace, so they read as words. */
+  .label-quiet { font-size: var(--t-sm); font-weight: 600; color: var(--color-text-muted); }
+
   [hidden] { display: none !important; }
 </style>
 <style>
@@ -618,36 +627,36 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
-    <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 7–10 · presenting your work</p>
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActs">All activities</span></a>
+    <div class="row" style="justify-content: flex-end">
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
     <h1><span data-t="title1">Showing your work to</span> <em class="mark" data-t="title2">the class</em></h1>
-    <p class="lede" data-t="intro">Today you present the quest you built, and you watch your friends present theirs. Five moments where the choice matters.</p>
+    <p class="lede" data-t="intro">Today you present the quest you built and watch your friends present theirs. At five moments you will have to decide what to do, and more than one answer will sound fine.</p>
   </header>
 
   <div class="hall">
     <div class="hall__quiz">
       <section class="card stack" id="game">
     <div class="row row--between">
-      <span class="eyebrow"><span data-t="stepLabel">Moment</span> <span id="qNum" class="mono">1</span>/5</span>
+      <span class="label-quiet"><span data-t="stepLabel">Moment</span> <span id="qNum" class="mono">1</span>/5</span>
       <div class="tally" id="tally" aria-hidden="true"></div>
     </div>
 
-    <div class="stack stack--tight">
-      <p class="eyebrow" id="qKicker">…</p>
-      <h2 id="qText">…</h2>
-    </div>
+    <h2 id="qText">…</h2>
 
     <div class="stack stack--tight" id="answers"></div>
-    <div id="verdict" hidden></div>
-    <div><button class="btn" id="next" data-t="next" hidden>Next</button></div>
-  </section>
-
+    <div id="verdict" hidden aria-live="polite"></div>
+    <div><button class="btn" id="next" hidden>Next</button></div>
+      </section>
+      <section class="card stack" id="over" hidden aria-live="polite">
+        <h2 id="overTitle">…</h2>
+        <p class="muted" id="overBody"></p>
+        <div class="stack stack--tight" id="overReview"></div>
+        <div><button class="btn" id="again" data-t="again">Try again</button></div>
       </section>
     </div>
 
@@ -695,15 +704,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
         <text class="wonder" x="100" y="30">?</text>
       </svg>
-      <p class="seats__note muted" data-t="crowdNote">Your class is watching.</p>
+      <p class="seats__note muted" data-t="crowdNote">Your classmates are watching.</p>
     </aside>
   </div>
 
-  <section class="card stack" id="over" hidden aria-live="polite">
-    <h2 id="overTitle">…</h2>
-    <p class="muted" id="overBody"></p>
-    <div><button class="btn" id="again" data-t="again">Try again</button></div>
-  </section>
 
 </div>
 
@@ -711,105 +715,139 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 (function () {
   "use strict";
 
+  /* Five moments, three choices each. The original had one good answer and
+     one cartoon of a bad one, which a child picks without reading. Now the
+     third choice is a reasonable mistake, the kind a real presenter makes,
+     and every wrong choice carries its own note saying what it costs. */
   const Q = {
     en: [
-      { kicker: "Your turn",
-        text: "You stand up to show your quest. What do you say first?",
-        good: "Hi, my name is Alex. My quest is called Space.",
-        bad: "Um, this is, my quest.",
-        okNote: "Your name and the title, in the first breath. Now everyone knows who made it and what it is.",
-        noNote: "Nobody caught your name or what the quest is called. Start with both." },
+      { text: "You stand up to show your quest. What do you say first?",
+        options: [
+          { ok: true, text: "Hi, my name is Alex, and my quest is called Space.",
+            note: "Your name and the title came first, and now everyone knows who made the quest and what it is called." },
+          { text: "Sorry, it's not finished, but here it is.",
+            note: "Opening with sorry tells the class to expect something bad before they have seen anything. Start with your name and the title instead." },
+          { text: "Um, this is, my quest.",
+            note: "Nobody caught your name or the name of the quest. Start with both." }
+        ] },
 
-      { kicker: "Two minutes",
-        text: "Your quest has four paths and you have two minutes. How much do you show?",
-        good: "One path, slowly, all the way through.",
-        bad: "All four, as fast as I can.",
-        okNote: "One path finished beats four paths half-seen. The class follows what you show.",
-        noNote: "Four paths in two minutes is a blur. Pick one and let people see it work." },
+      { text: "Your quest has four paths, and you have two minutes. How much do you show?",
+        options: [
+          { ok: true, text: "I show one path slowly, all the way to the end.",
+            note: "The class watched one path from start to finish and could follow every step of it." },
+          { text: "I show the first screen of each path and stop there.",
+            note: "The class saw four beginnings and no ending, so they never saw a path work. Pick one and show all of it." },
+          { text: "I show all four paths as fast as I can.",
+            note: "Four paths in two minutes go by in a blur. Pick one and let people watch it work." }
+        ] },
 
-      { kicker: "A friend presents",
-        text: "Bunny just showed a quest about carrots. You write in the chat.",
-        good: "The carrot drawing is great. How did you make it move?",
-        bad: "It's okay.",
-        okNote: "You named the thing you liked. That is what makes praise land.",
-        noNote: "It's okay tells Bunny nothing. Say which part you liked and why." },
+      { text: "Bunny has just shown a quest about carrots. What do you write in the chat?",
+        options: [
+          { ok: true, text: "The carrot drawing is great, how did you make it move?",
+            note: "You named the part you liked and asked about it, and Bunny can use that kind of praise." },
+          { text: "Great job, Bunny!",
+            note: "It is kind, yet Bunny still does not know which part worked. Say what you liked and why." },
+          { text: "It's okay.",
+            note: "“It's okay” gives Bunny nothing to go on. Say which part you liked and why." }
+        ] },
 
-      { kicker: "Something breaks",
-        text: "Bear's button does not work during the demo. You speak up.",
-        good: "The story is good. The button is a small fix, I can show you.",
-        bad: "It's broken, it doesn't even work.",
-        okNote: "You said what worked, then offered help. Bear can keep going.",
-        noNote: "Bear already knows it broke. What Bear needs is the part that worked." },
+      { text: "Bear's button stops working in the middle of the demo. What do you do?",
+        options: [
+          { ok: true, text: "I let Bear finish, then say the story is good and offer to help with the button.",
+            note: "Bear kept the turn, heard what worked and got an offer of help after the demo." },
+          { text: "I call out how to fix it while Bear is still presenting.",
+            note: "The fix is right, but calling it out takes the turn away from Bear. Wait until the end, then say what worked and offer help." },
+          { text: "I say that it is broken and does not even work.",
+            note: "Bear already knows the button broke. What helps now is hearing which part worked and getting help after the demo." }
+        ] },
 
-      { kicker: "Your mind goes blank",
-        text: "You are mid-presentation and you forget what comes next.",
-        good: "Keep clicking. The screen shows what happens next.",
-        bad: "Stop, apologise, and sit down.",
-        okNote: "Your quest is on the screen. Click, and the pictures carry the story for you.",
-        noNote: "Forgetting a line is not the end of the demo. Click on, the screen remembers." }
+      { text: "Halfway through your presentation, you forget what comes next. What do you do?",
+        options: [
+          { ok: true, text: "I keep clicking, because the screen shows what comes next.",
+            note: "The quest is on the screen, and each click brings up the next picture of your story." },
+          { text: "I start the whole demo again from the beginning.",
+            note: "Starting again eats up your two minutes, and you might get stuck in the same place." },
+          { text: "I stop, say sorry and sit down.",
+            note: "Forgetting a line does not end a demo. The next click still shows what comes next." }
+        ] }
     ],
     es: [
-      { kicker: "Es tu turno",
-        text: "Te levantas para mostrar tu quest. ¿Qué dices primero?",
-        good: "Hola, me llamo Alex. Mi quest se llama Espacio.",
-        bad: "Eh, esto es, mi quest.",
-        okNote: "Tu nombre y el título, de entrada. Ya todos saben quién lo hizo y qué es.",
-        noNote: "Nadie entendió tu nombre ni el título. Empieza por los dos." },
+      { text: "Te levantas para enseñar tu aventura. ¿Qué dices primero?",
+        options: [
+          { ok: true, text: "Hola, me llamo Alex y mi aventura se llama Espacio.",
+            note: "Lo primero fueron tu nombre y el título, y ahora todos saben quién hizo la aventura y cómo se llama." },
+          { text: "Perdón, no está terminada, pero aquí está.",
+            note: "Empezar pidiendo perdón hace que la clase espere algo malo antes de ver nada. Empieza mejor por tu nombre y el título." },
+          { text: "Eh, esto es, mi aventura.",
+            note: "Nadie entendió tu nombre ni el de la aventura. Empieza por los dos." }
+        ] },
 
-      { kicker: "Dos minutos",
-        text: "Tu quest tiene cuatro caminos y tienes dos minutos. ¿Cuánto enseñas?",
-        good: "Un camino, despacio, de principio a fin.",
-        bad: "Los cuatro, lo más rápido posible.",
-        okNote: "Un camino completo vale más que cuatro a medias. La clase sigue lo que enseñas.",
-        noNote: "Cuatro caminos en dos minutos no se ven. Elige uno y deja que funcione." },
+      { text: "Tu aventura tiene cuatro caminos y tienes dos minutos. ¿Cuánto enseñas?",
+        options: [
+          { ok: true, text: "Enseño un camino despacio, de principio a fin.",
+            note: "La clase vio un camino entero y pudo seguir cada paso." },
+          { text: "Enseño la primera pantalla de cada camino y ahí lo dejo.",
+            note: "La clase vio cuatro principios y ningún final, y nunca llegó a ver un camino funcionar. Elige uno y enséñalo entero." },
+          { text: "Enseño los cuatro caminos lo más rápido que puedo.",
+            note: "Cuatro caminos en dos minutos pasan volando. Elige uno y deja que la gente lo vea funcionar." }
+        ] },
 
-      { kicker: "Presenta un amigo",
-        text: "Conejo acaba de mostrar un quest sobre zanahorias. Escribes en el chat.",
-        good: "El dibujo de la zanahoria está genial. ¿Cómo lo hiciste mover?",
-        bad: "Está bien.",
-        okNote: "Dijiste qué te gustó. Eso es lo que hace que un elogio sirva.",
-        noNote: "Está bien no le dice nada a Conejo. Di qué parte te gustó y por qué." },
+      { text: "Conejo acaba de enseñar una aventura sobre zanahorias. ¿Qué le escribes en el chat?",
+        options: [
+          { ok: true, text: "El dibujo de la zanahoria está genial, ¿cómo hiciste que se moviera?",
+            note: "Dijiste qué parte te gustó y preguntaste por ella, y a Conejo ese elogio le sirve." },
+          { text: "¡Muy bien, Conejo!",
+            note: "Es amable, pero Conejo sigue sin saber qué parte funcionó. Dile qué te gustó y por qué." },
+          { text: "Está bien.",
+            note: "«Está bien» no le da a Conejo ninguna pista. Dile qué parte te gustó y por qué." }
+        ] },
 
-      { kicker: "Algo se rompe",
-        text: "El botón de Oso no funciona durante la demo. Tú hablas.",
-        good: "La historia es buena. El botón se arregla rápido, te enseño.",
-        bad: "Está roto, ni siquiera funciona.",
-        okNote: "Dijiste qué funcionaba y ofreciste ayuda. Oso puede continuar.",
-        noNote: "Oso ya sabe que se rompió. Lo que necesita es saber qué sí funcionó." },
+      { text: "El botón de Oso deja de funcionar en mitad de la demo. ¿Qué haces?",
+        options: [
+          { ok: true, text: "Dejo que Oso termine, le digo que la historia es buena y le ofrezco ayuda con el botón.",
+            note: "Oso conservó su turno, oyó qué funcionaba y recibió una oferta de ayuda para después de la demo." },
+          { text: "Le digo en voz alta cómo arreglarlo mientras sigue presentando.",
+            note: "El arreglo es correcto, pero decirlo en voz alta le quita el turno a Oso. Espera al final, dile qué funcionaba y ofrécele ayuda." },
+          { text: "Digo que está roto y que ni siquiera funciona.",
+            note: "Oso ya sabe que el botón se rompió. Ahora le ayuda más oír qué parte funcionó y saber que le echarás una mano después." }
+        ] },
 
-      { kicker: "Te quedas en blanco",
-        text: "Estás presentando y olvidas lo que venía después.",
-        good: "Sigue haciendo clic. La pantalla enseña lo que viene.",
-        bad: "Parar, pedir perdón y sentarse.",
-        okNote: "Tu quest está en la pantalla. Haz clic y las imágenes cuentan la historia.",
-        noNote: "Olvidar una frase no acaba la demo. Sigue clicando, la pantalla se acuerda." }
+      { text: "A mitad de la presentación se te olvida lo que venía después. ¿Qué haces?",
+        options: [
+          { ok: true, text: "Sigo haciendo clic, porque la pantalla enseña lo que viene.",
+            note: "La aventura está en la pantalla, y cada clic muestra la siguiente imagen de tu historia." },
+          { text: "Empiezo la demo otra vez desde el principio.",
+            note: "Volver a empezar se come tus dos minutos, y puedes atascarte en el mismo sitio." },
+          { text: "Paro, pido perdón y me siento.",
+            note: "Olvidar una frase no acaba con una demo. El siguiente clic sigue mostrando lo que viene." }
+        ] }
     ]
   };
 
   const T = {
     en: {
-      eyebrow: "Ages 7–10 · presenting your work",
       title1: "Showing your work to", title2: "the class",
-      intro: "Today you present the quest you built, and you watch your friends present theirs. Five moments where the choice matters.",
-      stepLabel: "Moment", next: "Next", again: "Try again", crowdNote: "Your class is watching.",
+      intro: "Today you present the quest you built and watch your friends present theirs. At five moments you will have to decide what to do, and more than one answer will sound fine.",
+      stepLabel: "Moment", next: "Next", seeResult: "See how it went", again: "Try again", crowdNote: "Your classmates are watching.",
+      allActs: "All activities",
       allTitle: "You are ready to present",
-      allBody: "Five for five. You know how to open, what to show, and what to say to someone whose demo went wrong.",
-      someTitle: "Nearly there",
-      someBody: function (n) { return "You chose well in " + n + " of 5. Read the notes on the ones you missed and run it again."; },
-      fewTitle: "Worth another run",
-      fewBody: function (n) { return "You chose well in " + n + " of 5. None of these are about the code. They are about what you say."; }
+      allBody: "You chose well at all five moments. You know how to begin, what to show and what to say when a friend's demo goes wrong.",
+      someTitle: "You are nearly ready",
+      someBody: function (n) { return "You chose well at " + n + " of the five moments. The ones you missed are below, each with a better choice."; },
+      fewTitle: "Have another go",
+      fewBody: function (n) { return "You chose well at " + n + " of the five moments. Read the ones you missed below, then try again."; }
     },
     es: {
-      eyebrow: "7–10 años · presentar tu trabajo",
       title1: "Presentar tu trabajo a", title2: "la clase",
-      intro: "Hoy presentas el quest que construiste y ves los de tus compañeros. Cinco momentos donde la elección importa.",
-      stepLabel: "Momento", next: "Siguiente", again: "Intentar otra vez", crowdNote: "Tu clase te está mirando.",
-      allTitle: "Estás listo para presentar",
-      allBody: "Cinco de cinco. Sabes cómo empezar, qué enseñar y qué decirle a alguien a quien se le rompió la demo.",
-      someTitle: "Casi",
-      someBody: function (n) { return "Elegiste bien en " + n + " de 5. Lee las notas de los que fallaste y vuelve a intentarlo."; },
-      fewTitle: "Merece otra vuelta",
-      fewBody: function (n) { return "Elegiste bien en " + n + " de 5. Ninguno va de código: van de lo que dices."; }
+      intro: "Hoy presentas la aventura que construiste y ves las de tus compañeros. En cinco momentos tendrás que decidir qué hacer, y más de una respuesta te parecerá bien.",
+      stepLabel: "Momento", next: "Siguiente", seeResult: "Ver cómo ha ido", again: "Intentar otra vez", crowdNote: "Tus compañeros te están mirando.",
+      allActs: "Todas las actividades",
+      allTitle: "Ya puedes presentar",
+      allBody: "Elegiste bien en los cinco momentos. Sabes cómo empezar, qué enseñar y qué decir cuando a un amigo se le rompe la demo.",
+      someTitle: "Te falta muy poco",
+      someBody: function (n) { return "Elegiste bien en " + n + " de los cinco momentos. Abajo tienes los que fallaste, cada uno con una opción mejor."; },
+      fewTitle: "Prueba otra vez",
+      fewBody: function (n) { return "Elegiste bien en " + n + " de los cinco momentos. Lee abajo los que fallaste y vuelve a intentarlo."; }
     }
   };
 
@@ -839,11 +877,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     }
   }
 
+  function shuffled(arr) {
+    const a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
   function question() {
     const q = list()[idx];
     answered = false;
     $("qNum").textContent = String(idx + 1);
-    $("qKicker").textContent = q.kicker;
     $("qText").textContent = q.text;
     $("verdict").hidden = true;
     $("next").hidden = true;
@@ -851,15 +897,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     /* Order is shuffled so the right answer is not always in the same slot.
        A child spots a position pattern long before they read the options. */
-    var opts = [{ text: q.good, ok: true }, { text: q.bad, ok: false }];
-    if (Math.random() < 0.5) opts.reverse();
-
     const box = $("answers");
     box.innerHTML = "";
-    opts.forEach(function (o) {
+    shuffled(q.options).forEach(function (o) {
       const b = document.createElement("button");
       b.type = "button"; b.className = "option"; b.textContent = o.text;
-      b.onclick = function () { answer(o.ok, b); };
+      b.dataset.ok = o.ok ? "1" : "";
+      b.onclick = function () { answer(o, b); };
       box.appendChild(b);
     });
   }
@@ -877,15 +921,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     moodTimer = setTimeout(function () { crowd.classList.remove("is-happy", "is-puzzled"); }, 2200);
   }
 
-  function answer(ok, btn) {
+  function answer(o, btn) {
     if (answered) return;
     answered = true;
-    const q = list()[idx];
+    const ok = !!o.ok;
 
     Array.prototype.forEach.call($("answers").children, function (b) {
       b.disabled = true;
       if (b === btn) b.classList.add(ok ? "is-right" : "is-off");
-      else if (!ok) b.classList.add("is-right");
+      else if (!ok && b.dataset.ok) b.classList.add("is-right");
     });
 
     marks[idx] = ok;
@@ -896,37 +940,60 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     const v = $("verdict");
     v.hidden = false;
     v.className = "feedback feedback--" + (ok ? "ok" : "no");
-    v.textContent = ok ? q.okNote : q.noNote;
+    v.textContent = o.note;
 
-    if (idx >= list().length - 1) finish();
-    else $("next").hidden = false;
+    /* The last note stays up until the child asks for the result: it is the
+       part worth reading, so no timer takes it away. */
+    const last = idx >= list().length - 1;
+    $("next").textContent = last ? t().seeResult : t().next;
+    $("next").hidden = false;
+    $("next").focus();
   }
 
   function finish() {
     const d = t(), n = list().length;
-    setTimeout(function () {
-      $("game").hidden = true;
-      $("over").hidden = false;
-      if (score === n) {
-        $("overTitle").textContent = d.allTitle;
-        $("overBody").textContent = d.allBody;
-      } else if (score >= 3) {
-        $("overTitle").textContent = d.someTitle;
-        $("overBody").textContent = d.someBody(score);
-      } else {
-        $("overTitle").textContent = d.fewTitle;
-        $("overBody").textContent = d.fewBody(score);
-      }
-    }, 1400);
+    $("game").hidden = true;
+    $("over").hidden = false;
+    if (score === n) {
+      $("overTitle").textContent = d.allTitle;
+      $("overBody").textContent = d.allBody;
+    } else if (score >= 3) {
+      $("overTitle").textContent = d.someTitle;
+      $("overBody").textContent = d.someBody(score);
+    } else {
+      $("overTitle").textContent = d.fewTitle;
+      $("overBody").textContent = d.fewBody(score);
+    }
+
+    /* What the closing line promises: each missed moment, the better choice,
+       and why. */
+    const rev = $("overReview");
+    rev.innerHTML = "";
+    list().forEach(function (q, i) {
+      if (marks[i] !== false) return;
+      const good = q.options.filter(function (o) { return o.ok; })[0];
+      const row = document.createElement("div");
+      row.className = "review";
+      const k = document.createElement("span"); k.textContent = q.text;
+      const b = document.createElement("b"); b.textContent = good.text;
+      const w = document.createElement("span"); w.textContent = good.note;
+      row.append(k, b, w);
+      rev.appendChild(row);
+    });
   }
 
   function reset() {
     idx = 0; score = 0; marks = [];
+    mood(null);
     $("game").hidden = false; $("over").hidden = true;
     paintChrome(); question();
   }
 
-  $("next").onclick = function () { idx++; question(); };
+  $("next").onclick = function () {
+    if (!answered) return;
+    if (idx >= list().length - 1) { finish(); return; }
+    idx++; question();
+  };
   $("again").onclick = reset;
 
   document.querySelectorAll(".langs button").forEach(function (b) {

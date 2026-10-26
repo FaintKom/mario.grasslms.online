@@ -573,7 +573,23 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
   .swatches button[aria-pressed="true"] { border-color: var(--ink-900); }
 
-  @media (max-height: 760px) { canvas { max-height: min(34svh, 270px); } .slots { gap: var(--s-2); } .slot { gap: var(--s-1); } }
+  /* The job card under the robot: pick a job, check the build, read why. */
+  .briefs { display: flex; flex-wrap: wrap; gap: var(--s-1); }
+  .brief__pick { border: 1px solid var(--color-border-strong); cursor: pointer; font-family: inherit; min-height: 32px; }
+  .brief__pick[aria-pressed="true"] { background: var(--color-primary-soft); border-color: var(--color-primary); color: var(--color-text); }
+  .briefs__count { font-size: var(--t-2xs); color: var(--color-text-subtle); }
+  .brief__text { font-size: var(--t-sm); font-weight: 600; }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+  .check { font-size: var(--t-sm); padding: var(--s-2) var(--s-3); border-radius: var(--radius-sm); }
+  .check--ok { background: var(--color-success-soft); color: var(--color-success-fg); }
+  .check--no { background: var(--color-danger-soft); color: var(--color-danger-fg); }
+  .checks .feedback { padding: var(--s-2) var(--s-3); font-size: var(--t-sm); }
+
+  /* Plain labels for counters and controls: same size as the UI text,
+     no capitals and no monospace, so they read as words. */
+  .label-quiet { font-size: var(--t-sm); font-weight: 600; color: var(--color-text-muted); }
+
+  @media (max-height: 820px) { canvas { max-height: min(34svh, 270px); } .slots { gap: var(--s-2); } .slot { gap: var(--s-1); } }
 
   /* The last notch, for a screen with barely 660px of room. */
   @media (max-height: 700px) {
@@ -595,16 +611,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
-    <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 7–10 · design choices</p>
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActs">All activities</span></a>
+    <div class="row" style="justify-content: flex-end">
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Sixteen thousand</span> <em class="mark" data-t="title2">robots</em></h1>
-    <p class="lede" data-t="intro">Six parts, each with a handful of choices. Swap any of them and the robot redraws. When you like what you see, take it with you.</p>
+    <h1><span data-t="title1">Build a robot</span> <em class="mark" data-t="title2">for a job</em></h1>
+    <p class="lede" data-t="intro">Each robot has six parts with a few choices for each, which makes 16,000 different robots. Pick a job and build a robot for it, or switch to free mode and build anything you like.</p>
   </header>
 
   <div class="bench">
@@ -615,11 +630,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         <button class="btn btn--secondary" id="rand" data-t="surprise">Surprise me</button>
         <button class="btn btn--ghost" id="reset" data-t="reset">Start again</button>
       </div>
+
+      <section class="card stack stack--tight brief" aria-labelledby="briefTitle">
+        <div class="row row--between">
+          <p class="label-quiet" id="briefTitle" data-t="briefLabel">The job</p>
+          <span class="briefs__count" id="briefCount"></span>
+        </div>
+        <div class="briefs" id="briefs" role="group"></div>
+        <p class="brief__text" id="briefText"></p>
+        <div class="row" id="briefActions">
+          <button class="btn btn--sm" id="check" data-t="check">Check my robot</button>
+        </div>
+        <ul class="checks" id="checks" aria-live="polite"></ul>
+      </section>
     </div>
 
     <div class="card stack">
       <div class="stack stack--tight">
-        <p class="eyebrow" data-t="colourLabel">Colour</p>
+        <p class="label-quiet" data-t="colourLabel">Colour</p>
         <div class="swatches" id="colours"></div>
       </div>
       <div class="slots" id="slots"></div>
@@ -631,6 +659,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <script>
 (function () {
   "use strict";
+
+  /* roundRect arrived in canvas only in 2023 (Safari 16, Firefox 112).
+     Older browsers get a small stand-in built from arcTo, so the robot still
+     draws instead of throwing halfway through. */
+  if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+      var rad = Math.max(0, Math.min(r || 0, Math.abs(w) / 2, Math.abs(h) / 2));
+      this.moveTo(x + rad, y);
+      this.arcTo(x + w, y, x + w, y + h, rad);
+      this.arcTo(x + w, y + h, x, y + h, rad);
+      this.arcTo(x, y + h, x, y, rad);
+      this.arcTo(x, y, x + w, y, rad);
+      this.closePath();
+    };
+  }
 
   const PALETTE = ["#0a8754", "#e2552f", "#f5b800", "#12798f", "#7c5cbf", "#485444"];
 
@@ -645,37 +688,152 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   };
   const ORDER = ["head", "body", "eyes", "arms", "legs", "antenna"];
 
+  /* Four jobs. A robot built for nothing in particular is only a picture;
+     a job turns every part into a decision with a reason behind it. Each job
+     checks two parts, and every verdict says why that part does or does not
+     fit — the reasons are the lesson, not the tick. */
+  const BRIEFS = [
+    { id: "stairs", icon: "🏢", needs: [
+      { slot: "legs", ok: ["normal", "spider", "springs"] },
+      { slot: "arms", ok: ["strong", "claws", "mechanical"] }
+    ] },
+    { id: "reef", icon: "🪸", needs: [
+      { slot: "arms", ok: ["claws", "tentacles"] },
+      { slot: "eyes", ok: ["visor"] }
+    ] },
+    { id: "night", icon: "🌙", needs: [
+      { slot: "legs", ok: ["wheels"] },
+      { slot: "antenna", ok: ["satellite", "double"] }
+    ] },
+    { id: "race", icon: "🏁", needs: [
+      { slot: "legs", ok: ["wheels", "rocket"] },
+      { slot: "body", ok: ["round", "trapezoid"] }
+    ] }
+  ];
+
   const T = {
     en: {
-      eyebrow: "Ages 7–10 · design choices",
-      title1: "Sixteen thousand", title2: "robots",
-      intro: "Six parts, each with a handful of choices. Swap any of them and the robot redraws. When you like what you see, take it with you.",
+      title1: "Build a robot", title2: "for a job", allActs: "All activities",
+      intro: "Each robot has six parts with a few choices for each, which makes 16,000 different robots. Pick a job and build a robot for it, or switch to free mode and build anything you like.",
       colourLabel: "Colour", download: "Save the picture", surprise: "Surprise me", reset: "Start again",
       prev: "previous", next: "next",
+      colours: ["Green", "Red", "Yellow", "Blue", "Purple", "Grey"],
+      robotLabel: function (parts) { return "Your robot, with " + parts.join(", ") + "."; },
       slots: { head: "Head", body: "Body", eyes: "Eyes", arms: "Arms", legs: "Legs", antenna: "Antenna" },
       names: {
         circle: "Round", square: "Square", triangle: "Triangle", hexagon: "Six-sided",
         rectangle: "Boxy", round: "Rounded", trapezoid: "Wedge",
-        star: "Stars", heart: "Hearts", visor: "Visor", angry: "Cross", sleepy: "Sleepy", happy: "Smiling",
+        star: "Stars", heart: "Hearts", visor: "Visor", angry: "Angry", sleepy: "Sleepy", happy: "Smiling",
         normal: "Plain", strong: "Strong", claws: "Claws", tentacles: "Tentacles", mechanical: "Jointed",
         wheels: "Wheels", springs: "Springs", rocket: "Rockets", spider: "Spider",
         single: "One", double: "Two", satellite: "Dish", lightning: "Bolt", none: "None"
+      },
+      slotNames: { eyes: { round: "Round", square: "Square" } },
+      briefLabel: "The job", check: "Check my robot", free: "Free mode",
+      freeText: "Free mode has no job and no rules. Build whatever you like.",
+      solved: function (n, all) { return n + " of " + all + " jobs done"; },
+      allGood: "This robot can do the job, and the notes above say why.",
+      fixOne: "One part does not suit the job yet. Change it and check again.",
+      fixTwo: "Neither part suits the job yet. Read the notes, change both parts and check again.",
+      briefs: {
+        stairs: { name: "Stair climber",
+          text: "Carry the shopping up the stairs of a block of flats with no lift.",
+          legs: { yes: "These legs can climb the stairs one step at a time.",
+                  no: { wheels: "Wheels roll well on the flat, and the first step stops them.",
+                        rocket: "Rockets would lift the robot, and nobody fires rockets inside a block of flats." } },
+          arms: { yes: "These arms can hold a heavy bag all the way up.",
+                  no: { normal: "Plain arms are thin. A full shopping bag needs strong arms, claws or jointed arms.",
+                        tentacles: "Tentacles bend every way, and a heavy bag slides off them." } } },
+        reef: { name: "Reef cleaner",
+          text: "Dive down to the coral reef and pick up the rubbish people have dropped there.",
+          arms: { yes: "These can grab small things on the sea floor.",
+                  no: { normal: "Plain arms have no hand at the end to pick anything up.",
+                        strong: "Strong arms push hard, yet there is no hand at the end to grab with.",
+                        mechanical: "A jointed arm with no hand at the end cannot grab a bottle cap." } },
+          eyes: { yes: "A sealed visor keeps the water out of the cameras behind it.",
+                  no: "Open eyes would let water in. Under the sea the robot needs a sealed visor." } },
+        night: { name: "Night guard",
+          text: "Patrol a dark, quiet warehouse all night and call the base if something goes wrong.",
+          legs: { yes: "Wheels roll quietly along a flat warehouse floor.",
+                  no: { normal: "Plain legs clank on a hard floor all night. Wheels stay quiet on the flat.",
+                        spider: "Spider legs tap and rattle all night. Wheels stay quiet on the flat.",
+                        springs: "Springs bounce noisily, and they are hard to stop quickly.",
+                        rocket: "Rockets are loud and burn fuel, and a night shift indoors is long." } },
+          antenna: { yes: "That antenna can send a message back to the base.",
+                     no: { single: "One small antenna does not reach far enough. A dish or two antennas can call the base.",
+                           lightning: "The bolt looks great but cannot send messages.",
+                           none: "Without an antenna the robot cannot call the base at all." } } },
+        race: { name: "Racer",
+          text: "Win a race on a long, flat track.",
+          legs: { yes: "Wheels and rockets are fast on flat ground.",
+                  no: { normal: "Plain legs are slow next to wheels or rockets.",
+                        springs: "Springs send the robot up as much as forward, and it loses time.",
+                        spider: "Spider legs grip well but are slow on a flat track." } },
+          body: { yes: "A rounded or wedge body lets the air slip past.",
+                  no: { rectangle: "A boxy body pushes against the air like a wall.",
+                        hexagon: "A six-sided body has flat faces and corners that catch the air." } } }
       }
     },
     es: {
-      eyebrow: "7–10 años · decisiones de diseño",
-      title1: "Dieciséis mil", title2: "robots",
-      intro: "Seis piezas, cada una con unas cuantas opciones. Cambia cualquiera y el robot se vuelve a dibujar. Cuando te guste, llévatelo.",
+      title1: "Construye un robot", title2: "para un trabajo", allActs: "Todas las actividades",
+      intro: "Cada robot tiene seis piezas con unas cuantas opciones, lo que da 16.000 robots distintos. Elige un trabajo y construye un robot para él, o pasa al modo libre y construye lo que quieras.",
       colourLabel: "Color", download: "Guardar la imagen", surprise: "Sorpréndeme", reset: "Empezar de nuevo",
       prev: "anterior", next: "siguiente",
+      colours: ["Verde", "Rojo", "Amarillo", "Azul", "Morado", "Gris"],
+      robotLabel: function (parts) { return "Tu robot, con " + parts.join(", ") + "."; },
       slots: { head: "Cabeza", body: "Cuerpo", eyes: "Ojos", arms: "Brazos", legs: "Piernas", antenna: "Antena" },
       names: {
         circle: "Redonda", square: "Cuadrada", triangle: "Triángulo", hexagon: "Hexágono",
-        rectangle: "Rectangular", round: "Redondeado", trapezoid: "Trapecio",
+        rectangle: "Rectangular", round: "Redondeado", trapezoid: "Cuña",
         star: "Estrellas", heart: "Corazones", visor: "Visor", angry: "Enfadados", sleepy: "Dormidos", happy: "Sonrientes",
         normal: "Normales", strong: "Fuertes", claws: "Pinzas", tentacles: "Tentáculos", mechanical: "Articulados",
         wheels: "Ruedas", springs: "Muelles", rocket: "Cohetes", spider: "Araña",
         single: "Una", double: "Dos", satellite: "Parabólica", lightning: "Rayo", none: "Ninguna"
+      },
+      slotNames: { eyes: { round: "Redondos", square: "Cuadrados" } },
+      briefLabel: "El trabajo", check: "Comprobar mi robot", free: "Modo libre",
+      freeText: "El modo libre no tiene trabajo ni reglas. Construye lo que quieras.",
+      solved: function (n, all) { return n + " de " + all + " trabajos hechos"; },
+      allGood: "Este robot puede hacer el trabajo, y las notas de arriba dicen por qué.",
+      fixOne: "Todavía hay una pieza que no sirve para el trabajo. Cámbiala y vuelve a comprobar.",
+      fixTwo: "Ninguna de las dos piezas sirve todavía. Lee las notas, cambia las dos y vuelve a comprobar.",
+      briefs: {
+        stairs: { name: "Sube-escaleras",
+          text: "Sube la compra por las escaleras de un bloque de pisos sin ascensor.",
+          legs: { yes: "Estas piernas pueden subir la escalera escalón a escalón.",
+                  no: { wheels: "Las ruedas van bien por lo llano, y el primer escalón las para.",
+                        rocket: "Los cohetes subirían el robot, y nadie enciende cohetes dentro de un bloque de pisos." } },
+          arms: { yes: "Estos brazos pueden sujetar una bolsa pesada hasta arriba.",
+                  no: { normal: "Los brazos normales son finos. Una bolsa llena de compra pide brazos fuertes, pinzas o brazos articulados.",
+                        tentacles: "Los tentáculos se doblan hacia todos lados, y una bolsa pesada se les escurre." } } },
+        reef: { name: "Limpia-arrecifes",
+          text: "Bucea hasta el arrecife de coral y recoge la basura que la gente ha tirado allí.",
+          arms: { yes: "Con esto se pueden agarrar cosas pequeñas en el fondo del mar.",
+                  no: { normal: "Los brazos normales no tienen mano en la punta para coger nada.",
+                        strong: "Los brazos fuertes empujan mucho, pero no tienen mano en la punta para agarrar.",
+                        mechanical: "Un brazo articulado sin mano en la punta no puede agarrar un tapón." } },
+          eyes: { yes: "Un visor cerrado mantiene el agua fuera de las cámaras de detrás.",
+                  no: "Unos ojos abiertos dejarían entrar el agua. Bajo el mar el robot necesita un visor cerrado." } },
+        night: { name: "Vigilante nocturno",
+          text: "Vigila toda la noche un almacén oscuro y silencioso, y avisa a la base si pasa algo.",
+          legs: { yes: "Las ruedas avanzan en silencio por el suelo liso de un almacén.",
+                  no: { normal: "Las piernas normales suenan toda la noche en un suelo duro. Las ruedas no hacen ruido en lo llano.",
+                        spider: "Las patas de araña golpean y traquetean toda la noche. Las ruedas no hacen ruido en lo llano.",
+                        springs: "Los muelles botan con mucho ruido, y cuesta pararlos rápido.",
+                        rocket: "Los cohetes hacen ruido y gastan combustible, y una noche entera bajo techo es muy larga." } },
+          antenna: { yes: "Esa antena puede mandar un mensaje a la base.",
+                     no: { single: "Una antena pequeña no llega lo bastante lejos. Una parabólica o dos antenas sí pueden llamar a la base.",
+                           lightning: "El rayo queda genial, pero no puede mandar mensajes.",
+                           none: "Sin antena el robot no tiene forma de llamar a la base." } } },
+        race: { name: "Corredor",
+          text: "Gana una carrera en una pista larga y llana.",
+          legs: { yes: "Las ruedas y los cohetes son rápidos en lo llano.",
+                  no: { normal: "Las piernas normales son lentas al lado de ruedas o cohetes.",
+                        springs: "Los muelles mandan el robot tanto hacia arriba como hacia delante, y pierde tiempo.",
+                        spider: "Las patas de araña se agarran bien, pero son lentas en una pista llana." } },
+          body: { yes: "Un cuerpo redondeado o en cuña deja que el aire pase de largo.",
+                  no: { rectangle: "Un cuerpo rectangular empuja el aire como si fuera una pared.",
+                        hexagon: "Un cuerpo hexagonal tiene caras planas y esquinas que frenan contra el aire." } } }
       }
     }
   };
@@ -683,11 +841,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   var lang = "en";
   var colour = PALETTE[0];
   var pick = { head: 0, body: 0, eyes: 0, arms: 0, legs: 0, antenna: 0 };
+  var brief = null;        /* id of the chosen job, or null for free build */
+  var verdict = null;      /* the last check, kept so a language switch can redraw it */
+  var solved = {};
 
   const $ = function (id) { return document.getElementById(id); };
   const t = function () { return T[lang]; };
   const cv = $("cv"), ctx = cv.getContext("2d");
   const val = function (k) { return PARTS[k][pick[k]]; };
+  /* Some part ids are shared between slots (round eyes, rounded body), so a
+     slot can override the shared name. */
+  const nameOf = function (slot, part) {
+    const d = T[lang], own = d.slotNames[slot];
+    return (own && own[part]) || d.names[part] || part;
+  };
 
   function shade(hex, amount) {
     const n = parseInt(hex.slice(1), 16);
@@ -714,6 +881,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     const cx = cv.width / 2;
     const bt = 300, bb = 470;
+    const head = val("head"), body = val("body");
 
     /* antenna, drawn behind the head */
     const ant = val("antenna");
@@ -741,60 +909,71 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       }
     }
 
+    /* neck, behind head and body, so no head floats above its body — the
+       triangle head ends 40px higher than the others */
+    ctx.fillStyle = shade(colour, -20); ctx.strokeStyle = dark;
+    ctx.beginPath(); ctx.rect(cx - 18, 250, 36, 56); ctx.fill(); ctx.stroke();
+
     /* head */
     ctx.fillStyle = colour; ctx.strokeStyle = dark;
-    const head = val("head");
     if (head === "circle") { ctx.beginPath(); ctx.arc(cx, 206, 84, 0, Math.PI * 2); }
     else if (head === "square") { ctx.beginPath(); ctx.rect(cx - 80, 128, 160, 156); }
     else if (head === "triangle") { poly(cx, 212, 96, 3, -Math.PI / 2); }
     else { poly(cx, 206, 90, 6, Math.PI / 6); }
     ctx.fill(); ctx.stroke();
 
-    /* eyes */
-    const eyes = val("eyes"), ey = 200;
+    /* eyes. A triangle head narrows towards the top, so on it the eyes sit
+       lower, closer together and smaller, and stay inside the outline. */
+    const eyes = val("eyes");
+    const tri = head === "triangle";
+    const ey = tri ? 226 : 200, ex = tri ? 24 : 32, k = tri ? 0.75 : 1;
     if (eyes === "visor") {
-      ctx.beginPath(); ctx.roundRect(cx - 62, ey - 20, 124, 40, 18);
+      const vw = tri ? 44 : 62, vh = tri ? 16 : 20;
+      ctx.beginPath(); ctx.roundRect(cx - vw, ey - vh, vw * 2, vh * 2, 18 * k);
       ctx.fillStyle = shade(colour, -70); ctx.fill(); ctx.stroke();
       ctx.fillStyle = light;
-      ctx.beginPath(); ctx.roundRect(cx - 50, ey - 12, 40, 12, 6); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(cx - vw + 12, ey - vh + 8, 40 * k, 12 * k, 6 * k); ctx.fill();
     } else {
-      [cx - 32, cx + 32].forEach(function (x, i) {
+      [cx - ex, cx + ex].forEach(function (x, i) {
+        ctx.save();
+        ctx.translate(x, ey);
+        ctx.scale(k, k);
         ctx.fillStyle = "#ffffff"; ctx.strokeStyle = dark;
-        if (eyes === "square") { ctx.beginPath(); ctx.rect(x - 20, ey - 20, 40, 40); }
-        else if (eyes === "star") { poly(x, ey, 22, 5, -Math.PI / 2); }
+        if (eyes === "square") { ctx.beginPath(); ctx.rect(-20, -20, 40, 40); }
+        else if (eyes === "star") { ctx.beginPath(); for (var p = 0; p < 5; p++) { const a = -Math.PI / 2 + p * 2 * Math.PI / 5; if (p === 0) ctx.moveTo(22 * Math.cos(a), 22 * Math.sin(a)); else ctx.lineTo(22 * Math.cos(a), 22 * Math.sin(a)); } ctx.closePath(); }
         else if (eyes === "heart") {
           ctx.beginPath();
-          ctx.moveTo(x, ey + 18);
-          ctx.bezierCurveTo(x - 30, ey - 4, x - 14, ey - 26, x, ey - 10);
-          ctx.bezierCurveTo(x + 14, ey - 26, x + 30, ey - 4, x, ey + 18);
+          ctx.moveTo(0, 18);
+          ctx.bezierCurveTo(-30, -4, -14, -26, 0, -10);
+          ctx.bezierCurveTo(14, -26, 30, -4, 0, 18);
           ctx.closePath();
-        } else { ctx.beginPath(); ctx.arc(x, ey, 20, 0, Math.PI * 2); }
+        } else { ctx.beginPath(); ctx.arc(0, 0, 20, 0, Math.PI * 2); }
         ctx.fill(); ctx.stroke();
 
         if (eyes !== "star" && eyes !== "heart") {
           ctx.fillStyle = "#0d150d";
-          ctx.beginPath(); ctx.arc(x, ey + (eyes === "sleepy" ? 6 : 0), 8, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(0, eyes === "sleepy" ? 6 : 0, 8, 0, Math.PI * 2); ctx.fill();
         }
         if (eyes === "angry") {
           ctx.lineWidth = 7;
           ctx.beginPath();
-          ctx.moveTo(x + (i ? 22 : -22), ey - 32); ctx.lineTo(x + (i ? -6 : 6), ey - 20);
+          ctx.moveTo(i ? 22 : -22, -32); ctx.lineTo(i ? -6 : 6, -20);
           ctx.stroke(); ctx.lineWidth = 5;
         }
         if (eyes === "sleepy") {
-          ctx.beginPath(); ctx.moveTo(x - 20, ey - 6); ctx.lineTo(x + 20, ey - 6); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(-20, -6); ctx.lineTo(20, -6); ctx.stroke();
         }
+        ctx.restore();
       });
       if (eyes === "happy") {
         ctx.lineWidth = 6;
-        ctx.beginPath(); ctx.arc(cx, 244, 30, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+        ctx.beginPath(); ctx.arc(cx, tri ? 236 : 244, tri ? 18 : 30, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
         ctx.lineWidth = 5;
       }
     }
 
     /* body */
     ctx.fillStyle = colour; ctx.strokeStyle = dark;
-    const body = val("body");
     if (body === "rectangle") { ctx.beginPath(); ctx.rect(cx - 96, bt, 192, bb - bt); }
     else if (body === "round") { ctx.beginPath(); ctx.roundRect(cx - 96, bt, 192, bb - bt, 60); }
     else if (body === "hexagon") { poly(cx, (bt + bb) / 2, 108, 6, Math.PI / 2); }
@@ -805,10 +984,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     }
     ctx.fill(); ctx.stroke();
 
-    /* arms */
+    /* arms, fixed to the body's side at shoulder height (y = 340): the
+       wedge and the hexagon are narrower there than the box. */
+    const shoulder = { rectangle: 96, round: 96, hexagon: 92, trapezoid: 78 }[body] - 2;
     const arms = val("arms");
     [-1, 1].forEach(function (s) {
-      const sx = cx + s * 100, sy = 340;
+      const sx = cx + s * shoulder, sy = 340;
       ctx.strokeStyle = dark; ctx.fillStyle = colour;
       if (arms === "tentacles") {
         ctx.beginPath();
@@ -826,10 +1007,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         ctx.beginPath(); ctx.roundRect(s < 0 ? sx - w : sx, sy, w, 120, 10);
         ctx.fill(); ctx.stroke();
         if (arms === "claws") {
+          const hx = s < 0 ? sx - w / 2 : sx + w / 2;
           ctx.lineWidth = 10;
           ctx.beginPath();
-          ctx.moveTo(sx + s * 4, sy + 120); ctx.lineTo(sx + s * 34, sy + 156);
-          ctx.moveTo(sx + s * 4, sy + 120); ctx.lineTo(sx - s * 20, sy + 156);
+          ctx.moveTo(hx, sy + 120); ctx.lineTo(hx + s * 22, sy + 156);
+          ctx.moveTo(hx, sy + 120); ctx.lineTo(hx - s * 22, sy + 156);
           ctx.stroke(); ctx.lineWidth = 5;
         }
       }
@@ -840,10 +1022,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     ctx.fillStyle = colour; ctx.strokeStyle = dark;
     if (legs === "spider") {
       [-1, 1].forEach(function (s) {
-        [0, 1, 2].forEach(function (k) {
+        [0, 1, 2].forEach(function (k2) {
           ctx.beginPath();
           ctx.moveTo(cx + s * 40, bb - 10);
-          ctx.quadraticCurveTo(cx + s * (110 + k * 26), bb + 30 + k * 10, cx + s * (80 + k * 44), bb + 118);
+          ctx.quadraticCurveTo(cx + s * (110 + k2 * 26), bb + 30 + k2 * 10, cx + s * (80 + k2 * 44), bb + 118);
           ctx.lineWidth = 8; ctx.stroke(); ctx.lineWidth = 5;
         });
       });
@@ -881,6 +1063,64 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     }
   }
 
+  /* ---- jobs --------------------------------------------------------------- */
+  function briefById(id) { return BRIEFS.filter(function (b) { return b.id === id; })[0]; }
+
+  /* One reason per checked part: why it fits, or why this choice does not. */
+  function judge(b) {
+    const d = t().briefs[b.id];
+    return b.needs.map(function (need) {
+      const part = val(need.slot), ok = need.ok.indexOf(part) >= 0;
+      const txt = d[need.slot];
+      const why = ok ? txt.yes : (typeof txt.no === "string" ? txt.no : txt.no[part]);
+      return { slot: need.slot, part: part, ok: ok, why: why };
+    });
+  }
+
+  function paintBrief() {
+    const d = t();
+    const row = $("briefs");
+    row.innerHTML = "";
+    BRIEFS.concat([{ id: null, icon: "✏️" }]).forEach(function (b) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "chip brief__pick";
+      btn.setAttribute("aria-pressed", String(brief === b.id));
+      btn.textContent = b.icon + " " + (b.id ? d.briefs[b.id].name : d.free) + (b.id && solved[b.id] ? " ✓" : "");
+      btn.onclick = function () { brief = b.id; verdict = null; render(); };
+      row.appendChild(btn);
+    });
+    $("briefCount").textContent = d.solved(Object.keys(solved).length, BRIEFS.length);
+    $("briefText").textContent = brief ? d.briefs[brief].text : d.freeText;
+    $("briefActions").hidden = !brief;
+
+    const list = $("checks");
+    list.innerHTML = "";
+    if (!brief || !verdict) return;
+    verdict = judge(briefById(brief));   /* re-read in the current language */
+    verdict.forEach(function (v) {
+      const li = document.createElement("li");
+      li.className = "check " + (v.ok ? "check--ok" : "check--no");
+      const b = document.createElement("b");
+      b.textContent = (v.ok ? "✓ " : "✗ ") + d.slots[v.slot] + ": " + nameOf(v.slot, v.part) + ". ";
+      li.append(b, document.createTextNode(v.why));
+      list.appendChild(li);
+    });
+    const bad = verdict.filter(function (v) { return !v.ok; }).length;
+    const sum = document.createElement("li");
+    sum.className = "feedback " + (bad ? "feedback--hint" : "feedback--ok");
+    sum.textContent = bad === 0 ? d.allGood : bad === 1 ? d.fixOne : d.fixTwo;
+    list.appendChild(sum);
+  }
+
+  $("check").onclick = function () {
+    if (!brief) return;
+    verdict = judge(briefById(brief));
+    if (verdict.every(function (v) { return v.ok; })) solved[brief] = true;
+    render();
+    $("checks").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  };
+
   function render() {
     const d = t();
     document.documentElement.lang = lang;
@@ -891,11 +1131,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     const cb = $("colours");
     cb.innerHTML = "";
-    PALETTE.forEach(function (c) {
+    PALETTE.forEach(function (c, i) {
       const b = document.createElement("button");
       b.type = "button"; b.style.background = c;
       b.setAttribute("aria-pressed", String(c === colour));
-      b.setAttribute("aria-label", c);
+      b.setAttribute("aria-label", d.colours[i]);
+      b.title = d.colours[i];
       b.onclick = function () { colour = c; render(); };
       cb.appendChild(b);
     });
@@ -920,33 +1161,41 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       const back = document.createElement("button");
       back.type = "button"; back.className = "btn btn--secondary btn--sm";
       back.textContent = "◀"; back.setAttribute("aria-label", d.slots[k] + ", " + d.prev);
-      back.onclick = function () { pick[k] = (pick[k] - 1 + PARTS[k].length) % PARTS[k].length; render(); };
+      back.onclick = function () { pick[k] = (pick[k] - 1 + PARTS[k].length) % PARTS[k].length; verdict = null; render(); };
 
       const cur = document.createElement("span");
       cur.className = "slot__value";
-      cur.textContent = d.names[val(k)] || val(k);
+      cur.textContent = nameOf(k, val(k));
 
       const fwd = document.createElement("button");
       fwd.type = "button"; fwd.className = "btn btn--secondary btn--sm";
       fwd.textContent = "▶"; fwd.setAttribute("aria-label", d.slots[k] + ", " + d.next);
-      fwd.onclick = function () { pick[k] = (pick[k] + 1) % PARTS[k].length; render(); };
+      fwd.onclick = function () { pick[k] = (pick[k] + 1) % PARTS[k].length; verdict = null; render(); };
 
       row.append(back, cur, fwd);
       wrap.append(head, row);
       sb.appendChild(wrap);
     });
 
+    /* The picture's text alternative says what was built, part by part. */
+    cv.setAttribute("aria-label", d.robotLabel(
+      [d.colours[PALETTE.indexOf(colour)]].concat(ORDER.map(function (k) {
+        return d.slots[k] + " " + nameOf(k, val(k)).toLowerCase();
+      }))));
+
+    paintBrief();
     draw();
   }
 
   $("rand").onclick = function () {
     ORDER.forEach(function (k) { pick[k] = Math.floor(Math.random() * PARTS[k].length); });
     colour = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+    verdict = null;
     render();
   };
   $("reset").onclick = function () {
     ORDER.forEach(function (k) { pick[k] = 0; });
-    colour = PALETTE[0]; render();
+    colour = PALETTE[0]; verdict = null; render();
   };
   $("dl").onclick = function () {
     const a = document.createElement("a");

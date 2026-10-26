@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 1 · Would you click? · questions</title>
+<title>Spotting a phishing email, questions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
   * { box-sizing: border-box; margin: 0; }
   /* Plain dark background — dot grid removed (feedback item 6). */
   body { background: var(--bg); color: var(--txt); font: 400 16px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
-  .wrap { max-width: 780px; margin: 0 auto; padding: 30px 20px 90px; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 30px 20px 36px; }
   h1 { font: 700 clamp(24px, 6.5vw, 34px)/1.1 var(--sans); letter-spacing: -.01em; margin-bottom: 8px; }
   .lead { color: var(--dim); font-size: 15px; margin-bottom: 8px; max-width: 620px; }
   .score { position: sticky; top: 0; z-index: 10; font: 600 13px var(--mono); color: var(--dim);
@@ -26,7 +26,7 @@
 
   .card { border: 1px solid rgba(53,182,255,.25); border-radius: 18px; background: var(--panel);
     box-shadow: 0 0 0 1px rgba(53,182,255,.05), 0 14px 40px rgba(0,0,0,.35); padding: 20px 22px; margin-bottom: 20px; }
-  .eyebrow { font: 500 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+  .eyebrow { font: 500 13px var(--body); color: var(--dim); margin-bottom: 10px; }
 
   /* mail-styled scenario — rendered as a realistic Gmail message so the skill
      transfers to what real mail actually looks like (feedback item 21). Only
@@ -65,7 +65,7 @@
   .fb.show { display: block; animation: pop .4s cubic-bezier(.2,1.2,.4,1); }
   .fb.ok { border-left-color: var(--green); background: rgba(61,220,132,.08); }
   .fb.no { border-left-color: var(--red); background: rgba(255,59,74,.07); }
-  .fb .ref { display: block; margin-top: 6px; font: 500 11.5px var(--mono); letter-spacing: .06em; color: var(--dim); }
+  .fb .ref { display: block; margin-top: 6px; font: 400 12.5px var(--body); color: var(--dim); }
   @keyframes pop { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -79,98 +79,118 @@
 <script>if (window.self === window.top) document.getElementById('standalone-home').hidden = false;</script>
 
 <div class="wrap">
-  <h1>Would you click?</h1>
-  <p class="lead">Pick an answer on each card to see why it's right or wrong.</p>
+  <h1 id="title">Six questions on the four tells</h1>
+  <p class="lead" id="lead">Choose an answer on each card to see why it is right or wrong.</p>
   <div id="deck"></div>
+  <p class="lead" id="sum" role="status" hidden></p>
   <button id="retry" style="display:none;margin-top:6px;font-size:13px;font-weight:600;color:#fff;background:rgba(53,182,255,.15);border:1px solid #35B6FF;border-radius:10px;padding:9px 16px;cursor:pointer">Try again</button>
 </div>
 
 <script>
 const C = { blue:'#35B6FF', red:'#FF3B4A', green:'#3DDC84', lime:'#C6F221', dim:'#8A93A0' };
 // mail scenario: {from, subj, body(html)} · or plain {q} question
-const ITEMS = [
-  { id:'u1-probe-1', tag:'cold probe · Trust / Report',
+// part:'probe' items open the unit, before the film (?part=probe): a gut call,
+// not scored. Everything else is the check after the lesson.
+// Trust / Report cards always list Trust first, so position never gives the answer away.
+const ALL = [
+  { id:'u1-probe-1', part:'probe', tag:'cold probe · Trust / Report',
     mail:{ from:'Comms Team &lt;newsletter@yourcompany.com&gt;', subj:'March town hall — recording and slides', time:'Mon 08:47',
       body:'Hi all, the recording from Tuesday\'s town hall is now on the intranet. Slides attached.' },
     opts:[
-      { t:'Trust', ok:true,  fb:'Right. Expected sender, internal address, no pressure, no ask. Most mail is fine; the skill is spotting the exceptions.' },
-      { t:'Report', ok:false, fb:'Cautious, but this one\'s clean: known sender, real internal address, nothing urgent, nothing requested. Reporting everything drowns the signal.' },
+      { t:'Trust', ok:true, fb:"The sender is one you were expecting, the address is your company's own, and nothing hurries you or asks for anything. Most of your mail looks like this one." },
+      { t:'Report', ok:false, fb:"Being careful is good, but this one is clean: a known sender at your real internal address, asking for nothing. If everything like it got reported, the real warnings would get lost." },
     ], ref:'27002 §6.3' },
 
-  { id:'u1-probe-2', tag:'cold probe · Trust / Report',
-    mail:{ from:'IT Support &lt;it-helpdesk@yourcompany-<span class="redch">security.net</span>&gt;', subj:'ACTION REQUIRED: password expires in 2 hours', time:'Mon 08:58',
+  { id:'u1-probe-2', part:'probe', tag:'cold probe · Trust / Report',
+    mail:{ from:'IT Support &lt;it-helpdesk@yourcompany-security.net&gt;', subj:'ACTION REQUIRED: password expires in 2 hours', time:'Mon 08:58',
       body:'Your network password expires today at 17:00. To avoid losing access, confirm your current password here: <span class="mono">[Verify now]</span>' },
     opts:[
-      { t:'Report', ok:true, fb:'Correct. Three tells: an urgent deadline out of nowhere, a look-alike domain (yourcompany-security.net isn\'t your company), and it asks for your password. IT never asks you to confirm a password by email.' },
-      { t:'Trust', ok:false, fb:'This is the one that gets people. No shame, it\'s built to. A 2-hour deadline you never heard about, a domain that almost matches, and a request for your password. Any one of those is reason to stop.' },
+      { t:'Trust', ok:false, fb:"This message catches most people, and it was built to. It sets a two-hour deadline you never heard about and comes from a domain that almost matches yours. It also asks for your password, and any one of those is reason to stop." },
+      { t:'Report', ok:true, fb:"It shows three tells at once: a deadline out of nowhere, a look-alike domain that isn't your company's, and a request to confirm your password. IT never asks for that by email." },
     ], ref:'27002 §8.7, §5.17' },
 
-  { id:'u1-probe-3', tag:'cold probe · Trust / Report',
+  { id:'u1-probe-3', part:'probe', tag:'cold probe · Trust / Report',
     mail:{ from:'Accounts &lt;billing@supplier-invoices.com&gt;', subj:'Overdue invoice #48213 — final notice', time:'Mon 09:14',
       body:'Please find attached the outstanding invoice. Settle within 24 hours to avoid escalation. <span class="mono">[invoice_48213.zip]</span>' },
     opts:[
-      { t:'Report', ok:true, fb:'Right. Unexpected, urgent, and carrying a zip file from a domain you don\'t recognise. Zip attachments in surprise invoices are the classic malware delivery. If it might be real, verify with finance through a channel you choose.' },
-      { t:'Trust', ok:false, fb:'Check the tells: did you expect this invoice? Is supplier-invoices.com a supplier you know? Why a zip file, why 24 hours? Unexpected, urgent and carrying an attachment is the standard malware pattern.' },
+      { t:'Trust', ok:false, fb:"You weren't expecting this invoice, and supplier-invoices.com isn't a supplier you know. A surprise invoice with a 24-hour deadline and a zip file attached fits the usual pattern for malware." },
+      { t:'Report', ok:true, fb:"The invoice is unexpected and urgent and arrives as a zip file from a domain you don't recognise. That is how malware usually gets in. If it might be genuine, check with finance through a channel you choose yourself." },
     ], ref:'27002 §8.7' },
 
   { id:'u1-check-1', tag:'check · spotting a tell',
-    q:'A message you never expected gives you two hours to act. Which tell is that?',
+    q:"A message you weren't expecting gives you two hours to act. Which tell is that?",
     opts:[
-      { t:'Look-alike domain', ok:false, fb:'This one is about timing, not content: you didn\'t expect it, and it pushes you to hurry. That combination is tell one: unexpected and urgent.' },
-      { t:'Unexpected and urgent', ok:true, fb:'Yes. Pressure out of nowhere is there to make you skip thinking. Pause and check. Nothing legitimate breaks because you checked first.' },
-      { t:'Asks for secrets', ok:false, fb:'Not quite. Nothing has been asked for yet. The tell here is timing: unexpected and urgent at once. That is tell one.' },
-      { t:'Link mismatch', ok:false, fb:'No link in play yet. The tell is that it\'s unexpected and pushes you to hurry: tell one, unexpected and urgent.' },
+      { t:'Look-alike sender domain', ok:false, fb:"The question doesn't mention the sender's address at all. What it describes is timing: a surprise message that pushes you to hurry." },
+      { t:'Unexpected and urgent', ok:true, fb:"Pressure out of nowhere is there to make you skip thinking, and nothing legitimate breaks when you take a minute to check." },
+      { t:'Asks for secrets', ok:false, fb:"Nothing has been asked for yet. A deadline on a message you didn't expect is the first tell, unexpected and urgent." },
+      { t:'Link mismatch', ok:false, fb:"There is no link in this message yet. The surprise and the two-hour deadline are what give it away." },
     ], ref:'27002 §8.7' },
 
   { id:'u1-check-2', tag:'check · the rule',
-    q:'How many tells do you need before you stop and report?',
+    q:"How many tells does a message need before you stop and report it?",
     opts:[
-      { t:'One is enough: any single tell means stop and check', ok:true, fb:'Right. One tell is enough. Unexpected timing, a mismatched domain or a request for a password: any one of them is reason to stop and report. You don\'t need to be sure it\'s fake. Checking is the security team\'s job.' },
-      { t:'At least two', ok:false, fb:'That\'s too high a bar. Waiting for a second tell gives the first one time to work on you. One tell is already enough to stop and report.' },
-      { t:'All four', ok:false, fb:'If you wait for every tell to line up, the phish has more time to work. One tell is enough to stop and report.' },
-      { t:'Only when IT confirms', ok:false, fb:'That\'s backwards: you report so IT can confirm. One tell on your side is already enough to send it in.' },
+      { t:'At least two, to be sure', ok:false, fb:"Waiting for a second tell gives the first one time to work on you. One is already enough." },
+      { t:'All four, to be certain', ok:false, fb:"Asking for all four sets the bar so high that a message with one clear tell would get through." },
+      { t:'Only once IT confirms it', ok:false, fb:"IT can only check a message after someone reports it." },
+      { t:"A single tell is enough", ok:true, fb:"Any one tell is reason to stop and report, whether it is unexpected timing, a mismatched domain or a request for a password. Checking whether the message is fake is the security team's job." },
     ], ref:'27002 §8.7, §6.8' },
 
   { id:'u1-check-3', tag:'check · asks for secrets',
-    q:'An email from "IT Support" asks you to confirm your current password. What does that tell you?',
+    q:"An email signed \"IT Support\" asks you to confirm your current password. What should you make of that?",
     opts:[
-      { t:'Routine security practice, comply', ok:false, fb:'No legitimate system asks you to confirm your password by email; IT resets passwords, it doesn\'t collect them.' },
-      { t:'Fine if the sender domain matches', ok:false, fb:'The domain isn\'t the point. A credentials ask by email is a tell on its own, matching domain or not.' },
-      { t:'A phish tell on its own: IT never needs your password', ok:true, fb:'Exactly. IT has admin access; they never need your password. A credentials ask is a full-stop tell even when everything else looks clean.' },
-      { t:'Reply and ask if the request is real', ok:false, fb:'Never verify through the message itself; use a channel you choose. And the ask is already the tell.' },
+      { t:"A tell in itself, since IT never needs it", ok:true, fb:"IT has admin access and never needs your password. A request for it by email is reason to stop even when everything else looks clean." },
+      { t:"It is routine, so confirm it", ok:false, fb:"No legitimate system asks you to confirm your password by email. IT resets passwords when it needs to and has no reason to collect them." },
+      { t:'Fine as long as the sender domain matches', ok:false, fb:"A request for your credentials by email is a tell in itself, whether the domain matches or not." },
+      { t:'Reply to ask whether it\'s real', ok:false, fb:"A reply only asks the sender to vouch for themselves. Check through a channel you choose instead." },
     ], ref:'27002 §5.17, §8.7' },
 
   { id:'u1-check-4', tag:'check · the safe move',
-    q:'Why report a phish instead of just deleting it?',
+    q:"Why is it better to report a phishing email than to delete it?",
     opts:[
-      { t:'Deleting is fine, the threat is gone', ok:false, fb:'The same phish landed in other inboxes. Deleting yours does nothing for your colleagues.' },
-      { t:'Reporting warns security while the campaign is still running', ok:true, fb:'Right. Delete protects one inbox for one morning. Report lets security warn everyone else who got the same message, before they click.' },
-      { t:'Reporting punishes the sender', ok:false, fb:'It\'s not about the sender. Reporting gives security a live sample so they can protect everyone else.' },
-      { t:'Deleting breaks the reply chain', ok:false, fb:'The reason to report is coverage: security warns the next person. Deleting just removes your copy.' },
+      { t:"Deleting it removes the threat", ok:false, fb:"The same phish usually lands in other inboxes as well. Deleting your copy does nothing for the colleagues who might still click it." },
+      { t:'It punishes the person who sent it', ok:false, fb:"Reporting has nothing to do with punishing the sender. It gives the security team a live sample they can use to protect everyone else." },
+      { t:'Security can warn everyone who got it', ok:true, fb:"A report lets security warn everyone else who received the same message before they click it, while deleting protects only your own inbox." },
+      { t:'Deleting would break the reply chain', ok:false, fb:"Deleting leaves the reply chain as it was. Reporting matters because security can then warn the next person who gets the message." },
     ], ref:'27002 §6.8, §8.7' },
 
   { id:'u1-perf-1', tag:'harder · authority pressure',
-    mail:{ from:'Daniel Reeve &lt;ceo.office.mail@gmail.com&gt;', subj:'Quick favour — are you at your desk?', time:'Mon 09:32',
-      body:'I\'m heading into a board meeting and can\'t talk. I need you to buy 4 × €100 gift cards for a client thank-you. Send me the codes here. Keep it between us for now.' },
+    mail:{ from:'Mark Ellis (CFO) &lt;m.ellis@yourcompany-finance.com&gt;', subj:'Supplier payment — needs to go today', time:'Mon 09:32',
+      body:'I\'m on a flight and offline until tonight. Northwind changed banks, so pay their open invoice to the new account before 15:00 or we miss the payment run. Details attached. No need to loop in Accounts Payable, I\'ll sign it off when I land. <span class="mono">[northwind_new_bank_details.pdf]</span>' },
     opts:[
-      { t:'Report', ok:true, fb:'Correct. Authority, urgency, secrecy and gift cards: the full CEO-fraud pattern, from a personal address. Real executives don\'t buy gift cards by email, and "keep it between us" exists to stop you verifying.' },
-      { t:'Trust', ok:false, fb:'The name is real. That\'s what makes it work. Look at the address: gmail, not your company. And the ask: gift-card codes, urgently, in secret. "Keep it between us" is a tell on its own.' },
+      { t:'Trust', ok:false, fb:"The name is right and the message reads like a note from a busy finance lead. The address, yourcompany-finance.com, isn't your company's. It also asks you to move money today without the people who would normally check it." },
+      { t:'Report', ok:true, fb:"It combines a look-alike domain, a same-day deadline, a change of bank details and a push to leave out Accounts Payable, which is CEO fraud under another name. \"Offline until tonight\" is there so you can't check. Confirm any change of bank details by calling the supplier on a number you already have." },
     ], ref:'27002 §8.7, §6.3' },
 
   { id:'u1-perf-2', tag:'harder · plausible notification',
     mail:{ from:'SharePoint &lt;no-reply@sharepointonline.com&gt;', subj:'Priya Nair shared "Q3-planning.xlsx" with you', time:'Mon 09:45',
       body:'<span style="color:#1a73e8;text-decoration:underline">Open document</span><span class="mono" style="display:block;margin-top:10px;font-size:12px;color:#5f6368">Hover shows: <span style="color:#d93025">http://docs-share-view.ru/a8f2</span></span>' },
     opts:[
-      { t:'Report', ok:true, fb:'Right. The only visible tell is the link. The sender looks plausible, the colleague is real, sharing files is normal. But hover shows the destination is a random domain, not your document platform.' },
-      { t:'Trust', ok:false, fb:'Everything looks routine, except where the link actually goes. Hover: docs-share-view.ru is not your document platform. Sometimes there is only one tell. Unsure? Ask the colleague in chat, not by replying to the email.' },
+      { t:'Trust', ok:false, fb:"Everything looks routine apart from the link. Hovering shows docs-share-view.ru, which is not your document platform. If you are unsure, ask the colleague in chat instead of replying to the email." },
+      { t:'Report', ok:true, fb:"The link is the only visible tell: the sender looks plausible and sharing files is normal, but hovering shows an unknown domain instead of your document platform." },
     ], ref:'27002 §8.7' },
 ];
 
+const PART = new URLSearchParams(location.search).get('part') === 'probe' ? 'probe' : 'check';
+const ITEMS = ALL.filter(i => (i.part || 'check') === PART);
 const deck = document.getElementById('deck');
-const PASS = 7;                          // proceed at 7 of 9 correct, no need to ace it
+const PASS = 5;                          // proceed at 5 of 6 correct, no need to ace it
 let answered = 0, correct = 0, passed = false;
 
+if (PART === 'probe') {
+  document.getElementById('title').textContent = 'Three messages from a Monday morning';
+  document.getElementById('lead').textContent = 'Read each message and decide on your first impression whether you would trust it or report it. Nothing is scored here, and the film that follows explains each case.';
+}
+
+// Probe: unscored. Answering all three unlocks the film and sums up the gut call.
+function probeDone() {
+  const sum = document.getElementById('sum');
+  sum.hidden = false;
+  sum.textContent = `You judged ${correct} of ${ITEMS.length} correctly. The film that comes next walks through the four tells behind each of these messages.`;
+  try { window.parent && window.parent.postMessage({ type: 'u1-progress', id: 'probe' }, '*'); } catch (e) {}
+}
+
 function updateScore() {
+  if (PART === 'probe') { if (answered === ITEMS.length) probeDone(); return; }
   // The score lives in the lesson shell's sticky bar (this iframe doesn't
   // scroll), mirrored via postMessage. No in-page score row.
   try { window.parent && window.parent.postMessage({ type: 'u1-quiz-score', answered, correct, total: ITEMS.length, pass: PASS, passed }, '*'); } catch (e) {}
@@ -186,9 +206,9 @@ function markPassed() {
 }
 
 // --- Gmail-look rendering helpers for mail-styled items (feedback item 21) ---
-// `from` strings mix literal &lt;/&gt; entities around the address with real
-// embedded tags (the .redch look-alike-domain highlight). Split on the
-// entity-escaped brackets only, so the redch span keeps working untouched.
+// `from` strings carry literal &lt;/&gt; entities around the address. Split on
+// the entity-escaped brackets only, so any markup inside the address survives.
+// Nothing in the address is highlighted before the answer: spotting it is the task.
 function parseFrom(raw) {
   const m = raw.match(/^(.*?)&lt;(.*)&gt;\s*$/);
   return m ? { name: m[1].trim(), addr: m[2].trim() } : { name: raw.trim(), addr: '' };
@@ -258,8 +278,8 @@ function buildDeck() {
         mk.style.color = o.ok ? C.green : C.red; b.appendChild(mk);
         if (!o.ok) optsBox.querySelectorAll('.opt').forEach((x, i) => { if (item.opts[i].ok) x.classList.add('correct'); });
         fb.className = 'fb show ' + (o.ok ? 'ok' : 'no');
-        fb.innerHTML = o.fb + `<span class="ref">${item.ref}</span>`;
-        if (!passed && correct >= PASS) markPassed();   // unlock as soon as the bar is met
+        fb.innerHTML = o.fb + `<span class="ref">ISO ${item.ref}</span>`;
+        if (PART === 'check' && !passed && correct >= PASS) markPassed();   // unlock as soon as the bar is met
         updateScore();
       };
       optsBox.appendChild(b);
@@ -268,8 +288,15 @@ function buildDeck() {
   });
 }
 
-// Rescue path: fell short across all 9 → wipe answers and try again (passed can't be true here).
-function retry() { answered = 0; correct = 0; buildDeck(); updateScore(); window.scrollTo(0, 0); }
+// Rescue path: fell short across all six → wipe answers and try again (passed can't be true here).
+// The lesson shell grows this frame to its content, so the page that scrolls is
+// the parent: bring the top of the frame back into view there.
+function retry() {
+  answered = 0; correct = 0; buildDeck(); updateScore();
+  window.scrollTo(0, 0);
+  // The lesson bar is sticky, so leave room for it above the frame.
+  try { if (window.frameElement) { window.frameElement.scrollIntoView({ block: 'start' }); window.parent.scrollBy(0, -90); } } catch (e) {}
+}
 document.getElementById('retry').onclick = retry;
 
 buildDeck();

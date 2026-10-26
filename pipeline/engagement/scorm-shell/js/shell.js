@@ -2,7 +2,7 @@
  * shell.js · mini-OS window manager + app launcher + module boot.
  *
  * Public surface (module-consumer-facing):
- *   import { MiniOS, eventBus, scorm, coachMarks, bootModule } from ".../shell.js";
+ *   import { MiniOS, eventBus, scorm, bootModule } from ".../shell.js";
  *
  * Decisions backing this file:
  *   D-005 custom SCORM 1.2 (no third-party authoring tool)
@@ -14,20 +14,19 @@
 
 import { ScormBridge } from "./scorm-bridge.js";
 import { EventLog, EVENT } from "./event-log.js";
-import { coachMarks } from "./coach-marks.js";
 import { appRegistry, icon } from "./apps/registry.js";
 import { brandIcon, hydrateBrandIcons } from "./brand-icons.js";
 
 // Eager-import every app so registerApp() side-effects populate the registry
 // before any consumer calls MiniOS.openApp(). Browsers cache by URL, so
 // re-imports inside individual modules are free.
-import "./apps/outreach.js?v=20260927s1";
-import "./apps/gong.js?v=20260927s1";
-import "./apps/salesforce.js?v=20260927s1";
-import "./apps/linkedin-ch.js?v=20260927s1";
-import "./apps/calendar.js?v=20260927s1";
-import "./apps/phone-dialler.js?v=20260927s1";
-import "./apps/slack.js?v=20260927s1";
+import "./apps/outreach.js?v=20261026b";
+import "./apps/gong.js?v=20261026b";
+import "./apps/salesforce.js?v=20261026b";
+import "./apps/linkedin-ch.js?v=20261026b";
+import "./apps/calendar.js?v=20261026b";
+import "./apps/phone-dialler.js?v=20261026b";
+import "./apps/slack.js?v=20261026b";
 
 /** Shared inter-app + telemetry event bus. */
 export const eventBus = new EventTarget();
@@ -35,7 +34,6 @@ export const eventBus = new EventTarget();
 /** Shared SCORM bridge instance — one per page. */
 export const scorm = new ScormBridge();
 
-export { coachMarks };
 
 const DEBUG = new URLSearchParams(globalThis.location?.search ?? "").has("debug");
 
@@ -110,6 +108,7 @@ export class MiniOS {
     /** @type {WindowHandle} */
     const handle = {
       appId,
+      name: def.name,
       el,
       body,
       api: {},
@@ -154,7 +153,8 @@ export class MiniOS {
     if (this.focusedId === winId) this.focusedId = null;
     const next = [...this.windows.keys()].pop();
     if (next) this._focusWindow(next);
-    this._announce(`${handle.appId} app closed`);
+    this._announce(`${handle.name ?? handle.appId} app closed`);
+    this._showEmptyStateIfIdle();
     this.bus.dispatchEvent(new CustomEvent("app:closed", { detail: { appId: handle.appId, winId } }));
   }
 
@@ -187,7 +187,7 @@ export class MiniOS {
     handle.el.style.zIndex = String(++this._zSeed + 100);
     const focusable = handle.body.querySelector("button, [tabindex], a, input, select, textarea");
     if (focusable instanceof HTMLElement) focusable.focus({ preventScroll: true });
-    this._announce(`${handle.appId} window focused`);
+    this._announce(`${handle.name ?? handle.appId} window focused`);
     this._updateTaskbarPressed(winId);
   }
 
@@ -388,10 +388,10 @@ export class MiniOS {
           this._updateTaskbarPressed(null);
         }
       }
-      this._announce(`${handle.def?.name || "Window"} minimised`);
+      this._announce(`${handle.name ?? "Window"} minimised`);
     } else {
       this._focusWindow(winId);
-      this._announce(`${handle.def?.name || "Window"} restored`);
+      this._announce(`${handle.name ?? "Window"} restored`);
     }
   }
 
@@ -490,6 +490,12 @@ export class MiniOS {
     if (empty && this.windows.size > 0) empty.hidden = true;
   }
 
+  /** Preview page only: bring the intro back once the last window closes. */
+  _showEmptyStateIfIdle() {
+    const empty = document.getElementById("desktop-empty-state");
+    if (empty && this.windows.size === 0) empty.hidden = false;
+  }
+
   _announce(msg) {
     if (this.announcer) this.announcer.textContent = msg;
   }
@@ -533,7 +539,6 @@ export class MiniOS {
  * @property {ScormBridge} scorm
  * @property {EventLog} eventLog
  * @property {EventTarget} eventBus
- * @property {typeof coachMarks} coachMarks
  * @property {(score?:number) => void} complete
  * @property {(score:number, max?:number) => void} fail
  */
@@ -564,7 +569,7 @@ export function bootModule(config) {
 
   /** @type {BootApi} */
   const api = {
-    os, scorm, eventLog, eventBus, coachMarks,
+    os, scorm, eventLog, eventBus,
     complete(score) {
       const valid = typeof score === "number" && Number.isFinite(score);
       eventLog.record(EVENT.MODULE_COMPLETED, { score: valid ? score : null });
@@ -623,4 +628,4 @@ if (typeof document !== "undefined") {
   });
 }
 
-export default { MiniOS, eventBus, scorm, coachMarks, bootModule };
+export default { MiniOS, eventBus, scorm, bootModule };

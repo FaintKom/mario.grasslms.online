@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>The Call · social-engineering defence (branching voice scenario) · Mario Rafael Becerra Dueñas</title>
-<meta name="description" content="Interactive HTML5 branching voice scenario: an attacker phones you posing as IT Security. Listen, choose your replies, and keep him out. Your choices change how he pushes and how the call ends." />
+<title>Phone phishing call, a branching voice scenario by Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="A branching voice scenario in which an attacker phones you pretending to be from IT Security, and the replies you choose change how he pushes and how the call ends." />
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
@@ -44,11 +45,13 @@
   .caller .cname{font-weight:800;font-size:15px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
   .unverified{font-family:var(--font-mono);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
     color:var(--coral-700);background:var(--coral-50);border:1px solid var(--coral-300);padding:2px 7px;border-radius:var(--r-pill);}
-  .caller .cmeta{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-400);letter-spacing:.03em;margin-top:2px;}
+  .caller .cmeta{font-size:12.5px;color:var(--ink-500);margin-top:2px;}
   .ctimer{text-align:right;font-family:var(--font-mono);}
   .ctimer .t{font-size:15px;font-weight:800;color:var(--ink-900);display:inline-flex;align-items:center;gap:6px;}
   .ctimer .t::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--coral-500);animation:blink 1.2s infinite;}
   @keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+  .ctimer .t.ended::before{animation:none;background:var(--ink-300);}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
   .ctimer .l{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin-top:3px;}
 
   /* meters */
@@ -78,7 +81,7 @@
   .transcript{font-size:14px;color:var(--ink-700);line-height:1.6;margin-top:12px;padding:11px 13px;background:var(--paper-2);border:1px dashed var(--ink-200);border-radius:var(--r-sm);font-style:italic;}
   .transcript[hidden]{display:none;}
 
-  .your-turn{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin-bottom:9px;}
+  .your-turn{font-size:13px;color:var(--ink-500);margin-bottom:9px;}
   .choices{display:grid;gap:9px;}
   .choice{text-align:left;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;
     padding:13px 15px;border:1.5px solid var(--ink-100);border-radius:var(--r-md);background:var(--paper);transition:border-color .15s,background .15s,transform .1s;}
@@ -105,11 +108,12 @@
   .overlay.hide{display:none;}
   .ov-card{background:var(--paper-2);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);max-width:540px;width:100%;max-height:92vh;overflow-y:auto;padding:26px;}
   .ov-card .eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green-700);font-weight:600;margin:0 0 6px;}
+  .ov-card h1:focus{outline:none;}  /* heading takes focus only so screen readers start there */
   .ov-card h1{font-size:23px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px;}
   .ov-card h1 em{font-style:normal;background:var(--sun-300);padding:0 7px;border-radius:7px;display:inline-block;transform:rotate(-1.5deg);}
   .ov-card p{font-size:13.5px;color:var(--ink-700);margin:0 0 14px;}
   .ov-rules{display:grid;gap:7px;margin-bottom:16px;}
-  .ov-r{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;font-size:12.5px;padding:9px 11px;border:1px solid var(--ink-100);border-radius:var(--r-md);background:var(--paper);}
+  .ov-r{display:grid;grid-template-columns:1fr;gap:10px;align-items:center;font-size:12.5px;padding:9px 11px;border:1px solid var(--ink-100);border-radius:var(--r-md);background:var(--paper);}
   .ov-r .tg{font-family:var(--font-mono);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:var(--r-pill);background:var(--green-100);color:var(--green-800);white-space:nowrap;}
   .btn-primary{background:var(--green-600);color:#fff;padding:11px 20px;border-radius:var(--r-sm);font-weight:700;font-size:13.5px;box-shadow:var(--shadow-pop);}
   .btn-primary:hover{background:var(--green-700);} .btn-primary:active{transform:translateY(3px);box-shadow:none;}
@@ -119,9 +123,9 @@
   .grade{display:inline-flex;align-items:center;gap:12px;margin:2px 0 14px;}
   .grade .g{font-size:38px;font-weight:800;line-height:1;width:64px;height:64px;border-radius:var(--r-lg);display:grid;place-items:center;color:#fff;background:var(--green-600);}
   .grade .g.b{background:var(--green-500);} .grade .g.c{background:var(--sun-500);color:var(--ink-900);} .grade .g.d{background:var(--coral-500);}
-  .grade .gl{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);}
+  .grade .gl{font-size:12.5px;color:var(--ink-500);}
   .grade .gl b{display:block;font-family:var(--font-sans);font-size:15px;color:var(--ink-900);margin-top:3px;text-transform:none;letter-spacing:0;}
-  .obj-head{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin:6px 0 8px;}
+  .obj-head{font-size:13.5px;font-weight:800;color:var(--ink-900);margin:10px 0 8px;}
   .checklist{display:grid;gap:6px;margin:0 0 14px;}
   .crow{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:start;font-size:12.5px;padding:8px 11px;border:1px solid var(--ink-100);border-radius:var(--r-sm);background:var(--paper);}
   .crow .ic{line-height:1.2;}
@@ -129,7 +133,7 @@
   .crow.miss{border-color:var(--coral-300);background:var(--coral-50);color:var(--ink-700);}
   .end-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 0 8px;}
   .es{padding:10px 12px;border-radius:var(--r-md);border:1px solid var(--ink-100);background:var(--paper);}
-  .es .n{font-size:16px;font-weight:800;letter-spacing:-.02em;} .es .l{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-top:4px;}
+  .es .n{font-size:16px;font-weight:800;letter-spacing:-.02em;} .es .l{font-size:12px;color:var(--ink-500);margin-top:4px;}
   .debrief{border:1px solid var(--ink-100);border-left:3px solid var(--green-600);border-radius:var(--r-md);background:var(--green-25);padding:13px 15px;margin:14px 0 16px;}
   .debrief h3{font-size:13.5px;font-weight:800;margin:0 0 7px;} .debrief ul{margin:0;padding-left:17px;font-size:12.5px;color:var(--ink-700);} .debrief li{margin-bottom:6px;} .debrief li b{color:var(--ink-900);}
   .res-actions{display:flex;gap:10px;flex-wrap:wrap;}
@@ -138,7 +142,7 @@
   .transcript .sd{display:block;font-style:normal;color:var(--ink-500);font-size:12.5px;margin-top:6px;}
   .note-foot{margin-top:18px;font-size:12px;color:var(--ink-400);line-height:1.6;} .note-foot b{color:var(--ink-700);}
 
-  @media (max-width:560px){ .meters{grid-template-columns:1fr;} .end-stats{grid-template-columns:1fr;} }
+  @media (max-width:560px){ .meters{gap:8px;} .meter{padding:10px 12px;} }
   @media (prefers-reduced-motion:reduce){ *{animation:none !important;transition:none !important;} }
 </style>
 </head>
@@ -155,15 +159,15 @@
       <span class="cav">?</span>
       <div>
         <div class="cname">"Mark Reeves" <span class="unverified">caller unverified</span></div>
-        <div class="cmeta">claims: IT Security · inbound · +44 20 7946 0xxx</div>
+        <div class="cmeta">Claims to be IT Security, +44 20 7946 0xxx</div>
       </div>
     </div>
-    <div class="ctimer"><div class="t" id="clock">00:00</div><div class="l">call time</div></div>
+    <div class="ctimer"><div class="t" id="clockT"><span id="clock">00:00</span></div><div class="l" id="clockL">call time</div></div>
   </div>
 
   <div class="meters">
     <div class="meter"><div class="l">Account exposure</div><div class="v" id="mExpL" style="color:var(--coral-700)">None</div><div class="bar"><i class="coral" id="mExp"></i></div></div>
-    <div class="meter"><div class="l">Verification rigor</div><div class="v" id="mVerL">—</div><div class="bar"><i class="green" id="mVer"></i></div></div>
+    <div class="meter"><div class="l">Caller verification</div><div class="v" id="mVerL">Not yet</div><div class="bar"><i class="green" id="mVer"></i></div></div>
   </div>
 
   <section class="scene" aria-live="polite">
@@ -174,9 +178,10 @@
         <button class="vo-btn ghost" id="muteBtn" type="button">Sound: on</button>
         <button class="vo-btn ghost" id="txtBtn" type="button" aria-expanded="false">Show transcript</button>
       </div>
-      <div class="transcript" id="sBody" hidden></div>
+      <p class="sr-only" id="srLine"></p>
+      <div class="transcript" id="sBody" aria-hidden="true" hidden></div>
     </div>
-    <div class="your-turn">Your response</div>
+    <div class="your-turn">What do you say?</div>
     <div class="choices" id="sChoices"></div>
     <div class="conseq" id="conseq" role="status">
       <div class="said" id="cSaid"></div>
@@ -186,51 +191,50 @@
     </div>
   </section>
 
-  <div class="note-foot">Your choices change what the caller tries next and how the call ends.</div>
+  <div class="note-foot">What you say changes what the caller tries next and how the call ends.</div>
 </div>
 
 <!-- intro -->
 <div class="overlay" id="intro">
   <div class="ov-card">
-    <p class="eyebrow">Voice call · 4 endings</p>
-    <h1>Your phone rings. It's <em>"IT Security."</em></h1>
-    <p>You work on the payments team. A caller says there is an account takeover running on your login and he needs your help to stop it right now. He is calm, he knows things about you, and he is in a hurry. You cannot see who is on the line. Listen, and choose what you say back.</p>
+    <h1>An unexpected call about your account</h1>
+    <p>You work on the payments team. A man calls to say that someone is taking over your login right now and that he needs your help to stop it.</p>
+    <p>He sounds calm, knows a few things about you and is in a hurry. You cannot see who is on the line, so all you have is what he says and what you say back.</p>
     <div class="ov-rules">
-      <div class="ov-r"><span class="tg">Verify</span><span>You did not call anyone. Before you do anything, check the caller on a number you already trust.</span></div>
-      <div class="ov-r"><span class="tg">Never share</span><span>No OTP, no password, no push-approval. Real IT never asks for them.</span></div>
-      <div class="ov-r"><span class="tg">Report</span><span>Rushing you, pulling rank and threatening you are the attack. Say no, end the call, and report it.</span></div>
+      <div class="ov-r"><span>You did not call anyone. Before you do anything he asks, check who he is on a number you already trust.</span></div>
+      <div class="ov-r"><span>Never read out a one-time code, give a password or approve a push you did not start. Real IT never asks for any of them.</span></div>
+      <div class="ov-r"><span>Rushing you, pulling rank and threatening you are part of the attack. Say no, end the call and report it.</span></div>
     </div>
-    <p style="font-size:12.5px;color:var(--ink-500)">The voice is the caller. Open the transcript if you need it. Keys <span class="mono">1</span>/<span class="mono">2</span>/<span class="mono">3</span>.</p>
-    <div style="display:flex;justify-content:flex-end;"><button class="btn-primary" id="btnStart">Answer the call →</button></div>
+    <p style="font-size:12.5px;color:var(--ink-500)">You will hear the caller's voice, and the transcript is there if you would rather read along. Keys <span class="mono">1</span>, <span class="mono">2</span> and <span class="mono">3</span> choose a reply.</p>
+    <div style="display:flex;justify-content:flex-end;"><button class="btn-primary" id="btnStart">Answer the call</button></div>
   </div>
 </div>
 
 <!-- ending -->
 <div class="overlay hide" id="ending">
   <div class="ov-card">
-    <p class="eyebrow" id="eTag">Call ended</p>
-    <h1 id="eTitle" tabindex="-1">—</h1>
-    <div class="grade"><span class="g" id="eGrade">A</span><span class="gl">Call outcome<b id="eGradeLabel">—</b></span></div>
+    <h1 id="eTitle" tabindex="-1"></h1>
+    <div class="grade"><span class="g" id="eGrade">A</span><span class="gl">Grade for this call<b id="eGradeLabel"></b></span></div>
     <p id="eVerdict"></p>
     <p id="eHints" style="font-size:12px;color:var(--ink-400);margin:-6px 0 14px;"></p>
     <div class="end-stats">
       <div class="es"><div class="n" id="eExp" style="color:var(--coral-700)">None</div><div class="l">Account exposure</div></div>
-      <div class="es"><div class="n" id="eVer">—</div><div class="l">Verification rigor</div></div>
+      <div class="es"><div class="n" id="eVer"></div><div class="l">Caller verification</div></div>
     </div>
-    <div class="obj-head">Learning objectives · what this call assessed</div>
+    <h2 class="obj-head">What this call checked</h2>
     <div class="checklist" id="eChecklist"></div>
     <div class="debrief">
-      <h3>How to beat a vishing call</h3>
+      <h3>What to do when a caller asks for a code</h3>
       <ul>
-        <li><b>Call back on a number you trust.</b> Hang up and call IT on a number you already have, never one the caller gives you. A real team never minds.</li>
-        <li><b>Never read an OTP or approve a push you didn't start.</b> Those exist to stop exactly this. IT will never ask for them.</li>
-        <li><b>Treat pressure as the warning sign.</b> Urgency, authority and threats are there to make you skip the check.</li>
-        <li><b>If you slip, report instantly.</b> Fast reporting lets security burn the code or kill the session before it is used, which turns a breach back into a near-miss.</li>
+        <li>Hang up and call IT back on a number you already have, never on one the caller gives you. A real team never minds the check.</li>
+        <li>Never read out a one-time code or approve a push you did not start. IT will never ask for either.</li>
+        <li>Treat pressure as the warning sign. Urgency, authority and threats are there to make you skip the check.</li>
+        <li>If you do slip, report it at once. Security can then cancel the code or end the session before it is used.</li>
       </ul>
     </div>
     <div class="res-actions">
       <button class="btn-primary" id="btnReplay">Take the call again</button>
-      <a class="btn-ghost" href="../../#demos">See more formats →</a>
+      <a class="btn-ghost" href="../../#demos">Back to the other demos</a>
     </div>
   </div>
 </div>
@@ -244,40 +248,40 @@
     start:{ time:"00:06",
       body:"Hi — this is Mark Reeves, IT Security. We've just flagged a sign-in to your account from an IP in Bucharest, about two minutes ago. It looks like an account takeover in progress, and I'm trying to lock it down before they reach the payments tools. First — am I speaking with the account owner?",
       choices:[
-        {k:1, lab:"“Yes, that's me — what do you need?”", good:false, eff:{exposure:+5}, note:"You confirmed your identity to a caller you haven't verified, and handed him the initiative. It is not fatal, but he now sets the pace.", to:"ask"},
-        {k:2, lab:"“Before anything — what team are you on, and what's the ticket number?”", good:true, eff:{verification:+15}, note:"Good instinct. You are making him prove who he is. Watch what he asks for in return.", to:"verify"},
-        {k:3, lab:"“I'm going to hang up and call IT back on the number in our directory.”", good:true, eff:{verification:+25}, note:"Calling back on a number you trust is the main defence, and a real IT team loses nothing by it. Watch how he reacts.", to:"callback"}
+        {k:1, lab:"“Yes, that's me. What do you need?”", good:false, eff:{exposure:+5}, note:"Now he knows he has the right person, and you still don't know who he is. From here on he sets the pace.", to:"ask"},
+        {k:2, lab:"“Which team are you on? And what's the ticket number?”", good:true, eff:{verification:+15}, note:"He now has to prove who he is. Watch what he asks you for in return.", to:"verify"},
+        {k:3, lab:"“I'm going to hang up and call IT back on the number in our directory.”", good:true, eff:{verification:+25}, note:"Calling back on a number you already trust is the main defence against a call like this, and a real IT team loses nothing by it. Watch how he reacts.", to:"callback"}
       ] },
 
     callback:{ time:"00:18",
       body:"Whoa — there's no time for that. By the time you dig through the directory and wait on hold, they're already inside. I just need sixty seconds of your help here. Don't overthink a simple verification, okay?",
       choices:[
-        {k:1, lab:"“No. If it's real, IT won't mind me calling back. Hanging up now.”", good:true, eff:{verification:+20}, note:"A genuine security team loses nothing because you verified. His panic about the callback is the tell.", to:"end_callback_win"},
-        {k:2, lab:"“Okay, fair — it's urgent. What do you need me to do?”", good:false, eff:{exposure:+10, verification:-15}, note:"He invented a deadline and you accepted it. When you feel rushed, slow down.", to:"ask"}
+        {k:1, lab:"“No. If this is real, IT won't mind me calling back. I'm hanging up.”", good:true, eff:{verification:+45}, note:"His panic about the callback is the tell. A genuine security team loses nothing when you check.", to:"end_callback_win"},
+        {k:2, lab:"“Okay, fair enough, it's urgent. What do you need?”", good:false, eff:{exposure:+10, verification:-15}, note:"The deadline is his invention, and you accepted it. On a call like this, feeling rushed is the signal to slow down.", to:"ask"}
       ] },
 
     verify:{ time:"00:22",
       body:"Of course — it's ticket INC-4471, I'm on the SecOps team under Dana Whitfield. Look, to verify it's really you and whitelist your device, we just pushed a six-digit code to your phone. Read it back to me and I'll lock the attacker straight out.",
       choices:[
-        {k:1, lab:"“I'm not reading out a one-time code — IT never needs that.”", good:true, eff:{verification:+20}, note:"Correct. A ticket number and a manager's name cost nothing to invent. The request for the code is the attack itself.", to:"pressure"},
-        {k:2, lab:"“Sure, hold on… let me grab my phone — it's…”", good:false, eff:{exposure:+60}, note:"That code is the one thing standing between him and your account. The 'verification' framing is exactly how the ask gets through.", to:"leak_otp"},
-        {k:3, lab:"“I'll call SecOps back and confirm that ticket myself first.”", good:true, eff:{verification:+18}, note:"A ticket number you cannot independently check is not proof of anything. Verify it through a channel he does not control.", to:"end_callback_win"}
+        {k:1, lab:"“I'm not reading out a code. IT never needs one.”", good:true, eff:{verification:+20}, note:"The request for the code is the attack itself, and a ticket number and a manager's name cost nothing to invent.", to:"pressure"},
+        {k:2, lab:"“Sure, hang on, let me grab my phone… it's…”", good:false, eff:{exposure:+60}, note:"That code was the one thing standing between him and your account. Calling the request a verification is how he got it out of you.", to:"leak_otp"},
+        {k:3, lab:"“I'll call SecOps myself and check that ticket first.”", good:true, eff:{verification:+60}, note:"A ticket number you cannot check yourself proves nothing. Checking it through a channel he does not control settles the question.", to:"end_callback_win"}
       ] },
 
     ask:{ time:"00:20",
       body:"Great. To prove it's you on a trusted device, I've just sent a push to your authenticator app — you'll see an Approve prompt pop up. Tap Approve and we'll kick the attacker out immediately.",
       choices:[
-        {k:1, lab:"“I'm not approving a login I didn't start. How do I know that prompt isn't you?”", good:true, eff:{verification:+18}, note:"Exactly the right question. An unprompted push means someone is trying to log in at that moment, and it is almost certainly him.", to:"pressure_push"},
-        {k:2, lab:"“Okay — tapping Approve now.”", good:false, eff:{exposure:+70}, note:"That approval just let his login through your MFA. A prompt you did not trigger is the exact thing MFA exists to stop.", to:"leak_push"},
-        {k:3, lab:"“Hold on — what's the ticket number and your manager's name?”", good:true, eff:{verification:+10}, note:"Reasonable enough to make him produce details. Remember that details can be faked, so the test that counts is still the callback.", to:"verify"}
+        {k:1, lab:"“I'm not approving a login I didn't start. How do I know that prompt isn't you?”", good:true, eff:{verification:+18}, note:"A push you did not trigger means someone is trying to log in at that moment. It is almost certainly him.", to:"pressure_push"},
+        {k:2, lab:"“Okay, tapping Approve now.”", good:false, eff:{exposure:+70}, note:"Your approval let his login through your MFA. A prompt you did not start yourself is exactly what MFA is there to stop.", to:"leak_push"},
+        {k:3, lab:"“Hang on. What's the ticket number, and who's your manager?”", good:true, eff:{verification:+10}, note:"Details like these are easy to invent, and the callback is still the check that counts. Expect him to change his request when the first one stalls.", to:"verify"}
       ] },
 
     pressure:{ time:"00:41",
       body:"Listen to me. I have your employee ID, I can see you're on the payments team, I know your last login time. If this account gets used for fraud on YOUR watch, that lands on you — not me. I'm handing you the way out right now. The code. Read it to me.",
       choices:[
-        {k:1, lab:"“Knowing my ID proves nothing — none of that is secret. I'm reporting this call. Goodbye.”", good:true, eff:{verification:+20}, note:"Personal details create a feeling of legitimacy without being proof of anything. You named the manipulation and shut it down.", to:"end_resist_win"},
-        {k:2, lab:"“…okay, okay — the code is…”", good:false, eff:{exposure:+60}, note:"The threat worked. Fear of being blamed is a classic closer, and it pushed you past the one rule that mattered.", to:"leak_otp"},
-        {k:3, lab:"“I'm putting you on hold and calling the official IT line right now.”", good:true, eff:{verification:+15}, note:"Under pressure you went back to the process: hang up and call the official line. That is what stops these calls.", to:"end_callback_win"}
+        {k:1, lab:"“Knowing my ID proves nothing, none of that is secret. I'm reporting this call. Goodbye.”", good:true, eff:{verification:+20}, note:"Personal details make a caller sound legitimate without proving anything. You saw through them, refused and reported the call.", to:"end_resist_win"},
+        {k:2, lab:"“…okay, okay, the code is…”", good:false, eff:{exposure:+60}, note:"Fear of being blamed is a classic way to close these calls. It pushed you past the one rule that mattered.", to:"leak_otp"},
+        {k:3, lab:"“I'm hanging up and calling the official IT line.”", good:true, eff:{verification:+40}, note:"Hanging up and calling the official line is what stops these calls, and you went back to it under pressure.", to:"end_callback_win"}
       ] },
 
     // Same threat when only a push prompt has been mentioned: he asks for the
@@ -285,39 +289,39 @@
     pressure_push:{ time:"00:41",
       body:"Listen to me. I have your employee ID, I can see you're on the payments team, I know your last login time. If this account gets used for fraud on YOUR watch, that lands on you — not me. I'm handing you the way out right now.",
       choices:[
-        {k:1, lab:"“Knowing my ID proves nothing — none of that is secret. I'm reporting this call. Goodbye.”", good:true, eff:{verification:+20}, note:"Personal details create a feeling of legitimacy without being proof of anything. You named the manipulation and shut it down.", to:"end_resist_win"},
-        {k:2, lab:"“…okay, okay — approving it now.”", good:false, eff:{exposure:+70}, note:"The threat worked. Fear of being blamed is a classic closer, and it pushed you past the one rule that mattered.", to:"leak_push"},
-        {k:3, lab:"“I'm putting you on hold and calling the official IT line right now.”", good:true, eff:{verification:+15}, note:"Under pressure you went back to the process: hang up and call the official line. That is what stops these calls.", to:"end_callback_win"}
+        {k:1, lab:"“Knowing my ID proves nothing, none of that is secret. I'm reporting this call. Goodbye.”", good:true, eff:{verification:+20}, note:"Personal details make a caller sound legitimate without proving anything. You saw through them, refused and reported the call.", to:"end_resist_win"},
+        {k:2, lab:"“…okay, okay, I'm approving it.”", good:false, eff:{exposure:+70}, note:"Fear of being blamed is a classic way to close these calls. It pushed you past the one rule that mattered.", to:"leak_push"},
+        {k:3, lab:"“I'm hanging up and calling the official IT line.”", good:true, eff:{verification:+55}, note:"Hanging up and calling the official line is what stops these calls, and you went back to it under pressure.", to:"end_callback_win"}
       ] },
 
-    leak_otp:{ time:"00:52",
+    leak_otp:{ time:"00:52", callEnded:true,
       body:"…got it. Perfect. You've been really helpful. <span class='sd'>(A short pause, then the line goes dead.)</span>",
       choices:[
-        {k:1, lab:"Realise what just happened. Call IT on the directory number right away and report the code.", good:true, eff:{exposure:-25}, note:"The damage is done, but reporting in seconds lets security invalidate the code and lock the session before he uses it.", to:"end_leaked_but_reported"},
-        {k:2, lab:"Shrug it off. It was probably IT after all.", good:false, eff:{}, note:"That 'thanks, bye' and the dead line were the attacker leaving with what he came for. Assuming it was fine is how a slip becomes a breach.", to:"end_compromised"}
+        {k:1, lab:"Call IT on the directory number now and report the code.", good:true, eff:{exposure:-25}, note:"The code is out, but security can still cancel it and lock the session if you report within seconds.", to:"end_leaked_but_reported"},
+        {k:2, lab:"Shrug it off, it was probably IT.", good:false, eff:{}, note:"The thanks and the dead line were the attacker leaving with what he came for. Assuming it was fine turns a slip into a breach.", to:"end_compromised"}
       ] },
 
-    leak_push:{ time:"00:38",
+    leak_push:{ time:"00:38", callEnded:true,
       body:"Approved — got it. I mean… you're all set. Have a good one. <span class='sd'>(The call ends abruptly.)</span>",
       choices:[
-        {k:1, lab:"Something is wrong. Report it to security now and ask them to end the session.", good:true, eff:{exposure:-25}, note:"Right call. Revoking the session and reporting immediately can cut his access before he does anything with it.", to:"end_leaked_but_reported"},
-        {k:2, lab:"Assume it worked and get back to your day.", good:false, eff:{}, note:"He's now logged in as you. The abrupt hang-up was him getting exactly what he needed. Always report an approval you're unsure about.", to:"end_compromised"}
+        {k:1, lab:"Report it to security now and ask them to end the session.", good:true, eff:{exposure:-25}, note:"Revoking the session at once can cut off his access before he does anything with it.", to:"end_leaked_but_reported"},
+        {k:2, lab:"Assume it worked and get on with your day.", good:false, eff:{}, note:"He is now logged in as you. The sudden hang-up meant he had everything he needed.", to:"end_compromised"}
       ] },
 
     // ---- endings ----
-    end_callback_win:{ end:true, gradeFixed:"A", etag:"Call ended · you hung up", title:"You hung up and verified.",
-      verdict:"You did not act on his deadline. You ended the call and reached IT on a number you trust. A real security team loses nothing when you call back, and an attacker cannot pass that check. Nothing leaked." },
-    end_resist_win:{ end:true, gradeFixed:"A", etag:"Call ended · you held", title:"You held the line.",
-      verdict:"The authority, the urgency, the personal details: none of it moved you. You refused to hand anything over, named the call for what it was, and reported it. (The cleanest version is to hang up and call back on a number you trust before you engage at all. The checklist below shows where you landed.)" },
-    end_leaked_but_reported:{ end:true, gradeFixed:"C", etag:"Call ended · reported", title:"You slipped, then reported fast.",
-      verdict:"You gave the attacker what he asked for. The save was realising it at once and reporting, so security could burn the code or kill the session before it was used. Fast reporting turns a breach back into a near-miss. The goal is still to never hand it over." },
-    end_compromised:{ end:true, gradeFixed:"D", etag:"Call ended · compromised", title:"Account taken over.",
-      verdict:"You handed an unverified caller the one thing that defeats your MFA, and then assumed it was fine. By the time anyone notices, he has been inside the payments tools for hours. Every part of that call was the attack: the authority, the urgency, the threat, and the offer to help." }
+    end_callback_win:{ end:true, gradeFixed:"A", title:"You hung up and called IT on a trusted number",
+      verdict:"You did not let his deadline decide for you. You ended the call and reached IT on a number you already trusted, which costs a real team nothing and is the one check an attacker cannot pass. Nothing leaked." },
+    end_resist_win:{ end:true, gradeFixed:"B", title:"You refused and reported the call, but did not call back",
+      verdict:"The authority, the urgency and the personal details did not move you. You refused to hand anything over and reported the call. The cleaner version is to hang up and call back on a trusted number before you engage at all, and the checklist below marks that step as missed." },
+    end_leaked_but_reported:{ end:true, gradeFixed:"C", title:"You gave him what he asked for, then reported it at once",
+      verdict:"You gave the attacker what he asked for. Realising it straight away and reporting it let security cancel the code or end the session before he used it. Fast reporting turns a breach back into a near miss, though the aim is still never to hand it over." },
+    end_compromised:{ end:true, gradeFixed:"D", title:"The attacker took over your account",
+      verdict:"You gave an unverified caller the one thing that gets past your MFA and then assumed it was fine. By the time anyone notices, he will have been inside the payments tools for hours. The authority, the urgency, the threat and the offer to help were all part of the attack." }
   };
 
   // ---- engine ----
   const $ = id=>document.getElementById(id);
-  let state, cur, locked, curId, hintScenes, flags;
+  let state, cur, locked, curId, hintScenes, silentScenes, flags;
   // which (node_choice) demonstrates which learning objective
   const OBJ_OOB={callback_1:1, verify_3:1, pressure_3:1, pressure_push_3:1};   // verify out-of-band
   const OBJ_LEAK={verify_2:1, ask_2:1, pressure_2:1, pressure_push_2:1};                  // disclosed a secret
@@ -328,23 +332,58 @@
   function pickVoice(){ if(!TTS) return; const vs=speechSynthesis.getVoices(); ttsVoice = vs.find(v=>/^en-GB/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || vs[0] || null; }
   if(TTS){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
   function stripHtml(h){ const d=document.createElement('div'); d.innerHTML=h; d.querySelectorAll('.sd').forEach(n=>n.remove()); return d.textContent.replace(/\s+/g,' ').trim(); }
-  function narrate(text){
-    lastSpoken=text||""; if(!TTS||muted||!text) return;
+  // Every speak/stop bumps the token, so a late failure from an older clip
+  // (e.g. play() rejected because the learner already answered) never
+  // falls back to reading a stale line aloud.
+  let token=0;
+  // No sound for this line (muted, no clip and no system voice): open the
+  // transcript so the learner still gets what the caller said.
+  function noAudio(my){ if(my!==token || !cur || cur.end) return; showTranscript(true); }
+  function narrate(text, my){
+    lastSpoken=text||""; if(!text) return;
+    if(!TTS){ noAudio(my); return; }
     try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); if(ttsVoice)u.voice=ttsVoice; u.rate=1.0;u.pitch=1.0;
-      const b=$("voBtn"); u.onstart=()=>{if(b)b.classList.add("speaking");}; u.onend=()=>{if(b)b.classList.remove("speaking");}; speechSynthesis.speak(u);
-    }catch(e){}
+      const b=$("voBtn"); let started=false;
+      u.onstart=()=>{ started=true; if(b)b.classList.add("speaking"); };
+      u.onend=()=>{ if(b)b.classList.remove("speaking"); };
+      u.onerror=()=>{ if(b)b.classList.remove("speaking"); if(!started) noAudio(my); };
+      speechSynthesis.speak(u);
+      setTimeout(()=>{ if(!started) noAudio(my); }, 2500);   // some browsers fail silently
+    }catch(e){ noAudio(my); }
   }
   function speak(key, text){
     lastKey=key||""; lastSpoken=text||"";
-    if(muted) return;
+    const my=++token;
     if(TTS) speechSynthesis.cancel();
     if(curAudio){ curAudio.pause(); curAudio=null; }
-    if(!key){ narrate(text); return; }
+    if(muted){ noAudio(my); return; }
+    if(!key){ narrate(text, my); return; }
     const b=$("voBtn"); const a=new Audio("audio/"+key+".mp3"); curAudio=a; let fellBack=false;
-    const fb=()=>{ if(fellBack)return; fellBack=true; if(curAudio===a)curAudio=null; narrate(text); };
+    const fb=()=>{ if(fellBack||my!==token)return; fellBack=true; if(curAudio===a)curAudio=null; narrate(text, my); };
     a.onplaying=()=>{ if(b)b.classList.add("speaking"); };
     a.onended=()=>{ if(b)b.classList.remove("speaking"); };
-    a.onerror=fb; a.play().catch(fb);
+    a.onerror=fb;
+    a.play().catch(e=>{ if(e && e.name==="AbortError") return; fb(); });   // AbortError = we paused it on purpose
+  }
+  function showTranscript(auto){
+    const b=$("sBody"); if(!b.hidden) return;
+    b.hidden=false; $("txtBtn").setAttribute("aria-expanded","true"); $("txtBtn").textContent="Hide transcript";
+    if(auto && curId) silentScenes.add(curId);
+  }
+
+  // Call clock: starts at each scene's scripted time (never earlier than the
+  // last value shown) and ticks while the line is open.
+  let clockSec=0, clockTimer=null;
+  function toSec(t){ const m=/(\d+):(\d+)/.exec(t||""); return m ? (+m[1])*60 + (+m[2]) : 0; }
+  function fmt(sec){ return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0"); }
+  function stopClock(){ if(clockTimer){ clearInterval(clockTimer); clockTimer=null; } }
+  function setClock(node){
+    stopClock();
+    clockSec = Math.max(clockSec+1, toSec(node.time));
+    $("clock").textContent = fmt(clockSec);
+    $("clockL").textContent = node.callEnded ? "call ended" : "call time";
+    $("clockT").classList.toggle("ended", !!node.callEnded);
+    if(!node.callEnded) clockTimer=setInterval(()=>{ clockSec++; $("clock").textContent=fmt(clockSec); },1000);
   }
 
   function clampPct(v){ return Math.max(0,Math.min(100,v)); }
@@ -358,7 +397,7 @@
   }
 
   function init(){
-    state={exposure:0, verification:0}; hintScenes=new Set();
+    state={exposure:0, verification:0}; hintScenes=new Set(); silentScenes=new Set(); clockSec=0;
     flags={oob:false, recognize:false, leaked:false};
     go("start");
   }
@@ -367,10 +406,11 @@
     cur=NODES[id]; curId=id;
     applyEff(cur.onEnter);
     syncMeters();
-    if(cur.end){ showEnding(cur); return; }
-    $("clock").textContent = cur.time||"00:00";
+    if(cur.end){ stopClock(); showEnding(cur); return; }
+    setClock(cur);
     $("sBody").innerHTML = cur.body;
     $("sBody").hidden = true;
+    $("srLine").textContent = "The caller says: "+$("sBody").textContent;
     $("txtBtn").setAttribute("aria-expanded","false"); $("txtBtn").textContent="Show transcript";
     speak(curId, stripHtml(cur.body));
     $("conseq").className="conseq";
@@ -411,7 +451,7 @@
     $("btnNext").focus();
   }
 
-  const GL={A:"Clean defence",B:"Defended, but leaned on the transcript",C:"Close call, you slipped",D:"Account compromised"};
+  const GL={A:"You verified the caller through IT, and nothing leaked.",B:"Nothing leaked, though you skipped the callback.",C:"You slipped and then reported it quickly.",D:"He got past your MFA, and nobody was told."};
   const CLS={A:"",B:"b",C:"c",D:"d"};
   // Criterion-referenced: the grade is fixed by the outcome reached.
   function grade(node){
@@ -420,7 +460,6 @@
   }
 
   function showEnding(node){
-    $("eTag").textContent=node.etag||"Call ended";
     $("eTitle").textContent=node.title;
     $("eVerdict").textContent=node.verdict;
     stopAudio();  // ending is text only, no voiceover
@@ -428,27 +467,31 @@
     $("eVer").textContent=verLabel(state.verification);
     const reported = ["end_callback_win","end_resist_win","end_leaked_but_reported"].indexOf(curId)>=0;
     const objs=[
-      {met:flags.oob,        t:"Called back on a number you trust"},
-      {met:!flags.leaked,    t:"Protected the secret: no OTP, no push approval"},
-      {met:flags.recognize,  t:"Treated the call as an attack (urgency, authority, threat)"},
-      {met:reported,         t:"Told IT or security about the call"}
+      {met:flags.oob,        t:"Calling back on a number you already trust"},
+      {met:!flags.leaked,    t:"Keeping the one-time code and the push approval to yourself"},
+      {met:flags.recognize && !flags.leaked, t:"Treating the urgency, the authority and the threat as signs of an attack"},
+      {met:reported,         t:"Telling IT or security about the call"}
     ];
     $("eChecklist").innerHTML = objs.map(o=>'<div class="crow '+(o.met?"met":"miss")+'"><span class="ic">'+(o.met?"✓":"✗")+'</span><span>'+o.t+'</span></div>').join("");
     const g=grade(node); $("eGrade").textContent=g.g; $("eGrade").className="g "+g.cls; $("eGradeLabel").textContent=g.label;
-    $("eHints").textContent = hintScenes.size ? ("You opened the transcript on "+hintScenes.size+" line"+(hintScenes.size>1?"s":"")+".") : "You played the whole call by ear.";
+    const plural=n=>n+" line"+(n>1?"s":"");
+    const hints=[];
+    if(hintScenes.size) hints.push("You opened the transcript on "+plural(hintScenes.size)+".");
+    if(silentScenes.size) hints.push("Sound was off or unavailable on "+plural(silentScenes.size)+", so the transcript opened by itself.");
+    $("eHints").textContent = hints.length ? hints.join(" ") : "You followed the whole call by ear without opening the transcript.";
     $("ending").classList.remove("hide");
     $("ending").scrollTop=0; $("ending").querySelector(".ov-card").scrollTop=0;
     $("eTitle").focus();
   }
 
-  function stopAudio(){ if(TTS)speechSynthesis.cancel(); if(curAudio){curAudio.pause();curAudio=null;} }
+  function stopAudio(){ token++; if(TTS)speechSynthesis.cancel(); if(curAudio){curAudio.pause();curAudio=null;} const b=$("voBtn"); if(b)b.classList.remove("speaking"); }
 
   // wire
   $("voBtn").addEventListener("click",()=>speak(lastKey,lastSpoken));
-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; if(muted)stopAudio(); $("muteBtn").textContent="Sound: "+(muted?"off":"on"); });
-  $("txtBtn").addEventListener("click",()=>{ const b=$("sBody"); b.hidden=!b.hidden; if(!b.hidden&&curId)hintScenes.add(curId); $("txtBtn").setAttribute("aria-expanded",String(!b.hidden)); $("txtBtn").textContent=(b.hidden?"Show":"Hide")+" transcript"; });
+  $("muteBtn").addEventListener("click",()=>{ muted=!muted; if(muted){ stopAudio(); if(cur && !cur.end && !locked) showTranscript(true); } $("muteBtn").textContent="Sound: "+(muted?"off":"on"); });
+  $("txtBtn").addEventListener("click",()=>{ const b=$("sBody"); b.hidden=!b.hidden; if(!b.hidden&&curId&&!silentScenes.has(curId))hintScenes.add(curId); $("txtBtn").setAttribute("aria-expanded",String(!b.hidden)); $("txtBtn").textContent=(b.hidden?"Show":"Hide")+" transcript"; });
   $("btnStart").addEventListener("click",()=>{ $("intro").classList.add("hide"); init(); });
-  $("btnReplay").addEventListener("click",()=>{ stopAudio(); $("ending").classList.add("hide"); init(); });
+  $("btnReplay").addEventListener("click",()=>{ stopAudio(); stopClock(); $("ending").classList.add("hide"); init(); });
   document.addEventListener("keydown",e=>{
     const playing = $("intro").classList.contains("hide") && $("ending").classList.contains("hide");
     if(!playing) return;

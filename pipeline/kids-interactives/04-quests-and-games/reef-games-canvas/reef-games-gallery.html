@@ -574,6 +574,18 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     background: var(--lagoon-50);
   }
 
+  .loopnote { font-size: var(--t-2xs); }
+  .knobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--s-3); }
+  .knob { display: grid; gap: var(--s-1); font-size: var(--t-sm); font-weight: 600; }
+  .knob input { width: 100%; accent-color: var(--color-primary); }
+  pre.code {
+    margin: 0; padding: var(--s-3); overflow: auto;
+    border-radius: var(--radius-md); background: var(--ink-900); color: #d6efd9;
+    font-family: var(--font-mono); font-size: var(--t-2xs); line-height: 1.7;
+  }
+  pre.code--long { max-height: 260px; margin-top: var(--s-2); }
+  details summary { cursor: pointer; font-size: var(--t-sm); font-weight: 600; }
+
   [hidden] { display: none !important; }
 
   @media (max-height: 760px) {
@@ -595,16 +607,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
-    <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Reef Games · sprite gallery</p>
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActs">All activities</span></a>
+    <div class="row" style="justify-content: flex-end">
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Every creature here</span> <em class="mark" data-t="title2">is a few lines of code</em></h1>
-    <p class="lede" data-t="intro">The whole cast of the Reef Games, plus their props, their backdrops and the interface around them. Not one of these is an image file. Open any of them to watch it move, then save it as a picture or a sprite sheet for a game of your own.</p>
+    <h1><span data-t="title1">Reef Games sprites</span> <em class="mark" data-t="title2">made from code</em></h1>
+    <p class="lede" data-t="intro">These are the characters of the Reef Games with their props, backdrops and interface pieces, and none of them is an image file. Open any of them to watch it move and change the numbers in its code. You can save it as a picture or as a sprite sheet for your own game.</p>
   </header>
 
   <nav class="tabs" id="tabs" role="tablist"></nav>
@@ -626,10 +637,30 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     <div class="row">
       <button class="btn" id="playPause" data-t="pause">Pause</button>
+      <button class="btn btn--secondary" id="codeToggle" aria-expanded="false" aria-controls="codePanel" data-t="showCode">Show the code</button>
       <button class="btn btn--ghost" id="savePng" data-t="savePng">Save this frame</button>
       <button class="btn btn--ghost" id="saveSheet" data-t="saveSheet">Save a sprite sheet</button>
     </div>
-    <div id="verdict" hidden></div>
+    <p class="muted loopnote" id="loopNote"></p>
+
+    <div class="stack" id="codePanel" hidden>
+      <p class="muted" data-t="codeIntro">This sprite is a small program that draws one picture many times a second. The sliders change numbers in that program, and the picture changes with them.</p>
+      <div class="knobs">
+        <label class="knob"><span><span data-t="knobSize">Size</span> <b class="mono" id="sizeOut"></b></span>
+          <input type="range" id="knobSize" min="0.5" max="1.5" step="0.05" value="1"></label>
+        <label class="knob"><span><span data-t="knobSpeed">Speed</span> <b class="mono" id="speedOut"></b></span>
+          <input type="range" id="knobSpeed" min="0" max="3" step="0.25" value="1"></label>
+        <label class="knob" id="hueKnob"><span><span data-t="knobHue">Colour shift</span> <b class="mono" id="hueOut"></b></span>
+          <input type="range" id="knobHue" min="0" max="360" step="10" value="0"></label>
+      </div>
+      <pre class="code" id="callView"></pre>
+      <details>
+        <summary data-t="fullCode">The whole drawing function</summary>
+        <pre class="code code--long" id="fnView"></pre>
+      </details>
+      <div><button class="btn btn--ghost btn--sm" id="knobReset" data-t="knobReset">Put the numbers back</button></div>
+    </div>
+    <div id="verdict" hidden aria-live="polite"></div>
   </section>
 
 </div>
@@ -646,6 +677,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
      between them. Nothing here needs a network: a single frame saves as PNG,
      and an animation saves as a sprite sheet, which is what a game engine
      wants anyway. */
+
+  /* roundRect arrived in canvas only in 2023 (Safari 16, Firefox 112).
+     Without it one sprite throws on every frame and the whole tab stops
+     drawing, so older browsers get a small stand-in built from arcTo. */
+  if (typeof CanvasRenderingContext2D !== "undefined" && !CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+      var rad = Math.max(0, Math.min(Array.isArray(r) ? (r[0] || 0) : (r || 0), Math.abs(w) / 2, Math.abs(h) / 2));
+      this.moveTo(x + rad, y);
+      this.arcTo(x + w, y, x + w, y + h, rad);
+      this.arcTo(x + w, y + h, x, y + h, rad);
+      this.arcTo(x, y + h, x, y, rad);
+      this.arcTo(x, y, x + w, y, rad);
+      this.closePath();
+    };
+  }
 
         /* Shared parts, so eight animals do not each repeat the same forty
            lines of eye and bubble drawing. Every helper paints inside
@@ -1346,11 +1392,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
             }
         ];
 
-        // Объекты и предметы
+        // Props
         const objects = [
             {
-                name: 'Кольца для метания',
-                desc: 'Разноцветные кольца',
+                name: 'Throwing rings',
+                desc: 'Coloured rings',
                 category: 'objects',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -1366,21 +1412,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.translate(cx + pos[0], cy + pos[1] + Math.sin(frame * 0.1 + i) * 5);
                         ctx.rotate(Math.sin(frame * 0.05 + i) * 0.1);
                         
-                        // Тень кольца
+                        // Ring shadow
                         ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
                         ctx.beginPath();
                         ctx.ellipse(3, 3, 25, 20, 0, 0, Math.PI * 2);
                         ctx.ellipse(3, 3, 15, 12, 0, 0, Math.PI * 2, true);
                         ctx.fill();
                         
-                        // Кольцо
+                        // Ring
                         ctx.fillStyle = colors[i];
                         ctx.beginPath();
                         ctx.ellipse(0, 0, 25, 20, 0, 0, Math.PI * 2);
                         ctx.ellipse(0, 0, 15, 12, 0, 0, Math.PI * 2, true);
                         ctx.fill();
                         
-                        // Блик
+                        // Highlight
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
                         ctx.beginPath();
                         ctx.ellipse(-8, -8, 8, 5, -Math.PI/4, 0, Math.PI * 2);
@@ -1391,8 +1437,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Кораллы-мишени',
-                desc: 'Мишени для колец',
+                name: 'Coral targets',
+                desc: 'Targets for the rings',
                 category: 'objects',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -1411,11 +1457,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.translate(cx + coral.x, cy + coral.y);
                         ctx.scale(coral.size, coral.size);
                         
-                        // Основание коралла
+                        // Coral base
                         ctx.fillStyle = '#FF7F50';
                         ctx.fillRect(-5, 0, 10, 30);
                         
-                        // Ветви коралла
+                        // Coral branches
                         for (let i = -2; i <= 2; i++) {
                             ctx.save();
                             ctx.translate(0, 10 + i * 5);
@@ -1441,13 +1487,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                             ctx.restore();
                         }
                         
-                        // Номер
+                        // Number
                         ctx.fillStyle = '#FFD700';
                         ctx.font = 'bold 20px Arial';
                         ctx.textAlign = 'center';
                         ctx.fillText(coral.num, 0, -15);
                         
-                        // Свечение
+                        // Glow
                         ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
                         ctx.lineWidth = 3;
                         ctx.beginPath();
@@ -1459,8 +1505,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Сундук синий',
-                desc: 'Таинственный синий сундук',
+                name: 'Blue chest',
+                desc: 'Mysterious blue chest',
                 category: 'objects',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -1471,15 +1517,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.save();
                     ctx.translate(cx, cy);
                     
-                    // Тень
+                    // Shadow
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
                     ctx.fillRect(-45, 35, 90, 10);
                     
-                    // Основание сундука
+                    // Chest base
                     ctx.fillStyle = '#1E3A8A';
                     ctx.fillRect(-40, 0, 80, 40);
                     
-                    // Крышка
+                    // Lid
                     ctx.save();
                     ctx.translate(0, -5 + Math.sin(frame * 0.1) * 2);
                     ctx.fillStyle = '#2563EB';
@@ -1492,12 +1538,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.fill();
                     ctx.restore();
                     
-                    // Металлические полосы
+                    // Metal bands
                     ctx.fillStyle = '#C0C0C0';
                     ctx.fillRect(-42, 10, 84, 3);
                     ctx.fillRect(-42, 27, 84, 3);
                     
-                    // Замок
+                    // Lock
                     ctx.fillStyle = '#FFD700';
                     ctx.beginPath();
                     ctx.arc(0, 20, 8, 0, Math.PI * 2);
@@ -1507,7 +1553,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.arc(0, 21, 3, 0, Math.PI * 2);
                     ctx.fill();
                     
-                    // Таинственное свечение
+                    // Mysterious glow
                     const glowIntensity = 0.3 + Math.sin(frame * 0.15) * 0.2;
                     ctx.shadowColor = '#00BFFF';
                     ctx.shadowBlur = 20;
@@ -1520,8 +1566,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Сундук зелёный',
-                desc: 'Сундук с водорослями',
+                name: 'Green chest',
+                desc: 'Chest with seaweed',
                 category: 'objects',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -1532,15 +1578,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.save();
                     ctx.translate(cx, cy);
                     
-                    // Тень
+                    // Shadow
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
                     ctx.fillRect(-45, 35, 90, 10);
                     
-                    // Основание сундука
+                    // Chest base
                     ctx.fillStyle = '#14532D';
                     ctx.fillRect(-40, 0, 80, 40);
                     
-                    // Крышка
+                    // Lid
                     ctx.fillStyle = '#16A34A';
                     ctx.beginPath();
                     ctx.moveTo(-45, -5);
@@ -1550,7 +1596,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.closePath();
                     ctx.fill();
                     
-                    // Водоросли
+                    // Seaweed
                     ctx.strokeStyle = '#0F7938';
                     ctx.lineWidth = 3;
                     for (let i = -30; i <= 30; i += 15) {
@@ -1565,12 +1611,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.stroke();
                     }
                     
-                    // Металлические полосы
+                    // Metal bands
                     ctx.fillStyle = '#A3A3A3';
                     ctx.fillRect(-42, 10, 84, 3);
                     ctx.fillRect(-42, 27, 84, 3);
                     
-                    // Замок
+                    // Lock
                     ctx.fillStyle = '#FFD700';
                     ctx.beginPath();
                     ctx.arc(0, 20, 8, 0, Math.PI * 2);
@@ -1584,8 +1630,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Жемчужина',
-                desc: 'Сияющая жемчужина',
+                name: 'Pearl',
+                desc: 'Shining pearl',
                 category: 'objects',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -1596,7 +1642,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.save();
                     ctx.translate(cx, cy);
                     
-                    // Раковина
+                    // Shell
                     ctx.fillStyle = '#DDA0DD';
                     ctx.beginPath();
                     ctx.moveTo(0, 30);
@@ -1607,7 +1653,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.closePath();
                     ctx.fill();
                     
-                    // Линии на раковине
+                    // Shell ridges
                     ctx.strokeStyle = '#C77FDD';
                     ctx.lineWidth = 2;
                     for (let i = -3; i <= 3; i++) {
@@ -1617,10 +1663,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.stroke();
                     }
                     
-                    // Жемчужина с анимацией пульсации
+                    // Pearl, pulsing
                     const pearlSize = 25 + Math.sin(frame * 0.1) * 3;
                     
-                    // Свечение жемчужины
+                    // Pearl glow
                     const gradient = ctx.createRadialGradient(0, -5, 0, 0, -5, pearlSize * 2);
                     gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
                     gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.3)');
@@ -1630,7 +1676,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.arc(0, -5, pearlSize * 2, 0, Math.PI * 2);
                     ctx.fill();
                     
-                    // Основа жемчужины
+                    // Pearl body
                     const pearlGradient = ctx.createRadialGradient(-5, -10, 0, 0, -5, pearlSize);
                     pearlGradient.addColorStop(0, '#FFFFFF');
                     pearlGradient.addColorStop(0.5, '#F8F8FF');
@@ -1640,7 +1686,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.arc(0, -5, pearlSize, 0, Math.PI * 2);
                     ctx.fill();
                     
-                    // Радужные переливы
+                    // Rainbow sheen
                     ctx.save();
                     ctx.globalCompositeOperation = 'overlay';
                     const rainbowColors = ['#FF69B4', '#87CEEB', '#98FB98', '#FFB6C1'];
@@ -1659,7 +1705,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     });
                     ctx.restore();
                     
-                    // Блик
+                    // Highlight
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
                     ctx.beginPath();
                     ctx.ellipse(-8, -15, 8, 5, -Math.PI/4, 0, Math.PI * 2);
@@ -1669,8 +1715,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Золотые монетки',
-                desc: 'Сокровища океана',
+                name: 'Gold coins',
+                desc: 'Treasure of the ocean',
                 category: 'objects',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -1691,13 +1737,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.translate(cx + coin.x, cy + coin.y);
                         ctx.rotate(coin.rotation);
                         
-                        // Тень монеты
+                        // Coin shadow
                         ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
                         ctx.beginPath();
                         ctx.ellipse(2, 2, 15, 12, 0, 0, Math.PI * 2);
                         ctx.fill();
                         
-                        // Монета
+                        // Coin
                         const gradient = ctx.createLinearGradient(-15, -15, 15, 15);
                         gradient.addColorStop(0, '#FFD700');
                         gradient.addColorStop(0.5, '#FFA500');
@@ -1707,14 +1753,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.ellipse(0, 0, 15, 12, 0, 0, Math.PI * 2);
                         ctx.fill();
                         
-                        // Обод монеты
+                        // Coin rim
                         ctx.strokeStyle = '#B8860B';
                         ctx.lineWidth = 2;
                         ctx.beginPath();
                         ctx.ellipse(0, 0, 13, 10, 0, 0, Math.PI * 2);
                         ctx.stroke();
                         
-                        // Якорь на монете
+                        // Anchor on the coin
                         ctx.strokeStyle = '#B8860B';
                         ctx.lineWidth = 1.5;
                         ctx.beginPath();
@@ -1726,7 +1772,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.quadraticCurveTo(0, 3, 4, 5);
                         ctx.stroke();
                         
-                        // Блик
+                        // Highlight
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
                         ctx.beginPath();
                         ctx.ellipse(-5, -5, 5, 3, -Math.PI/4, 0, Math.PI * 2);
@@ -1735,7 +1781,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.restore();
                     });
                     
-                    // Блеск монет
+                    // Coin sparkle
                     if (frame % 30 < 10) {
                         const sparkleIndex = Math.floor(frame / 30) % 5;
                         const sparkle = coins[sparkleIndex];
@@ -1760,8 +1806,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Золотая звезда',
-                desc: 'Приз за первое место',
+                name: 'Gold star',
+                desc: 'First-place prize',
                 category: 'objects',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -1773,7 +1819,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.translate(cx, cy);
                     ctx.rotate(Math.sin(frame * 0.05) * 0.05);
                     
-                    // Сияние
+                    // Radiance
                     const glowSize = 60 + Math.sin(frame * 0.1) * 10;
                     const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
                     gradient.addColorStop(0, 'rgba(255, 215, 0, 0.5)');
@@ -1784,7 +1830,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
                     ctx.fill();
                     
-                    // Звезда
+                    // Star
                     ctx.fillStyle = '#FFD700';
                     ctx.beginPath();
                     for (let i = 0; i < 5; i++) {
@@ -1806,7 +1852,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.closePath();
                     ctx.fill();
                     
-                    // Градиент на звезде
+                    // Star gradient
                     const starGradient = ctx.createLinearGradient(-40, -40, 40, 40);
                     starGradient.addColorStop(0, '#FFEA00');
                     starGradient.addColorStop(0.5, '#FFD700');
@@ -1814,19 +1860,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.fillStyle = starGradient;
                     ctx.fill();
                     
-                    // Обводка
+                    // Outline
                     ctx.strokeStyle = '#B8860B';
                     ctx.lineWidth = 2;
                     ctx.stroke();
                     
-                    // Цифра 1
+                    // Number 1
                     ctx.fillStyle = '#8B0000';
                     ctx.font = 'bold 30px Arial';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.fillText('1', 0, 0);
                     
-                    // Искры
+                    // Sparks
                     ctx.strokeStyle = 'rgba(255, 255, 0, 0.8)';
                     ctx.lineWidth = 2;
                     for (let i = 0; i < 8; i++) {
@@ -1848,17 +1894,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
             }
         ];
 
-        // Фоны
+        // Backdrops
         const backgrounds = [
             {
-                name: 'Главная площадь',
-                desc: 'Центр фестиваля',
+                name: 'Main square',
+                desc: 'Heart of the festival',
                 category: 'backgrounds',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
                     const h = ctx.canvas.height;
                     
-                    // Градиент воды
+                    // Water gradient
                     const waterGradient = ctx.createLinearGradient(0, 0, 0, h);
                     waterGradient.addColorStop(0, '#87CEEB');
                     waterGradient.addColorStop(0.5, '#4682B4');
@@ -1866,7 +1912,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.fillStyle = waterGradient;
                     ctx.fillRect(0, 0, w, h);
                     
-                    // Песчаное дно
+                    // Sandy floor
                     ctx.fillStyle = '#F4A460';
                     ctx.beginPath();
                     ctx.moveTo(0, h - 60);
@@ -1878,13 +1924,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.closePath();
                     ctx.fill();
                     
-                    // Праздничные палатки
+                    // Festival tents
                     const tentColors = ['#FF6B6B', '#4ECDC4', '#FFD93D'];
                     for (let i = 0; i < 3; i++) {
                         ctx.save();
                         ctx.translate(100 + i * 150, h - 120);
                         
-                        // Палатка
+                        // Tent
                         ctx.fillStyle = tentColors[i];
                         ctx.beginPath();
                         ctx.moveTo(0, 0);
@@ -1893,12 +1939,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.closePath();
                         ctx.fill();
                         
-                        // Полосы на палатке
+                        // Tent stripes
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
                         ctx.fillRect(-20, 20, 40, 5);
                         ctx.fillRect(-15, 35, 30, 5);
                         
-                        // Флажок
+                        // Flag
                         ctx.fillStyle = '#FFD700';
                         ctx.beginPath();
                         ctx.moveTo(0, 0);
@@ -1910,7 +1956,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.restore();
                     }
                     
-                    // Гирлянды
+                    // Bunting
                     ctx.strokeStyle = '#FFD700';
                     ctx.lineWidth = 2;
                     ctx.beginPath();
@@ -1920,7 +1966,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     }
                     ctx.stroke();
                     
-                    // Флажки на гирлянде
+                    // Bunting flags
                     for (let x = 15; x < w; x += 60) {
                         ctx.fillStyle = ['#FF69B4', '#00CED1', '#FFD700'][Math.floor(x / 60) % 3];
                         ctx.beginPath();
@@ -1931,7 +1977,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.fill();
                     }
                     
-                    // Пузыри
+                    // Bubbles
                     for (let i = 0; i < 10; i++) {
                         const x = (i * 73 + frame * 2) % w;
                         const y = h - (frame * 3 + i * 100) % h;
@@ -1944,7 +1990,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.stroke();
                     }
                     
-                    // Лучи света
+                    // Light rays
                     ctx.globalAlpha = 0.3;
                     ctx.fillStyle = '#FFFACD';
                     for (let i = 0; i < 3; i++) {
@@ -1959,21 +2005,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Гоночная трасса',
-                desc: 'Трасса для соревнований',
+                name: 'Race course',
+                desc: 'Course for the races',
                 category: 'backgrounds',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
                     const h = ctx.canvas.height;
                     
-                    // Фон океана
+                    // Ocean background
                     const gradient = ctx.createLinearGradient(0, 0, 0, h);
                     gradient.addColorStop(0, '#00BFFF');
                     gradient.addColorStop(1, '#1E90FF');
                     ctx.fillStyle = gradient;
                     ctx.fillRect(0, 0, w, h);
                     
-                    // Трасса
+                    // Course
                     ctx.strokeStyle = '#FFD700';
                     ctx.lineWidth = 80;
                     ctx.lineCap = 'round';
@@ -1985,7 +2031,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.stroke();
                     ctx.globalAlpha = 1;
                     
-                    // Разметка трассы
+                    // Lane markings
                     ctx.strokeStyle = 'white';
                     ctx.lineWidth = 4;
                     ctx.setLineDash([20, 10]);
@@ -1996,7 +2042,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.stroke();
                     ctx.setLineDash([]);
                     
-                    // Старт
+                    // Start
                     ctx.fillStyle = '#000000';
                     ctx.fillRect(30, h/2 - 50, 10, 100);
                     for (let i = 0; i < 5; i++) {
@@ -2006,7 +2052,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         }
                     }
                     
-                    // Финиш
+                    // Finish
                     ctx.fillStyle = '#000000';
                     ctx.fillRect(w - 40, h/2 - 50, 10, 100);
                     for (let i = 0; i < 5; i++) {
@@ -2016,7 +2062,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         }
                     }
                     
-                    // Кораллы-препятствия
+                    // Coral obstacles
                     const obstacles = [
                         { x: w/3, y: h/3 },
                         { x: w/2, y: 2*h/3 },
@@ -2034,7 +2080,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.fill();
                     });
                     
-                    // Пузыри потока
+                    // Current bubbles
                     for (let i = 0; i < 15; i++) {
                         const progress = (frame * 0.02 + i * 0.1) % 1;
                         const x = 50 + progress * (w - 100);
@@ -2048,21 +2094,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Подиум награждения',
-                desc: 'Место вручения призов',
+                name: 'Winners podium',
+                desc: 'Where prizes are handed out',
                 category: 'backgrounds',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
                     const h = ctx.canvas.height;
                     
-                    // Фон с градиентом
+                    // Gradient background
                     const gradient = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w/2);
                     gradient.addColorStop(0, '#4169E1');
                     gradient.addColorStop(1, '#000080');
                     ctx.fillStyle = gradient;
                     ctx.fillRect(0, 0, w, h);
                     
-                    // Прожекторы
+                    // Spotlights
                     ctx.globalAlpha = 0.3;
                     for (let i = 0; i < 3; i++) {
                         const x = w/4 + i * w/4;
@@ -2076,7 +2122,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     }
                     ctx.globalAlpha = 1;
                     
-                    // Подиум
+                    // Podium
                     const podiumData = [
                         { place: 2, height: 80, x: w/2 - 100, color: '#C0C0C0' },
                         { place: 1, height: 100, x: w/2, color: '#FFD700' },
@@ -2084,11 +2130,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ];
                     
                     podiumData.forEach(podium => {
-                        // Основание подиума
+                        // Podium base
                         ctx.fillStyle = podium.color;
                         ctx.fillRect(podium.x - 40, h - podium.height, 80, podium.height);
                         
-                        // Градиент на подиуме
+                        // Podium gradient
                         const podiumGradient = ctx.createLinearGradient(
                             podium.x - 40, h - podium.height,
                             podium.x + 40, h
@@ -2098,13 +2144,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.fillStyle = podiumGradient;
                         ctx.fillRect(podium.x - 40, h - podium.height, 80, podium.height);
                         
-                        // Номер места
+                        // Place number
                         ctx.fillStyle = 'white';
                         ctx.font = 'bold 40px Arial';
                         ctx.textAlign = 'center';
                         ctx.fillText(podium.place, podium.x, h - podium.height/2 + 15);
                         
-                        // Звезды вокруг первого места
+                        // Stars around first place
                         if (podium.place === 1) {
                             ctx.fillStyle = '#FFD700';
                             for (let i = 0; i < 5; i++) {
@@ -2135,9 +2181,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         }
                     });
                     
-                    // Конфетти
+                    // Confetti
                     for (let i = 0; i < 20; i++) {
-                        const x = Math.random() * w;
+                        // A fixed lane per piece with a little sway. Picking x at
+                        // random every frame made the confetti jitter sideways.
+                        const x = (i * 97 + 13) % w + Math.sin(frame * 0.05 + i) * 10;
                         const y = (frame * 2 + i * 50) % (h + 50) - 50;
                         const color = ['#FF69B4', '#00CED1', '#FFD700', '#98FB98'][i % 4];
                         
@@ -2152,11 +2200,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
             }
         ];
 
-        // UI элементы
+        // Interface pieces
         const uiElements = [
             {
-                name: 'Кнопка Играть',
-                desc: 'Начать игру',
+                name: 'Play button',
+                desc: 'Start the game',
                 category: 'ui',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -2170,13 +2218,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.translate(cx, cy);
                     ctx.scale(scale, scale);
                     
-                    // Тень кнопки
+                    // Button shadow
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
                     ctx.beginPath();
                     ctx.roundRect(-60, -25 + 5, 120, 50, 25);
                     ctx.fill();
                     
-                    // Градиент кнопки
+                    // Button gradient
                     const gradient = ctx.createLinearGradient(0, -25, 0, 25);
                     gradient.addColorStop(0, '#00CED1');
                     gradient.addColorStop(0.5, '#20B2AA');
@@ -2186,14 +2234,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.roundRect(-60, -25, 120, 50, 25);
                     ctx.fill();
                     
-                    // Обводка
+                    // Outline
                     ctx.strokeStyle = '#00FFFF';
                     ctx.lineWidth = 2;
                     ctx.beginPath();
                     ctx.roundRect(-60, -25, 120, 50, 25);
                     ctx.stroke();
                     
-                    // Треугольник play
+                    // Play triangle
                     ctx.fillStyle = 'white';
                     ctx.beginPath();
                     ctx.moveTo(-10, -15);
@@ -2202,7 +2250,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.closePath();
                     ctx.fill();
                     
-                    // Блик
+                    // Highlight
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
                     ctx.beginPath();
                     ctx.ellipse(0, -15, 40, 10, 0, 0, Math.PI);
@@ -2212,8 +2260,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Табло очков',
-                desc: 'Отображение счета',
+                name: 'Score board',
+                desc: 'Shows the score',
                 category: 'ui',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -2224,7 +2272,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.save();
                     ctx.translate(cx, cy);
                     
-                    // Рамка табло
+                    // Board frame
                     const gradient = ctx.createLinearGradient(-80, -40, 80, 40);
                     gradient.addColorStop(0, '#1E3A8A');
                     gradient.addColorStop(1, '#2563EB');
@@ -2233,13 +2281,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.roundRect(-80, -40, 160, 80, 15);
                     ctx.fill();
                     
-                    // Внутренний экран
+                    // Inner screen
                     ctx.fillStyle = '#001F3F';
                     ctx.beginPath();
                     ctx.roundRect(-70, -30, 140, 60, 10);
                     ctx.fill();
                     
-                    // Светодиодная сетка
+                    // LED grid
                     ctx.globalAlpha = 0.1;
                     ctx.strokeStyle = '#00FFFF';
                     ctx.lineWidth = 1;
@@ -2257,8 +2305,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     }
                     ctx.globalAlpha = 1;
                     
-                    // Анимированный счет
-                    const score = Math.floor((Math.sin(frame * 0.05) + 1) * 50);
+                    // Animated score
+                    // A score only climbs; it runs 0 to 99 and starts over.
+                    const score = Math.floor((frame % 200) / 2);
                     ctx.fillStyle = '#00FFFF';
                     ctx.font = 'bold 40px monospace';
                     ctx.textAlign = 'center';
@@ -2268,7 +2317,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.fillText(score.toString().padStart(3, '0'), 0, 0);
                     ctx.shadowBlur = 0;
                     
-                    // Декоративные светодиоды
+                    // Decorative LEDs
                     for (let i = 0; i < 8; i++) {
                         const angle = (Math.PI * 2 / 8) * i;
                         const x = Math.cos(angle) * 90;
@@ -2284,8 +2333,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                 }
             },
             {
-                name: 'Счетчик времени',
-                desc: 'Таймер обратного отсчета',
+                name: 'Countdown timer',
+                desc: 'Counts the time down',
                 category: 'ui',
                 draw: function(ctx, frame = 0) {
                     const w = ctx.canvas.width;
@@ -2296,30 +2345,33 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.save();
                     ctx.translate(cx, cy);
                     
-                    // Круглая рамка таймера
+                    // Round timer frame
                     ctx.strokeStyle = '#2563EB';
                     ctx.lineWidth = 8;
                     ctx.beginPath();
                     ctx.arc(0, 0, 60, 0, Math.PI * 2);
                     ctx.stroke();
                     
-                    // Прогресс таймера
+                    // Timer progress
                     const progress = (frame % 360) / 360;
-                    ctx.strokeStyle = progress < 0.2 ? '#FF0000' : '#00FF00';
+                    // Green while there is time, red for the last fifth.
+                    ctx.strokeStyle = progress > 0.8 ? '#FF0000' : '#00FF00';
                     ctx.lineWidth = 6;
                     ctx.lineCap = 'round';
                     ctx.beginPath();
                     ctx.arc(0, 0, 60, -Math.PI/2, -Math.PI/2 + Math.PI * 2 * progress);
                     ctx.stroke();
                     
-                    // Фон циферблата
+                    // Dial face
                     ctx.fillStyle = 'rgba(0, 31, 63, 0.9)';
                     ctx.beginPath();
                     ctx.arc(0, 0, 50, 0, Math.PI * 2);
                     ctx.fill();
                     
-                    // Время
-                    const seconds = Math.floor((1 - progress) * 60);
+                    // Time
+                    // 360 frames at the gallery's 20 per second is 18 real seconds,
+                    // so the dial counts 18 seconds, not a minute in fast-forward.
+                    const seconds = Math.ceil((1 - progress) * 18);
                     const minutes = Math.floor(seconds / 60);
                     const secs = seconds % 60;
                     
@@ -2329,7 +2381,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                     ctx.textBaseline = 'middle';
                     ctx.fillText(`${minutes}:${secs.toString().padStart(2, '0')}`, 0, 0);
                     
-                    // Мигающая рамка при малом времени
+                    // Flashing ring when time is short
                     if (seconds < 10 && frame % 20 < 10) {
                         ctx.strokeStyle = '#FF0000';
                         ctx.lineWidth = 3;
@@ -2340,7 +2392,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
                         ctx.globalAlpha = 1;
                     }
                     
-                    // Декоративные метки
+                    // Tick marks
                     ctx.strokeStyle = '#FFFFFF';
                     ctx.lineWidth = 2;
                     for (let i = 0; i < 12; i++) {
@@ -2375,98 +2427,114 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   var NAMES = {
     en: {
       characters: [
-        ["Nell the Narwhal", "Runs the show and points with that tusk"],
-        ["Dart the Flying Fish", "The fastest thing in the bay, wing fins and all"],
-        ["Professor Puffer", "Reads the rules out loud, puffs up when nobody listens"],
-        ["Tuck the Sea Turtle", "Slow, steady, carries whatever needs carrying"],
-        ["Marlow the Manta Ray", "Glides above the lanes and sees every finish"],
-        ["Wren the Seahorse", "Announces each race through a conch shell"],
-        ["Juno the Jellyfish", "Glows brighter the louder the crowd gets"],
-        ["Ollie the Sea Otter", "Floats on the surface and times every heat"]
+        ["Nell the Narwhal", "She runs the show and points with her tusk."],
+        ["Dart the Flying Fish", "He is the fastest thing in the bay, thanks to his wing fins."],
+        ["Professor Puffer", "He reads the rules out loud and puffs up when nobody listens."],
+        ["Tuck the Sea Turtle", "She is slow and steady and carries whatever needs carrying."],
+        ["Marlow the Manta Ray", "He glides above the lanes so that he can see every finish."],
+        ["Wren the Seahorse", "She announces each race through a conch shell."],
+        ["Juno the Jellyfish", "She glows brighter the louder the crowd cheers."],
+        ["Ollie the Sea Otter", "He floats on the surface and times every race."]
       ],
       objects: [
-        ["Throwing rings", "Coloured rings for the ring toss"],
-        ["Coral targets", "What the rings are aimed at"],
-        ["Blue chest", "Nobody knows what is inside"],
-        ["Green chest", "The one covered in seaweed"],
-        ["Pearl", "Glows when the light hits it"],
-        ["Gold coins", "Treasure from the seabed"],
-        ["Gold star", "First place, nothing less"]
+        ["Throwing rings", "These coloured rings are for the ring toss."],
+        ["Coral targets", "This is what the rings are thrown at."],
+        ["Blue chest", "Nobody knows what is inside it."],
+        ["Green chest", "This one is covered in seaweed."],
+        ["Pearl", "It shines when the light catches it."],
+        ["Gold coins", "This treasure came up from the seabed."],
+        ["Gold star", "It goes to whoever comes first."]
       ],
       backgrounds: [
-        ["Main square", "Where the festival gathers"],
-        ["Race course", "The lanes for the swimming heats"],
-        ["Winners' podium", "Where the medals are handed out"]
+        ["Main square", "This is where the festival gathers."],
+        ["Race course", "These are the lanes for the swimming races."],
+        ["Winners' podium", "This is where the medals are handed out."]
       ],
       ui: [
-        ["Play button", "Starts the game"],
-        ["Score board", "Shows how many points"],
-        ["Countdown timer", "Counts the seconds down"]
+        ["Play button", "Pressing it starts the game."],
+        ["Score board", "It shows how many points you have."],
+        ["Countdown timer", "It counts the seconds down to zero."]
       ]
     },
     es: {
       characters: [
-        ["Nell la narval", "Dirige el evento y señala con ese colmillo"],
-        ["Dart el pez volador", "Lo más rápido de la bahía, con aletas de ala"],
-        ["Profesor Globo", "Lee las reglas en voz alta y se hincha si nadie escucha"],
-        ["Tuck la tortuga marina", "Lenta, firme, carga con lo que haga falta"],
-        ["Marlow la manta", "Planea sobre los carriles y ve todas las llegadas"],
-        ["Wren el caballito de mar", "Anuncia cada carrera con una caracola"],
-        ["Juno la medusa", "Brilla más cuanto más grita el público"],
-        ["Ollie la nutria marina", "Flota en la superficie y cronometra cada manga"]
+        ["Nell la narval", "Dirige el espectáculo y señala con su colmillo."],
+        ["Dart el pez volador", "Es lo más rápido de la bahía gracias a sus aletas en forma de ala."],
+        ["Profesor Globo", "Lee las reglas en voz alta y se hincha cuando nadie le escucha."],
+        ["Tuck la tortuga marina", "Es lenta y constante, y carga con todo lo que haga falta."],
+        ["Marlow la manta", "Planea por encima de los carriles para poder ver todas las llegadas."],
+        ["Wren el caballito de mar", "Anuncia cada carrera a través de una caracola."],
+        ["Juno la medusa", "Brilla más cuanto más fuerte anima el público."],
+        ["Ollie la nutria marina", "Flota en la superficie y cronometra cada carrera."]
       ],
       objects: [
-        ["Aros para lanzar", "Aros de colores para el juego de puntería"],
-        ["Corales diana", "A donde van los aros"],
-        ["Cofre azul", "Nadie sabe qué hay dentro"],
-        ["Cofre verde", "El que está cubierto de algas"],
-        ["Perla", "Brilla cuando le da la luz"],
-        ["Monedas de oro", "Tesoro del fondo del mar"],
-        ["Estrella dorada", "Primer puesto, nada menos"]
+        ["Aros para lanzar", "Estos aros de colores son para el juego de puntería."],
+        ["Corales diana", "Es adonde se lanzan los aros."],
+        ["Cofre azul", "Nadie sabe qué hay dentro."],
+        ["Cofre verde", "Este está cubierto de algas."],
+        ["Perla", "Brilla cuando le da la luz."],
+        ["Monedas de oro", "Este tesoro salió del fondo del mar."],
+        ["Estrella dorada", "Es para quien llegue primero."]
       ],
       backgrounds: [
-        ["Plaza principal", "Donde se junta el festival"],
-        ["Pista de carreras", "Los carriles de las eliminatorias"],
-        ["Podio de ganadores", "Donde se entregan las medallas"]
+        ["Plaza principal", "Aquí es donde se reúne el festival."],
+        ["Pista de carreras", "Estos son los carriles de las carreras a nado."],
+        ["Podio de ganadores", "Aquí es donde se entregan las medallas."]
       ],
       ui: [
-        ["Botón de jugar", "Empieza el juego"],
-        ["Marcador", "Muestra cuántos puntos hay"],
-        ["Cuenta atrás", "Va contando los segundos"]
+        ["Botón de jugar", "Al pulsarlo empieza el juego."],
+        ["Marcador", "Muestra cuántos puntos tienes."],
+        ["Cuenta atrás", "Cuenta los segundos hasta llegar a cero."]
       ]
     }
   };
 
   var T = {
     en: {
-      eyebrow: "Reef Games · sprite gallery",
-      title1: "Every creature here", title2: "is a few lines of code",
-      intro: "The whole cast of the Reef Games, plus their props, their backdrops and the interface around them. Not one of these is an image file. Open any of them to watch it move, then save it as a picture or a sprite sheet for a game of your own.",
+      title1: "Reef Games sprites", title2: "made from code", allActs: "All activities",
+      intro: "These are the characters of the Reef Games with their props, backdrops and interface pieces, and none of them is an image file. Open any of them to watch it move and change the numbers in its code. You can save it as a picture or as a sprite sheet for your own game.",
       tabs: { characters: "Characters", objects: "Props", backgrounds: "Backdrops", ui: "Interface" },
       back: "Back to the gallery", play: "Play", pause: "Pause",
       savePng: "Save this frame", saveSheet: "Save a sprite sheet",
-      savedPng: "Saved one frame as a PNG.",
-      savedSheet: "Saved a sprite sheet: 12 frames in one picture, left to right.",
+      showCode: "Show the code", hideCode: "Hide the code",
+      codeIntro: "This sprite is a small program that draws one picture many times a second. The sliders change numbers in that program, and the picture changes with them.",
+      knobSize: "Size", knobSpeed: "Speed", knobHue: "Colour shift",
+      fullCode: "The whole drawing function", knobReset: "Put the numbers back",
+      loop: function (n) { return "One full loop takes " + n + " frames, about " + (n / 20).toFixed(1) + " seconds. A sprite sheet holds exactly one loop, so it repeats without a jump."; },
+      savedPng: "The frame was saved as a PNG file.",
+      savedSheet: function (n) { return "The sprite sheet has " + SHEET_FRAMES + " frames from one " + n + "-frame loop, left to right, with your size and colour changes in it."; },
       saveFailed: "This browser would not save the file."
     },
     es: {
-      eyebrow: "Juegos del Arrecife · galería de sprites",
-      title1: "Cada criatura de aquí", title2: "son unas líneas de código",
-      intro: "Todo el reparto de los Juegos del Arrecife, con sus objetos, sus fondos y la interfaz que los rodea. Ninguno es un archivo de imagen. Abre el que quieras para verlo moverse y guárdalo como imagen o como hoja de sprites para tu propio juego.",
+      title1: "Sprites de los Juegos del Arrecife", title2: "hechos con código", allActs: "Todas las actividades",
+      intro: "Estos son los personajes de los Juegos del Arrecife con sus objetos, fondos y piezas de interfaz, y ninguno es un archivo de imagen. Abre cualquiera para verlo moverse y cambiar los números de su código. Puedes guardarlo como imagen o como hoja de sprites para tu propio juego.",
       tabs: { characters: "Personajes", objects: "Objetos", backgrounds: "Fondos", ui: "Interfaz" },
       back: "Volver a la galería", play: "Reproducir", pause: "Pausa",
       savePng: "Guardar este fotograma", saveSheet: "Guardar hoja de sprites",
-      savedPng: "Guardado un fotograma en PNG.",
-      savedSheet: "Guardada una hoja de sprites: 12 fotogramas en una imagen, de izquierda a derecha.",
+      showCode: "Ver el código", hideCode: "Ocultar el código",
+      codeIntro: "Este sprite es un pequeño programa que dibuja una imagen muchas veces por segundo. Los controles cambian números de ese programa, y la imagen cambia con ellos.",
+      knobSize: "Tamaño", knobSpeed: "Velocidad", knobHue: "Cambio de color",
+      fullCode: "La función de dibujo completa", knobReset: "Dejar los números como estaban",
+      loop: function (n) { return "Una vuelta completa dura " + n + " fotogramas, unos " + (n / 20).toFixed(1).replace(".", ",") + " segundos. Una hoja de sprites lleva justo una vuelta, así que se repite sin saltos."; },
+      savedPng: "El fotograma se ha guardado como archivo PNG.",
+      savedSheet: function (n) { return "La hoja de sprites tiene " + SHEET_FRAMES + " fotogramas de una vuelta de " + n + ", de izquierda a derecha, con tus cambios de tamaño y color."; },
       saveFailed: "Este navegador no ha podido guardar el archivo."
     }
   };
 
+  /* A sprite sheet is only useful if its last frame leads back into its
+     first. Every sprite here moves at its own mix of speeds, so the loop
+     length is measured rather than guessed: the page draws frames 24 to 360,
+     shrinks each to a thumbnail and compares it with frames 0 and 1. The
+     closest match is that sprite's period. Most of them close to within a
+     few pixels; it is cached on the sprite after the first time. */
   var SHEET_FRAMES = 12;
-  var SHEET_STEP = 5;   /* frames apart, so the sheet spans a whole loop */
+  var PERIOD_MIN = 24, PERIOD_MAX = 360;
 
   var lang = "en", group = "characters", frame = 0, playing = true;
   var current = null, thumbs = [];
+  var knobs = { size: 1, speed: 1, hue: 0 };
+  var clock = 0;   /* the sprite's own frame count, which Speed scales */
 
   function byId(id) { return document.getElementById(id); }
   function t() { return T[lang]; }
@@ -2485,6 +2553,79 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   function paint(ctx, item, f) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     item.draw(ctx, f);
+  }
+
+  /* The same call, with the three numbers from the code panel around it. */
+  var canFilter = (function () {
+    try { return "filter" in document.createElement("canvas").getContext("2d"); } catch (e) { return false; }
+  })();
+
+  function paintTuned(ctx, item, f) {
+    var w = ctx.canvas.width, h = ctx.canvas.height;
+    ctx.save();
+    ctx.clearRect(0, 0, w, h);
+    if (canFilter && knobs.hue) ctx.filter = "hue-rotate(" + knobs.hue + "deg)";
+    ctx.translate(w / 2, h / 2);
+    ctx.scale(knobs.size, knobs.size);
+    ctx.translate(-w / 2, -h / 2);
+    item.draw(ctx, f);
+    ctx.restore();
+  }
+
+  /* The measuring runs as a generator so it can be done in two ways: all at
+     once when a sheet is saved, or a slice at a time between animation
+     frames when a sprite is opened, so the stage never freezes while it
+     works. */
+  function* periodSteps(item) {
+    var big = document.createElement("canvas"); big.width = 300; big.height = 200;
+    var small = document.createElement("canvas"); small.width = 60; small.height = 40;
+    var bg = big.getContext("2d"), sg = small.getContext("2d", { willReadFrequently: true });
+    function shot(f) {
+      paint(bg, item, f);
+      sg.clearRect(0, 0, 60, 40);
+      sg.drawImage(big, 0, 0, 60, 40);
+      return sg.getImageData(0, 0, 60, 40).data;
+    }
+    function diff(a, b) {
+      var sum = 0;
+      for (var i = 0; i < a.length; i++) sum += Math.abs(a[i] - b[i]);
+      return sum;
+    }
+    var f0 = shot(0), f1 = shot(1), errs = [], best = Infinity;
+    var prev = shot(PERIOD_MIN);
+    for (var p = PERIOD_MIN; p <= PERIOD_MAX; p++) {
+      var next = shot(p + 1);
+      /* Match the picture and the direction it is moving in: frame p must
+         look like frame 0 and frame p + 1 like frame 1. */
+      var e = diff(prev, f0) + diff(next, f1);
+      errs.push(e);
+      if (e < best) best = e;
+      prev = next;
+      if (p % 24 === 0) yield;
+    }
+    /* The shortest loop that is as good as the best one. Twice a loop is
+       also a loop, and a sheet should not hold two of them, but the margin
+       is kept tight: a sprite whose parts move at two speeds can look
+       almost closed at half its true period and still jump. */
+    var pick = PERIOD_MAX;
+    for (var k = 0; k < errs.length; k++) {
+      if (errs[k] <= best * 1.02 + 1) { pick = PERIOD_MIN + k; break; }
+    }
+    item.period = pick;
+  }
+
+  function measurePeriod(item) {
+    if (!item.period) { var it = periodSteps(item); while (!it.next().done) {} }
+    return item.period;
+  }
+
+  function measurePeriodLater(item, done) {
+    if (item.period) { done(item.period); return; }
+    var it = periodSteps(item);
+    (function slice() {
+      if (it.next().done) { done(item.period); return; }
+      setTimeout(slice, 0);
+    })();
   }
 
   function buildGrid() {
@@ -2515,16 +2656,29 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     });
   }
 
+  function paintLoopNote() {
+    if (!current) return;
+    var item = current.item;
+    measurePeriodLater(item, function (n) {
+      if (current && current.item === item) byId("loopNote").textContent = t().loop(n);
+    });
+  }
+
   function openDetail(i) {
     var names = NAMES[lang][group];
+    var fresh = !current || current.index !== i || current.group !== group;
     current = { item: itemsOf(group)[i], index: i, group: group };
     byId("detailName").textContent = names[i] ? names[i][0] : current.item.name;
     byId("detailDesc").textContent = names[i] ? names[i][1] : "";
-    playing = true;
-    byId("playPause").textContent = t().pause;
+    if (fresh) { playing = true; clock = frame; }
+    byId("playPause").textContent = playing ? t().pause : t().play;
     clearSay();
     byId("browse").hidden = true;
     byId("detail").hidden = false;
+    byId("loopNote").textContent = "";
+    /* Measuring the loop takes a moment, so the detail view shows first. */
+    setTimeout(paintLoopNote, 30);
+    paintCode();
   }
 
   function closeDetail() {
@@ -2534,15 +2688,77 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
 
   function tick() {
-    if (playing) frame++;
-    thumbs.forEach(function (th) { paint(th.ctx, th.item, frame); });
-    if (current) paint(byId("stage").getContext("2d"), current.item, frame);
+    if (playing) { frame++; clock += knobs.speed; }
+    /* The thumbnails only paint while the gallery is on screen. */
+    if (!current) thumbs.forEach(function (th) { paint(th.ctx, th.item, frame); });
+    else paintTuned(byId("stage").getContext("2d"), current.item, clock);
   }
 
+  /* ---- the code panel ---------------------------------------------------- */
+  function codeName() {
+    var raw = (current && current.item.name) || "sprite";
+    var parts = raw.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").split(/[^a-z0-9]+/).filter(Boolean);
+    return parts.map(function (p, i) { return i ? p.charAt(0).toUpperCase() + p.slice(1) : p; }).join("") || "sprite";
+  }
+
+  /* The functions sit deep inside the page, so their source arrives indented
+     by sixteen spaces. Take off what every line has in common. */
+  function dedent(src) {
+    var lines = src.split(/\r?\n/), pad = Infinity;
+    lines.slice(1).forEach(function (l) {
+      if (!l.trim()) return;
+      pad = Math.min(pad, l.match(/^ */)[0].length);
+    });
+    if (!isFinite(pad)) return src;
+    return [lines[0]].concat(lines.slice(1).map(function (l) { return l.slice(pad); })).join(String.fromCharCode(10));
+  }
+
+  function paintCode() {
+    if (!current) return;
+    byId("sizeOut").textContent = knobs.size.toFixed(2);
+    byId("speedOut").textContent = knobs.speed.toFixed(2);
+    byId("hueOut").textContent = knobs.hue + "°";
+    byId("hueKnob").hidden = !canFilter;
+    var lines = [];
+    if (canFilter) lines.push('ctx.filter = "hue-rotate(' + knobs.hue + 'deg)";');
+    lines.push("ctx.scale(" + knobs.size.toFixed(2) + ", " + knobs.size.toFixed(2) + ");");
+    lines.push("frame = frame + " + knobs.speed.toFixed(2) + ";   // every tick");
+    lines.push(codeName() + ".draw(ctx, frame);");
+    byId("callView").textContent = lines.join("\n");
+    byId("fnView").textContent = "draw: " + dedent(String(current.item.draw));
+  }
+
+  function bindKnob(id, key) {
+    byId(id).addEventListener("input", function (e) {
+      knobs[key] = parseFloat(e.target.value);
+      paintCode();
+    });
+  }
+  bindKnob("knobSize", "size");
+  bindKnob("knobSpeed", "speed");
+  bindKnob("knobHue", "hue");
+
+  byId("knobReset").onclick = function () {
+    knobs = { size: 1, speed: 1, hue: 0 };
+    byId("knobSize").value = "1"; byId("knobSpeed").value = "1"; byId("knobHue").value = "0";
+    paintCode();
+  };
+
+  byId("codeToggle").onclick = function () {
+    var panel = byId("codePanel"), open = panel.hidden;
+    panel.hidden = !open;
+    byId("codeToggle").setAttribute("aria-expanded", String(open));
+    byId("codeToggle").textContent = open ? t().hideCode : t().showCode;
+    paintCode();
+  };
+
+  /* ---- saving ------------------------------------------------------------ */
   function fileName(ext) {
     var names = NAMES[lang][current.group];
     var base = (names[current.index] ? names[current.index][0] : current.item.name) || "sprite";
-    return base.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") + ext;
+    /* Accents come off first, so "Botón de jugar" saves as boton-de-jugar. */
+    return base.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") + ext;
   }
 
   function saveCanvas(cv, ext, okMessage) {
@@ -2563,22 +2779,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     if (!current) return;
     var cv = document.createElement("canvas");
     cv.width = 300; cv.height = 200;
-    paint(cv.getContext("2d"), current.item, frame);
+    paintTuned(cv.getContext("2d"), current.item, clock);
     saveCanvas(cv, ".png", t().savedPng);
   };
 
   byId("saveSheet").onclick = function () {
     if (!current) return;
+    var period = measurePeriod(current.item);
     var cv = document.createElement("canvas");
     cv.width = 300 * SHEET_FRAMES; cv.height = 200;
     var g = cv.getContext("2d");
     for (var i = 0; i < SHEET_FRAMES; i++) {
       var cell = document.createElement("canvas");
       cell.width = 300; cell.height = 200;
-      paint(cell.getContext("2d"), current.item, i * SHEET_STEP);
+      /* Evenly spread over one loop: frame 12 would be frame 0 again. */
+      paintTuned(cell.getContext("2d"), current.item, i * period / SHEET_FRAMES);
       g.drawImage(cell, i * 300, 0);
     }
-    saveCanvas(cv, "-sheet.png", t().savedSheet);
+    saveCanvas(cv, "-sheet.png", t().savedSheet(period));
   };
 
   byId("playPause").onclick = function () {
@@ -2595,6 +2813,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       if (typeof v === "string") n.textContent = v;
     });
     byId("playPause").textContent = playing ? d.pause : d.play;
+    byId("codeToggle").textContent = byId("codePanel").hidden ? d.showCode : d.hideCode;
 
     var tabs = byId("tabs"); tabs.innerHTML = "";
     GROUPS.forEach(function (gr) {

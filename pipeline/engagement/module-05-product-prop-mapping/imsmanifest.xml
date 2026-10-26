@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  SCORM 1.2 manifest · Module 5 · Product Prop Mapping (multi-stakeholder)
-  Identifier: FTC.SDR.M5.product-prop-mapping.v1
-  Class 5 (multi-stakeholder) per 4cid-blueprint.md §3.1 — task class is
-  derived from brief §12.2 (Tom + finance peer) + §12.3 (Emma + bookkeeper)
-  substrate (no §11 Gong evidence yet; cohort-1 Gong validates LO-PP.3
-  threshold — see design-log.md §1 + storyboard Evidence note).
-  Single SCO. Shell at ../scorm-shell/ is copied alongside on packaging.
--->
 <manifest identifier="FTC.SDR.M5.product-prop-mapping.v1"
           version="1.0.0"
           xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
@@ -24,10 +15,10 @@
 
   <organizations default="FTC-SDR-ONBOARDING">
     <organization identifier="FTC-SDR-ONBOARDING">
-      <title>FinTechCard SDR Onboarding</title>
+      <title>FinTechCard SDR onboarding</title>
       <item identifier="ITEM-M5" identifierref="RES-M5" isvisible="true">
-        <title>Module 5 · Product Prop Mapping (multi-stakeholder)</title>
-        <adlcp:masteryscore>80</adlcp:masteryscore>
+        <title>Module 5: Matching pains to products</title>
+        <adlcp:masteryscore>67</adlcp:masteryscore>
         <adlcp:maxtimeallowed>00:10:00</adlcp:maxtimeallowed>
         <adlcp:timelimitaction>continue,no message</adlcp:timelimitaction>
         <adlcp:datafromlms></adlcp:datafromlms>
@@ -41,33 +32,47 @@
               adlcp:scormtype="sco"
               href="index.html">
       <file href="index.html"/>
-      <file href="styles.css"/>
       <file href="module.js"/>
-      <file href="data/transcripts.json"/>
-      <file href="data/prospects.json"/>
+      <file href="styles.css"/>
       <file href="data/prop-pain-bank.json"/>
+      <file href="data/prospects.json"/>
       <file href="data/quiz.json"/>
+      <file href="data/transcripts.json"/>
       <dependency identifierref="RES-SHELL"/>
     </resource>
-
+    <!-- The mini-OS shell (apps, shared buyers and calls), shared by all six modules. -->
     <resource identifier="RES-SHELL"
               type="webcontent"
-              adlcp:scormtype="asset"
-              href="../scorm-shell/index.html">
-      <file href="../scorm-shell/js/shell.js"/>
-      <file href="../scorm-shell/js/scorm-bridge.js"/>
+              adlcp:scormtype="asset">
+      <file href="../scorm-shell/index.html"/>
+      <file href="../scorm-shell/data/sample-gong-transcripts.json"/>
+      <file href="../scorm-shell/data/sample-profiles.json"/>
+      <file href="../scorm-shell/js/brand-icons.js"/>
       <file href="../scorm-shell/js/event-log.js"/>
-      <file href="../scorm-shell/js/coach-marks.js"/>
-      <file href="../scorm-shell/js/apps/registry.js"/>
-      <file href="../scorm-shell/js/apps/outreach.js"/>
-      <file href="../scorm-shell/js/apps/gong.js"/>
-      <file href="../scorm-shell/js/apps/salesforce.js"/>
-      <file href="../scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="../scorm-shell/js/quiz-normalize.js"/>
+      <file href="../scorm-shell/js/scorm-bridge.js"/>
+      <file href="../scorm-shell/js/shell.js"/>
+      <file href="../scorm-shell/js/task-banner.js"/>
       <file href="../scorm-shell/js/apps/calendar.js"/>
+      <file href="../scorm-shell/js/apps/gong.js"/>
+      <file href="../scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="../scorm-shell/js/apps/outreach.js"/>
       <file href="../scorm-shell/js/apps/phone-dialler.js"/>
+      <file href="../scorm-shell/js/apps/profiles.js"/>
+      <file href="../scorm-shell/js/apps/registry.js"/>
+      <file href="../scorm-shell/js/apps/salesforce.js"/>
       <file href="../scorm-shell/js/apps/slack.js"/>
-      <file href="../scorm-shell/styles/shell.css"/>
       <file href="../scorm-shell/styles/apps.css"/>
+      <file href="../scorm-shell/styles/shell.css"/>
+      <file href="../scorm-shell/styles/apps/_shared.css"/>
+      <file href="../scorm-shell/styles/apps/calendar.css"/>
+      <file href="../scorm-shell/styles/apps/gong.css"/>
+      <file href="../scorm-shell/styles/apps/linkedin-ch.css"/>
+      <file href="../scorm-shell/styles/apps/outreach.css"/>
+      <file href="../scorm-shell/styles/apps/phone-dialler.css"/>
+      <file href="../scorm-shell/styles/apps/salesforce.css"/>
+      <file href="../scorm-shell/styles/apps/slack.css"/>
+      <file href="../../_shared/desktop-only.js"/>
     </resource>
   </resources>
 </manifest>

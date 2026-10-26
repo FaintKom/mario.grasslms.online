@@ -11,6 +11,7 @@
  */
 
 import { registerApp, icon } from "./registry.js";
+import { loadCalls } from "./profiles.js";
 
 const MOVE_META = {
   M1: { label: "Diagnostic",   iconName: "eye"     },
@@ -140,7 +141,8 @@ registerApp({
     function renderRubric(t) {
       const panel = container.querySelector("[data-region='rubric']");
       if (!panel) return;
-      const tagged = (t.lines ?? []).filter(l => l.m_move_tag && l.m_move_tag !== "FAIL");
+      // Only lines a manager actually scored; untagged or unscored lines stay out.
+      const tagged = (t.lines ?? []).filter(l => l.m_move_tag && l.m_move_tag !== "FAIL" && typeof l.m_move_quality === "number");
       if (tagged.length === 0) { panel.setAttribute("hidden",""); return; }
       panel.removeAttribute("hidden");
       const rows = tagged.map(l => `
@@ -174,14 +176,8 @@ registerApp({
 
     async function ensureTranscripts() {
       if (transcripts) return;
-      try {
-        const res = await fetch(new URL("../../data/sample-gong-transcripts.json", import.meta.url));
-        transcripts = (await res.json()).map(normalizeTranscript);
-        if (!activeId && transcripts.length) activeId = transcripts[0].id;
-      } catch (e) {
-        console.warn("[gong] could not load sample transcripts", e);
-        transcripts = [];
-      }
+      transcripts = (await loadCalls()).map(normalizeTranscript);
+      if (!activeId && transcripts.length) activeId = transcripts[0].id;
     }
 
     bindCallSelection();

@@ -25,12 +25,12 @@
     var back = (script && script.dataset.back) || "/";
     var backLabel = (script && script.dataset.backLabel) || "Back to portfolio";
 
-    var css = document.createElement("style");
+    var css = document.getElementById("desktop-only-css") || document.createElement("style");
+    css.id = "desktop-only-css";
     css.textContent =
       "#desktop-only{position:fixed;inset:0;z-index:2147483000;overflow:auto;background:#fafbf6;color:#0a1a10;" +
       "font:15px/1.55 Manrope,system-ui,-apple-system,'Segoe UI',sans-serif;padding:max(24px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom))}" +
       "#desktop-only .do-in{max-width:560px;margin:0 auto;display:grid;gap:18px}" +
-      "#desktop-only .do-k{font:500 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:#5f6e64}" +
       "#desktop-only h1{font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.01em;margin:0}" +
       "#desktop-only p{margin:0;color:#4d5a51}" +
       "#desktop-only img{display:block;width:100%;height:auto;border:1px solid #e3e6e0;border-radius:10px}" +
@@ -50,9 +50,8 @@
     box.setAttribute("aria-labelledby", "desktop-only-h");
     box.innerHTML =
       '<div class="do-in">' +
-        '<div class="do-k">Desktop simulation</div>' +
-        '<h1 id="desktop-only-h" tabindex="-1">Open this on a computer</h1>' +
-        "<p>This simulation recreates a desktop workspace and needs a screen at least 900 px wide. Here is what it looks like.</p>" +
+        '<h1 id="desktop-only-h" tabindex="-1">This simulation needs a computer screen</h1>' +
+        "<p>The simulation recreates a desktop workspace and needs a screen at least 900 pixels wide. The screenshot below shows what it looks like there, and you can copy the link to open it later on a computer.</p>" +
         (shot ? '<img alt="Screenshot of the simulation on a desktop screen" src="' + new URL(shot, location.href).href + '">' : "") +
         '<div class="do-a">' +
           '<button type="button" class="do-p" data-do="copy">Copy link</button>' +
@@ -79,11 +78,34 @@
         }
       }
     });
+    // Keep Tab inside the notice while it is open (it is a modal dialog).
+    box.addEventListener("keydown", function (e) {
+      if (e.key !== "Tab") return;
+      var f = box.querySelectorAll("button, a[href]");
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === h)) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    });
     var h = document.getElementById("desktop-only-h");
     if (h) h.focus();
   }
 
+  // The window grew back to desktop width: the simulation fits, so drop the notice.
+  function teardown() {
+    var box = document.getElementById("desktop-only");
+    if (!box) return;
+    box.remove();
+    document.documentElement.style.overflow = "";
+  }
+
+  function update() { if (mq.matches) build(); else teardown(); }
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", build);
   else build();
-  if (mq.addEventListener) mq.addEventListener("change", build);
+  if (mq.addEventListener) mq.addEventListener("change", update);
+  else if (mq.addListener) mq.addListener(update);
 })();

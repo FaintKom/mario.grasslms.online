@@ -740,13 +740,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .lede { font-size: var(--t-sm); }
   .wrap { max-width: 1180px; }
 
+  /* The canvas keeps its own 900:520 shape at every size. The shared part
+     stretches it to the full width and then caps its height, which left
+     empty bands at the sides of the drawing and put the line beside the
+     pointer instead of under it. */
+  .px__stage canvas { width: auto; max-width: 100%; height: auto; aspect-ratio: 900 / 520; object-fit: fill; }
+
+  /* The step list is the instruction, so it gets a size and a contrast a
+     child can read on the dark panel. */
+  .px-step { font-size: 12px; color: #a7adb5; }
+  .px-step.is-done { color: #8d939b; }
+  .px__railhead, .px-panel__head { text-transform: none; letter-spacing: 0; font-size: 11px; font-weight: 600; }
+
   [hidden] { display: none !important; }
 </style>
 <style>
   /* Way back to the catalogue, same look as its own back link. */
   .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
 </style>
@@ -757,22 +768,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 8–12 · drawing tools</p>
+      <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Learn the tools</span> <em class="mark" data-t="title2">by using them</em></h1>
-    <p class="lede" data-t="intro">Pick a tool and it walks you through what it can do. A step only ticks off once you have really done it, so there is no skipping ahead.</p>
+    <h1><span data-t="title1">Learning the drawing tools</span> <em class="mark" data-t="title2">in Pixilart</em></h1>
+    <p class="lede" data-t="intro">When you pick a tool on the left, the Steps panel on the right shows what to do with it. A step gets its tick only once you have done it on the canvas.</p>
   </header>
 
   <div class="px">
     <div class="px__top">
       <span class="px__logo"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#px-logo"/></svg>Pixilart</span>
-      <span class="px__menu" aria-hidden="true"><span>File</span><span>Edit</span><span>View</span><span>Image</span></span>
+      <span class="px__menu" aria-hidden="true"><span data-t="mFile">File</span><span data-t="mEdit">Edit</span><span data-t="mView">View</span><span data-t="mImage">Image</span></span>
       <span class="px__file" aria-hidden="true">drawing.png</span>
       <span class="px__save" aria-hidden="true" data-t="save">Save</span>
     </div>
@@ -826,6 +836,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     </div>
   </div>
 
+  <p class="feedback feedback--ok" id="finished" hidden aria-live="polite"></p>
+
 </div>
 
 <script>
@@ -847,48 +859,60 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   };
   const ORDER = ["pencil", "circle", "square", "triangle"];
 
+  /* Progress. One shared key, so the sector map can see which tasks are done. */
+  function remember() {
+    try {
+      const k = "kids.progress.v1";
+      const seen = JSON.parse(localStorage.getItem(k) || "{}");
+      seen.pixilart = true;
+      localStorage.setItem(k, JSON.stringify(seen));
+    } catch (err) {}
+  }
+
   const T = {
     en: {
-      eyebrow: "Ages 8–12 · drawing tools",
-      title1: "Learn the tools", title2: "by using them",
-      intro: "Pick a tool and it walks you through what it can do. A step only ticks off once you have really done it, so there is no skipping ahead.",
+      allActivities: "All activities",
+      title1: "Learning the drawing tools", title2: "in Pixilart",
+      intro: "When you pick a tool on the left, the Steps panel on the right shows what to do with it. A step gets its tick only once you have done it on the canvas.",
       stepsLabel: "Steps", strokeLabel: "Colour", sizeLabel: "Size",
       fillHead: "Fill", save: "Save",
+      mFile: "File", mEdit: "Edit", mView: "View", mImage: "Image",
       fillLabel: "Fill the shape", fillColourLabel: "Fill colour", clear: "Clear",
-      done: "done",
+      done: function (tool) { return "You have finished every step for the " + tool.toLowerCase() + "."; },
       names: { pencil: "Pencil", circle: "Circle", square: "Square", triangle: "Triangle" },
       steps: {
         colour: "Pick a colour you like",
-        size: "Pick a different nib size on the left",
+        size: "Pick a different size on the left",
         draw: "Draw something on the canvas",
-        drawMore: "Draw again with a different pen size",
-        drawOther: "Draw one more, a different size",
+        drawMore: "Draw again with a different size",
+        drawOther: "Draw another one that is bigger or smaller than the first",
         fillOn: "Tick Fill the shape",
         fillColour: "Pick a fill colour",
-        drawFilled: "Draw a filled one"
+        drawFilled: "Draw one more, which will now come out filled"
       },
-      finished: "All four tools done. The canvas is yours now."
+      finished: "You have tried all four tools, and the canvas is yours to draw whatever you like."
     },
     es: {
-      eyebrow: "8–12 años · herramientas de dibujo",
-      title1: "Aprende las herramientas", title2: "usándolas",
-      intro: "Elige una herramienta y te guía por lo que sabe hacer. Un paso solo se marca cuando lo has hecho de verdad, así que no se puede saltar.",
-      stepsLabel: "Pasos", strokeLabel: "Color", sizeLabel: "Tamaño",
+      allActivities: "Todas las actividades",
+      title1: "Aprender las herramientas de dibujo", title2: "en Pixilart",
+      intro: "Cuando eliges una herramienta a la izquierda, el panel Pasos de la derecha te dice qué hacer con ella. Cada paso se marca solo cuando lo has hecho en el lienzo.",
+      stepsLabel: "Pasos", strokeLabel: "Color", sizeLabel: "Grosor",
       fillHead: "Relleno", save: "Guardar",
+      mFile: "Archivo", mEdit: "Editar", mView: "Ver", mImage: "Imagen",
       fillLabel: "Rellenar la figura", fillColourLabel: "Color de relleno", clear: "Limpiar",
-      done: "hecho",
+      done: function (tool) { return "Has terminado todos los pasos del " + tool.toLowerCase() + "."; },
       names: { pencil: "Lápiz", circle: "Círculo", square: "Cuadrado", triangle: "Triángulo" },
       steps: {
         colour: "Elige un color que te guste",
-        size: "Elige otro grosor de punta a la izquierda",
+        size: "Elige otro grosor a la izquierda",
         draw: "Dibuja algo en el lienzo",
         drawMore: "Dibuja otra vez con otro grosor",
-        drawOther: "Dibuja otra, de otro tamaño",
+        drawOther: "Dibuja otra más grande o más pequeña que la primera",
         fillOn: "Marca Rellenar la figura",
         fillColour: "Elige un color de relleno",
-        drawFilled: "Dibuja una rellena"
+        drawFilled: "Dibuja otra más, que ahora saldrá rellena"
       },
-      finished: "Las cuatro herramientas hechas. El lienzo es tuyo."
+      finished: "Has probado las cuatro herramientas, y el lienzo es tuyo para dibujar lo que quieras."
     }
   };
 
@@ -897,7 +921,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   var step = 0;
   var doneTools = {};
   var stroke = PALETTE[0], fillColour = PALETTE[1];
-  var penSize = 4, fillOn = false;
+  /* The pen starts on one of the four nibs, so one of them is lit from the
+     start and "pick a different size" means a different one. */
+  var penSize = SIZES[1], fillOn = false;
   var lastSize = 0;
 
   const $ = function (id) { return document.getElementById(id); };
@@ -906,10 +932,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var drawing = false, startX = 0, startY = 0, snapshot = null;
 
+  /* Pointer to canvas pixels, measured on the drawing itself: inside the
+     border, and inside any letterbox the browser leaves when the element is
+     not exactly 900:520. */
   function pos(e) {
     const r = cv.getBoundingClientRect();
-    return { x: (e.clientX - r.left) * (cv.width / r.width),
-             y: (e.clientY - r.top) * (cv.height / r.height) };
+    const w = cv.clientWidth, h = cv.clientHeight;
+    const s = Math.min(w / cv.width, h / cv.height);
+    const ox = cv.clientLeft + (w - cv.width * s) / 2;
+    const oy = cv.clientTop + (h - cv.height * s) / 2;
+    return { x: (e.clientX - r.left - ox) / s, y: (e.clientY - r.top - oy) / s };
   }
 
   function advance(trigger) {
@@ -969,15 +1001,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     drawing = false;
     const p = pos(e);
 
-    if (tool === "pencil") {
+    /* A stroke only counts towards "draw again, different" once the first
+       "draw" step has been ticked: scribbles made before it do not set the
+       size to differ from, so two steps never close on one stroke. */
+    const spec = TOOLS[tool], drawAt = spec.steps.indexOf("draw");
+    const size = tool === "pencil" ? penSize : drawShape(startX, startY, p.x, p.y);
+    if (step === drawAt) {
       advance("draw");
-      if (lastSize !== 0 && penSize !== lastSize) advance("drawMore");
-      lastSize = penSize;
-    } else {
-      const size = drawShape(startX, startY, p.x, p.y);
-      advance("draw");
-      if (lastSize && Math.abs(size - lastSize) > 12) advance("drawOther");
-      if (fillOn) advance("drawFilled");
+      lastSize = size;
+    } else if (step > drawAt) {
+      if (tool === "pencil") {
+        if (size !== lastSize) advance("drawMore");
+      } else {
+        if (Math.abs(size - lastSize) > 12) advance("drawOther");
+        if (fillOn) advance("drawFilled");
+      }
       lastSize = size;
     }
   });
@@ -1023,7 +1061,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         ok.className = "px-tool__done"; ok.textContent = "✓";
         b.appendChild(ok);
       }
-      b.onclick = function () { tool = k; step = 0; lastSize = 0; render(); };
+      /* A new tool starts clean: the Fill box from the last tool would
+         otherwise already be ticked when this one asks you to tick it. */
+      b.onclick = function () { tool = k; step = 0; lastSize = 0; fillOn = false; render(); };
       tb.appendChild(b);
     });
 
@@ -1040,15 +1080,26 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       row.append(dot, txt);
       sb.appendChild(row);
     });
+    const allDone = Object.keys(doneTools).length === ORDER.length;
     if (step >= spec.steps.length) {
       const row = document.createElement("div");
       row.className = "px-step is-done";
       row.style.color = "#6ee7a8";
       row.style.fontWeight = "600";
-      row.textContent = Object.keys(doneTools).length === ORDER.length
-        ? d.finished : d.names[tool] + " — " + d.done;
+      /* Same two columns as a step: a tick, then the words, so the line does
+         not get squeezed into the narrow tick column. */
+      const tick = document.createElement("span");
+      tick.className = "px-step__dot"; tick.textContent = "✓";
+      const words = document.createElement("span");
+      words.textContent = d.done(d.names[tool]);
+      row.append(tick, words);
       sb.appendChild(row);
     }
+    /* The finish is said under the studio, where it is seen, not only in
+       the small step list. */
+    $("finished").hidden = !allDone;
+    $("finished").textContent = allDone ? d.finished : "";
+    if (allDone) remember();
 
     $("sizeField").hidden = !spec.size;
     $("fillField").hidden = !spec.fill;
@@ -1072,7 +1123,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       dot.style.width = Math.min(14, 3 + n) + "px";
       dot.style.height = Math.min(14, 3 + n) + "px";
       b.appendChild(dot);
-      b.onclick = function () { penSize = n; advance("size"); render(); };
+      b.onclick = function () {
+        const changed = n !== penSize;
+        penSize = n;
+        if (changed) advance("size");
+        render();
+      };
       sizes.appendChild(b);
     });
 

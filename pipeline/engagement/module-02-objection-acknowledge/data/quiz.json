@@ -1,41 +1,86 @@
 [
   {
     "id": "Q1",
-    "lo": "LO-M2.1 · classify objection family ≤ 3 s",
-    "stem": "Tom (Series-B SaaS founder) says: 'We already use Brex — why would we switch?' What kind of objection is it?",
+    "lo": "LO-M2.1 · classify objection family",
+    "stem": "Tom, the founder of a Series-B SaaS company, says: 'We already use Brex — why would we switch?' What kind of objection is he raising?",
     "options": [
-      { "id": "A", "text": "They already have a bank card" },
-      { "id": "B", "text": "They already use a competitor (Brex)" },
-      { "id": "C", "text": "Their accountant won't take on another tool" },
-      { "id": "D", "text": "They don't trust fintechs" }
+      {
+        "id": "A",
+        "text": "They already have a bank card",
+        "feedback": "Tom named a competitor. A bank-card objection would sound like Maria's 'We already have a corporate Visa from our bank'."
+      },
+      {
+        "id": "B",
+        "text": "Their accountant won't take on another tool",
+        "feedback": "That is Sven's objection about his accountant, and Tom said nothing about his."
+      },
+      {
+        "id": "C",
+        "text": "They don't trust fintechs",
+        "feedback": "That is Lukas's objection. Tom already pays with a fintech card, and trust is not what is stopping him."
+      },
+      {
+        "id": "D",
+        "text": "They already use a competitor (Brex)",
+        "feedback": "Tom named a competitor. On GC-06 L.D. answered it by first repeating it: 'So you already use Brex, and the card side is fine.'"
+      }
     ],
-    "correct": "B",
-    "feedback": "A competitor objection. It is the top objection for founders like Tom, and it came up on L.D.'s recorded call with Tom."
+    "correct": "D"
   },
   {
     "id": "Q2",
-    "lo": "LO-M2.2 · restate in buyer's own words",
-    "stem": "Emma (manufacturing ops head): 'Our accountant won't deal with another tool.' Which response best restates in her own words without rebutting?",
+    "lo": "LO-M2.2 · restate in the buyer's own words",
+    "stem": "Emma, who runs operations at a manufacturer, says: 'We need it to integrate with Xero — the last vendor said they could, and it broke.' Which reply repeats her objection in her own words without arguing with it?",
     "options": [
-      { "id": "A", "text": "Our Xero sync is automated — your accountant won't add work." },
-      { "id": "B", "text": "So you're protecting your accountant's bandwidth." },
-      { "id": "C", "text": "Most accountants love us once they see the integration." },
-      { "id": "D", "text": "Have you tried showing your accountant our integration page?" }
+      {
+        "id": "A",
+        "text": "So Xero is a must, and the last vendor's integration broke on you.",
+        "feedback": "It reuses her own words about Xero, the last vendor and the integration that broke, and names her concern without arguing."
+      },
+      {
+        "id": "B",
+        "text": "Our Xero sync is native, so it won't break the way theirs did.",
+        "feedback": "This argues back before Emma has heard that you listened. The promise sounds exactly like the last vendor's."
+      },
+      {
+        "id": "C",
+        "text": "Most of our customers moved from that vendor without any problems.",
+        "feedback": "Pointing to other customers' stories brushes her concern aside. She first needs to hear her own concern said back to her."
+      },
+      {
+        "id": "D",
+        "text": "Have you looked at our integrations page?",
+        "feedback": "Sending her to a web page moves the conversation away from what broke."
+      }
     ],
-    "correct": "B",
-    "feedback": "B reuses Emma's word (accountant) and names her concern (protecting the accountant's time) without a rebuttal. This is how M.G. restates. A argues, C brushes her concern aside and D deflects."
+    "correct": "A"
   },
   {
     "id": "Q3",
     "lo": "LO-M2.3 · ask the broken-thing follow-up",
-    "stem": "Lukas just told you he doesn't trust fintechs after a payroll provider went sideways. You restated cleanly. What's the follow-up question?",
+    "stem": "Maria said: 'We already have a corporate Visa from our bank.' You repeated it in her words and waited, and now she adds: 'The controls are a mess, though.' What do you ask next?",
     "options": [
-      { "id": "A", "text": "Have you considered our regulatory backing with a tier-1 partner bank?" },
-      { "id": "B", "text": "What specifically went sideways with that payroll provider?" },
-      { "id": "C", "text": "Are you open to a quick demo if I send our DPA?" },
-      { "id": "D", "text": "Most operators feel that way before they try us — fair to share what changed for them?" }
+      {
+        "id": "A",
+        "text": "Our controls are real-time, so that won't happen with us.",
+        "feedback": "This is a pitch. Maria has opened the door to what went wrong, and it skips that question."
+      },
+      {
+        "id": "B",
+        "text": "Would you like a demo of our controls?",
+        "feedback": "It asks for a meeting before you know what is broken, and Maria can answer it with a simple no."
+      },
+      {
+        "id": "C",
+        "text": "What happened the last time a charge showed up that nobody recognised?",
+        "feedback": "It is an open question about the thing that broke. On GC-01 this is where Maria told M.G. about the £1,200 charge."
+      },
+      {
+        "id": "D",
+        "text": "Is it a Visa or a Mastercard?",
+        "feedback": "It is a closed question about the card itself and tells you nothing about why the controls are a mess."
+      }
     ],
-    "correct": "B",
-    "feedback": "B asks what actually broke, the way M.G. does. A jumps to regulation, which Module 6 covers. C asks for the meeting too early. D offers other customers' stories instead of asking about Lukas."
+    "correct": "C"
   }
 ]

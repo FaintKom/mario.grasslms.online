@@ -2,93 +2,93 @@
   {
     "id": "M3-Q1",
     "lo": "LO-M3.2",
-    "stem": "Maria R. (retail SMB owner) just said: \"Yeah, that does sound interesting. Send me something?\" You have Calendar open in a second window. Which close sets <code>Next_Step_Booked__c = TRUE</code> in Salesforce during this call?",
+    "stem": "Maria, who owns two retail stores, says: \"Yeah, that does sound interesting. Send me something?\" With Calendar open in a second window, which close gets the meeting booked before you hang up?",
     "options": [
       {
         "label": "A",
         "text": "\"I'll send a calendar invite by email later today.\"",
         "correct": false,
-        "rationale": "Partly right. The flag won't change until you send the invite, and \"later today\" is where the deal slips. Top reps send during the call."
+        "rationale": "Nothing is booked when you hang up. The Salesforce flag stays FALSE until the invite goes out later, if it ever does."
       },
       {
         "label": "B",
-        "text": "\"What's the best 20 minutes next week to walk you through the SMB version — Tuesday 11 or Thursday 2?\"",
-        "correct": true,
-        "rationale": "Yes. Two specific slots in one sentence, sent during the call. This is M.G.'s close, and the Salesforce flag changes before you hang up."
+        "text": "\"Let me know which day works best for you.\"",
+        "correct": false,
+        "rationale": "An open-ended close leaves the work with the buyer and gives her no two times to choose between."
       },
       {
         "label": "C",
-        "text": "\"Let me know which day works best for you.\"",
-        "correct": false,
-        "rationale": "An open-ended close. It puts the work on the buyer and gives no two slots to choose from."
+        "text": "\"Two 20-minute slots next week: Tuesday 10:00 or Wednesday 10:30. Which works to walk through it with your bookkeeper?\"",
+        "correct": true,
+        "rationale": "Two specific times in one sentence, and the invite can go out while Maria is still on the line. This is how M.G. closed her on GC-01."
       },
       {
         "label": "D",
         "text": "\"I'll follow up next week with some options.\"",
         "correct": false,
-        "rationale": "\"Follow up\" is where these deals were lost. None of the buyers in the sample calls re-engaged."
+        "rationale": "\"I'll follow up\" is the line that lost GC-10 and GC-11. Neither buyer replied again."
       }
     ]
   },
   {
     "id": "M3-Q2",
     "lo": "LO-M3.3",
-    "stem": "A peer rep tells you: \"I always pick the slots after the call ends — I want to double-check my own calendar first.\" What does that habit cost, going by the Gong and Salesforce data?",
+    "stem": "A rep in your pod tells you: \"I always pick the slots after the call ends — I want to double-check my own calendar first.\" What does that habit cost, judging by the Gong and Salesforce data?",
     "options": [
       {
         "label": "A",
-        "text": "Nothing. The buyer accepted, so the booking is the same.",
-        "correct": false,
-        "rationale": "No. The booking may still happen, but the <code>Next_Step_Booked__c</code> flag stays FALSE on the day of the call, and buyers re-engage about as rarely as they do after \"I'll follow up\"."
+        "text": "The Salesforce flag stays FALSE that day, and buyers re-engage about as rarely as after \"I'll follow up\".",
+        "correct": true,
+        "rationale": "Picking the slots after the call is \"I'll follow up\" under another name. The flag stays FALSE that day, and buyers reply about as rarely."
       },
       {
         "label": "B",
-        "text": "The Salesforce flag stays FALSE that day, and buyers re-engage about as rarely as after \"I'll follow up\".",
-        "correct": true,
-        "rationale": "Yes. \"After the call\" is the same mistake under another name. The flag has two states: set during the call, or not set."
+        "text": "Nothing. The buyer accepted, so the booking is the same.",
+        "correct": false,
+        "rationale": "The booking may still happen, but the Next_Step_Booked__c flag stays FALSE on the day of the call."
       },
       {
         "label": "C",
         "text": "It is fine if the rep sends the invite within 24 hours.",
         "correct": false,
-        "rationale": "Not according to the Gong sample. In one recorded call the rep sent the invite the next morning, and the buyer never re-engaged."
+        "rationale": "On GC-11 the rep sent the invite the next morning, and the buyer never replied."
       },
       {
         "label": "D",
         "text": "It is better. Checking the calendar twice prevents double-booking.",
         "correct": false,
-        "rationale": "You can fix a calendar clash by sending a new invite. You can't fix a buyer who has gone cold, so the second cost is far bigger."
+        "rationale": "With Calendar open in a second window you already see your free times. A clash can be fixed with a new invite; a buyer who has gone cold usually can't."
       }
     ]
   },
   {
     "id": "M3-Q3",
     "lo": "LO-M3.2",
-    "stem": "You read out two slots, the buyer says \"Tuesday 11 works.\" What is the very next thing you do, still on the call?",
+    "stem": "You have read out two times and the buyer says \"Tuesday works.\" What do you do next while they are still on the call?",
     "options": [
       {
         "label": "A",
         "text": "Thank them and end the call. Confirm by email tomorrow.",
         "correct": false,
-        "rationale": "A mistake. Confirm now: the buyer's yes is your cue to send the invite, not to wait."
+        "rationale": "The buyer has said yes on the call. Send the invite now, while they are still there."
       },
       {
         "label": "B",
-        "text": "Click \"Send invite\" in Calendar and watch <code>Next_Step_Booked__c</code> flip to TRUE in Salesforce.",
-        "correct": true,
-        "rationale": "Yes. Send the invite, check that the flag changes, then confirm with the buyer that the invite is in their inbox. Do all three before you hang up."
+        "text": "Ask whether they want a reminder 1 day before.",
+        "correct": false,
+        "rationale": "A reminder is a nice extra. The invite during the call comes first."
       },
       {
         "label": "C",
-        "text": "Ask whether they want a reminder 1 day before.",
+        "text": "Pivot to a second pitch prop while you have their attention.",
         "correct": false,
-        "rationale": "A reminder is a nice extra. Sending during the call is not optional, and it comes first."
+        "rationale": "Pitching a second product now puts the booking at risk. Lock in the next step first and pitch on the booked call."
       },
       {
         "label": "D",
-        "text": "Pivot to a second pitch prop while you have their attention.",
-        "correct": false,
-        "rationale": "Tempting, but you risk losing the booking. Lock the next step first, then pitch on the booked call."
+        "text": "Click Send invite in Calendar, then log the next step in Salesforce and click Save so Next_Step_Booked__c turns TRUE.",
+        "correct": true,
+        "rationale": "Send the invite from Calendar and save the next step in Salesforce so that Next_Step_Booked__c turns TRUE. Then check with the buyer that the invite arrived."
       }
     ]
   }

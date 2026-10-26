@@ -104,15 +104,12 @@ registerApp({
             ${chSignals.map(renderSignal).join("") || "<p class='empty'>No recent filings.</p>"}
           </section>
         </div>
-        <div class="lch-summary">
-          Pain: <strong>${escapeHtml(p.top_pain ?? "—")}</strong> · Top objection: <strong>${escapeHtml(p.top_objection ?? "—")}</strong>
-        </div>
       `;
     }
 
     function renderSignal(s) {
       return `
-        <span class="signal">
+        <span class="signal" data-signal-type="${escapeHtml(s.type ?? "")}" data-source="${escapeHtml(s.source ?? "")}">
           <span class="src">${escapeHtml(s.source)}</span><br>
           ${escapeHtml(s.content)}
         </span>

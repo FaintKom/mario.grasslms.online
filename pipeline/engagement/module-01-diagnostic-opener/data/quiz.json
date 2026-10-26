@@ -3,32 +3,31 @@
     "id": "M1-Q1",
     "lo_id": "LO-M1.1",
     "bloom": "Analyse",
-    "source_note": "Maria-style scenario · keyed line anchors on M.G. §10.1 verbatim opener. Distractors drawn from §10.4 P.B. + §11 GC-19/17/20.",
     "stem": "You're about to dial Maria, who owns a two-store retail business. Companies House shows she opened the second store in January. Which opener works as an M1 diagnostic?",
     "choices": [
       {
         "id": "A",
         "text": "Hi Maria — do you have a moment to talk about your corporate spending?",
         "keyed": false,
-        "feedback": "Too generic: no signal and no diagnostic question. When a bottom-quartile rep opened Maria's call this way, she hung up at 0:08."
+        "feedback": "It mentions no signal and asks nothing Maria could answer. When P.B. used it on GC-19, she hung up at 0:08."
       },
       {
         "id": "B",
-        "text": "I noticed you opened a second location 6 months ago — who's approving expense reports across both stores now?",
-        "keyed": true,
-        "feedback": "Correct. It names a specific signal (the second location) and asks who controls what. M.G. opened this way and booked a demo 14 minutes into the call."
+        "text": "Our card is cheaper than your bank's — worth 10 minutes?",
+        "keyed": false,
+        "feedback": "Talking about fees turns the opening into a pitch, and the only answer it leaves Maria is no."
       },
       {
         "id": "C",
-        "text": "Our card is cheaper than your bank's — worth 10 minutes?",
+        "text": "We help SMB owners get real-time visibility into their team spend — can I tell you more?",
         "keyed": false,
-        "feedback": "Arguing on fees is a pitch, not a diagnostic. A recorded call that opened this way ended at 0:24."
+        "feedback": "This goes straight into a pitch before anyone has asked Maria anything, and it leaves her nothing to answer."
       },
       {
         "id": "D",
-        "text": "We help SMB owners get real-time visibility into their team spend — can I tell you more?",
-        "keyed": false,
-        "feedback": "This goes straight into a pitch. On a recorded call with this opener, the buyer hung up at 0:22 because nobody asked a diagnostic question."
+        "text": "I noticed you opened a second store in January — who's approving card spend across both stores now?",
+        "keyed": true,
+        "feedback": "It names the second store and asks who controls the spending. M.G. opened GC-01 this way and booked the demo on the same call."
       }
     ]
   },
@@ -36,32 +35,31 @@
     "id": "M1-Q2",
     "lo_id": "LO-M1.2",
     "bloom": "Create",
-    "source_note": "Worked-example completion on Tom · §12.2 Series-B founder · drives variability vs Maria. Keyed answer pairs signal with who-controls-what in ≤ 15 words.",
-    "stem": "Tom just closed a Series B (LinkedIn announcement last month, 22 FTE, 6 engineering jobs posted). Which diagnostic pairs the signal with a who-controls-what question in 15 words or fewer?",
+    "stem": "Tom has closed a Series B, announced in April, and his company of 22 people has posted six engineering jobs. Which opening question pairs that signal with a question about who controls what, in 15 words or fewer?",
     "choices": [
       {
         "id": "A",
-        "text": "Congratulations on the Series B — that must be a huge milestone for the team. Would love to hear how it's going.",
-        "keyed": false,
-        "feedback": "Too long, and it asks nothing about who controls what. A compliment is not a diagnostic."
+        "text": "Saw your Series B — who's owning per-employee card issuance now that engineering is scaling?",
+        "keyed": true,
+        "feedback": "In 14 words it names the Series B and asks who owns per-employee card issuance. L.D. opened his call with Tom on GC-06 in much the same way."
       },
       {
         "id": "B",
-        "text": "Saw your Series B — who's owning per-employee card issuance now that engineering is scaling?",
-        "keyed": true,
-        "feedback": "Correct. 14 words, a specific signal (the Series B) and a who-controls-what question (per-employee card issuance). L.D. opened Tom's call the same way."
+        "text": "Congratulations on the Series B — that must be a huge milestone for the team. Would love to hear how it's going.",
+        "keyed": false,
+        "feedback": "It is too long, and it only compliments Tom without asking who controls the spending."
       },
       {
         "id": "C",
         "text": "We help fast-growing SaaS teams with corporate cards — sound like something you'd want to evaluate?",
         "keyed": false,
-        "feedback": "A pitch with no signal. It fails the same way as the 'We help SMB owners' opener in question 1."
+        "feedback": "This is a pitch without a signal, like the 'We help SMB owners' opener in question 1."
       },
       {
         "id": "D",
         "text": "Are you using Brex?",
         "keyed": false,
-        "feedback": "A yes/no question with no signal behind it. Even if Tom says yes, you have nothing to acknowledge in M2."
+        "feedback": "It is a yes-or-no question with no signal behind it. Even if Tom says yes, you have nothing to build on."
       }
     ]
   },
@@ -69,32 +67,31 @@
     "id": "M1-Q3",
     "lo_id": "LO-M1.3",
     "bloom": "Evaluate",
-    "source_note": "Threshold-concept item · anchored on M.G. §10.1 verbatim ('Ask one good question and then shut up for 5 seconds'). Distractors are §10.4 P.B. anti-patterns.",
-    "stem": "You ask your diagnostic question. The buyer says nothing for 6 seconds: no breath you can hear, no reply. What do you do?",
+    "stem": "You have asked your diagnostic question, and the buyer has said nothing for six seconds, without a breath or a word on the line. What do you do?",
     "choices": [
       {
         "id": "A",
         "text": "Rephrase the question more clearly so they understand it.",
         "keyed": false,
-        "feedback": "You just took the silence away. As M.G. puts it: 'Five seconds feels like an hour but it's where the deal happens.'"
+        "feedback": "Rephrasing takes the silence away at the moment the buyer is working out an answer."
       },
       {
         "id": "B",
-        "text": "Fill the gap with a quick benefit statement to keep momentum.",
-        "keyed": false,
-        "feedback": "This is the bottom-quartile reflex, the one P.B. shows. Pitching into the silence kills the diagnostic."
+        "text": "Wait. Let the buyer fill the silence.",
+        "keyed": true,
+        "feedback": "The buyer is thinking during those seconds. What they say when they break the silence is usually the real problem."
       },
       {
         "id": "C",
-        "text": "Wait. Let the buyer fill the silence.",
-        "keyed": true,
-        "feedback": "Correct. Sit through the 5-second silence. The buyer is thinking, and what they say next is the real pain."
+        "text": "Fill the gap with a quick benefit statement to keep momentum.",
+        "keyed": false,
+        "feedback": "P.B. does this on his calls. Pitching into the silence throws away the answer your question was meant to get."
       },
       {
         "id": "D",
         "text": "Ask if they're still on the line.",
         "keyed": false,
-        "feedback": "It breaks the silence and shows you're uncomfortable. The buyer hears a sales rep, not a peer."
+        "feedback": "Asking whether they are still there breaks the silence and tells the buyer you are uncomfortable with it."
       }
     ]
   }

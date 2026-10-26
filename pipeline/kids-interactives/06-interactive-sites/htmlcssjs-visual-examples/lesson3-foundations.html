@@ -555,7 +555,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .layers { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-3); }
   @media (max-width: 760px) { .layers { grid-template-columns: 1fr; } }
   .layer { display: grid; gap: var(--s-2); align-content: start; }
-  .layer__tag { font-family: var(--font-mono); font-size: var(--t-2xs); letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-subtle); }
+  .layer__tag { font-size: var(--t-sm); font-weight: 700; color: var(--color-text); }
   .layer h3 { font-size: var(--t-md); }
 
   .switches { display: flex; flex-wrap: wrap; gap: var(--s-2); }
@@ -656,7 +656,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     display: grid; gap: var(--s-1); padding: var(--s-3);
     border: 1px solid var(--color-border); border-radius: var(--radius-md);
   }
-  .prompt b { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); font-weight: 500; }
+  .prompt b { font-size: var(--t-xs); color: var(--color-text-muted); font-weight: 700; }
   .prompt span { font-size: var(--t-sm); }
 
   [hidden] { display: none !important; }
@@ -675,28 +675,27 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
-    <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Web basics · lesson 3</p>
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActs">All activities</span></a>
+    <div class="row" style="justify-content: flex-end">
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
     <h1><span data-t="title1">A web page has</span> <em class="mark" data-t="title2">three layers</em></h1>
-    <p class="lede" data-t="intro">Bones, clothes, movement. Every page you have ever opened is those three things stacked on top of each other, and you can switch each one off to see what it was doing.</p>
+    <p class="lede" data-t="intro">Every web page you have opened is built from three layers, with HTML as the bones, CSS as the clothes and JavaScript as the movement. On this page you can switch each layer off and see what it was doing.</p>
   </header>
 
   <nav class="tabs" id="tabs" role="tablist" aria-label="Sections"></nav>
 
   <section class="card stack">
-    <h2 data-t="s1Title">Bones, clothes, movement</h2>
+    <h2 data-t="s1Title">The three layers</h2>
     <div class="layers" id="layers"></div>
   </section>
 
   <section class="card stack">
     <h2 data-t="s2Title">Switch a layer off</h2>
-    <p class="muted" data-t="s2Body">The same card, three times over. Turn CSS off and the styling goes; turn JavaScript off and the button stops answering.</p>
+    <p class="muted" data-t="s2Body">This card has a switch for each layer. With CSS off the styling disappears, and with JavaScript off the button stops answering.</p>
 
     <div class="switches" id="switches"></div>
 
@@ -711,21 +710,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       </div>
       <pre class="code" id="codeView"></pre>
     </div>
-    <div id="verdict" hidden></div>
+    <div id="verdict" hidden aria-live="polite"></div>
   </section>
 
   <section class="card stack">
-    <h2 data-t="s3Title">Three layouts worth knowing</h2>
+    <h2 data-t="s3Title">Three common layouts</h2>
     <div class="patterns">
       <div class="panel stack stack--tight">
         <span class="layer__tag" data-t="patBento">Bento grid</span>
         <div class="bento"><div></div><div></div><div></div><div></div></div>
-        <p class="muted" data-t="patBentoWhy">One big block carries the headline, the small ones fill in around it.</p>
+        <p class="muted" data-t="patBentoWhy">One big block carries the main message, and smaller blocks fill the space around it.</p>
       </div>
       <div class="panel stack stack--tight">
         <span class="layer__tag" data-t="patTier">Tier list</span>
         <div class="tier" id="tier"></div>
-        <p class="muted" data-t="patTierWhy">Rows in order, best at the top. The colour does the ranking, not the words.</p>
+        <p class="muted" data-t="patTierWhy">Rows run from best at the top to worst at the bottom, and the colour of each row shows the ranking before you read a word.</p>
       </div>
       <div class="panel stack stack--tight">
         <span class="layer__tag" data-t="patProfile">Social profile</span>
@@ -739,23 +738,23 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           </div>
           <div class="profile__grid"><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </div>
-        <p class="muted" data-t="patProfileWhy">A header that says who, then a grid that says what they made.</p>
+        <p class="muted" data-t="patProfileWhy">The header says who the person is, and the grid underneath shows what they have made.</p>
       </div>
     </div>
   </section>
 
   <section class="card stack">
-    <h2 data-t="s4Title">Three things JavaScript adds</h2>
+    <h2 data-t="s4Title">Three ways a page reacts</h2>
     <div class="trio">
       <div class="panel stack stack--tight">
-        <span class="layer__tag" data-t="fxHover">Hover, no JavaScript</span>
+        <span class="layer__tag" data-t="fxHover">Hover without JavaScript</span>
         <div class="hoverbox" data-t="fxHoverBox">Point at me</div>
-        <p class="muted" data-t="fxHoverWhy">CSS alone can react to the mouse. Reach for JavaScript only when CSS runs out.</p>
+        <p class="muted" data-t="fxHoverWhy">CSS can react to the mouse on its own. JavaScript is worth adding only when CSS cannot do the job.</p>
       </div>
       <div class="panel stack stack--tight">
         <span class="layer__tag" data-t="fxCount">A counter</span>
         <div class="row"><button class="btn btn--sm" id="counterBtn"></button><span class="hud__score" id="counter">0</span></div>
-        <p class="muted" data-t="fxCountWhy">The page remembers a number and shows it again. That is most of what apps do.</p>
+        <p class="muted" data-t="fxCountWhy">The page remembers a number and shows it again each time it changes. Most apps do a great deal of exactly this.</p>
       </div>
       <div class="panel stack stack--tight">
         <span class="layer__tag" data-t="fxTheme">A theme switch</span>
@@ -764,15 +763,22 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           <div><b id="themeCardTitle"></b><small id="themeCardMeta"></small></div>
         </div>
         <div><button class="btn btn--sm btn--ghost" id="themeBtn"></button></div>
-        <p class="muted" data-t="fxThemeWhy">One class on one element, and every rule tied to that class changes at once.</p>
+        <p class="muted" data-t="fxThemeWhy">One class added to one element changes every rule tied to that class at once.</p>
       </div>
     </div>
+    <div id="verdict4" hidden aria-live="polite"></div>
   </section>
 
   <section class="card stack">
     <h2 data-t="s5Title">Asking an AI for a page</h2>
-    <p class="muted" data-t="s5Body">A vague ask gets a vague page. Say what it is for, what goes on it, and how it should feel.</p>
+    <p class="muted" data-t="s5Body">A vague request gets a vague page back. Tell the AI what the page is for, what goes on it and how it should feel.</p>
     <div class="prompts" id="prompts"></div>
+  </section>
+
+  <section class="card stack">
+    <h2 data-t="s6Title">Check yourself</h2>
+    <p class="muted" data-t="s6Body">Here are three questions about the layers, and every answer comes with an explanation.</p>
+    <div class="stack" id="quiz"></div>
   </section>
 
 </div>
@@ -788,93 +794,129 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
-      eyebrow: "Web basics · lesson 3",
-      title1: "A web page has", title2: "three layers",
-      intro: "Bones, clothes, movement. Every page you have ever opened is those three things stacked on top of each other, and you can switch each one off to see what it was doing.",
-      s1Title: "Bones, clothes, movement",
+      title1: "A web page has", title2: "three layers", allActs: "All activities",
+      intro: "Every web page you have opened is built from three layers, with HTML as the bones, CSS as the clothes and JavaScript as the movement. On this page you can switch each layer off and see what it was doing.",
+      s1Title: "The three layers",
       layers: [
-        ["HTML", "The bones", "What is on the page and in what order: a heading, a picture, a paragraph, a button. Nothing about how it looks."],
-        ["CSS", "The clothes", "Colour, size, spacing, where things sit. Same bones, completely different page."],
-        ["JavaScript", "The movement", "What happens when you press, type or scroll. Without it a page just sits there."]
+        ["HTML", "The bones", "HTML says what is on the page and in which order, such as a heading, a picture, a paragraph and a button. It says nothing about how they look."],
+        ["CSS", "The clothes", "CSS decides colour, size, spacing and position. The same bones can become a completely different page."],
+        ["JavaScript", "The movement", "JavaScript decides what happens when you press, type or scroll. Without it a button can still change colour under the pointer, but nothing on the page can count or answer back."]
       ],
       s2Title: "Switch a layer off",
-      s2Body: "The same card, three times over. Turn CSS off and the styling goes; turn JavaScript off and the button stops answering.",
+      s2Body: "This card has a switch for each layer. With CSS off the styling disappears, and with JavaScript off the button stops answering.",
       switches: { html: "HTML", css: "CSS", js: "JavaScript" },
-      htmlLocked: "HTML cannot be switched off — with no bones there is no page at all.",
-      demoTitle: "Hello, world", demoText: "A small card with a picture, a line of text and a button.",
-      demoBtn: "Press me", demoPressed: "You pressed it!", demoDead: "Nothing happens",
-      jsOff: "JavaScript is off, so the button does nothing at all.",
+      htmlLocked: "HTML stays on, because without the bones there would be no page at all.",
+      demoTitle: "Hello, world", demoText: "This is a small card with a picture, a line of text and a button.",
+      demoBtn: "Press me", demoPressed: "You pressed it!",
+      jsOff: "JavaScript is off. The button still looks like a button, but pressing it does nothing.",
       code: {
         html: "<div class=\"card\">\n  <img src=\"fox.png\">\n  <h3>Hello, world</h3>\n  <p>A small card.</p>\n  <button>Press me</button>\n</div>",
         css: ".card {\n  background: #e4f1f4;\n  border-radius: 18px;\n  padding: 20px;\n  text-align: center;\n}",
         js: "button.onclick = function () {\n  text.textContent = \"You pressed it!\";\n};"
       },
-      s3Title: "Three layouts worth knowing",
-      patBento: "Bento grid", patBentoWhy: "One big block carries the headline, the small ones fill in around it.",
-      patTier: "Tier list", patTierWhy: "Rows in order, best at the top. The colour does the ranking, not the words.",
-      patProfile: "Social profile", patProfileWhy: "A header that says who, then a grid that says what they made.",
+      s3Title: "Three common layouts",
+      patBento: "Bento grid", patBentoWhy: "One big block carries the main message, and smaller blocks fill the space around it.",
+      patTier: "Tier list", patTierWhy: "Rows run from best at the top to worst at the bottom, and the colour of each row shows the ranking before you read a word.",
+      patProfile: "Social profile", patProfileWhy: "The header says who the person is, and the grid underneath shows what they have made.",
       profName: "Robin Vega", profMeta: "42 projects · 6 followers",
-      s4Title: "Three things JavaScript adds",
-      fxHover: "Hover, no JavaScript", fxHoverBox: "Point at me",
-      fxHoverWhy: "CSS alone can react to the mouse. Reach for JavaScript only when CSS runs out.",
+      s4Title: "Three ways a page reacts",
+      fxHover: "Hover without JavaScript", fxHoverBox: "Point at me",
+      fxHoverWhy: "CSS can react to the mouse on its own. JavaScript is worth adding only when CSS cannot do the job.",
       fxCount: "A counter", fxCountBtn: "Click",
-      fxCountWhy: "The page remembers a number and shows it again. That is most of what apps do.",
+      fxCountWhy: "The page remembers a number and shows it again each time it changes. Most apps do a great deal of exactly this.",
       fxTheme: "A theme switch", fxThemeOn: "Turn the lights off", fxThemeOff: "Turn the lights on",
       fxThemeCardLight: "Daytime", fxThemeMetaLight: 'class="themecard"',
       fxThemeCardDark: "Night", fxThemeMetaDark: 'class="themecard is-dark"',
-      fxThemeWhy: "One class on one element, and every rule tied to that class changes at once.",
+      fxThemeWhy: "One class added to one element changes every rule tied to that class at once.",
       s5Title: "Asking an AI for a page",
-      s5Body: "A vague ask gets a vague page. Say what it is for, what goes on it, and how it should feel.",
+      s5Body: "A vague request gets a vague page back. Tell the AI what the page is for, what goes on it and how it should feel.",
       prompts: [
         ["Too vague", "Make me a website."],
         ["Better", "A one-page site about my skateboard club: a headline, three photos and how to join."],
-        ["Better still", "A one-page site about my skateboard club. Headline, three photos in a row, a short paragraph, and a join button. Bright colours, big rounded corners, works on a phone."],
+        ["Even better", "A one-page site about my skateboard club. Headline, three photos in a row, a short paragraph, and a join button. Bright colours, big rounded corners, works on a phone."],
         ["Then keep going", "Now make the button green and move it above the photos."]
+      ],
+      s6Title: "Check yourself",
+      s6Body: "Here are three questions about the layers, and every answer comes with an explanation.",
+      quiz: [
+        { q: "When you switch CSS off, what happens to the card?", right: 0, opts: [
+          ["The text and the button stay, but the colours, spacing and shape disappear.", "CSS is the clothes, and taking them off leaves the bones in place, only plain."],
+          ["The whole card disappears.", "The card is made of HTML, and HTML is still on. Only its look goes away."],
+          ["The button stops answering.", "A silent button comes from switching JavaScript off. CSS only changes how the button looks."]
+        ] },
+        { q: "Which layer decides that the heading comes before the picture?", right: 1, opts: [
+          ["CSS", "CSS can move things around on the screen, but HTML decides the order they are written in."],
+          ["HTML", "HTML says what is on the page and in which order."],
+          ["JavaScript", "JavaScript reacts to what you do, and HTML decides what is on the page."]
+        ] },
+        { q: "When a counter goes up by one with every click, which layer remembers the number?", right: 2, opts: [
+          ["HTML", "HTML can show a number but cannot change it when you click."],
+          ["CSS", "CSS can style the counter or react to the pointer, yet it cannot count."],
+          ["JavaScript", "Remembering a number and changing it is the kind of job JavaScript does."]
+        ] }
       ]
     },
     es: {
-      eyebrow: "Bases de la web · lección 3",
-      title1: "Una página web tiene", title2: "tres capas",
-      intro: "Huesos, ropa, movimiento. Todas las páginas que has abierto son esas tres cosas apiladas una sobre otra, y puedes apagar cada una para ver qué hacía.",
-      s1Title: "Huesos, ropa, movimiento",
+      title1: "Una página web tiene", title2: "tres capas", allActs: "Todas las actividades",
+      intro: "Todas las páginas web que has abierto están hechas de tres capas, con el HTML como huesos, el CSS como ropa y JavaScript como movimiento. En esta página puedes apagar cada capa y ver qué estaba haciendo.",
+      s1Title: "Las tres capas",
       layers: [
-        ["HTML", "Los huesos", "Qué hay en la página y en qué orden: un titular, una imagen, un párrafo, un botón. Nada sobre su aspecto."],
-        ["CSS", "La ropa", "Color, tamaño, espacio, dónde va cada cosa. Los mismos huesos, una página completamente distinta."],
-        ["JavaScript", "El movimiento", "Qué pasa cuando pulsas, escribes o haces scroll. Sin él la página se queda quieta."]
+        ["HTML", "Los huesos", "El HTML dice qué hay en la página y en qué orden, por ejemplo un titular, una imagen, un párrafo y un botón. No dice nada de cómo se ven."],
+        ["CSS", "La ropa", "El CSS decide el color, el tamaño, los espacios y la posición. Los mismos huesos pueden convertirse en una página completamente distinta."],
+        ["JavaScript", "El movimiento", "JavaScript decide qué pasa cuando pulsas, escribes o haces scroll. Sin él un botón todavía puede cambiar de color bajo el puntero, pero nada en la página puede contar ni responder."]
       ],
       s2Title: "Apaga una capa",
-      s2Body: "La misma tarjeta, tres veces. Apaga el CSS y se va el estilo; apaga JavaScript y el botón deja de responder.",
+      s2Body: "Esta tarjeta tiene un interruptor para cada capa. Con el CSS apagado desaparece el estilo, y con JavaScript apagado el botón deja de responder.",
       switches: { html: "HTML", css: "CSS", js: "JavaScript" },
-      htmlLocked: "El HTML no se puede apagar: sin huesos no hay página.",
-      demoTitle: "Hola, mundo", demoText: "Una tarjeta pequeña con una imagen, una línea de texto y un botón.",
-      demoBtn: "Púlsame", demoPressed: "¡Lo has pulsado!", demoDead: "No pasa nada",
-      jsOff: "JavaScript está apagado, así que el botón no hace absolutamente nada.",
+      htmlLocked: "El HTML se queda encendido, porque sin los huesos no habría página.",
+      demoTitle: "Hola, mundo", demoText: "Esta es una tarjeta pequeña con una imagen, una línea de texto y un botón.",
+      demoBtn: "Púlsame", demoPressed: "¡Lo has pulsado!",
+      jsOff: "JavaScript está apagado. El botón sigue pareciendo un botón, pero al pulsarlo no pasa nada.",
       code: {
         html: "<div class=\"card\">\n  <img src=\"zorro.png\">\n  <h3>Hola, mundo</h3>\n  <p>Una tarjeta pequeña.</p>\n  <button>Púlsame</button>\n</div>",
         css: ".card {\n  background: #e4f1f4;\n  border-radius: 18px;\n  padding: 20px;\n  text-align: center;\n}",
         js: "button.onclick = function () {\n  texto.textContent = \"¡Lo has pulsado!\";\n};"
       },
-      s3Title: "Tres maquetas que conviene conocer",
-      patBento: "Rejilla bento", patBentoWhy: "Un bloque grande lleva el titular y los pequeños rellenan alrededor.",
-      patTier: "Lista por niveles", patTierWhy: "Filas en orden, lo mejor arriba. El color hace la clasificación, no las palabras.",
-      patProfile: "Perfil social", patProfileWhy: "Una cabecera que dice quién y luego una rejilla que dice qué ha hecho.",
+      s3Title: "Tres maquetas habituales",
+      patBento: "Rejilla bento", patBentoWhy: "Un bloque grande lleva el mensaje principal, y los bloques pequeños rellenan el espacio de alrededor.",
+      patTier: "Lista por niveles", patTierWhy: "Las filas van de lo mejor arriba a lo peor abajo, y el color de cada fila muestra la clasificación antes de que leas una palabra.",
+      patProfile: "Perfil social", patProfileWhy: "La cabecera dice quién es la persona, y la rejilla de debajo enseña lo que ha hecho.",
       profName: "Robin Vega", profMeta: "42 proyectos · 6 seguidores",
-      s4Title: "Tres cosas que añade JavaScript",
-      fxHover: "Hover, sin JavaScript", fxHoverBox: "Apúntame con el ratón",
-      fxHoverWhy: "El CSS solo ya reacciona al ratón. Usa JavaScript cuando el CSS se quede corto.",
+      s4Title: "Tres formas en que una página reacciona",
+      fxHover: "Hover sin JavaScript", fxHoverBox: "Pasa el ratón por aquí",
+      fxHoverWhy: "El CSS puede reaccionar al ratón por su cuenta. Solo merece la pena añadir JavaScript cuando el CSS no basta.",
       fxCount: "Un contador", fxCountBtn: "Clic",
-      fxCountWhy: "La página recuerda un número y lo vuelve a mostrar. Eso es casi todo lo que hacen las apps.",
+      fxCountWhy: "La página recuerda un número y lo vuelve a mostrar cada vez que cambia. Las apps hacen esto muchísimas veces.",
       fxTheme: "Un cambio de tema", fxThemeOn: "Apagar la luz", fxThemeOff: "Encender la luz",
       fxThemeCardLight: "De día", fxThemeMetaLight: 'class="themecard"',
       fxThemeCardDark: "De noche", fxThemeMetaDark: 'class="themecard is-dark"',
-      fxThemeWhy: "Una clase en un elemento y todas las reglas atadas a esa clase cambian a la vez.",
+      fxThemeWhy: "Una clase añadida a un elemento cambia a la vez todas las reglas ligadas a esa clase.",
       s5Title: "Pedirle una página a una IA",
-      s5Body: "Una petición vaga da una página vaga. Di para qué es, qué lleva y cómo se tiene que sentir.",
+      s5Body: "Si pides algo vago, la IA te devuelve una página vaga, así que dile para qué es, qué lleva y qué sensación tiene que dar.",
       prompts: [
         ["Demasiado vago", "Hazme una web."],
         ["Mejor", "Una web de una página sobre mi club de skate: un titular, tres fotos y cómo apuntarse."],
         ["Mejor todavía", "Una web de una página sobre mi club de skate. Titular, tres fotos en fila, un párrafo corto y un botón para apuntarse. Colores vivos, esquinas muy redondeadas, que funcione en el móvil."],
         ["Y sigue", "Ahora pon el botón en verde y muévelo encima de las fotos."]
+      ],
+      s6Title: "Compruébalo",
+      s6Body: "Aquí tienes tres preguntas sobre las capas, y cada respuesta trae su explicación.",
+      quiz: [
+        { q: "Cuando apagas el CSS, ¿qué le pasa a la tarjeta?", right: 0, opts: [
+          ["El texto y el botón siguen ahí, pero desaparecen los colores, los espacios y la forma.", "El CSS es la ropa, y al quitarla los huesos siguen en su sitio, aunque sin adornos."],
+          ["La tarjeta entera desaparece.", "La tarjeta está hecha de HTML, y el HTML sigue encendido. Solo se va su aspecto."],
+          ["El botón deja de responder.", "Un botón que no responde viene de apagar JavaScript. El CSS solo cambia cómo se ve el botón."]
+        ] },
+        { q: "¿Qué capa decide que el titular vaya antes que la imagen?", right: 1, opts: [
+          ["CSS", "El CSS puede mover las cosas por la pantalla, pero el orden en que están escritas lo decide el HTML."],
+          ["HTML", "El HTML dice qué hay en la página y en qué orden."],
+          ["JavaScript", "JavaScript reacciona a lo que haces, pero lo que hay en la página lo decide el HTML."]
+        ] },
+        { q: "Cuando un contador sube uno con cada clic, ¿qué capa recuerda el número?", right: 2, opts: [
+          ["HTML", "El HTML puede mostrar un número, pero no puede cambiarlo cuando haces clic."],
+          ["CSS", "El CSS puede dar estilo al contador o reaccionar al puntero, pero no sabe contar."],
+          ["JavaScript", "Recordar un número y cambiarlo es justo el tipo de trabajo que hace JavaScript."]
+        ] }
       ]
     }
   };
@@ -882,29 +924,49 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   var lang = "en";
   var on = { html: true, css: true, js: true };
   var clicks = 0, dark = false;
+  var picked = [];   /* quiz: the option chosen per question, or undefined */
 
   function byId(id) { return document.getElementById(id); }
 
-  /* Five sections, one at a time. Each section already carries its own h2, so
-     the tab labels come from those and the headings themselves step aside. */
+  /* Six sections, one at a time. Each section already carries its own h2, so
+     the tab labels come from those and the headings themselves step aside.
+     Proper tabs: each tab controls its panel, and the arrow keys move along
+     the strip the way they do in any tab list. */
   var sections = Array.prototype.slice.call(document.querySelectorAll(".wrap > section.card"));
   var tabAt = 0;
 
-  function paintTabs() {
+  function paintTabs(focusNow) {
     var bar = byId("tabs");
     bar.innerHTML = "";
     sections.forEach(function (sec, i) {
       var h = sec.querySelector("h2");
       var b = document.createElement("button");
       b.type = "button";
+      b.id = "tab-" + i;
       b.setAttribute("role", "tab");
       b.setAttribute("aria-selected", String(i === tabAt));
+      b.setAttribute("aria-controls", "panel-" + i);
+      b.tabIndex = i === tabAt ? 0 : -1;
       b.textContent = h ? h.textContent : String(i + 1);
-      b.onclick = function () { tabAt = i; paintTabs(); };
+      b.onclick = function () { tabAt = i; paintTabs(true); };
+      b.onkeydown = function (e) {
+        var n = sections.length, to = null;
+        if (e.key === "ArrowRight") to = (i + 1) % n;
+        else if (e.key === "ArrowLeft") to = (i - 1 + n) % n;
+        else if (e.key === "Home") to = 0;
+        else if (e.key === "End") to = n - 1;
+        if (to === null) return;
+        e.preventDefault();
+        tabAt = to; paintTabs(true);
+      };
       bar.appendChild(b);
+      sec.id = "panel-" + i;
+      sec.setAttribute("role", "tabpanel");
+      sec.setAttribute("aria-labelledby", "tab-" + i);
       sec.hidden = i !== tabAt;
       if (h) h.hidden = true;
     });
+    if (focusNow) byId("tab-" + tabAt).focus();
   }
 
 
@@ -916,11 +978,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     return n;
   }
 
-  function say(kind, message) {
-    var v = byId("verdict");
+  /* Each section that talks back has its own message slot, so a message never
+     lands in a section that is hidden behind another tab. */
+  function say(kind, message, where) {
+    var v = byId(where || "verdict");
     v.hidden = false; v.className = "feedback feedback--" + kind; v.textContent = message;
   }
-  function clearSay() { var v = byId("verdict"); v.hidden = true; v.className = ""; }
+  function clearSay() {
+    ["verdict", "verdict4"].forEach(function (id) {
+      var v = byId(id); v.hidden = true; v.className = "";
+    });
+  }
 
   function paintDemo() {
     var d = t();
@@ -928,13 +996,41 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     stage.className = "stage" + (on.css ? " css-on" : "");
     byId("demoTitle").textContent = d.demoTitle;
     byId("demoText").textContent = d.demoText;
-    byId("demoBtn").textContent = on.js ? d.demoBtn : d.demoDead;
-    byId("demoBtn").disabled = !on.js;
+    /* With JavaScript off a real button still looks like a button and can
+       still be pressed — it just has nothing behind it. So it keeps its label. */
+    byId("demoBtn").textContent = d.demoBtn;
 
     var parts = [d.code.html];
     if (on.css) parts.push(d.code.css);
     if (on.js) parts.push(d.code.js);
     byId("codeView").textContent = parts.join("\n\n");
+  }
+
+  function paintQuiz() {
+    var d = t(), box = byId("quiz");
+    box.innerHTML = "";
+    d.quiz.forEach(function (item, qi) {
+      var block = el("div", "stack stack--tight");
+      block.appendChild(el("h3", null, item.q));
+      var chosen = picked[qi];
+      item.opts.forEach(function (o, oi) {
+        var b = el("button", "option", o[0]);
+        b.type = "button";
+        if (chosen !== undefined) {
+          b.disabled = true;
+          if (oi === item.right) b.classList.add("is-correct");
+          else if (oi === chosen) b.classList.add("is-wrong");
+        }
+        b.onclick = function () { picked[qi] = oi; paintQuiz(); };
+        block.appendChild(b);
+      });
+      if (chosen !== undefined) {
+        var ok = chosen === item.right;
+        block.appendChild(el("div", "feedback feedback--" + (ok ? "ok" : "no"),
+          item.opts[chosen][1]));
+      }
+      box.appendChild(block);
+    });
   }
 
   function render() {
@@ -1001,19 +1097,25 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       pr.appendChild(row);
     });
 
+    paintQuiz();
     paintDemo();
     paintTabs();
   }
 
   byId("demoBtn").onclick = function () {
-    if (!on.js) return;
+    if (!on.js) { say("hint", t().jsOff); return; }
     byId("demoText").textContent = t().demoPressed;
   };
 
-  byId("counterBtn").onclick = function () { clicks++; render(); };
+  /* The counter and the theme switch are JavaScript too, so the JavaScript
+     switch above turns them off as well — the lesson has to agree with itself. */
+  byId("counterBtn").onclick = function () {
+    if (!on.js) { say("hint", t().jsOff, "verdict4"); return; }
+    clicks++; render();
+  };
 
   byId("themeBtn").onclick = function () {
-    if (!on.js) { say("hint", t().jsOff); return; }
+    if (!on.js) { say("hint", t().jsOff, "verdict4"); return; }
     dark = !dark;
     render();
   };

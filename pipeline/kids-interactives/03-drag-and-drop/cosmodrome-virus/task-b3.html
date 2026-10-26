@@ -536,7 +536,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   /* One screen on open: a tighter heading block, and the page held to the
      height of the viewport so the working area can take what is left. */
   body { padding: var(--page-top) 0 var(--page-bottom); }
-  .wrap { height: calc(100svh - var(--page-pad)); }
+  /* min-height, not height: on a phone the task is taller than the screen. */
+  .wrap { min-height: calc(100svh - var(--page-pad)); }
   h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
   .lede { font-size: var(--t-sm); max-width: 78ch; }
   .stack--loose { gap: var(--s-4); }
@@ -558,6 +559,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     border-radius: 3px; background: #4a4a4a;
   }
   .px:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+  /* A square that does not match the plan yet. Two rings, white inside dark,
+     so the mark reads on every paint colour and on the empty grey. */
+  .px.is-off { box-shadow: inset 0 0 0 2px #ffffff, inset 0 0 0 4px #0d150d; }
   @media (max-width: 560px) { .px { width: 22px; height: 22px; } .ref i { width: 14px; height: 14px; } }
 
   .swatches { display: flex; flex-wrap: wrap; gap: var(--s-2); }
@@ -572,6 +576,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   .now { display: flex; align-items: center; gap: var(--s-2); font-size: var(--t-sm); }
   .now__chip { width: 28px; height: 28px; border-radius: var(--radius-sm); border: 2px solid var(--ink-900); flex: none; }
+
+  /* Small labels in plain sentence case, not spaced capitals. */
+  .eyebrow { font-family: var(--font-sans); font-size: var(--t-sm); font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--color-text-muted); }
+  .row--between > .back { align-self: center; }
 
   [hidden] { display: none !important; }
 
@@ -600,27 +608,27 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Spaceport · sector B · task 3</p>
+      <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
+
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Copy the rocket,</span> <em class="mark" data-t="title2">square by square</em></h1>
-    <p class="lede" data-t="intro">The small picture on the left is the plan. Copy it onto the big grid: pick a colour, then paint. Drag across squares to fill a row quickly.</p>
+    <h1><span data-t="title1">Copy the</span> <em class="mark" data-t="title2">pixel rocket</em></h1>
+    <p class="lede" data-t="intro">The small picture is the plan. Copy it onto the big grid square by square, choosing a colour and tapping the squares. When several squares next to each other have the same colour, you can drag along them.</p>
   </header>
 
   <div class="hud">
     <div class="row">
-      <span class="eyebrow" data-t="matchLabel">Matching squares</span>
+      <span class="eyebrow" data-t="matchLabel">Squares that match</span>
       <span class="hud__score" id="score">0</span>
     </div>
     <div class="now">
-      <span class="eyebrow" data-t="nowLabel">Holding</span>
+      <span class="eyebrow" data-t="nowLabel">Colour on your brush</span>
       <span class="now__chip" id="nowChip"></span>
-      <span id="nowName">—</span>
+      <span id="nowName">White</span>
     </div>
   </div>
 
@@ -632,7 +640,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       </div>
 
       <div class="stack stack--tight">
-        <p class="eyebrow" data-t="canvasLabel">Your canvas</p>
+        <p class="eyebrow" data-t="canvasLabel">Your grid</p>
         <div class="plate"><div class="canvas" id="canvas"></div></div>
       </div>
     </div>
@@ -646,12 +654,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     <div class="row">
       <button class="btn" id="check" data-t="check">Compare with the plan</button>
-      <button class="btn btn--ghost" id="reset" data-t="reset">Clear the canvas</button>
+      <button class="btn btn--ghost" id="reset" data-t="reset">Clear the grid</button>
     </div>
   </section>
 
   <section class="card stack" id="over" hidden aria-live="polite">
-    <h2 id="overTitle">Done</h2>
+    <h2 id="overTitle">Every square matches the plan</h2>
     <p class="muted" id="overBody"></p>
     <div><button class="btn" id="again" data-t="again">Draw it again</button></div>
   </section>
@@ -708,42 +716,46 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
-      toMap: "Back to the map",
-      eyebrow: "Spaceport · sector B · task 3",
-      title1: "Copy the rocket,", title2: "square by square",
-      intro: "The small picture on the left is the plan. Copy it onto the big grid: pick a colour, then paint. Drag across squares to fill a row quickly.",
-      matchLabel: "Matching squares", nowLabel: "Holding", planLabel: "The plan",
-      paletteLabel: "Colours", canvasLabel: "Your canvas",
-      check: "Compare with the plan", reset: "Clear the canvas", again: "Draw it again",
-      erase: "Rub it out",
+      allActivities: "All activities", toMap: "Back to the map",
+      title1: "Copy the", title2: "pixel rocket",
+      intro: "The small picture is the plan. Copy it onto the big grid square by square, choosing a colour and tapping the squares. When several squares next to each other have the same colour, you can drag along them.",
+      matchLabel: "Squares that match", nowLabel: "Colour on your brush", planLabel: "The plan",
+      paletteLabel: "Colours", canvasLabel: "Your grid",
+      check: "Compare with the plan", reset: "Clear the grid", again: "Draw it again",
+      erase: "Rub out",
       names: { 1: "White", 2: "Red", 3: "Blue", 4: "Orange", 5: "Yellow" },
-      close: function (n) { return n + " of " + TOTAL + " squares match the plan. Keep going."; },
+      close: function (n) {
+        return n + " of " + TOTAL + " squares match the plan. The ones that still differ have a ring around them.";
+      },
       stray: function (n) {
         return n === 1
-          ? "One square is painted that the plan leaves empty. Rub it out."
-          : n + " squares are painted that the plan leaves empty. Rub them out.";
+          ? "One square has paint where the plan leaves it empty. Rub out the square with the ring."
+          : n + " squares have paint where the plan leaves them empty. Rub out the squares with rings.";
       },
-      done: "Every square matches.",
-      wonBody: "The rocket is drawn exactly as planned."
+      cell: function (r, c) { return "Row " + r + ", column " + c; },
+      done: "Every square matches the plan",
+      wonBody: "Your rocket is an exact copy of the plan, down to the last square."
     },
     es: {
-      toMap: "Volver al mapa",
-      eyebrow: "Puerto espacial · sector B · tarea 3",
-      title1: "Copia el cohete,", title2: "cuadro a cuadro",
-      intro: "El dibujo pequeño de la izquierda es el plano. Cópialo en la cuadrícula grande: elige un color y pinta. Arrastra por los cuadros para llenar una fila rápido.",
-      matchLabel: "Cuadros correctos", nowLabel: "En la mano", planLabel: "El plano",
-      paletteLabel: "Colores", canvasLabel: "Tu lienzo",
-      check: "Comparar con el plano", reset: "Limpiar el lienzo", again: "Dibujar otra vez",
+      allActivities: "Todas las actividades", toMap: "Volver al mapa",
+      title1: "Copia el", title2: "cohete de píxeles",
+      intro: "El dibujo pequeño es el plano. Cópialo en la cuadrícula grande cuadro a cuadro, eligiendo un color y tocando los cuadros. Cuando varios cuadros seguidos llevan el mismo color, puedes arrastrar por ellos.",
+      matchLabel: "Cuadros que coinciden", nowLabel: "Color del pincel", planLabel: "El plano",
+      paletteLabel: "Colores", canvasLabel: "Tu cuadrícula",
+      check: "Comparar con el plano", reset: "Borrar la cuadrícula", again: "Dibujar otra vez",
       erase: "Borrar",
       names: { 1: "Blanco", 2: "Rojo", 3: "Azul", 4: "Naranja", 5: "Amarillo" },
-      close: function (n) { return n + " de " + TOTAL + " cuadros coinciden con el plano. Sigue."; },
+      close: function (n) {
+        return n + " de " + TOTAL + " cuadros coinciden con el plano. Los que todavía no coinciden llevan un aro.";
+      },
       stray: function (n) {
         return n === 1
-          ? "Hay un cuadro pintado que el plano deja vacío. Bórralo."
-          : "Hay " + n + " cuadros pintados que el plano deja vacíos. Bórralos.";
+          ? "Hay un cuadro pintado donde el plano lo deja vacío. Borra el cuadro que lleva el aro."
+          : "Hay " + n + " cuadros pintados donde el plano los deja vacíos. Borra los cuadros que llevan aro.";
       },
-      done: "Todos los cuadros coinciden.",
-      wonBody: "El cohete está dibujado igual que el plano."
+      cell: function (r, c) { return "Fila " + r + ", columna " + c; },
+      done: "Todos los cuadros coinciden con el plano",
+      wonBody: "Tu cohete es una copia exacta del plano, hasta el último cuadro."
     }
   };
 
@@ -796,27 +808,71 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     }
   }
 
+  /* Painting follows the pointer with pointermove and elementFromPoint, not
+     pointerenter. A finger on a touch screen is captured by the first square
+     it lands on, so pointerenter never reached the next square and a drag
+     painted one square only. Releasing the capture and asking which square
+     sits under the pointer works the same for a mouse, a pen and a finger.
+
+     Keyboard: one square is in the tab order at a time, the arrow keys move
+     between squares, Enter or Space paints. */
+  var focusAt = 0;
+
+  function cellAt(x, y) {
+    var el = document.elementFromPoint(x, y);
+    if (!el || !el.classList || !el.classList.contains("px") || el.parentNode !== byId("canvas")) return null;
+    return { r: +el.dataset.r, c: +el.dataset.c };
+  }
+
   function buildCanvas() {
     var cv = byId("canvas");
     cv.style.gridTemplateColumns = "repeat(" + COLS + ", auto)";
     cv.innerHTML = "";
     for (var r = 0; r < ROWS; r++) {
       for (var c = 0; c < COLS; c++) {
-        (function (row, col) {
-          var b = document.createElement("button");
-          b.type = "button"; b.className = "px";
-          b.setAttribute("aria-label", "row " + (row + 1) + ", column " + (col + 1));
-          b.addEventListener("pointerdown", function (e) {
-            e.preventDefault(); painting = true; paint(row, col);
-          });
-          b.addEventListener("pointerenter", function () { if (painting) paint(row, col); });
-          b.addEventListener("keydown", function (e) {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); paint(row, col); }
-          });
-          cv.appendChild(b);
-        })(r, c);
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "px";
+        b.dataset.r = r; b.dataset.c = c;
+        b.tabIndex = r === 0 && c === 0 ? 0 : -1;
+        cv.appendChild(b);
       }
     }
+
+    cv.addEventListener("pointerdown", function (e) {
+      var at = cellAt(e.clientX, e.clientY);
+      if (!at) return;
+      e.preventDefault();
+      if (e.target.hasPointerCapture && e.target.hasPointerCapture(e.pointerId)) {
+        e.target.releasePointerCapture(e.pointerId);
+      }
+      painting = true;
+      paint(at.r, at.c);
+    });
+    cv.addEventListener("pointermove", function (e) {
+      if (!painting) return;
+      var at = cellAt(e.clientX, e.clientY);
+      if (at && grid[at.r][at.c] !== (held === "erase" ? 0 : held)) paint(at.r, at.c);
+    });
+    cv.addEventListener("keydown", function (e) {
+      var el = e.target;
+      if (!el.classList || !el.classList.contains("px")) return;
+      var r = +el.dataset.r, c = +el.dataset.c;
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); paint(r, c); return; }
+      var move = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] }[e.key];
+      if (!move) return;
+      e.preventDefault();
+      var nr = Math.min(ROWS - 1, Math.max(0, r + move[0]));
+      var nc = Math.min(COLS - 1, Math.max(0, c + move[1]));
+      moveFocus(nr * COLS + nc);
+    });
+  }
+
+  function moveFocus(index) {
+    var cells = byId("canvas").children;
+    if (cells[focusAt]) cells[focusAt].tabIndex = -1;
+    focusAt = index;
+    cells[focusAt].tabIndex = 0;
+    cells[focusAt].focus();
   }
 
   document.addEventListener("pointerup", function () { painting = false; });
@@ -831,7 +887,25 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   function paintCell(r, c) {
     var el = byId("canvas").children[r * COLS + c];
-    if (el) el.style.background = HEX[grid[r][c]];
+    if (!el) return;
+    el.style.background = HEX[grid[r][c]];
+    el.classList.remove("is-off");
+  }
+
+  /* Ring the squares that need work: the strays when there are any, since
+     the message is about them, otherwise every square that differs. */
+  function markOff(onlyStrays) {
+    var cells = byId("canvas").children;
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        var stray = PATTERN[r][c] === 0 && grid[r][c] !== 0;
+        var off = onlyStrays ? stray : grid[r][c] !== PATTERN[r][c];
+        cells[r * COLS + c].classList.toggle("is-off", off);
+      }
+    }
+  }
+  function clearMarks() {
+    Array.prototype.forEach.call(byId("canvas").children, function (el) { el.classList.remove("is-off"); });
   }
 
   function updateScore() {
@@ -869,15 +943,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     sw.appendChild(er);
 
     buildRef();
-    for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) paintCell(r, c);
+    var cells = byId("canvas").children;
+    for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+      cells[r * COLS + c].style.background = HEX[grid[r][c]];
+      cells[r * COLS + c].setAttribute("aria-label", d.cell(r + 1, c + 1));
+    }
     updateScore();
   }
 
   function check() {
     var d = t();
     var n = matches(), extra = strays();
-    if (extra) { say("no", d.stray(extra)); return; }
-    if (n < TOTAL) { say("no", d.close(n)); return; }
+    if (extra) { markOff(true); say("no", d.stray(extra)); return; }
+    if (n < TOTAL) { markOff(false); say("no", d.close(n)); return; }
     say("ok", d.done);
     byId("game").hidden = true; byId("over").hidden = false;
     remember();
@@ -888,7 +966,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   function reset() {
     grid = blank(); held = 1;
     byId("game").hidden = false; byId("over").hidden = true;
-    clearSay(); render();
+    clearSay(); clearMarks(); render();
   }
 
   byId("check").onclick = check;
@@ -901,6 +979,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       document.querySelectorAll(".langs button").forEach(function (x) {
         x.setAttribute("aria-pressed", String(x === b));
       });
+      /* Keep the drawing and its rings; drop only the last message, which
+         was written in the other language. */
+      clearSay();
       render();
     };
   });

@@ -2,12 +2,12 @@
   {
     "id": "OB-01",
     "family": "bank_visa",
+    "lead_id": "L-001",
     "prospect_name": "Maria",
-    "prospect_archetype": "storefront",
     "buyer_verbatim": "We already have a corporate Visa from our bank.",
     "ideal_phrases": [
-      "so you've got the card-issuing side sorted",
-      "card from your bank is in place — what's actually broken about it?"
+      "So you already have a corporate Visa from your bank.",
+      "The Visa from your bank is in place — so what's broken about it?"
     ],
     "anti_patterns": [
       "But our fees are lower than your bank's.",
@@ -18,12 +18,12 @@
   {
     "id": "OB-02",
     "family": "competitor_brex",
+    "lead_id": "L-002",
     "prospect_name": "Tom",
-    "prospect_archetype": "rocket",
     "buyer_verbatim": "We already use Brex — why would we switch?",
     "ideal_phrases": [
-      "Brex is great if you're US-based with USD spend",
-      "you've got the issuance side sorted with Brex — how does FX show up?"
+      "So you already use Brex, and the card side is fine.",
+      "So you already use Brex — how does FX show up on your bill?"
     ],
     "anti_patterns": [
       "Our FX is cheaper than Brex by 0.5%.",
@@ -34,49 +34,33 @@
   {
     "id": "OB-03",
     "family": "accountant_friction",
-    "prospect_name": "Emma",
-    "prospect_archetype": "factory",
+    "lead_id": "L-005",
+    "prospect_name": "Sven",
     "buyer_verbatim": "Our accountant won't deal with another tool.",
     "ideal_phrases": [
-      "so you're protecting your accountant's bandwidth",
-      "another tool on your accountant's plate is the blocker"
+      "So your accountant won't take on another tool.",
+      "Another tool on your accountant's plate is the blocker."
     ],
     "anti_patterns": [
-      "Our Xero sync is automated — your accountant won't add work.",
-      "Most accountants love us once they see the integration.",
+      "FinTechCard integrates with most accounting platforms — it's actually less work for them.",
+      "Most accountants change their mind once they see the demo.",
       "Have you tried showing your accountant our integration page?"
     ]
   },
   {
     "id": "OB-04",
     "family": "trust_fintech",
+    "lead_id": "L-004",
     "prospect_name": "Lukas",
-    "prospect_archetype": "forkKnife",
     "buyer_verbatim": "I don't trust new fintechs with my money. We had a payroll thing go sideways with one of those startups last year.",
     "ideal_phrases": [
-      "a payroll thing going sideways is exactly why you're cautious",
-      "you got burned by a fintech last year — trust is the actual question"
+      "A payroll thing going sideways last year is exactly why you're cautious with your money.",
+      "You got burned by a fintech startup last year, so trust is the real question."
     ],
     "anti_patterns": [
       "We're not like those other fintechs — our uptime is 99.99%.",
       "Actually we're regulated by a tier-1 partner bank, so it's safer.",
       "Most owners feel that way until they read our regulator page."
-    ]
-  },
-  {
-    "id": "OB-05",
-    "family": "comp_distraction",
-    "prospect_name": "Pavel",
-    "prospect_archetype": "storefront",
-    "buyer_verbatim": "Look — your competitor's been emailing me weekly and they're cheaper.",
-    "ideal_phrases": [
-      "weekly emails and a cheaper price — that's the offer on the table",
-      "cheaper-and-pushier is the comparison you're holding us against"
-    ],
-    "anti_patterns": [
-      "But our price-per-feature is actually better than theirs.",
-      "However, their FX rates are worse than ours.",
-      "Their cheaper price hides a 2% FX markup most owners miss."
     ]
   }
 ]

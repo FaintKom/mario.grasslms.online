@@ -94,7 +94,7 @@
 /* --- Body (calls list + transcript) --- */
 .app--gong .gong-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: minmax(150px, 30%) 1fr;
   height: 100%;
   overflow: hidden;
   background: #FFFFFF;
@@ -169,6 +169,8 @@
   overflow: hidden;
 }
 .app--gong .transcript {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
   padding: 18px 22px;
   font-family: var(--ftc-font-sans);
@@ -188,6 +190,12 @@
   padding: 10px 12px;
   border-radius: 6px;
   margin-bottom: 2px;
+}
+/* In a narrow Gong window the line goes under the speaker instead of being squeezed */
+.app--gong .transcript { container-type: inline-size; }
+@container (max-width: 460px) {
+  .app--gong .transcript .turn { grid-template-columns: 40px 1fr; row-gap: 2px; }
+  .app--gong .transcript .turn .text { grid-column: 2; }
 }
 .app--gong .transcript .turn .ts {
   color: #9ca3af;
@@ -223,6 +231,10 @@
 
 /* Rubric panel */
 .app--gong .rubric-panel {
+  /* never more than ~40% of the pane, so a small Gong window still shows the transcript */
+  flex: 0 1 auto;
+  max-height: 40%;
+  overflow: auto;
   margin: 12px 22px 18px;
   padding: 14px 16px;
   background: #FAFBFC;

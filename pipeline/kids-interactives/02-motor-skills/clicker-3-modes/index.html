@@ -602,7 +602,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 }
 .arcade .lede,
 .arcade .muted { color: var(--ar-dim); }
-.arcade .eyebrow { color: var(--ar-gold); }
+.arcade .eyebrow, .arcade .tag { color: var(--ar-gold); }
 
 /* ---- panels: a lit top face and a hard lip ------------------------------ */
 .arcade .card,
@@ -796,6 +796,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .mode:hover { border-color: var(--color-border-focus); }
   .mode[aria-pressed="true"] { border-color: var(--color-primary); background: var(--color-primary-soft); }
   .mode b { font-weight: 700; }
+  /* A picture of the move on every card: the youngest players choose by
+     looking, not by reading. */
+  .mode__icon { width: 48px; height: 32px; display: block; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
   .mode span { font-size: var(--t-sm); color: var(--color-text-muted); line-height: 1.45; }
 
   .field {
@@ -858,10 +861,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <style>
   /* Way back to the catalogue, same look as its own back link. */
   .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
+  /* On the grape ground the default subtle grey all but vanished. */
+  .arcade .back { color: var(--ar-dim); }
+  .arcade .back:hover { color: #fff; }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+  /* Section labels in plain sentence case at body size, not small capitals. */
+  .tag { margin: 0; font-size: var(--t-sm); font-weight: 700; color: var(--color-text-muted); }
 </style>
 </head>
 <body class="arcade">
@@ -869,31 +877,30 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 6 to 9 · mouse and touch control</p>
+      <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Get the</span> <em class="mark" data-t="title2">pointer</em> <span data-t="title3">under control</span></h1>
-    <p class="lede" data-t="intro">Four small games for your hand. Each one teaches it something it has to know before the rest of a computer makes any sense.</p>
+    <h1><span data-t="title1"></span><em class="mark" data-t="title2">Clicking and dragging</em> <span data-t="title3">with the mouse</span></h1>
+    <p class="lede" data-t="intro">Each of these four little games trains one move your hand makes on a computer, so pick a game and a level and press Start.</p>
   </header>
 
   <section class="card setup" id="setup">
     <div class="stack stack--tight">
-      <p class="eyebrow" data-t="pickGame">Pick a game</p>
+      <p class="tag" data-t="pickGame">Pick a game</p>
       <div class="modes" id="modes"></div>
     </div>
 
     <div class="row" style="gap: var(--s-8); align-items: flex-start;">
       <div class="stack stack--tight">
-        <p class="eyebrow" data-t="pickLevel">Level</p>
+        <p class="tag" data-t="pickLevel">Level</p>
         <div class="picker" id="levels"></div>
       </div>
       <div class="stack stack--tight">
-        <p class="eyebrow" data-t="pickLength">Round length</p>
+        <p class="tag" data-t="pickLength">Round length</p>
         <div class="picker" id="lengths"></div>
       </div>
     </div>
@@ -904,15 +911,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   <section class="stack" id="play" hidden>
     <div class="hud">
       <div class="row">
-        <span class="eyebrow" data-t="hits">Hits</span>
+        <span class="tag" data-t="hits">Hits</span>
         <span class="hud__score" id="hits">0</span>
       </div>
       <div class="row">
-        <span class="eyebrow" data-t="misses">Missed</span>
+        <span class="tag" data-t="misses">Missed</span>
         <span class="hud__score" id="misses">0</span>
       </div>
       <div class="row">
-        <span class="eyebrow" data-t="timeLeft">Time left</span>
+        <span class="tag" data-t="timeLeft">Time left</span>
         <span class="hud__score" id="clock">60</span>
       </div>
       <button class="btn btn--ghost btn--sm" id="stop" data-t="stop">Stop</button>
@@ -922,11 +929,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   </section>
 
   <section class="card stack" id="result" hidden aria-live="polite">
-    <h2 data-t="resultTitle">Round over</h2>
+    <h2 data-t="resultTitle">The round is over</h2>
     <div class="stats">
-      <div><b id="rHits">0</b><span class="eyebrow" data-t="hits">Hits</span></div>
-      <div><b id="rMiss">0</b><span class="eyebrow" data-t="misses">Missed</span></div>
-      <div><b id="rRate">0%</b><span class="eyebrow" data-t="accuracy">On target</span></div>
+      <div><b id="rHits">0</b><span class="tag" data-t="hits">Hits</span></div>
+      <div><b id="rMiss">0</b><span class="tag" data-t="misses">Missed</span></div>
+      <div><b id="rRate">0%</b><span class="tag" data-t="accuracy">On target</span></div>
     </div>
     <div class="stars" id="stars" aria-hidden="true"></div>
     <p class="muted" id="verdict"></p>
@@ -954,65 +961,75 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   };
   const SIZE = 80;
 
+  /* One small drawing per game: a pointer on a circle, the same with two
+     clicks, a circle carried into a dashed frame, a circle on the move. */
+  const POINTER = '<path d="M30 15l11 4.5-4.6 1.6 3.8 5.4-2.4 1.7-3.8-5.4-3.3 3.6z" fill="currentColor" stroke="none"/>';
+  const ICONS = {
+    single: '<circle cx="17" cy="16" r="11"/>' + POINTER,
+    double: '<circle cx="17" cy="16" r="11"/><circle cx="17" cy="16" r="5"/>' + POINTER + '<path d="M41 7l3-3M44 12h3"/>',
+    drag:   '<circle cx="10" cy="16" r="7"/><rect x="31" y="5" width="15" height="22" rx="3" stroke-dasharray="3 3"/><path d="M19 16h9M25 12l4 4-4 4"/>',
+    dodge:  '<circle cx="32" cy="16" r="10"/><path d="M4 10h12M2 16h13M4 22h12"/>'
+  };
+
   const T = {
     en: {
-      eyebrow: "Ages 6 to 9 · mouse and touch control",
-      title1: "Get the", title2: "pointer", title3: "under control",
-      intro: "Four small games for your hand. Each one practises a move you need for everything else on a computer.",
+      allActivities: "All activities",
+      title1: "", title2: "Clicking and dragging", title3: "with the mouse",
+      intro: "Each of these four little games trains one move your hand makes on a computer, so pick a game and a level and press Start.",
       pickGame: "Pick a game", pickLevel: "Level", pickLength: "Round length",
       start: "Start", stop: "Stop", again: "Play it again", back: "Pick another game",
       hits: "Hits", misses: "Missed", timeLeft: "Time left", accuracy: "On target",
-      resultTitle: "Round over",
+      resultTitle: "The round is over",
       levels: { easy: "Easy", medium: "Medium", hard: "Hard" },
       lengths: { 30: "30 seconds", 60: "60 seconds" },
       modes: {
-        single: { name: "One click", note: "Click the circle once before it disappears." },
-        double: { name: "Double click", note: "Two clicks, quickly, on the same circle." },
-        drag:   { name: "Drag and drop", note: "Hold the circle and pull it into the frame." },
-        dodge:  { name: "Moving targets", note: "These circles keep moving. Click them anyway." }
+        single: { name: "One click", note: "Click the circle once before it disappears, because it only waits a few seconds." },
+        double: { name: "Double click", note: "Click the same circle twice, quickly, to make a double click." },
+        drag:   { name: "Drag and drop", note: "Hold the circle down and pull it into the dashed frame before you let go." },
+        dodge:  { name: "Moving targets", note: "The circles keep moving. Follow one with the pointer and click it when you catch up." }
       },
       hints: {
-        single: "Click the circle.",
-        double: "Double-click the circle.",
-        drag: "Drag the circle into the dashed frame.",
-        dodge: "Click the circles while they move."
+        single: "Click each circle before it disappears.",
+        double: "Double-click each circle, with both clicks quick and on the same spot.",
+        drag: "Drag the yellow circle into the dashed frame and let go inside it.",
+        dodge: "Follow a moving circle and click it when the pointer is on top of it."
       },
       goal: "Drop here",
       verdict: function (r, total) {
-        return !total ? "You stopped before the first click. Press Play it again."
-             : r >= 80 ? "Almost every click landed. Try the next level up."
-             : r >= 50 ? "Good aim. Land a few more and you get three stars."
-                       : "Slow down and aim. Speed comes later.";
+        return !total ? "You stopped before the first click. Press Play it again when you are ready."
+             : r >= 80 ? (level === "hard" ? "Almost every click hit a circle, even on the hardest level." : "Almost every click hit a circle. Try the next level when you want a bigger challenge.")
+             : r >= 50 ? "More than half of your clicks landed. A few more next time will earn three stars."
+                       : "Try going a little slower and aim before you click. Speed will come on its own later.";
       }
     },
     es: {
-      eyebrow: "De 6 a 9 años · control del ratón y del dedo",
-      title1: "Toma el", title2: "control", title3: "del puntero",
-      intro: "Cuatro juegos pequeños para tu mano. Cada uno practica un movimiento que necesitas para todo lo demás en el ordenador.",
+      allActivities: "Todas las actividades",
+      title1: "", title2: "Clics y arrastres", title3: "con el ratón",
+      intro: "Cada uno de estos cuatro juegos pequeños entrena un movimiento que tu mano hace en el ordenador, así que elige un juego y un nivel y pulsa Empezar.",
       pickGame: "Elige un juego", pickLevel: "Nivel", pickLength: "Duración",
       start: "Empezar", stop: "Parar", again: "Jugar otra vez", back: "Elegir otro juego",
       hits: "Aciertos", misses: "Fallos", timeLeft: "Tiempo", accuracy: "Precisión",
-      resultTitle: "Fin de la ronda",
+      resultTitle: "La ronda ha terminado",
       levels: { easy: "Fácil", medium: "Medio", hard: "Difícil" },
       lengths: { 30: "30 segundos", 60: "60 segundos" },
       modes: {
-        single: { name: "Un clic", note: "Haz un clic en el círculo antes de que desaparezca." },
-        double: { name: "Doble clic", note: "Dos clics seguidos en el mismo círculo." },
-        drag:   { name: "Arrastrar y soltar", note: "Sujeta el círculo y llévalo al marco." },
-        dodge:  { name: "Objetivos en movimiento", note: "Estos círculos no paran de moverse. Haz clic en ellos igual." }
+        single: { name: "Un clic", note: "Haz un clic en el círculo antes de que desaparezca, porque solo espera unos segundos." },
+        double: { name: "Doble clic", note: "Haz dos clics rápidos en el mismo círculo para hacer un doble clic." },
+        drag:   { name: "Arrastrar y soltar", note: "Mantén pulsado el círculo y llévalo hasta el marco punteado antes de soltarlo." },
+        dodge:  { name: "Objetivos en movimiento", note: "Los círculos no paran de moverse. Sigue uno con el puntero y haz clic cuando lo alcances." }
       },
       hints: {
-        single: "Haz clic en el círculo.",
-        double: "Haz doble clic en el círculo.",
-        drag: "Arrastra el círculo hasta el marco punteado.",
-        dodge: "Haz clic en los círculos mientras se mueven."
+        single: "Haz clic en cada círculo antes de que desaparezca.",
+        double: "Haz doble clic en cada círculo, con los dos clics rápidos y en el mismo sitio.",
+        drag: "Arrastra el círculo amarillo hasta el marco punteado y suéltalo dentro.",
+        dodge: "Sigue un círculo que se mueve y haz clic cuando el puntero esté encima."
       },
       goal: "Suelta aquí",
       verdict: function (r, total) {
-        return !total ? "Paraste antes del primer clic. Pulsa Jugar otra vez."
-             : r >= 80 ? "Casi todos los clics acertaron. Prueba el nivel siguiente."
-             : r >= 50 ? "Buena puntería. Acierta unos pocos más y tendrás tres estrellas."
-                       : "Ve más despacio y apunta. La velocidad llega después.";
+        return !total ? "Has parado antes del primer clic. Pulsa Jugar otra vez cuando estés listo."
+             : r >= 80 ? (level === "hard" ? "Casi todos tus clics dieron en el círculo, incluso en el nivel más difícil." : "Casi todos tus clics dieron en el círculo. Cuando quieras un reto mayor, prueba el nivel siguiente.")
+             : r >= 50 ? "Más de la mitad de tus clics acertaron. Con unos cuantos más, la próxima vez tendrás tres estrellas."
+                       : "Prueba a ir un poco más despacio y a apuntar antes de hacer clic. La rapidez ya vendrá sola.";
       }
     }
   };
@@ -1038,9 +1055,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       const b = document.createElement("button");
       b.type = "button"; b.className = "mode";
       b.setAttribute("aria-pressed", String(mode === k));
+      const ic = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      ic.setAttribute("class", "mode__icon");
+      ic.setAttribute("viewBox", "0 0 48 32");
+      ic.setAttribute("aria-hidden", "true");
+      ic.innerHTML = ICONS[k];
       const nm = document.createElement("b"); nm.textContent = d.modes[k].name;
       const nt = document.createElement("span"); nt.textContent = d.modes[k].note;
-      b.append(nm, nt);
+      b.append(ic, nm, nt);
       b.onclick = function () { mode = k; paintStatic(); };
       $("modes").appendChild(b);
     });
@@ -1147,7 +1169,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     el.className = "target target--sun";
     el.setAttribute("role", "button");
     el.setAttribute("aria-label", t().hints.drag);
-    place(el, SIZE, SIZE);
+    /* The circle never starts on top of the frame: a hit has to be a carry,
+       not a nudge. A few tries, then whatever the field leaves room for. */
+    const g = { x: parseFloat(goal.style.left), y: parseFloat(goal.style.top) };
+    for (var tries = 0; tries < 30; tries++) {
+      const p = place(el, SIZE, SIZE);
+      const apart = p.x + SIZE < g.x - 8 || p.x > g.x + zoneSize + 8 ||
+                    p.y + SIZE < g.y - 8 || p.y > g.y + zoneSize + 8;
+      if (apart) break;
+    }
     field.appendChild(el);
 
     const gone = setTimeout(function () {
@@ -1200,14 +1230,22 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     if (!running) return;
     const n = CFG.dodge.count[level], speed = CFG.dodge.speed[level];
     for (var i = 0; i < n; i++) addMover(speed);
+    lastFrame = 0;
     tick();
   }
 
-  function tick() {
+  /* Speeds are in pixels per frame at 60 frames a second, the rate they were
+     tuned at. A 120 or 144 Hz screen calls this twice as often, so each step
+     is scaled by the time that really passed; a long gap (the tab was hidden)
+     counts as three frames at most, so nothing jumps across the field. */
+  var lastFrame = 0;
+  function tick(now) {
     if (!running) return;
     const r = field.getBoundingClientRect();
+    const k = lastFrame && now ? Math.min(3, (now - lastFrame) / (1000 / 60)) : 1;
+    lastFrame = now || 0;
     movers.forEach(function (m) {
-      m.x += m.vx; m.y += m.vy;
+      m.x += m.vx * k; m.y += m.vy * k;
       if (m.x <= 0 || m.x >= r.width - SIZE) m.vx *= -1;
       if (m.y <= 0 || m.y >= r.height - SIZE) m.vy *= -1;
       m.x = Math.min(Math.max(0, m.x), r.width - SIZE);
@@ -1230,7 +1268,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     clockId = setInterval(function () {
       const left = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
       $("clock").textContent = String(left);
-      if (left <= 0) finish();
+      if (left <= 0) finish(false);
     }, 200);
 
     if (mode === "single") spawnTap(false);
@@ -1243,7 +1281,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     };
   }
 
-  function finish() {
+  function finish(early) {
     running = false;
     if (clockId) { clearInterval(clockId); clockId = null; }
     clearField();
@@ -1254,9 +1292,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     $("rRate").textContent = rate + "%";
     $("verdict").textContent = t().verdict(rate, total);
 
-    /* Three stars, the way a match-three round ends: one for finishing, one
-       for half the taps landing, one for four in five. No clicks, no stars. */
-    const earned = !total ? 0 : rate >= 80 ? 3 : rate >= 50 ? 2 : 1;
+    /* Three stars, the way a match-three round ends: one for playing the
+       round to the end (Stop does not earn it), one for half the taps
+       landing, one for four in five. No clicks, no stars. */
+    const earned = !total ? 0 : (early ? 0 : 1) + (rate >= 50 ? 1 : 0) + (rate >= 80 ? 1 : 0);
     const box = $("stars");
     box.innerHTML = "";
     for (let i = 0; i < 3; i++) {
@@ -1272,7 +1311,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
 
   $("start").onclick = start;
-  $("stop").onclick = finish;
+  $("stop").onclick = function () { finish(true); };
   $("again").onclick = start;
   $("back").onclick = function () { $("result").hidden = true; $("setup").hidden = false; };
 

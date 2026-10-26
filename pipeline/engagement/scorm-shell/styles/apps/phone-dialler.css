@@ -15,6 +15,10 @@
   background: var(--pd-bg-1);
 }
 .app--phone-dialler .os-window-body { padding: 0; background: var(--pd-bg-1); }
+/* A task banner above the dialler takes its own height; the dialler shrinks to fit instead of overflowing the window. */
+.os-window-body.app--phone-dialler { display: flex; flex-direction: column; }
+.os-window-body.app--phone-dialler > .task-banner { flex: none; }
+.os-window-body.app--phone-dialler > .brand-app { flex: 1 1 auto; min-height: 0; height: auto; }
 
 .app--phone-dialler .brand-app {
   grid-template-rows: 44px 1fr;
@@ -74,6 +78,8 @@
 
 /* Body container */
 .app--phone-dialler .dialler {
+  /* one solid colour, so the sticky call controls blend in wherever they sit */
+  background: var(--pd-bg-1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -240,7 +246,10 @@
   display: flex; justify-content: center; flex-wrap: wrap; gap: 8px;
   margin-top: 8px;
   width: 100%;
-  max-width: 320px;
+  /* Hang up stays reachable in a short window while captions grow above it */
+  position: sticky; bottom: -24px; z-index: 2;
+  padding: 14px 0 24px;
+  background: linear-gradient(180deg, rgba(14,26,43,0) 0, var(--pd-bg-1) 14px);
 }
 .app--phone-dialler .dialler-ctrl[hidden] { display: none !important; }
 .app--phone-dialler .dialler-ctrl {
@@ -332,4 +341,39 @@
   .app--phone-dialler .dialler-ring,
   .app--phone-dialler .dialler-waveform span,
   .app--phone-dialler .pd-topbar__status::before { animation: none !important; }
+}
+
+/* Live captions: what the rep and the buyer just said */
+.app--phone-dialler .dialler-captions {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 0 12px;
+  display: grid;
+  gap: 6px;
+}
+.app--phone-dialler .dialler-captions[hidden] { display: none; }
+.app--phone-dialler .dialler-caption {
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  color: #ffffff;
+  font-family: var(--ftc-font-sans);
+  font-size: 12.5px;
+  line-height: 1.45;
+  text-align: left;
+}
+.app--phone-dialler .dialler-caption b {
+  display: block;
+  font-family: var(--ftc-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 2px;
+}
+.app--phone-dialler .dialler-caption[data-who="rep"] {
+  background: rgba(0,182,122,0.16);
+  border-left: 3px solid var(--pd-green);
 }

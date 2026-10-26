@@ -28,12 +28,12 @@ const DEFAULT_RECORD = {
   AccountName: "Two Pines Apparel",
   OpportunityName: "Two Pines Apparel · Card + Spend Mgmt",
   Stage: "Discovery",
-  Amount: "€42,000 ARR",
+  Amount: "£42,000 ARR",
   CloseDate: "2026-07-31",
   Owner: "You",
-  NextStep: "Demo · receipt-capture + Xero sync",
+  NextStep: "Demo · Wed 10:30 · per-store cards + receipt capture",
   Industry: "Retail SMB",
-  AnnualRevenue: "€1.8M",
+  AnnualRevenue: "£1.8M",
   Ramp_Time__c: "—",
   Tenure_Cohort__c: "Q2-2026",
   Pod__c: "UK · Manchester",
@@ -43,9 +43,9 @@ const DEFAULT_RECORD = {
 };
 
 const DEFAULT_TIMELINE = [
-  { ts: "2026-04-30", type: "call",    text: "Outbound call · voicemail · left two demo slots" },
-  { ts: "2026-05-02", type: "email",   text: "Follow-up email sent · open + 2 link clicks" },
-  { ts: "2026-05-05", type: "meeting", text: "Demo scheduled · Tue 11:00 · booked during the call" },
+  { ts: "2026-05-05", type: "meeting", text: "Demo booked during the call · Wed 10:30 · Maria + bookkeeper" },
+  { ts: "2026-05-02", type: "email",   text: "Follow-up email sent · opened twice" },
+  { ts: "2026-04-30", type: "call",    text: "Outbound call · voicemail" },
 ];
 
 const TYPE_ICON = {
@@ -277,6 +277,15 @@ registerApp({
     }
 
     function saveRecord() {
+      const toast = container.querySelector("[data-region='toast']");
+      if (!String(record.NextStep ?? "").trim()) {
+        if (toast) {
+          toast.hidden = false;
+          toast.textContent = "Fill in the next step (what you booked and when) before you save.";
+          setTimeout(() => { if (toast) toast.hidden = true; }, 2400);
+        }
+        return;
+      }
       record.Next_Step_Booked__c = true;
       const today = new Date().toISOString().slice(0, 10);
       timeline = [
@@ -286,10 +295,9 @@ registerApp({
       eventBus.dispatchEvent(new CustomEvent("telemetry", {
         detail: { event_name: EVENT.NEXT_STEP_BOOKED_SET, account: record.AccountName, stage: record.Stage },
       }));
-      const toast = container.querySelector("[data-region='toast']");
       if (toast) {
         toast.hidden = false;
-        toast.textContent = `✓ Saved · Next_Step_Booked__c flipped to TRUE`;
+        toast.textContent = `✓ Saved. Next_Step_Booked__c is now TRUE.`;
         setTimeout(() => { if (toast) toast.hidden = true; }, 2400);
       }
       renderBody();

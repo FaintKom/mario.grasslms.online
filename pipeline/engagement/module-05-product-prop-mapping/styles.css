@@ -154,6 +154,8 @@
   margin-bottom: 16px;
   animation: summary-check-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+/* not passed yet: a retry mark instead of a green tick */
+.summary-card__check.is-retry { background: var(--accent-warn, #f5b800); color: #1a1a1a; }
 @keyframes summary-check-pop {
   0%   { transform: scale(0.4); opacity: 0; }
   60%  { transform: scale(1.15); opacity: 1; }
@@ -446,7 +448,7 @@
   cursor: pointer;
   transition: background 0.12s, border-color 0.12s, transform 0.08s;
 }
-.tom-drawer__opt:hover { background: #f0f7ee; border-color: var(--brand-green); }
+.tom-drawer__opt:hover:not(:disabled):not(.is-correct):not(.is-incorrect) { background: #f0f7ee; border-color: var(--brand-green); }
 .tom-drawer__opt:active { transform: scale(0.99); }
 .tom-drawer__label {
   display: inline-flex; align-items: center; justify-content: center;
@@ -1060,7 +1062,7 @@
   font-family: inherit; font-size: 13px; color: inherit;
 }
 button.m5-propcard__row { cursor: pointer; }
-button.m5-propcard__row:hover { border-color: var(--brand-green); background: #f0f7ee; }
+button.m5-propcard__row:hover:not(.is-correct):not(.is-incorrect) { border-color: var(--brand-green); background: #f0f7ee; }
 .m5-propcard__n {
   display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%;
   background: var(--ftc-ink); color: #fff; font-family: var(--ftc-font-mono); font-size: 12px; font-weight: 700;
@@ -1128,3 +1130,25 @@ button.m5-propcard__row:hover { border-color: var(--brand-green); background: #f
 .m5-pinned__label { color: var(--brand-green); }
 .m5-pinned__quote { font-size: 15px; font-style: italic; line-height: 1.55; color: var(--ftc-ink); margin: 0 0 10px; }
 .m5-pinned__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--ftc-border); font-size: 12.5px; color: var(--ftc-ink-2); }
+
+/* ===== Module 5 · say-it-back + fresh-question inputs ===================== */
+.m5-sayit { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--ftc-border); }
+.m5-sayit__label { display: block; font-size: 12.5px; color: var(--ftc-ink-2); margin: 6px 0 4px; }
+.m5-sayit textarea, .m5-solo__item textarea {
+  width: 100%; box-sizing: border-box; padding: 8px;
+  border: 1px solid var(--ftc-border); border-radius: 4px;
+  font-family: var(--ftc-font-sans); font-size: 13px; resize: vertical;
+}
+.m5-sayit__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; font-size: 12px; color: var(--ftc-ink-2); }
+.m5-sayit .m5-btn:last-child { margin-top: 10px; }
+
+/* Plain labels: no uppercase or monospace tag lines */
+.narrative-overlay__step, .summary-card__stat-k, .summary-card__recap summary,
+.mx-thread__k, .mx-pinned__k,
+.tom-drawer__opt.is-reveal:not(.is-correct):not(.is-incorrect)::after,
+.m5-map dt, .m5-propcard__label, .m5-tag, .m5-solo__head, .m5-quiz__label, .m5-pinned__label,
+.reg-aid__k, .reg-mini > summary, .m6-chip, .m6-quiz__kicker, .m6-pinned__kicker {
+  text-transform: none;
+  letter-spacing: normal;
+  font-family: var(--ftc-font-sans);
+}

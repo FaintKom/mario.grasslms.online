@@ -451,9 +451,11 @@ code, kbd, samp { font-family: var(--ftc-font-mono); font-size: 0.92em; }
   flex-shrink: 0;
   margin-right: 8px;
   position: relative;
+  order: -2;
 }
 #taskbar::after {
   content: "FinTechCard";
+  order: -1;
   display: inline-flex;
   align-items: center;
   margin-right: 12px;
@@ -645,45 +647,6 @@ code, kbd, samp { font-family: var(--ftc-font-mono); font-size: 0.92em; }
 }
 
 /* =========================================================================
-   Coach-marks
-   ========================================================================= */
-#coachmark-root { position: fixed; inset: 0; pointer-events: none; z-index: var(--z-coachmark); }
-.coachmark {
-  pointer-events: auto;
-  position: absolute;
-  max-width: 280px;
-  padding: var(--sp-3);
-  background: #1f1f1f;
-  color: #ffffff;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-2);
-  font-size: 13px;
-  animation: coachmark-in 150ms ease-out;
-}
-.coachmark::after {
-  content: "";
-  position: absolute;
-  width: 10px; height: 10px;
-  background: #1f1f1f;
-  transform: rotate(45deg);
-  top: -5px; left: 24px;
-}
-.coachmark .coachmark-dismiss {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.30);
-  color: #ffffff;
-  font-size: 12px;
-  padding: var(--sp-1) var(--sp-2);
-  border-radius: var(--radius-sm);
-  margin-top: var(--sp-2);
-}
-.coachmark .coachmark-dismiss:hover { background: rgba(255,255,255,0.1); }
-@keyframes coachmark-in {
-  from { opacity: 0; transform: translateY(-2px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* =========================================================================
    Responsive + a11y
    ========================================================================= */
 @media (max-width: 1023px) {
@@ -860,17 +823,15 @@ body.module .app--outreach .lead-row[data-task-target="active"] {
   position: relative;
 }
 body.module .app--outreach .lead-row[data-task-target="active"]::before {
-  content: "👈 your target";
+  content: "Your next lead";
   position: absolute;
   top: -10px; left: 12px;
   background: var(--app-accent, #ff4757);
   color: #ffffff;
-  font-family: var(--ftc-font-mono);
-  font-size: 10px;
+  font-family: var(--ftc-font-sans);
+  font-size: 11px;
   padding: 2px 8px;
   border-radius: 4px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 body.module .app--outreach .lead-row[data-task-target="inactive"] {
   opacity: 0.4;

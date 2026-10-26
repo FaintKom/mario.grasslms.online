@@ -3,15 +3,22 @@
  *
  * States: idle → ringing → on-call → ended
  *
- * Preserved API:
- *   - registerApp({ id:"phone-dialler", ... })
- *   - eventBus 'phone:dial'    → startCall(prospect)
- *   - eventBus 'phone:move'    → activateMove(move)
- *   - eventBus 'phone:silence' → start/clear silence banner
- *   - returns: { startCall, endCall, activateMove, startSilence, clearSilence }
+ * Listens on the eventBus:
+ *   'phone:dial'    {prospect}            → startCall(prospect)
+ *   'phone:answer'                        → answer a ringing call now
+ *   'phone:move'    {move:"M1"|"M2"|"M3"}  → light that move chip
+ *   'phone:say'     {who, speaker, text}  → add a live caption
+ *   'phone:silence' {start, thresholdMs}  → start / clear the silence timer
  *
- * New: 'phone:answer' event listener + state-machine phase exposed via the
- * `.dialler[data-phase]` attribute so CSS can switch visuals.
+ * Emits on the eventBus:
+ *   'phone:connected'     {prospect}           the buyer picked up
+ *   'phone:ended'         {prospect, reason}   the call ended
+ *   'phone:silence-held'  {duration_ms}        silence reached the threshold (once)
+ *   'phone:silence-ended' {duration_ms, held}  the silence was broken or cleared
+ *   'phone:dial-request'  {prospect, handled}  own Dial button. Outreach handles
+ *        it and applies its dial rules; if nobody handles it, the call starts here.
+ *
+ * The phase is exposed as `.dialler[data-phase]` so CSS can switch visuals.
  *
  * @see 02-design/ux-design-system.md §4.6 + §6.2
  */
@@ -21,6 +28,14 @@ import { EVENT } from "../event-log.js";
 
 const SILENCE_THRESHOLD_MS = 4000;
 const RING_TO_ANSWER_MS    = 1600;
+
+const ARCHETYPE_LABEL = {
+  storefront: "Retail SMB",
+  rocket:     "Series-B SaaS",
+  factory:    "Manufacturing",
+  forkKnife:  "Restaurant group",
+};
+const archetypeLabel = a => ARCHETYPE_LABEL[a] ?? a ?? "";
 
 registerApp({
   id: "phone-dialler",
@@ -42,6 +57,10 @@ registerApp({
     let ringTimeoutId  = 0;
     let silenceStartedAt = 0;
     let silenceIntervalId = 0;
+    let silenceThreshold = SILENCE_THRESHOLD_MS;
+    let silenceHeld = false;
+    /** Last person dialled, so the Dial button redials them. */
+    let lastProspect = options.prospect ?? null;
 
     container.innerHTML = renderShell();
     setPhase("idle");
@@ -73,6 +92,7 @@ registerApp({
               <span></span><span></span><span></span><span></span>
             </div>
             <div class="silence-banner" data-region="silence" role="status" aria-live="polite" hidden>buyer is thinking · 0s</div>
+            <div class="dialler-captions" data-region="captions" role="log" aria-live="polite" aria-label="Live captions" hidden></div>
             <div class="move-chips" role="status" aria-live="polite" aria-label="Move indicators">
               <span class="m-chip" data-move="M1" data-active="false">[M1]</span>
               <span class="m-chip" data-move="M2" data-active="false">[M2]</span>
@@ -143,14 +163,16 @@ registerApp({
 
     function startCall(prospect) {
       if (call) endCall("interrupted");
-      const p = prospect ?? options.prospect ?? { name: "Prospect", company: "—" };
+      const p = prospect ?? lastProspect ?? options.prospect ?? { name: "Prospect", company: "—" };
+      lastProspect = p;
       call = { prospect: p, started_at: Date.now(), ended_at: null };
+      clearCaptions();
       activeMoves = { M1: false, M2: false, M3: false };
       toggles = { mute: false, hold: false };
       updateChips();
       setText("initials", initialsOf(p.name));
       setText("buyer", p.name ?? "Prospect");
-      setText("meta",  `${p.company ?? ""}${p.archetype ? " · " + p.archetype : ""} · ringing…`);
+      setText("meta",  `${p.company ?? ""}${p.archetype ? " · " + archetypeLabel(p.archetype) : ""} · ringing…`);
       setPhase("ringing");
       container.querySelectorAll('[aria-pressed]').forEach(el => el.setAttribute("aria-pressed", "false"));
       clearTimeout(ringTimeoutId);
@@ -160,10 +182,11 @@ registerApp({
     function answerCall() {
       if (!call || phase !== "ringing") return;
       call.started_at = Date.now();
-      setText("meta", `${call.prospect.company ?? ""}${call.prospect.archetype ? " · " + call.prospect.archetype : ""}`);
+      setText("meta", `${call.prospect.company ?? ""}${call.prospect.archetype ? " · " + archetypeLabel(call.prospect.archetype) : ""}`);
       setPhase("on-call");
       timerId = window.setInterval(tickTimer, 1000);
       tickTimer();
+      eventBus.dispatchEvent(new CustomEvent("phone:connected", { detail: { prospect: call.prospect } }));
     }
 
     function endCall(reason) {
@@ -173,9 +196,11 @@ registerApp({
       clearInterval(timerId);
       clearSilence();
       const r = reason ?? "hangup";
+      const ended = call.prospect;
       setText("meta", `Call ended (${r}). Pick a disposition below.`);
       setPhase("ended");
       call = null;
+      eventBus.dispatchEvent(new CustomEvent("phone:ended", { detail: { prospect: ended, reason: r } }));
     }
 
     function tickTimer() {
@@ -184,26 +209,55 @@ registerApp({
       setText("timer", `${pad(Math.floor(sec/60))}:${pad(sec%60)}`);
     }
 
-    function startSilence() {
+    function startSilence(thresholdMs) {
       clearSilence();
+      silenceThreshold = typeof thresholdMs === "number" ? thresholdMs : SILENCE_THRESHOLD_MS;
+      silenceHeld = false;
       silenceStartedAt = Date.now();
       const banner = container.querySelector("[data-region='silence']");
       banner?.removeAttribute("hidden");
+      if (banner) banner.textContent = "buyer is thinking · 0s";
       silenceIntervalId = window.setInterval(() => {
         const elapsed = Date.now() - silenceStartedAt;
         if (banner) banner.textContent = `buyer is thinking · ${Math.floor(elapsed/1000)}s`;
-        if (elapsed >= SILENCE_THRESHOLD_MS) {
+        if (!silenceHeld && elapsed >= silenceThreshold) {
+          silenceHeld = true;   // report once per silence, not on every tick
           eventBus.dispatchEvent(new CustomEvent("telemetry", {
             detail: { event_name: EVENT.SILENCE_OBSERVED, duration_ms: elapsed },
           }));
+          eventBus.dispatchEvent(new CustomEvent("phone:silence-held", { detail: { duration_ms: elapsed } }));
         }
       }, 250);
     }
     function clearSilence() {
+      const wasRunning = Boolean(silenceIntervalId);
       clearInterval(silenceIntervalId);
       silenceIntervalId = 0;
       const banner = container.querySelector("[data-region='silence']");
       banner?.setAttribute("hidden", "");
+      if (wasRunning) {
+        eventBus.dispatchEvent(new CustomEvent("phone:silence-ended", {
+          detail: { duration_ms: Date.now() - silenceStartedAt, held: silenceHeld },
+        }));
+      }
+    }
+    function addCaption({ who = "buyer", speaker = "", text = "" } = {}) {
+      const box = container.querySelector("[data-region='captions']");
+      if (!box || !text) return;
+      box.hidden = false;
+      const line = document.createElement("p");
+      line.className = "dialler-caption";
+      line.dataset.who = who === "rep" ? "rep" : "buyer";
+      line.innerHTML = `<b>${escapeHtml(speaker || (who === "rep" ? "You" : "Buyer"))}</b> ${escapeHtml(text)}`;
+      box.appendChild(line);
+      while (box.children.length > 3) box.firstElementChild?.remove();
+      // keep the newest line and the call controls in view in a short window
+      const scroller = box.closest(".dialler");
+      if (scroller) scroller.scrollTop = scroller.scrollHeight;
+    }
+    function clearCaptions() {
+      const box = container.querySelector("[data-region='captions']");
+      if (box) { box.innerHTML = ""; box.hidden = true; }
     }
 
     function activateMove(move) {
@@ -234,12 +288,20 @@ registerApp({
     container.addEventListener("click", e => {
       const t = e.target;
       if (!(t instanceof Element)) return;
-      if (t.closest('[data-action="dial"]'))         startCall();
+      if (t.closest('[data-action="dial"]'))         requestDial();
       else if (t.closest('[data-action="hangup"]'))  endCall("hangup");
       else if (t.closest('[data-action="mute"]'))    toggleControl("mute");
       else if (t.closest('[data-action="hold"]'))    toggleControl("hold");
       // transfer is a no-op stub for v1
     });
+
+    /** Own Dial button: let Outreach apply its dial rules; dial here only if nobody handles it. */
+    function requestDial() {
+      const prospect = lastProspect ?? options.prospect ?? null;
+      const detail = { prospect, handled: false };
+      eventBus.dispatchEvent(new CustomEvent("phone:dial-request", { detail }));
+      if (!detail.handled) startCall(prospect);
+    }
 
     const onDial   = (/** @type {CustomEvent} */ ev) => startCall(ev.detail?.prospect);
     eventBus.addEventListener("phone:dial", onDial);
@@ -248,20 +310,27 @@ registerApp({
     const onMove   = (ev) => activateMove(ev.detail?.move);
     eventBus.addEventListener("phone:move", onMove);
     const onSilence = (ev) => {
-      if (ev.detail?.start) startSilence();
+      if (ev.detail?.start) startSilence(ev.detail?.thresholdMs);
       else clearSilence();
     };
     eventBus.addEventListener("phone:silence", onSilence);
+    const onSay = (ev) => addCaption(ev.detail ?? {});
+    eventBus.addEventListener("phone:say", onSay);
 
     return {
-      startCall, endCall, activateMove, startSilence, clearSilence,
+      startCall, endCall, activateMove, startSilence, clearSilence, addCaption,
+      /** Re-opening with a new prospect only sets who the Dial button calls. */
+      update(opts = {}) { if (opts.prospect) lastProspect = opts.prospect; },
       destroy() {
         eventBus.removeEventListener("phone:dial", onDial);
         eventBus.removeEventListener("phone:answer", onAnswer);
         eventBus.removeEventListener("phone:move", onMove);
         eventBus.removeEventListener("phone:silence", onSilence);
+        eventBus.removeEventListener("phone:say", onSay);
         clearInterval(timerId); clearTimeout(ringTimeoutId); clearSilence();
       },
     };
   },
 });
+
+function escapeHtml(s) { return String(s ?? "").replace(/[<>&]/g, c => ({ "<":"&lt;",">":"&gt;","&":"&amp;" }[c])); }
