@@ -564,7 +564,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .tag:hover { border-color: var(--sun-400); }
   .tag__id {
     display: grid; place-items: center; width: 22px; height: 22px; border-radius: var(--radius-pill);
-    background: var(--ink-500); color: #fff; font-family: var(--font-mono);
+    background: var(--ink-500); color: #fff; font-weight: 700;
   }
   .tag svg { width: 12px; height: 12px; }
   .tag.is-open .tag__id { background: var(--clay-500); }
@@ -595,7 +595,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     background: var(--paper-2); color: var(--ink-900); box-shadow: var(--shadow-lg);
   }
   .say__face svg { display: block; width: 76px; height: 76px; margin-top: -30px; }
-  .say__who { font: 700 var(--t-2xs)/1 var(--font-mono); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--green-600); }
+  .say__who { font-size: var(--t-sm); font-weight: 700; line-height: 1; color: var(--green-600); }
   .say--virus .say__who { color: var(--clay-600); }
   .say__text { margin: var(--s-1) 0 var(--s-2); font-size: var(--t-md); line-height: 1.45; }
   .say .btn--ghost { color: var(--ink-700); background: transparent; border-color: var(--ink-200); }
@@ -612,10 +612,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     background: var(--color-surface-2); color: var(--color-text); text-decoration: none; font-size: var(--t-sm);
   }
   a.tasklink:hover { border-color: var(--color-primary); }
-  .tasklink__tag, .tasklink__state { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); }
+  .tasklink__tag, .tasklink__state { font-size: var(--t-xs); color: var(--color-text-subtle); }
+  .tasks__title { margin: 0; font-size: var(--t-sm); font-weight: 700; }
+  .panel__state { margin: 0; font-size: var(--t-sm); font-weight: 600; }
   .tasklink.is-done .tasklink__state { color: var(--color-success-fg); }
   .tasklink.is-locked { opacity: .55; }
-  .locknote { font-size: var(--t-sm); font-weight: 600; color: var(--color-reward-fg); }
 
   .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-2); }
   .lg {
@@ -629,7 +630,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .lg__dot { width: 12px; height: 12px; border-radius: var(--radius-pill); background: var(--ink-400); }
   .lg.is-open .lg__dot { background: var(--clay-500); }
   .lg.is-clear .lg__dot { background: var(--green-500); }
-  .lg__state { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); }
+  .lg__state { font-size: var(--t-xs); color: var(--color-text-subtle); }
   .lg.is-clear .lg__state { color: var(--color-success-fg); }
 
   .fallback { display: grid; place-items: center; gap: var(--s-3); height: 100%; padding: var(--s-6); text-align: center; color: var(--ink-200); font-size: var(--t-sm); }
@@ -659,9 +660,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
   .lever__grip::after { content: ""; position: absolute; inset: 6px 10px; border-radius: 2px; background: repeating-linear-gradient(var(--ink-900) 0 2px, transparent 2px 6px); opacity: .35; }
 
-  .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+  .back { display: inline-flex; align-items: center; gap: var(--s-2);
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
 
@@ -688,16 +688,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Spaceport · Andy's island</p>
+      <a class="back" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
     <h1><span data-t="title1">Help Andy take back</span> <em class="mark" data-t="title2">the spaceport</em></h1>
-    <p class="lede" data-t="intro">A virus got into the spaceport computers overnight. Drag to turn the island, tap a building and do the tasks inside. Andy will tell you where to start.</p>
+    <p class="lede" data-t="intro">A virus got into the spaceport computers overnight. Drag to turn the island and tap a building to see its tasks, and Andy will tell you where to start.</p>
   </header>
 
   <div class="stage" id="stage">
@@ -708,10 +707,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     <section class="card stack panel" id="panel" hidden aria-live="polite">
       <div class="row row--between">
-        <p class="eyebrow" id="panelTag"></p>
+        <h2 id="panelName"></h2>
         <button class="btn btn--ghost btn--sm" id="closePanel" data-t="close">Close</button>
       </div>
-      <h2 id="panelName"></h2>
       <p class="muted" id="panelWhat"></p>
       <div id="panelBody" class="stack"></div>
     </section>
@@ -782,13 +780,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
-      eyebrow: "Spaceport · Andy's island",
+      allActivities: "All activities",
       title1: "Help Andy take back", title2: "the spaceport",
-      intro: "A virus got into the spaceport computers overnight. Drag to turn the island, tap a building and do the tasks inside. Andy will tell you where to start.",
+      intro: "A virus got into the spaceport computers overnight. Drag to turn the island and tap a building to see its tasks, and Andy will tell you where to start.",
       hint: "Drag to turn · scroll to zoom · tap a building, Andy or the rocket",
       close: "Close", openAll: "Open everything", reset: "Start over",
       note: "Progress is saved only in this browser, on this device.",
-      openAllTip: "Unlocks all four buildings for a quick look, without playing them in order.",
+      openAllTip: "Opens all four buildings for a quick look, without playing them in order.",
       next: "Next", ok: "OK", skip: "Skip",
       sector: "Sector",
       states: { locked: "locked", open: "virus inside", clear: "clear" },
@@ -801,6 +799,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         D: ["Command centre", "The dish still turns, but it is listening to the virus. Whoever holds this room holds the launch."]
       },
       locked: function (p) { return "This door opens once sector " + p + " is clear."; },
+      stateLine: { open: "The virus is still in here.", clear: "The virus has left this building." },
       tasksTitle: "Tasks inside",
       tasksNote: "Each task opens on its own page. Finish all of them and the virus has to leave this building.",
       taskDone: "done", taskTodo: "to do", taskLocked: "locked",
@@ -812,10 +811,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       },
       noWebgl: "This browser can't draw the 3D island. All four buildings are in the list below, and everything works from there.",
       mini: {
-        lever: { tag: "Launch pad", name: "Engine test",
-                 what: "Andy tests the engines whenever someone pulls this lever. The rocket won't leave, it only hops. Pull the lever all the way down and hold it there.",
+        lever: { name: "Engine test",
+                 what: "Whenever someone pulls this lever, Andy tests the engines and the rocket hops on the pad without leaving. Pull it all the way down and hold it there.",
                  action: "Pull the lever down" },
-        wires: { tag: "Launch pad", name: "Pad lights",
+        wires: { name: "Pad lights",
                  what: "The lights around the launch pad came unplugged. Drag each wire to the socket with the same colour and shape.",
                  wire: "{c} wire", socket: "{c} socket", colours: ["Red", "Yellow", "Green", "Blue"],
                  wrong: "That socket is a different colour. Match the colour and the shape on the plug." }
@@ -836,7 +835,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         b3: [["andy", "happy", "You drew a rocket out of pixels? Can I keep it? It can go next to my bolts."]],
         B: [
           ["andy", "happy", "The colours are back! Now the text tower. Every message from the spaceport goes through it, and right now they all come out as gibberish."],
-          ["virus", "smug", "Gibberish is a language. Mine."]
+          ["virus", "smug", "Gibberish is a language, and it happens to be mine."]
         ],
         c1: [["andy", "happy", "Find and replace: a hundred fixes in one click. I wish my treads worked like that."]],
         c2: [["virus", "panic", "You cracked my cipher? It took me all week to make up!"]],
@@ -853,7 +852,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           ["andy", "happy", "The last door! I'm out! My treads are a bit stiff, but I'm out!"],
           ["virus", "panic", "Five doors! How did you remember all of that?"],
           ["andy", "happy", "Because you did every task yourself. Stand back, I'm starting the engines for real this time."],
-          ["virus", "panic", "I'll be back! On a floppy disk! Somewhere!"]
+          ["virus", "panic", "I'll be back, on some floppy disk somewhere!"]
         ]
       },
       openAllLine: ["andy", "happy", "Every door is open now. Go wherever you like, I'll catch up."],
@@ -862,7 +861,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       andyIdle: [
         ["andy", "happy", "Beep. Sorry, that one slipped out."],
         ["andy", "happy", "I found a bolt behind the archive. Don't tell the engineers."],
-        ["andy", "happy", "When this is over, I'm getting polished. Properly polished."],
+        ["andy", "happy", "When this is over, I'm getting a proper polish."],
         ["andy", "worried", "Did you know I can't climb stairs? That's why the whole spaceport is flat."],
         ["andy", "worried", "Careful with the orange ones. The more you tap them, the more they show off."]
       ],
@@ -872,19 +871,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       ],
       virusPop: [
         ["virus", "panic", "Hey! I was using that copy!"],
-        ["virus", "smug", "Pop all you like. I've got a backup. I think."],
+        ["virus", "smug", "Pop all you like. I'm fairly sure I made a backup."],
         ["virus", "panic", "Every time you do that, I lose a kilobyte of dignity."],
         ["virus", "panic", "Ow. That was my favourite one."]
       ]
     },
     es: {
-      eyebrow: "Puerto espacial · la isla de Andy",
+      allActivities: "Todas las actividades",
       title1: "Ayuda a Andy a recuperar", title2: "el puerto espacial",
-      intro: "Esta noche se ha colado un virus en los ordenadores del puerto espacial. Arrastra para girar la isla, toca un edificio y haz las tareas que hay dentro. Andy te dirá por dónde empezar.",
+      intro: "Esta noche se ha colado un virus en los ordenadores del puerto espacial. Arrastra para girar la isla y toca un edificio para ver sus tareas, y Andy te dirá por dónde empezar.",
       hint: "Arrastra para girar · rueda para acercar · toca un edificio, a Andy o el cohete",
       close: "Cerrar", openAll: "Abrir todo", reset: "Empezar de nuevo",
       note: "El progreso se guarda solo en este navegador y en este equipo.",
-      openAllTip: "Desbloquea los cuatro edificios para echar un vistazo rápido, sin jugarlos en orden.",
+      openAllTip: "Abre los cuatro edificios para echar un vistazo rápido, sin jugarlos en orden.",
       next: "Seguir", ok: "Vale", skip: "Saltar",
       sector: "Sector",
       states: { locked: "cerrado", open: "con virus", clear: "libre" },
@@ -897,6 +896,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         D: ["Centro de mando", "La antena sigue girando, pero escucha al virus. Quien tenga esta sala tiene el lanzamiento."]
       },
       locked: function (p) { return "Esta puerta se abre cuando el sector " + p + " esté libre."; },
+      stateLine: { open: "El virus sigue aquí dentro.", clear: "El virus ya se ha ido de este edificio." },
       tasksTitle: "Tareas de dentro",
       tasksNote: "Cada tarea se abre en su propia página. Termínalas todas y el virus tendrá que irse de este edificio.",
       taskDone: "hecha", taskTodo: "pendiente", taskLocked: "cerrada",
@@ -908,10 +908,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       },
       noWebgl: "Este navegador no puede dibujar la isla en 3D. Los cuatro edificios están en la lista de abajo, y todo funciona desde ahí.",
       mini: {
-        lever: { tag: "Plataforma de lanzamiento", name: "Prueba de motores",
-                 what: "Andy prueba los motores cada vez que alguien baja esta palanca. El cohete no se va a ir, solo da un saltito. Baja la palanca del todo y sujétala ahí.",
+        lever: { name: "Prueba de motores",
+                 what: "Cada vez que alguien baja esta palanca, Andy prueba los motores y el cohete da un saltito sin salir de la plataforma. Bájala del todo y sujétala ahí.",
                  action: "Baja la palanca" },
-        wires: { tag: "Plataforma de lanzamiento", name: "Luces de la plataforma",
+        wires: { name: "Luces de la plataforma",
                  what: "Las luces de la plataforma se han desenchufado. Arrastra cada cable al enchufe del mismo color y la misma forma.",
                  wire: "Cable {c}", socket: "Enchufe {c}", colours: ["rojo", "amarillo", "verde", "azul"],
                  wrong: "Ese enchufe es de otro color. Busca el mismo color y la misma forma que el cable." }
@@ -932,7 +932,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         b3: [["andy", "happy", "¿Has dibujado un cohete con píxeles? ¿Me lo puedo quedar? Lo pondré al lado de mis tornillos."]],
         B: [
           ["andy", "happy", "¡Han vuelto los colores! Ahora, la torre de texto. Todos los mensajes del puerto espacial pasan por ahí, y ahora mismo salen hechos un galimatías."],
-          ["virus", "smug", "El galimatías es un idioma. El mío."]
+          ["virus", "smug", "El galimatías es un idioma, y resulta que es el mío."]
         ],
         c1: [["andy", "happy", "Buscar y reemplazar: cien arreglos de un clic. Ojalá mis orugas funcionaran así."]],
         c2: [["virus", "panic", "¿Has descifrado mi código? ¡Me costó toda la semana inventarlo!"]],
@@ -949,7 +949,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           ["andy", "happy", "¡La última puerta! ¡Estoy fuera! Tengo las orugas un poco tiesas, pero ¡estoy fuera!"],
           ["virus", "panic", "¡Cinco puertas! ¿Cómo te has acordado de todo eso?"],
           ["andy", "happy", "Porque cada tarea la has hecho tú. Apártate, que esta vez arranco los motores de verdad."],
-          ["virus", "panic", "¡Volveré! ¡En un disquete! ¡En algún sitio!"]
+          ["virus", "panic", "¡Volveré, en algún disquete perdido!"]
         ]
       },
       openAllLine: ["andy", "happy", "Ya están todas las puertas abiertas. Ve a donde quieras, yo te alcanzo."],
@@ -958,7 +958,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       andyIdle: [
         ["andy", "happy", "Bip. Perdón, se me ha escapado."],
         ["andy", "happy", "He encontrado un tornillo detrás del archivo. No se lo digas a los ingenieros."],
-        ["andy", "happy", "Cuando terminemos, me van a sacar brillo. Pero brillo de verdad."],
+        ["andy", "happy", "Cuando terminemos, me van a sacar brillo de verdad."],
         ["andy", "worried", "¿Sabías que no puedo subir escaleras? Por eso todo el puerto espacial es plano."],
         ["andy", "worried", "Cuidado con los naranjas. Cuanto más los tocas, más presumen."]
       ],
@@ -968,7 +968,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       ],
       virusPop: [
         ["virus", "panic", "¡Eh! ¡Que esa copia la estaba usando!"],
-        ["virus", "smug", "Revienta las que quieras. Tengo una copia de seguridad. Creo."],
+        ["virus", "smug", "Revienta las que quieras. Estoy casi seguro de que hice una copia de seguridad."],
         ["virus", "panic", "Cada vez que haces eso pierdo un kilobyte de dignidad."],
         ["virus", "panic", "Ay. Esa era mi favorita."]
       ]
@@ -1161,7 +1161,6 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     if (open === "lever" || open === "wires") {
       var m = d.mini[open];
-      byId("panelTag").textContent = m.tag;
       byId("panelName").textContent = m.name;
       byId("panelWhat").textContent = m.what;
       /* Built once per opening, so a re-render does not throw away a lever
@@ -1178,14 +1177,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     body.dataset.mini = "";
     var id = open, st = state(id), now = progress();
-    byId("panelTag").textContent = d.sector + " " + id + " · " + d.states[st];
     byId("panelName").textContent = d.names[id][0];
     byId("panelWhat").textContent = d.names[id][1];
     body.innerHTML = "";
-    if (st === "locked") body.appendChild(el("p", "locknote", d.locked(ORDER[ORDER.indexOf(id) - 1])));
+    body.appendChild(el("p", "panel__state", st === "locked" ? d.locked(ORDER[ORDER.indexOf(id) - 1]) : d.stateLine[st]));
 
     var list = el("div", "tasks");
-    list.appendChild(el("p", "eyebrow", d.tasksTitle));
+    list.appendChild(el("h3", "tasks__title", d.tasksTitle));
     TASKS[id].forEach(function (k) {
       var isDone = !!now[k];
       var row = el(st === "locked" ? "div" : "a", "tasklink" + (isDone ? " is-done" : "") + (st === "locked" ? " is-locked" : ""));
