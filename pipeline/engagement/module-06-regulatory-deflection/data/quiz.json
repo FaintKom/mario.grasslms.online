@@ -1,31 +1,31 @@
 {
-  "_doc": "Module 6 quiz · 3 scenario items. Every item is open-job-aid: the learner sees the job aid while answering, because the assessment tests use of the aid, not recall (Rossett & Schafer, 2007).",
+  "_doc": "Module 6 quiz · 3 scenario items, each a different decision from the practice steps: a row that answers a question about ownership (q1), a product question that needs no row (q2) and a GDPR follow-up that goes past its row (q3). Every item is open-job-aid: the learner sees the job aid while answering, because the assessment tests use of the aid, not recall (Rossett & Schafer, 2007).",
   "items": [
     {
       "id": "q1",
       "lo": "LO-REG.1",
       "open_job_aid": true,
-      "stem": "Lukas opens the call with \"I don't trust new fintechs. What happens to my money if you go under?\" Which row do you start from?",
+      "stem": "Sven says the company belongs to three members of his family and asks how much work signup will be for them. What do you do?",
       "options": [
         {
-          "label": "The AML row, about transaction monitoring",
+          "label": "Read the AML row, because these checks are about financial crime",
           "correct": false,
-          "rationale": "The AML row covers checks on transactions. Lukas is asking what happens to his money."
+          "rationale": "The AML row is about checking payments once the account is open. The checks before an account opens are on the KYC row."
         },
         {
-          "label": "The safeguarding row, about customer money if we fail",
+          "label": "Book the compliance team, because ownership questions go to them",
+          "correct": false,
+          "rationale": "The KYC row sends ownership thresholds and lists of documents to compliance. Sven only asked how much work signup is, and the row's line answers that."
+        },
+        {
+          "label": "Read the KYC row",
           "correct": true,
-          "rationale": "The safeguarding line tells him that his money sits in a separate account at a tier-1 bank and is ring-fenced for customers if the company fails."
+          "rationale": "Checks at signup are what the KYC row covers. Its line already says that the owner needs about 10 minutes and that everyone with a large stake goes through the same check."
         },
         {
-          "label": "The PSD2 row, about the rules for payment services",
+          "label": "Tell him that only the person who signs the contract has to be checked",
           "correct": false,
-          "rationale": "The PSD2 line explains how you work alongside his bank. It says nothing about his money if you fail."
-        },
-        {
-          "label": "No row, because this is a product question",
-          "correct": false,
-          "rationale": "Lukas is asking whether his money is safe with a regulated company. That is a regulatory question, and the safeguarding row answers it."
+          "rationale": "That is a guess, and the job aid says the opposite: everyone with a large stake goes through the check."
         }
       ]
     },
@@ -36,24 +36,24 @@
       "stem": "Tom, the founder of a SaaS company, asks \"Does it tag software subscriptions and travel as separate expense categories?\" Which row do you use?",
       "options": [
         {
-          "label": "The GDPR row, because the question touches data",
+          "label": "The GDPR row, because expense records hold personal data",
           "correct": false,
-          "rationale": "GDPR covers personal data. Tom is asking about expense categories."
+          "rationale": "Expense records do hold personal data, but Tom is asking what the product does with categories, and the GDPR line says nothing about that."
         },
         {
-          "label": "The AML row, because it sounds like monitoring",
+          "label": "Book the compliance team, in case it touches accounting rules",
           "correct": false,
-          "rationale": "AML is about suspicious transactions. Tom is asking about bookkeeping."
+          "rationale": "Compliance can't tell him how the product tags spending. A regulatory answer to a product question sounds as though you are dodging it."
         },
         {
-          "label": "The PSD2 row, because these are EU payments",
+          "label": "The PSD2 row, because these are card payments",
           "correct": false,
-          "rationale": "PSD2 is about payments and banks and says nothing about expense categories."
+          "rationale": "The PSD2 line is about the licence you work under and says nothing about expense categories."
         },
         {
           "label": "No row, because this is a product question",
           "correct": true,
-          "rationale": "This is a product question. Reading a regulatory line in reply would sound as though you were dodging it."
+          "rationale": "Expense categories are a product feature. Answer it as you would any product question, or note it for the demo."
         }
       ]
     },
@@ -66,22 +66,22 @@
         {
           "label": "Message the compliance team and book a follow-up with the buyer",
           "correct": true,
-          "rationale": "Timelines for data requests and transfer rules for Switzerland are on the GDPR row's escalation list. Book the follow-up while you are still on the call."
+          "rationale": "Deadlines for data requests and transfers outside the UK and the EU are on the GDPR row's escalation list. Book the follow-up while you are still on the call."
         },
         {
-          "label": "Read the GDPR row, since it covers cross-border questions",
+          "label": "Read the GDPR row, since it covers where data goes",
           "correct": false,
-          "rationale": "The GDPR line says that data is stored in the EU and offers the data processing agreement, but it gives no timeline for a request from Switzerland."
+          "rationale": "The GDPR line says where data is stored and who it is shared with. It gives no deadline and no rule for Switzerland."
         },
         {
-          "label": "Say that Switzerland has an adequacy decision, so it's fine",
+          "label": "Say that Switzerland has an adequacy decision, so transfers are covered",
           "correct": false,
-          "rationale": "That is a guess on a legal point. If it's wrong, the buyer's lawyer will find it."
+          "rationale": "That is an answer on a legal point from memory. If any part of it is wrong, the buyer's lawyer will find it."
         },
         {
-          "label": "Say you'll send something later",
+          "label": "Say the deadline is one month, and check the transfer question after the call",
           "correct": false,
-          "rationale": "A promise without a date drifts until the buyer stops waiting. Book the follow-up while you are on the call."
+          "rationale": "The deadline depends on which law applies to the request, and that is the compliance team's call. Book them for both questions while you are on the call."
         }
       ]
     }

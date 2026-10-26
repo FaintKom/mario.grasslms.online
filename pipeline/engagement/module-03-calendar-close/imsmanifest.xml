@@ -20,7 +20,7 @@
             identifierref="FTC-SDR-M3-RES"
             isvisible="true">
         <title>Module 3: Calendar close</title>
-        <adlcp:masteryscore>67</adlcp:masteryscore>
+        <adlcp:masteryscore>80</adlcp:masteryscore>
         <adlcp:maxtimeallowed>00:10:00</adlcp:maxtimeallowed>
         <adlcp:timelimitaction>continue,no message</adlcp:timelimitaction>
       </item>

@@ -34,7 +34,7 @@
         "dm": 1,
         "intent": 4,
         "verdict": "skip",
-        "why": "The Series C makes Helio Rivers look like a hot lead. With 180 people and a CFO who buys through a committee it is outside SMB: size and decision-maker both score 1, and the total is 16. It goes to the mid-market team."
+        "why": "The Series C makes Helio Rivers look like a hot lead. With 180 people and a CFO who buys through a committee it is outside SMB: size and decision-maker both score 1, and the total is 16. You skip it in your own queue and reassign it to the mid-market team."
       }
     },
     {
@@ -45,6 +45,7 @@
       "industry": "Hospitality · 1 location (UK)",
       "fte": 14,
       "monthly_spend": 6000,
+      "currency": "GBP",
       "stage": "Founder · single location · 3-yr tenure",
       "registered_office": "OakRow Lane, Bath BA1 5PH",
       "last_touch_at": {
@@ -70,7 +71,7 @@
         "dm": 5,
         "intent": 2,
         "verdict": "skip",
-        "why": "Food service with one site scores 4 on industry, and you would be talking to the founder. But €6K a month is below the €10K floor, and the only signal is a routine filing. The total is 16, so you skip it."
+        "why": "Food service with one site scores 4 on industry, and you would be talking to the founder. But £6K a month, about €7K, is below the €10K floor, and the only signal is a routine filing. The total is 16, so you skip it."
       }
     },
     {
@@ -81,6 +82,7 @@
       "industry": "Wholesale food distribution · 1 site",
       "fte": 38,
       "monthly_spend": 22000,
+      "currency": "GBP",
       "stage": "Owner-operator · single warehouse",
       "registered_office": "Pine Mills Yard, Bristol BS3 4QF",
       "last_touch_at": {
@@ -106,7 +108,7 @@
         "dm": 5,
         "intent": 1,
         "verdict": "week",
-        "why": "Wholesale with one site, 38 people, €22K a month and the owner on the phone add up to 19. Flat accounts and no visible pain make intent the weak spot, and the lead goes on this week's list."
+        "why": "Wholesale with one site, 38 people, £22K a month (about €26K) and the owner on the phone add up to 19. Flat accounts and no visible pain make intent the weak spot, and the lead goes on this week's list."
       }
     }
   ]

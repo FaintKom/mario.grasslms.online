@@ -93,24 +93,24 @@ registerApp({
               ${escapeHtml(p.company)} · LinkedIn
             </h3>
             <div class="meta">${escapeHtml(p.industry)} · ${p.fte} FTE · ${escapeHtml(p.stage ?? "—")}</div>
-            ${liSignals.map(renderSignal).join("") || "<p class='empty'>No recent posts.</p>"}
+            ${liSignals.map(s => renderSignal(s)).join("") || "<p class='empty'>No recent posts.</p>"}
           </section>
-          <section class="lch-panel ch" aria-label="Companies House filings">
+          <section class="lch-panel ch" aria-label="${escapeHtml(p.registry ?? "Companies House")} filings">
             <h3>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6a9 9 0 0 1-8 9 9 9 0 0 1-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
-              ${escapeHtml(p.company)} · Companies House
+              ${escapeHtml(p.company)} · ${escapeHtml(p.registry ?? "Companies House")}
             </h3>
             <div class="meta">Reg. office: ${escapeHtml(p.registered_office ?? "—")}</div>
-            ${chSignals.map(renderSignal).join("") || "<p class='empty'>No recent filings.</p>"}
+            ${chSignals.map(s => renderSignal(s, p.registry ?? "Companies House")).join("") || "<p class='empty'>No recent filings.</p>"}
           </section>
         </div>
       `;
     }
 
-    function renderSignal(s) {
+    function renderSignal(s, label = s.source) {
       return `
         <span class="signal" data-signal-type="${escapeHtml(s.type ?? "")}" data-source="${escapeHtml(s.source ?? "")}">
-          <span class="src">${escapeHtml(s.source)}</span><br>
+          <span class="src">${escapeHtml(label)}</span><br>
           ${escapeHtml(s.content)}
         </span>
       `;

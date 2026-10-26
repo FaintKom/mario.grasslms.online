@@ -17,7 +17,7 @@
       <title>FinTechCard SDR onboarding</title>
       <item identifier="FTC-SDR-M6-ITEM" identifierref="FTC-SDR-M6-RES" isvisible="true">
         <title>Module 6: Regulatory questions</title>
-        <adlcp:masteryscore>67</adlcp:masteryscore>
+        <adlcp:masteryscore>80</adlcp:masteryscore>
         <adlcp:maxtimeallowed>00:10:30</adlcp:maxtimeallowed>
         <adlcp:timelimitaction>continue,no message</adlcp:timelimitaction>
         <adlcp:datafromlms></adlcp:datafromlms>

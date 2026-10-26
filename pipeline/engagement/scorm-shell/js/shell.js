@@ -549,8 +549,8 @@ export class MiniOS {
  * @param {BootConfig} config
  * @returns {BootApi}
  */
-/** Quiz score (percent) a module needs to report "passed". */
-export const PASS_PCT = 67;
+/** Quiz score (percent) a module needs to report "passed"; matches masteryscore in every imsmanifest.xml. */
+export const PASS_PCT = 80;
 
 export function bootModule(config) {
   if (!config?.moduleId) throw new Error("bootModule: moduleId required");
@@ -573,7 +573,7 @@ export function bootModule(config) {
     complete(score) {
       const valid = typeof score === "number" && Number.isFinite(score);
       eventLog.record(EVENT.MODULE_COMPLETED, { score: valid ? score : null });
-      // SCORM 1.2: report passed/failed against the 67% bar when there is a score.
+      // SCORM 1.2: report passed/failed against the manifest mastery score when there is a score.
       scorm.setStatus(valid ? (score >= PASS_PCT ? "passed" : "failed") : "completed");
       if (valid) scorm.setScore(score);
       scorm.commit();

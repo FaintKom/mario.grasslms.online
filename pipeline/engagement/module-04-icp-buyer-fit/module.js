@@ -12,7 +12,7 @@
  * (total within 2 points, same verdict).
  */
 
-import { bootModule } from "../scorm-shell/js/shell.js";
+import { bootModule, PASS_PCT } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
@@ -40,8 +40,8 @@ const RUBRIC = [
     2: ["5-9 FTE", "an 8-person café"],
     1: ["Under 5, or 180+ (pass to the mid-market team)", "a 180-person Series-C company"] } },
   { k: "spend", label: "Monthly card spend", levels: {
-    5: ["€30K or more a month", "Lukas €31K, Emma £42K"],
-    4: ["€18K-29K", "Tom €18K, Sven €27K, Maria £25K"],
+    5: ["€35K or more a month", "Emma £42K, about €49K"],
+    4: ["€18K-34K", "Tom €18K, Sven €27K, Lukas €31K, Maria £25K (about €29K)"],
     3: ["€10K-17K", "€12K a month"],
     2: ["€5K-9K: below the €10K floor", "€6K a month"],
     1: ["Under €5K", "€3K a month"] } },
@@ -64,7 +64,7 @@ const verdictFor = total => (total >= 22 ? "today" : total >= 18 ? "week" : "ski
 /** Reference score for Emma, the real buyer in the solo set. */
 const EMMA_REFERENCE = {
   industry: 5, fte: 5, spend: 5, dm: 4, intent: 5, verdict: "today",
-  why: "Manufacturing with 3 sites, 78 people, £42K a month, an ops head who reports to the MD and a reply asking to talk today add up to 24. She gets a call today.",
+  why: "Manufacturing with 3 sites, 78 people, £42K a month (about €49K), an ops head who reports to the MD and a reply asking to talk today add up to 24. She gets a call today.",
 };
 
 const state = {
@@ -242,7 +242,12 @@ function bar(host, attr, text, button) {
   host.appendChild(el);
   return el;
 }
-const money = (lead) => `${lead.currency === "GBP" ? "£" : "€"}${Math.round((lead.monthly_spend ?? 0) / 1000)}K`;
+/** The scale is in euros; a UK lead's pounds are shown with the euro figure the rep scores. */
+const GBP_EUR = 1.17;
+const money = (lead) => {
+  const k = Math.round((lead.monthly_spend ?? 0) / 1000);
+  return lead.currency === "GBP" ? `£${k}K (€${Math.round(k * GBP_EUR)}K)` : `€${k}K`;
+};
 
 // --- Steps 1-3 -------------------------------------------------------------
 
@@ -673,7 +678,7 @@ function showSummaryCard(pct) {
   keepOnly([]);
   const overlay = document.getElementById("narrative-overlay");
   if (overlay) overlay.style.visibility = "hidden";
-  const passed = pct >= 67;
+  const passed = pct >= PASS_PCT;
   const right = state.solo.filter(r => r?.ok).length;
   const card = document.createElement("div");
   card.className = "summary-card";
@@ -683,7 +688,7 @@ function showSummaryCard(pct) {
       <div class="summary-card__check${passed ? "" : " is-retry"}" aria-hidden="true">${passed ? "✓" : "↻"}</div>
       <h2 class="summary-card__title">ICP buyer fit, ${passed ? "passed" : "not passed yet"}</h2>
       <div class="summary-card__stats">
-        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}%, ${passed ? "above the 67% pass mark" : "below the 67% pass mark"}</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}%, ${passed ? `above the ${PASS_PCT}% pass mark` : `below the ${PASS_PCT}% pass mark`}</span></div>
         <div class="summary-card__stat"><span class="summary-card__stat-k">Leads scored</span><span class="summary-card__stat-v">${right}/3</span><span class="summary-card__stat-sub">matched J.T.'s scores</span></div>
         <div class="summary-card__stat"><span class="summary-card__stat-k">Time</span><span class="summary-card__stat-v">${timestamp()}</span><span class="summary-card__stat-sub">the module is planned for ten minutes</span></div>
       </div>

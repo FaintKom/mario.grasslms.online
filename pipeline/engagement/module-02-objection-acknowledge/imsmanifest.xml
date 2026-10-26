@@ -18,7 +18,7 @@
       <title>FinTechCard SDR onboarding</title>
       <item identifier="ITEM-M2" identifierref="RES-M2" isvisible="true">
         <title>Module 2: Acknowledging objections</title>
-        <adlcp:masteryscore>67</adlcp:masteryscore>
+        <adlcp:masteryscore>80</adlcp:masteryscore>
         <adlcp:maxtimeallowed>00:10:00</adlcp:maxtimeallowed>
         <adlcp:timelimitaction>continue,no message</adlcp:timelimitaction>
         <adlcp:datafromlms></adlcp:datafromlms>

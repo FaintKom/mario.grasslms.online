@@ -5,39 +5,39 @@
   "rows": [
     {
       "acronym": "KYC",
-      "what_it_means": "Know Your Customer, the identity checks at signup",
-      "rep_response_verbatim": "We run KYC at signup, and it takes the owner about 10 minutes. The process is smoother than your bank's.",
+      "what_it_means": "Know Your Customer, the checks we run before we open an account",
+      "rep_response_verbatim": "We check who owns and runs the business before the account opens. It takes the owner about 10 minutes online, and anyone else with a large stake in the company goes through the same check.",
       "escalation_criteria": "Escalate if the buyer asks about the list of accepted documents, beneficial-ownership thresholds, KYC rules in a particular country or how we handle politically exposed persons (PEPs)."
     },
     {
       "acronym": "AML",
-      "what_it_means": "Anti-Money Laundering, the monitoring of transactions",
-      "rep_response_verbatim": "Every transaction is monitored. You will not see this as a customer unless something gets flagged, which is rare and we walk you through it.",
-      "escalation_criteria": "Escalate if the buyer asks about our transaction-monitoring rules, how many suspicious activity reports we file, false-positive rates or how a flag would show up in their accounting."
+      "what_it_means": "Anti-Money Laundering, the ongoing checks on payments for financial crime",
+      "rep_response_verbatim": "Like every regulated payments company, we monitor card payments for financial crime. Now and then we ask a customer for an invoice or other details about a payment, and that is a routine part of it.",
+      "escalation_criteria": "Escalate if the buyer asks about our monitoring rules, suspicious activity reports, what happens when a payment is flagged, or whether any customer or payment is under review. Never say whether a review or a report exists."
     },
     {
       "acronym": "SCA",
-      "what_it_means": "Strong Customer Authentication, the approval of payments with two factors",
-      "rep_response_verbatim": "Card payments in the EU need Strong Customer Authentication unless an exemption applies. Your cardholder approves with a push on their phone, and it takes a couple of seconds. Which payments count as exempt is a question for our compliance team.",
-      "escalation_criteria": "Escalate if the buyer asks about SCA delegation, how exemptions are decided (low-value, trusted-beneficiary or transaction-risk) or merchant-side SCA flows in a particular country."
+      "what_it_means": "Strong Customer Authentication, approving a payment with two factors",
+      "rep_response_verbatim": "In the UK and the EU, card payments need Strong Customer Authentication unless an exemption applies. For an online payment your cardholder approves with a push on their phone, which takes a couple of seconds. Which payments are exempt is a question for our compliance team.",
+      "escalation_criteria": "Escalate if the buyer asks about SCA delegation, which payments are exempt (low-value, recurring, trusted-beneficiary or corporate payments) or how SCA works with a particular merchant."
     },
     {
       "acronym": "PSD2",
-      "what_it_means": "Payment Services Directive, the EU rules for payment services and open banking",
-      "rep_response_verbatim": "We work under PSD2, the EU rules for payment services. Among other things, it's what lets a licensed provider like us work alongside your existing bank instead of replacing it. Anything more specific, I'll bring in our compliance team.",
-      "escalation_criteria": "Escalate on any PSD2 follow-up question, such as open-banking consent, third-party provider (TPP) registration, AISP or PISP licensing, the RTS on SCA or cross-border passporting. Sales only uses the PSD2 line as a reference."
+      "what_it_means": "Payment Services Directive, the rules for payment services that the EU set and the UK kept in its own regulations",
+      "rep_response_verbatim": "We're authorised to issue e-money and cards, under PSD2 and the e-money rules in the EU and under the Payment Services and E-Money Regulations in the UK. That's what lets us run your cards alongside your bank account instead of replacing it. Anything more specific, I'll bring in our compliance team.",
+      "escalation_criteria": "Escalate on any PSD2 follow-up question, such as which of our companies holds the licence, which regulator supervises it, open-banking consent, passporting or how the UK rules differ from the EU's."
     },
     {
       "acronym": "GDPR",
-      "what_it_means": "EU data protection, covering where your data is stored and what we do with it",
-      "rep_response_verbatim": "Your card data is stored in the EU. We don't sell it, and we only share it with the payment partners needed to process your transactions, as our DPA sets out. Happy to send the DPA over.",
-      "escalation_criteria": "Escalate if the buyer asks about transfers outside the EU (SCCs, or adequacy for Switzerland, the UK or the US), our sub-processors, deadlines for data requests from former employees or audit clauses in the DPA."
+      "what_it_means": "data protection law, UK GDPR or EU GDPR, covering where your data is stored and how we use it",
+      "rep_response_verbatim": "Your card data is stored in the EU, and we don't sell it. We share it only where running the service or the law requires it, for example with the card network, the providers who help us run the service and regulators. Our privacy notice and DPA list who they are, and I'm happy to send the DPA over.",
+      "escalation_criteria": "Escalate if the buyer asks about transfers outside the UK and the EU (SCCs, or adequacy for Switzerland or the US), our sub-processors, deadlines for data requests from staff or former staff, or audit clauses in the DPA."
     },
     {
       "acronym": "Safeguarding",
-      "what_it_means": "the protection of customer money if we fail",
-      "rep_response_verbatim": "Your money sits in a separate safeguarded account at a tier-1 bank, apart from our own funds. If we ever failed, it's ring-fenced for customers and can't be used to pay our creditors.",
-      "escalation_criteria": "Escalate if the buyer asks which bank holds the funds, how long a return would take, how insolvency would work or how safeguarding compares with deposit insurance."
+      "what_it_means": "how customer money is protected if we fail",
+      "rep_response_verbatim": "The money you put on your cards is safeguarded, which means we keep it apart from our own funds in a separate account at a bank. If we ever failed, customers would be paid back from that account before our other creditors. It isn't a bank deposit, so deposit insurance doesn't cover it.",
+      "escalation_criteria": "Escalate if the buyer asks which bank holds the funds, how long paying customers back would take or how an insolvency would be run."
     }
   ],
   "honest_carve_out": {

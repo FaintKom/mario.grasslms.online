@@ -12,7 +12,7 @@
  * is built from what the learner typed and did.
  */
 
-import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
+import { bootModule, eventBus, PASS_PCT } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
@@ -240,7 +240,8 @@ function stems(text) {
     .filter(w => w.length >= 3 && !STOP.has(w))
     .map(w => w.replace(/(ings|ing|ed|es|s)$/, "") || w);
 }
-const REBUTTAL = /\b(but|however|actually|although|unlike|we're not|we are not|regulated|insured|safer|guarantee|our|we have|we've got)\b/i;
+/** Words that argue back. A bare "our" is not one ("so our call is about…"); "our" plus what we sell is. */
+const REBUTTAL = /\b(but|however|actually|although|unlike|we're not|we are not|regulated|insured|safer|guarantee|our (cards?|platform|product|tool|fees|uptime|bank|partner|licen[cs]e)|we have|we've got)\b/i;
 
 function checkRestate(text, objection) {
   const objStems = new Set(stems(objection));
@@ -871,7 +872,7 @@ function showSummaryCard(pct) {
   keepOnly([]);
   const overlay = document.getElementById("narrative-overlay");
   if (overlay) overlay.style.visibility = "hidden";
-  const passed = pct >= 67;
+  const passed = pct >= PASS_PCT;
   const doneCount = Object.keys(state.stepTs).length;
   const card = document.createElement("div");
   card.className = "summary-card";
@@ -886,7 +887,7 @@ function showSummaryCard(pct) {
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Quiz</span>
           <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
-          <span class="summary-card__stat-sub">${pct}%, ${passed ? "above the 67% pass mark" : "below the 67% pass mark"}</span>
+          <span class="summary-card__stat-sub">${pct}%, ${passed ? `above the ${PASS_PCT}% pass mark` : `below the ${PASS_PCT}% pass mark`}</span>
         </div>
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Time</span>

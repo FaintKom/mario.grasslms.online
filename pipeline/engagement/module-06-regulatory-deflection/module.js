@@ -11,8 +11,6 @@
  * Data: reg-job-aid.json (rows), Lukas from scorm-shell/data/sample-profiles.json,
  * prospects.json ({prospects:[Priya]}, Lukas's opening line),
  * transcripts.json ({transcripts:[good KYC call, PSD2 guess]}), quiz.json.
- * Learner-facing copy for the quiz is overridden below (QUIZ_COPY) so no
- * internal references from the data files reach the screen.
  */
 
 import { bootModule, PASS_PCT } from "../scorm-shell/js/shell.js";
@@ -45,7 +43,7 @@ async function loadAllData() {
   if (!lukas) throw new Error("buyer profiles missing");
   state.trigger = p?.lukas_trigger_line ?? "";
   state.prospects = [{ id: "lukas", display_name: lukas.name, company: lukas.company }, ...(p?.prospects ?? [])];
-  state.quizItems = normalizeQuiz(q).map(applyQuizCopy);
+  state.quizItems = normalizeQuiz(q);
   state.aid = a?.rows ?? [];
   const priya = state.prospects.find(x => x.id === "priya");
   state.leads = (Array.isArray(leads) ? leads : []).slice();
@@ -343,7 +341,7 @@ function stepGainAttention(body) {
           { text: "\"Don't worry. Your money is insured like a bank deposit, up to €100,000 I think.\"", correct: false,
             why: "This is a guess. If Lukas checks the number and finds it wrong, he stops believing the rest of what you say." },
           { text: `"${say("Safeguarding")}"`, correct: true,
-            why: "This answer is read word for word from the safeguarding row of the job aid. If Lukas then asks which bank holds the money or how long a return takes, that goes past the row and you book the compliance team." },
+            why: "This answer is read word for word from the safeguarding row of the job aid. If Lukas then asks which bank holds the money or how long it would take to get it back, that goes past the row and you book the compliance team." },
         ],
         onCorrect: () => {
           markTaskBannerDone("m6-s1-pick");
@@ -705,46 +703,6 @@ function stepFeedback(body) {
 }
 
 // --- Step 8 · quiz ---------------------------------------------------------------
-
-/** Plain-language copy for each quiz item, matched by id and option order. */
-const QUIZ_COPY = {
-  q1: {
-    stem: "Lukas opens the call with \"I don't trust new fintechs. What happens to my money if you go under?\" Which row do you start from?",
-    options: [
-      ["The AML row, about transaction monitoring", "The AML row covers checks on transactions. Lukas is asking what happens to his money."],
-      ["The safeguarding row, about customer money if we fail", "The safeguarding line tells him that his money sits in a separate account at a tier-1 bank and is ring-fenced for customers if the company fails."],
-      ["The PSD2 row, about the rules for payment services", "The PSD2 line explains how you work alongside his bank. It says nothing about his money if you fail."],
-      ["No row, because this is a product question", "Lukas is asking whether his money is safe with a regulated company. That is a regulatory question, and the safeguarding row answers it."],
-    ],
-  },
-  q2: {
-    stem: "Tom, the founder of a SaaS company, asks \"Does it tag software subscriptions and travel as separate expense categories?\" Which row do you use?",
-    options: [
-      ["The GDPR row, because the question touches data", "GDPR covers personal data. Tom is asking about expense categories."],
-      ["The AML row, because it sounds like monitoring", "AML is about suspicious transactions. Tom is asking about bookkeeping."],
-      ["The PSD2 row, because these are EU payments", "PSD2 is about payments and banks and says nothing about expense categories."],
-      ["No row, because this is a product question", "This is a product question. Reading a regulatory line in reply would sound as though you were dodging it."],
-    ],
-  },
-  q3: {
-    stem: "A buyer follows up on GDPR and asks how fast you answer a data request from a Swiss former employee who wants their full card history, and which transfer mechanism covers Switzerland. What do you do?",
-    options: [
-      ["Message the compliance team and book a follow-up with the buyer", "Timelines for data requests and transfer rules for Switzerland are on the GDPR row's escalation list. Book the follow-up while you are still on the call."],
-      ["Read the GDPR row, since it covers cross-border questions", "The GDPR line says that data is stored in the EU and offers the data processing agreement, but it gives no timeline for a request from Switzerland."],
-      ["Say that Switzerland has an adequacy decision, so it's fine", "That is a guess on a legal point. If it's wrong, the buyer's lawyer will find it."],
-      ["Say you'll send something later", "A promise without a date drifts until the buyer stops waiting. Book the follow-up while you are on the call."],
-    ],
-  },
-};
-function applyQuizCopy(item) {
-  const c = QUIZ_COPY[item.id];
-  if (!c) return item;
-  return {
-    ...item,
-    stem: c.stem,
-    options: item.options.map((o, i) => c.options[i] ? { ...o, text: c.options[i][0], rationale: c.options[i][1] } : o),
-  };
-}
 
 function stepQuiz(body) {
   state.quizIndex = 0; state.quizScore = 0;

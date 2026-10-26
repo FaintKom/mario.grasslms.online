@@ -19,7 +19,7 @@
  * event names). Data strings go through clean() before they are rendered.
  */
 
-import { bootModule } from "../scorm-shell/js/shell.js";
+import { bootModule, PASS_PCT } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, findProfile } from "../scorm-shell/js/apps/profiles.js";
@@ -901,10 +901,10 @@ function showSummaryCard(pct) {
   card.setAttribute("role", "dialog"); card.setAttribute("aria-modal", "true"); card.setAttribute("aria-labelledby", "summary-title");
   card.innerHTML = `
     <div class="summary-card__panel">
-      <div class="summary-card__check${pct >= 67 ? "" : " is-retry"}" aria-hidden="true">${pct >= 67 ? "✓" : "↻"}</div>
-      <h2 class="summary-card__title" id="summary-title">Matching pains to products, ${pct >= 67 ? "passed" : "not passed yet"}</h2>
+      <div class="summary-card__check${pct >= PASS_PCT ? "" : " is-retry"}" aria-hidden="true">${pct >= PASS_PCT ? "✓" : "↻"}</div>
+      <h2 class="summary-card__title" id="summary-title">Matching pains to products, ${pct >= PASS_PCT ? "passed" : "not passed yet"}</h2>
       <div class="summary-card__stats">
-        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}%, ${pct >= 67 ? "above the 67% pass mark" : "below the 67% pass mark"}</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}%, ${pct >= PASS_PCT ? `above the ${PASS_PCT}% pass mark` : `below the ${PASS_PCT}% pass mark`}</span></div>
         <div class="summary-card__stat"><span class="summary-card__stat-k">On your own</span><span class="summary-card__stat-v">${right}/${state.solo.length || SOLO.length}</span><span class="summary-card__stat-sub">pains matched without hints</span></div>
         <div class="summary-card__stat"><span class="summary-card__stat-k">Time</span><span class="summary-card__stat-v">${timestamp()}</span><span class="summary-card__stat-sub">the module is planned for ten minutes</span></div>
       </div>

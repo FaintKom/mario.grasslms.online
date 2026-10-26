@@ -32,7 +32,7 @@
     "stem": "Which of these signals scores 5 on intent?",
     "options": [
       {
-        "text": "Companies House shows a second site, filed in {{month:maria_store}}",
+        "text": "The owner announced a second store, opened in {{month:maria_store}}",
         "correct": false,
         "rationale": "A dated growth event in the last six months scores 4. It is a good reason to call, but the buyer hasn't asked for one."
       },
@@ -56,7 +56,7 @@
   {
     "id": "Q-M4-3",
     "lo": "LO-M4.2",
-    "stem": "Pine Mills distributes food wholesale from one warehouse with 38 people and spends about €22K a month on cards. The owner signs off spending, but the accounts are flat and he posts that 'Sage gets me through.' What do you do with this lead?",
+    "stem": "Pine Mills distributes food wholesale from one warehouse with 38 people and spends about £22K a month on cards, around €26K. The owner signs off spending, but the accounts are flat and he posts that 'Sage gets me through.' What do you do with this lead?",
     "options": [
       {
         "text": "Dial today, because the owner is on the phone and the spend is good",
@@ -66,7 +66,7 @@
       {
         "text": "Dial this week, because the total is 19 and intent is the weak spot",
         "correct": true,
-        "rationale": "Wholesale with one site scores 4, 38 people 5, €22K a month 4, the owner 5 and intent 1. That makes 19 and puts the lead on this week's list."
+        "rationale": "Wholesale with one site scores 4, 38 people 5, £22K a month 4, the owner 5 and intent 1. That makes 19 and puts the lead on this week's list."
       },
       {
         "text": "Skip it, because wholesale isn't one of our segments",
@@ -76,7 +76,7 @@
       {
         "text": "Skip it, because it is below the card-spend floor",
         "correct": false,
-        "rationale": "The floor is €10K a month. €22K is well above it and scores 4."
+        "rationale": "The floor is €10K a month. £22K is about €26K, well above it, and scores 4."
       }
     ]
   },

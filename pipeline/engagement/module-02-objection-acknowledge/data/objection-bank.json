@@ -22,7 +22,7 @@
     "prospect_name": "Tom",
     "buyer_verbatim": "We already use Brex — why would we switch?",
     "ideal_phrases": [
-      "So you already use Brex, and the card side is fine.",
+      "So you already use Brex and don't see a reason to switch.",
       "So you already use Brex — how does FX show up on your bill?"
     ],
     "anti_patterns": [
@@ -54,8 +54,8 @@
     "prospect_name": "Lukas",
     "buyer_verbatim": "I don't trust new fintechs with my money. We had a payroll thing go sideways with one of those startups last year.",
     "ideal_phrases": [
-      "A payroll thing going sideways last year is exactly why you're cautious with your money.",
-      "You got burned by a fintech startup last year, so trust is the real question."
+      "So after the payroll thing went sideways last year, you don't trust new fintechs with your money.",
+      "A startup let you down on payroll last year, and you don't want that happening with your money."
     ],
     "anti_patterns": [
       "We're not like those other fintechs — our uptime is 99.99%.",

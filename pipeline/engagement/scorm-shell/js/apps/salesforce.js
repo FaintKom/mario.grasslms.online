@@ -28,8 +28,8 @@ const TABS = [
 const DEFAULT_RECORD = {
   AccountName: "Two Pines Apparel",
   OpportunityName: "Two Pines Apparel · Card + Spend Mgmt",
-  Stage: "Discovery",
-  Amount: "£42,000 ARR",
+  Stage: "Demo",
+  Amount: "£7,500 ARR",
   CloseDate: resolveDates({ inDays: 35 }),   // Maria, as in sample-profiles.json
   Owner: "You",
   NextStep: "Pricing for per-store cards + receipt capture, after the demo",
@@ -90,7 +90,7 @@ registerApp({
         ...DEFAULT_RECORD,
         AccountName: p.company,
         OpportunityName: `${p.company} · Card + Spend Mgmt`,
-        Amount: crm.amount ?? DEFAULT_RECORD.Amount,
+        Amount: crm.amount ?? "—",
         CloseDate: crm.close_date ?? DEFAULT_RECORD.CloseDate,
         NextStep: crm.next_step ?? "",
         Industry: crm.industry ?? p.industry ?? "—",

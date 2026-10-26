@@ -18,7 +18,7 @@
       <title>FinTechCard SDR onboarding</title>
       <item identifier="ITEM-M5" identifierref="RES-M5" isvisible="true">
         <title>Module 5: Matching pains to products</title>
-        <adlcp:masteryscore>67</adlcp:masteryscore>
+        <adlcp:masteryscore>80</adlcp:masteryscore>
         <adlcp:maxtimeallowed>00:10:00</adlcp:maxtimeallowed>
         <adlcp:timelimitaction>continue,no message</adlcp:timelimitaction>
         <adlcp:datafromlms></adlcp:datafromlms>

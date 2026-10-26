@@ -11,7 +11,7 @@
  * feedback in step 7 is built from what the learner actually did.
  */
 
-import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
+import { bootModule, eventBus, PASS_PCT } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
@@ -323,8 +323,8 @@ function stepStateOutcome(body) {
           sig.classList.add("is-wrong");
           fb.dataset.tone = "warn";
           fb.textContent = type === "hiring"
-            ? "The bookkeeper job hints at the pain, but you'd be guessing at the reason. The Companies House filing gives you a dated fact instead."
-            : "The shopfront photo tells you something about Maria but gives you no reason to call. Look for the filing that changed how her spending works.";
+            ? "The bookkeeper job hints at the pain, but you'd be guessing at the reason. The second store gives you a dated fact instead."
+            : "A confirmation statement with no changes is a routine yearly filing and tells you nothing new. Look for the news that changed how her spending works.";
         }
       };
       sig.addEventListener("click", pick);
@@ -373,7 +373,7 @@ function stepWorkedExample(body) {
   body.innerHTML = `
     <p style="font-size:14px;">
       On Gong call GC-01 <strong>M.G.</strong> opens <strong>Maria</strong>'s call with
-      a question about her Companies House filing. Then he waits five seconds for her answer.
+      a question about her second store. Then he waits five seconds for her answer.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
       When you have read it, click the <strong>[M1]</strong> chip next to his question.
@@ -396,7 +396,7 @@ function stepWorkedExample(body) {
       state.api.eventLog?.record?.(EVENT.WORKED_EXAMPLE_COMPLETED);
       completeStep(3);
     };
-    bar(gong, "data-m1-s4-done", "M.G. asks a single question about the filing and stays silent for five seconds until Maria starts talking.", "✓ Watched it")
+    bar(gong, "data-m1-s4-done", "M.G. asks a single question about the new store and stays silent for five seconds until Maria starts talking.", "✓ Watched it")
       .querySelector("button").addEventListener("click", complete);
     if (!gong.dataset.m1ChipBound) {
       gong.dataset.m1ChipBound = "true";
@@ -672,8 +672,8 @@ function feedbackMessages() {
     ? "✅ You read M.G.'s opening on GC-01 and found the moment he asks his question."
     : "⚠️ You skipped M.G.'s call. GC-01 is worth two minutes before your next dial."));
   msgs.push(jt(state.signal.ok
-    ? `✅ You picked the Companies House filing as Maria's signal${state.signal.tries === 1 ? " on the first try" : ` after ${state.signal.tries} tries`}.`
-    : "⚠️ You didn't pick a signal for Maria. Next time look for the dated fact in her filing and build the question on it."));
+    ? `✅ You picked the second store as Maria's signal${state.signal.tries === 1 ? " on the first try" : ` after ${state.signal.tries} tries`}.`
+    : "⚠️ You didn't pick a signal for Maria. Next time look for the dated fact in her profile and build the question on it."));
   msgs.push(jt(state.tom.ok
     ? (state.tom.tries === 1 ? "✅ You chose the Series B question for Tom on the first try." : `⚠️ Tom took you ${state.tom.tries} tries. Name the signal first, then ask who controls the spending.`)
     : "⚠️ You didn't choose an opening question for Tom."));
@@ -847,7 +847,7 @@ function showSummaryCard(pct) {
   keepOnly([]);
   const overlay = document.getElementById("narrative-overlay");
   if (overlay) overlay.style.visibility = "hidden";
-  const passed = pct >= 67;
+  const passed = pct >= PASS_PCT;
   const doneCount = Object.keys(state.stepTs).length;
   const card = document.createElement("div");
   card.className = "summary-card";
@@ -862,7 +862,7 @@ function showSummaryCard(pct) {
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Quiz</span>
           <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
-          <span class="summary-card__stat-sub">${pct}%, ${passed ? "above the 67% pass mark" : "below the 67% pass mark"}</span>
+          <span class="summary-card__stat-sub">${pct}%, ${passed ? `above the ${PASS_PCT}% pass mark` : `below the ${PASS_PCT}% pass mark`}</span>
         </div>
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Time</span>

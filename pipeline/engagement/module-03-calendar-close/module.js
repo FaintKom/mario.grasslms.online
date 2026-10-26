@@ -15,7 +15,7 @@
  * feedback in step 7 is built from what actually happened, in what order.
  */
 
-import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
+import { bootModule, eventBus, PASS_PCT } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
@@ -800,7 +800,7 @@ function showSummaryCard(pct) {
   keepOnly([]);
   const overlay = document.getElementById("narrative-overlay");
   if (overlay) overlay.style.visibility = "hidden";
-  const passed = pct >= 67;
+  const passed = pct >= PASS_PCT;
   const doneCount = Object.keys(state.stepTs).length;
   const card = document.createElement("div");
   card.className = "summary-card";
@@ -815,7 +815,7 @@ function showSummaryCard(pct) {
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Quiz</span>
           <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
-          <span class="summary-card__stat-sub">${pct}%, ${passed ? "above the 67% pass mark" : "below the 67% pass mark"}</span>
+          <span class="summary-card__stat-sub">${pct}%, ${passed ? `above the ${PASS_PCT}% pass mark` : `below the ${PASS_PCT}% pass mark`}</span>
         </div>
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Time</span>

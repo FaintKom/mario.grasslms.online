@@ -3,7 +3,7 @@
     "id": "M1-Q1",
     "lo_id": "LO-M1.1",
     "bloom": "Analyse",
-    "stem": "You're about to dial Maria, who owns a two-store retail business. Companies House shows she opened the second store in {{month:maria_store}}. Which opener works as an M1 diagnostic?",
+    "stem": "You're about to dial Maria, who owns a two-store retail business. Her LinkedIn shows she opened the second store in {{month:maria_store}}. Which opener works as an M1 diagnostic?",
     "choices": [
       {
         "id": "A",

@@ -28,11 +28,11 @@ const SHORT = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5 };
 
 /** Named growth events, in months before today. One place, so every module tells the same story. */
 export const EVENTS = {
-  maria_store: 4,      // Maria's second store on Deansgate (Companies House filing)
+  maria_store: 4,      // Maria's second store on Deansgate (her LinkedIn announcement)
   tom_series_b: 2,     // Northwind's Series B
   emma_accounts: 5,    // Brightline's annual accounts
   lukas_opening: 3,    // Tafelrunde's fourth restaurant, in Schwabing
-  lukas_register: 4,   // its Handelsregister entry
+  lukas_register: 4,   // the Schwabing branch entered in the Handelsregister
   helio_series_c: 5,   // Helio Rivers' Series C (module 4)
   oakrow_accounts: 5,  // OakRow's micro-entity accounts (module 4)
 };

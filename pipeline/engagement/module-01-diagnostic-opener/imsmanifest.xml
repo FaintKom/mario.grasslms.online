@@ -19,7 +19,7 @@
       <title>FinTechCard SDR onboarding</title>
       <item identifier="ITEM-M1" identifierref="RES-M1" isvisible="true">
         <title>Module 1: Diagnostic opener</title>
-        <adlcp:masteryscore>67</adlcp:masteryscore>
+        <adlcp:masteryscore>80</adlcp:masteryscore>
         <adlcp:maxtimeallowed>00:10:00</adlcp:maxtimeallowed>
         <adlcp:timelimitaction>continue,no message</adlcp:timelimitaction>
         <adlcp:datafromlms></adlcp:datafromlms>

@@ -18,14 +18,14 @@
     "disposition": "",
     "top_pain": "Nobody can say who spent what: last quarter a £1,200 charge sat unexplained for two weeks, and the bookkeeper spends about 6 hours a week reconciling the two stores.",
     "top_objection": "We already have a corporate Visa from our bank.",
-    "ideal_opener": "I noticed on Companies House you opened a second store on Deansgate in {{month:maria_store}}. Who's approving card spend across both stores now?",
+    "ideal_opener": "I saw you opened a second store on Deansgate in {{month:maria_store}}. Who's approving card spend across both stores now?",
     "best_pitch_prop": "Per-store virtual cards with auto-reconciled receipts.",
     "closing_move": "Two 20-minute slots: {{day0}} 10:00 or {{day1}} 10:30. Which works to walk through it with your bookkeeper?",
     "signals": [
       {
         "type": "new_location",
-        "source": "companieshouse",
-        "content": "Filed change-of-registered-office to add second Deansgate site ({{monYear:maria_store}})."
+        "source": "linkedin",
+        "content": "Announced the opening of a second store, on Deansgate ({{monYear:maria_store}})."
       },
       {
         "type": "hiring",
@@ -33,17 +33,17 @@
         "content": "Posted: 'Hiring an assistant bookkeeper, Manchester — 3 days/week.'"
       },
       {
-        "type": "post",
-        "source": "linkedin",
-        "content": "Owner shared a photo of new shopfront opening."
+        "type": "filing",
+        "source": "companieshouse",
+        "content": "Confirmation statement filed, no changes."
       }
     ],
     "crm": {
-      "amount": "£42,000 ARR",
+      "amount": "£7,500 ARR",
       "close_date": {
         "inDays": 35
       },
-      "stage": "Discovery",
+      "stage": "Demo",
       "next_step": "Pricing for per-store cards + receipt capture, after the demo",
       "industry": "Retail SMB",
       "annual_revenue": "£1.8M",
@@ -92,8 +92,10 @@
     "industry": "Series-B SaaS",
     "fte": 22,
     "monthly_spend": 18000,
+    "currency": "EUR",
     "stage": "Series-B · founder-CEO",
-    "registered_office": "20 St Andrew's Square, Edinburgh EH2 1AF",
+    "registered_office": "14 Fitzwilliam Place, Dublin 2, D02 X285",
+    "registry": "Companies Registration Office",
     "last_touch_at": {
       "call": "GC-06"
     },
@@ -109,7 +111,7 @@
       {
         "type": "funding",
         "source": "linkedin",
-        "content": "Announced €15M Series B led by Northzone ({{monYear:tom_series_b}})."
+        "content": "Announced a €15M Series B ({{monYear:tom_series_b}})."
       },
       {
         "type": "hiring",
@@ -119,7 +121,7 @@
       {
         "type": "filing",
         "source": "companieshouse",
-        "content": "Filed allotment of shares — Series B confirmation ({{monYear:tom_series_b}})."
+        "content": "Filed a return of allotment of shares for the Series B ({{monYear:tom_series_b}})."
       }
     ]
   },
@@ -163,7 +165,7 @@
       }
     ],
     "crm": {
-      "amount": "£60,000 ARR",
+      "amount": "£14,000 ARR",
       "close_date": {
         "inDays": 30
       },
@@ -206,14 +208,16 @@
     "industry": "Restaurant group (DE) · 4 locations",
     "fte": 52,
     "monthly_spend": 31000,
+    "currency": "EUR",
     "stage": "4 locations · founder-operator",
     "registered_office": "Karlstrasse 12, München 80333",
+    "registry": "Handelsregister",
     "last_touch_at": {
       "daysAgo": 4
     },
     "sequence_step": 5,
     "disposition": "",
-    "top_pain": "Each restaurant manager runs their own bank card, so supplier spend, including the monthly order from an Italian supplier, is invisible until invoices land. Last year one manager had to go over expense fraud.",
+    "top_pain": "Each restaurant manager runs their own bank card, so supplier spend, including the monthly order from an Italian supplier, is invisible until invoices land. Last year he had to let a manager go over expense fraud.",
     "top_objection": "I don't trust new fintechs with my money.",
     "ideal_opener": "Tafelrunde added a fourth location in Schwabing in {{month:lukas_opening}} — wie regelt ihr Kartenausgaben über die Standorte hinweg im Moment?",
     "best_pitch_prop": "Per-location cards with weekly limits · EU-only data residency · receipt capture in the buyer's own language.",
@@ -227,12 +231,12 @@
       {
         "type": "press",
         "source": "linkedin",
-        "content": "Featured in Süddeutsche Zeitung — 'four locations, one menu'."
+        "content": "Featured in a Munich restaurant guide: 'four locations, one menu'."
       },
       {
         "type": "filing",
         "source": "companieshouse",
-        "content": "Filed Handelsregister-Eintrag for 4th location ({{monYear:lukas_register}})."
+        "content": "Registered the Schwabing restaurant as a branch ({{monYear:lukas_register}})."
       }
     ]
   },
@@ -245,8 +249,10 @@
     "industry": "Industrial wholesale (DE)",
     "fte": 64,
     "monthly_spend": 27000,
+    "currency": "EUR",
     "stage": "Family-owned · operations head decision-maker",
     "registered_office": "Hafenstrasse 8, 20457 Hamburg",
+    "registry": "Unternehmensregister",
     "last_touch_at": {
       "daysAgo": 3
     },
