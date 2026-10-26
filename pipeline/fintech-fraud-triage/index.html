@@ -186,6 +186,8 @@
   @keyframes fade{from{opacity:0;}to{opacity:1;}}
   .res-card{background:var(--paper-2);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);max-width:560px;width:100%;
     max-height:92vh;overflow-y:auto;padding:26px 26px 24px;}
+  /* headings take focus only so screen readers start there; no ring needed */
+  [tabindex="-1"]:focus{outline:none;}
   .res-card h2{font-size:23px;font-weight:800;letter-spacing:-.025em;margin:0 0 2px;}
   .res-card .sub{font-size:13px;color:var(--ink-500);margin:0 0 16px;}
   .grade{display:inline-flex;align-items:center;gap:12px;margin:2px 0 18px;}
@@ -238,8 +240,8 @@
     .rail .logo{margin-bottom:0;} .rail .spacer{margin:0;} .rail .nav{width:32px;height:32px;}
     .app{grid-template-rows:48px minmax(0,1fr);} .main{height:auto;min-height:0;}
     .case{padding:16px 14px;}
-    /* phones: keep the three decisions on one row so they do not cover the case */
-    .actbar{gap:8px;padding-top:10px;} .act{padding:11px 4px;font-size:13.5px;} .act .key{display:none;}
+    /* phones: the three decisions sit on one row after the rules, not floating over them */
+    .actbar{position:static;background:none;gap:8px;padding-top:6px;} .act{padding:11px 4px;font-size:13.5px;} .act .key{display:none;}
     .top .pill{display:none;}
     .kpi{padding:8px 14px;gap:14px;} .kpi h3{display:none;} .kstat .n{font-size:18px;} .kpi #kNet{font-size:16px !important;}
     .case-hd{flex-direction:column;} .gauge{text-align:left;} .gauge .grow,.gauge .gscale,.gauge .gwrap{margin-left:0;}
@@ -355,6 +357,7 @@
     <h1>A shift on the payments fraud review queue</h1>
     <p>You are covering a shift as a risk analyst. Ten card payments that the fraud model flagged are waiting in your queue, and for each one you read the details and the rules that fired before you decide. Wrongly declining a genuine customer costs money here as surely as missed fraud does.</p>
     <p style="font-size:12.5px;color:var(--ink-500);margin-top:-4px;">The model gives every case a risk score, and you are free to overrule it. On some cases the score is wrong, and the signals underneath it show why. Every shift builds a new queue from the same kinds of cases.</p>
+    <p style="font-size:12.5px;color:var(--ink-500);margin-top:-4px;" id="econNote"></p>
     <div class="rules-mini">
       <div class="rmini"><span class="tag approve">Approve</span><span>when the signals are clean and the payment should go through.</span></div>
       <div class="rmini"><span class="tag decline">Decline</span><span>when the pattern is clearly fraud and the payment must stop before it settles.</span></div>
@@ -415,9 +418,20 @@
     last4:()=>String(R.int(1000,9999)),
     method:()=>R.pick(["Visa credit","Visa debit","Mastercard credit","Mastercard debit"])
   };
-  // Booked cost of letting a card test through: the micro-charge itself is
-  // trivial, so the desk counts the exposure to the fraud that follows.
-  const CT_EXPOSURE = 250;
+  // ---- Shift economics: every money figure in the simulation comes from here. ----
+  // An approved genuine payment earns its margin, not its full amount.
+  // A wrong decline loses that margin plus the expected value of a customer who may leave.
+  // Missed fraud loses the full amount plus the chargeback fee.
+  // An escalation the case did not need costs analyst time; a needed one is part of the job.
+  // A card test is booked at the exposure to the fraud
+  // it enables, because its own charge is a couple of euros.
+  const ECON = { MARGIN:0.20, CUSTOMER_LOSS:25, CHARGEBACK_FEE:20, REVIEW_COST:8, CT_EXPOSURE:250 };
+  const CT_EXPOSURE = ECON.CT_EXPOSURE;
+  const cents = v => Math.round(v*100)/100;
+  const gain   = amt => cents(amt*ECON.MARGIN);
+  const lostSale = amt => -cents(amt*ECON.MARGIN + ECON.CUSTOMER_LOSS);
+  const fraudLoss  = amt => -cents(amt + ECON.CHARGEBACK_FEE);
+  const reviewCost = -ECON.REVIEW_COST;
   const ord = n => n+(n%100>=11&&n%100<=13?"th":({1:"st",2:"nd",3:"rd"}[n%10]||"th"));
   const days = n => n+(n===1?" day":" days");
   const P = {
@@ -441,9 +455,9 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Subscription"],["Shipping","Digital, none"]],
           dev:[["IP location",loc],["Device","Recognised, "+ord(visits)+" visit"],["Account age",y+" yr "+m+" mo"],["Velocity","Normal"]],
           signals:[["good","HISTORY_CLEAN",prior+" prior good charges, same card"],["good","GEO_MATCH","IP = billing country"],["good","DEVICE_KNOWN","Returning trusted device"]],
-          fb:{ approve:{ok:true, why:"The device has been here before, the location matches the billing country and the card has "+prior+" clean charges. Nothing in this case needed a human.", money:+amt},
-               decline:{ok:false, why:"This subscriber shows no warning signs at all. Blocking the renewal loses the revenue and probably the customer, and that loss never appears in the fraud figures.", money:-amt},
-               review:{ok:false, why:"A clean, low-value renewal gives a senior analyst nothing to settle. The escalation spent analyst time on a payment that should have gone through.", money:-8} } };
+          fb:{ approve:{ok:true, why:"The device has been here before, the location matches the billing country and the card has "+prior+" clean charges. Nothing in this case needed a human.", money:gain(amt)},
+               decline:{ok:false, why:"This subscriber shows no warning signs at all. Blocking the renewal loses the revenue and probably the customer, and that loss never appears in the fraud figures.", money:lostSale(amt)},
+               review:{ok:false, why:"A clean, low-value renewal gives a senior analyst nothing to settle. The escalation spent analyst time on a payment that should have gone through.", money:reviewCost} } };
       } },
 
     { key:"cleanGaming", weight:2, build(){
@@ -452,9 +466,9 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Gaming top-up"],["Shipping","Digital, none"]],
           dev:[["IP location",loc],["Device","Recognised, "+ord(visits)+" visit"],["Account age",R.int(2,18)+" mo"],["Velocity","Normal"]],
           signals:[["good","GEO_MATCH","Device + geo match"],["good","AMOUNT_LOW","Low amount, low-risk category"],["good","CARD_SEEN","Card used here before"]],
-          fb:{ approve:{ok:true, why:"A known device, a matching country and a small top-up make this a low-risk payment.", money:+amt},
-               decline:{ok:false, why:"Nothing in this case is suspicious. Declining small payments like this one annoys genuine players and pushes up your false-positive rate.", money:-amt},
-               review:{ok:false, why:"None of the signals contradict each other here. The escalation added cost without anything to resolve.", money:-8} } };
+          fb:{ approve:{ok:true, why:"A known device, a matching country and a small top-up make this a low-risk payment.", money:gain(amt)},
+               decline:{ok:false, why:"Nothing in this case is suspicious. Declining small payments like this one annoys genuine players and pushes up your false-positive rate.", money:lostSale(amt)},
+               review:{ok:false, why:"None of the signals contradict each other here. The escalation added cost without anything to resolve.", money:reviewCost} } };
       } },
 
     { key:"cardTesting", weight:2, build(){
@@ -474,9 +488,9 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",R.pick(["United States","United Kingdom"])],["Category","Prepaid / cash-out"],["Shipping","Digital, by email"]],
           dev:[["IP location",loc+" (VPN)"],["Device","New, VPN detected"],["Account age",R.int(1,9)+" hr"],["Velocity",ord(orders)+" large order today"]],
           signals:[["bad","CASHOUT_GIFTCARD","Untraceable prepaid gift cards"],["bad","IP_VPN_MISMATCH","VPN + IP ≠ BIN country"],["bad","VELOCITY_HIGH",orders+" large orders in one day"],["bad","DEVICE_NEW","Brand-new device"]],
-          fb:{ approve:{ok:false, why:"Every signal here points to fraud. The goods are untraceable prepaid gift cards, the location sits behind a VPN and the orders keep growing. Approving it means a direct loss plus chargeback fees.", money:-amt},
+          fb:{ approve:{ok:false, why:"Every signal here points to fraud. The goods are untraceable prepaid gift cards, the location sits behind a VPN and the orders keep growing. Approving it means a direct loss plus chargeback fees.", money:fraudLoss(amt)},
                decline:{ok:true, why:"Prepaid gift cards for cash-out, a VPN, a card from another country and orders growing through the day have no innocent explanation together.", money:0},
-               review:{ok:false, why:"This case was clear enough to decline at once. While it waited for a senior analyst, the payment could have settled.", money:-amt} } };
+               review:{ok:false, why:"This case was clear enough to decline at once. While it waited for a senior analyst, the payment could have settled.", money:fraudLoss(amt)} } };
       } },
 
     { key:"highValueMismatch", weight:2, build(){
@@ -485,8 +499,8 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","High-resale"],["Shipping","Matches billing"]],
           dev:[["IP location",loc],["Device","New, first seen"],["Account age",days(R.int(1,4))],["Velocity","Normal"]],
           signals:[["bad","GEO_MISMATCH","IP country ≠ BIN country"],["warn","CATEGORY_RESALE","High-resale goods"],["warn","DEVICE_NEW","First-time device"],["good","AVS_PASS","Address verification passed"]],
-          fb:{ approve:{ok:false, why:"The location does not match the card, the goods resell easily and the device is new. The passed address check leaves room for a genuine traveller, but that is too much doubt for an order this size.", money:-amt},
-               decline:{ok:false, why:"Fraud is plausible here, yet the address check passed and people do shop while they travel. A hard decline could lose a genuine high-value sale.", money:-amt},
+          fb:{ approve:{ok:false, why:"The location does not match the card, the goods resell easily and the device is new. The passed address check leaves room for a genuine traveller, but that is too much doubt for an order this size.", money:fraudLoss(amt)},
+               decline:{ok:false, why:"Fraud is plausible here, yet the address check passed and people do shop while they travel. A hard decline could lose a genuine high-value sale.", money:lostSale(amt)},
                review:{ok:true, why:"The signals contradict each other on a large order. A senior analyst can settle it with 3DS or a call-back to the cardholder instead of guessing.", money:0} } };
       } },
 
@@ -496,8 +510,8 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",abin],["Category","Gaming wallet"],["Shipping","Digital, none"]],
           dev:[["IP location",loc],["Device","New device, returning account"],["Account age",yrs+" yr (clean)"],["Velocity","Normal"]],
           signals:[["warn","DEVICE_NEW_ACCT","New device on an existing account"],["warn","GEO_MISMATCH","IP ≠ BIN country"],["good","ACCOUNT_AGED",yrs+"-year clean account"],["good","AMOUNT_TYPICAL","Deposit in normal range"]],
-          fb:{ approve:{ok:false, why:"This could be the real owner on a new phone abroad, or someone who has taken over the account. On a gaming wallet, a wrong approval pays for a cash-out.", money:-amt},
-               decline:{ok:false, why:"This account has "+yrs+" clean years behind it, and both flags are soft ones. A hard block may freeze a genuine player who only needed a check.", money:-amt},
+          fb:{ approve:{ok:false, why:"This could be the real owner on a new phone abroad, or someone who has taken over the account. On a gaming wallet, a wrong approval pays for a cash-out.", money:fraudLoss(amt)},
+               decline:{ok:false, why:"This account has "+yrs+" clean years behind it, and both flags are soft ones. A hard block may freeze a genuine player who only needed a check.", money:lostSale(amt)},
                review:{ok:true, why:"A new device and a change of country on an established account is where account takeovers hide. A check with the cardholder tells you which case this is.", money:0} } };
       } },
 
@@ -508,9 +522,9 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country","Spain"],["Category","Travel"],["Shipping","Digital, e-ticket"]],
           dev:[["IP location",loc+" (roaming)"],["Device","Recognised, "+ord(visits)+" visit"],["Account age",yrs+" yr"],["Velocity","Normal"]],
           signals:[["warn","GEO_SOFT","IP country ≠ billing (roaming)"],["good","DEVICE_KNOWN","Known device, long history"],["good","TRAVEL_CONSISTENT","Purchase matches roaming pattern"]],
-          fb:{ approve:{ok:true, why:"The model reacted to the change of country. This is a Spanish customer booking travel from "+loc.split(",")[0]+" on a familiar device, with "+yrs+" years of history behind the account.", money:+amt},
-               decline:{ok:false, why:"The device and the account history both show that this is the customer. The decline blocked a real person in the middle of a trip, an expensive false positive.", money:-amt},
-               review:{ok:false, why:"The known device and the travel pattern already explain the only flag on this case. The escalation kept a good customer waiting for an approval that was clear.", money:-8} } };
+          fb:{ approve:{ok:true, why:"The model reacted to the change of country. This is a Spanish customer booking travel from "+loc.split(",")[0]+" on a familiar device, with "+yrs+" years of history behind the account.", money:gain(amt)},
+               decline:{ok:false, why:"The device and the account history both show that this is the customer. The decline blocked a real person in the middle of a trip, an expensive false positive.", money:lostSale(amt)},
+               review:{ok:false, why:"The known device and the travel pattern already explain the only flag on this case. The escalation kept a good customer waiting for an approval that was clear.", money:reviewCost} } };
       } },
 
     // ---- MISALIGNED: model score LOW but the right call is DECLINE ----
@@ -521,7 +535,7 @@
           pay:[["Method",R.method()],["Card","•••• "+R.last4()],["BIN country",bin],["Category","Electronics"],["Shipping",ship+" (billing: "+bin+")"]],
           dev:[["IP location",loc],["Device","New, first seen"],["Account age",R.int(1,6)+" hr"],["Velocity","Normal"]],
           signals:[["warn","ACCOUNT_FRESH","Account created hours ago"],["warn","SHIP_BILL_DIFF","Shipping ≠ billing address"],["warn","DEVICE_NEW","First-time device"],["warn","EMAIL_DISPOSABLE","Disposable email domain"]],
-          fb:{ approve:{ok:false, why:"The model scored this case low, and models often miss new fraud rings. An account a few hours old, a disposable email, shipping that differs from billing and a new device add up to a setup.", money:-amt},
+          fb:{ approve:{ok:false, why:"The model scored this case low, and models often miss new fraud rings. An account a few hours old, a disposable email, shipping that differs from billing and a new device add up to a setup.", money:fraudLoss(amt)},
                decline:{ok:true, why:"None of these flags is damning on its own. Together they describe an account opened for one purchase, which the low score missed.", money:0},
                review:{ok:true, why:"A low-score case that looks wrong is far safer escalated than approved. A decline would still have been the cleaner decision here.", money:0} } };
       } }
@@ -664,6 +678,8 @@
   function grade(){
     // Out of 10 cases: A = 9+, B = 7–8, C = 5–6, D = 4 or fewer.
     const pct=decisions.filter(d=>d&&d.ok).length/TOTAL;
+    // An A also needs the shift to end in profit: one costly miss outweighs nine good calls.
+    if(pct>=0.9 && netMoney<0) return {g:"B",cls:"b",label:"Almost every decision was right. The one that went wrong cost more than the shift earned."};
     if(pct>=0.9) return {g:"A",cls:"",label:"Almost every decision was right."};
     if(pct>=0.7) return {g:"B",cls:"b",label:"Most decisions were right. Look again at the cases where the signals disagreed."};
     if(pct>=0.5) return {g:"C",cls:"c",label:"Several decisions cost the business money."};
@@ -722,6 +738,8 @@
     }
   });
 
+  // The intro states the same figures the shift counts with.
+  $("econNote").textContent = "An approved genuine payment earns its "+Math.round(ECON.MARGIN*100)+"% margin. A wrong decline loses that margin and puts the customer at risk, which this desk counts as €"+ECON.CUSTOMER_LOSS+". Missed fraud costs the full amount plus a €"+ECON.CHARGEBACK_FEE+" chargeback fee, and an escalation the case did not need costs €"+ECON.REVIEW_COST+" of analyst time.";
   renderQueue(); syncKpi();
 })();
 </script>
