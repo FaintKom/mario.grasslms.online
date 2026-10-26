@@ -2,45 +2,45 @@ const { useState, useEffect, useMemo, useRef } = React;
 
 /* ─────────────────────────────────────────────────────
    Route-the-PO · Procurefy procurement-system simulation
-   3 POs · routing rules over UI · keystone moment
+   4 POs · routing rules over UI · first match wins
    ───────────────────────────────────────────────────── */
 
 const RULES = [
   {
     id: "r1",
     code: "01",
-    text: <>Is the vendor <b>onboarded</b>? <code>vendor.onboarded === true</code></>,
-    then: <>If <b>no</b> → <b>Legal & Compliance</b> (vendor-onboarding pack must clear first).</>,
+    text: <>Is the vendor <b>onboarded</b>, that is, on the approved vendor list?</>,
+    then: <>If it is not, the order goes to <b>Legal & Compliance</b>, because the vendor-onboarding pack has to clear first.</>,
     field: "Vendor status",
     evaluate: (po) => (po.vendor.onboarded ? "yes" : "no"),
-    onNo: { queue: "legal", note: "Vendor not yet onboarded — Legal owns the onboarding pack." },
+    onNo: { queue: "legal", note: "The vendor is not onboarded yet, and Legal owns the onboarding pack." },
   },
   {
     id: "r2",
     code: "02",
-    text: <>Is the vendor's jurisdiction <b>non-domestic</b>? <code>vendor.jurisdiction !== "DE"</code></>,
-    then: <>If <b>yes</b> → <b>Legal & Compliance</b> (cross-border terms, data residency, withholding).</>,
+    text: <>Is the vendor based <b>outside Germany</b>?</>,
+    then: <>If it is, the order goes to <b>Legal & Compliance</b>, which checks the terms that change across a border, such as governing law and tax treatment.</>,
     field: "Jurisdiction",
     evaluate: (po) => (po.vendor.jurisdiction !== "DE" ? "yes" : "no"),
-    onYes: { queue: "legal", note: "Foreign jurisdiction — Legal must clear cross-border terms." },
+    onYes: { queue: "legal", note: "The vendor is outside Germany, so Legal has to clear the cross-border terms." },
   },
   {
     id: "r3",
     code: "03",
-    text: <>Is <b>net total &gt; €10,000</b> OR category is <b>CapEx</b>?</>,
-    then: <>If <b>yes</b> → <b>Finance review</b> (funding-line check before commitment).</>,
+    text: <>Is the <b>net total above €10,000</b>, or is the category <b>CapEx</b>?</>,
+    then: <>If either is true, the order goes to <b>Finance review</b> for a funding-line check before anything is committed.</>,
     field: "Amount × category",
     evaluate: (po) => (po.amount > 10000 || po.category === "CapEx" ? "yes" : "no"),
-    onYes: { queue: "finance", note: "Over threshold or CapEx — Finance owns funding-line check." },
+    onYes: { queue: "finance", note: "The order is over the threshold or CapEx, so Finance checks the funding line." },
   },
   {
     id: "r4",
     code: "04",
-    text: <>Otherwise → <b>Auto-approve queue</b>.</>,
-    then: <>Default lane for low-risk, on-policy spend.</>,
+    text: <>If none of the rules above matched, the order goes to the <b>Auto-approve queue</b>.</>,
+    then: <>This is the default queue for low-risk spend that follows policy.</>,
     field: "Default route",
     evaluate: () => "yes",
-    onYes: { queue: "auto", note: "All gates cleared." },
+    onYes: { queue: "auto", note: "No earlier rule matched." },
   },
 ];
 
@@ -51,6 +51,7 @@ const POS = [
     line: "Rack-mount server replacement · Quote QT-9088",
     amount: 12480,
     category: "CapEx",
+    supply: "goods",
     department: "Platform Engineering",
     departmentCode: "ENG-PLT-12",
     requestedBy: "Anouk Mehta",
@@ -64,18 +65,17 @@ const POS = [
       { desc: "Installation labour", sub: "Per-rack install + cable management", account: "ENG-CAPEX-450", qty: 6, unit: 120, total: 720 },
       { desc: "Shipping & handling", sub: "Frankfurt warehouse → Berlin DC1", account: "ENG-OPEX-110", qty: 1, unit: 240, total: 240 },
     ],
-    vendor: { name: "Acme Industrial GmbH", onboarded: true, tier: 2, jurisdiction: "DE", vendorId: "VEN-00482", since: "Aug 2023", contract: "MSA-Acme-2024", paymentTerms: "Net-45", taxId: "DE 8821-4477-90", logo: "AI" },
+    vendor: { name: "Acme Industrial GmbH", onboarded: true, tier: 2, jurisdiction: "DE", vendorId: "VEN-00482", since: "Aug 2023", contract: "MSA-Acme-2024", paymentTerms: "Net-45", taxId: "DE882144778", logo: "AI" },
     correct: "finance",
-    teach: "Two independent gates fire: the total (€12,480 > €10K) and the category (CapEx). Either one alone routes to Finance, so with both there is no doubt. The trap is that the vendor looks fine and the amount looks \"ordinary\". But these gates are not about how good the vendor is. They are about who answers for the funding line.",
+    teach: "Acme is onboarded and based in Germany, so rules 01 and 02 do not apply. Rule 03 matches twice, because the total of €12,480 is above €10K and the category is CapEx. Either fact alone would send the order to Finance. A good vendor and an ordinary-looking amount make it tempting to wave the order through. Rule 03 is about who answers for the funding line, and the vendor's quality has nothing to do with it.",
     flow: [
       { rule: "r1", outcome: "yes", note: "Onboarded · Tier-2" },
-      { rule: "r2", outcome: "no",  note: "Jurisdiction DE — domestic" },
+      { rule: "r2", outcome: "no",  note: "Jurisdiction DE, domestic" },
       { rule: "r3", outcome: "yes", note: "€12,480 > €10K and CapEx" },
     ],
     activity: [
       { who: "Anouk Mehta", what: <>created the PO from quote <b>QT-9088</b></>, when: "Mar 14, 10:22", kind: "default" },
       { who: "System", what: <>budget pre-check <b>passed</b> against <b>ENG-CAPEX-450</b> (€48,200 remaining)</>, when: "Mar 14, 10:23", kind: "ok" },
-      { who: "System", what: <>flagged: <b>amount &gt; €10K threshold</b> and <b>CapEx</b> category</>, when: "Mar 14, 10:23", kind: "flag" },
       { who: "System", what: <>awaiting <b>routing decision</b></>, when: "Mar 14, 10:23", kind: "default" },
     ],
   },
@@ -85,6 +85,7 @@ const POS = [
     line: "Log analytics SaaS · 12-month annual",
     amount: 2400,
     category: "OpEx",
+    supply: "services",
     department: "Security Operations",
     departmentCode: "SEC-OPS-04",
     requestedBy: "Jules Tanaka",
@@ -96,26 +97,25 @@ const POS = [
     items: [
       { desc: "Globex Cloud — Pro tier · 12 months", sub: "Up to 250 GB / day log retention, single region", account: "SEC-OPEX-220", qty: 1, unit: 2400, total: 2400 },
     ],
-    vendor: { name: "Globex Cloud Services Inc.", onboarded: false, tier: null, jurisdiction: "US", vendorId: "VEN-NEW", since: "—", contract: "Pending Legal", paymentTerms: "Annual prepaid (no NET terms)", taxId: "US-EIN 88-3300114", logo: "GX" },
+    vendor: { name: "Globex Cloud Services Inc.", onboarded: false, tier: null, jurisdiction: "US", vendorId: "VEN-NEW", since: "—", contract: "Pending Legal", paymentTerms: "Annual prepaid (no NET terms)", taxId: "EIN 88-3300114", logo: "GX" },
     correct: "legal",
-    teach: "A small recurring SaaS order is easy to wave through, and that is the trap. The vendor isn't on the approved list yet, which on its own routes the order to Legal. The US jurisdiction would have caught it too. Two independent gates fire before amount or category come into play.",
+    teach: "A small yearly SaaS order is easy to wave through. The vendor is not yet on the approved list, and that alone sends the order to Legal under rule 01. The US jurisdiction would have sent it there under rule 02 as well, before the amount or the category is even considered.",
     flow: [
       { rule: "r1", outcome: "no", note: "Vendor not onboarded" },
     ],
     activity: [
       { who: "Jules Tanaka", what: <>requested vendor onboarding for <b>Globex Cloud Services</b></>, when: "Mar 12, 14:01", kind: "default" },
       { who: "Jules Tanaka", what: <>submitted PO referencing pending vendor record</>, when: "Mar 14, 09:48", kind: "default" },
-      { who: "System", what: <>flagged: <b>vendor not yet onboarded</b> (VEN-NEW)</>, when: "Mar 14, 09:48", kind: "flag" },
-      { who: "System", what: <>flagged: <b>foreign jurisdiction</b> (US)</>, when: "Mar 14, 09:48", kind: "flag" },
       { who: "System", what: <>awaiting <b>routing decision</b></>, when: "Mar 14, 09:48", kind: "default" },
     ],
   },
   {
     id: "PO-2026-0343",
-    name: "Office Depot Deutschland",
+    name: "Kontor Bürobedarf GmbH",
     line: "Q2 office supplies · standard catalogue",
     amount: 847,
     category: "OpEx",
+    supply: "goods",
     department: "Office Management",
     departmentCode: "FAC-OFF-01",
     requestedBy: "Karim Voss",
@@ -131,9 +131,9 @@ const POS = [
       { desc: "Coffee · whole bean · single-origin", sub: "8 kg · break-room stock", account: "FAC-OPEX-110", qty: 8, unit: 28.60, total: 228.80 },
       { desc: "Cleaning supplies, sundry", sub: "Restock per facilities checklist", account: "FAC-OPEX-110", qty: 1, unit: 160.20, total: 160.20 },
     ],
-    vendor: { name: "Office Depot Deutschland AG", onboarded: true, tier: 1, jurisdiction: "DE", vendorId: "VEN-00031", since: "Jan 2018", contract: "MSA-OD-2024", paymentTerms: "Net-30", taxId: "DE 4421-7790-11", logo: "OD" },
+    vendor: { name: "Kontor Bürobedarf GmbH", onboarded: true, tier: 1, jurisdiction: "DE", vendorId: "VEN-00031", since: "Jan 2018", contract: "MSA-Kontor-2024", paymentTerms: "Net-30", taxId: "DE442177909", logo: "KB" },
     correct: "auto",
-    teach: "Routine catalogue spend, approved Tier-1 vendor, domestic, OpEx, well under threshold. The lesson is the opposite of the others: when no gate fires, trust the auto-approve lane. Over-routing routine spend to Finance is what clogs the queue and makes the real reviews late.",
+    teach: "This is routine catalogue spend from an approved Tier-1 vendor in Germany. It is OpEx and well under the threshold, so no rule before 04 matches and the order belongs in the auto-approve queue. Sending orders like this to Finance clogs its queue and makes the reviews that matter arrive late.",
     flow: [
       { rule: "r1", outcome: "yes", note: "Tier-1 approved" },
       { rule: "r2", outcome: "no",  note: "Domestic DE" },
@@ -143,11 +143,59 @@ const POS = [
     activity: [
       { who: "Karim Voss", what: <>created the PO from standard catalogue order</>, when: "Mar 14, 11:02", kind: "default" },
       { who: "System", what: <>budget pre-check <b>passed</b> against <b>FAC-OPEX-100/110</b></>, when: "Mar 14, 11:02", kind: "ok" },
-      { who: "System", what: <>vendor pre-flight <b>passed</b> (Tier-1, contract current)</>, when: "Mar 14, 11:02", kind: "ok" },
       { who: "System", what: <>awaiting <b>routing decision</b></>, when: "Mar 14, 11:02", kind: "default" },
     ],
   },
+  {
+    // The precedence trap: everything about the money says Finance, but rule 02 matches first.
+    id: "PO-2026-0344",
+    name: "Nordwerk Automation GmbH",
+    line: "Warehouse label-printer line upgrade · Quote NW-2231",
+    amount: 18960,
+    category: "CapEx",
+    supply: "goods",
+    department: "Warehouse Operations",
+    departmentCode: "OPS-WH-07",
+    requestedBy: "Lena Brandt",
+    requestedByRole: "Warehouse Lead",
+    requestedDate: "Mar 14, 2026",
+    needBy: "May 15, 2026",
+    payment: "Net-30",
+    currency: "EUR",
+    items: [
+      { desc: "Industrial label printer · 600 dpi", sub: "Nordwerk part #NW-LP600, 2-year warranty", account: "OPS-CAPEX-300", qty: 4, unit: 3850, total: 15400 },
+      { desc: "Print-and-apply module", sub: "One per printer, conveyor mount", account: "OPS-CAPEX-300", qty: 4, unit: 690, total: 2760 },
+      { desc: "Commissioning & operator training", sub: "On site, one day", account: "OPS-OPEX-120", qty: 1, unit: 800, total: 800 },
+    ],
+    vendor: { name: "Nordwerk Automation GmbH", onboarded: true, tier: 2, jurisdiction: "AT", vendorId: "VEN-00317", since: "Nov 2022", contract: "MSA-Nordwerk-2023", paymentTerms: "Net-30", taxId: "ATU66204412", logo: "NA" },
+    correct: "legal",
+    teach: "Everything about the money points to Finance, because €18,960 is over the threshold and the order is CapEx. The rules are applied from the top, and the first one that matches decides. Nordwerk is onboarded, so rule 01 does not apply. Rule 02 then matches because the vendor is in Austria. The order goes to Legal & Compliance before anyone looks at the amount.",
+    flow: [
+      { rule: "r1", outcome: "yes", note: "Onboarded · Tier-2" },
+      { rule: "r2", outcome: "yes", note: "Jurisdiction AT, cross-border" },
+    ],
+    activity: [
+      { who: "Lena Brandt", what: <>created the PO from quote <b>NW-2231</b></>, when: "Mar 14, 13:37", kind: "default" },
+      { who: "System", what: <>budget pre-check <b>passed</b> against <b>OPS-CAPEX-300</b></>, when: "Mar 14, 13:38", kind: "ok" },
+      { who: "System", what: <>awaiting <b>routing decision</b></>, when: "Mar 14, 13:38", kind: "default" },
+    ],
+  },
 ];
+
+const COUNTRY = { DE: "Germany", US: "United States", AT: "Austria" };
+
+/* VAT as a German buyer sees it. A German vendor charges 19%. A vendor in another
+   EU country invoices net and the buyer self-assesses the 19% (intra-EU acquisition
+   of goods, §1a UStG; reverse charge on services, §13b UStG). From outside the EU,
+   services are reverse-charged and goods bear import VAT at customs. */
+const EU = new Set(["AT","BE","BG","CY","CZ","DK","EE","ES","FI","FR","GR","HR","HU","IE","IT","LT","LU","LV","MT","NL","PL","PT","RO","SE","SI","SK"]);
+function vatLine(po, net) {
+  const j = po.vendor.jurisdiction;
+  if (j === "DE") return { label: "VAT 19%", amount: +(net * 0.19).toFixed(2) };
+  if (EU.has(j)) return { label: "VAT 0% · intra-EU, we self-assess 19%", amount: 0 };
+  if (po.supply === "services") return { label: "VAT 0% · reverse charge, we self-assess 19%", amount: 0 };
+  return { label: "VAT 0% · import VAT is paid at customs", amount: 0 };
+}
 
 const QUEUES = [
   { id: "auto", kind: "auto", name: "Auto-approve queue", icon: "01", sub: "On-policy spend · approved vendor · under threshold", meta: ["Same-day", "No human touch"] },
@@ -156,7 +204,8 @@ const QUEUES = [
 ];
 
 function fmtEUR(n) {
-  return n.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // English grouping (12,480.00) to match the English UI and the feedback text.
+  return n.toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function queueLabel(id) {
   const q = QUEUES.find((x) => x.id === id);
@@ -202,7 +251,7 @@ function App() {
     setToast({
       msg: isCorrect
         ? `Routed to ${queueLabel(queueId)}.`
-        : `Routed to ${queueLabel(queueId)}. It will be re-routed on review.`,
+        : `Routed to ${queueLabel(queueId)}, where a reviewer will move it to the right queue.`,
       kind: isCorrect ? "success" : "info",
     });
     setTimeout(() => setToast(null), 2300);
@@ -240,6 +289,18 @@ function App() {
     setDrawerOpen(false);
   };
 
+  /* Keep the verdict and its Next button in view: the policy drawer opens under it. */
+  const verdictRef = useRef(null);
+  const nextRef = useRef(null);
+  useEffect(() => {
+    if (!verdict) return;
+    const t = setTimeout(() => {
+      if (verdictRef.current) verdictRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      if (nextRef.current) nextRef.current.focus({ preventScroll: true });
+    }, 400);
+    return () => clearTimeout(t);
+  }, [verdict]);
+
   /* Keyboard 1/2/3 → route */
   useEffect(() => {
     const onKey = (e) => {
@@ -260,7 +321,8 @@ function App() {
   });
 
   const lineTotal = po.items.reduce((a, i) => a + i.total, 0);
-  const tax = +(lineTotal * 0.19).toFixed(2);
+  const vat = vatLine(po, lineTotal);
+  const tax = vat.amount;
 
   return (
     <>
@@ -340,7 +402,7 @@ function App() {
                 <div
                   key={p.id}
                   className={cls}
-                  onClick={() => { if (!d && !verdict) setIdx(i); }}
+                  onClick={() => { if (!d && !verdict && !decisions[po.id]) setIdx(i); }}
                 >
                   <div className="list-row-check">{d && "✓"}</div>
                   <div>
@@ -388,28 +450,25 @@ function App() {
                 <div className="summary-cell">
                   <div className="summary-label">Net total</div>
                   <div className="summary-val amount">€{fmtEUR(po.amount)}</div>
-                  <div className={"summary-sub " + (po.amount > 10000 ? "warn" : "ok")}>
-                    {po.amount > 10000 ? "Over €10K threshold" : "Under €10K threshold"}
-                  </div>
+                  {/* Raw facts only: the screen states the data, the learner applies the rules. */}
+                  <div className="summary-sub">Excl. VAT · {po.items.length} line{po.items.length === 1 ? "" : "s"}</div>
                 </div>
                 <div className="summary-cell">
                   <div className="summary-label">Category</div>
                   <div className="summary-val">{po.category}</div>
-                  <div className={"summary-sub " + (po.category === "CapEx" ? "warn" : "")}>
+                  <div className="summary-sub">
                     {po.category === "CapEx" ? "Capital expenditure" : "Operating expenditure"}
                   </div>
                 </div>
                 <div className="summary-cell">
                   <div className="summary-label">Jurisdiction</div>
                   <div className="summary-val">{po.vendor.jurisdiction}</div>
-                  <div className={"summary-sub " + (po.vendor.jurisdiction !== "DE" ? "bad" : "ok")}>
-                    {po.vendor.jurisdiction !== "DE" ? "Cross-border" : "Domestic"}
-                  </div>
+                  <div className="summary-sub">{COUNTRY[po.vendor.jurisdiction] || po.vendor.jurisdiction}</div>
                 </div>
                 <div className="summary-cell">
                   <div className="summary-label">Vendor status</div>
                   <div className="summary-val">{po.vendor.onboarded ? `Tier ${po.vendor.tier}` : "Not onboarded"}</div>
-                  <div className={"summary-sub " + (po.vendor.onboarded ? "ok" : "bad")}>
+                  <div className="summary-sub">
                     {po.vendor.onboarded ? `Approved · since ${po.vendor.since}` : "Pending vendor record"}
                   </div>
                 </div>
@@ -450,7 +509,7 @@ function App() {
                     <td className="num">€{fmtEUR(lineTotal)}</td>
                   </tr>
                   <tr>
-                    <td colSpan="4" style={{ color: "var(--ink-3)" }}>VAT (19%)</td>
+                    <td colSpan="4" style={{ color: "var(--ink-3)" }}>{vat.label}</td>
                     <td className="num" style={{ color: "var(--ink-3)" }}>€{fmtEUR(tax)}</td>
                   </tr>
                   <tr className="total-row">
@@ -602,10 +661,9 @@ function App() {
         {/* ─── Right action panel ─── */}
         <aside className="right">
           <div className="right-head">
-            <div className="right-eyebrow">Step · Route</div>
             <div className="right-title">Pick a queue</div>
             <div className="right-sub">
-              Route each order by the policy rules, not by the screen layout. Check the Policy reference below if you need to confirm a rule.
+              Decide which queue each order goes to by the routing policy rather than by how the screen looks. You can open the policy at the bottom of this panel whenever you need to check a rule.
             </div>
           </div>
 
@@ -641,18 +699,15 @@ function App() {
 
           {/* Verdict */}
           {verdict && (
-            <div className={`verdict show ${verdict.correct ? "ok" : "wrong"}`}>
-              <div className="verdict-head">
-                {verdict.correct ? "Routed correctly" : "Re-route on review"}
-              </div>
+            <div className={`verdict show ${verdict.correct ? "ok" : "wrong"}`} ref={verdictRef} role="status">
               <div className="verdict-title">
                 {verdict.correct
-                  ? `Right lane: ${queueLabel(verdict.queue)}.`
-                  : `Procurement will re-route this PO from "${queueLabel(verdict.queue)}" to "${queueLabel(verdict.po.correct)}".`}
+                  ? `You sent it to the right queue, ${queueLabel(verdict.queue)}.`
+                  : `This order belongs in ${queueLabel(verdict.po.correct)}. A reviewer will move it there from ${queueLabel(verdict.queue)}.`}
               </div>
               <div className="verdict-body">{verdict.po.teach}</div>
-              <button className="verdict-next" onClick={advance}>
-                {nextOpenIdx() === null ? "See summary →" : "Next PO →"}
+              <button className="verdict-next" onClick={advance} ref={nextRef}>
+                {nextOpenIdx() === null ? "See results →" : "Next PO →"}
               </button>
             </div>
           )}
@@ -662,14 +717,14 @@ function App() {
             <div className="drawer-head" onClick={() => setDrawerOpen((o) => !o)}>
               <div className="drawer-title">
                 <span className="doc-icon">P</span>
-                Routing policy · §4.2 reference
+                Routing policy, section 4.2
               </div>
               <span className="drawer-toggle">▼</span>
             </div>
             <div className="drawer-body">
               <div className="drawer-inner">
                 <div style={{ fontSize: 11.5, color: "var(--ink-3)", marginBottom: 10 }}>
-                  Apply the rules from top to bottom. The first rule that matches decides the route. These rules stay the same when the screens change.
+                  Go through the rules from the top and stop at the first one that matches. That rule decides the route, and the rules stay the same when the screens are redesigned.
                 </div>
                 {RULES.map((r) => (
                   <div
@@ -697,22 +752,20 @@ function App() {
       <div className={`results ${showResults ? "show" : ""}`}>
         <div className="results-card">
           <div className="results-head">
-            <div className="results-eyebrow">Procurefy · Routing review</div>
             <div className="results-title">
-              {correctCount === POS.length ? "Every order routed by the rules." :
-               correctCount >= POS.length - 1 ? "Almost there." :
-               "Re-take recommended."}
+              {correctCount === POS.length ? "You routed all 4 orders to the right queue" :
+               `You routed ${correctCount} of 4 orders correctly, and the pass mark is all 4`}
             </div>
             <div className="results-sub">
               {correctCount === POS.length
-                ? "You routed each order by the rules, not by the screens. If Procurement rebuilds the screens next quarter, your decisions still hold, because they rest on the rules and not on where the buttons are."
-                : "Walk back through the trace below. The mistake is almost always a gate that fired earlier than you noticed."}
+                ? "You routed each order by applying the rules. Your decisions will still hold when Procurement redesigns the screens next quarter."
+                : "Go back through the rule trace below. The mistake is usually a rule that matched earlier than you noticed."}
             </div>
           </div>
           <div className="results-score">
             <div className="res-score-num"><b>{correctCount}</b>/{POS.length}</div>
             <div>
-              <div className="res-meta-row"><span style={{ minWidth: 130, color: "var(--ink-3)" }}>Pass bar</span><b>3 / 3 correct</b></div>
+              <div className="res-meta-row"><span style={{ minWidth: 130, color: "var(--ink-3)" }}>Pass mark</span><b>all {POS.length} orders correct</b></div>
             </div>
           </div>
           <div>
@@ -741,7 +794,7 @@ function App() {
                   </div>
                   <div className="res-decision">
                     <span className={`res-tag ${d.correct ? "" : "wrong"}`}>
-                      {d.correct ? "Routed correctly" : "Re-route"}
+                      {d.correct ? "Right queue" : "Wrong queue"}
                     </span>
                     <div className="res-decision-line">
                       You routed: <b>{queueLabel(d.queue)}</b>
@@ -757,7 +810,7 @@ function App() {
             })}
           </div>
           <div className="results-cta">
-            <button className="res-btn" onClick={restart}>Re-run</button>
+            <button className="res-btn" onClick={restart}>Try again</button>
             <a className="res-btn secondary" href="index.html">← Back to index</a>
           </div>
         </div>

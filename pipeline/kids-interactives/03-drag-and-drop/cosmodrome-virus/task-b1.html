@@ -536,22 +536,30 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   /* One screen on open: a tighter heading block, and the page held to the
      height of the viewport so the working area can take what is left. */
   body { padding: var(--page-top) 0 var(--page-bottom); }
-  .wrap { height: calc(100svh - var(--page-pad)); }
+  /* min-height, not height: on a phone the task is taller than the screen. */
+  .wrap { min-height: calc(100svh - var(--page-pad)); }
   h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
   .lede { font-size: var(--t-sm); max-width: 78ch; }
   .stack--loose { gap: var(--s-4); }
 
 
-  .lab { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: var(--s-4); align-items: start; }
+  .lab { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: var(--s-4); align-items: start; }
   /* The board is the thing to look at, so it gets whatever height is left
      rather than a fixed slice of a very tall card. */
   .board svg { max-height: min(46svh, 420px); }
   @media (max-width: 860px) { .lab { grid-template-columns: 1fr; } }
 
+  /* The colour code names a job, never a part: which part does which job is
+     the thing the child has to work out. */
   .legend { display: grid; gap: var(--s-2); }
-  .legend__row { display: flex; align-items: center; gap: var(--s-2); font-size: var(--t-sm); }
+  .legend__row { display: grid; grid-template-columns: 28px 1fr; gap: var(--s-1) var(--s-2); align-items: center; font-size: var(--t-sm); }
   .legend__chip { width: 28px; height: 28px; border-radius: var(--radius-sm); border: 2px solid var(--ink-900); flex: none; }
-  .legend__num { font-family: var(--font-mono); font-weight: 700; }
+  .legend__job { font-weight: 700; }
+  .legend__desc { grid-column: 2; color: var(--color-text-muted); font-size: var(--t-xs); line-height: 1.4; }
+
+  .parts { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-1) var(--s-3); font-size: var(--t-sm); }
+  .parts li { display: flex; gap: var(--s-2); align-items: baseline; }
+  .parts b { font-family: var(--font-mono); }
 
   /* The board is the object being repaired, not page chrome, so it keeps a
      real PCB colour instead of taking the page surface. */
@@ -564,18 +572,30 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .cell text { font-family: var(--font-mono); font-size: 20px; font-weight: 700; fill: #f4f7f2; text-anchor: middle; pointer-events: none; }
   .cell.is-wrong rect { stroke: var(--clay-500); stroke-width: 5; }
 
+  /* Each swatch carries its name in words, so the task never depends on
+     telling red from green by eye alone. */
   .swatches { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .swb {
+    display: grid; justify-items: center; gap: 2px; width: 52px;
+    padding: 0; border: 0; background: none; cursor: pointer; font: inherit;
+    color: var(--color-text-muted); font-size: var(--t-2xs); font-weight: 600; line-height: 1.2;
+  }
   .sw {
-    width: 48px; height: 48px; border-radius: var(--radius-sm);
-    border: 3px solid var(--ink-900); cursor: pointer; padding: 0;
+    width: 44px; height: 44px; border-radius: var(--radius-sm);
+    border: 3px solid var(--ink-900);
     box-shadow: 2px 2px 0 var(--ink-900);
     transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
   }
-  .sw[aria-pressed="true"] { transform: translateY(2px); box-shadow: 0 0 0 3px var(--color-primary); }
+  .swb[aria-pressed="true"] { color: var(--color-text); }
+  .swb[aria-pressed="true"] .sw { transform: translateY(2px); box-shadow: 0 0 0 3px var(--color-primary); }
   .sw--erase { background: repeating-linear-gradient(45deg, #fff 0 6px, #ddd 6px 12px); }
 
   .now { display: flex; align-items: center; gap: var(--s-2); font-size: var(--t-sm); }
   .now__chip { width: 28px; height: 28px; border-radius: var(--radius-sm); border: 2px solid var(--ink-900); background: var(--color-surface-2); flex: none; }
+
+  /* Small labels in plain sentence case, not spaced capitals. */
+  .eyebrow { font-family: var(--font-sans); font-size: var(--t-sm); font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--color-text-muted); }
+  .row--between > .back { align-self: center; }
 
   [hidden] { display: none !important; }
 
@@ -598,16 +618,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Spaceport · sector B</p>
+      <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
+
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">The virus took</span> <em class="mark" data-t="title2">the colours away</em></h1>
-    <p class="lede" data-t="intro">Every part on the board went grey. The chart on the left says which colour each numbered one should be: pick a colour, then tap the part. Get the small board right and a bigger one comes up.</p>
+    <h1><span data-t="title1">Repaint the</span> <em class="mark" data-t="title2">circuit board</em></h1>
+    <p class="lede" data-t="intro">The virus has turned every part on the board grey, but the board's own colour code is still there and gives each job its own colour. Think about what each numbered part does, then pick that job's colour and tap the part. When the small board is right, a bigger one appears.</p>
   </header>
 
   <div class="hud">
@@ -620,9 +640,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       <span class="lives" id="lives" aria-hidden="true"></span>
     </div>
     <div class="now">
-      <span class="eyebrow" data-t="nowLabel">Holding</span>
+      <span class="eyebrow" data-t="nowLabel">Colour on your brush</span>
       <span class="now__chip" id="nowChip"></span>
-      <span id="nowName">—</span>
+      <span id="nowName">no colour yet</span>
     </div>
   </div>
 
@@ -630,8 +650,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     <div class="lab">
       <div class="stack">
         <div class="stack stack--tight">
-          <p class="eyebrow" data-t="chartLabel">Wiring chart</p>
+          <p class="eyebrow" data-t="chartLabel">This board's colour code</p>
           <div class="legend" id="legend"></div>
+        </div>
+        <div class="stack stack--tight">
+          <p class="eyebrow" data-t="partsLabel">Parts on this board</p>
+          <ul class="parts" id="parts"></ul>
         </div>
         <div class="stack stack--tight">
           <p class="eyebrow" data-t="paletteLabel">Colours</p>
@@ -680,10 +704,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     } catch (err) {}
   }
 
-  /* Two boards that used to be two separate pages. The mechanic was identical
-     — read the chart, paint the numbered part — so the bigger board is now
-     level two rather than a second card in the catalogue. Hex values, the
-     answers and the five-try budget are the originals.
+  /* Two boards that used to be two separate pages, now level one and level
+     two of the same task. The old version printed the answer in its chart
+     ("Part 1 · Red"), so the task was copying. Now the chart is a colour
+     code by job, the parts are named by what they do, and the child has to
+     decide each part's job before the colour follows. The code is the
+     board's own and presented as such: no ground or earth job, so nothing in
+     it borrows (or contradicts) real wiring colours, and every part belongs
+     to exactly one job (a microphone hears, a speaker makes the sound).
+     Board drawings, hex values and the five-try budget are the originals.
 
      The boards are drawn from data rather than written into the markup, which
      is what made keeping two of them cheap. */
@@ -703,86 +732,127 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     { key: "black",  hex: "#111827" }
   ];
 
+  /* The colour code: one colour per job. */
+  var CODE = { power: "red", senses: "blue", memory: "green", output: "yellow" };
+  var JOBS = ["power", "senses", "memory", "output"];
+
   var LEVELS = [
     {
       name: "ROB-2000", w: 350, h: 300, grid: 15,
-      answer: { 1: "red", 2: "blue", 3: "yellow", 4: "green" },
+      jobs: ["power", "senses", "memory"],
+      parts: { 1: { name: "battery", job: "power" },    2: { name: "memory", job: "memory" },
+               3: { name: "microphone", job: "senses" }, 4: { name: "thermometer", job: "senses" } },
       traces: ["M 85 70 L 85 112 L 175 112", "M 265 70 L 265 112 L 175 112",
                "M 175 112 L 175 188",
                "M 85 230 L 85 188 L 175 188", "M 265 230 L 265 188 L 175 188"],
       joints: [[175, 112], [175, 188]],
-      parts: [[1, 45, 30, 80, 45], [2, 225, 30, 80, 45], [3, 45, 225, 80, 45], [4, 225, 225, 80, 45]],
+      boxes: [[1, 45, 30, 80, 45], [2, 225, 30, 80, 45], [3, 45, 225, 80, 45], [4, 225, 225, 80, 45]],
       core: { x: 135, y: 125, w: 80, h: 50, label: "CPU" },
       holes: [[20, 20], [330, 20], [20, 280], [330, 280]]
     },
     {
       name: "MAIN-CTRL-3000", w: 400, h: 320, grid: 16,
-      answer: { 1: "red", 2: "orange", 3: "yellow", 4: "green", 5: "blue", 6: "purple" },
+      jobs: ["power", "senses", "memory", "output"],
+      parts: { 1: { name: "charger", job: "power" },  2: { name: "camera", job: "senses" },
+               3: { name: "chip", job: "memory" },    4: { name: "speaker", job: "output" },
+               5: { name: "solar", job: "power" },    6: { name: "lamp", job: "output" } },
       traces: ["M 70 65 L 70 110 L 200 110", "M 200 65 L 200 110", "M 330 65 L 330 110 L 200 110",
                "M 200 110 L 200 210",
                "M 70 255 L 70 210 L 200 210", "M 200 255 L 200 210", "M 330 255 L 330 210 L 200 210"],
       joints: [[200, 110], [200, 210]],
-      parts: [[1, 30, 25, 80, 40], [2, 160, 25, 80, 40], [3, 290, 25, 80, 40],
+      boxes: [[1, 30, 25, 80, 40], [2, 160, 25, 80, 40], [3, 290, 25, 80, 40],
               [4, 30, 255, 80, 40], [5, 160, 255, 80, 40], [6, 290, 255, 80, 40]],
       core: { x: 150, y: 125, w: 100, h: 70, label: "MAIN" },
       holes: [[16, 16], [384, 16], [16, 304], [384, 304]]
     }
   ];
 
+  function answerOf(b, num) { return CODE[b.parts[num].job]; }
+
   var T = {
     en: {
-      eyebrow: "Spaceport · sector B",
-      title1: "The virus took", title2: "the colours away",
-      intro: "Every part on the board went grey. The chart on the left says which colour each numbered one should be: pick a colour, then tap the part. Get the small board right and a bigger one comes up.",
-      boardLabel: "Board", triesLabel: "Tries left", nowLabel: "Holding",
-      chartLabel: "Wiring chart", paletteLabel: "Colours",
+      allActivities: "All activities", toMap: "Back to the map",
+      title1: "Repaint the", title2: "circuit board",
+      intro: "The virus has turned every part on the board grey, but the board's own colour code is still there and gives each job its own colour. Think about what each numbered part does, then pick that job's colour and tap the part. When the small board is right, a bigger one appears.",
+      boardLabel: "Board", triesLabel: "Tries left", nowLabel: "Colour on your brush",
+      chartLabel: "This board's colour code", partsLabel: "Parts on this board", paletteLabel: "Colours",
       check: "Check the board", reset: "Start over", again: "Play again",
-      nothing: "nothing yet", erase: "Scrape it off", part: "Part",
+      nothing: "no colour yet", erase: "Scrape off", part: "Part",
       colours: {
         red: "Red", orange: "Orange", yellow: "Yellow", green: "Green", blue: "Blue",
         purple: "Purple", pink: "Pink", cyan: "Cyan", white: "White", black: "Black"
       },
-      pickFirst: "Pick a colour first, then tap a part.",
-      notDone: function (n) { return n === 1 ? "One part is still bare." : n + " parts are still bare."; },
+      jobs: {
+        power:  ["Power",  "Parts that give the board its energy."],
+        senses: ["Senses", "Parts that notice what is around the robot, the way your eyes and ears do."],
+        memory: ["Memory", "Parts that keep information so the robot does not forget it."],
+        output: ["Light and sound", "Parts that make a light or a sound for people to see or hear."]
+      },
+      names: {
+        battery: "Battery", memory: "Memory card", microphone: "Microphone", thermometer: "Thermometer",
+        charger: "Charging port", camera: "Camera", chip: "Memory chip",
+        speaker: "Speaker", solar: "Solar panel", lamp: "LED lamp"
+      },
+      pickFirst: "Choose a colour first, and then tap the part you want to paint.",
+      notDone: function (n) {
+        return n === 1
+          ? "One part is still grey. Paint it before you check."
+          : n + " parts are still grey. Paint them before you check.";
+      },
       someWrong: function (n) {
         return n === 1
-          ? "One part is the wrong colour. It is outlined, so check the chart for that number."
-          : n + " parts are the wrong colour. They are outlined, so check the chart for those numbers.";
+          ? "One part has the wrong colour and is outlined in red. Look at what it does and find that job in the colour code."
+          : n + " parts have the wrong colour and are outlined in red. Look at what each one does and find that job in the colour code.";
       },
-      levelDone: "ROB-2000 is back online. Now the big one.",
-      wonTitle: "Both boards are running",
-      wonBody: function (n) { return "Ten parts across two boards, " + n + " of " + TRIES + " tries used."; },
-      lostTitle: "Out of tries",
-      lostBody: "The chart is the answer. On the small board: 1 red, 2 blue, 3 yellow, 4 green. On the big one the chart is a rainbow in order."
+      levelDone: "ROB-2000 is working again. The bigger board's code has a fourth job, for parts that make light or sound.",
+      wonTitle: "Both boards are working again",
+      wonBody: function (n) { return "You painted all ten parts on the two boards with " + n + " of your " + TRIES + " tries."; },
+      lostTitle: "You have used all your tries",
+      lostBody: "Each colour belongs to a job, so look at what every part does before you pick its colour."
     },
     es: {
-      eyebrow: "Puerto espacial · sector B",
-      title1: "El virus se llevó", title2: "los colores",
-      intro: "Todas las piezas de la placa se quedaron grises. El esquema de la izquierda dice de qué color va cada una: elige un color y toca la pieza. Acierta la placa pequeña y saldrá otra más grande.",
-      boardLabel: "Placa", triesLabel: "Intentos", nowLabel: "En la mano",
-      chartLabel: "Esquema", paletteLabel: "Colores",
+      allActivities: "Todas las actividades", toMap: "Volver al mapa",
+      title1: "Pinta de nuevo", title2: "la placa del circuito",
+      intro: "El virus ha dejado grises todas las piezas de la placa, pero el código de colores propio de la placa sigue ahí y da a cada trabajo su propio color. Piensa qué hace cada pieza numerada, elige el color de ese trabajo y toca la pieza. Cuando la placa pequeña esté bien, aparecerá otra más grande.",
+      boardLabel: "Placa", triesLabel: "Intentos que quedan", nowLabel: "Color del pincel",
+      chartLabel: "El código de colores de esta placa", partsLabel: "Piezas de esta placa", paletteLabel: "Colores",
       check: "Comprobar la placa", reset: "Empezar de nuevo", again: "Jugar otra vez",
-      nothing: "nada todavía", erase: "Rascar el color", part: "Pieza",
+      nothing: "ningún color todavía", erase: "Rascar", part: "Pieza",
       colours: {
         red: "Rojo", orange: "Naranja", yellow: "Amarillo", green: "Verde", blue: "Azul",
         purple: "Morado", pink: "Rosa", cyan: "Celeste", white: "Blanco", black: "Negro"
       },
-      pickFirst: "Elige un color primero y luego toca una pieza.",
-      notDone: function (n) { return n === 1 ? "Queda una pieza sin pintar." : "Quedan " + n + " piezas sin pintar."; },
+      jobs: {
+        power:  ["Energía",  "Las piezas que dan energía a la placa."],
+        senses: ["Sentidos", "Las piezas que notan lo que hay alrededor del robot, como tus ojos y tus oídos."],
+        memory: ["Memoria",  "Las piezas que guardan información para que el robot no la olvide."],
+        output: ["Luz y sonido", "Las piezas que dan una luz o un sonido para que la gente lo vea o lo oiga."]
+      },
+      names: {
+        battery: "Batería", memory: "Tarjeta de memoria", microphone: "Micrófono", thermometer: "Termómetro",
+        charger: "Puerto de carga", camera: "Cámara", chip: "Chip de memoria",
+        speaker: "Altavoz", solar: "Panel solar", lamp: "Luz LED"
+      },
+      pickFirst: "Elige primero un color y después toca la pieza que quieres pintar.",
+      notDone: function (n) {
+        return n === 1
+          ? "Todavía queda una pieza gris. Píntala antes de comprobar."
+          : "Todavía quedan " + n + " piezas grises. Píntalas antes de comprobar.";
+      },
       someWrong: function (n) {
         return n === 1
-          ? "Una pieza tiene el color equivocado. Está marcada: mira el esquema para ese número."
-          : n + " piezas tienen el color equivocado. Están marcadas: mira el esquema para esos números.";
+          ? "Una pieza tiene el color equivocado y está marcada en rojo. Mira qué hace y busca ese trabajo en el código de colores."
+          : n + " piezas tienen el color equivocado y están marcadas en rojo. Mira qué hace cada una y busca ese trabajo en el código de colores.";
       },
-      levelDone: "ROB-2000 vuelve a encenderse. Ahora la grande.",
-      wonTitle: "Las dos placas funcionan",
-      wonBody: function (n) { return "Diez piezas en dos placas, " + n + " de " + TRIES + " intentos usados."; },
-      lostTitle: "Se acabaron los intentos",
-      lostBody: "El esquema es la respuesta. En la placa pequeña: 1 rojo, 2 azul, 3 amarillo, 4 verde. En la grande el esquema es un arcoíris en orden."
+      levelDone: "ROB-2000 vuelve a funcionar. El código de la placa grande tiene un cuarto trabajo, para las piezas que dan luz o sonido.",
+      wonTitle: "Las dos placas vuelven a funcionar",
+      wonBody: function (n) { return "Has pintado las diez piezas de las dos placas con " + n + " de tus " + TRIES + " intentos."; },
+      lostTitle: "Has gastado todos los intentos",
+      lostBody: "Cada color pertenece a un trabajo, así que mira qué hace cada pieza antes de elegir su color."
     }
   };
 
-  var lang = "en", level = 0, held = null, painted = {}, used = 0;
+  var lang = "en", level = 0, held = null, painted = {}, used = 0, outcome = null, wrongNow = [];
 
   function byId(id) { return document.getElementById(id); }
   function t() { return T[lang]; }
@@ -798,6 +868,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
   function clearSay() {
     var v = byId("verdict"); v.hidden = true; v.className = "";
+    wrongNow = [];
     document.querySelectorAll(".cell").forEach(function (c) { c.classList.remove("is-wrong"); });
   }
 
@@ -815,7 +886,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     var svg = svgEl("svg", {
       viewBox: "0 0 " + b.w + " " + b.h, role: "img",
-      "aria-label": b.name + " circuit board"
+      "aria-label": b.name
     });
 
     var defs = svgEl("defs");
@@ -836,20 +907,23 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     });
     svg.appendChild(wires);
 
-    b.parts.forEach(function (p) {
+    b.boxes.forEach(function (p) {
       var num = p[0], x = p[1], y = p[2], w = p[3], h = p[4];
+      var label = d.part + " " + num + ": " + d.names[b.parts[num].name] +
+        (painted[num] ? " (" + d.colours[painted[num]] + ")" : "");
       var g = svgEl("g", {
-        "class": "cell", "data-part": num, tabindex: "0", role: "button",
-        "aria-label": d.part + " " + num
+        "class": "cell" + (wrongNow.indexOf(String(num)) >= 0 ? " is-wrong" : ""),
+        "data-part": num, tabindex: "0", role: "button",
+        "aria-label": label
       });
       g.appendChild(svgEl("rect", {
         x: x, y: y, width: w, height: h, rx: 7,
         fill: painted[num] ? hexOf(painted[num]) : BLANK,
         stroke: "#6b7b70", "stroke-width": "3"
       }));
-      var label = svgEl("text", { x: x + w / 2, y: y + h / 2 + 7 });
-      label.textContent = String(num);
-      g.appendChild(label);
+      var text = svgEl("text", { x: x + w / 2, y: y + h / 2 + 7 });
+      text.textContent = String(num);
+      g.appendChild(text);
 
       g.addEventListener("click", function () { paint(num); });
       g.addEventListener("keydown", function (e) {
@@ -865,7 +939,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     }));
     var coreText = svgEl("text", {
       x: b.core.x + b.core.w / 2, y: b.core.y + b.core.h / 2 + 5,
-      fill: "#7de6a4", "font-size": "14"
+      fill: "#7de6a4", "font-size": "14", "text-anchor": "middle"
     });
     coreText.textContent = b.core.label;
     core.appendChild(coreText);
@@ -885,6 +959,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     if (!held) { say("hint", t().pickFirst); return; }
     if (held === "erase") { delete painted[num]; } else { painted[num] = held; }
     render();
+  }
+
+  function swatch(key, hex, name) {
+    var btn = document.createElement("button");
+    btn.type = "button"; btn.className = "swb";
+    btn.setAttribute("aria-pressed", String(held === key));
+    var chip = document.createElement("span");
+    chip.className = "sw" + (key === "erase" ? " sw--erase" : "");
+    if (hex) chip.style.background = hex;
+    var cap = document.createElement("span");
+    cap.textContent = name;
+    btn.appendChild(chip); btn.appendChild(cap);
+    btn.onclick = function () { held = held === key ? null : key; render(); };
+    return btn;
   }
 
   function render() {
@@ -907,81 +995,82 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     byId("nowChip").style.background = held && held !== "erase" ? hexOf(held) : "";
     byId("nowName").textContent = held ? (held === "erase" ? d.erase : d.colours[held]) : d.nothing;
 
+    /* The colour code: only the jobs this board uses. */
     var lg = byId("legend"); lg.innerHTML = "";
-    Object.keys(b.answer).forEach(function (num) {
+    b.jobs.forEach(function (job) {
       var row = document.createElement("div");
       row.className = "legend__row";
       var chip = document.createElement("span");
-      chip.className = "legend__chip"; chip.style.background = hexOf(b.answer[num]);
-      var lab = document.createElement("span");
-      lab.className = "legend__num"; lab.textContent = d.part + " " + num;
-      var nm = document.createElement("span");
-      nm.className = "muted"; nm.textContent = d.colours[b.answer[num]];
-      row.appendChild(chip); row.appendChild(lab); row.appendChild(nm);
+      chip.className = "legend__chip"; chip.style.background = hexOf(CODE[job]);
+      var head = document.createElement("span");
+      var jb = document.createElement("span");
+      jb.className = "legend__job"; jb.textContent = d.jobs[job][0];
+      head.appendChild(jb);
+      head.appendChild(document.createTextNode(" = " + d.colours[CODE[job]]));
+      var desc = document.createElement("span");
+      desc.className = "legend__desc"; desc.textContent = d.jobs[job][1];
+      row.appendChild(chip); row.appendChild(head); row.appendChild(desc);
       lg.appendChild(row);
     });
 
-    var sw = byId("swatches"); sw.innerHTML = "";
-    PALETTE.forEach(function (c) {
-      var btn = document.createElement("button");
-      btn.type = "button"; btn.className = "sw";
-      btn.style.background = c.hex;
-      btn.setAttribute("aria-pressed", String(held === c.key));
-      btn.setAttribute("aria-label", d.colours[c.key]);
-      btn.title = d.colours[c.key];
-      btn.onclick = function () { held = held === c.key ? null : c.key; render(); };
-      sw.appendChild(btn);
+    /* The parts: a number and a name, never a colour. */
+    var pl = byId("parts"); pl.innerHTML = "";
+    Object.keys(b.parts).forEach(function (num) {
+      var li = document.createElement("li");
+      var n = document.createElement("b"); n.textContent = num;
+      var nm = document.createElement("span"); nm.textContent = d.names[b.parts[num].name];
+      li.appendChild(n); li.appendChild(nm);
+      pl.appendChild(li);
     });
-    var er = document.createElement("button");
-    er.type = "button"; er.className = "sw sw--erase";
-    er.setAttribute("aria-pressed", String(held === "erase"));
-    er.setAttribute("aria-label", d.erase);
-    er.title = d.erase;
-    er.onclick = function () { held = held === "erase" ? null : "erase"; render(); };
-    sw.appendChild(er);
+
+    var sw = byId("swatches"); sw.innerHTML = "";
+    PALETTE.forEach(function (c) { sw.appendChild(swatch(c.key, c.hex, d.colours[c.key])); });
+    sw.appendChild(swatch("erase", null, d.erase));
 
     buildBoard();
   }
 
   function check() {
     var d = t(), b = board();
-    var nums = Object.keys(b.answer);
+    var nums = Object.keys(b.parts);
     var bare = nums.filter(function (n) { return !painted[n]; });
     if (bare.length) { say("hint", d.notDone(bare.length)); return; }
 
     used++;
-    var wrong = nums.filter(function (n) { return painted[n] !== b.answer[n]; });
-    render();
-    wrong.forEach(function (n) {
-      document.querySelector(".cell[data-part=\"" + n + "\"]").classList.add("is-wrong");
-    });
+    var wrong = nums.filter(function (n) { return painted[n] !== answerOf(b, n); });
 
     if (!wrong.length) {
       if (level < LEVELS.length - 1) {
-        level++; painted = {}; held = null;
+        level++; painted = {}; held = null; wrongNow = [];
         render();
         say("ok", d.levelDone);
         return;
       }
       remember();
-      byId("game").hidden = true; byId("over").hidden = false;
-      byId("overTitle").textContent = d.wonTitle;
-      byId("overBody").textContent = d.wonBody(used);
+      outcome = "won"; paintOver();
       return;
     }
+    wrongNow = wrong;
+    render();
     if (used >= TRIES) {
-      byId("game").hidden = true; byId("over").hidden = false;
-      byId("overTitle").textContent = d.lostTitle;
-      byId("overBody").textContent = d.lostBody;
+      outcome = "lost"; paintOver();
       return;
     }
     say("no", d.someWrong(wrong.length));
   }
 
+  /* The end card is written from state, so a language switch rewrites it. */
+  function paintOver() {
+    var d = t();
+    byId("game").hidden = !!outcome; byId("over").hidden = !outcome;
+    if (!outcome) return;
+    byId("overTitle").textContent = outcome === "won" ? d.wonTitle : d.lostTitle;
+    byId("overBody").textContent = outcome === "won" ? d.wonBody(used) : d.lostBody;
+  }
+
   function reset() {
-    level = 0; held = null; painted = {}; used = 0;
-    byId("game").hidden = false; byId("over").hidden = true;
-    clearSay(); render();
+    level = 0; held = null; painted = {}; used = 0; outcome = null;
+    clearSay(); paintOver(); render();
   }
 
   byId("check").onclick = check;
@@ -994,7 +1083,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       document.querySelectorAll(".langs button").forEach(function (x) {
         x.setAttribute("aria-pressed", String(x === b));
       });
-      reset();
+      /* Keep the board, the paint and the tries; drop only the last message. */
+      byId("verdict").hidden = true;
+      render(); paintOver();
     };
   });
 

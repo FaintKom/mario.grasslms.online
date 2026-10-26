@@ -760,9 +760,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .page__icon { font-size: 30px; line-height: 1; }
   .badges { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-4); }
   .page__note { margin-top: var(--s-4); color: var(--color-text-muted); font-style: italic; }
-  .blank { display: grid; place-items: center; gap: var(--s-2); min-height: 220px; text-align: center; color: var(--color-text-subtle); }
+  .blank { display: grid; place-items: center; align-content: center; gap: var(--s-2); min-height: 220px; text-align: center; color: var(--color-text-subtle); }
 
-  .cheats { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: var(--s-2); }
+  /* Four in a row on a laptop, so the fourth shortcut does not sit alone on a line of its own. */
+  .cheats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-2); }
+  .cheat { flex-direction: column; align-items: flex-start; gap: var(--s-2); }
+  [hidden] { display: none !important; }
   .cheat {
     display: flex; align-items: center; gap: var(--s-3);
     padding: var(--s-3) var(--s-4);
@@ -776,7 +779,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     border-radius: var(--radius-xs); padding: 3px var(--s-2); white-space: nowrap;
   }
   .cheat span { font-size: var(--t-sm); color: var(--color-text-muted); }
-  .cheat b { display: block; font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-success-fg); }
+  .cheat b { display: block; font-size: var(--t-xs); color: var(--color-success-fg); }
 
   .stage { display: grid; gap: var(--s-3); }
   .stage:fullscreen { background: var(--color-bg); padding: var(--s-6); align-content: center; }
@@ -800,10 +803,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <style>
   /* Way back to the catalogue, same look as its own back link. */
   .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+  /* Section labels in plain sentence case at body size, not small capitals. */
+  .tag { margin: 0; font-size: var(--t-sm); font-weight: 700; color: var(--color-text-muted); }
 </style>
 <script src="../../../_shared/desktop-only.js" data-shot="desktop-index.jpg" data-back="../../index.html" data-back-label="Back to all activities" defer></script>
 </head>
@@ -812,21 +817,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 9–12 · browser tabs</p>
+      <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">The keys are faster</span> <em class="mark" data-t="title2">than the mouse</em></h1>
-    <p class="lede" data-t="intro">The observatory left four pages open. Use the mouse if you like, but the keys are faster, and this browser tells you which shortcut you just used.</p>
+    <h1><span data-t="title1">Opening and switching tabs</span> <em class="mark" data-t="title2">from the keyboard</em></h1>
+    <p class="lede" data-t="intro">The observatory has left four pages open in this browser. You can move between them with the mouse, but the keyboard is quicker once you learn the four shortcuts below. Each shortcut gets a tick as soon as you use it.</p>
   </header>
 
   <div class="stage" id="stage">
     <div class="row row--between keybar">
-      <button class="btn btn--sm" id="grab" data-t="grabKeys">Give me the keyboard</button>
+      <button class="btn btn--sm" id="grab" data-t="grabKeys">Use the keyboard here</button>
       <span class="keystate" id="keystate"></span>
     </div>
 
@@ -858,17 +862,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       </div>
 
       <div class="chr__marks" aria-hidden="true">
-        <i>🔭 Observatory</i><i>📡 Signals</i><i>🌙 Night sky</i><i>☁️ Weather</i>
+        <i>🔭 <span data-t="bm1">Observatory</span></i><i>📡 <span data-t="bm2">Signals</span></i><i>🌙 <span data-t="bm3">Night sky</span></i><i>☁️ <span data-t="bm4">Weather</span></i>
       </div>
 
       <div class="chr__view" id="page" role="tabpanel"></div>
     </div>
-  </div>
 
-  <section class="card stack stack--tight">
-    <p class="eyebrow" data-t="cheatTitle">Try each one</p>
-    <div class="cheats" id="cheats"></div>
-  </section>
+    <!-- Inside the stage, so it goes fullscreen with the browser: the ticks
+         are the feedback, and practice mode is exactly when they matter. -->
+    <section class="card stack stack--tight">
+      <p class="tag" data-t="cheatTitle">Shortcuts to try</p>
+      <div class="cheats" id="cheats"></div>
+      <p class="feedback feedback--ok" id="done" hidden aria-live="polite"></p>
+    </section>
+  </div>
 
 </div>
 
@@ -887,10 +894,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       { icon: "🔭", title: "Space Tracking", url: "observatory.local/tracking",
         sub: "Watching the sky",
         badges: ["Telescope: active", "Scanning: 360°", "Objects found: 1,247"],
-        note: "Still searching for a signal from Pip." },
+        note: "Still searching the sky for a signal." },
       { icon: "📡", title: "Signal Database", url: "observatory.local/signals",
         sub: "Archive of intercepted space signals",
-        badges: ["Signals: 892", "Decoded: 721", "Possibly Pip: 3"],
+        badges: ["Signals: 892", "Decoded: 721", "Worth a closer look: 3"],
         note: "Three of them look promising." },
       { icon: "📖", title: "Observation Log", url: "observatory.local/log",
         sub: "The astronomer's own notes",
@@ -905,10 +912,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       { icon: "🔭", title: "Seguimiento espacial", url: "observatorio.local/seguimiento",
         sub: "Vigilando el cielo",
         badges: ["Telescopio: activo", "Barrido: 360°", "Objetos hallados: 1.247"],
-        note: "Seguimos buscando una señal de Pip." },
+        note: "Seguimos buscando una señal en el cielo." },
       { icon: "📡", title: "Base de señales", url: "observatorio.local/senales",
         sub: "Archivo de señales espaciales interceptadas",
-        badges: ["Señales: 892", "Descifradas: 721", "Posible Pip: 3"],
+        badges: ["Señales: 892", "Descifradas: 721", "Para revisar: 3"],
         note: "Tres de ellas tienen buena pinta." },
       { icon: "📖", title: "Diario de observación", url: "observatorio.local/diario",
         sub: "Las notas del astrónomo",
@@ -919,41 +926,49 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   const T = {
     en: {
-      eyebrow: "Ages 9–12 · browser tabs",
-      title1: "The keys are faster", title2: "than the mouse",
-      intro: "The observatory left four pages open. Use the mouse if you like, but the keys are faster, and this browser tells you which shortcut you just used.",
-      cheatTitle: "Try each one",
-      grabKeys: "Give me the keyboard", giveBack: "Give the keyboard back",
-      keysMine: "The shortcuts land here now. Esc gives the keyboard back.",
-      keysTheirs: "Right now Ctrl+T and Ctrl+W belong to your real browser. Take the keyboard first.",
-      keysNoApi: "This browser will not hand over Ctrl+T. Use the tabs and the buttons instead.",
-      newTab: "New tab", blankTitle: "Nothing open",
-      blankBody: "Press Ctrl + T, or click the plus, to open a tab.",
+      allActivities: "All activities",
+      title1: "Opening and switching tabs", title2: "from the keyboard",
+      intro: "The observatory has left four pages open in this browser. You can move between them with the mouse, but the keyboard is quicker once you learn the four shortcuts below. Each shortcut gets a tick as soon as you use it.",
+      cheatTitle: "Shortcuts to try",
+      bm1: "Observatory", bm2: "Signals", bm3: "Night sky", bm4: "Weather",
+      grabKeys: "Use the keyboard here", giveBack: "Give the keyboard back",
+      keysMine: "The shortcuts now come to this page. Press Esc when you want to give the keyboard back.",
+      keysTheirs: "Until you press the green button, Ctrl+T and Ctrl+W go to your real browser and would open or close its own tabs.",
+      keysNoApi: "This browser keeps Ctrl+T, Ctrl+W and Ctrl+Tab for itself; to practise them, open this page in Chrome or Edge.",
+      tips: { newTab: "New tab", back: "Back", forward: "Forward", reload: "Reload",
+              extensions: "Extensions", menu: "Customize and control Google Chrome" },
+      allDone: "You have used all four shortcuts and can now open, close and switch tabs without the mouse.",
+      newTab: "New tab", blankTitle: "There are no tabs open",
+      blankBody: "To open one, press Ctrl + T or click the plus next to the tabs.",
       close: "Close tab", used: "used",
       cheats: [
         "open a new tab",
-        "close the one you are on",
-        "step to the next tab",
-        "step back to the one before"
+        "close the tab you are on",
+        "move to the next tab",
+        "go back to the tab before"
       ]
     },
     es: {
-      eyebrow: "9–12 años · pestañas del navegador",
-      title1: "El teclado es más rápido", title2: "que el ratón",
-      intro: "El observatorio dejó cuatro páginas abiertas. Puedes usar el ratón, pero con el teclado es más rápido, y este navegador te dice qué atajo acabas de usar.",
-      cheatTitle: "Prueba cada uno",
-      grabKeys: "Dame el teclado", giveBack: "Devolver el teclado",
-      keysMine: "Los atajos llegan aquí. Esc devuelve el teclado.",
-      keysTheirs: "Ahora mismo Ctrl+T y Ctrl+W son de tu navegador de verdad. Pide el teclado primero.",
-      keysNoApi: "Este navegador no suelta Ctrl+T. Usa las pestañas y los botones.",
-      newTab: "Pestaña nueva", blankTitle: "No hay nada abierto",
-      blankBody: "Pulsa Ctrl + T, o haz clic en el más, para abrir una pestaña.",
+      allActivities: "Todas las actividades",
+      title1: "Abrir y cambiar de pestaña", title2: "con el teclado",
+      intro: "El observatorio ha dejado cuatro páginas abiertas en este navegador. Puedes moverte entre ellas con el ratón, pero el teclado es más rápido cuando aprendes los cuatro atajos de abajo. Cada atajo se marca en cuanto lo usas.",
+      cheatTitle: "Atajos para probar",
+      bm1: "Observatorio", bm2: "Señales", bm3: "Cielo nocturno", bm4: "Tiempo",
+      grabKeys: "Usar el teclado aquí", giveBack: "Devolver el teclado",
+      keysMine: "Ahora los atajos llegan a esta página. Pulsa Esc cuando quieras devolver el teclado.",
+      keysTheirs: "Hasta que pulses el botón verde, Ctrl+T y Ctrl+W van a tu navegador de verdad y abrirían o cerrarían sus propias pestañas.",
+      keysNoApi: "Este navegador se guarda Ctrl+T, Ctrl+W y Ctrl+Tab para sí mismo; para practicarlos, abre esta página en Chrome o en Edge.",
+      tips: { newTab: "Nueva pestaña", back: "Atrás", forward: "Adelante", reload: "Volver a cargar",
+              extensions: "Extensiones", menu: "Personaliza y controla Google Chrome" },
+      allDone: "Has usado los cuatro atajos y ya puedes abrir, cerrar y cambiar de pestaña sin el ratón.",
+      newTab: "Pestaña nueva", blankTitle: "No queda ninguna pestaña abierta",
+      blankBody: "Para abrir una, pulsa Ctrl + T o haz clic en el más que hay junto a las pestañas.",
       close: "Cerrar pestaña", used: "usado",
       cheats: [
         "abrir una pestaña nueva",
-        "cerrar la que tienes delante",
-        "pasar a la siguiente",
-        "volver a la anterior"
+        "cerrar la pestaña en la que estás",
+        "pasar a la pestaña siguiente",
+        "volver a la pestaña anterior"
       ]
     }
   };
@@ -986,6 +1001,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       row.append(k, wrap);
       box.appendChild(row);
     });
+
+    var all = KEYS.every(function (key) { return used[key]; });
+    $("done").hidden = !all;
+    if (all) { $("done").textContent = d.allDone; remember(); }
+  }
+
+  /* Progress. One shared key, so the sector map can see which tasks are done. */
+  function remember() {
+    try {
+      var k = "kids.progress.v1";
+      var seen = JSON.parse(localStorage.getItem(k) || "{}");
+      seen.chrome = true;
+      localStorage.setItem(k, JSON.stringify(seen));
+    } catch (err) {}
   }
 
   function render() {
@@ -999,9 +1028,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     const strip = $("strip");
     strip.innerHTML = "";
+    document.querySelectorAll("[data-ta]").forEach(function (el) {
+      const label = d.tips[el.dataset.ta];
+      if (label) { el.title = label; el.setAttribute("aria-label", label); }
+    });
+
     tabs.forEach(function (pi, i) {
-      const b = document.createElement("button");
-      b.type = "button";
+      /* The tab is a focusable div rather than a button, so its close cross
+         can be a real button of its own: a button inside a button is not
+         allowed, and the cross could not be reached from the keyboard. */
+      const b = document.createElement("div");
+      b.tabIndex = 0;
       b.className = "chr-tab" + (i === active ? " is-active" : "");
       b.setAttribute("role", "tab");
       b.setAttribute("aria-selected", String(i === active));
@@ -1019,15 +1056,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       lab.className = "chr-tab__label";
       lab.textContent = pi === null ? d.newTab : P[pi].title;
 
-      const x = document.createElement("span");
+      const x = document.createElement("button");
+      x.type = "button";
       x.className = "chr-tab__x";
-      x.setAttribute("role", "button");
       x.setAttribute("aria-label", d.close);
+      x.title = d.close;
       x.innerHTML = '<svg viewBox="0 0 12 12" aria-hidden="true"><use href="#chr-x"/></svg>';
-      x.onclick = function (e) { e.stopPropagation(); closeAt(i); };
+      x.onclick = function (e) { e.stopPropagation(); closeAt(i, false); };
+      x.onkeydown = function (e) { e.stopPropagation(); };
 
       b.append(curve, fav, lab, x);
       b.onclick = function () { active = i; render(); };
+      b.onkeydown = function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault(); active = i; render();
+          const again = $("strip").children[active];
+          if (again) again.focus();
+        }
+      };
       strip.appendChild(b);
     });
 
@@ -1090,17 +1136,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   function mark(key) { used[key] = true; }
 
-  function openTab() {
+  /* Only the keyboard ticks a shortcut off. The plus and the cross still
+     work, the way they do in Chrome, but a click is not a shortcut. */
+  function openTab(fromKeys) {
     tabs.push(null);
     active = tabs.length - 1;
-    mark("Ctrl + T");
+    if (fromKeys) mark("Ctrl + T");
     render();
   }
 
-  function closeAt(i) {
+  function closeAt(i, fromKeys) {
     tabs.splice(i, 1);
     if (active >= tabs.length) active = Math.max(0, tabs.length - 1);
-    mark("Ctrl + W");
+    if (fromKeys) mark("Ctrl + W");
     render();
   }
 
@@ -1172,14 +1220,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       mark(e.shiftKey ? "Ctrl + Shift + Tab" : "Ctrl + Tab");
       render();
     } else if (e.key.toLowerCase() === "t") {
-      e.preventDefault(); openTab();
+      e.preventDefault(); openTab(true);
     } else if (e.key.toLowerCase() === "w") {
       e.preventDefault();
-      if (tabs.length) closeAt(active);
+      if (tabs.length) closeAt(active, true);
     }
   });
 
-  $("newtab").onclick = openTab;
+  $("newtab").onclick = function () { openTab(false); };
   $("grab").onclick = function () { locked ? releaseKeyboard() : takeKeyboard(); };
 
   document.querySelectorAll(".langs button").forEach(function (b) {

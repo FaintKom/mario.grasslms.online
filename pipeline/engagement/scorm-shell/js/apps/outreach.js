@@ -6,11 +6,19 @@
  * telemetry `phone_dial_attempt` event (so the M3 habit-gate can read
  * whether Calendar was already open).
  *
+ * Dial rules (options, also changeable through update()):
+ *   dialLocked:   "reason"     every Dial button is off, the reason is shown
+ *   dialRequires: "calendar"   Dial is off until that app has an open window
+ * A blocked click fires `outreach:dial-blocked` {lead_id, reason}. The phone
+ * dialler's own Dial button goes through the same rules via
+ * `phone:dial-request`.
+ *
  * @see 02-design/ux-design-system.md §4.1
  */
 
 import { registerApp, icon } from "./registry.js";
 import { EVENT } from "../event-log.js";
+import { loadProfiles } from "./profiles.js";
 
 const ARCHETYPES = {
   storefront: { label: "Retail SMB",        glyph: "storefront" },
@@ -36,6 +44,8 @@ registerApp({
     let leads = Array.isArray(options.leads) ? options.leads.slice() : null;
     let activeIndustry = "any";
     let activeFte = "any";
+    let dialLocked = options.dialLocked || null;
+    let dialRequires = options.dialRequires || null;
 
     container.classList.add("app--outreach");
     container.innerHTML = renderShell();
@@ -57,8 +67,48 @@ registerApp({
         const id = btn.getAttribute("data-lead-id");
         const prospect = leads?.find(l => l.lead_id === id);
         if (!prospect) return;
-        dial(prospect);
+        tryDial(prospect);
       });
+    }
+
+    /** Why Dial is off right now, or null when it is on. */
+    function lockReason() {
+      if (dialLocked) return dialLocked;
+      if (dialRequires && !document.querySelector(`.os-window.app--${dialRequires}`)) {
+        return dialRequires === "calendar"
+          ? "Open Calendar first. Dial turns on once it's open in a second window."
+          : `Dial turns on once ${dialRequires} is open.`;
+      }
+      return null;
+    }
+
+    function tryDial(prospect) {
+      const reason = lockReason();
+      if (reason) {
+        showStatus(reason);
+        eventBus.dispatchEvent(new CustomEvent("outreach:dial-blocked", { detail: { lead_id: prospect.lead_id, reason } }));
+        return false;
+      }
+      showStatus("");
+      dial(prospect);
+      return true;
+    }
+
+    /** Update the Dial buttons in place, so anything a module put next to a row stays put. */
+    function refreshDialState() {
+      const reason = lockReason();
+      container.querySelectorAll("[data-action='dial']").forEach(b => {
+        b.setAttribute("aria-disabled", reason ? "true" : "false");
+        if (reason) b.setAttribute("title", reason); else b.removeAttribute("title");
+      });
+      if (!reason) showStatus("");
+    }
+
+    function showStatus(text) {
+      const el = container.querySelector("[data-region='dial-status']");
+      if (!el) return;
+      el.textContent = text;
+      el.hidden = !text;
     }
 
     function dial(prospect) {
@@ -87,6 +137,7 @@ registerApp({
         : list.map(renderRow).join("");
       const cnt = container.querySelector("[data-region='count']");
       if (cnt) cnt.textContent = String(list.length);
+      refreshDialState();
     }
 
     function renderRow(l) {
@@ -152,6 +203,7 @@ registerApp({
               <span class="oa-filter-chip">Stalled</span>
               <span class="oa-filter-chip">Replied</span>
             </div>
+            <p class="dial-btn-hint oa-dial-status" data-region="dial-status" role="status" aria-live="polite" hidden></p>
             <div class="oa-queue">
               <div class="dial-queue" role="list" data-region="queue"></div>
             </div>
@@ -162,24 +214,44 @@ registerApp({
 
     async function ensureLeads() {
       if (leads) return;
-      try {
-        const res = await fetch(new URL("../../data/sample-profiles.json", import.meta.url));
-        leads = await res.json();
-      } catch (e) {
-        console.warn("[outreach] could not load sample-profiles.json — empty queue", e);
-        leads = [];
-      }
+      leads = (await loadProfiles()).slice();
     }
 
     bindFilters();
     bindRows();
     (async () => { await ensureLeads(); render(); })();
 
+    // A window opening or closing can switch dialRequires on or off.
+    const onWindows = () => refreshDialState();
+    eventBus.addEventListener("app:opened", onWindows);
+    eventBus.addEventListener("app:closed", onWindows);
+    // The dialler's own Dial button asks here first, so the same rules apply.
+    const onDialRequest = (/** @type {CustomEvent} */ ev) => {
+      const d = ev.detail;
+      if (!d || d.handled) return;
+      const prospect = leads?.find(l => l.lead_id === d.prospect?.lead_id);
+      if (!prospect) return;
+      d.handled = true;
+      tryDial(prospect);
+    };
+    eventBus.addEventListener("phone:dial-request", onDialRequest);
+
     return {
       update(opts) {
         if (opts?.leads) { leads = opts.leads; render(); }
+        if (opts && "dialLocked" in opts) { dialLocked = opts.dialLocked || null; refreshDialState(); }
+        if (opts && "dialRequires" in opts) { dialRequires = opts.dialRequires || null; refreshDialState(); }
       },
-      destroy() { /* no listeners outside container */ },
+      /** Dial a lead through the same rules as a click on its row. */
+      dialLead(leadId) {
+        const prospect = leads?.find(l => l.lead_id === leadId);
+        return prospect ? tryDial(prospect) : false;
+      },
+      destroy() {
+        eventBus.removeEventListener("app:opened", onWindows);
+        eventBus.removeEventListener("app:closed", onWindows);
+        eventBus.removeEventListener("phone:dial-request", onDialRequest);
+      },
     };
   },
 });

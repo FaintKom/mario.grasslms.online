@@ -541,7 +541,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .tray { display: flex; flex-wrap: wrap; gap: var(--s-2); align-content: start; min-height: var(--control-md); }
   .tray:empty::after { content: attr(data-empty); color: var(--color-text-subtle); font-size: var(--t-sm); }
 
-  .token { font-family: var(--font-mono); font-size: var(--t-sm); }
+  /* Files are tapped, not dragged, so the shared grab cursor would promise
+     something the page does not do. */
+  .token { font-family: var(--font-mono); font-size: var(--t-sm); cursor: pointer; }
+  .token:active { cursor: pointer; }
   .token[aria-pressed="true"] {
     border-color: var(--color-primary);
     background: var(--color-primary-soft);
@@ -552,6 +555,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .bin { display: grid; gap: var(--s-2); }
   .bin__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-2); }
   .bin__name { font-weight: 700; font-size: var(--t-sm); }
+  /* The room's name is the keyboard way in: a real button, styled as the
+     label it replaces. Tapping anywhere in the room still works too. */
+  .bin__drop {
+    appearance: none; border: 0; background: none; padding: 0; margin: 0;
+    font: inherit; font-weight: 700; font-size: var(--t-sm); color: inherit;
+    cursor: pointer; text-align: left; border-radius: var(--radius-xs);
+  }
+  .bin__drop:hover { text-decoration: underline; text-underline-offset: 3px; }
   .bin__rule { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); }
   .dropzone { display: flex; flex-wrap: wrap; gap: var(--s-2); align-content: start; cursor: pointer; }
 
@@ -567,8 +578,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     border: 0; background: none; cursor: pointer; padding: 0 var(--s-1);
     color: var(--color-text-subtle); font: inherit; line-height: 1;
   }
+  /* The file's own name picks it up again, so a file in the wrong room can
+     go straight to the right one without a trip back to the tray. */
+  .placed .placed__name { color: var(--color-text); padding: 0; min-height: 28px; }
+  /* The × was a 13px glyph; on a phone it needs a finger-sized target. */
+  .placed button:not(.placed__name) { min-width: 28px; min-height: 28px; font-size: var(--t-sm); }
+  .placed[data-held] { border-color: var(--color-primary); background: var(--color-primary-soft); box-shadow: var(--ring-focus); }
   .placed.is-correct::before { content: "✓"; color: var(--color-success-fg); font-weight: 700; }
   .placed.is-wrong::before   { content: "✕"; color: var(--color-danger-fg);  font-weight: 700; }
+
+  /* Small labels in plain sentence case, not spaced capitals. The room
+     rules on level 3 are sentences, so they read in the body font too. */
+  .eyebrow { font-family: var(--font-sans); font-size: var(--t-sm); font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--color-text-muted); }
+  .bin__rule { font-family: var(--font-sans); font-size: var(--t-xs); }
+  .row--between > .back { align-self: center; }
 
   .done { display: none; }
   .done[data-open] { display: block; }
@@ -587,16 +610,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 8–10 · file management</p>
+      <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a>
+
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
     <h1><span data-t="title1">File</span> <em class="mark" data-t="title2">Kingdom</em></h1>
-    <p class="lede" data-t="intro">Files are scattered across the kingdom. Put each one back where it belongs.</p>
+    <p class="lede" data-t="intro">In this sorting game for ages 8 to 10, the files of the kingdom have been scattered. Over three levels you put them back, and each level sorts them in a different way.</p>
   </header>
 
   <div class="hud">
@@ -604,25 +627,23 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       <span class="eyebrow" data-t="levelLabel">Level</span>
       <span class="hud__score" id="levelNum">1</span>
     </div>
-    <div class="steps" style="flex:1; min-width:160px;" aria-hidden="true">
-      <i id="step1" class="is-current"></i><i id="step2"></i>
-    </div>
+    <div class="steps" id="steps" style="flex:1; min-width:160px;" aria-hidden="true"></div>
     <div class="row">
-      <span class="eyebrow" data-t="placedLabel">Sorted</span>
+      <span class="eyebrow" data-t="placedLabel">Files sorted</span>
       <span class="hud__score" id="score">0</span>
     </div>
   </div>
 
   <section class="card stack" aria-labelledby="taskTitle">
     <div class="stack stack--tight">
-      <h2 id="taskTitle" data-t="ltitle">Sort by extension</h2>
-      <p class="muted" data-t="lbrief">Every file name ends with a dot and a few letters. That ending says what kind of file it is. Pick a file, then pick its room.</p>
+      <h2 id="taskTitle" data-t="ltitle">Sort the files by their ending</h2>
+      <p class="muted" data-t="lbrief">Every file name ends with a dot and a few letters, and that ending tells the computer what kind of file it is. Tap a file and then the room where it belongs.</p>
     </div>
 
     <div class="board">
       <div class="stack stack--tight">
         <p class="eyebrow" data-t="trayLabel">Files waiting</p>
-        <div class="tray" id="tray" data-empty="All sorted."></div>
+        <div class="tray" id="tray" data-empty="Every file has been sorted."></div>
       </div>
       <div class="bins" id="bins"></div>
     </div>
@@ -637,7 +658,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   <section class="card done" id="done" aria-live="polite">
     <div class="stack">
-      <h2 data-t="doneTitle">The archive is back in order</h2>
+      <h2 id="doneTitle">The archive is back in order</h2>
       <p class="muted" id="doneBody"></p>
       <div class="row">
         <button class="btn" id="next" data-t="next">Next level</button>
@@ -700,23 +721,23 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       items: [
         { id: "g1",  bin: "music",   en: "Sheet music for the royal waltz", es: "Partitura del vals real" },
         { id: "g2",  bin: "art",     en: "Portrait of the princess",        es: "Retrato de la princesa" },
-        { id: "g3",  bin: "science", en: "The alchemist's formulas",        es: "Fórmulas del alquimista" },
+        { id: "g3",  bin: "science", en: "How a rainbow is made",          es: "Cómo se forma el arcoíris" },
         { id: "g4",  bin: "animals", en: "Horses of the royal stable",      es: "Caballos del establo real" },
         { id: "g5",  bin: "music",   en: "The magic flute",                 es: "La flauta mágica" },
         { id: "g6",  bin: "art",     en: "Mosaic of the throne room",       es: "Mosaico del salón del trono" },
-        { id: "g7",  bin: "science", en: "Map of the night sky",            es: "Mapa del cielo nocturno" },
+        { id: "g7",  bin: "science", en: "Why the moon changes shape",      es: "Por qué cambia la forma de la luna" },
         { id: "g8",  bin: "animals", en: "Creatures of the forest",         es: "Criaturas del bosque" },
         { id: "g9",  bin: "music",   en: "Songs of the minstrels",          es: "Canciones de los juglares" },
         { id: "g10", bin: "art",     en: "Chapel stained glass",            es: "Vidrieras de la capilla" },
-        { id: "g11", bin: "science", en: "Gears of the clock tower",        es: "Engranajes del reloj" },
-        { id: "g12", bin: "animals", en: "Dragons at the border",           es: "Dragones en la frontera" }
+        { id: "g11", bin: "science", en: "Experiments with magnets",        es: "Experimentos con imanes" },
+        { id: "g12", bin: "animals", en: "Owls of the castle tower",        es: "Búhos de la torre del castillo" }
       ]
     },
     {
       bins: [
-        { id: "cook",  en: "Royal cook", es: "Cocinera real", rule: "", ruleEn: "anything you can eat", ruleEs: "todo lo que se come" },
-        { id: "smith", en: "Blacksmith", es: "Herrero", rule: "", ruleEn: "anything that gets mended", ruleEs: "todo lo que se repara" },
-        { id: "maps",  en: "Map-maker", es: "Cartógrafo", rule: "", ruleEn: "anywhere you can travel", ruleEs: "todo lo que se recorre" }
+        { id: "cook",  en: "Royal cook", es: "Cocinera real", rule: "", ruleEn: "recipes", ruleEs: "recetas" },
+        { id: "smith", en: "Blacksmith", es: "Herrero", rule: "", ruleEn: "iron work", ruleEs: "trabajos de hierro" },
+        { id: "maps",  en: "Map-maker", es: "Cartógrafo", rule: "", ruleEn: "roads", ruleEs: "caminos" }
       ],
       items: [
         { id: "r1", bin: "cook",  en: "soup-recipe.txt",        es: "receta-sopa.txt" },
@@ -731,51 +752,63 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   const T = {
     en: {
-      eyebrow: "Ages 8–10 · file management",
+      allActivities: "All activities",
       title1: "File", title2: "Kingdom",
-      intro: "Files are scattered across the kingdom. Put each one back where it belongs.",
-      levelLabel: "Level", placedLabel: "Sorted", trayLabel: "Files waiting",
-      titles: ["Sort by extension", "Sort by what is inside", "Sort by who needs it"],
+      intro: "In this sorting game for ages 8 to 10, the files of the kingdom have been scattered. Over three levels you put them back, and each level sorts them in a different way.",
+      levelLabel: "Level", placedLabel: "Files sorted", trayLabel: "Files waiting",
+      titles: ["Sort the files by their ending", "Sort the files by what is inside", "Sort the files by who needs them"],
       briefs: [
-        "Every file name ends with a dot and a few letters. That ending says what kind of file it is. Pick a file, then pick its room.",
-        "These have no extension to help you. Read the name and decide which shelf it goes on.",
-        "Three people are waiting for their papers. The cook wants recipes, the blacksmith wants repairs, the map-maker wants roads. Each of them gets two."
+        "Every file name ends with a dot and a few letters, and that ending tells the computer what kind of file it is. Tap a file and then the room where it belongs.",
+        "These names have no ending to help you. Read each one and put it on the shelf for what it is about.",
+        "Three people are waiting for their papers, and each of them needs two. Recipes go to the cook, iron work to the blacksmith and roads to the map-maker."
       ],
       check: "Check", reset: "Start over", next: "Next level", again: "Play again",
+      againAll: "Start again from level 1",
       doneTitle: "The archive is back in order",
-      empty: "All sorted.", remove: "Take back",
-      allRight: "Every file is home. Nothing left to fix.",
+      finalTitle: "The whole kingdom is in order again",
+      finalLine: (a, b) => "You sorted the files in three different ways and got " + a + " of " + b + " right on your first try.",
+      empty: "No files are waiting.", remove: "Put back with the waiting files", putHere: "Put the chosen file in",
+      pickUp: "Pick up", rulesShown: "Each room now shows the endings it takes. Match the letters after the dot to a room.",
+      allRight: "Every file is back where it belongs.",
       someWrong: (n) => n === 1
-        ? "One file is in the wrong room. It is marked — move it and check again."
-        : n + " files are in the wrong room. They are marked — move them and check again.",
+        ? "One file is in the wrong room and has a cross on it. Tap its name, then the right room, and check again."
+        : n + " files are in the wrong rooms and have crosses on them. Tap each name, then the right room, and check again.",
       notDone: (n) => n === 1 ? "One file is still waiting." : n + " files are still waiting.",
-      scoreLine: (a, b) => "You put " + a + " of " + b + " in the right place on the first try."
+      scoreLine: (a, b) => "You put " + a + " of " + b + " files in the right place on your first try."
     },
     es: {
-      eyebrow: "8–10 años · gestión de archivos",
+      allActivities: "Todas las actividades",
       title1: "Reino de", title2: "Archivos",
-      intro: "Los archivos están repartidos por el reino. Devuelve cada uno a su sitio.",
-      levelLabel: "Nivel", placedLabel: "Ordenados", trayLabel: "Archivos pendientes",
-      titles: ["Ordena por extensión", "Ordena por su contenido", "Ordena por quién lo necesita"],
+      intro: "En este juego de ordenar para niños de 8 a 10 años, los archivos del reino se han desperdigado. En tres niveles los devuelves a su sitio, y cada nivel los ordena de una manera distinta.",
+      levelLabel: "Nivel", placedLabel: "Archivos ordenados", trayLabel: "Archivos que esperan",
+      titles: ["Ordena los archivos por su final", "Ordena los archivos por lo que contienen", "Ordena los archivos por quién los necesita"],
       briefs: [
-        "El nombre de cada archivo termina en un punto y unas letras. Ese final dice qué tipo de archivo es. Elige un archivo y luego su sala.",
-        "Aquí no hay extensión que te ayude. Lee el nombre y decide en qué estante va.",
-        "Tres personas esperan sus papeles. La cocinera quiere recetas, el herrero quiere reparaciones, el cartógrafo quiere caminos. A cada uno le tocan dos."
+        "El nombre de cada archivo termina en un punto y unas letras, y ese final le dice al ordenador qué tipo de archivo es. Toca un archivo y después la sala donde va.",
+        "Estos nombres no tienen un final que te ayude. Lee cada uno y ponlo en el estante del tema del que trata.",
+        "Tres personas esperan sus papeles, y cada una necesita dos. Las recetas van a la cocinera, los trabajos de hierro al herrero y los caminos al cartógrafo."
       ],
       check: "Comprobar", reset: "Empezar de nuevo", next: "Siguiente nivel", again: "Jugar otra vez",
+      againAll: "Volver a empezar desde el nivel 1",
       doneTitle: "El archivo vuelve a estar en orden",
-      empty: "Todo ordenado.", remove: "Devolver",
-      allRight: "Cada archivo está en su casa. No queda nada por corregir.",
+      finalTitle: "Todo el reino vuelve a estar en orden",
+      finalLine: (a, b) => "Has ordenado los archivos de tres maneras distintas y has acertado " + a + " de " + b + " al primer intento.",
+      empty: "No queda ningún archivo esperando.", remove: "Devolver a los archivos que esperan", putHere: "Poner aquí el archivo elegido",
+      pickUp: "Recoger", rulesShown: "Ahora cada sala enseña los finales que acepta. Busca la sala que coincide con las letras que van después del punto.",
+      allRight: "Cada archivo ha vuelto a su sitio.",
       someWrong: (n) => n === 1
-        ? "Un archivo está en la sala equivocada. Está marcado: muévelo y comprueba otra vez."
-        : n + " archivos están en la sala equivocada. Están marcados: muévelos y comprueba otra vez.",
-      notDone: (n) => n === 1 ? "Todavía queda un archivo." : "Todavía quedan " + n + " archivos.",
-      scoreLine: (a, b) => "Colocaste " + a + " de " + b + " en el sitio correcto al primer intento."
+        ? "Un archivo está en la sala equivocada y tiene una cruz. Toca su nombre, después la sala correcta, y vuelve a comprobar."
+        : n + " archivos están en salas equivocadas y tienen una cruz. Toca cada nombre, después la sala correcta, y vuelve a comprobar.",
+      notDone: (n) => n === 1 ? "Todavía queda un archivo esperando." : "Todavía quedan " + n + " archivos esperando.",
+      scoreLine: (a, b) => "Has colocado " + a + " de " + b + " archivos en su sitio al primer intento."
     }
   };
 
   let lang = "en", level = 0, placement = {}, selected = null;
   let firstTryRight = 0, checkedOnce = false;
+  /* Level one hides the endings on the room labels until a check finds a
+     mistake: matching ".jpg" to ".jpg" is reading, not knowing. */
+  let showRules = false, solvedLevel = false;
+  const firstTryByLevel = [];
 
   const $ = (id) => document.getElementById(id);
   const tray = $("tray"), bins = $("bins"), feedback = $("feedback");
@@ -794,9 +827,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     tray.dataset.empty = d.empty;
 
     $("levelNum").innerHTML = (level + 1) + '<span class="muted">/' + LEVELS.length + "</span>";
-    $("step1").className = level === 0 ? "is-current" : "is-done";
-    $("step2").className = level === 1 ? "is-current" : "";
+    const steps = $("steps");
+    steps.innerHTML = "";
+    LEVELS.forEach((_, i) => {
+      const seg = document.createElement("i");
+      if (i < level || (i === level && solvedLevel)) seg.className = "is-done";
+      else if (i === level) seg.className = "is-current";
+      steps.appendChild(seg);
+    });
     $("score").innerHTML = Object.keys(placement).length + '<span class="muted">/' + L.items.length + "</span>";
+
+    const last = level >= LEVELS.length - 1;
+    $("doneTitle").textContent = last ? d.finalTitle : d.doneTitle;
+    $("again").textContent = last ? d.againAll : d.again;
+    if (solvedLevel) {
+      $("doneBody").textContent = last
+        ? d.finalLine(firstTryByLevel.reduce((a, n) => a + n, 0), LEVELS.reduce((a, l) => a + l.items.length, 0))
+        : d.scoreLine(firstTryRight, L.items.length);
+    }
 
     tray.innerHTML = "";
     L.items.filter((i) => !placement[i.id]).forEach((item) => {
@@ -816,38 +864,68 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
       const head = document.createElement("div");
       head.className = "bin__head";
-      const nm = document.createElement("span");
-      nm.className = "bin__name"; nm.textContent = label(bin);
+      /* Once a level is solved the rooms are frozen, so the done card can
+         never sit under a board that has since been taken apart. */
+      const drop = () => {
+        if (!selected || solvedLevel) return;
+        placement[selected] = bin.id; selected = null; clearMarks(); render();
+      };
+      const nm = document.createElement("button");
+      nm.type = "button";
+      nm.className = "bin__drop"; nm.textContent = label(bin);
+      nm.setAttribute("aria-label", d.putHere + ": " + label(bin));
+      nm.onclick = (e) => { e.stopPropagation(); drop(); };
       const rl = document.createElement("span");
-      /* Levels 1-2 label a bin with its file extensions, which read the same
-         in both languages; level 3 labels it with a sentence, which does not. */
+      /* Level 1 labels a bin with its file extensions, which read the same in
+         both languages, and only once a check has found a mistake. Level 3
+         labels it with a sentence, which does not. */
       rl.className = "bin__rule";
-      rl.textContent = (lang === "es" ? bin.ruleEs : bin.ruleEn) || bin.rule;
+      rl.textContent = level === 0 && !showRules ? "" : ((lang === "es" ? bin.ruleEs : bin.ruleEn) || bin.rule);
       head.append(nm, rl);
       wrap.appendChild(head);
 
+      /* The room itself is a plain tap target for a finger or a mouse; the
+         button above is the same action for the keyboard, so the room does
+         not need to be a button with more buttons nested inside it. */
       const zone = document.createElement("div");
       zone.className = "dropzone";
-      zone.tabIndex = 0;
-      zone.setAttribute("role", "button");
-      zone.setAttribute("aria-label", label(bin));
-      const drop = () => {
-        if (!selected) return;
-        placement[selected] = bin.id; selected = null; clearMarks(); render();
-      };
       zone.onclick = drop;
-      zone.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); drop(); } };
 
       L.items.filter((i) => placement[i.id] === bin.id).forEach((item) => {
         const tag = document.createElement("span");
         tag.className = "placed";
         tag.dataset.item = item.id;
-        const name = document.createElement("span");
+        if (selected === item.id) tag.setAttribute("data-held", "");
+        const name = document.createElement("button");
+        name.type = "button";
+        name.className = "placed__name";
         name.textContent = label(item);
+        name.setAttribute("aria-pressed", String(selected === item.id));
+        name.setAttribute("aria-label", d.pickUp + ": " + label(item));
+        name.onclick = (e) => {
+          e.stopPropagation();
+          if (solvedLevel) return;
+          /* Holding another file? Then a tap anywhere in this room, even on a
+             file already in it, means "put it here". On a phone the files
+             fill most of the room, so this is where the finger lands. */
+          if (selected && selected !== item.id) { drop(); return; }
+          selected = selected === item.id ? null : item.id;
+          render();
+        };
         const rm = document.createElement("button");
         rm.type = "button"; rm.textContent = "×";
         rm.setAttribute("aria-label", d.remove + ": " + label(item));
-        rm.onclick = (e) => { e.stopPropagation(); delete placement[item.id]; clearMarks(); render(); };
+        rm.hidden = solvedLevel;
+        rm.onclick = (e) => {
+          e.stopPropagation();
+          if (solvedLevel) return;
+          /* Same rule as the name: while another file is held, a tap that
+             lands on this × is a tap on the room, not a request to remove. */
+          if (selected && selected !== item.id) { drop(); return; }
+          delete placement[item.id];
+          if (selected === item.id) selected = null;
+          clearMarks(); render();
+        };
         tag.append(name, rm);
         zone.appendChild(tag);
       });
@@ -873,6 +951,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     const wrong = L.items.filter((i) => placement[i.id] !== i.bin);
     if (!checkedOnce) { firstTryRight = L.items.length - wrong.length; checkedOnce = true; }
 
+    const reveal = level === 0 && wrong.length > 0 && !showRules;
+    if (reveal) { showRules = true; render(); }
+
     L.items.forEach((i) => {
       const el = document.querySelector('.placed[data-item="' + i.id + '"]');
       if (el) {
@@ -882,27 +963,36 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     });
 
     if (wrong.length === 0) {
-      say("ok", d.allRight);
-      $("doneBody").textContent = d.scoreLine(firstTryRight, L.items.length);
+      firstTryByLevel[level] = firstTryRight;
+      solvedLevel = true;
       $("done").setAttribute("data-open", "");
       $("next").hidden = level >= LEVELS.length - 1;
       if (level >= LEVELS.length - 1) remember();
+      render();
+      L.items.forEach((i) => {
+        const el = document.querySelector('.placed[data-item="' + i.id + '"]');
+        if (el) el.classList.add("is-correct");
+      });
+      say("ok", d.allRight);
       $("done").scrollIntoView({ behavior: "smooth", block: "nearest" });
     } else {
-      say("no", d.someWrong(wrong.length));
+      say("no", reveal ? d.someWrong(wrong.length) + " " + d.rulesShown : d.someWrong(wrong.length));
     }
   }
 
   function loadLevel(n) {
     level = n; placement = {}; selected = null;
     firstTryRight = 0; checkedOnce = false;
+    showRules = false; solvedLevel = false;
+    if (n === 0) firstTryByLevel.length = 0;
     $("done").removeAttribute("data-open");
     clearMarks(); render();
   }
 
   $("check").onclick = check;
   $("reset").onclick = () => loadLevel(level);
-  $("again").onclick = () => loadLevel(level);
+  /* On the last level "again" means the whole kingdom, from level 1. */
+  $("again").onclick = () => loadLevel(level >= LEVELS.length - 1 ? 0 : level);
   $("next").onclick  = () => loadLevel(Math.min(level + 1, LEVELS.length - 1));
 
   document.querySelectorAll(".langs button").forEach((b) => {

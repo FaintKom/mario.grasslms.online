@@ -154,6 +154,8 @@
   margin-bottom: 16px;
   animation: summary-check-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+/* not passed yet: a retry mark instead of a green tick */
+.summary-card__check.is-retry { background: var(--accent-warn, #f5b800); color: #1a1a1a; }
 @keyframes summary-check-pop {
   0%   { transform: scale(0.4); opacity: 0; }
   60%  { transform: scale(1.15); opacity: 1; }
@@ -446,7 +448,7 @@
   cursor: pointer;
   transition: background 0.12s, border-color 0.12s, transform 0.08s;
 }
-.tom-drawer__opt:hover { background: #f0f7ee; border-color: var(--brand-green); }
+.tom-drawer__opt:hover:not(:disabled):not(.is-correct):not(.is-incorrect) { background: #f0f7ee; border-color: var(--brand-green); }
 .tom-drawer__opt:active { transform: scale(0.99); }
 .tom-drawer__label {
   display: inline-flex; align-items: center; justify-content: center;
@@ -1019,4 +1021,93 @@
     width: auto;
     max-height: 60vh;
   }
+}
+
+/* ===== In-app task pieces shared by M1-M4 (bars, stages, checklists) ===== */
+.mx-bar {
+  /* sticks to the bottom of the app window, so the action is visible without scrolling */
+  position: sticky; bottom: 8px; z-index: 3; box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  margin: 14px 10px 0; padding: 10px 14px;
+  background: var(--ftc-green-tint, #ecf9e7);
+  border: 1px dashed var(--brand-green, #0a8754); border-radius: 6px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-size: 12.5px; color: var(--ftc-ink-2);
+}
+.mx-btn {
+  flex: none; background: var(--brand-green, #0a8754); color: #fff;
+  padding: 8px 14px; border: 0; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.mx-btn:disabled, .mx-btn[aria-disabled="true"] { background: #ccc; color: #666; cursor: not-allowed; }
+.mx-btn--ghost { background: transparent; color: var(--brand-green-deep, #07683f); border: 1px solid var(--brand-green, #0a8754); }
+.mx-btn--small { padding: 6px 12px; font-size: 12px; }
+.mx-stage {
+  margin-top: 14px; padding: 14px; background: #fff;
+  border: 1px solid var(--ftc-border, #e4e7ec); border-radius: 8px;
+}
+.mx-stage label { display: block; font-size: 12.5px; color: var(--ftc-ink-2); margin: 10px 0 4px; }
+.mx-stage textarea {
+  width: 100%; box-sizing: border-box; padding: 8px;
+  border: 1px solid var(--ftc-border, #e4e7ec); border-radius: 4px;
+  font-family: var(--ftc-font-sans); font-size: 13px; resize: vertical;
+}
+.mx-signal {
+  display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; padding: 10px 12px;
+  background: var(--ftc-green-tint, #ecf9e7); border-left: 3px solid var(--brand-green, #0a8754);
+  border-radius: 6px; font-size: 13px; color: var(--ftc-ink);
+}
+.mx-signal--objection { background: #fde7e3; border-left-color: var(--coral-700, #c33d22); }
+.mx-k {
+  flex: none; font-family: var(--ftc-font-mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--brand-green-deep, #07683f);
+}
+.mx-signal--objection .mx-k { color: var(--coral-700, #c33d22); }
+.mx-checks { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ftc-ink-2); }
+.mx-checks li::before { content: "·"; display: inline-block; width: 14px; font-weight: 700; }
+.mx-checks li[data-ok="true"] { color: var(--brand-green-deep, #07683f); }
+.mx-checks li[data-ok="true"]::before { content: "✓"; }
+.mx-checks li[data-ok="warn"] { color: var(--coral-700, #c33d22); }
+.mx-checks li[data-ok="warn"]::before { content: "!"; }
+.mx-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+.mx-status { font-size: 12px; color: var(--ftc-ink-2); }
+.mx-fb { margin-top: 10px; padding: 10px 12px; border-radius: 6px; background: #f6f8fa; font-size: 12.5px; line-height: 1.5; color: var(--ftc-ink); }
+.mx-fb[hidden] { display: none; }
+/* feedback that floats at the bottom of the app window, so it shows without scrolling */
+.mx-fb--float { position: sticky; bottom: 8px; z-index: 3; margin: 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
+.mx-fb[data-tone="ok"] { background: var(--ftc-green-tint, #ecf9e7); }
+.mx-fb[data-tone="warn"] { background: #fff4e5; }
+.mx-callbar {
+  margin: 10px; padding: 10px 14px; background: rgba(245,184,0,0.95); color: #1a1a1a;
+  border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-family: var(--ftc-font-mono); font-size: 12px;
+}
+.mx-callbar[hidden] { display: none; }
+.mx-thread { margin: 14px 0 0; padding: 14px 16px; background: #fff8e0; border-left: 3px solid var(--sun-500, #f5b800); border-radius: 6px; font-family: var(--ftc-font-sans); }
+.mx-thread__k, .mx-pinned__k {
+  font-family: var(--ftc-font-mono); font-size: 11px; color: var(--ftc-ink-2);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+}
+.mx-pinned {
+  margin: 14px 0 0; padding: 16px 18px;
+  background: linear-gradient(180deg, var(--ftc-green-tint, #ecf9e7) 0%, #ffffff 100%);
+  border: 1px solid var(--brand-green); border-left: 4px solid var(--brand-green); border-radius: 8px;
+  font-family: var(--ftc-font-sans); box-shadow: 0 6px 16px -8px rgba(10,26,16,0.12);
+}
+.mx-pinned__k { color: var(--brand-green); font-size: 10px; letter-spacing: 0.08em; }
+.mx-pinned__quote { font-size: 15px; font-style: italic; line-height: 1.55; color: var(--ftc-ink); margin: 0 0 10px; }
+.mx-pinned__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--ftc-border); font-size: 12.5px; color: var(--ftc-ink-2);
+}
+.mx-quiz-next { margin-top: 10px; text-align: right; }
+
+/* Plain labels: no uppercase or monospace tag lines */
+.narrative-overlay__step, .summary-card__stat-k, .summary-card__recap summary,
+.mx-thread__k, .mx-pinned__k,
+.tom-drawer__opt.is-reveal:not(.is-correct):not(.is-incorrect)::after,
+.m5-map dt, .m5-propcard__label, .m5-tag, .m5-solo__head, .m5-quiz__label, .m5-pinned__label,
+.reg-aid__k, .reg-mini > summary, .m6-chip, .m6-quiz__kicker, .m6-pinned__kicker {
+  text-transform: none;
+  letter-spacing: normal;
+  font-family: var(--ftc-font-sans);
 }

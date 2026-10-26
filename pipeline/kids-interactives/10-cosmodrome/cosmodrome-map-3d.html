@@ -534,149 +534,153 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <!-- grasslms:end -->
 <style>
   /* One screen on open. The page is a column the height of the viewport and
-     the stage takes whatever the fixed rows leave over, so there is no magic
-     number to go stale when a heading grows by a line. */
+     the stage takes whatever the fixed rows leave over. */
   body { padding: var(--page-top) 0 var(--page-bottom); }
-  .wrap { height: calc(100svh - var(--page-pad)); }   /* the body padding above and below */
+  .wrap { height: calc(100svh - var(--page-pad)); }
   h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
   .lede { font-size: var(--t-sm); max-width: 74ch; }
   .stack--loose { gap: var(--s-4); }
 
   .stage {
     position: relative;
-    flex: 1 1 0; min-height: 180px;
-    border: 2px solid var(--color-border-strong); border-radius: var(--radius-lg);
-    background: #04080c; overflow: hidden;
+    flex: 1 1 0; min-height: 320px;
+    border: 2px solid var(--color-border-strong); border-radius: var(--radius-xl);
+    background: radial-gradient(120% 95% at 50% 12%, var(--green-900) 0%, var(--ink-900) 72%);
+    overflow: hidden;
   }
   .stage canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
   .stage canvas.is-dragging { cursor: grabbing; }
   .stage canvas.is-over { cursor: pointer; }
 
-
-  /* ---- the four jobs that free a sector -------------------------------- */
-  /* One verb each, on purpose: pick and bin, connect, hold, pull. A sector
-     that opens with the same puzzle as the last one is not worth opening. */
-  .job { display: grid; gap: var(--s-3); }
-  .job__head { font-size: var(--t-sm); color: var(--color-text-muted); }
-  .job__done { font-weight: 700; color: var(--color-success-fg); }
-
-  /* A — the file list */
-  .files { display: grid; gap: 2px; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
-  .file {
-    display: grid; grid-template-columns: 22px minmax(0,1fr) auto; gap: var(--s-3);
-    align-items: center; padding: var(--s-2) var(--s-3);
-    background: var(--color-surface); border: 0; border-bottom: 1px solid var(--color-border);
-    font: inherit; font-family: var(--font-mono); font-size: var(--t-xs);
-    color: var(--color-text); text-align: left; cursor: pointer;
+  /* Name tags that follow the buildings around as the island turns. */
+  .tag {
+    position: absolute; left: 0; top: 0; z-index: 5;
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    padding: 3px var(--s-3) 3px 3px; border-radius: var(--radius-pill);
+    background: rgba(13, 21, 13, .8); border: 1px solid rgba(255, 255, 255, .16);
+    color: var(--ink-50); font: 600 var(--t-2xs)/1.2 var(--font-sans);
+    white-space: nowrap; cursor: pointer; transform: translate(-50%, -100%);
   }
-  .file:last-child { border-bottom: 0; }
-  .file:hover { background: var(--color-surface-2); }
-  .file[aria-pressed="true"] { background: var(--color-primary-soft); }
-  .file__dot { width: 12px; height: 12px; border-radius: 3px; background: var(--ink-200); }
-  .file__size { color: var(--color-text-subtle); }
-  .file.is-gone { opacity: .25; pointer-events: none; text-decoration: line-through; }
+  .tag:hover { border-color: var(--sun-400); }
+  .tag__id {
+    display: grid; place-items: center; width: 22px; height: 22px; border-radius: var(--radius-pill);
+    background: var(--ink-500); color: #fff; font-weight: 700;
+  }
+  .tag svg { width: 12px; height: 12px; }
+  .tag.is-open .tag__id { background: var(--clay-500); }
+  .tag.is-clear .tag__id { background: var(--green-500); }
+  .tag.is-locked { color: var(--ink-300); }
 
-  /* B — the wires */
-  .wires { position: relative; display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-6); align-items: stretch; }
+  .stage__views { position: absolute; right: var(--s-3); top: var(--s-3); display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--s-1); z-index: 6; }
+  .stage__views button {
+    min-height: 36px; padding: 0 var(--s-3);
+    border-radius: var(--radius-pill); border: 1px solid rgba(255, 255, 255, .16);
+    background: rgba(13, 21, 13, .8); color: var(--ink-50);
+    font: inherit; font-size: var(--t-2xs); cursor: pointer;
+  }
+  .stage__views button:hover { border-color: var(--sun-400); }
+  .stage__hint {
+    position: absolute; right: var(--s-3); bottom: var(--s-3); z-index: 6;
+    padding: var(--s-2) var(--s-3); border-radius: var(--radius-pill);
+    background: rgba(13, 21, 13, .8); font-size: var(--t-2xs); color: var(--ink-200);
+    pointer-events: none;
+  }
+
+  /* The speech box. A light card on purpose, night mode or not: it is the
+     one thing on the stage that has to be read. */
+  .say {
+    position: absolute; left: var(--s-3); right: var(--s-3); bottom: var(--s-3); z-index: 20;
+    max-width: 580px; display: grid; grid-template-columns: 76px 1fr; gap: var(--s-3); align-items: end;
+    padding: var(--s-3) var(--s-4); border-radius: var(--radius-lg);
+    background: var(--paper-2); color: var(--ink-900); box-shadow: var(--shadow-lg);
+  }
+  .say__face svg { display: block; width: 76px; height: 76px; margin-top: -30px; }
+  .say__who { font-size: var(--t-sm); font-weight: 700; line-height: 1; color: var(--green-600); }
+  .say--virus .say__who { color: var(--clay-600); }
+  .say__text { margin: var(--s-1) 0 var(--s-2); font-size: var(--t-md); line-height: 1.45; }
+  .say .btn--ghost { color: var(--ink-700); background: transparent; border-color: var(--ink-200); }
+
+  /* Building and mini-event panel: a side card on a wide screen. */
+  .panel { position: absolute; top: var(--s-3); right: var(--s-3); bottom: var(--s-3); z-index: 15; width: min(370px, 48%); overflow: auto; }
+  .panel h2 { margin: 0; }
+
+  .tasks { display: grid; gap: var(--s-2); }
+  .tasklink {
+    display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-2); align-items: center;
+    padding: var(--s-2) var(--s-3); min-height: var(--control-md);
+    border: 1px solid var(--color-border); border-radius: var(--radius-md);
+    background: var(--color-surface-2); color: var(--color-text); text-decoration: none; font-size: var(--t-sm);
+  }
+  a.tasklink:hover { border-color: var(--color-primary); }
+  .tasklink__tag, .tasklink__state { font-size: var(--t-xs); color: var(--color-text-subtle); }
+  .tasks__title { margin: 0; font-size: var(--t-sm); font-weight: 700; }
+  .panel__state { margin: 0; font-size: var(--t-sm); font-weight: 600; }
+  .tasklink.is-done .tasklink__state { color: var(--color-success-fg); }
+  .tasklink.is-locked { opacity: .55; }
+
+  .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-2); }
+  .lg {
+    display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-2); align-items: center;
+    padding: var(--s-2) var(--s-3); min-height: var(--control-md);
+    border: 1px solid var(--color-border); border-radius: var(--radius-md);
+    background: var(--color-surface); font: inherit; font-size: var(--t-sm); text-align: left;
+    cursor: pointer; color: inherit; width: 100%;
+  }
+  .lg:hover { border-color: var(--color-border-strong); }
+  .lg__dot { width: 12px; height: 12px; border-radius: var(--radius-pill); background: var(--ink-400); }
+  .lg.is-open .lg__dot { background: var(--clay-500); }
+  .lg.is-clear .lg__dot { background: var(--green-500); }
+  .lg__state { font-size: var(--t-xs); color: var(--color-text-subtle); }
+  .lg.is-clear .lg__state { color: var(--color-success-fg); }
+
+  .fallback { display: grid; place-items: center; gap: var(--s-3); height: 100%; padding: var(--s-6); text-align: center; color: var(--ink-200); font-size: var(--t-sm); }
+  .fallback svg { width: min(420px, 100%); height: auto; }
+
+  /* ---- mini-events: wires and lever. Optional, they clear nothing. ---- */
+  .job { display: grid; gap: var(--s-3); }
+  .wires { position: relative; display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-6); align-items: stretch; min-height: 180px; }
   .wires__col { display: grid; gap: var(--s-3); align-content: space-between; }
   .plug {
-    width: 46px; height: 30px; border: 2px solid var(--ink-900); border-radius: 5px;
-    padding: 0; cursor: grab; touch-action: none;
+    position: relative; width: 48px; height: 32px; border: 2px solid var(--ink-900); border-radius: 5px;
+    padding: 0; cursor: grab; touch-action: none; font: 700 19px/1 var(--font-sans);
   }
-  .plug { position: relative; font: 700 19px/1 var(--font-sans, sans-serif); }
   .plug::after { content: attr(data-shape); color: #fff; text-shadow: 0 1px 0 rgba(0,0,0,.45); }
   .plug.is-done { cursor: default; box-shadow: inset 0 0 0 3px #fff; }
   .wires svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-
-  /* C — hold to purge */
-  .purge { display: grid; gap: var(--s-3); justify-items: center; }
-  .purge__btn {
-    width: 128px; height: 128px; border-radius: 50%;
-    border: 3px solid var(--ink-900); background: var(--color-danger);
-    color: #fff; font: inherit; font-weight: 800; font-size: var(--t-sm);
-    cursor: pointer; touch-action: none; user-select: none;
-    box-shadow: 0 6px 0 var(--clay-700);
-  }
-  .purge__btn.is-down { transform: translateY(4px); box-shadow: 0 2px 0 var(--clay-700); }
-  .purge__meter { width: 100%; max-width: 320px; height: 14px; border-radius: var(--radius-pill); background: var(--color-surface-2); overflow: hidden; border: 1px solid var(--color-border); }
-  .purge__meter i { display: block; height: 100%; width: 0; background: var(--color-primary); }
-  .purge__meter.is-hit i { background: #a855f7; }
-
-  /* D — the lever */
   .lever { position: relative; height: 190px; width: 92px; margin: 0 auto; touch-action: none; }
   .lever__track {
     position: absolute; left: 50%; top: 0; bottom: 0; width: 26px; margin-left: -13px;
-    border-radius: var(--radius-pill); background: var(--color-surface-2);
-    border: 2px solid var(--color-border-strong);
+    border-radius: var(--radius-pill); background: var(--color-surface-2); border: 2px solid var(--color-border-strong);
   }
   .lever__fill { position: absolute; left: 0; right: 0; bottom: 0; border-radius: var(--radius-pill); background: var(--color-primary-soft); }
   .lever__grip {
     position: absolute; left: 50%; width: 76px; height: 34px; margin-left: -38px;
     border-radius: var(--radius-sm); border: 2px solid var(--ink-900);
-    background: var(--sun-400); cursor: grab; touch-action: none;
-    box-shadow: 0 4px 0 var(--sun-500);
+    background: var(--sun-400); cursor: grab; touch-action: none; box-shadow: 0 4px 0 var(--sun-500);
   }
-  .lever__grip:active { cursor: grabbing; }
   .lever__grip::after { content: ""; position: absolute; inset: 6px 10px; border-radius: 2px; background: repeating-linear-gradient(var(--ink-900) 0 2px, transparent 2px 6px); opacity: .35; }
 
-  .stage__hint {
-    position: absolute; left: var(--s-3); bottom: var(--s-3);
-    padding: var(--s-2) var(--s-3); border-radius: var(--radius-pill);
-    background: rgba(4, 8, 12, .72); border: 1px solid var(--color-border);
-    font-size: var(--t-2xs); color: var(--color-text-muted);
-    pointer-events: none;
-  }
-  .stage__views { position: absolute; right: var(--s-3); top: var(--s-3); display: flex; gap: var(--s-1); }
-  .stage__views button {
-    min-height: 36px; padding: 0 var(--s-3);
-    border-radius: var(--radius-pill); border: 1px solid var(--color-border-strong);
-    background: rgba(4, 8, 12, .72); color: var(--color-text);
-    font: inherit; font-size: var(--t-2xs); cursor: pointer;
-  }
-  .stage__views button:hover { border-color: var(--color-primary); }
-
-  .stage__tip {
-    position: absolute; padding: var(--s-1) var(--s-3);
-    border-radius: var(--radius-pill); background: var(--color-surface);
-    border: 1px solid var(--color-border-strong);
-    font-size: var(--t-2xs); white-space: nowrap; pointer-events: none;
-    transform: translate(-50%, -140%);
-  }
-
-  .fallback { display: grid; place-items: center; height: 100%; padding: var(--s-8); text-align: center; }
-
-  .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: var(--s-2); }
-  .lg {
-    display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-2); align-items: center;
-    padding: var(--s-2) var(--s-3);
-    border: 1px solid var(--color-border); border-radius: var(--radius-md);
-    background: var(--color-surface); font-size: var(--t-sm); text-align: left;
-    cursor: pointer; font-family: inherit; color: inherit; width: 100%;
-  }
-  .lg:hover { border-color: var(--color-border-strong); }
-  .lg__dot { width: 12px; height: 12px; border-radius: var(--radius-pill); }
-  .lg__state { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); }
-  .lg.is-clear .lg__state { color: var(--color-success-fg); }
-
-
-  .virus {
-    display: grid; grid-template-columns: auto 1fr; gap: var(--s-3); align-items: start;
-    padding: var(--s-4);
-    border: 2px solid var(--color-danger); border-radius: var(--radius-md);
-    background: var(--color-danger-soft);
-  }
-  .virus__face { font-size: 34px; }
-  .virus__line { font-weight: 700; }
-
-  [hidden] { display: none !important; }
-</style>
-<style>
-  /* Way back to the catalogue, same look as its own back link. */
-  .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+  .back { display: inline-flex; align-items: center; gap: var(--s-2);
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+  /* A phone: the page scrolls, the panel becomes a sheet from the bottom and
+     the speech box sits above everything. */
+  @media (max-width: 700px) {
+    .wrap { height: auto; }
+    .stage { flex: none; height: 64svh; min-height: 340px; }
+    .stage__hint { display: none; }
+    .tag { padding-right: 3px; }
+    .tag__name { display: none; }   /* the letter is enough; the list below has the names */
+    .panel { position: fixed; top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 72svh; z-index: 50;
+             border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
+    .say { position: fixed; left: var(--s-2); right: var(--s-2); bottom: var(--s-2); z-index: 60; grid-template-columns: 56px 1fr; }
+    .say__face svg { width: 56px; height: 56px; margin-top: -24px; }
+    .say__text { font-size: var(--t-base); }
+  }
+
+  [hidden] { display: none !important; }
 </style>
 </head>
 <body>
@@ -684,72 +688,52 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Spaceport · sector map</p>
+      <a class="back" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Four sectors,</span> <em class="mark" data-t="title2">one virus</em></h1>
-    <p class="lede" data-t="intro">The virus is sitting on all four sectors of the spaceport. Drag to walk around the field, click a building, and do the job inside it to push the virus off that sector.</p>
+    <h1><span data-t="title1">Help Andy take back</span> <em class="mark" data-t="title2">the spaceport</em></h1>
+    <p class="lede" data-t="intro">A virus got into the spaceport computers overnight. Drag to turn the island and tap a building to see its tasks, and Andy will tell you where to start.</p>
   </header>
 
-  <div class="hud">
-    <div class="row">
-      <span class="eyebrow" data-t="clearedLabel">Sectors clear</span>
-      <span class="hud__score" id="score">0</span>
-    </div>
-  </div>
-
   <div class="stage" id="stage">
-    <canvas id="scene"></canvas>
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div id="tags"></div>
     <div class="stage__views" id="views"></div>
-    <div class="stage__hint" data-t="hint">Drag to turn · scroll to zoom · click a building</div>
-    <div class="stage__tip" id="tip" hidden></div>
+    <div class="stage__hint" id="hint" data-t="hint"></div>
+
+    <section class="card stack panel" id="panel" hidden aria-live="polite">
+      <div class="row row--between">
+        <h2 id="panelName"></h2>
+        <button class="btn btn--ghost btn--sm" id="closePanel" data-t="close">Close</button>
+      </div>
+      <p class="muted" id="panelWhat"></p>
+      <div id="panelBody" class="stack"></div>
+    </section>
+
+    <div class="say" id="say" hidden role="dialog" aria-live="polite" aria-labelledby="sayWho">
+      <div class="say__face" id="sayFace"></div>
+      <div>
+        <div class="say__who" id="sayWho"></div>
+        <p class="say__text" id="sayText"></p>
+        <div class="row">
+          <button class="btn btn--sm" id="sayNext" type="button"></button>
+          <button class="btn btn--ghost btn--sm" id="saySkip" type="button"></button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="legend" id="legend"></div>
 
   <div class="row">
-    <button class="btn btn--ghost btn--sm" id="reset" data-t="reset">Reset progress</button>
-    <span class="muted" style="font-size: var(--t-2xs)" data-t="resetNote">Progress is saved only in this browser, on this device.</span>
+    <button class="btn btn--ghost btn--sm" id="openAll" type="button" data-t="openAll">Open everything</button>
+    <button class="btn btn--ghost btn--sm" id="reset" type="button" data-t="reset">Start over</button>
+    <span class="muted" style="font-size: var(--t-2xs)" data-t="note">Progress is saved only in this browser, on this device.</span>
   </div>
-
-  <section class="card stack" id="panel" hidden>
-    <div class="row row--between">
-      <div class="stack stack--tight">
-        <p class="eyebrow" id="panelTag"></p>
-        <h2 id="panelName"></h2>
-      </div>
-      <button class="btn btn--ghost" id="closePanel" data-t="close">Close</button>
-    </div>
-    <p class="muted" id="panelWhat"></p>
-
-    <div class="stack stack--tight">
-    </div>
-
-    <div class="job" id="job"></div>
-    <div id="verdict" hidden></div>
-  </section>
-
-  <section class="stack" id="endgame" hidden aria-live="polite">
-    <div class="virus">
-      <span class="virus__face" id="virusFace">👾</span>
-      <div class="stack stack--tight">
-        <span class="virus__line" id="virusLine"></span>
-        <span class="muted" id="virusSub"></span>
-      </div>
-    </div>
-    <div class="row"><button class="btn" id="virusNext"></button></div>
-  </section>
-
-  <section class="card stack" id="won" hidden aria-live="polite">
-    <h2 data-t="wonTitle">The spaceport is yours again</h2>
-    <p class="muted" data-t="wonBody">All four sectors are clear, and the rocket is back under your control. The virus has gone very quiet.</p>
-    <div><button class="btn btn--ghost" id="again" data-t="again">Play it again</button></div>
-  </section>
 
 </div>
 
@@ -758,156 +742,293 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 (function () {
   "use strict";
 
-  /* One page in place of seven. The scene, the four sectors, the orbiting
-     camera, the virus swarm and the closing dialogue all come from the
-     original three.js maps (map_3d, map_rescue_c, map_rescue_d_final,
-     map_sector_a / _b, map_start).
+  /* The spaceport is the story that joins the campaign tasks together. Each
+     building is a sector, each sector owns a set of real tasks on their own
+     pages, and a sector is only cleared by finishing those. Andy the robot and
+     the virus talk between tasks: every new finished task, cleared sector and
+     turn of the plot plays once, in campaign order.
 
-     three.js is vendored at _shared/vendor/three.min.js rather than pulled
-     from a CDN, so the page opens from a file:// path and travels inside a
-     frameBox archive. r128 is the last line that ships a classic build; the
-     module-only releases will not load over file://.
+     three.js is vendored at _shared/vendor/three.min.js and pinned at r128,
+     the last release with a classic non-module build, so the page still opens
+     from file:// and inside a frameBox archive. */
 
-     The models are new. The original gave all four sectors the same box with
-     a pyramid on top; here each building is made out of what its sector does,
-     so you can tell the archive from the command centre across the field. */
+  var ORDER = ["A", "B", "C", "D"];
 
-  var SECTORS = [
-    { id: "A", pos: [-4.6, 0, -3.4], hue: 0x8fd770, build: "archive" },
-    { id: "B", pos: [-4.6, 0,  3.4], hue: 0xffd84d, build: "studio" },
-    { id: "C", pos: [ 4.6, 0, -3.4], hue: 0x3aa0b5, build: "tower" },
-    { id: "D", pos: [ 4.6, 0,  3.4], hue: 0xf6b394, build: "command" }
-  ];
-
-  var INFECTED = 0xa855f7;
-
-  var VIEWS = {
-    orbit: { angle: Math.PI * 0.25, height: 9.5,  distance: 17 },
-    top:   { angle: Math.PI * 0.25, height: 21,   distance: 12 },
-    low:   { angle: Math.PI * 0.95, height: 3.2,  distance: 14 }
+  /* Task ids are what the task pages write into the shared store. */
+  var TASKS = {
+    A: ["explorer", "a3"],
+    B: ["b1", "b3"],
+    C: ["c1", "c2", "c3", "virus-battle"],
+    D: ["d1", "five-doors"]
   };
+  var PATHS = {
+    explorer: "../01-interface-simulators/explorer-context-menu/index.html",
+    a3: "../03-drag-and-drop/cosmodrome-virus/task-a3.html",
+    b1: "../03-drag-and-drop/cosmodrome-virus/task-b1.html",
+    b3: "../03-drag-and-drop/cosmodrome-virus/task-b3.html",
+    c1: "../01-interface-simulators/html-editor-find-replace/task-c1.html",
+    c2: "../01-interface-simulators/html-editor-find-replace/task-c2.html",
+    c3: "../01-interface-simulators/html-editor-find-replace/task-c3.html",
+    "virus-battle": "../04-quests-and-games/virus-battle-hp-quiz/index.html",
+    d1: "../01-interface-simulators/html-editor-find-replace/task-d1.html",
+    "five-doors": "../03-drag-and-drop/password-doors-wordy/index.html"
+  };
+  var TAGS = { explorer: "A1", a3: "A3", b1: "B1", b3: "B3", c1: "C1", c2: "C2", c3: "C3", "virus-battle": "C4", d1: "D1", "five-doors": "D2" };
 
-  /* Which tasks each sector owns. The ids match what the task pages write
-     into localStorage when they are finished. */
-  /* This screen was the level that joined the others together: the students
-     worked through the sector tasks on their own pages, and this is where the
-     result showed up. It carries no links now, only the story — but a sector
-     whose tasks were finished still comes up free, because the tasks write
-     their id into the same storage key this reads. */
-  var TASK_IDS = { A: ["explorer", "a3"], B: ["b1", "b3"], C: ["c1", "c2", "c3"], D: ["d1"] };
-
+  /* Story beats in campaign order. A sector letter is that sector clearing. */
+  var BEATS = ["intro", "explorer", "a3", "A", "b1", "b3", "B", "c1", "c2", "c3", "virus-battle", "capture", "d1", "rescue"];
 
   var T = {
     en: {
-      jobDone: "This sector is clear. The virus has nothing left in here.",
-      jobs: {
-        A: { head: "The virus hid its own files among ours. Click every file that is not ours, then press Delete selected.",
-             hint: "Ours have names that say what they are. The virus files do not.",
-             action: "Delete selected", pickFirst: "Nothing is picked yet.",
-             oops: "One of those files was ours, so nothing was deleted. Read the names again.",
-             more: "Good. There are still virus files in here." },
-        B: { head: "The colour boards are unplugged. Drag each wire across to the socket of the same colour.",
-             wire: "{c} wire", socket: "{c} socket", colours: ["Red", "Yellow", "Green", "Blue"] },
-        C: { head: "Press and hold the purge button until the bar is full. The virus pushes the bar back every second or so, so keep holding.",
-             action: "HOLD TO PURGE" },
-        D: { head: "The dish is still taking orders from the virus. Pull the lever all the way down and hold it there.",
-             action: "Pull the lever down" }
-      },
-      eyebrow: "Spaceport · sector map",
-      title1: "Four sectors,", title2: "one virus",
-      intro: "The virus has taken all four sectors of the spaceport. Drag to look around the field. Click a building and do the job inside to free that sector.",
-      clearedLabel: "Sectors clear", close: "Close",
-      submit: "Drive the virus out",
-      again: "Play it again", sector: "Sector",
-      reset: "Reset progress",
-      resetNote: "Progress is saved only in this browser, on this device.",
-      hint: "Drag to turn · scroll to zoom · click a building",
+      allActivities: "All activities",
+      title1: "Help Andy take back", title2: "the spaceport",
+      intro: "A virus got into the spaceport computers overnight. Drag to turn the island and tap a building to see its tasks, and Andy will tell you where to start.",
+      hint: "Drag to turn · scroll to zoom · tap a building, Andy or the rocket",
+      close: "Close", openAll: "Open everything", reset: "Start over",
+      note: "Progress is saved only in this browser, on this device.",
+      openAllTip: "Opens all four buildings for a quick look, without playing them in order.",
+      next: "Next", ok: "OK", skip: "Skip",
+      sector: "Sector",
+      states: { locked: "locked", open: "virus inside", clear: "clear" },
       views: { orbit: "Around", top: "From above", low: "From the pad" },
-      infected: "held by the virus", clear: "clear",
+      who: { andy: "Andy", virus: "Virus" },
       names: {
-        A: ["File archive", "Strange files turned up in the archive. The robots cannot tell which ones are theirs."],
+        A: ["File archive", "Strange files turned up in the archive overnight, and the robots can't tell which ones are theirs."],
         B: ["Graphics station", "The colour has been drained out of the boards, and nothing on this station lights up without them."],
-        C: ["Text module", "Every message leaving the spaceport goes through here, and right now every one of them comes out scrambled."],
+        C: ["Text tower", "Every message leaving the spaceport goes through here, and right now every one of them comes out scrambled."],
         D: ["Command centre", "The dish still turns, but it is listening to the virus. Whoever holds this room holds the launch."]
       },
-      right: function (id) { return "Sector " + id + " is free."; },
-      noWebgl: "This browser cannot draw 3D. Everything still works from the list below.",
-      wonTitle: "The spaceport is yours again",
-      wonBody: "All four sectors are clear, and the rocket is back under your control. The virus has gone very quiet.",
-      endgame: [
-        { face: "😱", line: "NO! ALL FOUR SECTORS?!", sub: "This cannot be happening…", btn: "Keep going" },
-        { face: "😈", line: "Wait. WAIT.", sub: "If I cannot have the spaceport, I will take the rocket!", btn: "Stop the virus" },
-        { face: "😰", line: "What are you doing? Leave those wires alone!", sub: "Don't! STOP!", btn: "Cut the wires" },
-        { face: "💀", line: "I am… dissolving…", sub: "Goodbyeeee…", btn: "Watch it go" }
+      locked: function (p) { return "This door opens once sector " + p + " is clear."; },
+      stateLine: { open: "The virus is still in here.", clear: "The virus has left this building." },
+      tasksTitle: "Tasks inside",
+      tasksNote: "Each task opens on its own page. Finish all of them and the virus has to leave this building.",
+      taskDone: "done", taskTodo: "to do", taskLocked: "locked",
+      taskNames: {
+        explorer: "Windows Explorer", a3: "Rebuild the folder tree",
+        b1: "Repair the circuit", b3: "Pixel rocket",
+        c1: "Find and replace", c2: "The secret cipher", c3: "Format the report", "virus-battle": "Virus Battle",
+        d1: "Assemble the deck", "five-doors": "Five doors"
+      },
+      noWebgl: "This browser can't draw the 3D island. All four buildings are in the list below, and everything works from there.",
+      mini: {
+        lever: { name: "Engine test",
+                 what: "Whenever someone pulls this lever, Andy tests the engines and the rocket hops on the pad without leaving. Pull it all the way down and hold it there.",
+                 action: "Pull the lever down" },
+        wires: { name: "Pad lights",
+                 what: "The lights around the launch pad came unplugged. Drag each wire to the socket with the same colour and shape.",
+                 wire: "{c} wire", socket: "{c} socket", colours: ["Red", "Yellow", "Green", "Blue"],
+                 wrong: "That socket is a different colour. Match the colour and the shape on the plug." }
+      },
+      beats: {
+        intro: [
+          ["andy", "happy", "Oh, hi! I'm Andy. I look after the spaceport. Well, I did, until last night something orange crawled in through the archive and started renaming everything."],
+          ["virus", "smug", "Renaming? I call it improving. file_final_FINAL_2 is a beautiful name."],
+          ["andy", "worried", "Ignore it. Let's start with the archive, the building with the drawers. Once the files are sorted, the virus has nowhere to hide."]
+        ],
+        explorer: [["andy", "happy", "You found your way around those folders faster than I do, and I live here."]],
+        a3: [["virus", "panic", "My lovely messy tree! You put every folder back where it belongs. Who does that?"]],
+        A: [
+          ["andy", "happy", "The archive is ours again! Next is the graphics station. Its screens went grey this morning."],
+          ["virus", "smug", "Fine, keep your boring files. I'm moving into the paint."]
+        ],
+        b1: [["andy", "happy", "Hear that hum? The circuit works. I'd do a dance, but treads."]],
+        b3: [["andy", "happy", "You drew a rocket out of pixels? Can I keep it? It can go next to my bolts."]],
+        B: [
+          ["andy", "happy", "The colours are back! Now the text tower. Every message from the spaceport goes through it, and right now they all come out as gibberish."],
+          ["virus", "smug", "Gibberish is a language, and it happens to be mine."]
+        ],
+        c1: [["andy", "happy", "Find and replace: a hundred fixes in one click. I wish my treads worked like that."]],
+        c2: [["virus", "panic", "You cracked my cipher? It took me all week to make up!"]],
+        c3: [["andy", "happy", "That report is so tidy the engineers will think a grown-up made it."]],
+        "virus-battle": [["virus", "panic", "Stop getting them right! Every right answer stings!"]],
+        capture: [
+          ["andy", "happy", "Three buildings done! Only the command centre is left, and then..."],
+          ["virus", "smug", "And then nothing. If I can't have the spaceport, I'll take its favourite robot."],
+          ["andy", "sad", "Hey! Put me down! I haven't finished sorting my bolts!"],
+          ["virus", "smug", "He's locked in the command centre now, behind five doors. Hope you remember everything you did today."]
+        ],
+        d1: [["andy", "worried", "Is that the slide deck? I can see it through the bars. It looks great. Now please get me out of here."]],
+        rescue: [
+          ["andy", "happy", "The last door! I'm out! My treads are a bit stiff, but I'm out!"],
+          ["virus", "panic", "Five doors! How did you remember all of that?"],
+          ["andy", "happy", "Because you did every task yourself. Stand back, I'm starting the engines for real this time."],
+          ["virus", "panic", "I'll be back, on some floppy disk somewhere!"]
+        ]
+      },
+      openAllLine: ["andy", "happy", "Every door is open now. Go wherever you like, I'll catch up."],
+      leverDone: ["andy", "happy", "The engines sound fine! I had my eyes shut the whole time, though."],
+      wiresDone: ["andy", "happy", "Lights are back on. Good, I kept bumping into the fence in the dark."],
+      andyIdle: [
+        ["andy", "happy", "Beep. Sorry, that one slipped out."],
+        ["andy", "happy", "I found a bolt behind the archive. Don't tell the engineers."],
+        ["andy", "happy", "When this is over, I'm getting a proper polish."],
+        ["andy", "worried", "Did you know I can't climb stairs? That's why the whole spaceport is flat."],
+        ["andy", "worried", "Careful with the orange ones. The more you tap them, the more they show off."]
+      ],
+      andyCaged: [
+        ["andy", "sad", "It's cramped in here, and it smells of old cables."],
+        ["andy", "worried", "Is that you? Tell me the doors are opening."]
+      ],
+      virusPop: [
+        ["virus", "panic", "Hey! I was using that copy!"],
+        ["virus", "smug", "Pop all you like. I'm fairly sure I made a backup."],
+        ["virus", "panic", "Every time you do that, I lose a kilobyte of dignity."],
+        ["virus", "panic", "Ow. That was my favourite one."]
       ]
     },
     es: {
-      jobDone: "Este sector está limpio. Al virus no le queda nada aquí.",
-      jobs: {
-        A: { head: "El virus dejó sus archivos entre los nuestros. Marca todos los que no son nuestros y bórralos.",
-             hint: "Los nuestros tienen nombres que dicen qué son. Los del virus no.",
-             action: "Borrar lo marcado", pickFirst: "Todavía no has marcado nada.",
-             oops: "Uno de esos archivos era nuestro, así que no se borró nada. Vuelve a leer los nombres.",
-             more: "Bien. Todavía quedan archivos del virus." },
-        B: { head: "Las placas de color están desenchufadas. Arrastra cada cable al conector de su mismo color.",
-             wire: "Cable {c}", socket: "Conector {c}", colours: ["rojo", "amarillo", "verde", "azul"] },
-        C: { head: "Mantén pulsada la purga hasta llenar la barra. El virus la tira hacia atrás cada poco, así que no sueltes.",
-             action: "MANTÉN PULSADO" },
-        D: { head: "La antena sigue obedeciendo al virus. Baja la palanca del todo y mantenla ahí.",
-             action: "Baja la palanca" }
-      },
-      eyebrow: "Puerto espacial · mapa de sectores",
-      title1: "Cuatro sectores,", title2: "un virus",
-      intro: "El virus está sentado en los cuatro sectores del puerto espacial. Arrastra para dar la vuelta al campo, pulsa un edificio y haz el trabajo que hay dentro para echar al virus de ese sector.",
-      clearedLabel: "Sectores libres", close: "Cerrar",
-      submit: "Echar al virus",
-      again: "Jugar otra vez", sector: "Sector",
-      reset: "Borrar el progreso",
-      resetNote: "El progreso se guarda solo en este navegador y solo en este equipo.",
-      hint: "Arrastra para girar · rueda para acercar · pulsa un edificio",
+      allActivities: "Todas las actividades",
+      title1: "Ayuda a Andy a recuperar", title2: "el puerto espacial",
+      intro: "Esta noche se ha colado un virus en los ordenadores del puerto espacial. Arrastra para girar la isla y toca un edificio para ver sus tareas, y Andy te dirá por dónde empezar.",
+      hint: "Arrastra para girar · rueda para acercar · toca un edificio, a Andy o el cohete",
+      close: "Cerrar", openAll: "Abrir todo", reset: "Empezar de nuevo",
+      note: "El progreso se guarda solo en este navegador y en este equipo.",
+      openAllTip: "Abre los cuatro edificios para echar un vistazo rápido, sin jugarlos en orden.",
+      next: "Seguir", ok: "Vale", skip: "Saltar",
+      sector: "Sector",
+      states: { locked: "cerrado", open: "con virus", clear: "libre" },
       views: { orbit: "Alrededor", top: "Desde arriba", low: "Desde la plataforma" },
-      infected: "en manos del virus", clear: "libre",
+      who: { andy: "Andy", virus: "Virus" },
       names: {
-        A: ["Archivo de ficheros", "En el archivo han aparecido ficheros extraños. Los robots no saben cuáles son suyos."],
+        A: ["Archivo de ficheros", "Esta noche han aparecido ficheros raros en el archivo, y los robots no saben cuáles son suyos."],
         B: ["Estación gráfica", "Le han sacado el color a las placas, y sin ellas en esta estación no se enciende nada."],
-        C: ["Módulo de texto", "Todos los mensajes que salen del puerto espacial pasan por aquí, y ahora mismo todos salen revueltos."],
+        C: ["Torre de texto", "Todos los mensajes que salen del puerto espacial pasan por aquí, y ahora mismo todos salen revueltos."],
         D: ["Centro de mando", "La antena sigue girando, pero escucha al virus. Quien tenga esta sala tiene el lanzamiento."]
       },
-      right: function (id) { return "El sector " + id + " está libre."; },
-      noWebgl: "Este navegador no puede dibujar en 3D. Todo sigue funcionando desde la lista de abajo.",
-      wonTitle: "El puerto espacial vuelve a ser tuyo",
-      wonBody: "Cuatro sectores libres, el cohete otra vez bajo control y un virus muy callado.",
-      endgame: [
-        { face: "😱", line: "¡NO! ¿LOS CUATRO SECTORES?", sub: "Esto no puede estar pasando…", btn: "Seguir" },
-        { face: "😈", line: "Un momento. UN MOMENTO.", sub: "Si no puedo tener el puerto espacial, ¡me llevo el cohete!", btn: "Detener al virus" },
-        { face: "😰", line: "¿Qué hacéis? ¡No toquéis esos cables!", sub: "¡No! ¡PARAD!", btn: "Cortar los cables" },
-        { face: "💀", line: "Me… me estoy disolviendo…", sub: "Adióooos…", btn: "Verlo marchar" }
+      locked: function (p) { return "Esta puerta se abre cuando el sector " + p + " esté libre."; },
+      stateLine: { open: "El virus sigue aquí dentro.", clear: "El virus ya se ha ido de este edificio." },
+      tasksTitle: "Tareas de dentro",
+      tasksNote: "Cada tarea se abre en su propia página. Termínalas todas y el virus tendrá que irse de este edificio.",
+      taskDone: "hecha", taskTodo: "pendiente", taskLocked: "cerrada",
+      taskNames: {
+        explorer: "Explorador de Windows", a3: "Reconstruye el árbol de carpetas",
+        b1: "Repara el circuito", b3: "Cohete de píxeles",
+        c1: "Buscar y reemplazar", c2: "El código secreto", c3: "Da formato al informe", "virus-battle": "Batalla contra el virus",
+        d1: "Monta la presentación", "five-doors": "Cinco puertas"
+      },
+      noWebgl: "Este navegador no puede dibujar la isla en 3D. Los cuatro edificios están en la lista de abajo, y todo funciona desde ahí.",
+      mini: {
+        lever: { name: "Prueba de motores",
+                 what: "Cada vez que alguien baja esta palanca, Andy prueba los motores y el cohete da un saltito sin salir de la plataforma. Bájala del todo y sujétala ahí.",
+                 action: "Baja la palanca" },
+        wires: { name: "Luces de la plataforma",
+                 what: "Las luces de la plataforma se han desenchufado. Arrastra cada cable al enchufe del mismo color y la misma forma.",
+                 wire: "Cable {c}", socket: "Enchufe {c}", colours: ["rojo", "amarillo", "verde", "azul"],
+                 wrong: "Ese enchufe es de otro color. Busca el mismo color y la misma forma que el cable." }
+      },
+      beats: {
+        intro: [
+          ["andy", "happy", "¡Ay, hola! Soy Andy. Cuido el puerto espacial. Bueno, lo cuidaba, hasta que anoche algo naranja se coló por el archivo y se puso a cambiarle el nombre a todo."],
+          ["virus", "smug", "¿Cambiar nombres? Yo lo llamo mejorar. archivo_final_FINAL_2 es un nombre precioso."],
+          ["andy", "worried", "Ni caso. Empezamos por el archivo, el edificio de los cajones. Cuando los ficheros estén ordenados, el virus no tendrá dónde esconderse."]
+        ],
+        explorer: [["andy", "happy", "Te has movido por esas carpetas más rápido que yo, y eso que vivo aquí."]],
+        a3: [["virus", "panic", "¡Mi precioso árbol desordenado! Has devuelto cada carpeta a su sitio. ¿Quién hace algo así?"]],
+        A: [
+          ["andy", "happy", "¡El archivo vuelve a ser nuestro! Ahora toca la estación gráfica. Sus pantallas se han quedado grises esta mañana."],
+          ["virus", "smug", "Quédate con tus ficheros aburridos. Yo me mudo a la pintura."]
+        ],
+        b1: [["andy", "happy", "¿Oyes ese zumbido? El circuito funciona. Me pondría a bailar, pero con orugas no se puede."]],
+        b3: [["andy", "happy", "¿Has dibujado un cohete con píxeles? ¿Me lo puedo quedar? Lo pondré al lado de mis tornillos."]],
+        B: [
+          ["andy", "happy", "¡Han vuelto los colores! Ahora, la torre de texto. Todos los mensajes del puerto espacial pasan por ahí, y ahora mismo salen hechos un galimatías."],
+          ["virus", "smug", "El galimatías es un idioma, y resulta que es el mío."]
+        ],
+        c1: [["andy", "happy", "Buscar y reemplazar: cien arreglos de un clic. Ojalá mis orugas funcionaran así."]],
+        c2: [["virus", "panic", "¿Has descifrado mi código? ¡Me costó toda la semana inventarlo!"]],
+        c3: [["andy", "happy", "Ese informe ha quedado tan ordenado que los ingenieros pensarán que lo ha hecho un adulto."]],
+        "virus-battle": [["virus", "panic", "¡Deja de acertar! ¡Cada acierto me escuece!"]],
+        capture: [
+          ["andy", "happy", "¡Tres edificios listos! Solo queda el centro de mando, y luego..."],
+          ["virus", "smug", "Y luego nada. Si no puedo quedarme con el puerto espacial, me llevo a su robot favorito."],
+          ["andy", "sad", "¡Eh! ¡Suéltame! ¡Que no he terminado de ordenar mis tornillos!"],
+          ["virus", "smug", "Ahora está encerrado en el centro de mando, detrás de cinco puertas. Espero que te acuerdes de todo lo que has hecho hoy."]
+        ],
+        d1: [["andy", "worried", "¿Es la presentación? La veo entre los barrotes. Ha quedado genial. Ahora sácame de aquí, por favor."]],
+        rescue: [
+          ["andy", "happy", "¡La última puerta! ¡Estoy fuera! Tengo las orugas un poco tiesas, pero ¡estoy fuera!"],
+          ["virus", "panic", "¡Cinco puertas! ¿Cómo te has acordado de todo eso?"],
+          ["andy", "happy", "Porque cada tarea la has hecho tú. Apártate, que esta vez arranco los motores de verdad."],
+          ["virus", "panic", "¡Volveré, en algún disquete perdido!"]
+        ]
+      },
+      openAllLine: ["andy", "happy", "Ya están todas las puertas abiertas. Ve a donde quieras, yo te alcanzo."],
+      leverDone: ["andy", "happy", "¡Los motores suenan bien! Aunque yo tenía los ojos cerrados todo el rato."],
+      wiresDone: ["andy", "happy", "Ya hay luz. Menos mal, a oscuras me chocaba todo el rato con la valla."],
+      andyIdle: [
+        ["andy", "happy", "Bip. Perdón, se me ha escapado."],
+        ["andy", "happy", "He encontrado un tornillo detrás del archivo. No se lo digas a los ingenieros."],
+        ["andy", "happy", "Cuando terminemos, me van a sacar brillo de verdad."],
+        ["andy", "worried", "¿Sabías que no puedo subir escaleras? Por eso todo el puerto espacial es plano."],
+        ["andy", "worried", "Cuidado con los naranjas. Cuanto más los tocas, más presumen."]
+      ],
+      andyCaged: [
+        ["andy", "sad", "Aquí dentro no hay sitio y huele a cable viejo."],
+        ["andy", "worried", "¿Eres tú? Dime que las puertas se están abriendo."]
+      ],
+      virusPop: [
+        ["virus", "panic", "¡Eh! ¡Que esa copia la estaba usando!"],
+        ["virus", "smug", "Revienta las que quieras. Estoy casi seguro de que hice una copia de seguridad."],
+        ["virus", "panic", "Cada vez que haces eso pierdo un kilobyte de dignidad."],
+        ["virus", "panic", "Ay. Esa era mi favorita."]
       ]
     }
   };
 
-  var lang = "en", manual = {}, open = null, beat = -1;
+  var lang = "en";
+  var open = null;   /* null, a sector letter, "lever" or "wires" */
 
-  /* Progress comes from the tasks themselves: each writes its id into one
-     shared localStorage key when it is finished, and the map reads it back.
-     The button on a sector panel is an override for when a teacher wants to
-     move on without replaying everything. */
+  /* ---- progress ---------------------------------------------------------
+     One shared key. The task pages write their own id into it when they are
+     finished; the map adds "map-open-all" and one "map-beat-<name>" per story
+     beat it has played. Every access is wrapped: a private window or blocked
+     site data makes localStorage throw. */
   var STORE = "kids.progress.v1";
 
   function progress() {
-    try { return JSON.parse(localStorage.getItem(STORE) || "{}"); }
+    try { return JSON.parse(localStorage.getItem(STORE) || "{}") || {}; }
     catch (err) { return {}; }
   }
-
-  function isClear(id) {
-    if (manual[id]) return true;
-    var done = progress();
-    return TASK_IDS[id].every(function (task) { return done[task]; });
+  function remember(key) {
+    try {
+      var d = progress();
+      d[key] = true;
+      localStorage.setItem(STORE, JSON.stringify(d));
+    } catch (err) {}
+  }
+  /* Start over forgets this campaign only. Other activities share the key. */
+  function forget() {
+    try {
+      var d = progress();
+      ORDER.forEach(function (id) { TASKS[id].forEach(function (k) { delete d[k]; }); });
+      Object.keys(d).forEach(function (k) { if (k.indexOf("map-") === 0) delete d[k]; });
+      localStorage.setItem(STORE, JSON.stringify(d));
+    } catch (err) {}
   }
 
-  function forgetProgress() {
-    try { localStorage.removeItem(STORE); } catch (err) {}
-    manual = {};
+  function done(k) { return !!progress()[k]; }
+  function seen(beat) { return done("map-beat-" + beat); }
+  function isClear(id) { return TASKS[id].every(done); }
+  function isOpen(id) {
+    if (done("map-open-all")) return true;
+    return ORDER.slice(0, ORDER.indexOf(id)).every(isClear);
+  }
+  function state(id) { return isClear(id) ? "clear" : isOpen(id) ? "open" : "locked"; }
+  function current() {
+    for (var i = 0; i < ORDER.length; i++) if (state(ORDER[i]) === "open") return ORDER[i];
+    return null;
+  }
+  /* Andy's whereabouts follow the story, not the tasks, so the cage only
+     closes once the capture has actually been told. */
+  function captured() { return seen("capture") && !seen("rescue"); }
+
+  function beatReady(b) {
+    if (b === "intro") return true;
+    if (TASKS[b]) return isClear(b);
+    if (b === "capture") return isClear("C") && !done("five-doors");
+    if (b === "d1") return done("d1") && seen("capture");
+    if (b === "rescue") return done("five-doors") && seen("capture");
+    return done(b);
   }
 
   function byId(id) { return document.getElementById(id); }
@@ -915,633 +1036,205 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   function el(tag, cls, text) {
     var n = document.createElement(tag);
     if (cls) n.className = cls;
-    if (text !== undefined) n.textContent = text;
-    return n;
-  }
-  function hex(n) { return "#" + ("000000" + n.toString(16)).slice(-6); }
-  function say(kind, message) {
-    var v = byId("verdict");
-    v.hidden = false; v.className = "feedback feedback--" + kind; v.textContent = message;
-  }
-  function clearSay() { var v = byId("verdict"); v.hidden = true; v.className = ""; }
-
-  /* ====================================================================== */
-  /* models                                                                 */
-  /* ====================================================================== */
-  function shellMat() {
-    return new THREE.MeshStandardMaterial({ color: 0x2f3a46, metalness: .25, roughness: .75 });
-  }
-
-  function makeArchive(hue) {
-    /* Sector A — stacked slabs, like a drawer unit half pulled out. */
-    var g = new THREE.Group();
-    var body = shellMat();
-    var trim = new THREE.MeshStandardMaterial({ color: hue, metalness: .35, roughness: .45 });
-
-    for (var i = 0; i < 4; i++) {
-      var slab = new THREE.Mesh(new THREE.BoxGeometry(2.6 - i * 0.18, 0.44, 1.9), body);
-      slab.position.set(i % 2 ? 0.12 : -0.12, 0.3 + i * 0.5, 0);
-      slab.castShadow = true; slab.receiveShadow = true;
-      g.add(slab);
-
-      var handle = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.08, 0.1), trim);
-      handle.position.set(i % 2 ? 0.12 : -0.12, 0.3 + i * 0.5, 0.98);
-      g.add(handle);
-    }
-    var cap = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.16, 2.2), trim);
-    cap.position.y = 2.32; cap.castShadow = true;
-    g.add(cap);
-    return g;
-  }
-
-  function makeStudio(hue) {
-    /* Sector B — a dome over a plinth, with a screen facing the field. */
-    var g = new THREE.Group();
-    var body = shellMat();
-    var trim = new THREE.MeshStandardMaterial({ color: hue, metalness: .4, roughness: .35 });
-
-    var plinth = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.7, 1.1, 12), body);
-    plinth.position.y = 0.55; plinth.castShadow = true; plinth.receiveShadow = true;
-    g.add(plinth);
-
-    var dome = new THREE.Mesh(new THREE.SphereGeometry(1.45, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2), trim);
-    dome.position.y = 1.1; dome.castShadow = true;
-    g.add(dome);
-
-    var screen = new THREE.Mesh(
-      new THREE.BoxGeometry(1.5, 0.9, 0.12),
-      new THREE.MeshStandardMaterial({ color: 0x0d1a22, emissive: 0x1c5f74, emissiveIntensity: .7, roughness: .4 })
-    );
-    screen.position.set(0, 1.0, 1.62);
-    g.add(screen);
-
-    var easel = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.1, 6), body);
-    easel.position.set(1.7, 0.55, 0.9);
-    g.add(easel);
-    return g;
-  }
-
-  function makeTower(hue) {
-    /* Sector C — a narrow tower of window bands, like lines on a page. */
-    var g = new THREE.Group();
-    var body = shellMat();
-    var trim = new THREE.MeshStandardMaterial({ color: hue, metalness: .4, roughness: .4 });
-    var glass = new THREE.MeshStandardMaterial({ color: 0x0d1a22, emissive: 0x2b7fa0, emissiveIntensity: .6, roughness: .3 });
-
-    var shaft = new THREE.Mesh(new THREE.BoxGeometry(1.5, 3.4, 1.5), body);
-    shaft.position.y = 1.7; shaft.castShadow = true; shaft.receiveShadow = true;
-    g.add(shaft);
-
-    for (var r = 0; r < 5; r++) {
-      var band = new THREE.Mesh(new THREE.BoxGeometry(1.56, 0.22, 1.56), glass);
-      band.position.y = 0.7 + r * 0.6;
-      g.add(band);
-    }
-
-    var crown = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.9, 0.7, 8), trim);
-    crown.position.y = 3.7; crown.castShadow = true;
-    g.add(crown);
-
-    var mast = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.0, 6), trim);
-    mast.position.y = 4.5;
-    g.add(mast);
-    return g;
-  }
-
-  function makeCommand(hue) {
-    /* Sector D — a wide bunker with a dish that keeps sweeping. */
-    var g = new THREE.Group();
-    var body = shellMat();
-    var trim = new THREE.MeshStandardMaterial({ color: hue, metalness: .4, roughness: .4 });
-
-    var base = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.1, 2.2), body);
-    base.position.y = 0.55; base.castShadow = true; base.receiveShadow = true;
-    g.add(base);
-
-    var deck = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.7, 1.6), body);
-    deck.position.y = 1.45; deck.castShadow = true;
-    g.add(deck);
-
-    var rail = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.12, 2.4), trim);
-    rail.position.y = 1.12;
-    g.add(rail);
-
-    var pylon = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 0.9, 8), body);
-    pylon.position.set(0, 2.2, 0);
-    g.add(pylon);
-
-    var dish = new THREE.Group();
-    var pan = new THREE.Mesh(
-      new THREE.ConeGeometry(0.85, 0.42, 22, 1, true),
-      new THREE.MeshStandardMaterial({ color: hue, metalness: .5, roughness: .3, side: THREE.DoubleSide })
-    );
-    pan.rotation.x = Math.PI;          /* point down, mouth up */
-    dish.add(pan);
-    var horn = new THREE.Mesh(
-      new THREE.SphereGeometry(0.1, 10, 8),
-      new THREE.MeshStandardMaterial({ color: 0x1b2730, roughness: .5 })
-    );
-    horn.position.y = 0.34;
-    dish.add(horn);
-    dish.position.set(0, 2.55, 0);
-    dish.rotation.x = -Math.PI / 7;    /* tipped at the sky, not straight up */
-    dish.name = "dish";
-    g.add(dish);
-    return g;
-  }
-
-  var BUILDERS = { archive: makeArchive, studio: makeStudio, tower: makeTower, command: makeCommand };
-
-  function makeRocket() {
-    /* A lathe profile gives the hull a real silhouette instead of a cylinder. */
-    var g = new THREE.Group();
-    var hull = new THREE.MeshStandardMaterial({ color: 0xe8eeea, metalness: .55, roughness: .3 });
-    var accent = new THREE.MeshStandardMaterial({ color: 0xe2552f, metalness: .4, roughness: .4 });
-    var dark = new THREE.MeshStandardMaterial({ color: 0x1b2730, metalness: .6, roughness: .35, side: THREE.DoubleSide });
-
-    var pts = [[0, 0], [0.62, 0.05], [0.72, 0.55], [0.78, 1.6], [0.74, 3.0], [0.5, 3.9], [0.2, 4.5], [0, 4.9]];
-    var profile = pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); });
-    var body = new THREE.Mesh(new THREE.LatheGeometry(profile, 24), hull);
-    body.castShadow = true;
-    g.add(body);
-
-    var band = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.3, 24), accent);
-    band.position.y = 2.1;
-    g.add(band);
-
-    var glass = new THREE.Mesh(
-      new THREE.SphereGeometry(0.26, 14, 10),
-      new THREE.MeshStandardMaterial({ color: 0x0d1a22, emissive: 0x3aa0b5, emissiveIntensity: .8, roughness: .2 })
-    );
-    glass.position.set(0, 2.9, 0.62);
-    g.add(glass);
-
-    for (var f = 0; f < 3; f++) {
-      var fin = new THREE.Mesh(new THREE.ConeGeometry(0.42, 1.15, 4), accent);
-      var a = (f / 3) * Math.PI * 2;
-      fin.position.set(Math.cos(a) * 0.72, 0.55, Math.sin(a) * 0.72);
-      fin.rotation.y = -a;
-      fin.rotation.z = Math.PI;
-      fin.castShadow = true;
-      g.add(fin);
-    }
-
-    var bell = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.55, 0.5, 16, 1, true), dark);
-    bell.position.y = -0.18;
-    g.add(bell);
-
-    var flame = new THREE.Mesh(
-      new THREE.ConeGeometry(0.32, 1.1, 14),
-      new THREE.MeshBasicMaterial({ color: 0xffd84d, transparent: true, opacity: .85 })
-    );
-    flame.position.y = -0.85;
-    flame.rotation.x = Math.PI;
-    flame.name = "flame";
-    g.add(flame);
-
-    return g;
-  }
-
-  function makeVirus() {
-    /* A spiked core — the original drew flat blobs, these have spikes. */
-    var g = new THREE.Group();
-    var skin = new THREE.MeshStandardMaterial({
-      color: INFECTED, emissive: INFECTED, emissiveIntensity: .55, roughness: .4
-    });
-    g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.3, 0), skin));
-    for (var i = 0; i < 8; i++) {
-      var spike = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.26, 5), skin);
-      var a = (i / 8) * Math.PI * 2;
-      var y = i % 2 ? 0.18 : -0.18;
-      spike.position.set(Math.cos(a) * 0.3, y, Math.sin(a) * 0.3);
-      spike.lookAt(spike.position.clone().multiplyScalar(2));
-      spike.rotateX(Math.PI / 2);
-      g.add(spike);
-    }
-    return g;
-  }
-
-  /* ====================================================================== */
-  /* scene                                                                  */
-  /* ====================================================================== */
-  var three = { ready: false, particles: [] };
-
-  function initThree() {
-    if (typeof THREE === "undefined") return false;
-    var canvas = byId("scene");
-    var renderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-    } catch (err) {
-      return false;
-    }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    if (THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
-
-    var scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x04080c);
-    scene.fog = new THREE.Fog(0x04080c, 24, 52);
-
-    var camera = new THREE.PerspectiveCamera(46, 16 / 10, 0.1, 220);
-
-    scene.add(new THREE.HemisphereLight(0x8ea8b8, 0x0a1410, 0.55));
-    var key = new THREE.DirectionalLight(0xffffff, 0.95);
-    key.position.set(8, 15, 6);
-    key.castShadow = true;
-    key.shadow.mapSize.set(1024, 1024);
-    key.shadow.camera.left = -16; key.shadow.camera.right = 16;
-    key.shadow.camera.top = 16; key.shadow.camera.bottom = -16;
-    scene.add(key);
-    var padLight = new THREE.PointLight(0xffd84d, 1.2, 14);
-    padLight.position.set(0, 1.2, 0);
-    scene.add(padLight);
-
-    var ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(60, 60),
-      new THREE.MeshStandardMaterial({ color: 0x0c1a16, roughness: 1 })
-    );
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    scene.add(ground);
-
-    var grid = new THREE.GridHelper(48, 48, 0x1d4a30, 0x14312a);
-    grid.position.y = 0.01;
-    if (grid.material) { grid.material.transparent = true; grid.material.opacity = 0.45; }
-    scene.add(grid);
-
-    var pad = new THREE.Mesh(
-      new THREE.CircleGeometry(3.1, 40),
-      new THREE.MeshStandardMaterial({ color: 0x16262f, roughness: .9 })
-    );
-    pad.rotation.x = -Math.PI / 2;
-    pad.position.y = 0.02;
-    pad.receiveShadow = true;
-    scene.add(pad);
-
-    var padRing = new THREE.Mesh(
-      new THREE.TorusGeometry(3.1, 0.06, 8, 48),
-      new THREE.MeshStandardMaterial({ color: 0xffd84d, emissive: 0xffd84d, emissiveIntensity: .35, roughness: .5 })
-    );
-    padRing.rotation.x = -Math.PI / 2;
-    padRing.position.y = 0.05;
-    scene.add(padRing);
-
-    var starGeo = new THREE.BufferGeometry();
-    var starPos = [];
-    for (var s = 0; s < 900; s++) {
-      var rad = 70 + Math.random() * 40;
-      var th = Math.random() * Math.PI * 2;
-      var ph = Math.acos(2 * Math.random() - 1);
-      starPos.push(
-        rad * Math.sin(ph) * Math.cos(th),
-        Math.abs(rad * Math.cos(ph)) + 5,
-        rad * Math.sin(ph) * Math.sin(th)
-      );
-    }
-    starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPos, 3));
-    scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({
-      color: 0xcfe4ea, size: 0.5, sizeAttenuation: true
-    })));
-
-    var rocket = makeRocket();
-    scene.add(rocket);
-
-    var pickables = [], built = {};
-    SECTORS.forEach(function (s) {
-      var group = new THREE.Group();
-      group.position.set(s.pos[0], 0, s.pos[2]);
-      group.lookAt(0, 0, 0);
-
-      var model = BUILDERS[s.build](s.hue);
-      group.add(model);
-
-      var shell = new THREE.Mesh(
-        new THREE.RingGeometry(1.9, 2.5, 40),
-        new THREE.MeshBasicMaterial({ color: INFECTED, transparent: true, opacity: .35, side: THREE.DoubleSide })
-      );
-      shell.rotation.x = -Math.PI / 2;
-      shell.position.y = 0.06;
-      group.add(shell);
-
-      /* One simple hit target rather than every little mesh. */
-      var hit = new THREE.Mesh(
-        new THREE.BoxGeometry(3.6, 4.8, 3.2),
-        new THREE.MeshBasicMaterial({ visible: false })
-      );
-      hit.position.y = 2.2;
-      hit.userData.sector = s.id;
-      group.add(hit);
-      pickables.push(hit);
-
-      var viruses = new THREE.Group();
-      for (var v = 0; v < 4; v++) {
-        var bug = makeVirus();
-        bug.userData.seed = v * 1.7;
-        viruses.add(bug);
-      }
-      viruses.position.y = 3.6;
-      group.add(viruses);
-
-      var dist = Math.sqrt(s.pos[0] * s.pos[0] + s.pos[2] * s.pos[2]);
-      var run = dist - 3.4;
-      var cable = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.05, 0.05, run, 6),
-        new THREE.MeshStandardMaterial({ color: 0x24404a, roughness: .8 })
-      );
-      cable.rotation.x = Math.PI / 2;
-      cable.position.set(0, 0.12, run / 2 + 1.6);
-      group.add(cable);
-
-      scene.add(group);
-      built[s.id] = { group: group, model: model, shell: shell, viruses: viruses, sector: s };
-    });
-
-    three = {
-      ready: true, renderer: renderer, scene: scene, camera: camera,
-      rocket: rocket, built: built, pickables: pickables,
-      raycaster: new THREE.Raycaster(), pointer: new THREE.Vector2(-2, -2),
-      angle: VIEWS.orbit.angle, height: VIEWS.orbit.height, distance: VIEWS.orbit.distance,
-      dragging: false, moved: 0, lastX: 0, lastY: 0,
-      hover: null, tipX: 0, tipY: 0, particles: []
-    };
-
-    placeCamera();
-    resize();
-    window.addEventListener("resize", resize);
-    bindPointer(canvas);
-    animate();
-    return true;
-  }
-
-  function placeCamera() {
-    var flat = three.flat || 0;
-    three.camera.position.set(
-      Math.cos(three.angle) * three.distance,
-      three.height * (1 - 0.34 * flat),
-      Math.sin(three.angle) * three.distance
-    );
-    three.camera.lookAt(0, 1.6 - 1.5 * flat, 0);
-  }
-
-  function resize() {
-    var stage = byId("stage");
-    var w = stage.clientWidth, h = stage.clientHeight;
-    if (!w || !h) return;
-    three.renderer.setSize(w, h, false);
-    three.camera.aspect = w / h;
-    /* How far the frame has flattened past the 16:10 the shot was composed
-       for. Pulling the camera back at that point only shrinks the field; what
-       it needs is to drop and aim lower, so the buildings sit mid-frame. */
-    three.flat = Math.min(1, Math.max(0, (w / h) - 1.6) / 2.4);
-    three.camera.updateProjectionMatrix();
-    placeCamera();
-  }
-
-  function bindPointer(canvas) {
-    canvas.addEventListener("pointerdown", function (e) {
-      three.dragging = true; three.moved = 0;
-      three.lastX = e.clientX; three.lastY = e.clientY;
-      canvas.classList.add("is-dragging");
-      try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
-    });
-    canvas.addEventListener("pointermove", function (e) {
-      var r = canvas.getBoundingClientRect();
-      three.pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-      three.pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
-      three.tipX = e.clientX - r.left;
-      three.tipY = e.clientY - r.top;
-      if (!three.dragging) return;
-      var dx = e.clientX - three.lastX, dy = e.clientY - three.lastY;
-      three.moved += Math.abs(dx) + Math.abs(dy);
-      three.angle -= dx * 0.006;
-      three.height = Math.max(2.5, Math.min(24, three.height + dy * 0.05));
-      three.lastX = e.clientX; three.lastY = e.clientY;
-      placeCamera();
-    });
-    function release() {
-      canvas.classList.remove("is-dragging");
-      /* a short press is a click, a long one was a drag */
-      if (three.dragging && three.moved < 6) pick();
-      three.dragging = false;
-    }
-    canvas.addEventListener("pointerup", release);
-    canvas.addEventListener("pointercancel", release);
-    canvas.addEventListener("wheel", function (e) {
-      e.preventDefault();
-      three.distance = Math.max(9, Math.min(36, three.distance + e.deltaY * 0.012));
-      placeCamera();
-    }, { passive: false });
-  }
-
-  function pick() {
-    three.raycaster.setFromCamera(three.pointer, three.camera);
-    var hits = three.raycaster.intersectObjects(three.pickables, false);
-    if (hits.length) openSector(hits[0].object.userData.sector);
-  }
-
-  function burst(id) {
-    /* the cleaning particles the original fired when a sector came free */
-    var b = three.built[id];
-    var geo = new THREE.BufferGeometry();
-    var pos = [], vel = [];
-    for (var i = 0; i < 140; i++) {
-      pos.push(0, 3.4, 0);
-      vel.push((Math.random() - .5) * .3, Math.random() * .28 + .05, (Math.random() - .5) * .3);
-    }
-    geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
-    var pts = new THREE.Points(geo, new THREE.PointsMaterial({
-      color: b.sector.hue, size: .18, transparent: true, opacity: 1
-    }));
-    b.group.add(pts);
-    three.particles.push({ points: pts, vel: vel, life: 0, group: b.group });
-  }
-
-  function paintSectors() {
-    if (!three.ready) return;
-    SECTORS.forEach(function (s) {
-      var b = three.built[s.id];
-      var clear = isClear(s.id);
-      b.shell.visible = !clear;
-      b.viruses.visible = !clear;
-    });
-  }
-
-  var clock = 0;
-  function animate() {
-    requestAnimationFrame(animate);
-    if (!three.ready) return;
-    clock += 0.016;
-
-    three.rocket.position.y = Math.sin(clock * 1.2) * 0.06;
-    var flame = three.rocket.getObjectByName("flame");
-    if (flame) flame.scale.y = 0.8 + Math.abs(Math.sin(clock * 6)) * 0.5;
-
-    SECTORS.forEach(function (s, si) {
-      var b = three.built[s.id];
-      if (b.viruses.visible) {
-        b.viruses.children.forEach(function (bug) {
-          var a = clock * 0.9 + bug.userData.seed + si;
-          bug.position.set(Math.cos(a) * 1.5, Math.sin(a * 1.6) * 0.35, Math.sin(a) * 1.5);
-          bug.rotation.y += 0.03;
-          bug.rotation.x += 0.02;
-        });
-      }
-      var dish = b.model.getObjectByName("dish");
-      if (dish) dish.rotation.z = Math.sin(clock * 0.4) * 0.6;
-
-      var lift = three.hover === s.id ? 0.25 : 0;
-      b.model.position.y += (lift - b.model.position.y) * 0.15;
-    });
-
-    for (var p = three.particles.length - 1; p >= 0; p--) {
-      var item = three.particles[p];
-      var arr = item.points.geometry.attributes.position.array;
-      for (var i = 0; i < arr.length; i += 3) {
-        arr[i] += item.vel[i];
-        arr[i + 1] += item.vel[i + 1];
-        arr[i + 2] += item.vel[i + 2];
-        item.vel[i + 1] -= 0.006;
-      }
-      item.points.geometry.attributes.position.needsUpdate = true;
-      item.life += 0.016;
-      item.points.material.opacity = Math.max(0, 1 - item.life / 1.6);
-      if (item.life > 1.6) {
-        item.group.remove(item.points);
-        item.points.geometry.dispose();
-        item.points.material.dispose();
-        three.particles.splice(p, 1);
-      }
-    }
-
-    if (!three.dragging) {
-      three.raycaster.setFromCamera(three.pointer, three.camera);
-      var hits = three.raycaster.intersectObjects(three.pickables, false);
-      var id = hits.length ? hits[0].object.userData.sector : null;
-      if (id !== three.hover) {
-        three.hover = id;
-        byId("scene").classList.toggle("is-over", !!id);
-        var tip = byId("tip");
-        tip.hidden = !id;
-        if (id) tip.textContent = t().sector + " " + id + " · " + t().names[id][0];
-      }
-      if (three.hover) {
-        var tip2 = byId("tip");
-        tip2.style.left = three.tipX + "px";
-        tip2.style.top = three.tipY + "px";
-      }
-    }
-
-    three.renderer.render(three.scene, three.camera);
-  }
-
-  /* ====================================================================== */
-  /* page                                                                   */
-  /* ====================================================================== */
-  /* ======================================================================
-     The four jobs. A sector stays with the virus until the job inside it is
-     done, and each one asks for a different movement: pick and bin, connect,
-     hold, pull. A sector that opens with the same puzzle as the last one is
-     not worth opening.
-
-     Every builder paints into `host` and calls `won()` once, when solved.
-     ====================================================================== */
-
-  function el(tag, cls, text) {
-    var n = document.createElement(tag);
-    if (cls) n.className = cls;
     if (text != null) n.textContent = text;
     return n;
   }
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* --- A · file archive: bin the virus files, leave ours alone ---------- */
-  function jobArchive(host, won) {
-    var d = t(), g = d.jobs.A;
-    host.appendChild(el("p", "job__head", g.head));
-
-    var files = [
-      { name: "rocket-plan.png", size: "412 KB" },
-      { name: "x7d9~tmp.bin", size: "3 KB", bad: true },
-      { name: "crew-list.txt", size: "2 KB" },
-      { name: "launch-log.txt", size: "88 KB" },
-      { name: "qq00~tmp.bin", size: "3 KB", bad: true },
-      { name: "mars-route.svg", size: "31 KB" },
-      { name: "zz41~tmp.bin", size: "3 KB", bad: true }
-    ];
-    var picked = {}, gone = {};
-
-    var list = el("div", "files");
-    var rows = files.map(function (f, i) {
-      var b = el("button", "file" + (f.bad ? " is-bad" : ""));
-      b.type = "button";
-      b.setAttribute("aria-pressed", "false");
-      b.append(el("span", "file__dot"), el("span", null, f.name), el("span", "file__size", f.size));
-      b.onclick = function () {
-        if (gone[i]) return;
-        picked[i] = !picked[i];
-        b.setAttribute("aria-pressed", String(!!picked[i]));
-      };
-      list.appendChild(b);
-      return b;
-    });
-    host.appendChild(list);
-
-    var note = el("p", "muted");
-    note.style.fontSize = "var(--t-2xs)";
-    note.textContent = g.hint;
-    host.appendChild(note);
-
-    var bin = el("button", "btn btn--danger");
-    bin.type = "button";
-    bin.textContent = g.action;
-    bin.onclick = function () {
-      var chose = files.map(function (_, i) { return !!picked[i]; });
-      if (!chose.some(Boolean)) { note.textContent = g.pickFirst; return; }
-
-      /* Taking one of ours costs the whole selection: the lesson is to read
-         the names before pressing delete, not to delete quickly. */
-      if (files.some(function (f, i) { return chose[i] && !f.bad; })) {
-        picked = {};
-        rows.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
-        note.textContent = g.oops;
-        return;
-      }
-
-      files.forEach(function (f, i) {
-        if (chose[i]) { gone[i] = true; rows[i].classList.add("is-gone"); }
-      });
-      picked = {};
-      if (files.every(function (f, i) { return !f.bad || gone[i]; })) {
-        bin.disabled = true;
-        won();
-      } else {
-        note.textContent = g.more;
-      }
-    };
-    var row = el("div", "row");
-    row.appendChild(bin);
-    host.appendChild(row);
+  /* ======================================================================
+     Portraits. SVG, so they stay sharp and work without WebGL.
+     ====================================================================== */
+  function andyFace(mood) {
+    var brow = { happy: "M-9 2 q9 -9 18 0", worried: "M-9 -4 l18 4", sad: "M-9 -2 q9 6 18 0" }[mood];
+    var py = mood === "sad" ? 6 : 2;
+    return '<svg viewBox="-60 -70 120 130" aria-hidden="true">' +
+      '<rect x="-30" y="0" width="60" height="44" rx="8" fill="#ffd84d" stroke="#0d150d" stroke-width="3"/>' +
+      '<rect x="-18" y="10" width="36" height="16" rx="4" fill="#f5b800" stroke="#0d150d" stroke-width="2"/>' +
+      '<rect x="-38" y="40" width="76" height="16" rx="8" fill="#485444" stroke="#0d150d" stroke-width="3"/>' +
+      '<circle cx="-24" cy="48" r="4" fill="#93a08d"/><circle cx="0" cy="48" r="4" fill="#93a08d"/><circle cx="24" cy="48" r="4" fill="#93a08d"/>' +
+      '<rect x="-3" y="-14" width="6" height="16" fill="#6a7568" stroke="#0d150d" stroke-width="2"/>' +
+      [-17, 17].map(function (x) {
+        return '<g transform="translate(' + x + ',-32)">' +
+          '<rect x="-15" y="-15" width="30" height="30" rx="11" fill="#e3e8dd" stroke="#0d150d" stroke-width="3"/>' +
+          '<circle r="10" fill="#b9d9e0" stroke="#0d150d" stroke-width="2"/>' +
+          '<circle cy="' + (py - 2) + '" r="5" fill="#0d150d"/><circle cx="2" cy="' + (py - 5) + '" r="1.8" fill="#fff"/>' +
+          '<path d="' + brow + '" transform="translate(0,-20)" fill="none" stroke="#0d150d" stroke-width="3" stroke-linecap="round"/></g>';
+      }).join("") + "</svg>";
+  }
+  function virusFace(mood) {
+    var mouth = mood === "smug" ? "M-12 8 q12 10 24 0" : "M-10 14 q10 -12 20 0";
+    var brow = mood === "smug" ? "M-20 -14 l12 5 M20 -14 l-12 5" : "M-20 -8 l12 -5 M20 -8 l-12 -5";
+    var spikes = "";
+    for (var i = 0; i < 10; i++) {
+      var a = i / 10 * Math.PI * 2, x = (Math.cos(a) * 34).toFixed(1), y = (Math.sin(a) * 34).toFixed(1);
+      spikes += '<line x1="0" y1="0" x2="' + x + '" y2="' + y + '" stroke="#0d150d" stroke-width="3"/>' +
+                '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#f6b394" stroke="#0d150d" stroke-width="2.5"/>';
+    }
+    return '<svg viewBox="-50 -50 100 100" aria-hidden="true">' + spikes +
+      '<circle r="26" fill="#e2552f" stroke="#0d150d" stroke-width="3"/>' +
+      '<circle cx="-9" cy="-2" r="6" fill="#fff" stroke="#0d150d" stroke-width="2"/><circle cx="9" cy="-2" r="6" fill="#fff" stroke="#0d150d" stroke-width="2"/>' +
+      '<circle cx="-8" cy="-1" r="2.6" fill="#0d150d"/><circle cx="10" cy="-1" r="2.6" fill="#0d150d"/>' +
+      '<path d="' + brow + '" stroke="#0d150d" stroke-width="3" stroke-linecap="round"/>' +
+      '<path d="' + mouth + '" fill="none" stroke="#0d150d" stroke-width="3" stroke-linecap="round"/></svg>';
   }
 
-  /* --- B · graphics station: put the colours back on their sockets ------ */
+  /* ======================================================================
+     Dialogue. The queue holds references, not strings, so switching the
+     language halfway through a scene re-reads the line in the new language.
+     ====================================================================== */
+  var queue = [], queued = {};
+
+  function lineOf(item) {
+    var d = t();
+    if (item.beat) return d.beats[item.beat][item.i];
+    if (item.pool) return d[item.pool][item.i];
+    return d[item.key];
+  }
+
+  /* Effects tied to a line: beat name + line index. */
+  var FX = {
+    A0: function () { burst("A"); },
+    B0: function () { burst("B"); },
+    capture0: function () { burst("C"); },
+    capture2: function () { carryAndy(); },
+    rescue0: function () { burst("D"); freeAndy(); },
+    rescue2: function () { launch(); }
+  };
+
+  function queueBeats() {
+    BEATS.forEach(function (b) {
+      if (queued[b] || seen(b) || !beatReady(b)) return;
+      queued[b] = true;
+      T.en.beats[b].forEach(function (_, i) { queue.push({ beat: b, i: i }); });
+    });
+    if (byId("say").hidden && queue.length) showLine();
+  }
+
+  function speak(item) {
+    /* One-off lines wait their turn behind a scene that is playing. */
+    queue.push(item);
+    if (byId("say").hidden) showLine();
+  }
+
+  function showLine() {
+    var box = byId("say");
+    if (!queue.length) { box.hidden = true; return; }
+    var item = queue[0], line = lineOf(item), d = t();
+    if (item.beat && item.i === 0 && !seen(item.beat)) remember("map-beat-" + item.beat);
+    if (item.beat && FX[item.beat + item.i] && !item.played) { item.played = true; FX[item.beat + item.i](); }
+    box.hidden = false;
+    box.className = "say" + (line[0] === "virus" ? " say--virus" : "");
+    byId("sayFace").innerHTML = line[0] === "andy" ? andyFace(line[1]) : virusFace(line[1]);
+    byId("sayWho").textContent = d.who[line[0]];
+    byId("sayText").textContent = line[2];
+    byId("sayNext").textContent = queue.length > 1 ? d.next : d.ok;
+    byId("saySkip").textContent = d.skip;
+    byId("saySkip").hidden = queue.length < 2;
+    if (line[0] === "andy") wiggleAndy();
+  }
+
+  byId("sayNext").onclick = function () {
+    queue.shift();
+    showLine();
+    if (byId("say").hidden) render();
+  };
+  /* Skipping still counts the scenes as told, so the island lands in the
+     state the story would have left it in. */
+  byId("saySkip").onclick = function () {
+    queue.forEach(function (item) { if (item.beat) remember("map-beat-" + item.beat); });
+    queue = [];
+    byId("say").hidden = true;
+    render();
+  };
+
+  function pick(pool) {
+    return { pool: pool, i: Math.floor(Math.random() * T.en[pool].length) };
+  }
+
+  /* ======================================================================
+     The panel: a building with its tasks, or one of the two mini-events.
+     ====================================================================== */
+  function paintPanel() {
+    var panel = byId("panel"), body = byId("panelBody"), d = t();
+    panel.hidden = !open;
+    if (!open) return;
+
+    if (open === "lever" || open === "wires") {
+      var m = d.mini[open];
+      byId("panelName").textContent = m.name;
+      byId("panelWhat").textContent = m.what;
+      /* Built once per opening, so a re-render does not throw away a lever
+         that is halfway down. */
+      if (body.dataset.mini !== open + lang) {
+        body.innerHTML = "";
+        body.dataset.mini = open + lang;
+        var host = el("div", "job");
+        body.appendChild(host);
+        (open === "lever" ? jobLever : jobWires)(host, miniDone);
+      }
+      return;
+    }
+
+    body.dataset.mini = "";
+    var id = open, st = state(id), now = progress();
+    byId("panelName").textContent = d.names[id][0];
+    byId("panelWhat").textContent = d.names[id][1];
+    body.innerHTML = "";
+    body.appendChild(el("p", "panel__state", st === "locked" ? d.locked(ORDER[ORDER.indexOf(id) - 1]) : d.stateLine[st]));
+
+    var list = el("div", "tasks");
+    list.appendChild(el("h3", "tasks__title", d.tasksTitle));
+    TASKS[id].forEach(function (k) {
+      var isDone = !!now[k];
+      var row = el(st === "locked" ? "div" : "a", "tasklink" + (isDone ? " is-done" : "") + (st === "locked" ? " is-locked" : ""));
+      if (st !== "locked") row.href = PATHS[k];
+      row.appendChild(el("span", "tasklink__tag", TAGS[k]));
+      row.appendChild(el("span", null, d.taskNames[k]));
+      row.appendChild(el("span", "tasklink__state", isDone ? "✓ " + d.taskDone : st === "locked" ? d.taskLocked : d.taskTodo));
+      list.appendChild(row);
+    });
+    body.appendChild(list);
+    body.appendChild(el("p", "muted", d.tasksNote)).style.fontSize = "var(--t-2xs)";
+  }
+
+  function openPanel(what) {
+    open = what;
+    byId("panelBody").dataset.mini = "";
+    render();
+    if (ORDER.indexOf(what) >= 0) { focusSector(what); sendAndy(what); }
+    else focusPad();
+  }
+
+  function miniDone() {
+    var kind = open;
+    setTimeout(function () {
+      if (open === kind) { open = null; render(); }
+      if (kind === "lever") hop(); else lightPad();
+      speak({ key: kind === "lever" ? "leverDone" : "wiresDone" });
+    }, 600);
+  }
+
+  byId("closePanel").onclick = function () { open = null; render(); };
+
+  /* ---- the wires, now the pad-lights mini-event ----------------------- */
   function jobWires(host, won) {
-    var d = t(), g = d.jobs.B;
-    host.appendChild(el("p", "job__head", g.head));
+    var g = t().mini.wires;
+    var note = el("p", "muted");
+    note.style.fontSize = "var(--t-2xs)";
+    note.setAttribute("aria-live", "polite");
 
     var COLS = ["#e2552f", "#f5b800", "#0a8754", "#12798f"];
     var RIGHT = ["#12798f", "#0a8754", "#e2552f", "#f5b800"];
     /* A shape per colour, so the pairs never depend on colour alone. */
-    var SHAPES = ["\u25CF", "\u25B2", "\u25A0", "\u25C6"];
+    var SHAPES = ["●", "▲", "■", "◆"];
 
     var wrap = el("div", "wires");
     var left = el("div", "wires__col"), rcol = el("div", "wires__col");
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     wrap.append(left, svg, rcol);
-    host.appendChild(wrap);
+    host.append(wrap, note);
 
     var from = null, live = null, joined = 0;
-
     function centre(node) {
       var a = node.getBoundingClientRect(), b = wrap.getBoundingClientRect();
       return [a.left - b.left + a.width / 2, a.top - b.top + a.height / 2];
@@ -1552,25 +1245,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     }
     function line(x1, y1, x2, y2, colour) {
       var l = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      l.setAttribute("stroke", colour);
-      l.setAttribute("stroke-width", "7");
-      l.setAttribute("stroke-linecap", "round");
-      l.setAttribute("fill", "none");
+      l.setAttribute("stroke", colour); l.setAttribute("stroke-width", "7");
+      l.setAttribute("stroke-linecap", "round"); l.setAttribute("fill", "none");
       l.setAttribute("d", curve(x1, y1, x2, y2));
       svg.appendChild(l);
       return l;
     }
-    function dropLive() {
-      if (live && live.parentNode) live.parentNode.removeChild(live);
-      live = null;
-    }
+    function dropLive() { if (live && live.parentNode) live.parentNode.removeChild(live); live = null; }
 
-    COLS.forEach(function (c) {
+    COLS.forEach(function (c, ci) {
       var b = el("button", "plug");
       b.type = "button"; b.style.background = c;
-      b.dataset.colour = c;
-      b.dataset.shape = SHAPES[COLS.indexOf(c)];
-      b.setAttribute("aria-label", g.wire.replace("{c}", g.colours[COLS.indexOf(c)]));
+      b.dataset.colour = c; b.dataset.shape = SHAPES[ci];
+      b.setAttribute("aria-label", g.wire.replace("{c}", g.colours[ci]));
       /* Tap or keyboard: pick the wire now, join it by pressing a socket. */
       b.addEventListener("click", function () { if (!b.classList.contains("is-done")) from = b; });
       b.addEventListener("pointerdown", function (e) {
@@ -1588,25 +1275,23 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     function tryJoin(target) {
       if (!from || target.classList.contains("is-done")) return;
       if (target.dataset.colour !== from.dataset.colour) {
-        dropLive();
-        from = null;
-        return;
+        dropLive(); from = null; note.textContent = g.wrong; return;
       }
+      note.textContent = "";
       var a = centre(from), b2 = centre(target);
       dropLive();
       line(a[0], a[1], b2[0], b2[1], target.dataset.colour);
-      from.classList.add("is-done");
-      target.classList.add("is-done");
+      from.classList.add("is-done"); target.classList.add("is-done");
       from = null;
       if (++joined === COLS.length) won();
     }
 
     RIGHT.forEach(function (c) {
+      var ci = COLS.indexOf(c);
       var b = el("button", "plug");
       b.type = "button"; b.style.background = c;
-      b.dataset.colour = c;
-      b.dataset.shape = SHAPES[COLS.indexOf(c)];
-      b.setAttribute("aria-label", g.socket.replace("{c}", g.colours[COLS.indexOf(c)]));
+      b.dataset.colour = c; b.dataset.shape = SHAPES[ci];
+      b.setAttribute("aria-label", g.socket.replace("{c}", g.colours[ci]));
       b.onclick = function () { tryJoin(b); };
       rcol.appendChild(b);
     });
@@ -1625,72 +1310,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     });
   }
 
-  /* --- C · text module: hold the purge down while the virus fights back -- */
-  function jobPurge(host, won) {
-    var d = t(), g = d.jobs.C;
-    host.appendChild(el("p", "job__head", g.head));
-
-    var box = el("div", "purge");
-    var btn = el("button", "purge__btn", g.action);
-    btn.type = "button";
-    var meter = el("div", "purge__meter");
-    var fill = el("i");
-    meter.appendChild(fill);
-    box.append(btn, meter);
-    host.appendChild(box);
-
-    var pct = 0, down = false, last = 0, knock = 0, done = false;
-
-    function press(on) {
-      if (done) return;
-      down = on;
-      btn.classList.toggle("is-down", on);
-    }
-    btn.addEventListener("pointerdown", function (e) { e.preventDefault(); press(true); });
-    window.addEventListener("pointerup", function () { press(false); });
-    btn.addEventListener("keydown", function (e) {
-      if (e.key === " " || e.key === "Enter") { e.preventDefault(); press(true); }
-    });
-    btn.addEventListener("keyup", function (e) {
-      if (e.key === " " || e.key === "Enter") press(false);
-    });
-
-    function step(now) {
-      /* The panel is rebuilt on every render, so a loop whose host has left
-         the document has to stop rather than keep burning frames. */
-      if (done) return;
-      if (!host.isConnected) { clearInterval(tick); return; }
-      if (!last) last = now;
-      var dt = Math.min(0.05, (now - last) / 1000);
-      last = now;
-
-      pct += down ? dt * 34 : -dt * 42;
-      knock += dt;
-      if (down && knock > 1.5) {
-        knock = 0;
-        pct -= 16;
-        meter.classList.add("is-hit");
-        setTimeout(function () { meter.classList.remove("is-hit"); }, 220);
-      }
-      pct = Math.max(0, Math.min(100, pct));
-      fill.style.width = pct + "%";
-
-      if (pct >= 100) {
-        done = true;
-        btn.disabled = true;
-        btn.classList.remove("is-down");
-        clearInterval(tick);
-        won();
-      }
-    }
-    var tick = setInterval(function () { step(performance.now()); }, 33);
-  }
-
-  /* --- D · command centre: pull the lever down and hold it there -------- */
+  /* ---- the lever, now the engine-test mini-event ---------------------- */
   function jobLever(host, won) {
-    var d = t(), g = d.jobs.D;
-    host.appendChild(el("p", "job__head", g.head));
-
+    var g = t().mini.lever;
     var box = el("div", "lever");
     var track = el("div", "lever__track");
     var fillEl = el("div", "lever__fill");
@@ -1705,7 +1327,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     host.appendChild(box);
 
     var TOP = 0, BOT = 156;          /* 190 tall, less the 34 of the grip */
-    var y = TOP, dragging = false, held = 0, keyDown = false, done = false, last = 0;
+    var y = TOP, dragging = false, held = 0, keyDown = false, finished = false, last = 0;
 
     function place() {
       grip.style.top = y + "px";
@@ -1714,11 +1336,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     }
     place();
 
-    grip.addEventListener("pointerdown", function (e) {
-      e.preventDefault();
-      dragging = true;
-      grip.setPointerCapture(e.pointerId);
-    });
+    grip.addEventListener("pointerdown", function (e) { e.preventDefault(); dragging = true; grip.setPointerCapture(e.pointerId); });
     grip.addEventListener("pointermove", function (e) {
       if (!dragging) return;
       var b = box.getBoundingClientRect();
@@ -1726,73 +1344,731 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       place();
     });
     grip.addEventListener("pointerup", function () { dragging = false; });
-    grip.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowDown") { e.preventDefault(); keyDown = true; }
-    });
-    grip.addEventListener("keyup", function (e) {
-      if (e.key === "ArrowDown") keyDown = false;
-    });
+    grip.addEventListener("pointercancel", function () { dragging = false; });
+    grip.addEventListener("keydown", function (e) { if (e.key === "ArrowDown") { e.preventDefault(); keyDown = true; } });
+    grip.addEventListener("keyup", function (e) { if (e.key === "ArrowDown") keyDown = false; });
 
-    function step(now) {
-      if (done) return;
+    var tick = setInterval(function () {
+      var now = performance.now();
+      if (finished) return;
       if (!host.isConnected) { clearInterval(tick); return; }
       if (!last) last = now;
       var dt = Math.min(0.05, (now - last) / 1000);
       last = now;
-
       if (keyDown) { y = Math.min(BOT, y + dt * 220); place(); }
       /* Let go and the spring takes it back, so the lever has to be held. */
       if (!dragging && !keyDown && y > TOP) { y = Math.max(TOP, y - dt * 150); place(); }
-
       held = y >= BOT - 2 ? held + dt : 0;
-      if (held >= 1.2) {
-        done = true;
+      if (held >= 1) {
+        finished = true;
         grip.style.pointerEvents = "none";
         clearInterval(tick);
         won();
       }
-    }
-    var tick = setInterval(function () { step(performance.now()); }, 33);
+    }, 33);
   }
 
-  var JOBS = { A: jobArchive, B: jobWires, C: jobPurge, D: jobLever };
+  /* ======================================================================
+     The island. Toon shading, ink outlines, GrassLMS colours only.
+     ====================================================================== */
+  var C = {
+    ink: 0x0d150d, ink700: 0x232b22, ink500: 0x485444, ink400: 0x6a7568, ink300: 0x93a08d, ink200: 0xc4cdbe, ink100: 0xe3e8dd,
+    paper: 0xfbfcf7, green50: 0xecf9e7, green300: 0x8fd770, green400: 0x34a06a, green500: 0x17915e, green700: 0x07683f,
+    sun100: 0xfff2b3, sun300: 0xffe066, sun400: 0xffd84d, sun500: 0xf5b800,
+    clay100: 0xfbd8c7, clay300: 0xf6b394, clay500: 0xe2552f,
+    lagoon200: 0xb9d9e0, lagoon400: 0x3aa0b5, lagoon600: 0x12798f
+  };
+  var PLACES = { A: [-4.6, -3.3], B: [-4.6, 3.4], C: [4.6, -3.3], D: [4.6, 3.4] };
+  var S = { ready: false };
+  var isClearCache = {};   /* isClear reads localStorage, too slow for every frame */
 
-  function paintJob() {
-    var host = byId("job");
-    host.innerHTML = "";
-    if (!open) return;
-    if (isClear(open)) {
-      host.appendChild(el("p", "job__done", t().jobDone));
+  function initThree() {
+    if (typeof THREE === "undefined") return false;
+    var canvas = byId("scene"), renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    } catch (err) { return false; }
+    if (!renderer.getContext()) return false;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(34, 16 / 10, 0.1, 300);
+
+    var ramp = new THREE.DataTexture(new Uint8Array([95, 175, 255]), 3, 1, THREE.LuminanceFormat);
+    ramp.minFilter = ramp.magFilter = THREE.NearestFilter;
+    ramp.needsUpdate = true;
+    var INK = new THREE.MeshBasicMaterial({ color: C.ink, side: THREE.BackSide });
+    var tinted = [], pickables = [];
+
+    /* Every visible piece is a toon mesh with a slightly larger inked copy
+       behind it, which is where the outline comes from. Pieces that belong
+       to a sector are remembered so they can be greyed while it is locked. */
+    function part(geo, color, x, y, z, parent, sector) {
+      var mat = new THREE.MeshToonMaterial({ color: color, gradientMap: ramp });
+      var m = new THREE.Mesh(geo, mat);
+      m.position.set(x || 0, y || 0, z || 0);
+      var hull = new THREE.Mesh(geo, INK);
+      hull.scale.setScalar(1.05);
+      m.add(hull);
+      (parent || scene).add(m);
+      if (sector) tinted.push({ sector: sector, mat: mat, base: new THREE.Color(color) });
+      return m;
+    }
+    /* One plain invisible box per clickable thing, rather than every mesh. */
+    function hitBox(w, h, d, y, parent, pickData) {
+      var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshBasicMaterial({ visible: false }));
+      m.position.y = y;
+      m.userData.pick = pickData;
+      parent.add(m);
+      pickables.push(m);
+      return m;
+    }
+
+    scene.add(new THREE.HemisphereLight(0xfffbe5, 0x0a3d24, 0.7));
+    var sun = new THREE.DirectionalLight(0xffffff, 0.75);
+    sun.position.set(7, 14, 6);
+    scene.add(sun);
+
+    /* The island: a grass top, rock layers underneath, a few loose rocks. */
+    part(new THREE.CylinderGeometry(8.6, 8.2, 0.8, 14), C.green300, 0, -0.4, 0);
+    part(new THREE.CylinderGeometry(8.1, 5.4, 1.8, 11), C.ink400, 0, -1.7, 0);
+    part(new THREE.ConeGeometry(5.2, 4.6, 9), C.ink500, 0, -4.9, 0).rotation.x = Math.PI;
+    var floaters = [];
+    [[-10, -2, 3], [9.5, -3, -4], [3, -2.5, 10.5], [-6, -3.5, -9.5]].forEach(function (p, i) {
+      var r = part(new THREE.DodecahedronGeometry(0.6 + (i % 2) * 0.35, 0), i % 2 ? C.ink400 : C.ink500, p[0], p[1], p[2]);
+      r.userData.base = p[1];
+      floaters.push(r);
+    });
+
+    /* The pad, its six lamps and the generator box that powers them. */
+    part(new THREE.CylinderGeometry(2.5, 2.5, 0.14, 32), C.ink200, 0, 0.07, 0);
+    part(new THREE.CylinderGeometry(1.7, 1.7, 0.16, 32), C.ink100, 0, 0.09, 0);
+    var bulbs = [];
+    for (var lb = 0; lb < 6; lb++) {
+      var la = lb / 6 * Math.PI * 2 + 0.26;
+      part(new THREE.CylinderGeometry(0.06, 0.06, 0.6, 6), C.ink500, Math.cos(la) * 2.75, 0.3, Math.sin(la) * 2.75);
+      var bulb = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), new THREE.MeshBasicMaterial({ color: C.ink500 }));
+      bulb.position.set(Math.cos(la) * 2.75, 0.68, Math.sin(la) * 2.75);
+      scene.add(bulb);
+      bulbs.push(bulb);
+    }
+    var gen = new THREE.Group();
+    gen.position.set(1.2, 0, 3.6);
+    scene.add(gen);
+    part(new THREE.BoxGeometry(0.9, 0.7, 0.6), C.ink500, 0, 0.35, 0, gen);
+    part(new THREE.BoxGeometry(0.92, 0.14, 0.62), C.sun400, 0, 0.5, 0, gen);
+    hitBox(1.4, 1.4, 1.2, 0.5, gen, { type: "wires" });
+
+    /* Path stones from the pad to each building. */
+    ORDER.forEach(function (id) {
+      var p = PLACES[id];
+      for (var k = 1; k <= 3; k++) {
+        var f = 0.36 + k * 0.12;
+        part(new THREE.CylinderGeometry(0.28, 0.3, 0.06, 7), C.ink100, p[0] * f, 0.03, p[1] * f);
+      }
+    });
+
+    /* Low-poly trees round the edge. */
+    [[-7, 0.2], [-6.4, -5.6], [-1.2, -7.4], [1.8, -7.2], [7.2, 0], [6.6, -6], [-1.5, 7.3], [2.6, 7.1], [-7.3, 5.6], [7.4, 6.2]].forEach(function (p, i) {
+      var s = 0.8 + (i % 3) * 0.22;
+      part(new THREE.CylinderGeometry(0.1, 0.13, 0.5, 6), C.ink500, p[0], 0.25, p[1]);
+      part(new THREE.ConeGeometry(0.55 * s, 1.3 * s, 7), i % 2 ? C.green500 : C.green400, p[0], 0.5 + 0.65 * s, p[1]);
+    });
+
+    /* Stars on a dome around everything. */
+    var starPos = [];
+    for (var s = 0; s < 700; s++) {
+      var rad = 80 + Math.random() * 30, th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
+      starPos.push(rad * Math.sin(ph) * Math.cos(th), rad * Math.cos(ph), rad * Math.sin(ph) * Math.sin(th));
+    }
+    var starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPos, 3));
+    scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: C.sun100, size: 0.35 })));
+
+    /* Buildings, each with its pulsing ring and its cloud of virus copies. */
+    var built = {};
+    var makers = { A: makeArchive, B: makeStation, C: makeTower, D: makeCommand };
+    ORDER.forEach(function (id) {
+      var g = new THREE.Group();
+      var p = PLACES[id];
+      g.position.set(p[0], 0, p[1]);
+      g.rotation.y = Math.atan2(-p[0], -p[1]);   /* front faces the pad */
+      scene.add(g);
+      var model = new THREE.Group();
+      g.add(model);
+      var anim = makers[id](model, part, id);
+
+      var ring = new THREE.Mesh(new THREE.RingGeometry(2.1, 2.45, 40), new THREE.MeshBasicMaterial({ color: C.sun400, transparent: true, opacity: 0.8 }));
+      ring.rotation.x = -Math.PI / 2;
+      ring.position.y = 0.05;
+      g.add(ring);
+
+      var bugs = new THREE.Group();
+      bugs.position.y = 3.6;
+      g.add(bugs);
+      for (var v = 0; v < 4; v++) bugs.add(makeBug(part, pickables, v));
+
+      hitBox(3, 4.4, 2.8, 2.2, g, { type: "sector", id: id });
+      built[id] = { group: g, model: model, anim: anim, ring: ring, bugs: bugs };
+    });
+
+    /* The cage beside the command centre. It only shows while Andy is held. */
+    var cage = new THREE.Group();
+    cage.position.set(PLACES.D[0] - 1.6, 0, PLACES.D[1] + 2.1);   /* to one side, so the building never hides it */
+    scene.add(cage);
+    part(new THREE.CylinderGeometry(1, 1, 0.12, 16), C.ink500, 0, 0.06, 0, cage);
+    for (var cb = 0; cb < 10; cb++) {
+      var ca = cb / 10 * Math.PI * 2;
+      part(new THREE.CylinderGeometry(0.05, 0.05, 2.1, 6), C.ink300, Math.cos(ca) * 0.95, 1.1, Math.sin(ca) * 0.95, cage);
+    }
+    part(new THREE.CylinderGeometry(1.05, 1.05, 0.14, 16), C.clay500, 0, 2.2, 0, cage);
+    cage.visible = false;
+
+    /* The rocket on its pad. */
+    var rocket = new THREE.Group();
+    scene.add(rocket);
+    part(new THREE.CylinderGeometry(0.62, 0.72, 2.8, 20), C.paper, 0, 1.6, 0, rocket);
+    part(new THREE.ConeGeometry(0.62, 1.2, 20), C.clay500, 0, 3.6, 0, rocket);
+    part(new THREE.CylinderGeometry(0.25, 0.25, 0.08, 16), C.lagoon400, 0, 2.3, 0.66, rocket).rotation.x = Math.PI / 2;
+    part(new THREE.CylinderGeometry(0.73, 0.73, 0.2, 20), C.clay500, 0, 1.0, 0, rocket);
+    for (var f = 0; f < 3; f++) {
+      var fin = part(new THREE.BoxGeometry(0.09, 0.9, 0.7), C.clay500, 0, 0, 0, rocket);
+      fin.position.set(Math.cos(f * 2.094) * 0.7, 0.55, Math.sin(f * 2.094) * 0.7);
+      fin.rotation.y = -f * 2.094;
+    }
+    var flame = part(new THREE.ConeGeometry(0.4, 1.1, 10), C.sun400, 0, -0.35, 0, rocket);
+    flame.rotation.x = Math.PI;
+    flame.visible = false;
+    hitBox(1.8, 4.6, 1.8, 2, rocket, { type: "lever" });
+
+    var andy = makeAndy(part);
+    scene.add(andy.group);
+    hitBox(1.6, 2.3, 1.6, 1, andy.group, { type: "andy" });
+
+    var orbit = { angle: VIEWS.orbit.angle, height: VIEWS.orbit.height, dist: VIEWS.orbit.dist };
+    S = {
+      ready: true, renderer: renderer, scene: scene, camera: camera, pickables: pickables,
+      built: built, tinted: tinted, bulbs: bulbs, cage: cage, rocket: rocket, flame: flame, andy: andy,
+      floaters: floaters, smoke: [], sparks: [], padLit: false,
+      rocketMode: null, rocketT: 0,
+      raycaster: new THREE.Raycaster(), pointer: new THREE.Vector2(-2, -2),
+      cam: { angle: orbit.angle, height: orbit.height, dist: orbit.dist, look: new THREE.Vector3(0, -0.4, 0) },
+      goal: { angle: orbit.angle, height: orbit.height, dist: orbit.dist, look: new THREE.Vector3(0, -0.4, 0) },
+      dragging: false, moved: 0, lastX: 0, lastY: 0, hover: null, time: 0
+    };
+
+    placeTags();
+    resize();
+    window.addEventListener("resize", resize);
+    bindPointer(canvas);
+    requestAnimationFrame(animate);
+    return true;
+  }
+
+  /* ---- building models. Each is made of what its sector does. ---------- */
+  function makeArchive(g, part, id) {
+    part(new THREE.BoxGeometry(2.8, 1.9, 2.2), C.green400, 0, 0.95, 0, g, id);
+    part(new THREE.BoxGeometry(3.1, 0.3, 2.5), C.green700, 0, 2.05, 0, g, id);
+    part(new THREE.BoxGeometry(1.1, 0.3, 2.5), C.green700, -0.8, 2.35, 0, g, id);
+    var drawers = [];
+    for (var r = 0; r < 3; r++) for (var c = 0; c < 2; c++) {
+      var dr = part(new THREE.BoxGeometry(1.05, 0.42, 0.3), C.green50, c ? 0.6 : -0.6, 0.4 + r * 0.52, 1.1, g, id);
+      part(new THREE.BoxGeometry(0.34, 0.07, 0.08), C.ink500, 0, 0, 0.17, dr);
+      drawers.push(dr);
+    }
+    return function (time, clear) {
+      drawers.forEach(function (dr, i) {
+        dr.position.z = 1.1 + (clear ? Math.max(0, Math.sin(time * 1.4 + i * 1.3)) * 0.35 : 0);
+      });
+    };
+  }
+
+  function makeStation(g, part, id) {
+    part(new THREE.CylinderGeometry(1.5, 1.6, 1.2, 10), C.sun400, 0, 0.6, 0, g, id);
+    part(new THREE.SphereGeometry(1.35, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), C.sun100, 0, 1.2, 0, g, id);
+    var screen = part(new THREE.BoxGeometry(2, 1.15, 0.14), C.ink700, 0, 1.4, 1.35, g, id);
+    screen.rotation.x = -0.25;
+    var lamps = [C.clay500, C.sun500, C.green500, C.lagoon600].map(function (col, i) {
+      return part(new THREE.BoxGeometry(0.34, 0.34, 0.1), col, -0.63 + i * 0.42, 0, 0.09, screen, id);
+    });
+    return function (time, clear) {
+      lamps.forEach(function (l, i) {
+        l.position.y = clear ? Math.max(0, Math.sin(time * 3 - i * 0.8)) * 0.18 : 0;
+      });
+    };
+  }
+
+  function makeTower(g, part, id) {
+    part(new THREE.CylinderGeometry(0.75, 0.95, 3.6, 10), C.lagoon400, 0, 1.8, 0, g, id);
+    part(new THREE.CylinderGeometry(1, 1, 0.3, 10), C.lagoon600, 0, 3.7, 0, g, id);
+    part(new THREE.CylinderGeometry(0.05, 0.05, 0.9, 6), C.ink300, 0, 4.3, 0, g);
+    part(new THREE.SphereGeometry(0.16, 10, 8), C.clay500, 0, 4.8, 0, g);
+    var ring = new THREE.Group();
+    ring.position.y = 2.3;
+    g.add(ring);
+    for (var i = 0; i < 10; i++) {
+      var a = i / 10 * Math.PI * 2;
+      var tile = part(new THREE.BoxGeometry(0.34, 0.44, 0.08), i % 3 ? C.paper : C.sun300, Math.cos(a) * 1.25, 0, Math.sin(a) * 1.25, ring, id);
+      tile.rotation.y = -a + Math.PI / 2;
+    }
+    return function (time, clear) {
+      /* Smooth while it works, a stuck stutter while the virus has it. */
+      ring.rotation.y = clear ? time * 0.6 : Math.floor(time * 1.5) * 0.4;
+    };
+  }
+
+  function makeCommand(g, part, id) {
+    part(new THREE.CylinderGeometry(1.5, 1.7, 1.6, 8), C.clay300, 0, 0.8, 0, g, id);
+    part(new THREE.CylinderGeometry(1.1, 1.5, 0.5, 8), C.clay100, 0, 1.85, 0, g, id);
+    for (var w = 0; w < 8; w++) {
+      var a = w / 8 * Math.PI * 2;
+      part(new THREE.BoxGeometry(0.28, 0.4, 0.06), C.sun300, Math.cos(a) * 1.62, 0.95, Math.sin(a) * 1.62, g, id).rotation.y = -a + Math.PI / 2;
+    }
+    var dish = new THREE.Group();
+    dish.position.y = 2.3;
+    g.add(dish);
+    part(new THREE.CylinderGeometry(0.12, 0.12, 0.8, 8), C.ink300, 0, 0.3, 0, dish);
+    var bowl = part(new THREE.SphereGeometry(0.85, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2.4), C.paper, 0, 0.85, 0.1, dish, id);
+    bowl.rotation.x = -0.9;
+    return function (time, clear) {
+      dish.rotation.y = clear ? time * 0.7 : Math.sin(time * 4) * 0.25;
+    };
+  }
+
+  function makeBug(part, pickables, v) {
+    var g = new THREE.Group();
+    var body = part(new THREE.IcosahedronGeometry(0.3, 0), C.clay500, 0, 0, 0, g);
+    [-0.11, 0.11].forEach(function (x) {
+      var eye = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+      eye.position.set(x, 0.05, 0.26);
+      var pupil = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6, 4), new THREE.MeshBasicMaterial({ color: C.ink }));
+      pupil.position.z = 0.06;
+      eye.add(pupil);
+      g.add(eye);
+    });
+    g.userData = { seed: v * 1.6, popped: 0 };
+    body.userData.pick = { type: "bug", bug: g };
+    pickables.push(body);
+    return g;
+  }
+
+  function makeAndy(part) {
+    var g = new THREE.Group();
+    var inner = new THREE.Group();
+    g.add(inner);
+    part(new THREE.BoxGeometry(1.3, 0.32, 1.1), C.ink500, 0, 0.16, 0, inner);
+    part(new THREE.BoxGeometry(1, 0.9, 0.9), C.sun400, 0, 0.77, 0, inner);
+    part(new THREE.BoxGeometry(0.6, 0.3, 0.05), C.sun500, 0, 0.8, 0.47, inner);
+    part(new THREE.CylinderGeometry(0.06, 0.06, 0.4, 8), C.ink400, 0, 1.38, 0, inner);
+    var head = new THREE.Group();
+    head.position.y = 1.62;
+    inner.add(head);
+    var pupils = [];
+    [-0.24, 0.24].forEach(function (x) {
+      part(new THREE.BoxGeometry(0.4, 0.36, 0.4), C.ink100, x, 0, 0, head);
+      part(new THREE.CylinderGeometry(0.14, 0.14, 0.06, 16), C.lagoon200, x, 0, 0.21, head).rotation.x = Math.PI / 2;
+      var pupil = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.02, 12), new THREE.MeshBasicMaterial({ color: C.ink }));
+      pupil.rotation.x = Math.PI / 2;
+      pupil.position.set(x, 0, 0.25);
+      head.add(pupil);
+      pupils.push(pupil);
+    });
+    g.position.set(-2.6, 0, 1.4);
+    return { group: g, inner: inner, head: head, pupils: pupils, mode: "free", target: new THREE.Vector3(-2.6, 0, 1.4), wait: 2, spin: 0, wiggle: 0, carry: 0, from: new THREE.Vector3() };
+  }
+
+  /* ---- what the story does to the island --------------------------------- */
+  var SPARK_HUE = { A: C.green300, B: C.sun400, C: C.lagoon400, D: C.clay300 };
+  function burst(id) {
+    if (!S.ready || reduced) return;
+    var b = S.built[id], pos = [], vel = [];
+    for (var i = 0; i < 120; i++) {
+      pos.push(0, 3.4, 0);
+      vel.push((Math.random() - .5) * 0.24, Math.random() * 0.24 + 0.05, (Math.random() - .5) * 0.24);
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+    var pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: SPARK_HUE[id], size: 0.2, transparent: true }));
+    b.group.add(pts);
+    S.sparks.push({ points: pts, vel: vel, life: 0, group: b.group });
+  }
+
+  function carryAndy() {
+    if (!S.ready) return;
+    var a = S.andy;
+    a.mode = "carry";
+    a.carry = 0;
+    a.from.copy(a.group.position);
+    S.cage.visible = true;
+    focusSector("D");
+  }
+  function freeAndy() {
+    if (!S.ready) return;
+    var a = S.andy;
+    a.mode = "free";
+    a.target.set(PLACES.D[0] * 0.45, 0, PLACES.D[1] * 0.45);
+    a.wait = 5;
+    S.cage.visible = false;
+  }
+  function wiggleAndy() { if (S.ready) S.andy.wiggle = 0.6; }
+  function sendAndy(id) {
+    if (!S.ready || S.andy.mode !== "free") return;
+    var p = PLACES[id];
+    S.andy.target.set(p[0] * 0.55, 0, p[1] * 0.55);
+    S.andy.wait = 6;
+  }
+
+  function hop() {
+    if (!S.ready || S.rocketMode) return;
+    S.rocketMode = "hop"; S.rocketT = 0;
+  }
+  function launch() {
+    if (!S.ready) return;
+    S.rocketMode = "launch"; S.rocketT = 0;
+    S.goal.height = 7; S.goal.dist = 30;
+    S.goal.look.set(0, 5, 0);
+  }
+  function lightPad() {
+    if (!S.ready) return;
+    S.padLit = true;
+  }
+
+  function puff() {
+    var m = new THREE.Mesh(new THREE.IcosahedronGeometry(0.4, 1),
+      new THREE.MeshToonMaterial({ color: C.paper, transparent: true, opacity: 0.9 }));
+    var r = S.rocket.position;
+    m.position.set(r.x + (Math.random() - .5) * 0.6, r.y + 0.1, r.z + (Math.random() - .5) * 0.6);
+    S.scene.add(m);
+    S.smoke.push({ mesh: m, life: 0, vx: (Math.random() - .5) * 0.04, vz: (Math.random() - .5) * 0.04 });
+  }
+
+  /* Puts the story state onto the scene. An animation in flight wins; the
+     resting state is whatever the progress says. */
+  function sync() {
+    if (!S.ready) return;
+    var grey = new THREE.Color(C.ink300);
+    ORDER.forEach(function (id) {
+      var st = state(id), b = S.built[id];
+      b.ring.visible = st === "open";
+      b.bugs.visible = st !== "clear";
+      /* the whole swarm where the work is, one lookout on a locked building */
+      b.bugs.children.forEach(function (bug, i) { bug.visible = st === "open" || i === 0; });
+    });
+    S.tinted.forEach(function (it) {
+      it.mat.color.copy(it.base);
+      if (state(it.sector) === "locked") it.mat.color.lerp(grey, 0.6);
+    });
+    var held = captured(), a = S.andy;
+    if (held && a.mode === "free") {
+      a.mode = "caged";
+      a.group.position.copy(S.cage.position);
+      a.group.rotation.y = 0;
+    }
+    if (!held && a.mode === "caged") freeAndy();
+    S.cage.visible = held || a.mode === "carry";
+    if (!S.padLit) S.bulbs.forEach(function (b) { b.material.color.setHex(C.ink500); });
+  }
+
+  /* ---- camera --------------------------------------------------------------- */
+  var VIEWS = {
+    orbit: { angle: 0.95, height: 13, dist: 25 },
+    top: { angle: 0.95, height: 27, dist: 10 },
+    low: { angle: 2.6, height: 4.2, dist: 19 }
+  };
+  function nearAngle(a) {
+    var cur = S.cam.angle;
+    while (a - cur > Math.PI) a -= Math.PI * 2;
+    while (a - cur < -Math.PI) a += Math.PI * 2;
+    return a;
+  }
+  function focusSector(id) {
+    if (!S.ready) return;
+    var p = PLACES[id];
+    S.goal.angle = nearAngle(Math.atan2(p[1], p[0]));
+    S.goal.look.set(p[0] * 0.45, 0.4, p[1] * 0.45);
+    S.goal.dist = 20; S.goal.height = 10.5;
+  }
+  function focusPad() {
+    if (!S.ready) return;
+    S.goal.look.set(0, 0.8, 0);
+    S.goal.dist = 18; S.goal.height = 9;
+  }
+
+  function placeCamera() {
+    var c = S.cam, aspect = S.camera.aspect;
+    /* A tall phone screen needs the camera further back to fit the island. */
+    var fit = Math.min(2.1, aspect < 1.3 ? 1.3 / aspect : 1);
+    S.camera.position.set(c.look.x + Math.cos(c.angle) * c.dist * fit, c.height * Math.min(fit, 1.6), c.look.z + Math.sin(c.angle) * c.dist * fit);
+    S.camera.lookAt(c.look);
+  }
+
+  function resize() {
+    if (!S.ready) return;
+    var stage = byId("stage"), w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h) return;
+    S.renderer.setSize(w, h, false);
+    S.camera.aspect = w / h;
+    S.camera.updateProjectionMatrix();
+    placeCamera();
+  }
+
+  function bindPointer(canvas) {
+    canvas.addEventListener("pointerdown", function (e) {
+      S.dragging = true; S.moved = 0;
+      S.lastX = e.clientX; S.lastY = e.clientY;
+      setPointer(e);
+      canvas.classList.add("is-dragging");
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    canvas.addEventListener("pointermove", function (e) {
+      setPointer(e);
+      if (!S.dragging) return;
+      var dx = e.clientX - S.lastX, dy = e.clientY - S.lastY;
+      S.moved += Math.abs(dx) + Math.abs(dy);
+      S.lastX = e.clientX; S.lastY = e.clientY;
+      if (S.moved < 6) return;
+      S.goal.angle = S.cam.angle = S.cam.angle - dx * 0.006;
+      S.goal.height = S.cam.height = Math.max(3, Math.min(30, S.cam.height + dy * 0.05));
+    });
+    function release() {
+      canvas.classList.remove("is-dragging");
+      /* a short press is a click, a long one was a drag */
+      if (S.dragging && S.moved < 6) pickAt();
+      S.dragging = false;
+    }
+    canvas.addEventListener("pointerup", release);
+    canvas.addEventListener("pointercancel", function () { S.dragging = false; canvas.classList.remove("is-dragging"); });
+    canvas.addEventListener("pointerleave", function () { if (!S.dragging) S.pointer.set(-2, -2); });
+    canvas.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      S.goal.dist = S.cam.dist = Math.max(11, Math.min(40, S.cam.dist + e.deltaY * 0.015));
+    }, { passive: false });
+  }
+  function setPointer(e) {
+    var r = byId("scene").getBoundingClientRect();
+    S.pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    S.pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+  }
+  function hitTest() {
+    S.raycaster.setFromCamera(S.pointer, S.camera);
+    var hits = S.raycaster.intersectObjects(S.pickables, false);
+    for (var i = 0; i < hits.length; i++) {
+      var p = hits[i].object.userData.pick;
+      if (p.type === "bug" && (!p.bug.parent.visible || !p.bug.visible || p.bug.userData.popped)) continue;
+      if (p.type === "andy" && S.andy.mode === "carry") continue;
+      return p;
+    }
+    return null;
+  }
+
+  var pops = 0;
+  function pickAt() {
+    var p = hitTest();
+    if (!p) return;
+    if (p.type === "sector") openPanel(p.id);
+    else if (p.type === "lever" || p.type === "wires") openPanel(p.type);
+    else if (p.type === "andy") {
+      S.andy.spin = 1;
+      speak(pick(S.andy.mode === "caged" ? "andyCaged" : "andyIdle"));
+    } else if (p.type === "bug") {
+      p.bug.userData.popped = 0.01;
+      if (++pops % 3 === 1) speak(pick("virusPop"));
+    }
+  }
+
+  /* ---- name tags -------------------------------------------------------- */
+  var LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+  function placeTags() {
+    var box = byId("tags");
+    ORDER.forEach(function (id) {
+      var b = el("button", "tag");
+      b.type = "button";
+      b.dataset.id = id;
+      b.onclick = function () { openPanel(id); };
+      box.appendChild(b);
+    });
+  }
+  function paintTags() {
+    var d = t();
+    Array.prototype.forEach.call(byId("tags").children, function (b) {
+      var id = b.dataset.id, st = state(id);
+      b.className = "tag is-" + st;
+      b.innerHTML = '<span class="tag__id">' + id + "</span>" + (st === "locked" ? LOCK : st === "clear" ? CHECK : "");
+      b.appendChild(el("span", "tag__name", d.names[id][0]));
+      b.setAttribute("aria-label", d.sector + " " + id + ", " + d.names[id][0] + ", " + d.states[st]);
+    });
+  }
+  var tagPos = null;
+  function moveTags() {
+    if (!tagPos) tagPos = new THREE.Vector3();
+    var stage = byId("stage"), w = stage.clientWidth, h = stage.clientHeight;
+    Array.prototype.forEach.call(byId("tags").children, function (b) {
+      var g = S.built[b.dataset.id].group;
+      tagPos.set(g.position.x, 4.9, g.position.z).project(S.camera);
+      b.style.visibility = tagPos.z > 1 ? "hidden" : "visible";
+      b.style.left = ((tagPos.x + 1) / 2 * w).toFixed(1) + "px";
+      b.style.top = ((1 - tagPos.y) / 2 * h).toFixed(1) + "px";
+    });
+  }
+
+  /* ---- the loop ----------------------------------------------------------- */
+  var lastFrame = 0;
+  function animate(now) {
+    requestAnimationFrame(animate);
+    var dt = lastFrame ? Math.min(0.05, (now - lastFrame) / 1000) : 0.016;
+    lastFrame = now;
+    S.time += dt;
+    var time = S.time;
+
+    /* the camera eases towards its goal */
+    var k = reduced ? 1 : 1 - Math.pow(0.03, dt);
+    var c = S.cam, g = S.goal;
+    c.angle += (g.angle - c.angle) * k;
+    c.height += (g.height - c.height) * k;
+    c.dist += (g.dist - c.dist) * k;
+    c.look.lerp(g.look, k);
+    placeCamera();
+
+    ORDER.forEach(function (id, si) {
+      var b = S.built[id];
+      b.anim(time, isClearCache[id]);
+      b.ring.material.opacity = 0.45 + Math.sin(time * 3) * 0.3;
+      var lift = S.hover === id ? 0.25 : 0;
+      b.model.position.y += (lift - b.model.position.y) * 0.15;
+      if (!b.bugs.visible) return;
+      b.bugs.children.forEach(function (bug) {
+        var u = bug.userData;
+        if (u.popped) {
+          /* shrinks away, then sneaks back a few seconds later */
+          u.popped += dt;
+          bug.scale.setScalar(Math.max(0, 1 - u.popped * 4));
+          if (u.popped > 7) { u.popped = 0; bug.scale.setScalar(1); }
+          return;
+        }
+        var a = time * 0.8 + u.seed + si;
+        bug.position.set(Math.cos(a) * 1.7, Math.sin(a * 1.7) * 0.35, Math.sin(a) * 1.7);
+        bug.lookAt(S.camera.position);
+      });
+    });
+
+    S.floaters.forEach(function (r, i) {
+      r.position.y = r.userData.base + Math.sin(time * 0.7 + i) * 0.3;
+      r.rotation.y += dt * 0.2;
+    });
+    if (S.padLit) S.bulbs.forEach(function (b, i) { b.material.color.setHex(Math.sin(time * 4 - i) > -0.3 ? C.sun300 : C.sun500); });
+
+    stepAndy(dt, time);
+    stepRocket(dt);
+    stepParticles(dt);
+
+    if (!S.dragging) {
+      var hit = hitTest();
+      S.hover = hit && hit.type === "sector" ? hit.id : null;
+      byId("scene").classList.toggle("is-over", !!hit);
+    }
+
+    moveTags();
+    S.renderer.render(S.scene, S.camera);
+  }
+
+  function stepAndy(dt, time) {
+    var a = S.andy, gp = a.group.position;
+    if (a.mode === "carry") {
+      /* lifted off, wriggling, and dropped into the cage */
+      a.carry = Math.min(1, a.carry + dt / 2.6);
+      gp.lerpVectors(a.from, S.cage.position, a.carry);
+      gp.y = Math.sin(a.carry * Math.PI) * 3;
+      a.inner.rotation.z = Math.sin(time * 12) * 0.25;
+      if (a.carry >= 1) { a.mode = "caged"; a.inner.rotation.z = 0; a.group.rotation.y = 0; }
+    } else if (a.mode === "caged") {
+      a.head.rotation.x = 0.3;
+    } else {
+      a.head.rotation.x = 0;
+      a.wait -= dt;
+      if (a.wait <= 0 && !open) {
+        /* Potter about near whichever building is waiting, or round the pad. */
+        var cur = current(), base = cur ? PLACES[cur] : null;
+        var ang = Math.random() * Math.PI * 2;
+        if (base) a.target.set(base[0] * 0.5 + Math.cos(ang) * 0.8, 0, base[1] * 0.5 + Math.sin(ang) * 0.8);
+        else a.target.set(Math.cos(ang) * 3.2, 0, Math.sin(ang) * 3.2);
+        a.wait = 3 + Math.random() * 3;
+      }
+      var dx = a.target.x - gp.x, dz = a.target.z - gp.z, dist = Math.sqrt(dx * dx + dz * dz);
+      if (dist > 0.05) {
+        var step = Math.min(dist, dt * 2.2);
+        gp.x += dx / dist * step; gp.z += dz / dist * step;
+        var want = Math.atan2(dx, dz), cy = a.group.rotation.y;
+        while (want - cy > Math.PI) want -= Math.PI * 2;
+        while (want - cy < -Math.PI) want += Math.PI * 2;
+        a.group.rotation.y = cy + (want - cy) * Math.min(1, dt * 6);
+        a.inner.position.y = Math.abs(Math.sin(time * 14)) * 0.04;
+      }
+      gp.y += (0 - gp.y) * Math.min(1, dt * 6);
+    }
+    if (a.spin > 0) { a.spin = Math.max(0, a.spin - dt * 1.4); a.inner.rotation.y = (1 - a.spin) * Math.PI * 2; }
+    if (a.wiggle > 0) { a.wiggle = Math.max(0, a.wiggle - dt); a.head.rotation.z = Math.sin(a.wiggle * 30) * 0.15; }
+    var blink = (time % 4) < 0.12;
+    a.pupils.forEach(function (p) { p.scale.z = blink ? 0.15 : 1; });
+  }
+
+  function stepRocket(dt) {
+    var r = S.rocket;
+    if (!S.rocketMode) { S.flame.visible = false; return; }
+    S.rocketT += dt;
+    var tt = S.rocketT;
+    S.flame.visible = true;
+    S.flame.scale.y = 0.8 + Math.random() * 0.6;
+    if (Math.random() < 0.6) puff();
+    if (S.rocketMode === "hop") {
+      r.position.y = Math.sin(Math.min(1, tt / 1.8) * Math.PI) * 1.5;
+      if (tt > 1.8) { S.rocketMode = null; r.position.y = 0; }
       return;
     }
-    JOBS[open](host, markDone);
-  }
-
-  function openSector(id) {
-    open = id;
-    clearSay();
-    render();
-    byId("panel").scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
-
-  /* The original asked for a code the task printed at the end, so a platform
-     could tell the task had been done. There is no platform here and the tasks
-     no longer print one, so the child just says when a sector is finished. */
-  function markDone() {
-    var d = t();
-    if (isClear(open)) return;
-    manual[open] = true;
-    if (three.ready) burst(open);
-    render();
-    say("ok", d.right(open));
-
-    if (SECTORS.every(function (x) { return isClear(x.id); })) {
-      beat = 0;
-      render();
-      byId("endgame").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    /* Up and out of sight, a pause up there, then a slow way back down. */
+    if (tt < 3.5) r.position.y = Math.pow(tt / 3.5, 2.2) * 50;
+    else if (tt < 5) { r.position.y = 50; S.flame.visible = false; }
+    else if (tt < 9) r.position.y = 50 * Math.pow(1 - (tt - 5) / 4, 2);
+    else {
+      S.rocketMode = null;
+      r.position.y = 0;
+      S.goal.height = VIEWS.orbit.height; S.goal.dist = VIEWS.orbit.dist;
+      S.goal.look.set(0, -0.4, 0);
     }
   }
 
+  function stepParticles(dt) {
+    for (var i = S.smoke.length - 1; i >= 0; i--) {
+      var p = S.smoke[i];
+      p.life += dt;
+      p.mesh.position.x += p.vx; p.mesh.position.z += p.vz;
+      p.mesh.position.y += dt * 0.4;
+      p.mesh.scale.setScalar(1 + p.life * 2.2);
+      p.mesh.material.opacity = Math.max(0, 0.9 - p.life * 0.75);
+      if (p.life > 1.2) {
+        S.scene.remove(p.mesh); p.mesh.geometry.dispose(); p.mesh.material.dispose();
+        S.smoke.splice(i, 1);
+      }
+    }
+    for (var j = S.sparks.length - 1; j >= 0; j--) {
+      var s = S.sparks[j], arr = s.points.geometry.attributes.position.array;
+      for (var n = 0; n < arr.length; n += 3) {
+        arr[n] += s.vel[n]; arr[n + 1] += s.vel[n + 1]; arr[n + 2] += s.vel[n + 2];
+        s.vel[n + 1] -= 0.006;
+      }
+      s.points.geometry.attributes.position.needsUpdate = true;
+      s.life += dt;
+      s.points.material.opacity = Math.max(0, 1 - s.life / 1.6);
+      if (s.life > 1.6) {
+        s.group.remove(s.points); s.points.geometry.dispose(); s.points.material.dispose();
+        S.sparks.splice(j, 1);
+      }
+    }
+  }
+
+  /* ======================================================================
+     Page
+     ====================================================================== */
   function render() {
     var d = t();
     document.documentElement.lang = lang;
@@ -1800,82 +2076,73 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       var v = d[n.dataset.t];
       if (typeof v === "string") n.textContent = v;
     });
-    document.querySelectorAll("[data-tp]").forEach(function (n) {
-      n.placeholder = d[n.dataset.tp] || "";
-    });
+    ORDER.forEach(function (id) { isClearCache[id] = isClear(id); });
 
     var views = byId("views");
     views.innerHTML = "";
-    if (three.ready) {
+    if (S.ready) {
       Object.keys(VIEWS).forEach(function (key) {
         var b = el("button", null, d.views[key]);
         b.type = "button";
         b.onclick = function () {
-          three.angle = VIEWS[key].angle;
-          three.height = VIEWS[key].height;
-          three.distance = VIEWS[key].distance;
-          placeCamera();
+          S.goal.angle = nearAngle(VIEWS[key].angle);
+          S.goal.height = VIEWS[key].height;
+          S.goal.dist = VIEWS[key].dist;
+          S.goal.look.set(0, -0.4, 0);
         };
         views.appendChild(b);
       });
+      paintTags();
     }
 
-    var count = SECTORS.filter(function (s) { return isClear(s.id); }).length;
-    byId("score").innerHTML = count + "<span class=\"muted\">/" + SECTORS.length + "</span>";
-
-    var lg = byId("legend"); lg.innerHTML = "";
-    SECTORS.forEach(function (s) {
-      var done = isClear(s.id);
-      var b = el("button", "lg" + (done ? " is-clear" : ""));
+    var lg = byId("legend");
+    lg.innerHTML = "";
+    ORDER.forEach(function (id) {
+      var st = state(id);
+      var b = el("button", "lg is-" + st);
       b.type = "button";
-      var dot = el("span", "lg__dot");
-      dot.style.background = done ? hex(s.hue) : hex(INFECTED);
-      b.appendChild(dot);
-      b.appendChild(el("span", null, d.sector + " " + s.id + " · " + d.names[s.id][0]));
-      b.appendChild(el("span", "lg__state", done ? d.clear : d.infected));
-      b.onclick = function () { openSector(s.id); };
+      b.appendChild(el("span", "lg__dot"));
+      b.appendChild(el("span", null, d.sector + " " + id + " · " + d.names[id][0]));
+      b.appendChild(el("span", "lg__state", d.states[st]));
+      b.onclick = function () { openPanel(id); };
       lg.appendChild(b);
     });
+    byId("openAll").hidden = done("map-open-all") || ORDER.every(isClear);
+    byId("openAll").title = d.openAllTip;
 
-    byId("panel").hidden = !open;
-    if (open) {
-      byId("panelTag").textContent = d.sector + " " + open;
-      byId("panelName").textContent = d.names[open][0];
-      byId("panelWhat").textContent = d.names[open][1];
-      paintJob();
-    }
-
-    byId("endgame").hidden = !(beat >= 0 && beat < d.endgame.length);
-    if (beat >= 0 && beat < d.endgame.length) {
-      var e = d.endgame[beat];
-      byId("virusFace").textContent = e.face;
-      byId("virusLine").textContent = e.line;
-      byId("virusSub").textContent = e.sub;
-      byId("virusNext").textContent = e.btn;
-    }
-    byId("won").hidden = !(beat >= d.endgame.length);
-
-    paintSectors();
+    paintPanel();
+    sync();
+    if (!byId("say").hidden && queue.length) showLine();
   }
 
-  byId("closePanel").onclick = function () { open = null; clearSay(); render(); };
-  byId("virusNext").onclick = function () { beat++; render(); };
-  byId("again").onclick = function () {
-    forgetProgress(); open = null; beat = -1;
-    clearSay(); render();
+  /* Coming back from a task (the back button, another tab, a restored page)
+     re-reads the store and plays whatever the child has earned since. */
+  function refresh() { render(); queueBeats(); }
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) refresh(); });
+  window.addEventListener("focus", refresh);
+  window.addEventListener("storage", refresh);
+  window.addEventListener("pageshow", function (e) { if (e.persisted) refresh(); });
+
+  byId("openAll").onclick = function () {
+    remember("map-open-all");
+    render();
+    speak({ key: "openAllLine" });
   };
   byId("reset").onclick = function () {
-    forgetProgress(); open = null; beat = -1;
-    clearSay(); render();
+    forget();
+    queue = []; queued = {};
+    open = null;
+    byId("say").hidden = true;
+    if (S.ready) {
+      S.andy.mode = "free";
+      S.andy.group.position.set(-2.6, 0, 1.4);
+      S.padLit = false;
+      S.rocketMode = null;
+      S.rocket.position.y = 0;
+    }
+    render();
+    queueBeats();
   };
-
-  /* Coming back from a task should show it ticked off, so re-read the store
-     whenever the page is looked at again, and when another tab writes to it. */
-  document.addEventListener("visibilitychange", function () {
-    if (!document.hidden) render();
-  });
-  window.addEventListener("focus", render);
-  window.addEventListener("storage", render);
 
   document.querySelectorAll(".langs button").forEach(function (b) {
     b.onclick = function () {
@@ -1887,14 +2154,30 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     };
   });
 
+  /* No WebGL: a flat picture of the island takes the stage, and everything
+     else (the list, the panel, the dialogue) works exactly the same. */
   if (!initThree()) {
     var stage = byId("stage");
-    stage.innerHTML = "";
+    stage.removeChild(byId("scene"));
+    stage.removeChild(byId("hint"));
     var box = el("div", "fallback");
-    box.appendChild(el("p", "muted", T[lang].noWebgl));
-    stage.appendChild(box);
+    box.innerHTML = '<svg viewBox="0 0 420 220" aria-hidden="true">' +
+      '<ellipse cx="210" cy="150" rx="190" ry="52" fill="#485444" stroke="#0d150d" stroke-width="3"/>' +
+      '<ellipse cx="210" cy="132" rx="196" ry="52" fill="#8fd770" stroke="#0d150d" stroke-width="3"/>' +
+      '<rect x="48" y="80" width="62" height="46" rx="4" fill="#34a06a" stroke="#0d150d" stroke-width="3"/>' +
+      '<path d="M120 128 v-28 a28 28 0 0 1 56 0 v28 z" fill="#ffd84d" stroke="#0d150d" stroke-width="3"/>' +
+      '<rect x="270" y="54" width="26" height="76" rx="6" fill="#3aa0b5" stroke="#0d150d" stroke-width="3"/>' +
+      '<path d="M318 130 v-34 l22 -10 l22 10 v34 z" fill="#f6b394" stroke="#0d150d" stroke-width="3"/>' +
+      '<path d="M200 130 v-58 q10 -28 20 0 v58 z" fill="#fbfcf7" stroke="#0d150d" stroke-width="3"/>' +
+      '<path d="M200 72 q10 -28 20 0 z" fill="#e2552f" stroke="#0d150d" stroke-width="3"/>' +
+      '<g transform="translate(240,116) scale(.36)">' + andyFace("happy").replace(/^<svg[^>]*>|<\/svg>$/g, "") + "</g></svg>";
+    var msg = el("p");
+    msg.dataset.t = "noWebgl";
+    box.appendChild(msg);
+    stage.insertBefore(box, stage.firstChild);
   }
   render();
+  queueBeats();
 })();
 </script>
 </body>

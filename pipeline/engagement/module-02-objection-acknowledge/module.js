@@ -1,76 +1,70 @@
 /**
  * Module 2 · M2 Objection Acknowledge · runtime (in-app driven)
  * ---------------------------------------------------------------------------
- * Same architecture as M1/M3 — bootModule + task-banner + welcome/summary
- * cards + 9-step Gagné timeline + window autoarrange. Content swapped for M2:
- * restate the buyer's objection in their own words (≥2 token overlap) before
- * any rebuttal.
+ * bootModule + task-banner + welcome/summary cards + 9 steps. The keystone
+ * move: restate the buyer's objection with at least two of their own words,
+ * no rebuttal, wait, then ask an open follow-up.
  *
- * Storyboard:  02-design/module-storyboards/M2-objection-acknowledge.md
- * Outcomes:    LO-M2.1 (classify ≤3s) · LO-M2.2 (restate ≥2 token overlap) · LO-M2.3 (open follow-up)
- * Voice:       peer-to-peer (brief §18.2)
+ * Buyers and shared calls (GC-06, GC-01) come from scorm-shell/data; this
+ * module adds its own lost call (GC-09), the objection bank and the quiz.
+ * The solo call runs in the phone dialler with a new buyer (Lukas): the wait
+ * after the restate is timed by `phone:silence`, and J.T.'s feedback in step 7
+ * is built from what the learner typed and did.
  */
 
-import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
+import { bootModule, eventBus, PASS_PCT } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
+import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
+import { EVENT } from "../scorm-shell/js/event-log.js";
+import { resolveDates } from "../scorm-shell/js/dates.js";
 
-function closeAppsByName(appIds) {
-  if (!state.api?.os?.listWindows) return;
-  const set = new Set(appIds);
-  for (const w of state.api.os.listWindows()) {
-    if (set.has(w.appId)) state.api.os.closeApp(w);
-  }
-}
-function keepOnly(appIds) {
-  if (!state.api?.os?.listWindows) return;
-  const keep = new Set(appIds);
-  for (const w of state.api.os.listWindows()) {
-    if (!keep.has(w.appId)) state.api.os.closeApp(w);
-  }
-}
+const WAIT_MS = 3000;
+const DIAL_LOCK = "No calls until step 6. Then you call Lukas from the panel under his row.";
 
 const state = {
-  api: null,
-  step: 0,
-  startedAt: 0,
-  objectionRead: false,
-  restateOk: false,
-  completionAnswer: null,
-  quizIndex: 0,
-  quizScore: 0,
-  transcripts: [],
-  prospects: [],
-  quizItems: [],
-  timeline: [],
+  api: null, step: 0, startedAt: 0, finished: false,
+  profiles: [], calls: [], bank: [], quizItems: [], quizIndex: 0, quizScore: 0,
+  stepTs: {},
+  workedDone: false,
+  sven: { tries: 0, ok: false },
+  solo: null,   // { restate, overlap, rebuttal, waited, waitMs, followUp, open }
 };
+
+const tom   = () => findProfile(state.profiles, "L-002");
+const lukas = () => findProfile(state.profiles, "L-004");
+const sven  = () => findProfile(state.profiles, "L-005");
+const ob    = id => state.bank.find(o => o.id === id);
+
+// --- Data + boot ---------------------------------------------------------------
 
 async function loadJson(path) {
   const res = await fetch(path);
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
-  return res.json();
-}
-async function loadAllData() {
-  const [transcripts, prospects, quizItems] = await Promise.all([
-    loadJson("./data/transcripts.json"),
-    loadJson("./data/prospects.json"),
-    loadJson("./data/quiz.json"),
-  ]);
-  state.transcripts = transcripts;
-  state.prospects   = prospects;
-  state.quizItems   = normalizeQuiz(quizItems);
+  return resolveDates(await res.json());
 }
 
 async function start() {
-  try { await loadAllData(); }
-  catch (err) {
+  try {
+    const [profiles, shared, local, bank, quiz] = await Promise.all([
+      loadProfiles(), loadCalls(),
+      loadJson("./data/transcripts.json"),
+      loadJson("./data/objection-bank.json"),
+      loadJson("./data/quiz.json"),
+    ]);
+    state.profiles = profiles;
+    state.calls = [...pickCalls(shared, ["GC-06", "GC-01"]), ...local];
+    state.bank = bank;
+    state.quizItems = normalizeQuiz(quiz);
+    if (!tom() || !lukas() || !sven() || !ob("OB-03") || !ob("OB-04")) throw new Error("buyer data missing");
+  } catch (err) {
     console.error("[M2] Failed to load module data", err);
     renderFatal(err.message);
     return;
   }
   bootModule({
     moduleId: "M2",
-    title: "Module 2 · Objection Acknowledge",
+    title: "Module 2: Acknowledging objections",
     appsToLaunch: [],
     onReady(api) {
       state.api = api;
@@ -78,6 +72,7 @@ async function start() {
       wireProgressTimer();
       wireHelpButton();
       wireNarrativeButtons();
+      wireCallEvents();
       showWelcomeCard(() => runStep(0));
     },
   });
@@ -85,20 +80,33 @@ async function start() {
 start();
 
 const STEPS = [
-  { title: "A rep argued with an objection, and the buyer hung up",     handler: stepGainAttention },
-  { title: "What you'll do: restate before you respond, then wait",     handler: stepStateOutcome },
-  { title: "The three moves on every call",                             handler: stepRecallPrior },
-  { title: "Watch L.D. acknowledge Tom's Brex objection",               handler: stepWorkedExample },
-  { title: "Your turn: pick how to acknowledge Sven",                   handler: stepCompletionProblem },
-  { title: "On your own: acknowledge Tom's 'We use Brex' before you pitch", handler: stepSoloProblem },
-  { title: "J.T.'s review of your restate",                             handler: stepFeedback },
-  { title: "Quick check: 3 questions",                                  handler: stepQuiz },
-  { title: "Takeaway and a 7-day refresher",                            handler: stepTakeaway },
+  { title: "How H.K. lost a call by arguing with an objection",         handler: stepGainAttention },
+  { title: "What you will practise in this module",                     handler: stepStateOutcome },
+  { title: "The three moves of a call",                                 handler: stepRecallPrior },
+  { title: "L.D.'s answer to Tom's Brex objection",                     handler: stepWorkedExample },
+  { title: "Choosing how to acknowledge Sven",                          handler: stepCompletionProblem },
+  { title: "Your own call to Lukas",                                    handler: stepSoloProblem },
+  { title: "J.T.'s review of your call",                                handler: stepFeedback },
+  { title: "Three questions from J.T.",                                 handler: stepQuiz },
+  { title: "M.G.'s note and a reminder in seven days",                  handler: stepTakeaway },
 ];
+
+/** Continue stays off until the step's task is done in the apps. A step done once stays open after Back. */
+const doneSteps = new Set();
+function setNextEnabled(on) {
+  const next = document.getElementById("narrative-next");
+  next.disabled = !on;
+  next.setAttribute("aria-disabled", String(!on));
+  next.title = on ? "" : "Finish the task in the apps to continue";
+}
+function markDone(i) { doneSteps.add(i); if (state.step === i) setNextEnabled(true); }
 
 function runStep(i) {
   state.step = i;
-  document.getElementById("gagne-step").textContent      = `${i + 1} of ${STEPS.length}`;
+  // Each step mounts its own action bar and highlight; drop the previous step's ones.
+  document.querySelectorAll(".mx-bar").forEach(el => el.remove());
+  document.querySelectorAll(".is-warm-highlight").forEach(el => el.classList.remove("is-warm-highlight"));
+  document.getElementById("gagne-step").textContent      = `Step ${i + 1} of ${STEPS.length}`;
   document.getElementById("narrative-title").textContent = STEPS[i].title;
   updateProgressBar(i + 1);
   const body = document.getElementById("narrative-body");
@@ -106,9 +114,14 @@ function runStep(i) {
   document.getElementById("narrative-back").hidden = i === 0;
   const next = document.getElementById("narrative-next");
   next.textContent = i === STEPS.length - 1 ? "Finish module" : "Continue";
-  next.disabled = false;
-  next.setAttribute("aria-disabled", "false");
+  setNextEnabled(doneSteps.has(i));
   STEPS[i].handler(body);
+}
+
+function completeStep(from, delay = 450) {
+  markDone(from);
+  if (!state.stepTs[from]) state.stepTs[from] = timestamp();
+  setTimeout(() => { if (state.step === from) runStep(from + 1); }, delay);
 }
 
 function showWelcomeCard(onStart) {
@@ -122,13 +135,12 @@ function showWelcomeCard(onStart) {
   card.innerHTML = `
     <div class="welcome-card__panel">
       <span class="welcome-card__logo" aria-hidden="true">FTC</span>
-      <div class="welcome-card__kicker">Module 2 &middot; save the call</div>
-      <h2 class="welcome-card__title" id="welcome-title">Objection Acknowledge</h2>
-      <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
+      <h2 class="welcome-card__title" id="welcome-title">Acknowledging objections</h2>
       <p class="welcome-card__lede">
-        When the buyer pushes back, restate the objection in their own words
-        before you respond, reusing at least two of the words they used. Then
-        wait. Their answer points you to the open follow-up question.
+        Over the next ten minutes you will practise what to do when a buyer pushes
+        back. You repeat the objection in their own words before you say anything else,
+        and you wait for their answer before you ask an open question. All nine steps
+        happen in the apps on this desktop.
       </p>
       <button type="button" class="welcome-card__start" data-action="start">
         Start module &rarr;
@@ -160,6 +172,7 @@ function updateProgressBar(currentStep) {
 
 function wireNarrativeButtons() {
   document.getElementById("narrative-next").addEventListener("click", () => {
+    if (!doneSteps.has(state.step)) return;
     if (state.step >= STEPS.length - 1) return finishModule();
     runStep(state.step + 1);
   });
@@ -167,10 +180,8 @@ function wireNarrativeButtons() {
     if (state.step > 0) runStep(state.step - 1);
   });
   document.getElementById("narrative-redo")?.addEventListener("click", () => runStep(state.step));
-  document.getElementById("narrative-skip")?.addEventListener("click", () => {
-    if (state.step >= STEPS.length - 1) return finishModule();
-    runStep(state.step + 1);
-  });
+  // No Skip: every task can be finished (a wrong answer shows the right one), and the summary only counts finished work.
+  document.getElementById("narrative-skip")?.remove();
 }
 
 function wireHelpButton() {
@@ -182,163 +193,184 @@ function wireHelpButton() {
 
 function wireProgressTimer() {
   const el = document.getElementById("module-progress");
-  const tick = () => {
-    const ms = Date.now() - state.startedAt;
-    const m = Math.floor(ms / 60000);
-    const s = Math.floor((ms % 60000) / 1000).toString().padStart(2, "0");
-    el.textContent = `${m}:${s} / 10:00`;
-  };
+  const tick = () => { el.textContent = `${timestamp()} / 10:00`; };
   tick(); setInterval(tick, 1000);
+}
+
+// --- Window helpers -------------------------------------------------------------
+
+function appBody(appId) { return document.querySelector(`.os-window.app--${appId} .os-window-body`); }
+function isOpen(appId) { return Boolean(document.querySelector(`.os-window.app--${appId}`)); }
+function keepOnly(appIds) {
+  if (!state.api?.os?.listWindows) return;
+  const keep = new Set(appIds);
+  for (const w of state.api.os.listWindows()) if (!keep.has(w.appId)) state.api.os.closeApp(w);
+}
+function openOutreach(lock = DIAL_LOCK) {
+  state.api.os.openApp("outreach", { dialLocked: lock });
+  return appBody("outreach");
+}
+function openGong() {
+  state.api.os.openApp("gong", { transcripts: state.calls, activeTranscriptId: "GC-06" });
+}
+function waitFor(fn, cb, tries = 40) {
+  const v = fn();
+  if (v) return cb(v);
+  if (tries > 0) setTimeout(() => waitFor(fn, cb, tries - 1), 80);
+}
+function leadRow(body, name) {
+  return [...(body?.querySelectorAll(".lead-row") ?? [])].find(r => r.querySelector(".name")?.textContent.trim() === name);
+}
+function bar(host, attr, text, button) {
+  host.querySelector(`[${attr}]`)?.closest(".mx-bar")?.remove();
+  const el = document.createElement("div");
+  el.className = "mx-bar";
+  el.innerHTML = `<span>${text}</span><button type="button" class="mx-btn" ${attr}>${button}</button>`;
+  host.appendChild(el);
+  return el;
+}
+const say = (who, speaker, text) => eventBus.dispatchEvent(new CustomEvent("phone:say", { detail: { who, speaker, text } }));
+
+// --- Restate + follow-up checks ----------------------------------------------------
+
+const STOP = new Set("the and with our you your that this one those had have has was were are for from his her him she they them its it's i'm we we're dont don't not but just very what".split(" "));
+/** Lower-case word stems, so "tool" and "tools" or "fintech" and "fintechs" match. */
+function stems(text) {
+  return String(text).toLowerCase().replace(/[’']/g, "").split(/[^a-z0-9£€%]+/)
+    .filter(w => w.length >= 3 && !STOP.has(w))
+    .map(w => w.replace(/(ings|ing|ed|es|s)$/, "") || w);
+}
+/** Words that argue back. A bare "our" is not one ("so our call is about…"); "our" plus what we sell is. */
+const REBUTTAL = /\b(but|however|actually|although|unlike|we're not|we are not|regulated|insured|safer|guarantee|our (cards?|platform|product|tool|fees|uptime|bank|partner|licen[cs]e)|we have|we've got)\b/i;
+
+function checkRestate(text, objection) {
+  const objStems = new Set(stems(objection));
+  // Show the learner's own words ("sideways", "fintechs"), one per matching stem.
+  const seen = new Set(), used = [];
+  for (const w of String(text).toLowerCase().replace(/[’']/g, "").split(/[^a-z0-9£€%]+/)) {
+    const st = stems(w)[0];
+    if (st && objStems.has(st) && !seen.has(st)) { seen.add(st); used.push(w); }
+  }
+  const t = text.trim();
+  return {
+    text: t,
+    used,
+    checks: { words: used.length >= 2, noRebuttal: !REBUTTAL.test(t), length: t.length >= 20 },
+  };
+}
+function checkFollowUp(text) {
+  const t = text.trim();
+  return {
+    text: t,
+    checks: {
+      question: /\?\s*$/.test(t),
+      open: /^(what|how|why|which|who|when|where|tell me|walk me)\b/i.test(t.replace(/^(so|and|ok|okay|right)[,\s]+/i, "")),
+      noPitch: !/\b(fintechcard|our (card|cards|platform|product|tool)|we (help|offer|can|provide)|demo|cheaper|safer)\b/i.test(t),
+    },
+  };
+}
+const RESTATE_LABELS = { words: "2+ of his words", noRebuttal: "no rebuttal", length: "a full sentence" };
+const FOLLOW_LABELS = { question: "ends with ?", open: "open (what / how / why…)", noPitch: "no pitch" };
+const checksHtml = (labels, attr) =>
+  `<ul class="mx-checks" ${attr} aria-live="polite">${Object.entries(labels).map(([k, l]) => `<li data-check="${k}" data-ok="false">${l}</li>`).join("")}</ul>`;
+function paintChecks(list, checks) {
+  list.querySelectorAll("[data-check]").forEach(li => { li.dataset.ok = checks[li.dataset.check] ? "true" : "false"; });
 }
 
 // --- Step 1 -----------------------------------------------------------------
 
 function stepGainAttention(body) {
+  const lost = state.calls.find(c => c.id === "GC-09");
+  const [buyerLine, repLine, endLine] = lost?.lines ?? [];
   body.innerHTML = `
     <blockquote class="peer-quote">
-      Buyer: "Too expensive." Rep: "Let me explain the value." Buyer: "Bye."
-      <cite>Gong sample, a 14-second call</cite>
+      Buyer: "${escapeHtml(buyerLine?.text)}"<br>
+      H.K.: "${escapeHtml(repLine?.text)}"<br>
+      Buyer: "${escapeHtml(endLine?.text)}"
+      <cite>Gong call GC-09, which ended at 1:42</cite>
     </blockquote>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
-      Bottom-quartile reps argue with objections, while top reps restate them.
-      The buyer has to hear that you listened before any rebuttal can land.
+      H.K. answered the objection with an argument about fees, and the buyer ended the
+      call. A buyer has to hear that you listened before any counter-argument can land.
     </p>
   `;
-  state.api.os.openApp("outreach", { highlightLeadId: "L-002" });
-  setTimeout(() => decorateOutreachForStep1(), 140);
-}
-
-function decorateOutreachForStep1() {
-  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
-  if (!outreachBody) return;
-  mountTaskBanner(outreachBody, {
+  const ob1 = openOutreach();
+  if (!ob1) return;
+  mountTaskBanner(ob1, {
     id: "m2-s1-pick-tom",
-    label: "Click Tom (Series-B SaaS). You'll hear his objection in step 4.",
-    hint: "The Gong example follows",
+    label: "Click Tom's row in Outreach.",
     state: "active",
   });
-  let tries = 0;
-  const tick = () => {
-    const tomRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /Tom/i.test(r.textContent || ""));
-    if (!tomRow) {
-      if (++tries < 20) return setTimeout(tick, 100);
-      return;
-    }
-    if (tomRow.dataset.m2Done === "true") return;
-    tomRow.classList.add("is-warm-highlight");
-    tomRow.dataset.m2Done = "true";
-    tomRow.addEventListener("click", e => {
-      if (e.target.closest('[data-action="dial"]')) return;
-      if (state.step !== 0) return;
+  waitFor(() => leadRow(appBody("outreach"), "Tom"), row => {
+    if (state.step !== 0) return;
+    row.classList.add("is-warm-highlight");
+    if (row.dataset.m2Bound) return;
+    row.dataset.m2Bound = "true";
+    row.addEventListener("click", e => {
+      if (e.target.closest('[data-action="dial"]') || state.step !== 0) return;
       markTaskBannerDone("m2-s1-pick-tom");
       state.api.eventLog?.record?.("step1_picked_tom");
-      setTimeout(() => runStep(1), 450);
+      completeStep(0);
     });
-  };
-  tick();
+  });
 }
 
 // --- Step 2 -----------------------------------------------------------------
 
 function stepStateOutcome(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">In the next 10 minutes you'll practise two things:</p>
-    <ul style="font-size:13.5px;margin:6px 0 10px 18px;">
-      <li><strong>Restate</strong> the buyer's objection in their own words,
-          reusing at least two of them, before any rebuttal.</li>
-      <li><strong>Then wait</strong> and ask the open follow-up their answer points to.</li>
-    </ul>
+    <p style="font-size:14px;">
+      In this module you will practise repeating a buyer's objection with at least two of
+      their own words and no counter-argument. Then you wait for the buyer's answer and ask
+      the open question it points to.
+    </p>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next: confirm you know Tom's top objection.
+      First, confirm in Outreach that you know which objection Tom usually raises.
     </p>
   `;
-  setTimeout(() => {
-    const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
-    if (!outreachBody) return;
-    mountTaskBanner(outreachBody, {
-      id: "m2-s2-confirm",
-      label: "Confirm: Tom's top objection is 'We already use Brex.'",
-      hint: "Click Got it below to confirm",
-      state: "active",
-    });
-    if (!outreachBody.querySelector("[data-m2-s2-done]")) {
-      const bar = document.createElement("div");
-      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-      bar.innerHTML = `
-        <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-          Top objection: <em>"We already use Brex."</em> (from Tom's CRM notes)
-        </span>
-        <button type="button" data-m2-s2-done
-                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-          ✓ Got it
-        </button>
-      `;
-      outreachBody.appendChild(bar);
-      bar.querySelector("[data-m2-s2-done]").addEventListener("click", () => {
+  openOutreach();
+  waitFor(() => appBody("outreach")?.querySelector(".lead-row"), () => {
+    if (state.step !== 1) return;
+    const o = appBody("outreach");
+    mountTaskBanner(o, { id: "m2-s2-confirm", label: "Read the objection from Tom's CRM notes below and click Got it.", state: "active" });
+    bar(o, "data-m2-s2-done", `According to his CRM notes, Tom usually says <em>"${escapeHtml(tom().top_objection)}"</em>`, "✓ Got it")
+      .querySelector("button").addEventListener("click", () => {
         if (state.step !== 1) return;
-        state.objectionRead = true;
         markTaskBannerDone("m2-s2-confirm");
         state.api.eventLog?.record?.("step2_objection_confirmed");
-        setTimeout(() => runStep(2), 450);
+        completeStep(1);
       });
-    }
-  }, 200);
+  });
 }
 
 // --- Step 3 -----------------------------------------------------------------
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Quick recall: the three moves on every call.</p>
+    <p style="font-size:14px;">Every call in this course follows three moves, and this module covers the second.</p>
     <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
-      <li><strong>M1 · Diagnostic.</strong> One sharp question off the profile.</li>
-      <li><strong>M2 · Acknowledge.</strong> Restate the objection in the buyer's words. <em>This module.</em></li>
-      <li><strong>M3 · Close.</strong> Two slots, one invite, during the call.</li>
+      <li><strong>M1, the diagnostic:</strong> you ask one specific question based on the buyer's profile.</li>
+      <li><strong>M2, the acknowledgement:</strong> you repeat the buyer's objection in their own words before you answer it.</li>
+      <li><strong>M3, the close:</strong> you offer two times and send the invite while the buyer is still on the line.</li>
     </ol>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next: watch L.D.'s worked example in Gong.
+      Open Gong now, where L.D.'s call with Tom is waiting.
     </p>
   `;
-  setTimeout(() => {
-    const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
-    if (outreachBody) {
-      mountTaskBanner(outreachBody, {
-        id: "m2-s3-open-gong",
-        label: "Open Gong to watch L.D. acknowledge Tom's objection",
-        hint: "Use the button below",
-        state: "active",
-      });
-      if (!outreachBody.querySelector("[data-m2-s3-open-gong]")) {
-        const bar = document.createElement("div");
-        bar.style.cssText = "margin-top:10px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-        bar.innerHTML = `
-          <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-            Look for the M2 chip on the line where L.D. restates.
-          </span>
-          <button type="button" data-m2-s3-open-gong
-                  style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-            🎙 Open Gong
-          </button>
-        `;
-        outreachBody.appendChild(bar);
-        bar.querySelector("[data-m2-s3-open-gong]").addEventListener("click", () => {
-          state.api.os.openApp("gong", {
-            transcripts: state.transcripts,
-            activeTranscriptId: state.transcripts[0]?.id,
-          });
-        });
-      }
-    }
-    const onAppOpened = (ev) => {
-      if (ev.detail?.appId !== "gong") return;
-      if (state.step !== 2) return;
-      state.api.eventBus.removeEventListener("app:opened", onAppOpened);
-      markTaskBannerDone("m2-s3-open-gong");
-      state.api.eventLog?.record?.("step3_gong_opened");
-      setTimeout(() => runStep(3), 500);
-    };
-    state.api.eventBus.addEventListener("app:opened", onAppOpened);
-  }, 140);
+  const done = () => {
+    if (state.step !== 2) return;
+    markTaskBannerDone("m2-s3-open-gong");
+    state.api.eventLog?.record?.("step3_gong_opened");
+    completeStep(2, 500);
+  };
+  openOutreach();
+  waitFor(() => appBody("outreach"), o => {
+    if (state.step !== 2) return;
+    mountTaskBanner(o, { id: "m2-s3-open-gong", label: "Open Gong with the button below.", state: "active" });
+    if (isOpen("gong")) { done(); return; }
+    bar(o, "data-m2-s3-open-gong", "In Gong, the line where L.D. repeats the objection has an M2 chip next to it.", "🎙 Open Gong")
+      .querySelector("button").addEventListener("click", () => { openGong(); done(); });
+  });
 }
 
 // --- Step 4 -----------------------------------------------------------------
@@ -346,478 +378,502 @@ function stepRecallPrior(body) {
 function stepWorkedExample(body) {
   body.innerHTML = `
     <p style="font-size:14px;">
-      Watch <strong>L.D.</strong> handle <strong>Tom's "We already use Brex"</strong>
-      objection. Notice that he restates it before any rebuttal.
+      On GC-06 Tom tells <strong>L.D.</strong> that they already use Brex. L.D. repeats it back,
+      waits three seconds and asks about FX only after Tom has answered.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Find the <strong>[M2]</strong> chip in the transcript and click it when
-      you've read the call.
+      Click the <strong>[M2]</strong> chip on the line where he repeats the objection.
+      On GC-01 M.G. does the same with Maria's bank Visa, and GC-09 is the call H.K. lost by arguing.
     </p>
   `;
-  setTimeout(() => {
-    const gongBody = document.querySelector(".os-window.app--gong .os-window-body");
-    if (!gongBody) return;
-    mountTaskBanner(gongBody, {
-      id: "m2-s4-watch",
-      label: "Read L.D.'s restate and find the [M2] Acknowledge chip",
-      hint: "Click the chip or Watched it below",
-      state: "active",
-    });
-    if (!gongBody.querySelector("[data-m2-s4-done]")) {
-      const bar = document.createElement("div");
-      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-      bar.innerHTML = `
-        <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-          L.D. reuses Tom's own word, 'Brex', then asks a question.
-        </span>
-        <button type="button" data-m2-s4-done
-                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-          ✓ Watched it
-        </button>
-      `;
-      gongBody.appendChild(bar);
-      const complete = () => {
-        if (state.step !== 3) return;
-        markTaskBannerDone("m2-s4-watch");
-        state.api.eventLog?.record?.("step4_worked_example_completed");
-        state.timeline.push({
-          label: "Watched L.D.'s restate",
-          detail: "Brex objection · Tom's words reused before any rebuttal",
-          ts: timestamp(),
-        });
-        setTimeout(() => runStep(4), 450);
-      };
-      bar.querySelector("[data-m2-s4-done]").addEventListener("click", complete);
-      gongBody.addEventListener("click", e => {
-        if (e.target.closest?.('.m-chip[data-move="M2"]')) complete();
-      });
+  openGong();
+  waitFor(() => appBody("gong")?.querySelector(".transcript .turn"), () => {
+    if (state.step !== 3) return;
+    const gong = appBody("gong");
+    mountTaskBanner(gong, { id: "m2-s4-watch", label: "Click the [M2] chip on L.D.'s line, or press Watched it.", state: "active" });
+    const complete = () => {
+      if (state.step !== 3) return;
+      state.workedDone = true;
+      markTaskBannerDone("m2-s4-watch");
+      state.api.eventLog?.record?.(EVENT.WORKED_EXAMPLE_COMPLETED);
+      completeStep(3);
+    };
+    bar(gong, "data-m2-s4-done", "L.D. reuses three of Tom's words (already, use, Brex) and waits three seconds before he asks about FX.", "✓ Watched it")
+      .querySelector("button").addEventListener("click", complete);
+    if (!gong.dataset.m2ChipBound) {
+      gong.dataset.m2ChipBound = "true";
+      gong.addEventListener("click", e => { if (e.target.closest?.('.m-chip[data-move="M2"]')) complete(); });
     }
-  }, 200);
+  });
 }
 
 // --- Step 5 -----------------------------------------------------------------
 
 function stepCompletionProblem(body) {
   keepOnly(["outreach"]);
+  const s = sven();
+  const bank = ob("OB-03");
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Sven</strong> (DE industrial wholesale · 64 FTE) just said:
-      <em>"Our accountant won't deal with another tool."</em>
+      <strong>${s.name}</strong> runs an industrial wholesale business in Hamburg with ${s.fte} people.
+      On the call he tells you <em>"${escapeHtml(bank.buyer_verbatim)}"</em>
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Pick how you acknowledge it in the panel under the highlighted row in Outreach.
+      Choose how you would acknowledge it in the panel under his row in Outreach.
     </p>
   `;
   const options = [
     { label: "A", result: "anti",
-      text: `"FinTechCard integrates with most accounting platforms — it's actually less work for them."`,
-      rationale: "A rebuttal with no restate. You skipped the listening step." },
-    { label: "B", result: "correct",
-      text: `"So your accountant pushes back on new tools — what does the friction usually look like for her?"`,
-      rationale: "Yes. It reuses his words ('accountant', 'tool') and asks an open follow-up." },
-    { label: "C", result: "partial",
+      text: `"${bank.anti_patterns[0]}"`,
+      rationale: "This argues back without repeating anything Sven said. He never hears that you listened." },
+    { label: "B", result: "partial",
       text: `"That's fair, accountants are busy. What can I do to help?"`,
-      rationale: "A soft restate with nothing specific, and the open question is too generic." },
+      rationale: "It reuses only one of his words, and the question after it is so general that Sven has nothing specific to answer." },
+    { label: "C", result: "correct",
+      text: `"${bank.ideal_phrases[0].replace(/\.$/, "")} — what does the friction usually look like for her?"`,
+      rationale: "It reuses three of his words (accountant, another, tool) without arguing, then asks an open question about the friction." },
     { label: "D", result: "anti",
-      text: `"Most accountants change their mind once they see the demo."`,
-      rationale: "It argues with the accountant before you've heard her side. Top reps never argue against someone who isn't on the call." },
+      text: `"${bank.anti_patterns[1]}"`,
+      rationale: "It argues with the accountant before you have heard her side, and arguing with someone who isn't on the call only makes Sven defend her." },
   ];
-  setTimeout(() => mountSvenDrawer(options), 160);
+  openOutreach();
+  waitFor(() => leadRow(appBody("outreach"), "Sven"), row => {
+    if (state.step !== 4) return;
+    mountSvenDrawer(appBody("outreach"), row, options, bank);
+  });
 }
 
-function mountSvenDrawer(options) {
-  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
-  if (!outreachBody) return;
-  mountTaskBanner(outreachBody, {
-    id: "m2-s5-pick-ack",
-    label: "Pick how you acknowledge Sven in the panel that just opened",
-    hint: "A wrong pick shows why it fails and which option is right",
-    state: "active",
-  });
-  const svenRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /\bSven\b/.test(r.textContent || "")) || outreachBody.querySelector(".lead-row");
-  if (!svenRow) return;
-  svenRow.classList.add("is-warm-highlight");
-  outreachBody.querySelector("[data-m2-s5-drawer]")?.remove();
+function mountSvenDrawer(o, row, options, bank) {
+  mountTaskBanner(o, { id: "m2-s5-pick-ack", label: "Choose your reply to Sven in the panel under his row.", state: "active" });
+  row.classList.add("is-warm-highlight");
+  o.querySelector("[data-m2-s5-drawer]")?.remove();
   const drawer = document.createElement("div");
   drawer.setAttribute("data-m2-s5-drawer", "");
   drawer.className = "tom-drawer";
   drawer.innerHTML = `
     <header class="tom-drawer__head">
-      <strong>Sven · live call · 01:14</strong>
-      <span class="tom-drawer__cue">Pick how you acknowledge</span>
+      <strong>Your call with Sven, a minute in</strong>
     </header>
-    <p class="tom-drawer__stem">
-      <em>"Our accountant won't deal with another tool."</em>
-    </p>
-    <div class="tom-drawer__opts" role="radiogroup" aria-label="Pick the acknowledge">
-      ${options.map((o, i) => `
+    <p class="tom-drawer__stem">Sven says <em>"${escapeHtml(bank.buyer_verbatim)}"</em></p>
+    <div class="tom-drawer__opts" role="radiogroup" aria-label="Choose your reply">
+      ${options.map((op, i) => `
         <button type="button" class="tom-drawer__opt" role="radio"
-                aria-checked="false" data-result="${o.result}" data-idx="${i}">
-          <span class="tom-drawer__label">${o.label}</span>
-          <span class="tom-drawer__text">${o.text}</span>
+                aria-checked="false" data-result="${op.result}" data-idx="${i}">
+          <span class="tom-drawer__label">${op.label}</span>
+          <span class="tom-drawer__text">${escapeHtml(op.text)}</span>
         </button>`).join("")}
     </div>
-    <div class="tom-drawer__fb" id="m2-s5-fb" hidden></div>
+    <div class="tom-drawer__fb" hidden></div>
   `;
-  svenRow.insertAdjacentElement("afterend", drawer);
-  const fb = drawer.querySelector("#m2-s5-fb");
+  row.insertAdjacentElement("afterend", drawer);
+  drawer.scrollIntoView({ block: "nearest" });
+  const fb = drawer.querySelector(".tom-drawer__fb");
   drawer.querySelectorAll(".tom-drawer__opt").forEach(btn => {
     btn.addEventListener("click", () => {
-      const idx = Number(btn.dataset.idx);
-      const opt = options[idx];
-      drawer.querySelectorAll(".tom-drawer__opt").forEach(b => {
-        b.classList.remove("is-correct", "is-incorrect");
-        b.setAttribute("aria-checked", "false");
-      });
+      if (state.step !== 4 || state.sven.ok) return;
+      const opt = options[Number(btn.dataset.idx)];
+      state.sven.tries += 1;
+      drawer.querySelectorAll(".tom-drawer__opt").forEach(b => { b.classList.remove("is-correct", "is-incorrect"); b.setAttribute("aria-checked", "false"); });
       btn.setAttribute("aria-checked", "true");
       btn.classList.add(opt.result === "correct" ? "is-correct" : "is-incorrect");
-      if (opt.result !== "correct") {
-        drawer.querySelector('.tom-drawer__opt[data-result="correct"]')?.classList.add("is-reveal");
-      }
+      if (opt.result !== "correct") drawer.querySelector('.tom-drawer__opt[data-result="correct"]')?.classList.add("is-reveal");
       fb.hidden = false;
       fb.textContent = opt.rationale;
-      state.completionAnswer = opt.result;
+      fb.scrollIntoView({ block: "nearest" });
       if (opt.result === "correct") {
+        state.sven.ok = true;
         markTaskBannerDone("m2-s5-pick-ack");
-        state.api.eventLog?.record?.("completion_problem_completed");
-        state.timeline.push({
-          label: "Picked the correct acknowledge for Sven",
-          detail: "Option B · his words reused, then an open follow-up",
-          ts: timestamp(),
-        });
-        setTimeout(() => runStep(5), 700);
+        state.api.eventLog?.record?.(EVENT.COMPLETION_PROBLEM_COMPLETED, { tries: state.sven.tries });
+        completeStep(4, 900);
       }
     });
   });
 }
 
-// --- Step 6 -----------------------------------------------------------------
+// --- Step 6 · solo call with Lukas ------------------------------------------------
 
 function stepSoloProblem(body) {
-  const tom = state.prospects.find(p => /tom/i.test(p.name)) ?? state.prospects[0];
+  keepOnly(["outreach", "phone-dialler"]);
+  const l = lukas();
+  state.solo = { phase: "dial", restate: null, waited: null, waitMs: 0, followUp: null };
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>On your own.</strong> ${tom.name} just said:
-      <em>"${tom.top_objection ?? "We already use Brex."}"</em>
+      ${l.name} owns ${escapeHtml(l.company)}, a restaurant group with four locations in Munich,
+      and hasn't spoken to us before. This time you make the call and handle his objection yourself.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Type your restate. Use at least two words from his objection.
+      When he raises it, repeat it with at least two of his words. Wait while the dialler times
+      the pause, and ask your open question after he answers.
     </p>
   `;
-  setTimeout(() => decorateSoloFlow(tom), 200);
+  openOutreach("Use the Dial Lukas button in the panel under his row.");
+  waitFor(() => leadRow(appBody("outreach"), "Lukas"), row => {
+    if (state.step !== 5) return;
+    mountSoloStage(appBody("outreach"), row, l);
+  });
 }
 
-function decorateSoloFlow(tom) {
-  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
-  if (!outreachBody) return;
-  mountTaskBanner(outreachBody, {
-    id: "m2-s6-solo",
-    label: `Restate ${tom.name}'s objection with at least two of his words, before any rebuttal`,
-    hint: "Then wait for his answer before you ask the follow-up",
-    state: "active",
-  });
-  if (outreachBody.querySelector("[data-m2-s6-stage]")) return;
-  const stageWrap = document.createElement("div");
-  stageWrap.setAttribute("data-m2-s6-stage", "");
-  stageWrap.style.cssText = "margin-top:14px; padding:14px; background:#fff; border:1px solid var(--ftc-border); border-radius:8px;";
-  const objection = tom.top_objection ?? "We already use Brex.";
-  stageWrap.innerHTML = `
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px; padding:10px 12px; background:#fde7e3; border-left:3px solid var(--coral-700, #c33d22); border-radius:6px;">
-      <span style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--coral-700, #c33d22); text-transform:uppercase; letter-spacing:0.06em;">Objection</span>
-      <span style="font-size:13px; color:var(--ftc-ink);">"${escapeHtml(objection)}"</span>
+function mountSoloStage(o, row, l) {
+  const bank = ob("OB-04");
+  mountTaskBanner(o, { id: "m2-s6-solo", label: `Call ${l.name} with the button under his row.`, state: "active" });
+  row.classList.add("is-warm-highlight");
+  o.querySelector("[data-m2-s6-stage]")?.remove();
+  const stage = document.createElement("div");
+  stage.className = "mx-stage";
+  stage.setAttribute("data-m2-s6-stage", "");
+  stage.innerHTML = `
+    <div class="mx-row" data-part="dial" style="margin-top:0">
+      <button type="button" class="mx-btn" data-m2-dial>📞 Dial ${escapeHtml(l.name)}</button>
+      <span class="mx-status">${escapeHtml(l.company)} has ${escapeHtml(String(l.stage).split("·")[0].trim().toLowerCase())}.</span>
     </div>
-    <label style="display:block; font-size:12.5px; color:var(--ftc-ink-2); margin-bottom:4px;">
-      Your restate (use the buyer's words):
-    </label>
-    <textarea data-m2-restate rows="2"
-      placeholder="e.g. So you're already on Brex and switching feels like risk — what tipped you toward them?"
-      style="width:100%; padding:8px; border:1px solid var(--ftc-border); border-radius:4px; font-family:var(--ftc-font-sans); font-size:13px; resize:vertical;"></textarea>
-    <div style="display:flex; gap:8px; margin-top:10px; align-items:center;">
-      <button type="button" data-m2-send
-              style="background:#ccc; color:#666; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:not-allowed;" disabled>
-        Send restate &amp; wait
-      </button>
-      <span data-m2-status style="font-size:12px; color:var(--ftc-ink-2);">
-        Use at least two words from the objection.
-      </span>
+    <div data-part="restate" hidden>
+      <p class="mx-signal mx-signal--objection">Lukas says "${escapeHtml(bank.buyer_verbatim)}"</p>
+      <label for="m2-restate">Repeat his objection in his own words, without arguing with it</label>
+      <textarea id="m2-restate" rows="2" placeholder="So …"></textarea>
+      ${checksHtml(RESTATE_LABELS, "data-restate-checks")}
+      <div class="mx-row"><button type="button" class="mx-btn" data-m2-say disabled>Say it</button><span class="mx-status" data-restate-status>Say it turns on once you use at least two of his words.</span></div>
     </div>
+    <div data-part="follow" hidden>
+      <label for="m2-follow">Your open question, now that he has answered</label>
+      <textarea id="m2-follow" rows="2" placeholder="What …?"></textarea>
+      ${checksHtml(FOLLOW_LABELS, "data-follow-checks")}
+      <div class="mx-row"><button type="button" class="mx-btn" data-m2-ask disabled>Ask</button></div>
+    </div>
+    <p class="mx-fb" data-m2-solo-fb role="status" hidden></p>
   `;
-  outreachBody.appendChild(stageWrap);
+  row.insertAdjacentElement("afterend", stage);
+  stage.scrollIntoView({ block: "nearest" });
 
-  const ta = stageWrap.querySelector("[data-m2-restate]");
-  const send = stageWrap.querySelector("[data-m2-send]");
-  const status = stageWrap.querySelector("[data-m2-status]");
-  const objTokens = objection.toLowerCase().split(/\W+/).filter(t => t.length >= 3);
-
-  ta.addEventListener("input", () => {
-    const repTokens = new Set(ta.value.toLowerCase().split(/\W+/).filter(t => t.length >= 3));
-    const overlap = objTokens.filter(t => repTokens.has(t)).length;
-    const ok = overlap >= 2 && ta.value.trim().length >= 20;
-    send.disabled = !ok;
-    send.style.background = ok ? "var(--brand-green)" : "#ccc";
-    send.style.color = ok ? "#fff" : "#666";
-    send.style.cursor = ok ? "pointer" : "not-allowed";
-    status.textContent = ok
-      ? `Good: ${overlap} of his words reused. Send when ready.`
-      : `Words from the objection so far: ${overlap}. You need at least 2.`;
+  stage.querySelector("[data-m2-dial]").addEventListener("click", () => {
+    if (state.step !== 5) return;
+    state.solo = { phase: "ringing", restate: null, waited: null, waitMs: 0, followUp: null };
+    stage.querySelector("[data-part='restate']").hidden = true;
+    stage.querySelector("[data-part='follow']").hidden = true;
+    stage.querySelector("[data-m2-solo-fb]").hidden = true;
+    const prospect = { ...l };
+    state.api.os.openApp("phone-dialler", { prospect });
+    eventBus.dispatchEvent(new CustomEvent("phone:dial", { detail: { prospect } }));
   });
-  send.addEventListener("click", () => {
-    if (send.disabled) return;
-    state.restateOk = true;
-    state.timeline.push({
-      label: `Restated ${tom.name}'s objection in his words`,
-      detail: ta.value.trim().slice(0, 80),
-      ts: timestamp(),
-    });
-    markTaskBannerDone("m2-s6-solo");
-    state.api.eventLog?.record?.("solo_problem_completed");
-    setTimeout(() => runStep(6), 600);
+
+  const ta = stage.querySelector("#m2-restate");
+  const sayBtn = stage.querySelector("[data-m2-say]");
+  ta.addEventListener("input", () => {
+    const r = checkRestate(ta.value, bank.buyer_verbatim);
+    paintChecks(stage.querySelector("[data-restate-checks]"), r.checks);
+    sayBtn.disabled = !(r.checks.words && r.checks.length);
+    stage.querySelector("[data-restate-status]").textContent = r.used.length
+      ? `So far you have used his words ${r.used.join(", ")}.`
+      : "Say it turns on once you use at least two of his words.";
+  });
+  sayBtn.addEventListener("click", () => {
+    if (state.step !== 5 || state.solo.phase !== "objection") return;
+    const r = checkRestate(ta.value, bank.buyer_verbatim);
+    state.solo.restate = r;
+    state.solo.phase = "waiting";
+    sayBtn.disabled = true;
+    ta.readOnly = true;
+    say("rep", "You", r.text);
+    eventBus.dispatchEvent(new CustomEvent("phone:move", { detail: { move: "M2" } }));
+    eventBus.dispatchEvent(new CustomEvent("telemetry", { detail: { event_name: EVENT.OBJECTION_RESTATED, word_overlap: r.used.length } }));
+    if (!r.checks.noRebuttal) eventBus.dispatchEvent(new CustomEvent("telemetry", { detail: { event_name: EVENT.OBJECTION_ARGUED } }));
+    eventBus.dispatchEvent(new CustomEvent("phone:silence", { detail: { start: true, thresholdMs: WAIT_MS } }));
+    mountWaitBar();
+  });
+
+  const fta = stage.querySelector("#m2-follow");
+  const askBtn = stage.querySelector("[data-m2-ask]");
+  fta.addEventListener("input", () => {
+    const f = checkFollowUp(fta.value);
+    paintChecks(stage.querySelector("[data-follow-checks]"), f.checks);
+    askBtn.disabled = fta.value.trim().length < 10;
+  });
+  askBtn.addEventListener("click", () => {
+    if (state.step !== 5 || state.solo.phase !== "follow") return;
+    const f = checkFollowUp(fta.value);
+    state.solo.followUp = f;
+    state.solo.phase = "asked";
+    askBtn.disabled = true;
+    fta.readOnly = true;
+    say("rep", "You", f.text);
+    const open = f.checks.question && f.checks.open && f.checks.noPitch;
+    say("buyer", l.name, open
+      ? "Honestly? Someone who answers the phone. And knowing where my money sits if something goes wrong."
+      : "No. Look, I've told you how I feel about it.");
+    const fb = stage.querySelector("[data-m2-solo-fb]");
+    fb.hidden = false;
+    fb.dataset.tone = open ? "ok" : "warn";
+    fb.textContent = open
+      ? `Lukas told you what would earn his trust. For the restate, M.G. would have said "${bank.ideal_phrases[0]}" Hang up when you're ready.`
+      : `A closed question or a pitch makes Lukas shut down. Next time ask what went wrong or what would help him, and hang up when you're ready.`;
+    const phone = appBody("phone-dialler");
+    if (phone) mountTaskBanner(phone, { id: "m2-s6-hangup", label: "Hang up in the dialler whenever you are ready.", state: "active" });
   });
 }
 
-// --- Step 7 -----------------------------------------------------------------
+function mountWaitBar() {
+  const phone = appBody("phone-dialler");
+  if (!phone) return;
+  mountTaskBanner(phone, { id: "m2-s6-wait", label: "Wait for Lukas to answer. The timer under his name counts the pause.", state: "active" });
+  phone.querySelector("[data-m2-wait-bar]")?.remove();
+  const el = document.createElement("div");
+  el.className = "mx-callbar";
+  el.setAttribute("data-m2-wait-bar", "");
+  el.innerHTML = `<span>If you feel the urge to explain, wait a little longer.</span><button type="button" class="mx-btn mx-btn--small mx-btn--ghost">Jump in</button>`;
+  const dialler = phone.querySelector(".dialler");
+  dialler?.insertBefore(el, dialler.querySelector(".dialler-controls"));
+  if (dialler) dialler.scrollTop = dialler.scrollHeight;
+  el.querySelector("button").addEventListener("click", () => {
+    if (state.step !== 5 || state.solo?.phase !== "waiting") return;
+    state.solo.phase = "jumped";
+    say("rep", "You", "…and honestly, we're really not like those startups.");
+    eventBus.dispatchEvent(new CustomEvent("phone:silence", { detail: { start: false } }));
+  });
+}
+
+function showFollowUp(answer) {
+  const l = lukas();
+  say("buyer", l.name, answer);
+  state.solo.phase = "follow";
+  const stage = appBody("outreach")?.querySelector("[data-m2-s6-stage]");
+  if (!stage) return;
+  stage.querySelector("[data-part='follow']").hidden = false;
+  stage.querySelector("#m2-follow").focus({ preventScroll: true });
+  stage.querySelector("[data-part='follow']").scrollIntoView({ block: "nearest" });
+  const o = appBody("outreach");
+  if (o) mountTaskBanner(o, { id: "m2-s6-follow", label: "Lukas has answered. Type your open question under his row and press Ask.", state: "active" });
+}
+
+function wireCallEvents() {
+  eventBus.addEventListener("phone:connected", ev => {
+    if (state.step !== 5 || ev.detail?.prospect?.lead_id !== "L-004" || state.solo?.phase !== "ringing") return;
+    state.solo.phase = "objection";
+    say("buyer", "Lukas", ob("OB-04").buyer_verbatim);
+    const stage = appBody("outreach")?.querySelector("[data-m2-s6-stage]");
+    if (stage) {
+      stage.querySelector("[data-part='restate']").hidden = false;
+      stage.querySelector("#m2-restate").focus({ preventScroll: true });
+      stage.querySelector("[data-part='restate']").scrollIntoView({ block: "nearest" });
+    }
+    const o = appBody("outreach");
+    if (o) mountTaskBanner(o, { id: "m2-s6-restate", label: "Repeat Lukas's objection under his row, with at least two of his words.", state: "active" });
+  });
+  eventBus.addEventListener("phone:silence-held", () => {
+    if (state.step !== 5 || state.solo?.phase !== "waiting") return;
+    eventBus.dispatchEvent(new CustomEvent("phone:silence", { detail: { start: false } }));
+  });
+  eventBus.addEventListener("phone:silence-ended", ev => {
+    if (state.step !== 5 || !state.solo || state.solo.waited !== null) return;
+    if (!["waiting", "jumped"].includes(state.solo.phase)) return;
+    state.solo.waited = Boolean(ev.detail?.held);
+    state.solo.waitMs = ev.detail?.duration_ms ?? 0;
+    appBody("phone-dialler")?.querySelector("[data-m2-wait-bar]")?.remove();
+    showFollowUp(state.solo.waited
+      ? "Exactly. The payroll startup we used missed two pay runs, and nobody picked up the phone."
+      : "Everyone says that.");
+  });
+  eventBus.addEventListener("phone:ended", ev => {
+    if (state.step !== 5 || ev.detail?.prospect?.lead_id !== "L-004" || !state.solo) return;
+    if (state.solo.phase === "ringing") return;
+    if (!state.solo.restate) {
+      const o = appBody("outreach");
+      if (o) mountTaskBanner(o, { id: "m2-s6-solo", label: "The call ended before you repeated his objection. Dial Lukas again.", state: "active" });
+      state.solo.phase = "dial";
+      return;
+    }
+    markTaskBannerDone("m2-s6-solo");
+    state.api.eventLog?.record?.(EVENT.SOLO_PROBLEM_COMPLETED, { overlap: state.solo.restate.used.length, waited: Boolean(state.solo.waited) });
+    completeStep(5, 900);
+  });
+}
+
+// --- Step 7 · feedback built from the run ------------------------------------------
+
+function feedbackMessages() {
+  const jt = (body, ts = "13:03") => ({ author: "J.T. (pod lead)", initials: "JT", ts, body });
+  const msgs = [jt("Here are my notes on your call with Lukas.", "13:02")];
+  msgs.push(jt(state.workedDone ? "✅ You found the line on GC-06 where L.D. repeats Tom's objection." : "⚠️ You skipped L.D.'s call. GC-06 shows the whole move in about a minute."));
+  msgs.push(jt(state.sven.ok
+    ? (state.sven.tries === 1 ? "✅ You chose the right reply to Sven on the first try." : `⚠️ Sven took you ${state.sven.tries} tries. Look for his own words first, then check that nothing in the reply argues back.`)
+    : "⚠️ You didn't choose a reply to Sven."));
+  const s = state.solo;
+  if (s?.restate) {
+    const r = s.restate;
+    msgs.push(jt(`${r.checks.words && r.checks.noRebuttal ? "✅" : "⚠️"} You told Lukas: "${r.text}"`));
+    msgs.push(jt(r.checks.words
+      ? `You reused ${r.used.length} of his words (${r.used.join(", ")}), and he heard his own objection.`
+      : `You reused only ${r.used.length} of his words, and he needs to hear at least two of them to know you listened.`));
+    if (!r.checks.noRebuttal) msgs.push(jt(`⚠️ There's a counter-argument in it. A line like "${ob("OB-04").anti_patterns[1]}" is what loses Lukas.`));
+    msgs.push(jt(s.waited
+      ? `✅ You waited ${Math.round(s.waitMs / 1000)} seconds, and Lukas used that time to tell you that a payroll startup had missed two pay runs.`
+      : `⚠️ You jumped in after ${Math.round(s.waitMs / 1000)} seconds. Lukas never told you what had gone wrong.`));
+    if (s.followUp) {
+      const f = s.followUp.checks;
+      const good = f.question && f.open && f.noPitch;
+      msgs.push(jt(good
+        ? `✅ Your next question was "${s.followUp.text}", which left him room to explain.`
+        : `⚠️ Your next question was "${s.followUp.text}". Start it with what, how or why, and leave the pitch out.`));
+    } else {
+      msgs.push(jt("⚠️ The call ended before you asked a follow-up question."));
+    }
+  } else {
+    msgs.push(jt("⚠️ You haven't repeated Lukas's objection on a call yet. Redo step 6 when you have two minutes."));
+  }
+  msgs.push(jt("Repeat the objection first. If you still need to argue the point, do it after the buyer has answered a question.", "13:05"));
+  msgs.push({ author: "M.G. (peer)", initials: "MG", ts: "13:06",
+    body: "Practise repeating the objection until you do it without thinking. On my calls the buyer often corrects himself once he hears it back." });
+  return msgs;
+}
 
 function stepFeedback(body) {
   keepOnly(["slack"]);
   body.innerHTML = `
-    <p style="font-size:14px;">
-      <strong>J.T.</strong> sent you a DM reviewing your restate.
-    </p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Read it, then click Mark thread read.
-    </p>
+    <p style="font-size:14px;"><strong>J.T.</strong>, your pod lead, has sent you a direct message in Slack about your call with Lukas. Read it, then click Mark thread read.</p>
   `;
-  const dmMessages = [
-    { author: "J.T. (pod lead)", initials: "JT", ts: "13:02",
-      body: "Watched your restate. You used his words 👇" },
-    ...state.timeline.map(e => ({
-      author: "J.T. (pod lead)", initials: "JT", ts: e.ts,
-      body: `✅ ${e.label}: ${e.detail}`,
-    })),
-    { author: "J.T. (pod lead)", initials: "JT", ts: "13:05",
-      body: "Restate first. If you still need to rebut, do it after the buyer has answered a question." },
-    { author: "M.G. (peer)", initials: "MG", ts: "13:06",
-      body: "Practise the restate until it's a reflex. Most of the time you won't need the rebuttal, because buyers correct themselves." },
-  ];
   state.api.os.openApp("slack", {
     channel: {
       channel_id: "dm-jt-podlead",
       pinned_messages: [
-        { title: "3-move card", content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: "M2" },
+        { title: "The three moves of a call", content_md: "Open with one question built on the buyer's profile. Repeat any objection in the buyer's words before you answer it, and send the invite before you hang up.", related_module: "M2" },
       ],
-      messages: dmMessages,
+      messages: feedbackMessages(),
     },
   });
-  setTimeout(() => {
-    const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
-    if (!slackBody) return;
-    mountTaskBanner(slackBody, {
-      id: "m2-s7-read-dm",
-      label: "Read J.T.'s feedback DM",
-      hint: "'Mark thread read' below to continue",
-      state: "active",
-    });
-    if (!slackBody.querySelector("[data-m2-s7-done]")) {
-      const bar = document.createElement("div");
-      bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-      bar.innerHTML = `
-        <span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. will see when you've read it.</span>
-        <button type="button" data-m2-s7-done
-                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-          ✓ Mark thread read
-        </button>
-      `;
-      slackBody.appendChild(bar);
-      bar.querySelector("[data-m2-s7-done]").addEventListener("click", () => {
+  waitFor(() => appBody("slack")?.querySelector(".slack-feed"), feed => {
+    if (state.step !== 6) return;
+    mountTaskBanner(appBody("slack"), { id: "m2-s7-read-dm", label: "Read J.T.'s message, then click Mark thread read.", state: "active" });
+    bar(feed, "data-m2-s7-done", "J.T. will see that you have read his message.", "✓ Mark thread read")
+      .querySelector("button").addEventListener("click", () => {
+        if (state.step !== 6) return;
         markTaskBannerDone("m2-s7-read-dm");
         state.api.eventLog?.record?.("step7_feedback_read");
-        setTimeout(() => runStep(state.step + 1), 500);
+        completeStep(6, 500);
       });
-    }
-  }, 200);
+  });
 }
 
-// --- Step 8 -----------------------------------------------------------------
+// --- Step 8 · quiz ------------------------------------------------------------------
 
 function stepQuiz(body) {
   state.quizIndex = 0;
   state.quizScore = 0;
   body.innerHTML = `
-    <p style="font-size:14px;"><strong>Quick check</strong>: 3 questions from J.T. in Slack.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Two of three right is a pass.</p>
+    <p style="font-size:14px;">J.T. has posted three questions in Slack, and you pass this check if you answer two of them correctly.</p>
   `;
-  setTimeout(() => mountQuizInSlack(), 200);
-}
-
-function mountQuizInSlack() {
-  const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
-  if (!slackBody) {
-    state.api.os.openApp("slack");
-    return setTimeout(mountQuizInSlack, 250);
-  }
-  mountTaskBanner(slackBody, {
-    id: "m2-s8-quiz",
-    label: "Answer the 3 quiz questions J.T. just posted",
-    hint: "A wrong pick shows the right answer",
-    state: "active",
+  if (!isOpen("slack")) state.api.os.openApp("slack");
+  waitFor(() => appBody("slack")?.querySelector(".slack-feed"), feed => {
+    if (state.step !== 7) return;
+    mountTaskBanner(appBody("slack"), { id: "m2-s8-quiz", label: "Answer J.T.'s three questions. A wrong answer shows you the right one and why.", state: "active" });
+    feed.querySelector("[data-m2-s7-done]")?.closest(".mx-bar")?.remove();
+    feed.querySelector("[data-m2-quiz-thread]")?.remove();
+    const thread = document.createElement("div");
+    thread.className = "mx-thread";
+    thread.setAttribute("data-m2-quiz-thread", "");
+    thread.innerHTML = `<div class="mx-thread__k">J.T. posted these questions at 13:08</div><div data-quiz-host></div>`;
+    feed.appendChild(thread);
+    renderQuizItem(thread.querySelector("[data-quiz-host]"));
+    thread.scrollIntoView({ block: "start" });
   });
-  let thread = slackBody.querySelector("[data-m2-quiz-thread]");
-  thread?.remove();
-  thread = document.createElement("div");
-  thread.setAttribute("data-m2-quiz-thread", "");
-  thread.style.cssText = "margin:14px 0 0; padding:14px 16px; background:#fff8e0; border-left:3px solid var(--sun-500, #f5b800); border-radius:6px; font-family:var(--ftc-font-sans);";
-  thread.innerHTML = `
-    <div style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--ftc-ink-2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
-      J.T. · 13:08 · quick check thread
-    </div>
-    <div data-quiz-host></div>
-  `;
-  const messages = slackBody.querySelector(".slack-msgs, .slack-messages, .slack-main") || slackBody;
-  messages.appendChild(thread);
-  renderQuizItemInSlack(thread.querySelector("[data-quiz-host]"));
 }
 
-function renderQuizItemInSlack(host) {
+function renderQuizItem(host) {
   const item = state.quizItems[state.quizIndex];
+  const last = state.quizIndex === state.quizItems.length - 1;
   host.innerHTML = `
-    <div style="font-size:12px; color:var(--ftc-ink-2); margin-bottom:6px;">
-      Question ${state.quizIndex + 1} of ${state.quizItems.length}
-    </div>
-    <p style="font-size:14px; margin:0 0 10px; color:var(--ftc-ink);">${item.stem}</p>
+    <div style="font-size:12px; color:var(--ftc-ink-2); margin-bottom:6px;">Question ${state.quizIndex + 1} of ${state.quizItems.length}</div>
+    <p style="font-size:14px; margin:0 0 10px; color:var(--ftc-ink);">${escapeHtml(item.stem)}</p>
     <div role="radiogroup" aria-label="Answer choices" style="display:grid; gap:6px;">
       ${item.options.map((o, i) => `
-        <button type="button" class="tom-drawer__opt" role="radio"
-                aria-checked="false" data-idx="${i}">
+        <button type="button" class="tom-drawer__opt" role="radio" aria-checked="false" data-idx="${i}">
           <span class="tom-drawer__label">${o.label}</span>
-          <span class="tom-drawer__text">${o.text}</span>
+          <span class="tom-drawer__text">${escapeHtml(o.text)}</span>
         </button>`).join("")}
     </div>
-    <div class="tom-drawer__fb" id="m2-s8-fb" hidden></div>
-    <div style="margin-top:10px; text-align:right;">
-      <button type="button" id="m2-s8-next" disabled
-              style="background:var(--brand-green); color:#fff; padding:6px 14px; border:0; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; opacity:0.5;">
-        ${state.quizIndex === state.quizItems.length - 1 ? "Finish quiz" : "Next question"}
-      </button>
-    </div>
+    <div class="tom-drawer__fb" hidden></div>
+    <div class="mx-quiz-next"><button type="button" class="mx-btn mx-btn--small" data-quiz-next disabled>${last ? "Finish quiz" : "Next question"}</button></div>
   `;
-  const fb = host.querySelector("#m2-s8-fb");
-  const nextBtn = host.querySelector("#m2-s8-next");
+  const fb = host.querySelector(".tom-drawer__fb");
+  const nextBtn = host.querySelector("[data-quiz-next]");
   host.querySelectorAll(".tom-drawer__opt").forEach(btn => {
     btn.addEventListener("click", () => {
-      const idx = Number(btn.dataset.idx);
-      const opt = item.options[idx];
-      host.querySelectorAll(".tom-drawer__opt").forEach(b => {
-        b.classList.remove("is-correct", "is-incorrect");
-        b.setAttribute("aria-checked", "false");
-        b.disabled = true;
-        b.style.cursor = "default";
-      });
+      const opt = item.options[Number(btn.dataset.idx)];
+      host.querySelectorAll(".tom-drawer__opt").forEach(b => { b.disabled = true; b.style.cursor = "default"; });
       btn.setAttribute("aria-checked", "true");
       btn.classList.add(opt.correct ? "is-correct" : "is-incorrect");
-      if (!opt.correct) {
-        host.querySelectorAll(".tom-drawer__opt").forEach((b, j) => {
-          if (item.options[j]?.correct) b.classList.add("is-reveal");
-        });
-      }
+      if (!opt.correct) host.querySelectorAll(".tom-drawer__opt").forEach((b, j) => { if (item.options[j]?.correct) b.classList.add("is-reveal"); });
       fb.hidden = false;
       fb.textContent = opt.rationale;
       if (opt.correct) state.quizScore += 1;
       nextBtn.disabled = false;
-      nextBtn.style.opacity = "1";
+      nextBtn.scrollIntoView({ block: "nearest" });
     });
   });
   nextBtn.addEventListener("click", () => {
-    if (state.quizIndex < state.quizItems.length - 1) {
-      state.quizIndex += 1;
-      renderQuizItemInSlack(host);
-    } else {
-      markTaskBannerDone("m2-s8-quiz");
-      state.api.eventLog?.record?.("step8_quiz_completed", { score: state.quizScore });
-      setTimeout(() => runStep(state.step + 1), 500);
-    }
+    if (state.step !== 7) return;
+    if (!last) { state.quizIndex += 1; renderQuizItem(host); return; }
+    markTaskBannerDone("m2-s8-quiz");
+    state.api.eventLog?.record?.("step8_quiz_completed", { score: state.quizScore });
+    completeStep(7, 500);
   });
 }
 
 // --- Step 9 -----------------------------------------------------------------
 
 function stepTakeaway(body) {
-  const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
+  const pct = quizPct();
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Last step.</strong> M.G. pinned the takeaway in your Slack channel.
-    </p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Quiz: <strong>${state.quizScore} / ${state.quizItems.length}</strong> (${scorePct}%).
-      Schedule the 7-day refresher in Slack to finish the module.
+      You answered <strong>${state.quizScore} of ${state.quizItems.length}</strong> questions correctly (${pct}%).
+      M.G. has pinned a short note in Slack, and the module ends when you schedule the refresher under it.
     </p>
   `;
-  setTimeout(() => {
-    const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
-    if (!slackBody) {
-      state.api.os.openApp("slack");
-      return setTimeout(() => stepTakeaway(body), 250);
-    }
-    slackBody.querySelector("[data-m2-quiz-thread]")?.remove();
-    mountTaskBanner(slackBody, {
-      id: "m2-s9-takeaway",
-      label: "Read M.G.'s takeaway, then schedule the refresher",
-      hint: "The module finishes when you schedule it.",
-      state: "active",
+  if (!isOpen("slack")) state.api.os.openApp("slack");
+  waitFor(() => appBody("slack")?.querySelector(".slack-feed"), feed => {
+    if (state.step !== 8) return;
+    feed.querySelector("[data-m2-quiz-thread]")?.remove();
+    feed.querySelector("[data-m2-s7-done]")?.closest(".mx-bar")?.remove();
+    mountTaskBanner(appBody("slack"), { id: "m2-s9-takeaway", label: "Read M.G.'s note, then schedule the refresher to finish the module.", state: "active" });
+    if (feed.querySelector("[data-m2-pinned]")) return;
+    const pinned = document.createElement("div");
+    pinned.className = "mx-pinned";
+    pinned.setAttribute("data-m2-pinned", "");
+    pinned.innerHTML = `
+      <div class="mx-pinned__k">📌 M.G., a rep in the Manchester pod, pinned this note</div>
+      <p class="mx-pinned__quote">"Before you argue with an objection, repeat it with at least two of the
+        buyer's words. Then wait for the answer and ask one open question."</p>
+      <div class="mx-pinned__foot">
+        <span>📅 In seven days you'll get three short questions about handling objections.</span>
+        <button type="button" class="mx-btn" data-m2-s9-finish>Schedule refresher &rarr;</button>
+      </div>
+    `;
+    feed.appendChild(pinned);
+    pinned.scrollIntoView({ block: "nearest" });
+    pinned.querySelector("[data-m2-s9-finish]").addEventListener("click", () => {
+      markTaskBannerDone("m2-s9-takeaway");
+      state.stepTs[8] = state.stepTs[8] ?? timestamp();
+      state.api.eventLog?.record?.("step9_retrieval_drop_set");
+      finishModule();
     });
-    if (!slackBody.querySelector("[data-m2-pinned]")) {
-      const pinned = document.createElement("div");
-      pinned.setAttribute("data-m2-pinned", "");
-      pinned.style.cssText = "margin:14px 0 0; padding:16px 18px; background:linear-gradient(180deg, var(--ftc-green-tint, #ecf9e7) 0%, #ffffff 100%); border:1px solid var(--brand-green); border-left:4px solid var(--brand-green); border-radius:8px; font-family:var(--ftc-font-sans); box-shadow:0 6px 16px -8px rgba(10,26,16,0.12);";
-      pinned.innerHTML = `
-        <div style="font-family:var(--ftc-font-mono); font-size:10px; color:var(--brand-green); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
-          📌 Pinned by M.G. (peer · Manchester pod)
-        </div>
-        <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
-          "Restate before you rebut, using at least two of the buyer's exact
-          words. Then ask one open question. After that you'll rarely need
-          the rebuttal."
-        </p>
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
-          <span style="font-size:12.5px; color:var(--ftc-ink-2);">
-            📅 In 7 days you'll get three short questions on restating objections.
-          </span>
-          <button type="button" data-m2-s9-finish
-                  style="background:var(--brand-green); color:#fff; padding:9px 16px; border:0; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
-            Schedule refresher &rarr;
-          </button>
-        </div>
-      `;
-      const messages = slackBody.querySelector(".slack-msgs, .slack-messages, .slack-main") || slackBody;
-      messages.appendChild(pinned);
-      pinned.querySelector("[data-m2-s9-finish]").addEventListener("click", () => {
-        markTaskBannerDone("m2-s9-takeaway");
-        state.api.eventLog?.record?.("step9_retrieval_drop_set");
-        finishModule();
-      });
-    }
-  }, 200);
+  });
 }
+
+function quizPct() { return state.quizItems.length ? Math.round((state.quizScore / state.quizItems.length) * 100) : 0; }
 
 function finishModule() {
-  const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
-  state.api.complete(scorePct);
+  if (state.finished) return;
+  state.finished = true;
+  const pct = quizPct();
+  state.api.complete(pct);
   document.getElementById("narrative-next").hidden = true;
   document.getElementById("narrative-back").hidden = true;
-  showSummaryCard(scorePct);
+  showSummaryCard(pct);
 }
 
-function showSummaryCard(scorePct) {
+function showSummaryCard(pct) {
   keepOnly([]);
   const overlay = document.getElementById("narrative-overlay");
   if (overlay) overlay.style.visibility = "hidden";
-  const totalMs = Date.now() - state.startedAt;
-  const totalMin = Math.floor(totalMs / 60000);
-  const totalSec = Math.floor((totalMs % 60000) / 1000).toString().padStart(2, "0");
-  const stepLabels = STEPS.map(s => s.title);
-  const recapEntries = stepLabels.map((label, i) => {
-    const fromLog = state.timeline.find(e => e.label?.toLowerCase().includes(label.toLowerCase().slice(0, 14)));
-    return { n: i + 1, label, ts: fromLog?.ts || "—" };
-  });
+  const passed = pct >= PASS_PCT;
+  const doneCount = Object.keys(state.stepTs).length;
   const card = document.createElement("div");
   card.className = "summary-card";
   card.setAttribute("role", "dialog");
@@ -825,41 +881,38 @@ function showSummaryCard(scorePct) {
   card.setAttribute("aria-labelledby", "summary-title");
   card.innerHTML = `
     <div class="summary-card__panel">
-      <div class="summary-card__check" aria-hidden="true">✓</div>
-      <div class="summary-card__kicker">Module complete</div>
-      <h2 class="summary-card__title" id="summary-title">Objection Acknowledge · ${scorePct >= 67 ? "passed" : "completed"}</h2>
+      <div class="summary-card__check${passed ? "" : " is-retry"}" aria-hidden="true">${passed ? "✓" : "↻"}</div>
+      <h2 class="summary-card__title" id="summary-title">Acknowledging objections, ${passed ? "passed" : "not passed yet"}</h2>
       <div class="summary-card__stats">
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Quiz</span>
           <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
-          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below the 67% pass mark"}</span>
+          <span class="summary-card__stat-sub">${pct}%, ${passed ? `above the ${PASS_PCT}% pass mark` : `below the ${PASS_PCT}% pass mark`}</span>
         </div>
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Time</span>
-          <span class="summary-card__stat-v">${totalMin}:${totalSec}</span>
-          <span class="summary-card__stat-sub">target 10:00</span>
+          <span class="summary-card__stat-v">${timestamp()}</span>
+          <span class="summary-card__stat-sub">the module is planned for ten minutes</span>
         </div>
         <div class="summary-card__stat">
-          <span class="summary-card__stat-k">Steps</span>
-          <span class="summary-card__stat-v">${STEPS.length} / ${STEPS.length}</span>
-          <span class="summary-card__stat-sub">100% complete</span>
+          <span class="summary-card__stat-k">Tasks done</span>
+          <span class="summary-card__stat-v">${doneCount} / ${STEPS.length}</span>
+          <span class="summary-card__stat-sub">${doneCount === STEPS.length ? "you did every step in the apps" : "you skipped the other steps"}</span>
         </div>
       </div>
       <details class="summary-card__recap">
-        <summary>9-step recap</summary>
+        <summary>What you did in each step</summary>
         <ol class="summary-card__list">
-          ${recapEntries.map(e => `
-            <li><span class="summary-card__list-n">${e.n}</span>
-                <span class="summary-card__list-label">${e.label}</span>
-                <span class="summary-card__list-ts">${e.ts}</span></li>
+          ${STEPS.map((s, i) => `
+            <li><span class="summary-card__list-n">${i + 1}</span>
+                <span class="summary-card__list-label">${s.title}</span>
+                <span class="summary-card__list-ts">${state.stepTs[i] ?? "skipped"}</span></li>
           `).join("")}
         </ol>
       </details>
       <div class="summary-card__actions">
         <a class="summary-card__btn summary-card__btn--ghost" href="../">&larr; Back to engagement</a>
-        <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">
-          Restart module
-        </button>
+        <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">Restart module</button>
       </div>
     </div>
   `;
@@ -869,18 +922,15 @@ function showSummaryCard(scorePct) {
 
 function timestamp() {
   const ms = Date.now() - state.startedAt;
-  const m = Math.floor(ms / 60000);
-  const s = Math.floor((ms % 60000) / 1000).toString().padStart(2, "0");
-  return `${m}:${s}`;
+  return `${Math.floor(ms / 60000)}:${Math.floor((ms % 60000) / 1000).toString().padStart(2, "0")}`;
 }
 
 function renderFatal(msg) {
   const body = document.getElementById("narrative-body");
-  if (body) {
-    body.innerHTML = `<p style="color:var(--coral-700);">Could not load module data: ${escapeHtml(msg)}</p>`;
-  }
+  if (body) body.innerHTML = `<p style="color:var(--coral-700);">Could not load module data: ${escapeHtml(msg)}</p>`;
 }
 
 function escapeHtml(s) {
-  return String(s ?? "").replace(/[<>&]/g, c => ({ "<":"&lt;",">":"&gt;","&":"&amp;" }[c]));
+  return String(s ?? "").replace(/[<>&"]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
 }
+

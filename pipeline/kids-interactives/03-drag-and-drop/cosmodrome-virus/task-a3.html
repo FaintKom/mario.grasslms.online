@@ -536,7 +536,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   /* One screen on open: a tighter heading block, and the page held to the
      height of the viewport so the working area can take what is left. */
   body { padding: var(--page-top) 0 var(--page-bottom); }
-  .wrap { height: calc(100svh - var(--page-pad)); }
+  /* min-height, not height: on a phone the task is taller than the screen,
+     and a fixed height would let it spill past the page's bottom padding. */
+  .wrap { min-height: calc(100svh - var(--page-pad)); }
   h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
   .lede { font-size: var(--t-sm); max-width: 78ch; }
   .stack--loose { gap: var(--s-4); }
@@ -545,19 +547,23 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .pool { display: flex; flex-wrap: wrap; gap: var(--s-2); min-height: var(--control-md); }
   .pool:empty::after { content: attr(data-empty); color: var(--color-text-subtle); font-size: var(--t-sm); }
 
+  /* The folders are tapped, not dragged, so the shared grab cursor would
+     promise something the page does not do. */
+  .token, .token:active { cursor: pointer; }
+
   .folder { display: inline-flex; align-items: center; gap: var(--s-2); }
   .folder[aria-pressed="true"] {
     border-color: var(--color-primary); background: var(--color-primary-soft);
     box-shadow: var(--ring-focus);
   }
 
-  .tree {
-    display: grid; gap: var(--s-2);
-    max-height: min(38svh, 340px); overflow: auto;
-  }
+  /* No max-height and no inner scroll: the indentation of all six slots is
+     the only clue to the tree, so every slot has to be on screen at once.
+     44px slots keep the whole tree near 300px tall. */
+  .tree { display: grid; gap: var(--s-2); }
   .slot {
     display: flex; align-items: center; gap: var(--s-2);
-    min-height: 64px; padding: var(--s-2) var(--s-3);
+    min-height: var(--control-md); padding: var(--s-1) var(--s-3);
     border: 2px dashed var(--color-border-strong); border-radius: var(--radius-md);
     background: var(--color-surface); cursor: pointer; text-align: left;
     font: inherit;
@@ -577,12 +583,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .slot.is-wrong { border-color: var(--color-danger); background: var(--color-danger-soft); }
   .slot.is-wrong .slot__mark { color: var(--color-danger-fg); }
 
-  [hidden] { display: none !important; }
+  /* Small labels in plain sentence case, not spaced capitals. */
+  .eyebrow { font-family: var(--font-sans); font-size: var(--t-sm); font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--color-text-muted); }
+  .row--between > .back { align-self: center; }
 
-  /* The last notch, for a screen with barely 660px of room. */
-  @media (max-height: 700px) {
-    .tree { max-height: 32svh; }
+  /* On a laptop the folders sit in a column beside the tree, so the tree,
+     the folders and the Check button all fit on a 1366x768 screen. */
+  @media (min-width: 900px) {
+    #game { display: grid; grid-template-columns: 250px minmax(0, 1fr); column-gap: var(--s-5); row-gap: var(--s-3); align-items: start; }
+    #game > .stack--tight { grid-column: 1; grid-row: 1 / span 3; }
+    #game > .panel, #game > #verdict, #game > .row { grid-column: 2; }
   }
+
+  [hidden] { display: none !important; }
 </style>
 <style>
   /* Way back to the catalogue, same look as its own back link. */
@@ -598,16 +611,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Spaceport · sector A · task 3</p>
+      <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
+
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Put the folders</span> <em class="mark" data-t="title2">back in order</em></h1>
-    <p class="lede" data-t="intro">The virus tipped the Mars mission folders out of their tree. The empty slots keep the old shape: the further a slot is indented, the deeper inside it sits. Tap a folder, then tap the slot it belongs in.</p>
+    <h1><span data-t="title1">Rebuild the</span> <em class="mark" data-t="title2">folder tree</em></h1>
+    <p class="lede" data-t="intro">The virus has thrown the Mars mission folders out of their tree, but the empty slots are still where they were. The further right a slot starts, the deeper inside another folder it goes, so tap a folder and then the slot where you think it belongs.</p>
   </header>
 
   <div class="hud">
@@ -616,7 +629,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       <span class="lives" id="lives" aria-hidden="true"></span>
     </div>
     <div class="row">
-      <span class="eyebrow" data-t="placedLabel">Placed</span>
+      <span class="eyebrow" data-t="placedLabel">Folders placed</span>
       <span class="hud__score" id="score">0</span>
     </div>
   </div>
@@ -624,7 +637,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   <section class="card stack" id="game">
     <div class="stack stack--tight">
       <p class="eyebrow" data-t="poolLabel">Folders to place</p>
-      <div class="pool" id="pool" data-empty="All placed."></div>
+      <div class="pool" id="pool" data-empty="Every folder is in a slot."></div>
     </div>
 
     <div class="panel">
@@ -672,15 +685,27 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
      stops being about nesting. */
   var TRIES = 5;
 
-  /* Drawn top to bottom; the index is the slot id. */
+  /* Drawn top to bottom; the index is the slot id.
+     Pilots and Engineers are both directly inside Crew, and nothing in the
+     shape of the tree says which comes first. Slots that share a group
+     accept any folder of that group, so a correct tree is never marked wrong
+     for an order the child had no way to see. */
   var STRUCTURE = [
     { key: "mission",   level: 0 },
     { key: "crew",      level: 1 },
-    { key: "pilots",    level: 2 },
-    { key: "engineers", level: 2 },
+    { key: "pilots",    level: 2, group: "crewKids" },
+    { key: "engineers", level: 2, group: "crewKids" },
     { key: "rocket",    level: 1 },
     { key: "engines",   level: 2 }
   ];
+
+  function groupOf(key) {
+    for (var i = 0; i < STRUCTURE.length; i++) if (STRUCTURE[i].key === key) return STRUCTURE[i].group || null;
+    return null;
+  }
+  function fits(row, key) {
+    return key === row.key || (!!row.group && groupOf(key) === row.group);
+  }
 
   var ICONS = {
     mission: "🚀", crew: "👥", pilots: "🧑‍✈️",
@@ -692,54 +717,64 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
-      eyebrow: "Spaceport · sector A · task 3",
-      title1: "Put the folders", title2: "back in order",
-      intro: "The virus tipped the Mars mission folders out of their tree. The empty slots keep the old shape: the further a slot is indented, the deeper inside it sits. Tap a folder, then tap the slot it belongs in.",
-      triesLabel: "Tries left", placedLabel: "Placed", poolLabel: "Folders to place",
+      allActivities: "All activities", toMap: "Back to the map",
+      title1: "Rebuild the", title2: "folder tree",
+      intro: "The virus has thrown the Mars mission folders out of their tree, but the empty slots are still where they were. The further right a slot starts, the deeper inside another folder it goes, so tap a folder and then the slot where you think it belongs.",
+      triesLabel: "Tries left", placedLabel: "Folders placed", poolLabel: "Folders to place",
       check: "Check", reset: "Start over", again: "Play again",
-      empty: "All placed.", drop: "Tap here to place a folder", remove: "Take back",
+      empty: "Every folder is in a slot.", drop: "Tap here to put a folder in", remove: "tap to take it back",
+      pickFirst: "Tap a folder first, and then the slot where it should go.",
       names: {
         mission: "Mission_Mars", crew: "Crew", pilots: "Pilots",
         engineers: "Engineers", rocket: "Rocket", engines: "Engines"
       },
-      notDone: function (n) { return n === 1 ? "One slot is still empty." : n + " slots are still empty."; },
-      allRight: "That is the tree the mission had.",
+      notDone: function (n) {
+        return n === 1
+          ? "One slot is still empty. Put a folder in every slot before you check."
+          : n + " slots are still empty. Put a folder in every slot before you check.";
+      },
+      allRight: "This is the tree the mission had before the virus came.",
       someWrong: function (n) {
         return n === 1
-          ? "One folder is in the wrong slot. It is marked, so move it and check again."
-          : n + " folders are in the wrong slots. They are marked, so move them and check again.";
+          ? "One folder is in the wrong slot and has a cross on it. Move it and check again."
+          : n + " folders are in the wrong slots and have crosses on them. Move them and check again.";
       },
       wonTitle: "The mission folder is whole again",
-      wonBody: function (n) { return "You used " + n + " of " + TRIES + " tries."; },
-      lostTitle: "Out of tries",
-      lostBody: "Two folders sit directly inside Mission_Mars: the people and the ship. Everything else goes inside one of those."
+      wonBody: function (n) { return "You rebuilt the tree with " + n + " of your " + TRIES + " tries."; },
+      lostTitle: "You have used all your tries",
+      lostBody: "Mission_Mars holds two folders directly, one for the people and one for the ship. Every other folder goes inside one of those two."
     },
     es: {
-      eyebrow: "Puerto espacial · sector A · tarea 3",
-      title1: "Devuelve las carpetas", title2: "a su sitio",
-      intro: "El virus tiró las carpetas de la misión a Marte fuera de su árbol. Los huecos vacíos conservan la forma antigua: cuanto más a la derecha está un hueco, más adentro va. Toca una carpeta y luego el hueco que le toca.",
-      triesLabel: "Intentos", placedLabel: "Colocadas", poolLabel: "Carpetas por colocar",
+      allActivities: "Todas las actividades", toMap: "Volver al mapa",
+      title1: "Reconstruye el", title2: "árbol de carpetas",
+      intro: "El virus ha sacado de su árbol las carpetas de la misión a Marte, pero los huecos vacíos siguen donde estaban. Cuanto más a la derecha empieza un hueco, más dentro de otra carpeta va, así que toca una carpeta y después el hueco donde crees que va.",
+      triesLabel: "Intentos que quedan", placedLabel: "Carpetas colocadas", poolLabel: "Carpetas por colocar",
       check: "Comprobar", reset: "Empezar de nuevo", again: "Jugar otra vez",
-      empty: "Todas colocadas.", drop: "Toca aquí para colocar una carpeta", remove: "Devolver",
+      empty: "Todas las carpetas están en un hueco.", drop: "Toca aquí para poner una carpeta", remove: "toca para devolverla",
+      pickFirst: "Toca primero una carpeta y después el hueco donde debe ir.",
       names: {
         mission: "Mision_Marte", crew: "Tripulacion", pilots: "Pilotos",
         engineers: "Ingenieros", rocket: "Cohete", engines: "Motores"
       },
-      notDone: function (n) { return n === 1 ? "Queda un hueco vacío." : "Quedan " + n + " huecos vacíos."; },
-      allRight: "Ese es el árbol que tenía la misión.",
+      notDone: function (n) {
+        return n === 1
+          ? "Todavía queda un hueco vacío. Pon una carpeta en cada hueco antes de comprobar."
+          : "Todavía quedan " + n + " huecos vacíos. Pon una carpeta en cada hueco antes de comprobar.";
+      },
+      allRight: "Este es el árbol que tenía la misión antes de que llegara el virus.",
       someWrong: function (n) {
         return n === 1
-          ? "Una carpeta está en el hueco equivocado. Está marcada: muévela y comprueba otra vez."
-          : n + " carpetas están en huecos equivocados. Están marcadas: muévelas y comprueba otra vez.";
+          ? "Una carpeta está en el hueco equivocado y tiene una cruz. Muévela y vuelve a comprobar."
+          : n + " carpetas están en huecos equivocados y tienen una cruz. Muévelas y vuelve a comprobar.";
       },
-      wonTitle: "La carpeta de la misión está entera",
-      wonBody: function (n) { return "Usaste " + n + " de " + TRIES + " intentos."; },
-      lostTitle: "Se acabaron los intentos",
-      lostBody: "Dentro de Mision_Marte van dos carpetas: la gente y la nave. Todo lo demás va dentro de una de esas dos."
+      wonTitle: "La carpeta de la misión vuelve a estar completa",
+      wonBody: function (n) { return "Has reconstruido el árbol con " + n + " de tus " + TRIES + " intentos."; },
+      lostTitle: "Has gastado todos los intentos",
+      lostBody: "Dentro de Mision_Marte van directamente dos carpetas, una para la gente y otra para la nave. Todas las demás van dentro de una de esas dos."
     }
   };
 
-  var lang = "en", slots = {}, selected = null, used = 0, marks = null;
+  var lang = "en", slots = {}, selected = null, used = 0, marks = null, outcome = null;
 
   function $(id) { return document.getElementById(id); }
   function t() { return T[lang]; }
@@ -803,7 +838,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           mk.className = "slot__mark"; mk.textContent = marks[index] ? "✓" : "✕";
           b.appendChild(mk);
         }
-        b.setAttribute("aria-label", d.names[here] + " — " + d.remove);
+        b.setAttribute("aria-label", d.names[here] + ", " + d.remove);
       } else {
         var hint = document.createElement("span");
         hint.className = "slot__hint"; hint.textContent = d.drop;
@@ -818,6 +853,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           else { delete slots[index]; }
         } else if (selected) {
           slots[index] = selected; selected = null;
+        } else {
+          say("hint", d.pickFirst);
+          return;
         }
         render();
       };
@@ -832,30 +870,36 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     used++;
     marks = {};
-    STRUCTURE.forEach(function (row, i) { marks[i] = slots[i] === row.key; });
+    STRUCTURE.forEach(function (row, i) { marks[i] = fits(row, slots[i]); });
     var wrong = STRUCTURE.filter(function (row, i) { return !marks[i]; });
     render();
 
     if (!wrong.length) {
       say("ok", d.allRight);
-      $("game").hidden = true; $("over").hidden = false;
       remember();
-      $("overTitle").textContent = d.wonTitle;
-      $("overBody").textContent = d.wonBody(used);
+      outcome = "won"; paintOver();
       return;
     }
     if (used >= TRIES) {
-      $("game").hidden = true; $("over").hidden = false;
-      $("overTitle").textContent = d.lostTitle;
-      $("overBody").textContent = d.lostBody;
+      outcome = "lost"; paintOver();
       return;
     }
     say("no", d.someWrong(wrong.length));
   }
 
+  /* The end card is written from state, so switching language on it
+     rewrites the card instead of leaving it in the old language. */
+  function paintOver() {
+    var d = t();
+    $("game").hidden = !!outcome; $("over").hidden = !outcome;
+    if (!outcome) return;
+    $("overTitle").textContent = outcome === "won" ? d.wonTitle : d.lostTitle;
+    $("overBody").textContent = outcome === "won" ? d.wonBody(used) : d.lostBody;
+  }
+
   function reset() {
-    slots = {}; selected = null; used = 0; marks = null;
-    $("game").hidden = false; $("over").hidden = true;
+    slots = {}; selected = null; used = 0; marks = null; outcome = null;
+    paintOver();
     clearSay(); render();
   }
 
@@ -869,7 +913,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       document.querySelectorAll(".langs button").forEach(function (x) {
         x.setAttribute("aria-pressed", String(x === b));
       });
-      reset();
+      /* A language switch keeps the folders, the marks and the tries: only
+         the last message goes, since it was written in the other language. */
+      $("verdict").hidden = true;
+      render(); paintOver();
     };
   });
 

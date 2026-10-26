@@ -11,6 +11,8 @@
  */
 
 import { registerApp, icon } from "./registry.js";
+import { loadCalls } from "./profiles.js";
+import { callDate, short } from "../dates.js";
 
 const MOVE_META = {
   M1: { label: "Diagnostic",   iconName: "eye"     },
@@ -89,7 +91,7 @@ registerApp({
       el.innerHTML = transcripts.map(t => `
         <li role="option" tabindex="0" data-call-id="${escapeAttr(t.id)}" aria-current="${t.id === activeId ? "true" : "false"}">
           <strong>${escapeHtml(t.id)}</strong><br>
-          ${escapeHtml([t.rep, t.who].filter(Boolean).join(" · "))}<br>
+          ${escapeHtml([t.rep, t.who, t.date].filter(Boolean).join(" · "))}<br>
           <span class="outcome">${escapeHtml(humanize(t.outcome))}</span>
         </li>
       `).join("");
@@ -140,7 +142,8 @@ registerApp({
     function renderRubric(t) {
       const panel = container.querySelector("[data-region='rubric']");
       if (!panel) return;
-      const tagged = (t.lines ?? []).filter(l => l.m_move_tag && l.m_move_tag !== "FAIL");
+      // Only lines a manager actually scored; untagged or unscored lines stay out.
+      const tagged = (t.lines ?? []).filter(l => l.m_move_tag && l.m_move_tag !== "FAIL" && typeof l.m_move_quality === "number");
       if (tagged.length === 0) { panel.setAttribute("hidden",""); return; }
       panel.removeAttribute("hidden");
       const rows = tagged.map(l => `
@@ -174,14 +177,8 @@ registerApp({
 
     async function ensureTranscripts() {
       if (transcripts) return;
-      try {
-        const res = await fetch(new URL("../../data/sample-gong-transcripts.json", import.meta.url));
-        transcripts = (await res.json()).map(normalizeTranscript);
-        if (!activeId && transcripts.length) activeId = transcripts[0].id;
-      } catch (e) {
-        console.warn("[gong] could not load sample transcripts", e);
-        transcripts = [];
-      }
+      transcripts = (await loadCalls()).map(normalizeTranscript);
+      if (!activeId && transcripts.length) activeId = transcripts[0].id;
     }
 
     bindCallSelection();
@@ -229,6 +226,7 @@ function normalizeTranscript(t) {
     id: t.id ?? t.gc_id ?? t.clip_id ?? "",
     rep,
     who: buyer ?? ARCHETYPE_LABEL[archetype] ?? archetype,
+    date: (d => (d ? short(d) : ""))(callDate(t.id ?? t.gc_id ?? t.clip_id ?? "")),   // "Mon 5 Oct", from dates.js
     outcome: t.outcome ?? "",
     lines: raw.map(ln => {
       if (typeof ln.silence === "number") return { silence: ln.silence };

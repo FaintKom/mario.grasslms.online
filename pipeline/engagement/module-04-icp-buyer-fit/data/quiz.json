@@ -1,102 +1,110 @@
 [
   {
     "id": "Q-M4-1",
-    "lo": "LO-ICP.1",
-    "stem": "Buyer preview: SaaS · 22 FTE · €18K/mo spend, heavy on AWS · just closed Series-B €15M. Which archetype?",
+    "lo": "LO-M4.1",
+    "stem": "A SaaS company with 22 people spends €18K a month on cards, you would be talking to the founder-CEO, and they announced a Series B in {{month:tom_series_b}}. What total does the scale give, and what do you do?",
     "options": [
       {
-        "text": "Maria, retail SMB owner",
-        "correct": false
+        "text": "23 out of 25, so you dial today",
+        "correct": true,
+        "rationale": "Funded SaaS scores 5 on industry, 22 people 5, €18K a month 4, a founder 5 and a round announced in {{month:tom_series_b}} 4. That makes 23, and Tom gets a call today."
       },
       {
-        "text": "Tom, Series-B SaaS founder",
-        "correct": true
+        "text": "21 out of 25, so you dial this week",
+        "correct": false,
+        "rationale": "A founder who signs off spending scores 5 on access. With that the sum is 23 and the lead goes on today's list."
       },
       {
-        "text": "Emma, manufacturing operations head",
-        "correct": false
+        "text": "18 out of 25, so you dial this week",
+        "correct": false,
+        "rationale": "A round announced in {{month:tom_series_b}} is a dated event within six months and scores 4. The total is 23."
       },
       {
-        "text": "Lukas, German restaurant group owner",
-        "correct": false
+        "text": "16 out of 25, so you skip it",
+        "correct": false,
+        "rationale": "Nothing here is below the floor. €18K a month is above €10K, and 22 people sit in the 20 to 99 band."
       }
-    ],
-    "feedback_correct": "A Series B, heavy AWS spend, 22 FTE and a founder-CEO: that is Tom's profile. Open with a signal that has a number in it.",
-    "feedback_incorrect": "A recent funding round, card spend driven by engineering, a small team and SaaS add up to Tom's profile. Maria, Emma and Lukas have no recent funding signal."
+    ]
   },
   {
     "id": "Q-M4-2",
-    "lo": "LO-ICP.4",
-    "stem": "You're calling Lukas: a German restaurant group with 4 locations. His top objection is 'I don't trust new fintechs.' Which prop do you lead with?",
+    "lo": "LO-M4.1",
+    "stem": "Which of these signals scores 5 on intent?",
     "options": [
       {
-        "text": "Prop 1: real-time spend control",
-        "correct": false
+        "text": "The owner announced a second store, opened in {{month:maria_store}}",
+        "correct": false,
+        "rationale": "A dated growth event in the last six months scores 4. It is a good reason to call, but the buyer hasn't asked for one."
       },
       {
-        "text": "Prop 2: multi-user cards with per-card limits",
-        "correct": true
+        "text": "The company filed its annual accounts",
+        "correct": false,
+        "rationale": "Every company files its accounts, and a routine filing scores 2."
       },
       {
-        "text": "Prop 3: auto-FX at the interbank rate",
-        "correct": false
+        "text": "The operations head posted about the tools her team uses",
+        "correct": false,
+        "rationale": "Growth news without a date or a link to spending scores 3 at most."
       },
       {
-        "text": "Prop 4: receipt capture and accounting sync",
-        "correct": false
+        "text": "The buyer replied to your sequence: \"interesting, talk {{today}}?\"",
+        "correct": true,
+        "rationale": "A reply or a request for a call in the last week scores 5. Emma's reply is why she is a lead you call today."
       }
-    ],
-    "feedback_correct": "Lukas wants to cap what each of his 4 site managers can spend. Multi-user cards with per-card limits (Prop 2) do that, with real-time spend control (Prop 1) in support. You build trust by showing control, not by pitching FX.",
-    "feedback_incorrect": "Lukas's main pain is controlling spend across 4 sites, so Prop 2 (a card with its own limit for each site manager) leads. Prop 3 (FX) only comes in later, for his payments to the Italian supplier."
+    ]
   },
   {
     "id": "Q-M4-3",
-    "lo": "LO-ICP.3",
-    "stem": "You ran M1, M2 and M3 cleanly with Maria (UK retail). You ran them the same way with Lukas (German restaurants), but the call ended cold. What is the most likely cause?",
+    "lo": "LO-M4.2",
+    "stem": "Pine Mills distributes food wholesale from one warehouse with 38 people and spends about £22K a month on cards, around €26K. The owner signs off spending, but the accounts are flat and he posts that 'Sage gets me through.' What do you do with this lead?",
     "options": [
       {
-        "text": "You skipped M2 against Lukas.",
-        "correct": false
+        "text": "Dial today, because the owner is on the phone and the spend is good",
+        "correct": false,
+        "rationale": "The owner and the spend are strong. Flat accounts and no pain put intent at 1, and the total of 19 puts the lead on this week's list."
       },
       {
-        "text": "Lukas needs an opener built on a number, not on behaviour, and you didn't switch styles.",
-        "correct": true
+        "text": "Dial this week, because the total is 19 and intent is the weak spot",
+        "correct": true,
+        "rationale": "Wholesale with one site scores 4, 38 people 5, £22K a month 4, the owner 5 and intent 1. That makes 19 and puts the lead on this week's list."
       },
       {
-        "text": "You should have pitched Prop 4 instead of Prop 1.",
-        "correct": false
+        "text": "Skip it, because wholesale isn't one of our segments",
+        "correct": false,
+        "rationale": "Wholesale is a close neighbour of our core segments and scores 4 on industry. Add up all five scores before you decide."
       },
       {
-        "text": "M3 calendar close doesn't work in German.",
-        "correct": false
+        "text": "Skip it, because it is below the card-spend floor",
+        "correct": false,
+        "rationale": "The floor is €10K a month. £22K is about €26K, well above it, and scores 4."
       }
-    ],
-    "feedback_correct": "UK buyers respond to openers about behaviour ('who approves what'). German buyers respond to signals with numbers in them (FX volume, headcount, monthly spend), as L.D. found. The moves stay the same, and the framing follows the buyer.",
-    "feedback_incorrect": "M1, M2 and M3 work the same for every buyer type. What changes is how you frame the diagnostic: behaviour for UK buyers, numbers for German buyers."
+    ]
   },
   {
     "id": "Q-M4-4",
-    "lo": "LO-ICP.2",
-    "stem": "You score a new lead: industry fit 4, FTE band 4, monthly spend 3, decision-maker access 4, intent signal 3. What do you do?",
+    "lo": "LO-M4.2",
+    "stem": "You score a new lead 4 on industry, 4 on size, 3 on card spend, 4 on access to the decision-maker and 3 on intent. What do you do?",
     "options": [
       {
         "text": "Dial today",
-        "correct": false
-      },
-      {
-        "text": "Dial this week",
-        "correct": true
+        "correct": false,
+        "rationale": "The five scores add up to 18. Only 22 or more gets a call today."
       },
       {
         "text": "Skip, it's below the cutoff",
-        "correct": false
+        "correct": false,
+        "rationale": "A total of 18 is the bottom of the band from 18 to 21. Only a total under 18 is skipped."
+      },
+      {
+        "text": "Dial this week",
+        "correct": true,
+        "rationale": "The five scores add up to 18, the bottom of the band from 18 to 21, and the lead goes on this week's list."
       },
       {
         "text": "Dial first and score it after the call",
-        "correct": false
+        "correct": false,
+        "rationale": "Scoring after the call is how a rep ends up spending eight minutes on a lead outside the profile."
       }
-    ],
-    "feedback_correct": "4 + 4 + 3 + 4 + 3 makes 18. That is the bottom of the 18 to 21 band, so the lead goes on this week's list. Only 22 or more gets a call today.",
-    "feedback_incorrect": "Add the five scores: 4 + 4 + 3 + 4 + 3 = 18. Below 18 means skip, 18 to 21 means dial this week, and 22 or more means dial today. This lead goes on this week's list."
+    ]
   }
 ]

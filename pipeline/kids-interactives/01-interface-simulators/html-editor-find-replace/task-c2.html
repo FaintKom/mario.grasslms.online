@@ -563,10 +563,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <style>
   /* Way back to the catalogue, same look as its own back link. */
   .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+  /* Section labels in plain sentence case at body size, not small capitals. */
+  .tag { margin: 0; font-size: var(--t-sm); font-weight: 700; color: var(--color-text-muted); }
 </style>
 </head>
 <body>
@@ -574,32 +576,31 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Spaceport · sector C · task 2</p>
+      <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">The station stopped</span> <em class="mark" data-t="title2">writing in words</em></h1>
-    <p class="lede" data-t="intro">The station writes its secrets in symbols. The key below gives the letter for each one. Read the symbols left to right and type the word. One symbol in the key is never used.</p>
+    <h1><span data-t="title1">Reading a message</span> <em class="mark" data-t="title2">written in symbols</em></h1>
+    <p class="lede" data-t="intro">The station has sent two words written in symbols. The key below shows the letter for each symbol. Read each message from left to right, find the letter for every symbol in the key and type the word you get. One symbol in the key appears in neither message.</p>
   </header>
 
   <div class="hud">
     <div class="row">
-      <span class="eyebrow" data-t="triesLabel">Tries left</span>
+      <span class="tag" data-t="triesLabel">Tries left</span>
       <span class="lives" id="lives" aria-hidden="true"></span>
     </div>
     <div class="row">
-      <span class="eyebrow" data-t="decodedLabel">Decoded</span>
+      <span class="tag" data-t="decodedLabel">Words read</span>
       <span class="hud__score" id="score">0</span>
     </div>
   </div>
 
   <section class="card stack" id="game">
     <div class="stack stack--tight">
-      <p class="eyebrow" data-t="keyLabel">The key</p>
+      <p class="tag" data-t="keyLabel">Key to the symbols</p>
       <div class="key" id="key"></div>
     </div>
 
@@ -647,10 +648,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
-      eyebrow: "Spaceport · sector C · task 2",
-      title1: "The station stopped", title2: "writing in words",
-      intro: "The station writes its secrets in symbols. The key below gives the letter for each one. Read the symbols left to right and type the word. One symbol in the key is never used.",
-      triesLabel: "Tries left", decodedLabel: "Decoded", keyLabel: "The key",
+      allActivities: "All activities", toMap: "Back to the map",
+      title1: "Reading a message", title2: "written in symbols",
+      intro: "The station has sent two words written in symbols. The key below shows the letter for each symbol. Read each message from left to right, find the letter for every symbol in the key and type the word you get. One symbol in the key appears in neither message.",
+      triesLabel: "Tries left", decodedLabel: "Words read", keyLabel: "Key to the symbols",
       check: "Check both", reset: "Start over", again: "Try again",
       placeholder: "the word",
       key: [
@@ -658,53 +659,53 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         { sym: "●", letter: "A" },
         { sym: "▲", letter: "R" },
         { sym: "◆", letter: "S" },
-        { sym: "♦", letter: "T" },
+        { sym: "■", letter: "T" },
         { sym: "☆", letter: "K" }
       ],
       messages: [
         { code: "★●▲◆",  answer: "MARS" },
-        { code: "◆♦●▲♦", answer: "START" }
+        { code: "◆■●▲■", answer: "START" }
       ],
-      empty: "Type a word for each message.",
+      empty: "Type a word for each message before you check, even if you are not sure of it yet.",
       someWrong: function (n) {
         return n === 1
-          ? "One word is not right yet. Read its symbols again, one at a time."
-          : "Neither word is right yet. Read the symbols one at a time and write the letter under each.";
+          ? "One word is not right yet. Read its symbols again one at a time and look each one up in the key."
+          : "Neither word is right yet. Go through the symbols one at a time and find each letter before you type the word.";
       },
-      wonTitle: "Both messages read clean",
-      wonBody: function (n) { return "MARS and START, on try " + n + " of " + TRIES + "."; },
-      lostTitle: "Out of tries",
-      lostBody: "The first word has four symbols and names a planet. The second has five and is what happens at the end of a countdown."
+      wonTitle: "You have read both messages",
+      wonBody: function (n) { return "The words were MARS and START, and you read them on try " + n + " of " + TRIES + "."; },
+      lostTitle: "There are no tries left",
+      lostBody: "The first word has four symbols and is the name of a planet, while the second has five and is what happens when a countdown reaches zero."
     },
     es: {
-      eyebrow: "Puerto espacial · sector C · tarea 2",
-      title1: "La estación dejó", title2: "de escribir con letras",
-      intro: "La estación escribe sus secretos con símbolos. La clave de abajo da la letra de cada uno: lee los símbolos de izquierda a derecha y escribe la palabra. Un símbolo de la clave no se usa nunca.",
-      triesLabel: "Intentos", decodedLabel: "Descifrados", keyLabel: "La clave",
+      allActivities: "Todas las actividades", toMap: "Volver al mapa",
+      title1: "Leer un mensaje", title2: "escrito con símbolos",
+      intro: "La estación ha enviado dos palabras escritas con símbolos. La clave de abajo muestra la letra de cada símbolo. Lee cada mensaje de izquierda a derecha, busca en la clave la letra de cada símbolo y escribe la palabra que te salga. Uno de los símbolos de la clave no aparece en ningún mensaje.",
+      triesLabel: "Intentos que quedan", decodedLabel: "Palabras leídas", keyLabel: "Clave de los símbolos",
       check: "Comprobar los dos", reset: "Empezar de nuevo", again: "Intentar otra vez",
       placeholder: "la palabra",
       key: [
         { sym: "★", letter: "M" },
         { sym: "●", letter: "A" },
         { sym: "▲", letter: "R" },
-        { sym: "♦", letter: "T" },
+        { sym: "■", letter: "T" },
         { sym: "◆", letter: "E" },
         { sym: "☆", letter: "K" }
       ],
       messages: [
-        { code: "★●▲♦◆", answer: "MARTE" },
-        { code: "★◆♦●",  answer: "META" }
+        { code: "★●▲■◆", answer: "MARTE" },
+        { code: "★◆■●",  answer: "META" }
       ],
-      empty: "Escribe una palabra para cada mensaje.",
+      empty: "Escribe una palabra en cada mensaje antes de comprobar, aunque todavía no estés seguro.",
       someWrong: function (n) {
         return n === 1
-          ? "Una palabra todavía no está bien. Lee sus símbolos otra vez, uno a uno."
-          : "Ninguna palabra está bien todavía. Lee los símbolos uno a uno y escribe la letra de cada uno.";
+          ? "Una palabra todavía no está bien. Lee otra vez sus símbolos uno a uno y busca cada uno en la clave."
+          : "Ninguna de las dos está bien todavía. Repasa los símbolos uno a uno y busca cada letra antes de escribir la palabra.";
       },
-      wonTitle: "Los dos mensajes se leen",
-      wonBody: function (n) { return "MARTE y META, en el intento " + n + " de " + TRIES + "."; },
-      lostTitle: "Se acabaron los intentos",
-      lostBody: "La primera palabra tiene cinco símbolos y es un planeta. La segunda tiene cuatro y es adonde quiere llegar la misión."
+      wonTitle: "Has leído los dos mensajes",
+      wonBody: function (n) { return "Las palabras eran MARTE y META, y las leíste en el intento " + n + " de " + TRIES + "."; },
+      lostTitle: "No quedan intentos",
+      lostBody: "La primera palabra tiene cinco símbolos y es el nombre de un planeta, y la segunda tiene cuatro y es el lugar al que quiere llegar la misión."
     }
   };
 
@@ -746,7 +747,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     var key = byId("key"); key.innerHTML = "";
     d.key.forEach(function (k) {
       var box = document.createElement("div");
-      box.className = "key__pair" + (live.indexOf(k.sym) === -1 ? " is-decoy" : "");
+      /* The decoy stays hidden while the child is decoding: finding the symbol
+         that is never used is part of reading the key. */
+      box.className = "key__pair" + (solved.every(Boolean) && live.indexOf(k.sym) === -1 ? " is-decoy" : "");
       var s = document.createElement("span");
       s.className = "key__sym"; s.textContent = k.sym;
       var l = document.createElement("span");

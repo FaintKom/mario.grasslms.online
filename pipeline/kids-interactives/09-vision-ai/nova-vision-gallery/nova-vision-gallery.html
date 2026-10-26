@@ -580,7 +580,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .bar i { display: block; height: 100%; background: var(--color-border-strong); }
   .label.is-hit .bar i { background: var(--color-primary); }
 
-  .saw__sum { font-family: var(--font-mono); font-size: var(--t-2xs); color: var(--color-text-subtle); margin-top: var(--s-1); }
+  .saw__title { font-size: var(--t-xs); }
+  .saw__sum { font-size: var(--t-xs); line-height: 1.5; color: var(--color-text-muted); margin-top: var(--s-1); }
+
+  /* Plain labels for counters and controls: same size as the UI text,
+     no capitals and no monospace, so they read as words. */
+  .label-quiet { font-size: var(--t-sm); font-weight: 600; color: var(--color-text-muted); }
 
   [hidden] { display: none !important; }
 </style>
@@ -598,27 +603,26 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
-    <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Vision AI · gallery</p>
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActs">All activities</span></a>
+    <div class="row" style="justify-content: flex-end">
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Show it a photo.</span> <em class="mark" data-t="title2">It says what it sees</em></h1>
-    <p class="lede" data-t="intro">Each room takes one kind of photo. Put a picture in a frame. The machine says what it sees and decides whether the photo fits the room.</p>
+    <h1><span data-t="title1">Show the computer</span> <em class="mark" data-t="title2">a photo</em></h1>
+    <p class="lede" data-t="intro">Each of the five rooms takes one kind of photo. When you put a picture in a frame, the computer decides whether it belongs there and shows you the guesses behind that decision.</p>
   </header>
 
   <section class="card stack">
-    <h2 data-t="setupTitle">Where the machine lives</h2>
-    <p class="muted" data-t="setupBody">The machine is not a website you send photos to. It is a 14 MB file that runs inside this page on your computer. Your photos stay on your computer, and you do not need an account.</p>
-    <div id="netNote" class="feedback feedback--hint">The 14 MB file downloads the first time you add a photo.</div>
+    <h2 data-t="setupTitle">Where the photos are checked</h2>
+    <p class="muted" data-t="setupBody">The photos are checked by a 14 MB file that runs inside this page on your own computer. Your photos never leave it, and you do not need an account.</p>
+    <div id="netNote" class="feedback feedback--hint" data-t="idle">The 14 MB file downloads the first time you add a photo.</div>
   </section>
 
   <div class="hud">
     <div class="row">
-      <span class="eyebrow" data-t="hungLabel">Photos hung</span>
+      <span class="label-quiet" data-t="hungLabel">Photos hung</span>
       <span class="hud__score" id="score">0</span>
     </div>
   </div>
@@ -628,8 +632,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   </section>
 
   <section class="card stack" id="over" hidden aria-live="polite">
-    <h2 data-t="wonTitle">The gallery is open</h2>
-    <p class="muted" data-t="wonBody">Every room has a photo, and the machine agreed with all five.</p>
+    <h2 data-t="wonTitle">All five rooms have a photo</h2>
+    <p class="muted" data-t="wonBody">The gallery is full, and the computer agreed that each photo belongs in its room.</p>
     <div><button class="btn" id="again" data-t="again">Empty the gallery</button></div>
   </section>
 
@@ -670,7 +674,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       need: 0.25,
       keywords: ["animal", "pet", "cat", "kitten", "dog", "puppy", "bird", "fish", "horse",
         "pony", "foal", "cow", "ox", "bull", "pig", "hog", "boar", "warthog", "sheep",
-        "ram", "goat", "ibex", "bighorn", "rabbit", "hare", "hamster", "mouse", "rat",
+        "ram", "goat", "ibex", "bighorn", "rabbit", "hare", "hamster", "rat",
         "elephant", "lion", "tiger", "leopard", "jaguar", "cheetah", "lynx", "cougar",
         "puma", "panther", "bear", "panda", "monkey", "ape", "gorilla", "chimpanzee",
         "orangutan", "gibbon", "macaque", "baboon", "lemur", "marmoset", "zebra",
@@ -686,7 +690,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         "gar", "puffer", "chicken", "hen", "cock", "duck", "drake", "goose", "swan",
         "parrot", "macaw", "cockatoo", "lorikeet", "toucan", "eagle", "hawk", "kite",
         "falcon", "vulture", "owl", "penguin", "pelican", "flamingo", "stork", "heron",
-        "bittern", "crane", "ostrich", "peacock", "quail", "partridge", "grouse",
+        "bittern", "ostrich", "peacock", "quail", "partridge", "grouse",
         "finch", "jay", "magpie", "chickadee", "robin", "bulbul", "hornbill",
         "hummingbird", "jacamar", "albatross", "otter", "badger", "skunk", "weasel",
         "mink", "ferret", "polecat", "mongoose", "meerkat", "beaver", "porcupine",
@@ -706,15 +710,18 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
          hillside rarely scores high on any one of them. The bar is low here on
          purpose, and the guesses are shown so the reason stays visible. */
       need: 0.12,
+      /* Left out on purpose: mountain, park, garden, rock, sea and leaf each
+         start an unrelated class (mountain tent, park bench, garden spider,
+         rock crab, sea lion, leaf beetle) and let the wrong photo in. */
       keywords: ["nature", "landscape", "lakeside", "lakeshore", "seashore", "coast",
         "shore", "beach", "valley", "vale", "alp", "volcano", "cliff", "drop-off",
-        "promontory", "headland", "sandbar", "sandbank", "geyser", "reef", "mountain",
+        "promontory", "headland", "sandbar", "sandbank", "geyser", "reef", 
         "forest", "tree", "daisy", "flower", "slipper", "rapeseed", "corn", "acorn",
         "hip", "buckeye", "conker", "mushroom", "agaric", "bolete", "stinkhorn",
         "earthstar", "cardoon", "field", "meadow", "grass", "sky", "cloud", "waterfall",
-        "lake", "river", "ocean", "sea", "desert", "canyon", "glacier", "island", "park",
-        "garden", "jungle", "rainforest", "hill", "rock", "stone", "plant", "foliage",
-        "leaf", "branch", "fern", "moss", "cactus", "palm"]
+        "lake", "river", "ocean", "desert", "canyon", "glacier", "island", 
+        "jungle", "rainforest", "hill", "stone", "plant", "foliage",
+        "branch", "fern", "moss", "cactus", "palm"]
     },
     transport: {
       need: 0.15,   /* an airliner seen from below scores ~0.20 */
@@ -735,8 +742,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         "ping-pong", "golf", "baseball", "ballplayer", "rugby", "punching bag", "ski",
         "bobsled", "dogsled", "balance beam", "horizontal bar", "parallel bars",
         "barbell", "dumbbell", "pool table", "billiard", "croquet", "puck", "paddle",
-        "scoreboard", "helmet", "scuba", "snorkel", "surfboard", "skateboard", "sport",
-        "sports", "athlete", "player", "stadium", "gym", "match", "race"]
+        "scoreboard", "helmet", "scuba", "snorkel", "surfboard", "skateboard",
+        "athlete", "player", "stadium", "gym"]
     },
     food: {
       need: 0.20,
@@ -754,93 +761,96 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
-      eyebrow: "Vision AI · gallery",
-      title1: "Show it a photo.", title2: "It says what it sees",
-      intro: "Each room takes one kind of photo. Put a picture in a frame. The machine says what it sees and decides whether the photo fits the room.",
-      setupTitle: "Where the machine lives",
-      setupBody: "The machine is not a website you send photos to. It is a 14 MB file that runs inside this page on your computer. Your photos stay on your computer, and you do not need an account.",
+      title1: "Show the computer", title2: "a photo", allActs: "All activities",
+      intro: "Each of the five rooms takes one kind of photo. When you put a picture in a frame, the computer decides whether it belongs there and shows you the guesses behind that decision.",
+      setupTitle: "Where the photos are checked",
+      setupBody: "The photos are checked by a 14 MB file that runs inside this page on your own computer. Your photos never leave it, and you do not need an account.",
       idle: "The 14 MB file downloads the first time you add a photo.",
-      loading: "Loading the machine…",
-      ready: "Ready. It knows 1,000 kinds of things, and about 400 of them are animals.",
+      loading: "Loading the 14 MB file…",
+      ready: "The computer is ready and knows 1,000 kinds of things, about 400 of them animals.",
       /* A browser will not read the 14 MB weights from a file:// address, so the page has to come from a web server. */
-      failed: "The machine did not load. Ask an adult to open this page from a web address, not from a file on the computer.",
+      failed: "The file did not load. Ask an adult to open this page from a web address instead of from a file on the computer.",
       hungLabel: "Photos hung", again: "Empty the gallery",
-      wonTitle: "The gallery is open",
-      wonBody: "Every room has a photo, and the machine agreed with all five.",
+      wonTitle: "All five rooms have a photo",
+      wonBody: "The gallery is full, and the computer agreed that each photo belongs in its room.",
       rooms: {
-        animal:    ["Animals", "Anything alive with fur, feathers or scales."],
-        nature:    ["Nature", "Sky, water, trees or rocks, with no people or buildings."],
-        transport: ["Getting around", "Something that carries people or things."],
-        sport:     ["Sport", "A game being played, or the kit for one."],
-        food:      ["Food", "Something to eat or drink."]
+        animal:    ["Animals", "Any animal at all, whether a beetle, a cat or a whale."],
+        nature:    ["Nature", "Photos of sky, water, trees, rocks or plants."],
+        transport: ["Getting around", "Anything that carries people or things from place to place."],
+        sport:     ["Sport", "A game being played, or the equipment for one."],
+        food:      ["Food", "Anything you can eat or drink."]
       },
-      dropHere: "Drop a photo here, or tap to choose one",
+      dropHere: "Drop a photo here or tap to choose one",
       thinking: "Looking at the photo…",
-      waiting: "Waiting for the machine to finish loading…",
-      badFile: "That is not an image file.",
-      badFileKept: "That is not an image file. The photo you had stays.",
-      failedShot: "Something went wrong looking at that photo.",
-      sawTitle: "What it saw",
-      tally: function (got, need) { return "Matching guesses came to " + got + "%. This room needs " + need + "%."; },
-      noLabels: "The machine saw nothing it could name in that photo.",
-      accepted: "Accepted. It belongs in this room.",
+      waiting: "Waiting for the file to finish loading…",
+      badFile: "That file is not an image.",
+      badFileKept: "That file is not an image, and the photo you had stays where it is.",
+      failedShot: "Something went wrong while the computer looked at that photo.",
+      sawTitle: "What the computer saw",
+      tally: function (got, need) { return "The matching guesses add up to " + got + "%, and this room needs " + need + "%."; },
+      noLabels: "The computer could not name anything in this photo.",
+      accepted: "This photo belongs in this room.",
       rejected: function (room) {
         return {
-          animal: "Rejected. The machine found no animal in this photo.",
-          nature: "Rejected. The machine found no nature in this photo.",
-          transport: "Rejected. The machine found nothing that carries people or things.",
-          sport: "Rejected. The machine found no sport in this photo.",
-          food: "Rejected. The machine found no food in this photo."
+          animal: "The computer found no animal in this photo.",
+          nature: "Sky, water, trees, rocks and plants are all missing from what the computer saw.",
+          transport: "Nothing the computer saw in this photo carries people or things.",
+          sport: "There is no game or sports equipment among the computer's guesses.",
+          food: "None of the computer's guesses is something to eat or drink."
         }[room];
       },
-      weak: "The machine is not sure about this photo. Try a clearer one."
+      weak: "The computer only half recognised this photo. It may be blurry, or it may show something the computer was never taught.",
+      limits: "The computer only knows the 1,000 things it was trained on. About 400 of them are animals but only about ten are landscapes, so even a clear photo of something it never learned gets turned away.",
+      labelsNote: ""
     },
     es: {
-      eyebrow: "IA de visión · galería",
-      title1: "Enséñale una foto.", title2: "Dice lo que ve",
-      intro: "Cada sala admite un tipo de foto. Pon una imagen en un marco. La máquina dice qué ve y decide si la foto encaja en la sala.",
-      setupTitle: "Dónde vive la máquina",
-      setupBody: "La máquina no es una web a la que mandas fotos. Es un archivo de 14 MB que funciona dentro de esta página, en tu ordenador. Tus fotos se quedan en tu ordenador y no necesitas ninguna cuenta.",
+      title1: "Enséñale al ordenador", title2: "una foto", allActs: "Todas las actividades",
+      intro: "Cada una de las cinco salas admite un tipo de foto. Cuando pones una imagen en un marco, el ordenador decide si encaja ahí y te enseña las suposiciones en las que se basa.",
+      setupTitle: "Dónde se revisan las fotos",
+      setupBody: "Las fotos las revisa un archivo de 14 MB que funciona dentro de esta página, en tu propio ordenador. Tus fotos nunca salen de él, y no necesitas ninguna cuenta.",
       idle: "El archivo de 14 MB se descarga la primera vez que añades una foto.",
-      loading: "Cargando la máquina…",
-      ready: "Listo. Conoce 1000 tipos de cosas, y unos 400 son animales.",
-      failed: "La máquina no se ha cargado. Pide a un adulto que abra esta página desde una dirección web, no desde un archivo del ordenador.",
+      loading: "Cargando el archivo de 14 MB…",
+      ready: "El ordenador está listo y conoce 1000 tipos de cosas, unas 400 de ellas animales.",
+      failed: "El archivo no se ha cargado. Pide a un adulto que abra esta página desde una dirección web y no desde un archivo del ordenador.",
       hungLabel: "Fotos colgadas", again: "Vaciar la galería",
-      wonTitle: "La galería está abierta",
-      wonBody: "Cinco salas, cinco fotos y una máquina que estuvo de acuerdo con todas.",
+      wonTitle: "Las cinco salas tienen foto",
+      wonBody: "La galería está completa, y el ordenador está de acuerdo en que cada foto encaja en su sala.",
       rooms: {
-        animal:    ["Animales", "Cualquier ser vivo con pelo, plumas o escamas."],
-        nature:    ["Naturaleza", "Cielo, agua, árboles o rocas, sin personas ni edificios."],
-        transport: ["Transporte", "Algo que lleva personas o cosas."],
-        sport:     ["Deporte", "Un juego en marcha, o el material para jugarlo."],
-        food:      ["Comida", "Algo de comer o de beber."]
+        animal:    ["Animales", "Cualquier animal, ya sea un escarabajo, un gato o una ballena."],
+        nature:    ["Naturaleza", "Fotos de cielo, agua, árboles, rocas o plantas."],
+        transport: ["Transporte", "Cualquier cosa que lleve personas o cosas de un sitio a otro."],
+        sport:     ["Deporte", "Un partido en marcha, o el material para jugarlo."],
+        food:      ["Comida", "Cualquier cosa que se pueda comer o beber."]
       },
-      dropHere: "Suelta aquí una foto, o toca para elegir una",
+      dropHere: "Suelta aquí una foto o toca para elegir una",
       thinking: "Mirando la foto…",
-      waiting: "Esperando a que termine de cargar el reconocedor…",
+      waiting: "Esperando a que termine de cargarse el archivo…",
       badFile: "Ese archivo no es una imagen.",
-      badFileKept: "Ese archivo no es una imagen. La foto que tenías se queda.",
-      failedShot: "Algo ha fallado al mirar esa foto.",
-      sawTitle: "Lo que vio",
-      tally: function (got, need) { return "Las conjeturas que encajan suman " + got + "%. Esta sala necesita un " + need + "%."; },
-      noLabels: "La máquina no supo nombrar nada en esa foto.",
-      accepted: "Aceptada: encaja en esta sala.",
+      badFileKept: "Ese archivo no es una imagen, y la foto que tenías se queda donde estaba.",
+      failedShot: "Algo ha fallado mientras el ordenador miraba esa foto.",
+      sawTitle: "Lo que vio el ordenador",
+      tally: function (got, need) { return "Las suposiciones que encajan suman un " + got + "%, y esta sala necesita un " + need + "%."; },
+      noLabels: "El ordenador no supo nombrar nada en esta foto.",
+      accepted: "Esta foto encaja en esta sala.",
       rejected: function (room) {
         return {
-          animal: "Rechazada. La máquina no encontró ningún animal en esta foto.",
-          nature: "Rechazada. La máquina no encontró naturaleza en esta foto.",
-          transport: "Rechazada. La máquina no encontró nada que lleve personas o cosas.",
-          sport: "Rechazada. La máquina no encontró deporte en esta foto.",
-          food: "Rechazada. La máquina no encontró comida en esta foto."
+          animal: "El ordenador no encontró ningún animal en esta foto.",
+          nature: "En lo que vio el ordenador no hay cielo, agua, árboles, rocas ni plantas.",
+          transport: "Nada de lo que vio el ordenador en esta foto lleva personas o cosas.",
+          sport: "Entre las suposiciones del ordenador no hay ningún partido ni material deportivo.",
+          food: "Ninguna de las suposiciones del ordenador es algo de comer o de beber."
         }[room];
       },
-      weak: "La máquina no está lo bastante segura de esa foto. Prueba con una más clara."
+      weak: "El ordenador reconoció esta foto solo a medias. Puede que esté borrosa, o que enseñe algo que nunca le enseñaron.",
+      limits: "El ordenador solo conoce las 1000 cosas con las que lo entrenaron. Unas 400 son animales pero solo unas diez son paisajes, así que hasta una foto muy clara de algo que nunca aprendió se queda fuera.",
+      labelsNote: "El ordenador aprendió los nombres en inglés y por eso los escribe en inglés."
     }
   };
 
   var lang = "en";
   var net = null, netState = "idle";
   var state = {};   /* room -> { img, labels, done, busy, note, score } */
+  var lastDone = 0;
 
   function byId(id) { return document.getElementById(id); }
   function t() { return T[lang]; }
@@ -858,7 +868,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
 
   /* Whole words only. A substring test finds "ant" inside "plant" and "ray"
-     inside "tray", and either one quietly wrecks a room. */
+     inside "tray", and either one quietly wrecks a room. Words that name two
+     ImageNet classes at once are left out on purpose: "mouse" is only the
+     computer mouse there, "crane" is both the bird and the building machine,
+     and "sport"/"race" would let a sports car or a race car into Sport. */
   function belongs(label, cat) {
     var text = " " + label.toLowerCase().replace(/[^a-z'\- ]+/g, " ").replace(/\s+/g, " ") + " ";
     return CATEGORY[cat].keywords.some(function (k) {
@@ -980,6 +993,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     var done = ROOMS.filter(function (r) { return state[r].done; }).length;
     byId("score").innerHTML = done + "<span class=\"muted\">/" + ROOMS.length + "</span>";
     byId("over").hidden = done < ROOMS.length;
+    /* The closing card sits under all five rooms, below the fold on most
+       screens, so the moment the fifth photo lands the page goes to it. */
+    if (done === ROOMS.length && lastDone < ROOMS.length) {
+      setTimeout(function () { byId("over").scrollIntoView({ behavior: "smooth", block: "nearest" }); }, 0);
+    }
+    lastDone = done;
 
     var wrap = byId("rooms"); wrap.innerHTML = "";
     ROOMS.forEach(function (room, i) {
@@ -991,7 +1010,6 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       titles.appendChild(el("h3", null, d.rooms[room][0]));
       titles.appendChild(el("p", "muted", d.rooms[room][1]));
       head.appendChild(titles);
-      head.appendChild(el("span", "room__n", "0" + (i + 1)));
       card.appendChild(head);
 
       var frame = el("button", "frame");
@@ -1021,7 +1039,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
       if (s.labels) {
         var list = el("div", "labels");
-        list.appendChild(el("span", "eyebrow", d.sawTitle));
+        list.appendChild(el("b", "saw__title", d.sawTitle));
+        if (d.labelsNote) list.appendChild(el("p", "saw__sum", d.labelsNote));
         s.labels.forEach(function (l) {
           var row = el("div", "label" + (belongs(l[0], room) ? " is-hit" : ""));
           var left = el("div");
@@ -1043,13 +1062,18 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       if (s.note) {
         var msg = d[s.note.key];
         card.appendChild(el("div", "feedback feedback--" + s.note.kind, typeof msg === "function" ? msg(s.note.arg) : msg));
+        /* A turned-away photo gets the reason it is worth learning: the
+           machine only knows what it was taught. */
+        if (s.note.key === "rejected" || s.note.key === "weak") {
+          card.appendChild(el("p", "saw__sum", d.limits));
+        }
       }
 
       wrap.appendChild(card);
     });
   }
 
-  byId("again").onclick = function () { state = blank(); render(); };
+  byId("again").onclick = function () { state = blank(); lastDone = 0; render(); };
 
   document.querySelectorAll(".langs button").forEach(function (b) {
     b.onclick = function () {

@@ -868,7 +868,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   /* One screen on open: a tighter heading block, and the page held to the
      height of the viewport so the working area can take what is left. */
   body { padding: var(--page-top) 0 var(--page-bottom); }
-  .wrap { height: calc(100svh - var(--page-pad)); }
+  /* The window keeps a fixed height and the page scrolls under it: squeezed
+     into what the header and the task list left, the file grid shrank to a
+     single row and the side panel lost half its entries. */
+  .wrap { height: auto; }
   h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
   .lede { font-size: var(--t-sm); max-width: 78ch; }
   .stack--loose { gap: var(--s-4); }
@@ -876,7 +879,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   /* The grid inside the window: Windows 11 sizing, so a 40px icon with the
      name under it and a 4px selection rectangle. */
-  .w { flex: 1 1 0; min-height: 260px; }
+  .w { flex: none; height: 420px; }
 
   .files {
     flex: 1 1 0; min-height: 0; overflow: auto;
@@ -932,15 +935,38 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .target span.is-last { background: var(--sun-300); font-weight: 700; }
   .target b { color: var(--color-text-subtle); font-weight: 400; }
 
+  /* The four sandbox tasks run across in one strip, so the window keeps
+     its height. */
+  .tasks { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-4); }
+  .todo { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .todo li {
+    display: flex; align-items: center; gap: var(--s-2);
+    padding: var(--s-1) var(--s-3);
+    border: 1px solid var(--color-border-strong); border-radius: var(--radius-pill);
+    font-size: var(--t-sm);
+  }
+  .todo li::before { content: "○"; color: var(--color-text-subtle); font-weight: 700; }
+  .todo li.is-done { color: var(--color-success-fg); border-color: var(--color-success); background: var(--color-success-soft); }
+  .todo li.is-done::before { content: "●"; color: var(--color-success-fg); }
+  .tasks .feedback { flex-basis: 100%; padding: var(--s-2) var(--s-3); }
+
+  /* The side panel: live entries are clickable, the ones with nothing
+     behind them in this practice say so by fading back. */
+  .w-nav { cursor: pointer; }
+  .w-nav.is-off { opacity: .45; cursor: default; }
+  .w-nav.is-off:hover { background: none; }
+
   [hidden] { display: none !important; }
 </style>
 <style>
   /* Way back to the catalogue, same look as its own back link. */
   .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+  /* Section labels in plain sentence case at body size, not small capitals. */
+  .tag { margin: 0; font-size: var(--t-sm); font-weight: 700; color: var(--color-text-muted); }
 </style>
 <script src="../../../_shared/desktop-only.js" data-shot="desktop-index.jpg" data-back="../../index.html" data-back-label="Back to all activities" defer></script>
 </head>
@@ -949,28 +975,28 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 8–11 · files and folders</p>
+      <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">A place to</span> <em class="mark" data-t="title2">make a mess</em></h1>
-    <p class="lede" data-t="intro">Nothing here breaks. Make folders, put files inside them, rename things, move them around, and it stays as you left it. When you would rather have a goal than a sandbox, switch to the missions.</p>
+    <h1><span data-t="title1">Practising with</span> <em class="mark" data-t="title2">File Explorer</em></h1>
+    <p class="lede" data-t="intro">Nothing you do in this copy of File Explorer can harm a real computer, so make folders and move or rename things. Everything will be where you left it when you come back. When you would rather have a goal, switch to Find the file, which gives you a path to follow down to one file.</p>
   </header>
 
   <div class="modes" role="group" id="modes"></div>
 
   <section class="card stack stack--tight" id="mission" hidden>
     <div class="row row--between">
-      <p class="eyebrow" data-t="missionTag">Find this file</p>
+      <p class="tag" data-t="missionTag">The file to find</p>
       <span class="hud__score" id="missionNo">1</span>
     </div>
     <div class="target" id="target"></div>
     <div id="missionNote" hidden></div>
   </section>
+
 
   <div class="w">
     <div class="w__tabs">
@@ -1023,20 +1049,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     </div>
 
     <div class="w__body">
-      <aside class="w__nav" aria-hidden="true">
-        <div class="w-nav is-open"><svg viewBox="0 0 24 24"><use href="#w-home"/></svg><span data-t="navHome">Home</span></div>
-        <div class="w-nav"><svg viewBox="0 0 24 24"><use href="#w-star"/></svg><span data-t="navGallery">Gallery</span></div>
+      <nav class="w__nav" aria-label="Navigation">
+        <div class="w-nav" data-nav="home" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#w-home"/></svg><span data-t="navHome">Home</span></div>
+        <div class="w-nav" data-nav="gallery" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#w-star"/></svg><span data-t="navGallery">Gallery</span></div>
         <div class="w__navgap"></div>
-        <div class="w-nav"><svg viewBox="0 0 24 24"><use href="#w-cloud"/></svg><span>OneDrive</span></div>
+        <div class="w-nav" data-nav="onedrive" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#w-cloud"/></svg><span>OneDrive</span></div>
         <div class="w__navgap"></div>
-        <div class="w-nav"><svg viewBox="0 0 48 48"><use href="#w-folder"/></svg><span data-t="navDesktop">Desktop</span></div>
-        <div class="w-nav"><svg viewBox="0 0 24 24"><use href="#w-down"/></svg><span data-t="navDownloads">Downloads</span></div>
-        <div class="w-nav"><svg viewBox="0 0 48 48"><use href="#w-folder"/></svg><span data-t="navDocuments">Documents</span></div>
-        <div class="w-nav"><svg viewBox="0 0 48 48"><use href="#w-img"/></svg><span data-t="navPictures">Pictures</span></div>
-        <div class="w-nav"><svg viewBox="0 0 48 48"><use href="#w-vid"/></svg><span data-t="navVideos">Videos</span></div>
+        <div class="w-nav" data-nav="desktop" role="button"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#w-folder"/></svg><span data-t="navDesktop">Desktop</span></div>
+        <div class="w-nav" data-nav="downloads" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#w-down"/></svg><span data-t="navDownloads">Downloads</span></div>
+        <div class="w-nav" data-nav="documents" role="button"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#w-folder"/></svg><span data-t="navDocuments">Documents</span></div>
+        <div class="w-nav" data-nav="pictures" role="button"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#w-img"/></svg><span data-t="navPictures">Pictures</span></div>
+        <div class="w-nav" data-nav="videos" role="button"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#w-vid"/></svg><span data-t="navVideos">Videos</span></div>
         <div class="w__navgap"></div>
-        <div class="w-nav"><svg viewBox="0 0 24 24"><use href="#w-pc"/></svg><span data-t="navPc">This PC</span></div>
-      </aside>
+        <div class="w-nav" data-nav="pc" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#w-pc"/></svg><span data-t="navPc">This PC</span></div>
+      </nav>
 
       <div class="w__content">
         <div class="files" id="files"></div>
@@ -1052,8 +1078,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     </div>
   </div>
 
+  <section class="card tasks" id="tasks">
+    <p class="tag" data-t="tasksTag">Things to try</p>
+    <ul class="todo" id="taskList"></ul>
+    <p class="feedback feedback--ok" id="tasksNote" hidden aria-live="polite"></p>
+  </section>
+
   <section class="card stack stack--tight">
-    <p class="eyebrow" data-t="shortcuts">Shortcuts that work here</p>
+    <p class="tag" data-t="shortcuts">Shortcuts you can use in this window</p>
     <div class="keys" id="keys"></div>
   </section>
 
@@ -1083,7 +1115,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
      rely on, so mission mode swaps in its own — held in memory and never
      saved, which leaves whatever the child built in the sandbox untouched.
      Editing is off while a mission is running: the exercise is reading a
-     path, not building one. */
+     path, not building one, and a tree that cannot change keeps every
+     mission pointing at the file it was written for. */
   const MISSION_TREE = {
     en: [
       { name: "Kitchen", type: "folder", content: [
@@ -1132,6 +1165,29 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   /* Each mission is a list of indexes into the tree above, so both languages
      resolve to the same three files. */
   const MISSIONS = [[0, 0, 0], [1, 0, 0], [2, 0, 0]];
+
+  /* What a first visit finds: an empty window teaches nothing, so the
+     sandbox starts with the folders every Windows computer has and a couple
+     of files to move about. The nav key ties a folder to its entry in the
+     side panel, wherever the child later moves it. */
+  const SEED = {
+    en: [
+      { name: "Documents", type: "folder", nav: "documents", content: [{ name: "Homework.txt", type: "text" }] },
+      { name: "Pictures", type: "folder", nav: "pictures", content: [{ name: "Rocket.jpg", type: "image" }] },
+      { name: "Downloads", type: "folder", nav: "downloads", content: [] },
+      { name: "Notes.txt", type: "text" }
+    ],
+    es: [
+      { name: "Documentos", type: "folder", nav: "documents", content: [{ name: "Deberes.txt", type: "text" }] },
+      { name: "Imágenes", type: "folder", nav: "pictures", content: [{ name: "Cohete.jpg", type: "image" }] },
+      { name: "Descargas", type: "folder", nav: "downloads", content: [] },
+      { name: "Notas.txt", type: "text" }
+    ]
+  };
+
+  /* The four moves the catalogue promises, ticked as they happen. */
+  const TASKS = ["folder", "rename", "menu", "move"];
+
   /* Windows draws these; emoji would be whatever font the machine happens to
      have, in whatever colour. */
   const ICON = { folder: "#w-folder", text: "#w-txt", image: "#w-img", video: "#w-vid" };
@@ -1148,23 +1204,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   const T = {
     en: {
-      eyebrow: "Ages 8–11 · files and folders",
-      title1: "A place to", title2: "make a mess",
-      intro: "Nothing here breaks. Make folders, put files inside them, rename things, move them around, and it stays as you left it. When you would rather have a goal than a sandbox, switch to the missions.",
+      allActivities: "All activities", toMap: "Back to the map",
+      title1: "Practising with", title2: "File Explorer",
+      intro: "Nothing you do in this copy of File Explorer can harm a real computer, so make folders and move or rename things. Everything will be where you left it when you come back. When you would rather have a goal, switch to Find the file, which gives you a path to follow down to one file.",
       winTitle: "File Explorer",
       newFolder: "Folder", newText: "Text Document", newImage: "Bitmap image", newVideo: "Video clip",
       cmdNew: "New", cmdSort: "Sort", cmdView: "View",
       searchIn: "Search Home",
       navHome: "Home", navGallery: "Gallery", navDesktop: "Desktop", navDownloads: "Downloads",
       navDocuments: "Documents", navPictures: "Pictures", navVideos: "Videos", navPc: "This PC",
+      navOff: "This folder is not part of the practice",
       items: function (n) { return n === 1 ? "1 item" : n + " items"; },
       oneSelected: "1 item selected",
-      tips: { back: "Back", up: "Up to This computer" },
+      tips: { back: "Back", up: "Up one level" },
       wipe: "Clear everything",
-      shortcuts: "Shortcuts that work here",
-      home: "This computer",
-      emptyTitle: "Nothing in here yet",
-      emptyBody: "Use the buttons above. Drop a file on a folder to move it in.",
+      shortcuts: "Shortcuts you can use in this window",
+      home: "This PC",
+      emptyTitle: "This folder is empty",
+      emptyBody: "You can make something here with New, or drag a file onto a folder to move it inside.",
       names: { folder: "New folder", text: "Notes.txt", image: "Photo.jpg", video: "Clip.mp4" },
       menu: { open: "Open", rename: "Rename", copy: "Copy", cut: "Cut", paste: "Paste", del: "Delete" },
       keys: [
@@ -1172,34 +1229,46 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         ["Ctrl + X", "cut it"],
         ["Ctrl + V", "paste into this folder"],
         ["F2", "rename"],
-        ["Delete", "throw away"],
-        ["Backspace", "go up one folder"]
+        ["Delete", "delete what you picked"],
+        ["Ctrl + Z", "bring back what you deleted"],
+        ["Enter", "open what you picked"],
+        ["Backspace", "go back to the last folder"]
       ],
+      opened: function (name) { return "On a real computer " + name + " would open in its own program. To rename it here, press F2."; },
+      tasksTag: "Things to try",
+      tasks: {
+        folder: "Make a new folder",
+        rename: "Rename something",
+        menu: "Right-click something",
+        move: "Cut something and paste it in another folder"
+      },
+      tasksDone: "All four are done, and the window is yours to use however you like.",
       modeSandbox: "Free play", modeMission: "Find the file",
-      missionTag: "Find this file",
-      mFound: "Found it. Next one.",
-      mWrongFile: "That is a different file. The last part of the path is the name you need.",
-      mAllDone: "Three files, three paths. Nothing stays hidden from you.",
-      confirmWipe: "Delete everything and start from an empty computer?"
+      missionTag: "The file to find",
+      mFound: "You found it. Here is the next path.",
+      mWrongFile: "That is a different file. The one you need is named at the end of the path, in yellow.",
+      mAllDone: "You followed all three paths down to the right files.",
+      confirmWipe: "Do you want to delete everything and start again with an empty computer?"
     },
     es: {
-      eyebrow: "8–11 años · archivos y carpetas",
-      title1: "Un sitio donde", title2: "desordenar",
-      intro: "Aquí no se rompe nada. Crea carpetas, mete archivos dentro, cambia nombres, muévelo todo, y se queda como lo dejaste. Cuando prefieras un objetivo en vez de un patio de juegos, cambia a las misiones.",
+      allActivities: "Todas las actividades", toMap: "Volver al mapa",
+      title1: "Practicar con el", title2: "Explorador de archivos",
+      intro: "Nada de lo que hagas en esta copia del Explorador de archivos puede estropear un ordenador de verdad, así que crea carpetas y mueve o renombra lo que quieras. Cuando vuelvas, todo estará donde lo dejaste. Si prefieres tener un objetivo, cambia a Busca el archivo, que te da una ruta para seguir hasta un archivo concreto.",
       winTitle: "Explorador de archivos",
       newFolder: "Carpeta", newText: "Documento de texto", newImage: "Imagen de mapa de bits", newVideo: "Clip de vídeo",
       cmdNew: "Nuevo", cmdSort: "Ordenar", cmdView: "Ver",
       searchIn: "Buscar en Inicio",
       navHome: "Inicio", navGallery: "Galería", navDesktop: "Escritorio", navDownloads: "Descargas",
       navDocuments: "Documentos", navPictures: "Imágenes", navVideos: "Vídeos", navPc: "Este equipo",
+      navOff: "Esta carpeta no forma parte de la práctica",
       items: function (n) { return n === 1 ? "1 elemento" : n + " elementos"; },
       oneSelected: "1 elemento seleccionado",
-      tips: { back: "Atrás", up: "Subir a Este ordenador" },
+      tips: { back: "Atrás", up: "Subir un nivel" },
       wipe: "Borrar todo",
-      shortcuts: "Atajos que funcionan aquí",
-      home: "Este ordenador",
-      emptyTitle: "Aquí no hay nada todavía",
-      emptyBody: "Usa los botones de arriba. Suelta un archivo sobre una carpeta para meterlo dentro.",
+      shortcuts: "Atajos que puedes usar en esta ventana",
+      home: "Este equipo",
+      emptyTitle: "Esta carpeta está vacía",
+      emptyBody: "Puedes crear algo aquí con Nuevo, o arrastrar un archivo hasta una carpeta para meterlo dentro.",
       names: { folder: "Nueva carpeta", text: "Notas.txt", image: "Foto.jpg", video: "Clip.mp4" },
       menu: { open: "Abrir", rename: "Cambiar nombre", copy: "Copiar", cut: "Cortar", paste: "Pegar", del: "Eliminar" },
       keys: [
@@ -1207,42 +1276,80 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         ["Ctrl + X", "cortarlo"],
         ["Ctrl + V", "pegar en esta carpeta"],
         ["F2", "cambiar el nombre"],
-        ["Supr", "tirar a la basura"],
-        ["Retroceso", "subir una carpeta"]
+        ["Supr", "eliminar lo que elegiste"],
+        ["Ctrl + Z", "recuperar lo que eliminaste"],
+        ["Intro", "abrir lo que elegiste"],
+        ["Retroceso", "volver a la carpeta anterior"]
       ],
+      opened: function (name) { return "En un ordenador de verdad, " + name + " se abriría en su propio programa. Para cambiarle el nombre aquí, pulsa F2."; },
+      tasksTag: "Cosas para probar",
+      tasks: {
+        folder: "Crea una carpeta nueva",
+        rename: "Cambia el nombre de algo",
+        menu: "Haz clic derecho en algo",
+        move: "Corta algo y pégalo en otra carpeta"
+      },
+      tasksDone: "Has hecho las cuatro, y ya puedes usar la ventana como quieras.",
       modeSandbox: "Juego libre", modeMission: "Busca el archivo",
-      missionTag: "Busca este archivo",
-      mFound: "Encontrado. El siguiente.",
-      mWrongFile: "Ese es otro archivo. La última parte de la ruta es el nombre que buscas.",
-      mAllDone: "Tres archivos, tres rutas. Nada se te esconde.",
-      confirmWipe: "¿Borrar todo y empezar con un ordenador vacío?"
+      missionTag: "El archivo que buscas",
+      mFound: "Lo has encontrado. Aquí tienes la siguiente ruta.",
+      mWrongFile: "Ese es otro archivo. El que buscas tiene su nombre al final de la ruta, en amarillo.",
+      mAllDone: "Has seguido las tres rutas hasta los archivos correctos.",
+      confirmWipe: "¿Quieres borrarlo todo y empezar de nuevo con un ordenador vacío?"
     }
   };
 
   var lang = "en";
   var tree = [];
   var path = [];
+  var trail = [];          /* earlier paths, for Back */
   var mode = "sandbox", missionAt = 0, sandboxTree = null, sandboxNext = 1;
   var nextId = 1;
   var selected = null;
   var clip = null, clipMode = null;
   var renaming = null;
+  var done = {};
+  var lastGone = null;     /* the one thing Ctrl+Z can bring back */
+  var note = "";           /* a line in the status bar, cleared on the next move */
 
   const $ = function (id) { return document.getElementById(id); };
   const t = function () { return T[lang]; };
+  const editing = function () { return mode !== "mission"; };
 
-  function save() {
+  /* "pristine" means the sandbox is still the starting set nobody has
+     touched yet. Only then does a language switch rename it, so a Spanish
+     visitor does not meet English folder names; anything the child made
+     keeps the names they gave it. Every save from an edit clears the flag. */
+  var pristine = false;
+  function save(keepPristine) {
     if (mode === "mission") return;   /* the mission tree is scratch, not the sandbox */
-    try { localStorage.setItem(KEY, JSON.stringify({ tree: tree, nextId: nextId })); }
+    if (!keepPristine) pristine = false;
+    try { localStorage.setItem(KEY, JSON.stringify({ tree: tree, nextId: nextId, done: done, pristine: pristine })); }
     catch (e) { /* private window or quota — the sandbox still works in memory */ }
   }
   function load() {
     try {
       const raw = localStorage.getItem(KEY);
-      if (!raw) return;
+      if (!raw) return false;
       const d = JSON.parse(raw);
-      if (d && Array.isArray(d.tree)) { tree = d.tree; nextId = d.nextId || 1; }
-    } catch (e) { /* corrupt or blocked — start empty */ }
+      if (d && Array.isArray(d.tree)) {
+        tree = d.tree; nextId = d.nextId || 1; done = d.done || {}; pristine = d.pristine === true;
+        return true;
+      }
+    } catch (e) { /* corrupt or blocked — start from the seed */ }
+    return false;
+  }
+
+  function seed() {
+    function walk(list) {
+      return list.map(function (n) {
+        const node = { id: nextId++, name: n.name, type: n.type };
+        if (n.nav) node.nav = n.nav;
+        if (n.type === "folder") node.content = walk(n.content || []);
+        return node;
+      });
+    }
+    return walk(SEED[lang]);
   }
 
   function folderAt(p) {
@@ -1281,6 +1388,18 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     if (!a || a.type !== "folder") return false;
     return !!findNode(a.content, nodeId);
   }
+  /* The ids of the folders from the top down to a node, the node included. */
+  function pathTo(list, test, acc) {
+    for (var i = 0; i < list.length; i++) {
+      const n = list[i], here2 = acc.concat([n.id]);
+      if (test(n)) return here2;
+      if (n.type === "folder") {
+        const deep = pathTo(n.content, test, here2);
+        if (deep) return deep;
+      }
+    }
+    return null;
+  }
 
   function uniqueName(list, base) {
     var name = base, n = 2;
@@ -1292,28 +1411,84 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     return name;
   }
 
+  /* ---- the four sandbox tasks ------------------------------------------- */
+  function tick(task) {
+    if (mode === "mission" || done[task]) return;
+    done[task] = true;
+    save();
+    paintTasks();
+    if (TASKS.every(function (k) { return done[k]; })) remember();
+  }
+
+  function paintTasks() {
+    const d = t();
+    $("tasks").hidden = mode === "mission";
+    const ul = $("taskList");
+    ul.innerHTML = "";
+    TASKS.forEach(function (k) {
+      const li = document.createElement("li");
+      if (done[k]) li.className = "is-done";
+      li.textContent = d.tasks[k];
+      ul.appendChild(li);
+    });
+    const all = TASKS.every(function (k) { return done[k]; });
+    $("tasksNote").hidden = !all;
+    $("tasksNote").textContent = all ? d.tasksDone : "";
+  }
+
+  /* ---- moving about ------------------------------------------------------ */
+  function go(next) {
+    trail.push(path);
+    path = next; selected = null; note = "";
+    render();
+  }
+  function back() {
+    if (!trail.length) return;
+    path = trail.pop(); selected = null; note = "";
+    render();
+  }
+  function up() { if (path.length) go(path.slice(0, -1)); }
+
+  function openNode(node) {
+    if (node.type === "folder") { go(path.concat([node.id])); return; }
+    if (mode === "mission") { missionPick(node); return; }
+    /* Windows opens a file in its app. There is no app here, so the status
+       bar says so instead of quietly starting a rename. */
+    selected = node.id; note = t().opened(node.name);
+    render();
+  }
+
+  /* ---- editing ----------------------------------------------------------- */
   function create(type) {
+    if (!editing()) return;
     const list = here();
     const node = { id: nextId++, name: uniqueName(list, t().names[type]), type: type };
     if (type === "folder") node.content = [];
     list.push(node);
     selected = node.id;
+    if (type === "folder") tick("folder");
     save(); render();
+  }
+
+  function startRename(node) {
+    if (!editing()) return;
+    renaming = node.id; render();
   }
 
   function commitRename(node, value) {
     const clean = String(value || "").trim();
-    if (clean) {
+    if (clean && clean !== node.name) {
       const list = findParent(tree, node.id) || tree;
       const others = list.filter(function (x) { return x !== node; });
       node.name = others.some(function (x) { return x.name === clean; })
         ? uniqueName(others, clean) : clean;
+      tick("rename");
     }
     renaming = null; save(); render();
   }
 
   function moveInto(id, folderId) {
-    if (!id || id === folderId) return;
+    if (!editing() || !id || id === folderId) return;
     if (isInside(id, folderId)) return;   /* never drop a folder into itself */
     const node = findNode(tree, id);
     const from = findParent(tree, id);
@@ -1326,11 +1501,27 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
 
   function removeNode(id) {
+    if (!editing()) return;
     const node = findNode(tree, id);
     const from = findParent(tree, id);
     if (!node || !from) return;
+    const parent = pathTo(tree, function (n) { return n.type === "folder" && n.content === from; }, []);
+    lastGone = { node: node, parentId: parent ? parent[parent.length - 1] : null, index: from.indexOf(node) };
     from.splice(from.indexOf(node), 1);
     if (selected === id) selected = null;
+    if (clip && clip.id === id) { clip = null; clipMode = null; }
+    save(); render();
+  }
+
+  function undoDelete() {
+    if (!editing() || !lastGone) return;
+    const host = lastGone.parentId === null ? null : findNode(tree, lastGone.parentId);
+    const list = host && host.type === "folder" ? host.content : tree;
+    const node = lastGone.node;
+    node.name = uniqueName(list, node.name);
+    list.splice(Math.min(lastGone.index, list.length), 0, node);
+    lastGone = null;
+    selected = node.id;
     save(); render();
   }
 
@@ -1340,18 +1531,29 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     return copy;
   }
 
-  function paste() {
-    if (!clip) return;
-    const list = here();
+  function setClip(node, how) {
+    if (!editing()) return;
+    clip = node; clipMode = how; render();
+  }
+
+  /* Paste lands in the folder that was right-clicked when there is one, the
+     way Windows does it, and in the open folder otherwise. */
+  function paste(into) {
+    if (!editing() || !clip) return;
+    const targetId = into ? into.id : (path.length ? path[path.length - 1] : null);
+    const list = into ? into.content : here();
+    /* A folder never goes inside itself, cut or copied. */
+    if (clip.type === "folder" && targetId !== null && (targetId === clip.id || isInside(clip.id, targetId))) return;
     if (clipMode === "cut") {
       const node = findNode(tree, clip.id);
       const from = findParent(tree, clip.id);
-      if (!node || !from) { clip = null; return; }
-      if (node.type === "folder" && path.indexOf(node.id) >= 0) return;
+      if (!node || !from) { clip = null; clipMode = null; render(); return; }
+      const moved = from !== list;
       from.splice(from.indexOf(node), 1);
       node.name = uniqueName(list, node.name);
       list.push(node);
       clip = null; clipMode = null;
+      if (moved) tick("move");
     } else {
       const copy = clone(clip);
       copy.name = uniqueName(list, copy.name);
@@ -1363,6 +1565,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   /* ---- missions --------------------------------------------------------- */
   function buildMissionTree() {
+    /* Ids follow the walk order, so the English and the Spanish tree hand out
+       the same ids: a language switch mid-mission keeps the open folder. */
     var id = 10000;   /* well clear of anything the sandbox handed out */
     function walk(list) {
       return list.map(function (n) {
@@ -1374,23 +1578,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     return walk(MISSION_TREE[lang]);
   }
 
-  function missionTarget() {
-    var list = tree, node = null;
-    MISSIONS[missionAt].forEach(function (i) {
-      node = list[i];
-      list = node.content || [];
-    });
-    return node;
-  }
-
   function missionChain() {
     var list = tree, out = [];
     MISSIONS[missionAt].forEach(function (i) {
       var node = list[i];
+      if (!node) return;
       out.push(node);
       list = node.content || [];
     });
     return out;
+  }
+
+  function missionTarget() {
+    var chain = missionChain();
+    return chain[chain.length - 1] || null;
   }
 
   function paintMission() {
@@ -1408,11 +1609,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       b.onclick = function () { setMode(pair[0]); };
       modes.appendChild(b);
     });
-    /* On a mission you are looking for a file, not making one, so the
-       creating controls step aside. */
-    var making = mode !== "mission";
-    $("newBtn").hidden = !making;
-    $("moreBtn").hidden = !making;
+    /* On a mission you are looking for a file, not changing anything, so
+       every control that edits steps aside. */
+    var making = editing();
+    ["newBtn", "moreBtn", "cmdCut", "cmdCopy", "cmdPaste", "cmdRename", "cmdDelete"].forEach(function (id) {
+      $(id).hidden = !making;
+    });
+    document.querySelectorAll(".w__cmd .w__sep").forEach(function (s) { s.hidden = !making; });
     if (mode !== "mission") return;
 
     $("missionNo").innerHTML = (missionAt + 1) + '<span class="muted">/' + MISSIONS.length + "</span>";
@@ -1420,7 +1623,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     box.innerHTML = "";
     var parts = [d.home].concat(missionChain().map(function (n) { return n.name; }));
     parts.forEach(function (name, i) {
-      if (i) { var sep = document.createElement("b"); sep.textContent = "\u203a"; box.appendChild(sep); }
+      if (i) { var sep = document.createElement("b"); sep.textContent = "›"; box.appendChild(sep); }
       var sp = document.createElement("span");
       sp.textContent = name;
       if (i === parts.length - 1) sp.className = "is-last";
@@ -1434,9 +1637,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
 
   function missionPick(node) {
-    var d = t();
+    var d = t(), want = missionTarget();
     if (node.type === "folder") return;
-    if (node.id !== missionTarget().id) { missionNote("no", d.mWrongFile); return; }
+    if (!want || node.id !== want.id) { missionNote("no", d.mWrongFile); return; }
     missionAt++;
     if (missionAt >= MISSIONS.length) {
       remember();
@@ -1444,7 +1647,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       missionNote("ok", d.mAllDone);
       return;
     }
-    path = []; selected = null;
+    path = []; trail = []; selected = null;
     render();
     missionNote("ok", d.mFound);
   }
@@ -1457,16 +1660,44 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       missionAt = 0;
     } else {
       tree = sandboxTree || tree; nextId = sandboxNext;
+      if (pristine) { nextId = 1; tree = seed(); }   /* the language may have changed meanwhile */
     }
     mode = next;
-    path = []; selected = null;
+    path = []; trail = []; selected = null; renaming = null; note = "";
+    clip = null; clipMode = null;
+    closeMenu();
     $("missionNote").hidden = true;
     render();
+  }
+
+  /* ---- the side panel ---------------------------------------------------- */
+  /* Home and This PC go to the top. Documents, Pictures and Downloads go to
+     the sandbox folders of the same name, wherever they have been moved.
+     The rest have nothing behind them here and say so. */
+  function navPath(key) {
+    if (key === "home" || key === "pc") return [];
+    return pathTo(tree, function (n) { return n.nav === key; }, []);
+  }
+
+  function paintNav() {
+    const d = t();
+    document.querySelectorAll("[data-nav]").forEach(function (el) {
+      const p = navPath(el.dataset.nav);
+      const live = !!p;
+      el.classList.toggle("is-off", !live);
+      el.tabIndex = live ? 0 : -1;
+      el.setAttribute("aria-disabled", String(!live));
+      el.title = live ? "" : d.navOff;
+      const open = live && (el.dataset.nav === "home" ? path.length === 0
+        : el.dataset.nav !== "pc" && p.length > 0 && p.join() === path.join());
+      el.classList.toggle("is-open", !!open);
+    });
   }
 
   function render() {
     const d = t();
     paintMission();
+    paintTasks();
     document.documentElement.lang = lang;
     document.querySelectorAll("[data-t]").forEach(function (el) {
       const v = d[el.dataset.t];
@@ -1475,7 +1706,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     const kb = $("keys");
     kb.innerHTML = "";
-    d.keys.forEach(function (pair) {
+    d.keys.forEach(function (pair, i) {
+      /* On a mission only the moving-about keys work, so only those show. */
+      if (!editing() && i < 6) return;
       const row = document.createElement("div");
       const k = document.createElement("kbd"); k.textContent = pair[0];
       row.append(k, document.createTextNode(" " + pair[1]));
@@ -1492,7 +1725,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     const mkCrumb = function (label, depth) {
       const b = document.createElement("button");
       b.type = "button"; b.textContent = label;
-      b.onclick = function () { path = path.slice(0, depth); selected = null; render(); };
+      b.onclick = function () { if (depth !== path.length) go(path.slice(0, depth)); };
       return b;
     };
     cr.appendChild(mkCrumb(d.home, 0));
@@ -1508,6 +1741,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       walk = node.content;
     });
 
+    paintNav();
     paintStatus();
 
     const box = $("files");
@@ -1524,6 +1758,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       return;
     }
 
+    var focusMe = null;
     list.forEach(function (node) {
       const el = document.createElement("div");
       el.className = "node";
@@ -1531,7 +1766,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       el.setAttribute("role", "button");
       el.setAttribute("aria-selected", String(selected === node.id));
       if (clip && clipMode === "cut" && clip.id === node.id) el.classList.add("is-cut");
-      el.draggable = true;
+      el.draggable = editing();
+      if (selected === node.id && renaming !== node.id) focusMe = el;
 
       const ic = iconFor(node.type);
 
@@ -1540,10 +1776,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       if (renaming === node.id) {
         const inp = document.createElement("input");
         inp.value = node.name;
+        inp.setAttribute("aria-label", d.menu.rename);
         inp.onkeydown = function (e) {
+          e.stopPropagation();
           if (e.key === "Enter") commitRename(node, inp.value);
           if (e.key === "Escape") { renaming = null; render(); }
         };
+        inp.onclick = function (e) { e.stopPropagation(); };
+        inp.ondblclick = function (e) { e.stopPropagation(); };
         inp.onblur = function () { if (renaming === node.id) commitRename(node, inp.value); };
         nm.appendChild(inp);
         setTimeout(function () { inp.focus(); inp.select(); }, 0);
@@ -1554,32 +1794,54 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       el.append(ic, nm);
 
       el.onclick = function (e) {
-        e.stopPropagation(); selected = node.id; render();
+        e.stopPropagation(); selected = node.id; note = ""; render();
         if (mode === "mission") missionPick(node);
       };
       el.ondblclick = function (e) {
         e.stopPropagation();
-        if (node.type === "folder") { path = path.concat([node.id]); selected = null; render(); }
-        else { renaming = node.id; render(); }
+        if (renaming === node.id) return;
+        if (node.type === "folder" || mode !== "mission") openNode(node);
       };
       el.oncontextmenu = function (e) {
         e.preventDefault(); e.stopPropagation();
         selected = node.id; render(); openMenu(e.clientX, e.clientY, node);
       };
+      el.onkeydown = function (e) {
+        if (renaming === node.id) return;
+        if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); openNode(node); }
+        else if (e.key === " ") {
+          e.preventDefault(); selected = node.id; note = ""; render();
+          if (mode === "mission") missionPick(node);
+        } else if (e.key === "ContextMenu" || (e.shiftKey && e.key === "F10")) {
+          e.preventDefault();
+          selected = node.id; render();
+          const r = (box.querySelector('[aria-selected="true"]') || el).getBoundingClientRect();
+          openMenu(r.left + r.width / 2, r.top + r.height / 2, node);
+        }
+      };
 
-      el.ondragstart = function (e) { e.dataTransfer.setData("text/plain", String(node.id)); };
-      if (node.type === "folder") {
-        el.ondragover = function (e) { e.preventDefault(); el.classList.add("is-over"); };
-        el.ondragleave = function () { el.classList.remove("is-over"); };
-        el.ondrop = function (e) {
-          e.preventDefault(); e.stopPropagation();
-          el.classList.remove("is-over");
-          moveInto(Number(e.dataTransfer.getData("text/plain")), node.id);
-        };
+      if (editing()) {
+        el.ondragstart = function (e) { e.dataTransfer.setData("text/plain", String(node.id)); };
+        if (node.type === "folder") {
+          el.ondragover = function (e) { e.preventDefault(); el.classList.add("is-over"); };
+          el.ondragleave = function () { el.classList.remove("is-over"); };
+          el.ondrop = function (e) {
+            e.preventDefault(); e.stopPropagation();
+            el.classList.remove("is-over");
+            moveInto(Number(e.dataTransfer.getData("text/plain")), node.id);
+          };
+        }
       }
 
       box.appendChild(el);
     });
+
+    /* render() rebuilds the grid, so keyboard focus is put back on the
+       picked item rather than dropped on the page. */
+    if (focusMe && box.contains(document.activeElement) === false &&
+        (document.activeElement === document.body || document.activeElement === null)) {
+      focusMe.focus({ preventScroll: true });
+    }
   }
 
   /* Explorer keeps its status bar and its command bar honest about what is
@@ -1587,9 +1849,9 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   function paintStatus() {
     const d = t(), n = here().length, sel = selected !== null;
     $("count").textContent = d.items(n);
-    $("picked").textContent = sel ? d.oneSelected : "";
+    $("picked").textContent = note || (sel ? d.oneSelected : "");
     [["cmdCut", !sel], ["cmdCopy", !sel], ["cmdRename", !sel], ["cmdDelete", !sel],
-     ["cmdPaste", !clip], ["navBack", !path.length], ["navUp", !path.length]].forEach(function (it) {
+     ["cmdPaste", !clip], ["navBack", !trail.length], ["navUp", !path.length]].forEach(function (it) {
       $(it[0]).disabled = it[1];
     });
     document.querySelectorAll("[data-tt]").forEach(function (b) {
@@ -1613,67 +1875,84 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   function menuRow(m, opts) {
     const b = document.createElement("button");
     b.type = "button";
+    b.setAttribute("role", "menuitem");
     b.appendChild(opts.icon ? svgIcon(opts.icon, opts.box) : svgIcon("#w-blank"));
     const s2 = document.createElement("span"); s2.textContent = opts.label;
     const k = document.createElement("kbd"); k.textContent = opts.key || "";
     b.append(s2, k);
     b.disabled = !!opts.off;
-    b.onclick = function () { closeMenu(); opts.on(); };
+    b.onclick = function (e) { e.stopPropagation(); closeMenu(); opts.on(); };
     m.appendChild(b);
     return b;
   }
 
+  var menuFrom = null;   /* where focus goes back to when the menu closes */
+
   function showMenu(x, y) {
     const m = $("menu");
+    if (!m.children.length) return;
+    menuFrom = document.activeElement;
     m.hidden = false;
     const w = m.offsetWidth, h = m.offsetHeight;
     m.style.left = Math.max(8, Math.min(x, window.innerWidth - w - 8)) + "px";
     m.style.top = Math.max(8, Math.min(y, window.innerHeight - h - 8)) + "px";
+    const first = m.querySelector("button:not(:disabled)");
+    if (first) first.focus();
   }
 
   function openMenu(x, y, node) {
     const d = t(), m = $("menu");
     m.innerHTML = "";
 
+    if (!editing()) {
+      /* On a mission the only thing a menu can do is open a folder. */
+      if (node && node.type === "folder") {
+        menuRow(m, { label: d.menu.open, icon: "#w-folder", box: "0 0 48 48",
+          on: function () { go(path.concat([node.id])); } });
+      }
+      showMenu(x, y);
+      return;
+    }
+
     /* Windows 11 opens a file menu with a bare row of the five things you do
        most, and only then the worded list. */
     if (node) {
+      tick("menu");
+      const into = node.type === "folder" ? node : null;
       const row = document.createElement("div");
       row.className = "w-menu__icons";
-      [["#w-cut", d.menu.cut, function () { clip = node; clipMode = "cut"; render(); }],
-       ["#w-copy", d.menu.copy, function () { clip = node; clipMode = "copy"; render(); }],
-       ["#w-rename", d.menu.rename, function () { renaming = node.id; render(); }],
+      [["#w-cut", d.menu.cut, function () { setClip(node, "cut"); }],
+       ["#w-copy", d.menu.copy, function () { setClip(node, "copy"); }],
+       ["#w-rename", d.menu.rename, function () { startRename(node); }],
        ["#w-del", d.menu.del, function () { removeNode(node.id); }]].forEach(function (it) {
         const b = document.createElement("button");
         b.type = "button"; b.title = it[1];
         b.setAttribute("aria-label", it[1]);
+        b.setAttribute("role", "menuitem");
         b.appendChild(svgIcon(it[0]));
-        b.onclick = function () { closeMenu(); it[2](); };
+        b.onclick = function (e) { e.stopPropagation(); closeMenu(); it[2](); };
         row.appendChild(b);
       });
       const pb = document.createElement("button");
       pb.type = "button"; pb.title = d.menu.paste;
       pb.setAttribute("aria-label", d.menu.paste);
+      pb.setAttribute("role", "menuitem");
       pb.appendChild(svgIcon("#w-paste"));
       pb.disabled = !clip;
-      pb.onclick = function () { closeMenu(); paste(); };
+      pb.onclick = function (e) { e.stopPropagation(); closeMenu(); paste(into); };
       row.appendChild(pb);
       m.appendChild(row);
 
-      if (node.type === "folder") {
-        menuRow(m, { label: d.menu.open, icon: "#w-folder", box: "0 0 48 48",
-          on: function () { path = path.concat([node.id]); selected = null; render(); } });
-      }
+      menuRow(m, { label: d.menu.open, icon: node.type === "folder" ? "#w-folder" : ICON[node.type], box: "0 0 48 48",
+        on: function () { openNode(node); } });
       menuRow(m, { label: d.menu.rename, key: "F2", icon: "#w-rename",
-        on: function () { renaming = node.id; render(); } });
+        on: function () { startRename(node); } });
       m.appendChild(document.createElement("hr"));
-    }
-
-    menuRow(m, { label: d.menu.paste, key: "Ctrl+V", icon: "#w-paste", off: !clip, on: paste });
-    if (node) {
+      menuRow(m, { label: d.menu.paste, key: "Ctrl+V", icon: "#w-paste", off: !clip, on: function () { paste(into); } });
       menuRow(m, { label: d.menu.del, key: "Del", icon: "#w-del",
         on: function () { removeNode(node.id); } });
     } else {
+      menuRow(m, { label: d.menu.paste, key: "Ctrl+V", icon: "#w-paste", off: !clip, on: function () { paste(null); } });
       menuRow(m, { label: d.cmdNew, icon: "#w-new", on: function () { openNewMenu(); } });
     }
 
@@ -1681,6 +1960,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
 
   function openNewMenu() {
+    if (!editing()) return;
     const d = t(), m = $("menu");
     m.innerHTML = "";
     [["folder", d.newFolder, "#w-folder", "0 0 48 48"],
@@ -1694,39 +1974,74 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
 
   function openMoreMenu() {
+    if (!editing()) return;
     const d = t(), m = $("menu");
     m.innerHTML = "";
     menuRow(m, { label: d.wipe, icon: "#w-del", on: function () {
       if (!window.confirm(d.confirmWipe)) return;
-      tree = []; path = []; selected = null; clip = null; nextId = 1;
+      tree = []; path = []; trail = []; selected = null; clip = null; clipMode = null; lastGone = null; nextId = 1;
       save(); render();
     } });
     const r = $("moreBtn").getBoundingClientRect();
     showMenu(r.right - 200, r.bottom + 4);
   }
 
-  function closeMenu() { $("menu").hidden = true; }
+  function closeMenu() {
+    const m = $("menu");
+    if (m.hidden) return;
+    m.hidden = true;
+    if (menuFrom && document.contains(menuFrom)) menuFrom.focus({ preventScroll: true });
+    menuFrom = null;
+  }
+
+  /* Arrow keys walk the menu, Escape closes it, as in Windows. */
+  $("menu").addEventListener("keydown", function (e) {
+    const items = Array.prototype.slice.call($("menu").querySelectorAll("button:not(:disabled)"));
+    const at = items.indexOf(document.activeElement);
+    if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+      e.preventDefault(); if (items.length) items[(at + 1) % items.length].focus();
+    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      e.preventDefault(); if (items.length) items[(at - 1 + items.length) % items.length].focus();
+    } else if (e.key === "Escape") {
+      e.preventDefault(); e.stopPropagation(); closeMenu();
+    }
+  });
 
   function picked() { return selected === null ? null : findNode(tree, selected); }
 
   $("newBtn").onclick = function (e) { e.stopPropagation(); openNewMenu(); };
   $("moreBtn").onclick = function (e) { e.stopPropagation(); openMoreMenu(); };
-  $("cmdCut").onclick = function () { const n = picked(); if (n) { clip = n; clipMode = "cut"; render(); } };
-  $("cmdCopy").onclick = function () { const n = picked(); if (n) { clip = n; clipMode = "copy"; render(); } };
-  $("cmdPaste").onclick = paste;
-  $("cmdRename").onclick = function () { const n = picked(); if (n) { renaming = n.id; render(); } };
+  $("cmdCut").onclick = function () { const n = picked(); if (n) setClip(n, "cut"); };
+  $("cmdCopy").onclick = function () { const n = picked(); if (n) setClip(n, "copy"); };
+  $("cmdPaste").onclick = function () { paste(null); };
+  $("cmdRename").onclick = function () { const n = picked(); if (n) startRename(n); };
   $("cmdDelete").onclick = function () { const n = picked(); if (n) removeNode(n.id); };
-  $("navBack").onclick = function () { if (path.length) { path = path.slice(0, -1); selected = null; render(); } };
-  $("navUp").onclick = function () { if (path.length) { path = path.slice(0, -1); selected = null; render(); } };
+  $("navBack").onclick = back;
+  $("navUp").onclick = up;
+
+  document.querySelectorAll("[data-nav]").forEach(function (el) {
+    const follow = function () {
+      const p = navPath(el.dataset.nav);
+      if (p && p.join() !== path.join()) go(p);
+    };
+    el.onclick = follow;
+    el.onkeydown = function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); follow(); }
+    };
+  });
 
   const filesBox = $("files");
-  filesBox.onclick = function () { selected = null; render(); };
-  filesBox.oncontextmenu = function (e) { e.preventDefault(); openMenu(e.clientX, e.clientY, null); };
-  filesBox.ondragover = function (e) { e.preventDefault(); filesBox.classList.add("is-over"); };
+  filesBox.onclick = function () { selected = null; note = ""; render(); };
+  filesBox.oncontextmenu = function (e) {
+    e.preventDefault();
+    if (editing()) openMenu(e.clientX, e.clientY, null);
+  };
+  filesBox.ondragover = function (e) { if (editing()) { e.preventDefault(); filesBox.classList.add("is-over"); } };
   filesBox.ondragleave = function () { filesBox.classList.remove("is-over"); };
   filesBox.ondrop = function (e) {
     e.preventDefault();
     filesBox.classList.remove("is-over");
+    if (!editing()) return;
     const id = Number(e.dataTransfer.getData("text/plain"));
     const node = findNode(tree, id), from = findParent(tree, id);
     const list = here();
@@ -1743,14 +2058,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   document.addEventListener("keydown", function (e) {
     if (renaming) return;
+    if (!$("menu").hidden) return;           /* the menu handles its own keys */
+    const tag = e.target && e.target.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
     const node = selected ? findNode(tree, selected) : null;
     const ctrl = e.ctrlKey || e.metaKey;
-    if (ctrl && e.key.toLowerCase() === "c" && node) { clip = node; clipMode = "copy"; render(); e.preventDefault(); }
-    else if (ctrl && e.key.toLowerCase() === "x" && node) { clip = node; clipMode = "cut"; render(); e.preventDefault(); }
-    else if (ctrl && e.key.toLowerCase() === "v") { paste(); e.preventDefault(); }
-    else if (e.key === "F2" && node) { renaming = node.id; render(); e.preventDefault(); }
+    const k = e.key.toLowerCase();
+    if (e.key === "Backspace") { if (trail.length) { back(); e.preventDefault(); } return; }
+    if (!editing()) return;                   /* a mission only reads */
+    if (ctrl && k === "c" && node) { setClip(node, "copy"); e.preventDefault(); }
+    else if (ctrl && k === "x" && node) { setClip(node, "cut"); e.preventDefault(); }
+    else if (ctrl && k === "v") { paste(null); e.preventDefault(); }
+    else if (ctrl && k === "z" && lastGone) { undoDelete(); e.preventDefault(); }
+    else if (e.key === "F2" && node) { startRename(node); e.preventDefault(); }
     else if (e.key === "Delete" && node) { removeNode(node.id); e.preventDefault(); }
-    else if (e.key === "Backspace" && path.length) { path = path.slice(0, -1); render(); e.preventDefault(); }
   });
 
   document.querySelectorAll(".langs button").forEach(function (b) {
@@ -1759,11 +2080,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       document.querySelectorAll(".langs button").forEach(function (x) {
         x.setAttribute("aria-pressed", String(x === b));
       });
+      /* The mission tree is rebuilt in the new language. Its ids do not
+         change, so the open folder and the current mission stay put. */
+      if (mode === "mission") tree = buildMissionTree();
+      else if (pristine) { nextId = 1; tree = seed(); path = []; trail = []; selected = null; save(true); }
       render();
     };
   });
 
-  load();
+  if (!load()) { tree = seed(); pristine = true; save(true); }
   render();
 })();
 </script>

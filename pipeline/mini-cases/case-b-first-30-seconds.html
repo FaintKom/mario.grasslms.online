@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>First-30-Seconds · Agent Desktop</title>
+<link rel="icon" href="../../icon.svg" sizes="any" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -334,6 +335,8 @@
   }
   .centre-tabs {
     display: flex;
+    overflow: hidden;
+    white-space: nowrap;
     border-bottom: 1px solid var(--line);
     padding: 0 20px;
     background: var(--surface);
@@ -865,10 +868,8 @@
   .coach-toast.passable { border-color: #FDE68A; background: var(--neu-soft); }
   .coach-toast.wrong { border-color: #FECACA; background: var(--neg-soft); }
   .coach-toast-head {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    font-size: 13px;
+    font-weight: 600;
     color: var(--pos);
     margin-bottom: 6px;
   }
@@ -984,8 +985,9 @@
     opacity: 0.85;
   }
   .results-title {
-    margin-top: 10px;
-    font-size: 30px;
+    margin-top: 0;
+    font-size: 24px;
+    line-height: 1.25;
     font-weight: 700;
     letter-spacing: -0.02em;
   }
@@ -1123,6 +1125,18 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--ink-4); }
+
+  /* ≤1199px: narrower side panes so the live transcript keeps a readable width */
+  @media (max-width: 1199px) {
+    .topbar { grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; }
+    .brand-name span { display: none; }
+    .call-cust-meta + .call-cust-meta { display: none; }
+    .main { grid-template-columns: 240px minmax(0, 1fr) 320px; }
+  }
+  @media (max-width: 999px) {
+    .main { grid-template-columns: 220px minmax(0, 1fr) 300px; }
+    .agent-status { display: none; }
+  }
 
 </style>
 <script src="../_shared/desktop-only.js" data-shot="shots/case-b.jpg" data-back="../../" defer></script>

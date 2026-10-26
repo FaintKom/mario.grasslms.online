@@ -97,7 +97,7 @@ export class EventLog {
     // Restore any prior suspend_data so module resumes don't lose KPIs.
     const prior = this.scorm.getSuspendData?.();
     if (prior && prior.moduleId === moduleId) {
-      this.events = Array.isArray(prior.events) ? prior.events : [];
+      this.events = Array.isArray(prior.events) ? prior.events.map(expandEvent).filter(Boolean) : [];
       this.kpis = { ...this.kpis, ...(prior.kpis ?? {}) };
     }
 
@@ -179,20 +179,23 @@ export class EventLog {
   }
 
   /**
-   * Flush the in-memory log + KPI summary to cmi.suspend_data.
-   * To stay under SCORM 1.2's 4096-char cap we persist only the most recent
-   * 32 events; the KPI table is always preserved (it's the assessment payload).
+   * Flush the KPI summary + a compact tail of the log to cmi.suspend_data.
+   * SCORM 1.2 caps suspend_data at 4096 chars, so each event is stored as
+   * [name, ts_ms, {up to 4 short fields}] and the oldest events are dropped
+   * until the blob fits under SUSPEND_BUDGET. The KPI table always stays
+   * (it's the assessment payload); the full log lives in memory (snapshot()).
    * @private
    */
   _persist() {
-    const tail = this.events.slice(-32);
-    const blob = {
-      version: 1,
-      moduleId: this.moduleId,
-      kpis: this.kpis,
-      events: tail,
-    };
-    this.scorm.setSuspendData?.(blob);
+    const kpis = Object.fromEntries(Object.entries(this.kpis).filter(([, v]) => v !== null && v !== false && v !== 0));
+    let tail = this.events.slice(-MAX_PERSISTED_EVENTS).map(compactEvent);
+    let json = "";
+    for (;;) {
+      json = JSON.stringify({ version: 2, moduleId: this.moduleId, kpis, events: tail });
+      if (json.length <= SUSPEND_BUDGET || tail.length === 0) break;
+      tail = tail.slice(1);
+    }
+    this.scorm.setSuspendData?.(JSON.parse(json));
   }
 
   /**
@@ -213,6 +216,27 @@ export class EventLog {
   destroy() {
     this.eventBus.removeEventListener("telemetry", this._onTelemetry);
   }
+}
+
+/** suspend_data budget: SCORM 1.2 allows 4096 chars; keep headroom for the LMS. */
+const SUSPEND_BUDGET = 3600;
+const MAX_PERSISTED_EVENTS = 24;
+
+/** [name, ts_ms, {≤4 primitive fields, strings ≤ 40 chars}] */
+function compactEvent(ev) {
+  const small = {};
+  for (const [k, v] of Object.entries(ev.payload ?? {})) {
+    if (Object.keys(small).length >= 4) break;
+    if (typeof v === "number" || typeof v === "boolean") small[k] = v;
+    else if (typeof v === "string") small[k] = v.slice(0, 40);
+  }
+  return Object.keys(small).length ? [ev.event_name, ev.ts_ms, small] : [ev.event_name, ev.ts_ms];
+}
+
+/** Accepts the compact form (v2) and the old object form (v1). */
+function expandEvent(e) {
+  if (Array.isArray(e)) return { event_name: e[0], module_id: null, ts_iso: null, ts_ms: e[1] ?? 0, payload: e[2] ?? {} };
+  return e && typeof e === "object" ? e : null;
 }
 
 export default EventLog;

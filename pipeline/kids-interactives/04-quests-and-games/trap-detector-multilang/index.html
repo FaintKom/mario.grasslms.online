@@ -596,10 +596,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .stats b { display: block; font-family: var(--font-mono); font-size: var(--t-2xl); font-weight: 700; font-variant-numeric: tabular-nums; }
 
   .tabstrip { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-3); }
-  .tab { display: inline-flex; align-items: center; gap: var(--s-2); }
+  .tab { display: inline-flex; align-items: center; gap: var(--s-2); cursor: default; touch-action: auto; }
+  /* The "open again" buttons are plain <button>s, which do not inherit the
+     page font on their own. */
+  .tabstrip button.token { font: inherit; font-weight: 600; color: var(--color-text); cursor: pointer; }
   .tab.is-current { border-color: var(--color-primary); background: var(--color-primary-soft); }
+  .tab__pick {
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    padding: 0; border: 0; background: transparent; color: inherit;
+    font: inherit; font-weight: 600; cursor: pointer;
+  }
   .tabx {
-    display: inline-grid; place-items: center; width: 24px; height: 24px;
+    display: inline-grid; place-items: center; width: 32px; height: 32px;
+    padding: 0; border: 0; background: transparent;
     border-radius: var(--radius-pill); color: var(--color-text-subtle); cursor: pointer;
   }
   .tabx:hover { background: var(--color-danger-soft); color: var(--color-danger-fg); }
@@ -610,6 +619,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .lock--off { color: var(--clay-600); display: inline-flex; }
   .tab .ico--lock { color: var(--green-700); }
   .tab .ico--insecure { color: var(--clay-600); }
+
+  /* On a phone the address is the evidence, so it wraps rather than being
+     cut off, and the encryption note gives up its room to it. */
+  @media (max-width: 560px) {
+    .addr__url { white-space: normal; overflow-wrap: anywhere; }
+    .addr__note { display: none; }
+  }
+
+  /* Plain labels for counters and controls: same size as the UI text,
+     no capitals and no monospace, so they read as words. */
+  .label-quiet { font-size: var(--t-sm); font-weight: 600; color: var(--color-text-muted); }
 
   [hidden] { display: none !important; }
 </style>
@@ -627,28 +647,27 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--narrow stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
-    <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 9–12 · safe browsing</p>
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActs">All activities</span></a>
+    <div class="row" style="justify-content: flex-end">
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Every way a site</span> <em class="mark" data-t="title2">can lie to you</em></h1>
-    <p class="lede" data-t="intro">No padlock. A prize you never entered for. An address one letter off from the real thing. Four levels of it, ending with a browser full of tabs.</p>
+    <h1><span data-t="title1">Spotting a website</span> <em class="mark" data-t="title2">that wants to trick you</em></h1>
+    <p class="lede" data-t="intro">Over four levels you will check websites that try to trick you in different ways. The last level gives you a whole browser full of tabs to sort out.</p>
   </header>
 
   <section class="stack" id="game">
     <div class="hud">
       <div class="row">
-        <span class="eyebrow"><span data-t="levelLabel">Level</span> <span id="lv" class="mono">1</span>/4</span>
+        <span class="label-quiet"><span data-t="levelLabel">Level</span> <span id="lv">1</span>/4</span>
       </div>
       <div class="steps" style="flex:1; min-width:140px;" aria-hidden="true">
         <i id="s1"></i><i id="s2"></i><i id="s3"></i><i id="s4"></i>
       </div>
       <div class="row">
-        <span class="eyebrow" data-t="rightLabel">Right</span>
+        <span class="label-quiet" data-t="rightLabel">Correct</span>
         <span class="hud__score" id="score">0</span>
       </div>
     </div>
@@ -664,19 +683,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     </div>
 
     <div id="controls"></div>
-    <div id="verdict" hidden></div>
+    <div id="verdict" hidden aria-live="polite"></div>
     <div class="row">
-      <button class="btn btn--ghost btn--sm" id="hint" data-t="hintBtn">Hint</button>
+      <button class="btn btn--ghost btn--sm" id="hint" data-t="hintBtn">Show a hint</button>
       <button class="btn" id="next" data-t="next" hidden>Next</button>
     </div>
   </section>
 
   <section class="card stack" id="over" hidden aria-live="polite">
-    <h2 data-t="doneTitle">Detector calibrated</h2>
+    <h2 id="doneTitle">The detector is ready</h2>
     <div class="stats">
-      <div><b id="fScore">0</b><span class="eyebrow" data-t="rightLabel">Right</span></div>
-      <div><b id="fRate">0%</b><span class="eyebrow" data-t="rateLabel">Accuracy</span></div>
-      <div><b id="fStreak">0</b><span class="eyebrow" data-t="streakLabel">Best run</span></div>
+      <div><b id="fScore">0</b><span class="label-quiet" data-t="rightLabel">Correct</span></div>
+      <div><b id="fRate">0%</b><span class="label-quiet" data-t="rateLabel">Accuracy</span></div>
+      <div><b id="fStreak">0</b><span class="label-quiet" data-t="streakLabel">Longest streak</span></div>
     </div>
     <p class="muted" id="doneBody"></p>
     <div><button class="btn" id="again" data-t="again">Start over</button></div>
@@ -688,11 +707,17 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 (function () {
   "use strict";
 
-  /* Sites, verdicts and hints carried over from the original trainer. */
+  /* Sites, verdicts and hints carried over from the original trainer, with
+     one correction. The original taught "padlock = safe", and that is wrong:
+     the padlock only says the connection is encrypted, and a phishing page can
+     have one as easily as a real site. So most traps here have https and a
+     padlock (every level except the address comparison, which has no address
+     bar), and the address is what decides. */
   const TASKS = {
     l1: [
       { url: "https://www.google.com", title: "Google", ssl: true, safe: true, hint: "googleHint" },
-      { url: "http://win-iphone-free.fake", title: "YOU WON", ssl: false, safe: false, hint: "prizeHint" },
+      { url: "https://win-iphone-free.fake", title: "YOU WON", ssl: true, safe: false, hint: "prizeHint" },
+      { url: "https://roblox.com.free-gift.net", title: "Roblox free gift", ssl: true, safe: false, hint: "subdomainHint" },
       { url: "https://scratch.mit.edu", title: "Scratch", ssl: true, safe: true, hint: "scratchHint" },
       { url: "http://get-robux-free.scam", title: "Free Robux", ssl: false, safe: false, hint: "robuxHint" },
       { url: "https://www.wikipedia.org", title: "Wikipedia", ssl: true, safe: true, hint: "wikiHint" }
@@ -704,146 +729,154 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       { urls: ["roblox.com", "robiox.com"], right: 0, hint: "robloxHint" },
       { urls: ["amazone.com", "amazon.com"], right: 1, hint: "amazonHint" }
     ],
-    /* Level four was its own page: four tabs open at once, two of them traps.
-       It is the same skill one step out — you are no longer judging a site
-       someone put in front of you, you are running the browser. The tabs,
-       their addresses and the safe/unsafe split are that page's originals. */
-    l4: [
-      { multi: true, hint: "tabsHint", tabs: [
-        { id: "prize",  url: "win-free-prize.net",           title: "You won!",     ssl: false, safe: false },
-        { id: "fake",   url: "googgle.com",                  title: "Google",       ssl: false, safe: false },
-        { id: "wiki",   url: "wikipedia.org",                title: "Wikipedia",    ssl: true,  safe: true },
-        { id: "natgeo", url: "kids.nationalgeographic.com",  title: "Nat Geo Kids", ssl: true,  safe: true }
-      ] }
-    ],
     l3: [
       { url: "https://education.minecraft.net", title: "Minecraft Education", ssl: true, safe: true, hint: "minecraftEduHint" },
       { url: "http://download-game.exe", title: "Download Game", ssl: false, safe: false, popup: "downloadNow", hint: "downloadHint" },
+      { url: "https://g00gle-account-check.com", title: "Google account check", ssl: true, safe: false, popup: "keepAccount", hint: "accountHint" },
       { url: "https://code.org", title: "Code.org", ssl: true, safe: true, hint: "codeOrgHint" },
-      { url: "http://your-bank-security.fake", title: "Bank Security", ssl: false, safe: false, popup: "enterBankPassword", hint: "bankHint" },
+      { url: "https://your-bank-security.fake", title: "Bank Security", ssl: true, safe: false, popup: "enterBankPassword", hint: "bankHint" },
       { url: "https://kahoot.it", title: "Kahoot", ssl: true, safe: true, hint: "kahootHint" }
+    ],
+    /* Level four was its own page: four tabs open at once, two of them traps.
+       It is the same skill one step out — you are no longer judging a site
+       someone put in front of you, you are running the browser. The fake
+       Google tab and the prize tab both have a padlock, so the addresses have to
+     be read. */
+    l4: [
+      { multi: true, hint: "tabsHint", tabs: [
+        { id: "prize",  url: "win-free-prize.net",           title: "You won!",     ssl: true,  safe: false },
+        { id: "fake",   url: "googgle.com",                  title: "Google",       ssl: true,  safe: false },
+        { id: "wiki",   url: "wikipedia.org",                title: "Wikipedia",    ssl: true,  safe: true },
+        { id: "natgeo", url: "kids.nationalgeographic.com",  title: "Nat Geo Kids", ssl: true,  safe: true }
+      ] }
     ]
   };
 
   const T = {
     en: {
-      eyebrow: "Ages 9–12 · safe browsing",
-      title1: "Every way a site", title2: "can lie to you",
-      intro: "No padlock. A prize you never entered for. An address one letter off from the real thing. Four levels of it, ending with a browser full of tabs.",
-      levelLabel: "Level", rightLabel: "Right", rateLabel: "Accuracy", streakLabel: "Best run",
-      hintBtn: "Hint", next: "Next", again: "Start over", doneTitle: "Detector calibrated",
+      title1: "Spotting a website", title2: "that wants to trick you", allActs: "All activities",
+      intro: "Over four levels you will check websites that try to trick you in different ways. The last level gives you a whole browser full of tabs to sort out.",
+      levelLabel: "Level", rightLabel: "Correct", rateLabel: "Accuracy", streakLabel: "Longest streak",
+      hintBtn: "Show a hint", next: "Next", again: "Start over",
+      doneTitles: ["The detector is ready", "The detector is nearly ready", "The detector needs another round"],
       safeBtn: "Safe", unsafeBtn: "Dangerous",
       briefs: [
-        "Look at the padlock in the address bar, then decide.",
-        "One of the two is the real address. The other is one letter away from it.",
-        "Padlock, address, and anything that pops up at you. All three at once.",
-        "Four tabs are open at once. Close the dangerous ones and leave the safe ones alone."
+        "Read the address first. A padlock only means the connection is encrypted, and a dishonest site can have one too.",
+        "One of these addresses is real, and the other differs from it by one letter.",
+        "Check the address and anything that pops up. A padlock does not make a fake address real.",
+        "Four tabs are open. Close the dangerous ones and leave the safe ones alone."
       ],
-      lockOn: "connection is protected",
-      lockOff: "connection is not protected",
-      okSafe: "Right, it is safe. Padlock in place and the address is the real one.",
-      okUnsafe: "Right, that one is dangerous.",
-      noSafe: "This one was safe. It has the padlock and it is the official address.",
-      noUnsafe: "Careful. That one is dangerous: no padlock, or the address is pretending.",
-      tabsClose: "Close this tab", tabsReopen: "open again", tabsDone: "I am done",
-      tabsAllClosed: "Every tab is closed.",
+      lockOn: "encrypted connection",
+      lockOff: "not encrypted",
+      okSafe: "This site is safe.",
+      okUnsafe: "This site is dangerous.",
+      noSafe: "This site was safe.",
+      noUnsafe: "This site was dangerous.",
+      tabsClose: "Close this tab", tabsReopen: "open again", tabsDone: "I have finished",
+      tabsAllClosed: "All the tabs are closed.",
       tabsStillOpen: function (n) {
         return n === 1 ? "A dangerous tab is still open. Read the addresses again."
                        : n + " dangerous tabs are still open. Read the addresses again.";
       },
-      tabsClosedSafe: "You also closed a safe site. Open it again — a padlock and a correctly spelled address mean it is fine.",
-      tabsWon: "Both traps shut. One promised a prize from a draw you never entered; the other spelled Google with an extra g.",
-      okPick: function (u) { return u + " is the real one."; },
-      noPick: function (u) { return "Not that one. The real address is " + u + "."; },
+      tabsClosedSafe: "You also closed a safe site. Its address is real and spelled correctly, so open it again.",
+      tabsWon: "Both traps are closed, although both had a padlock. One promised a prize from a draw you never entered, and the other spelled Google with an extra g.",
+      okPick: function (u) { return u + " is the real address."; },
+      noPick: function (u) { return "That one is the copy. The real address is " + u + "."; },
       popups: {
         downloadNow: "DOWNLOAD NOW! Your computer needs this file!",
-        enterBankPassword: "Enter your card number and password to continue"
+        enterBankPassword: "Enter your card number and password to continue",
+        keepAccount: "Your account will be closed today. Type your password to keep it."
       },
       hints: {
-        googleHint: "This is the official Google. Check the padlock.",
-        prizeHint: "Prize sites are almost always traps. And there is no padlock.",
-        scratchHint: "Scratch belongs to MIT and has the padlock.",
-        robuxHint: "No padlock, and it promises something free.",
-        wikiHint: "Wikipedia with the padlock. A source you can use.",
-        youtubeHint: "The real one ends with an E.",
-        googleCompareHint: "Google has two O's in a row, not three.",
-        minecraftHint: "Read every letter. One of them is missing a T.",
-        robloxHint: "Roblox has an L in it, not an I.",
-        amazonHint: "Amazon has no E on the end.",
-        minecraftEduHint: "Minecraft Education, with the padlock. A real learning site.",
-        downloadHint: "An .exe in the address and a pop-up shouting at you.",
-        codeOrgHint: "A site for learning to code. Safe.",
-        bankHint: "A bank would never ask like this.",
-        kahootHint: "A quiz platform schools use. Safe.",
-        tabsHint: "Two of the four have no padlock. Start there."
+        googleHint: "This is google.com, with every letter where it should be.",
+        prizeHint: "A prize from a draw you never entered is one of the oldest tricks there is.",
+        subdomainHint: "Read the address to the end. The site is free-gift.net, and roblox.com is only the start of its name.",
+        scratchHint: "Scratch belongs to MIT, and its address ends in mit.edu.",
+        robuxHint: "Nobody gives Robux away, and a page that promises them is after your account.",
+        wikiHint: "wikipedia.org is a source you can use for school.",
+        youtubeHint: "The real address ends with an e.",
+        googleCompareHint: "Google has two o's in a row, and the fake has three.",
+        minecraftHint: "One of these addresses has lost the t at the end.",
+        robloxHint: "Roblox has an l, and the fake uses an i that looks almost the same.",
+        amazonHint: "Amazon has no e at the end.",
+        minecraftEduHint: "education.minecraft.net is the site Minecraft runs for schools.",
+        downloadHint: "An address ending in .exe points to a program file, and the pop-up is pushing you to download it.",
+        accountHint: "The address has zeros where Google has o's. A page that says your account closes today is rushing you to type your password before you check where you are.",
+        codeOrgHint: "code.org is a site where children learn to code.",
+        bankHint: "No bank uses this address, and the padlock in front of it does not make it a bank. A page that asks for your card number and your password together is after your money.",
+        kahootHint: "kahoot.it is the quiz site many schools use.",
+        tabsHint: "Read each address letter by letter. One tab promises a prize, and another misspells a famous name."
       },
-      done: function (n) {
-        return n >= 14 ? "You caught almost every trap. That is the eye this needs."
-             : n >= 10 ? "Good detector. Look harder at the addresses that are one letter off."
-                       : "Worth another run. The padlock is the fastest tell, start there.";
+      done: function (n, total) {
+        return n >= total - 2 ? "You caught almost every trap."
+             : n >= Math.ceil(total * 0.6) ? "Addresses with one letter changed and pages with a padlock still caught you a few times. Look at those more closely next round."
+                       : "Try another round, and this time read each address letter by letter before anything else on the page.";
       }
     },
     es: {
-      eyebrow: "9–12 años · navegación segura",
-      title1: "Todo lo que un sitio", title2: "puede fingir",
-      intro: "Sin candado. Un premio al que nunca te apuntaste. Una dirección con una letra cambiada. Cuatro niveles, y el último te da el navegador entero.",
-      levelLabel: "Nivel", rightLabel: "Aciertos", rateLabel: "Precisión", streakLabel: "Mejor racha",
-      hintBtn: "Pista", next: "Siguiente", again: "Empezar de nuevo", doneTitle: "Detector calibrado",
-      safeBtn: "Seguro", unsafeBtn: "Peligroso",
+      title1: "Cómo reconocer una web", title2: "que quiere engañarte", allActs: "Todas las actividades",
+      intro: "A lo largo de cuatro niveles vas a revisar webs que intentan engañarte de distintas maneras. En el último nivel tendrás que ordenar un navegador lleno de pestañas.",
+      levelLabel: "Nivel", rightLabel: "Aciertos", rateLabel: "Precisión", streakLabel: "Racha más larga",
+      hintBtn: "Ver una pista", next: "Siguiente", again: "Empezar de nuevo",
+      doneTitles: ["El detector está listo", "El detector está casi listo", "El detector necesita otra vuelta"],
+      safeBtn: "Segura", unsafeBtn: "Peligrosa",
       briefs: [
-        "Mira el candado en la barra de direcciones y decide.",
-        "Uno de los dos es la dirección real. El otro está a una letra de distancia.",
-        "Candado, dirección y lo que salte en pantalla. Los tres a la vez.",
-        "Hay cuatro pestañas abiertas. Cierra las peligrosas y deja en paz las seguras."
+        "Lee primero la dirección. El candado solo dice que la conexión está cifrada, y una web tramposa también puede tenerlo.",
+        "Una de estas direcciones es la de verdad, y la otra cambia en una sola letra.",
+        "Fíjate en la dirección y en todo lo que salte en pantalla. Un candado no convierte una dirección falsa en verdadera.",
+        "Hay cuatro pestañas abiertas. Cierra las peligrosas y deja las seguras donde están."
       ],
-      lockOn: "la conexión está protegida",
-      lockOff: "la conexión no está protegida",
-      okSafe: "Correcto, es seguro. Tiene candado y la dirección es la real.",
-      okUnsafe: "Correcto, ese es peligroso.",
-      noSafe: "Este era seguro. Tiene candado y es la dirección oficial.",
-      noUnsafe: "Cuidado. Ese es peligroso: sin candado, o la dirección finge ser otra.",
-      tabsClose: "Cerrar esta pestaña", tabsReopen: "abrir otra vez", tabsDone: "Ya está",
+      lockOn: "conexión cifrada",
+      lockOff: "sin cifrar",
+      okSafe: "Esta web es segura.",
+      okUnsafe: "Esta web es peligrosa.",
+      noSafe: "Esta web era segura.",
+      noUnsafe: "Esta web era peligrosa.",
+      tabsClose: "Cerrar esta pestaña", tabsReopen: "abrir otra vez", tabsDone: "He terminado",
       tabsAllClosed: "Todas las pestañas están cerradas.",
       tabsStillOpen: function (n) {
-        return n === 1 ? "Todavía hay una pestaña peligrosa abierta. Lee otra vez las direcciones."
-                       : "Todavía hay " + n + " pestañas peligrosas abiertas. Lee otra vez las direcciones.";
+        return n === 1 ? "Todavía hay una pestaña peligrosa abierta. Vuelve a leer las direcciones."
+                       : "Todavía hay " + n + " pestañas peligrosas abiertas. Vuelve a leer las direcciones.";
       },
-      tabsClosedSafe: "También cerraste un sitio seguro. Ábrelo otra vez: un candado y una dirección bien escrita quieren decir que está bien.",
-      tabsWon: "Las dos trampas cerradas. Una prometía un premio de un sorteo en el que nunca participaste; la otra escribía Google con una g de más.",
-      okPick: function (u) { return u + " es la buena."; },
-      noPick: function (u) { return "Esa no. La dirección real es " + u + "."; },
+      tabsClosedSafe: "También cerraste una web segura. Su dirección es la de verdad y está bien escrita, así que ábrela otra vez.",
+      tabsWon: "Las dos trampas están cerradas, aunque las dos tenían candado. Una prometía un premio de un sorteo en el que nunca participaste, y la otra escribía Google con una g de más.",
+      okPick: function (u) { return u + " es la dirección de verdad."; },
+      noPick: function (u) { return "Esa es la copia. La dirección de verdad es " + u + "."; },
       popups: {
         downloadNow: "¡DESCARGA YA! ¡Tu ordenador necesita este archivo!",
-        enterBankPassword: "Introduce tu número de tarjeta y contraseña para seguir"
+        enterBankPassword: "Introduce tu número de tarjeta y contraseña para seguir",
+        keepAccount: "Tu cuenta se cerrará hoy. Escribe tu contraseña para conservarla."
       },
       hints: {
-        googleHint: "Este es el Google oficial. Mira el candado.",
-        prizeHint: "Los sitios de premios casi siempre son trampas. Y no hay candado.",
-        scratchHint: "Scratch es del MIT y tiene candado.",
-        robuxHint: "Sin candado, y promete algo gratis.",
-        wikiHint: "Wikipedia con candado. Una fuente que puedes usar.",
-        youtubeHint: "El de verdad termina en E.",
-        googleCompareHint: "Google lleva dos O seguidas, no tres.",
-        minecraftHint: "Lee cada letra. A una le falta la T.",
-        robloxHint: "Roblox lleva una L, no una I.",
-        amazonHint: "Amazon no lleva E al final.",
-        minecraftEduHint: "Minecraft Education, con candado. Sitio de aprendizaje real.",
-        downloadHint: "Un .exe en la dirección y una ventana gritando.",
-        codeOrgHint: "Un sitio para aprender a programar. Seguro.",
-        bankHint: "Un banco nunca lo pediría así.",
-        kahootHint: "Una plataforma de cuestionarios que usan los colegios. Segura.",
-        tabsHint: "Dos de las cuatro no tienen candado. Empieza por ahí."
+        googleHint: "Es google.com, con cada letra en su sitio.",
+        prizeHint: "Un premio de un sorteo en el que nunca participaste es uno de los trucos más viejos que existen.",
+        subdomainHint: "Lee la dirección hasta el final. La web es free-gift.net, y roblox.com es solo el principio de su nombre.",
+        scratchHint: "Scratch es del MIT, y su dirección termina en mit.edu.",
+        robuxHint: "Nadie regala Robux, y una página que los promete va a por tu cuenta.",
+        wikiHint: "wikipedia.org es una fuente que puedes usar para el colegio.",
+        youtubeHint: "La dirección de verdad termina en e.",
+        googleCompareHint: "Google lleva dos o seguidas, y la falsa lleva tres.",
+        minecraftHint: "A una de estas direcciones le falta la t del final.",
+        robloxHint: "Roblox se escribe con l, y la falsa usa una i que se le parece mucho.",
+        amazonHint: "Amazon no lleva e al final.",
+        minecraftEduHint: "education.minecraft.net es la web que Minecraft tiene para los colegios.",
+        downloadHint: "Una dirección que termina en .exe lleva a un archivo de programa, y la ventana te empuja a descargarlo.",
+        accountHint: "La dirección lleva ceros donde Google lleva oes. Una página que dice que tu cuenta se cierra hoy te mete prisa para que escribas la contraseña sin mirar dónde estás.",
+        codeOrgHint: "code.org es una web donde los niños aprenden a programar.",
+        bankHint: "Ningún banco usa esta dirección, y el candado que lleva delante no la convierte en un banco. Una página que te pide a la vez el número de tarjeta y la contraseña va a por tu dinero.",
+        kahootHint: "kahoot.it es la web de cuestionarios que usan muchos colegios.",
+        tabsHint: "Lee cada dirección letra a letra. Una pestaña promete un premio, y otra escribe mal un nombre famoso."
       },
-      done: function (n) {
-        return n >= 14 ? "Cazaste casi todas las trampas. Ese es el ojo que hace falta."
-             : n >= 10 ? "Buen detector. Fíjate más en las direcciones con una letra cambiada."
-                       : "Merece otra vuelta. El candado es la pista más rápida, empieza por ahí.";
+      done: function (n, total) {
+        return n >= total - 2 ? "Cazaste casi todas las trampas."
+             : n >= Math.ceil(total * 0.6) ? "Las direcciones con una letra cambiada y las páginas con candado todavía te engañaron alguna vez. Fíjate más en ellas en la próxima vuelta."
+                       : "Prueba otra vuelta, y esta vez lee cada dirección letra a letra antes que nada en la página.";
       }
     }
   };
 
   var lang = "en", level = 1, idx = 0, score = 0, asked = 0, streak = 0, best = 0, answered = false;
-  var tabsOpen = null, tabsActive = null;
+  var tabsOpen = null, tabsActive = null, tabsMissed = false;
 
   const $ = function (id) { return document.getElementById(id); };
   const t = function () { return T[lang]; };
@@ -853,9 +886,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   /* Address-bar icons drawn as SVG rather than emoji: an emoji padlock is a
      picture of a padlock in whatever style the operating system feels like,
-     and it never looks like the thing sitting in a real address bar. These
-     match what Chrome actually puts there — a closed padlock on https, an
-     information circle on plain http. */
+     and it never looks like the thing sitting in a real address bar. A
+     closed padlock on https, an information circle on plain http — the
+     classic address-bar pair, and the padlock is exactly the sign this
+     activity teaches not to over-trust. */
   const NS = "http://www.w3.org/2000/svg";
   function icon(kind) {
     const svg = document.createElementNS(NS, "svg");
@@ -913,12 +947,22 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     $("score").textContent = String(score);
   }
 
-  function render() {
-    const d = t(), q = task();
+  /* A fresh task: clear the verdict and the Next button. Kept apart from
+     render(), because level four redraws on every tab click and must not wipe
+     a verdict the child has already earned. */
+  function freshTask() {
     answered = false;
     $("verdict").hidden = true;
     $("next").hidden = true;
     $("hint").hidden = false;
+  }
+
+  /* After a verdict, the task's own hint says why — so a right answer is
+     explained too, not just marked. */
+  function why(q) { return " " + t().hints[q.hint]; }
+
+  function render() {
+    const d = t(), q = task();
     paintChrome();
 
     const addr = $("addr"), view = $("viewport"), ctrl = $("controls");
@@ -950,28 +994,29 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         addr.append(lk, uu, nn);
       }
 
+      /* A tab is a group of two real buttons side by side — pick and close —
+         rather than a button with a fake button nested inside it. */
       var strip = document.createElement("div");
       strip.className = "tabstrip";
       live.forEach(function (tb) {
+        var wrapTab = document.createElement("span");
+        wrapTab.className = "token tab" + (tb.id === tabsActive ? " is-current" : "");
         var b = document.createElement("button");
         b.type = "button";
-        b.className = "token tab" + (tb.id === tabsActive ? " is-current" : "");
+        b.className = "tab__pick";
         b.appendChild(icon(tb.ssl ? "lock" : "insecure"));
         var label = document.createElement("span");
         label.textContent = tb.title;
         b.appendChild(label);
-        b.onclick = function () { tabsActive = tb.id; render(); };
-        var x = document.createElement("span");
+        b.onclick = function () { if (answered) return; tabsActive = tb.id; render(); };
+        var x = document.createElement("button");
+        x.type = "button";
         x.className = "tabx";
-        x.setAttribute("role", "button");
-        x.setAttribute("tabindex", "0");
         x.appendChild(icon("close"));
         x.setAttribute("aria-label", d.tabsClose + ": " + tb.url);
-        var shut = function (e) { e.stopPropagation(); tabsOpen[tb.id] = false; render(); };
-        x.onclick = shut;
-        x.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); shut(e); } };
-        b.appendChild(x);
-        strip.appendChild(b);
+        x.onclick = function () { if (answered) return; tabsOpen[tb.id] = false; render(); };
+        wrapTab.append(b, x);
+        strip.appendChild(wrapTab);
       });
       view.appendChild(strip);
 
@@ -987,7 +1032,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           var b2 = document.createElement("button");
           b2.type = "button"; b2.className = "token";
           b2.textContent = tb.title + " · " + d.tabsReopen;
-          b2.onclick = function () { tabsOpen[tb.id] = true; tabsActive = tb.id; render(); };
+          b2.onclick = function () { if (answered) return; tabsOpen[tb.id] = true; tabsActive = tb.id; render(); };
           back.appendChild(b2);
         });
         view.appendChild(back);
@@ -996,17 +1041,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       var doneBtn = document.createElement("button");
       doneBtn.type = "button"; doneBtn.className = "btn";
       doneBtn.textContent = d.tabsDone;
+      doneBtn.disabled = answered;
       doneBtn.onclick = function () {
         if (answered) return;
         var badOpen = q.tabs.filter(function (tb) { return tabsOpen[tb.id] && !tb.safe; });
         var goodShut = q.tabs.filter(function (tb) { return !tabsOpen[tb.id] && tb.safe; });
-        if (badOpen.length) { say("no", d.tabsStillOpen(badOpen.length)); return; }
-        if (goodShut.length) { say("no", d.tabsClosedSafe); return; }
+        if (badOpen.length || goodShut.length) {
+          /* The level counts once: a first wrong "done" is the miss that goes
+             into accuracy, and later tries are free practice. */
+          if (!tabsMissed) { tabsMissed = true; tally(false); }
+          say("no", badOpen.length ? d.tabsStillOpen(badOpen.length) : d.tabsClosedSafe);
+          return;
+        }
         answered = true;
-        tally(true);
+        if (!tabsMissed) tally(true);
         say("ok", d.tabsWon);
         $("next").hidden = false;
         $("hint").hidden = true;
+        render();
       };
       ctrl.appendChild(doneBtn);
       return;
@@ -1037,7 +1089,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           b.classList.add(ok ? "is-right" : "is-off");
           if (!ok) box.children[q.right].classList.add("is-right");
           tally(ok);
-          say(ok ? "ok" : "no", ok ? d.okPick(q.urls[q.right]) : d.noPick(q.urls[q.right]));
+          say(ok ? "ok" : "no", (ok ? d.okPick(q.urls[q.right]) : d.noPick(q.urls[q.right])) + why(q));
           $("next").hidden = false;
           $("hint").hidden = true;
         };
@@ -1080,7 +1132,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         const ok = guessSafe === q.safe;
         tally(ok);
         say(ok ? "ok" : "no",
-            ok ? (q.safe ? d.okSafe : d.okUnsafe) : (q.safe ? d.noSafe : d.noUnsafe));
+            (ok ? (q.safe ? d.okSafe : d.okUnsafe) : (q.safe ? d.noSafe : d.noUnsafe)) + why(q));
         $("next").hidden = false;
         $("hint").hidden = true;
       };
@@ -1092,25 +1144,32 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   function step() {
     idx++;
-    if (idx < list().length) { render(); return; }
-    if (level < 4) { level++; idx = 0; render(); return; }
+    if (idx < list().length) { freshTask(); render(); return; }
+    if (level < 4) { level++; idx = 0; freshTask(); render(); return; }
     finish();
   }
 
+  function total() {
+    return TASKS.l1.length + TASKS.l2.length + TASKS.l3.length + TASKS.l4.length;
+  }
+
   function finish() {
-    const d = t();
+    const d = t(), n = total();
     $("game").hidden = true;
     $("over").hidden = false;
-    $("fScore").textContent = String(score);
+    $("doneTitle").textContent = score >= n - 2 ? d.doneTitles[0]
+                               : score >= Math.ceil(n * 0.6) ? d.doneTitles[1] : d.doneTitles[2];
+    $("fScore").textContent = score + " / " + n;
     $("fRate").textContent = (asked ? Math.round((score / asked) * 100) : 0) + "%";
     $("fStreak").textContent = String(best);
-    $("doneBody").textContent = d.done(score);
+    $("doneBody").textContent = d.done(score, n);
   }
 
   function reset() {
     level = 1; idx = 0; score = 0; asked = 0; streak = 0; best = 0;
-    tabsOpen = null; tabsActive = null;
+    tabsOpen = null; tabsActive = null; tabsMissed = false;
     $("game").hidden = false; $("over").hidden = true;
+    freshTask();
     render();
   }
 

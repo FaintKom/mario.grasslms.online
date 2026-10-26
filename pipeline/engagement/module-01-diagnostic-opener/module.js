@@ -1,77 +1,67 @@
 /**
  * Module 1 · M1 Diagnostic Opener · runtime (in-app driven)
  * ---------------------------------------------------------------------------
- * Same architecture as M3 — bootModule + task-banner + welcome/summary cards +
- * 9-step Gagné timeline + window autoarrange. Content swapped for the M1
- * keystone move: one specific question off the LinkedIn / CH profile + 5-sec
- * silence after.
+ * bootModule + task-banner + welcome/summary cards + 9 steps. The keystone
+ * move: one specific question built on a LinkedIn / Companies House signal,
+ * then five seconds of silence.
  *
- * Storyboard:  02-design/module-storyboards/M1-diagnostic-opener.md
- * Outcomes:    LO-M1.1 (diagnostic-pulled-from-signal) + LO-M1.3 (silence ≥ 4s)
- * Voice:       peer-to-peer (brief §18.2)
+ * Buyers and recorded calls come from the shell's shared data
+ * (scorm-shell/data/sample-profiles.json, sample-gong-transcripts.json).
+ * The silence is timed by the phone dialler (`phone:silence`), and J.T.'s
+ * feedback in step 7 is built from what the learner actually did.
  */
 
-import { bootModule, eventBus } from "../scorm-shell/js/shell.js";
+import { bootModule, eventBus, PASS_PCT } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
+import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
+import { EVENT } from "../scorm-shell/js/event-log.js";
+import { resolveDates, fill } from "../scorm-shell/js/dates.js";
+/** "a", "a and b", "a, b and c" */
+const listJoin = arr => arr.length < 3 ? arr.join(" and ") : `${arr.slice(0, -1).join(", ")} and ${arr[arr.length - 1]}`;
 
-function closeAppsByName(appIds) {
-  if (!state.api?.os?.listWindows) return;
-  const set = new Set(appIds);
-  for (const w of state.api.os.listWindows()) {
-    if (set.has(w.appId)) state.api.os.closeApp(w);
-  }
-}
-function keepOnly(appIds) {
-  if (!state.api?.os?.listWindows) return;
-  const keep = new Set(appIds);
-  for (const w of state.api.os.listWindows()) {
-    if (!keep.has(w.appId)) state.api.os.closeApp(w);
-  }
-}
+
+const SILENCE_MS = 5000;
+const DIAL_LOCK = "Calls start in step 6, from the buyer's profile.";
 
 const state = {
-  api: null,
-  step: 0,
-  startedAt: 0,
-  signalRead: false,
-  diagnosticSent: false,
-  silenceObserved: false,
-  completionAnswer: null,
-  quizIndex: 0,
-  quizScore: 0,
-  transcripts: [],
-  prospects: [],
-  quizItems: [],
-  timeline: [],
+  api: null, step: 0, startedAt: 0, finished: false,
+  profiles: [], calls: [], quizItems: [], quizIndex: 0, quizScore: 0,
+  stepTs: {},
+  workedDone: false,
+  signal: { tries: 0, ok: false },
+  tom: { tries: 0, ok: false },
+  diag: null,          // { text, checks, score }
+  call: { connected: false, silence: null, awaiting: false, reply: false },
 };
+
+const maria = () => findProfile(state.profiles, "L-001");
+const tom   = () => findProfile(state.profiles, "L-002");
+const emma  = () => findProfile(state.profiles, "L-003");
+
+// --- Data + boot ---------------------------------------------------------------
 
 async function loadJson(path) {
   const res = await fetch(path);
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
-  return res.json();
-}
-async function loadAllData() {
-  const [transcripts, prospects, quizItems] = await Promise.all([
-    loadJson("./data/transcripts.json"),
-    loadJson("./data/prospects.json"),
-    loadJson("./data/quiz.json"),
-  ]);
-  state.transcripts = transcripts;
-  state.prospects   = prospects;
-  state.quizItems   = normalizeQuiz(quizItems);
+  return resolveDates(await res.json());
 }
 
 async function start() {
-  try { await loadAllData(); }
-  catch (err) {
+  try {
+    const [profiles, calls, quiz] = await Promise.all([loadProfiles(), loadCalls(), loadJson("./data/quiz.json")]);
+    state.profiles = profiles;
+    state.calls = pickCalls(calls, ["GC-01", "GC-19"]);
+    state.quizItems = normalizeQuiz(quiz);
+    if (!emma() || !maria() || !tom()) throw new Error("buyer profiles missing");
+  } catch (err) {
     console.error("[M1] Failed to load module data", err);
     renderFatal(err.message);
     return;
   }
   bootModule({
     moduleId: "M1",
-    title: "Module 1 · Diagnostic Opener",
+    title: "Module 1: Diagnostic opener",
     appsToLaunch: [],
     onReady(api) {
       state.api = api;
@@ -79,6 +69,7 @@ async function start() {
       wireProgressTimer();
       wireHelpButton();
       wireNarrativeButtons();
+      wireCallEvents();
       showWelcomeCard(() => runStep(0));
     },
   });
@@ -86,20 +77,35 @@ async function start() {
 start();
 
 const STEPS = [
-  { title: "A bottom-quartile rep pitched in the first 6 seconds",      handler: stepGainAttention },
-  { title: "What you'll do: one sharp question, then silence",          handler: stepStateOutcome },
-  { title: "The three moves on every call",                             handler: stepRecallPrior },
-  { title: "Watch M.G. open Maria's call with a Companies House filing", handler: stepWorkedExample },
-  { title: "Your turn: pick Tom's diagnostic question",                 handler: stepCompletionProblem },
-  { title: "On your own: read Emma's signal, then ask your question",   handler: stepSoloProblem },
-  { title: "J.T.'s review of your opener",                              handler: stepFeedback },
-  { title: "Quick check: 3 questions",                                  handler: stepQuiz },
-  { title: "Takeaway and a 7-day refresher",                            handler: stepTakeaway },
+  { title: "How P.B. lost Maria's call in eight seconds",              handler: stepGainAttention },
+  { title: "What you will practise in this module",                     handler: stepStateOutcome },
+  { title: "The three moves of a call",                                 handler: stepRecallPrior },
+  { title: "M.G.'s opening question to Maria",                          handler: stepWorkedExample },
+  { title: "Choosing the opening question for Tom",                     handler: stepCompletionProblem },
+  { title: "Your own call to Emma",                                     handler: stepSoloProblem },
+  { title: "J.T.'s review of your call",                                handler: stepFeedback },
+  { title: "Three questions from J.T.",                                 handler: stepQuiz },
+  { title: "M.G.'s note and a reminder in seven days",                  handler: stepTakeaway },
 ];
+
+/** Continue stays off until the step's task is done in the apps. A step done once stays open after Back. */
+const doneSteps = new Set();
+function setNextEnabled(on) {
+  const next = document.getElementById("narrative-next");
+  next.disabled = !on;
+  next.setAttribute("aria-disabled", String(!on));
+  next.title = on ? "" : "Finish the task in the apps to continue";
+}
+function markDone(i) { doneSteps.add(i); if (state.step === i) setNextEnabled(true); }
 
 function runStep(i) {
   state.step = i;
-  document.getElementById("gagne-step").textContent      = `${i + 1} of ${STEPS.length}`;
+  // Each step mounts its own action bar and highlight; drop the previous step's ones.
+  document.querySelectorAll(".mx-bar").forEach(el => el.remove());
+  document.querySelectorAll(".is-warm-highlight").forEach(el => el.classList.remove("is-warm-highlight"));
+  // Leftovers from a skipped step must not dim or block the next one.
+  document.querySelectorAll(".app--outreach .lead-row[data-task-target]").forEach(r => delete r.dataset.taskTarget);
+  document.getElementById("gagne-step").textContent      = `Step ${i + 1} of ${STEPS.length}`;
   document.getElementById("narrative-title").textContent = STEPS[i].title;
   updateProgressBar(i + 1);
   const body = document.getElementById("narrative-body");
@@ -107,9 +113,15 @@ function runStep(i) {
   document.getElementById("narrative-back").hidden = i === 0;
   const next = document.getElementById("narrative-next");
   next.textContent = i === STEPS.length - 1 ? "Finish module" : "Continue";
-  next.disabled = false;
-  next.setAttribute("aria-disabled", "false");
+  setNextEnabled(doneSteps.has(i));
   STEPS[i].handler(body);
+}
+
+/** Record when step `from` was completed in the app, then move on if still there. */
+function completeStep(from, delay = 450) {
+  markDone(from);
+  if (!state.stepTs[from]) state.stepTs[from] = timestamp();
+  setTimeout(() => { if (state.step === from) runStep(from + 1); }, delay);
 }
 
 function showWelcomeCard(onStart) {
@@ -123,13 +135,12 @@ function showWelcomeCard(onStart) {
   card.innerHTML = `
     <div class="welcome-card__panel">
       <span class="welcome-card__logo" aria-hidden="true">FTC</span>
-      <div class="welcome-card__kicker">Module 1 &middot; open the call</div>
-      <h2 class="welcome-card__title" id="welcome-title">Diagnostic Opener</h2>
-      <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
+      <h2 class="welcome-card__title" id="welcome-title">Diagnostic opener</h2>
       <p class="welcome-card__lede">
-        Open every cold call with one specific question taken from the buyer's
-        LinkedIn or Companies House profile. Then stay quiet for five seconds.
-        What the buyer says in that pause tells you what hurts.
+        Over the next ten minutes you will learn to open a cold call with one
+        specific question about the buyer's LinkedIn or Companies House profile.
+        After the question you stay quiet for five seconds and let the buyer tell
+        you what hurts. All nine steps happen in the apps on this desktop.
       </p>
       <button type="button" class="welcome-card__start" data-action="start">
         Start module &rarr;
@@ -161,6 +172,7 @@ function updateProgressBar(currentStep) {
 
 function wireNarrativeButtons() {
   document.getElementById("narrative-next").addEventListener("click", () => {
+    if (!doneSteps.has(state.step)) return;
     if (state.step >= STEPS.length - 1) return finishModule();
     runStep(state.step + 1);
   });
@@ -168,10 +180,8 @@ function wireNarrativeButtons() {
     if (state.step > 0) runStep(state.step - 1);
   });
   document.getElementById("narrative-redo")?.addEventListener("click", () => runStep(state.step));
-  document.getElementById("narrative-skip")?.addEventListener("click", () => {
-    if (state.step >= STEPS.length - 1) return finishModule();
-    runStep(state.step + 1);
-  });
+  // No Skip: every task can be finished (a wrong answer shows the right one), and the summary only counts finished work.
+  document.getElementById("narrative-skip")?.remove();
 }
 
 function wireHelpButton() {
@@ -183,13 +193,39 @@ function wireHelpButton() {
 
 function wireProgressTimer() {
   const el = document.getElementById("module-progress");
-  const tick = () => {
-    const ms = Date.now() - state.startedAt;
-    const m = Math.floor(ms / 60000);
-    const s = Math.floor((ms % 60000) / 1000).toString().padStart(2, "0");
-    el.textContent = `${m}:${s} / 10:00`;
-  };
+  const tick = () => { el.textContent = `${timestamp()} / 10:00`; };
   tick(); setInterval(tick, 1000);
+}
+
+// --- Window helpers -------------------------------------------------------------
+
+function appBody(appId) { return document.querySelector(`.os-window.app--${appId} .os-window-body`); }
+function isOpen(appId) { return Boolean(document.querySelector(`.os-window.app--${appId}`)); }
+function keepOnly(appIds) {
+  if (!state.api?.os?.listWindows) return;
+  const keep = new Set(appIds);
+  for (const w of state.api.os.listWindows()) if (!keep.has(w.appId)) state.api.os.closeApp(w);
+}
+function openOutreach() {
+  state.api.os.openApp("outreach", { dialLocked: DIAL_LOCK });
+  return appBody("outreach");
+}
+/** Poll until fn() returns something truthy (apps render asynchronously). */
+function waitFor(fn, cb, tries = 40) {
+  const v = fn();
+  if (v) return cb(v);
+  if (tries > 0) setTimeout(() => waitFor(fn, cb, tries - 1), 80);
+}
+function leadRow(body, name) {
+  return [...(body?.querySelectorAll(".lead-row") ?? [])].find(r => r.querySelector(".name")?.textContent.trim() === name);
+}
+function bar(host, attr, text, button) {
+  host.querySelector(`[${attr}]`)?.closest(".mx-bar")?.remove();
+  const el = document.createElement("div");
+  el.className = "mx-bar";
+  el.innerHTML = `<span>${text}</span><button type="button" class="mx-btn" ${attr}>${button}</button>`;
+  host.appendChild(el);
+  return el;
 }
 
 // --- Step 1 -----------------------------------------------------------------
@@ -197,161 +233,138 @@ function wireProgressTimer() {
 function stepGainAttention(body) {
   body.innerHTML = `
     <blockquote class="peer-quote">
-      First 6 seconds: pitch. Next 4 seconds: dial tone. Every time.
-      <cite>J.T., pod lead, reviewing P.B.'s call log</cite>
+      Whenever P.B. starts pitching in the first few seconds, the buyer hangs up
+      before he has asked a single question.
+      <cite>J.T., pod lead, after reading P.B.'s call log</cite>
     </blockquote>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:10px">
-      P.B., a bottom-quartile rep, started pitching 6 seconds into the call,
-      and Maria hung up. In this module you'll learn how top reps open instead.
+      On Gong call GC-19 P.B. asked Maria whether she had a moment to talk about
+      corporate spending, and she hung up eight seconds in. M.G. opened the same buyer
+      with a question about her new store and booked a demo.
     </p>
   `;
-  state.api.os.openApp("outreach", { highlightLeadId: "L-MARIA" });
-  setTimeout(() => decorateOutreachForStep1(), 140);
-}
-
-function decorateOutreachForStep1() {
-  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
-  if (!outreachBody) return;
-  // UX 2026-05-20: Continue disabled until task complete
   const nextBtn = document.getElementById("narrative-next");
-  if (nextBtn) {
-    nextBtn.disabled = true;
-    nextBtn.setAttribute("aria-disabled", "true");
-    nextBtn.textContent = "🔒 Click Maria to continue";
-  }
-  let tries = 0;
-  const tick = () => {
-    const allLeads = [...outreachBody.querySelectorAll(".lead-row")];
-    const mariaRow = allLeads.find(r => /Maria/i.test(r.textContent || ""));
-    if (!mariaRow) {
-      if (++tries < 20) return setTimeout(tick, 100);
-      return;
-    }
-    // UX 2026-05-20: mark active/inactive for CSS dim
-    allLeads.forEach(row => {
-      row.dataset.taskTarget = row === mariaRow ? "active" : "inactive";
-    });
-    if (mariaRow.dataset.m1Done === "true") return;
-    mariaRow.classList.add("is-warm-highlight");
-    mariaRow.dataset.m1Done = "true";
-    mariaRow.addEventListener("click", e => {
-      if (e.target.closest('[data-action="dial"]')) return;
-      if (state.step !== 0) return;
+  nextBtn.disabled = true;
+  nextBtn.setAttribute("aria-disabled", "true");
+  nextBtn.textContent = "🔒 Click Maria in Outreach";
+  const ob = openOutreach();
+  if (!ob) return;
+  mountTaskBanner(ob, { id: "m1-s1-pick", label: "Click Maria's row in Outreach.", state: "active" });
+  waitFor(() => leadRow(ob, "Maria"), row => {
+    if (state.step !== 0) return;
+    const rows = [...ob.querySelectorAll(".lead-row")];
+    rows.forEach(r => { r.dataset.taskTarget = r === row ? "active" : "inactive"; });
+    row.classList.add("is-warm-highlight");
+    if (row.dataset.m1Bound) return;
+    row.dataset.m1Bound = "true";
+    row.addEventListener("click", e => {
+      if (e.target.closest('[data-action="dial"]') || state.step !== 0) return;
       state.api.eventLog?.record?.("step1_picked_warm_lead");
-      // Unlock Continue + auto-advance + clear task-target dim
-      if (nextBtn) {
-        nextBtn.disabled = false;
-        nextBtn.setAttribute("aria-disabled", "false");
-        nextBtn.textContent = "Continue →";
-      }
-      allLeads.forEach(row => { delete row.dataset.taskTarget; });
-      setTimeout(() => runStep(1), 450);
+      markTaskBannerDone("m1-s1-pick");
+      nextBtn.disabled = false;
+      nextBtn.setAttribute("aria-disabled", "false");
+      nextBtn.textContent = "Continue";
+      rows.forEach(r => { delete r.dataset.taskTarget; });
+      completeStep(0);
     });
-  };
-  tick();
+  });
 }
 
-// --- Step 2 -----------------------------------------------------------------
+// --- Step 2 · find the signal ---------------------------------------------------
 
 function stepStateOutcome(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">In the next 10 minutes you'll practise two things:</p>
-    <ul style="font-size:13.5px;margin:6px 0 10px 18px;">
-      <li><strong>One specific question</strong> from the buyer's LinkedIn or
-          Companies House profile in the first 60 seconds.</li>
-      <li><strong>Five seconds of silence</strong> after the question. Let the
-          buyer fill that pause, because that is where the deal starts.</li>
-    </ul>
+    <p style="font-size:14px;">
+      In this module you will practise asking one specific question about the
+      buyer's LinkedIn or Companies House profile in the first minute of a call.
+      After the question you stay silent for five seconds and let the buyer fill the pause.
+    </p>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next: find Maria's signal in the LinkedIn / Companies House window
-      that just opened.
+      Start with Maria's profile in the LinkedIn and Companies House window, and find
+      the fact you would build that question on.
     </p>
   `;
-  state.api.os.openApp("linkedin-ch", { lookupId: "maria" });
-  setTimeout(() => {
-    const lchBody = document.querySelector(".os-window.app--linkedin-ch .os-window-body");
-    if (!lchBody) return;
-    mountTaskBanner(lchBody, {
-      id: "m1-s2-read-signal",
-      label: "Find Maria's signal in the Companies House filing",
-      hint: "Then click Got the signal below",
+  state.api.os.openApp("linkedin-ch", { lookupId: "L-001" });
+  waitFor(() => appBody("linkedin-ch")?.querySelector(".lch-panel.ch .signal"), () => {
+    if (state.step !== 1) return;
+    const lch = appBody("linkedin-ch");
+    mountTaskBanner(lch, {
+      id: "m1-s2-signal",
+      label: "Click the line in Maria's profile that you would build your question on.",
       state: "active",
     });
-    if (!lchBody.querySelector("[data-m1-s2-done]")) {
-      const bar = document.createElement("div");
-      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-      bar.innerHTML = `
-        <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-          Signal: Maria opened a 2nd location in the last 6 months (CH filing).
-        </span>
-        <button type="button" data-m1-s2-done
-                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-          ✓ Got the signal
-        </button>
-      `;
-      lchBody.appendChild(bar);
-      bar.querySelector("[data-m1-s2-done]").addEventListener("click", () => {
-        if (state.step !== 1) return;
-        state.signalRead = true;
-        markTaskBannerDone("m1-s2-read-signal");
-        state.api.eventLog?.record?.("step2_signal_read");
-        setTimeout(() => runStep(2), 450);
-      });
+    let fb = lch.querySelector("[data-m1-s2-fb]");
+    if (!fb) {
+      fb = document.createElement("p");
+      fb.className = "mx-fb mx-fb--float"; fb.setAttribute("data-m1-s2-fb", ""); fb.setAttribute("role", "status"); fb.hidden = true;
+      lch.appendChild(fb);
     }
-  }, 200);
+    lch.querySelectorAll(".signal").forEach(sig => {
+      sig.classList.add("is-pickable");
+      sig.setAttribute("role", "button");
+      sig.tabIndex = 0;
+      if (sig.dataset.m1Bound) return;
+      sig.dataset.m1Bound = "true";
+      const pick = () => {
+        if (state.step !== 1 || state.signal.ok) return;
+        state.signal.tries += 1;
+        lch.querySelectorAll(".signal").forEach(s => s.classList.remove("is-picked", "is-wrong"));
+        const type = sig.dataset.signalType;
+        fb.hidden = false;
+        if (type === "new_location") {
+          state.signal.ok = true;
+          sig.classList.add("is-picked");
+          fb.dataset.tone = "ok";
+          fb.textContent = fill("A second store opened in {{month:maria_store}}, and card spend now runs across two sites. That gives you a dated fact to mention and a question about who approves spending in both stores.");
+          markTaskBannerDone("m1-s2-signal");
+          state.api.eventLog?.record?.("step2_signal_read", { tries: state.signal.tries });
+          completeStep(1, 1600);
+        } else {
+          sig.classList.add("is-wrong");
+          fb.dataset.tone = "warn";
+          fb.textContent = type === "hiring"
+            ? "The bookkeeper job hints at the pain, but you'd be guessing at the reason. The second store gives you a dated fact instead."
+            : "A confirmation statement with no changes is a routine yearly filing and tells you nothing new. Look for the news that changed how her spending works.";
+        }
+      };
+      sig.addEventListener("click", pick);
+      sig.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+    });
+  });
 }
 
 // --- Step 3 -----------------------------------------------------------------
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Quick recall: the three moves on every call.</p>
+    <p style="font-size:14px;">Every call in this course follows three moves, and this module covers the first of them.</p>
     <ol style="font-size:13.5px; margin:6px 0 8px 18px;">
-      <li><strong>M1 · Diagnostic.</strong> One sharp question off the profile. <em>This module.</em></li>
-      <li><strong>M2 · Acknowledge.</strong> Restate the objection in their words.</li>
-      <li><strong>M3 · Close.</strong> Two slots, one invite, during the call.</li>
+      <li><strong>M1, the diagnostic:</strong> you ask one specific question based on the buyer's profile.</li>
+      <li><strong>M2, the acknowledgement:</strong> you repeat the buyer's objection in their own words before you answer it.</li>
+      <li><strong>M3, the close:</strong> you offer two times and send the invite while the buyer is still on the line.</li>
     </ol>
     <p style="font-size:13px;color:var(--ftc-ink-2);margin-top:8px">
-      Next: open the phone dialler. You'll use it later in this module.
+      Open the phone dialler now. You'll call Emma from it in step 6.
     </p>
   `;
-  setTimeout(() => {
-    const lchBody = document.querySelector(".os-window.app--linkedin-ch .os-window-body");
-    if (lchBody) {
-      mountTaskBanner(lchBody, {
-        id: "m1-s3-open-phone",
-        label: "Open the phone dialler so it's ready for your call",
-        hint: "Use the button below",
-        state: "active",
+  const done = () => {
+    if (state.step !== 2) return;
+    markTaskBannerDone("m1-s3-open-phone");
+    state.api.eventLog?.record?.("step3_phone_opened");
+    completeStep(2, 500);
+  };
+  if (!isOpen("linkedin-ch")) state.api.os.openApp("linkedin-ch", { lookupId: "L-001" });
+  waitFor(() => appBody("linkedin-ch"), lch => {
+    if (state.step !== 2) return;
+    mountTaskBanner(lch, { id: "m1-s3-open-phone", label: "Open the phone dialler with the button below.", state: "active" });
+    // Already open (for example from the taskbar): the task is done.
+    if (isOpen("phone-dialler")) { done(); return; }
+    bar(lch, "data-m1-s3-open-phone", "The dialler stays open until you call Emma in step 6.", "📞 Open Phone-dialler")
+      .querySelector("button").addEventListener("click", () => {
+        state.api.os.openApp("phone-dialler", { prospect: emma() });
+        done();
       });
-      if (!lchBody.querySelector("[data-m1-s3-open-phone]")) {
-        const bar = document.createElement("div");
-        bar.style.cssText = "margin-top:10px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-        bar.innerHTML = `
-          <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-            You'll call Emma from the dialler later in this module.
-          </span>
-          <button type="button" data-m1-s3-open-phone
-                  style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-            📞 Open Phone-dialler
-          </button>
-        `;
-        lchBody.appendChild(bar);
-        bar.querySelector("[data-m1-s3-open-phone]").addEventListener("click", () => {
-          state.api.os.openApp("phone-dialler");
-        });
-      }
-    }
-    const onAppOpened = (ev) => {
-      if (ev.detail?.appId !== "phone-dialler") return;
-      if (state.step !== 2) return;
-      state.api.eventBus.removeEventListener("app:opened", onAppOpened);
-      markTaskBannerDone("m1-s3-open-phone");
-      state.api.eventLog?.record?.("step3_phone_opened");
-      setTimeout(() => runStep(3), 500);
-    };
-    state.api.eventBus.addEventListener("app:opened", onAppOpened);
-  }, 140);
+  });
 }
 
 // --- Step 4 -----------------------------------------------------------------
@@ -359,114 +372,91 @@ function stepRecallPrior(body) {
 function stepWorkedExample(body) {
   body.innerHTML = `
     <p style="font-size:14px;">
-      Watch <strong>M.G.</strong> open <strong>Maria</strong>'s call with a
-      question about her Companies House filing. Notice how long he waits after it.
+      On Gong call GC-01 <strong>M.G.</strong> opens <strong>Maria</strong>'s call with
+      a question about her second store. Then he waits five seconds for her answer.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Find the <strong>[M1]</strong> chip in the transcript and click it when
-      you've read the call.
+      When you have read it, click the <strong>[M1]</strong> chip next to his question.
+      GC-19, the call P.B. lost, is in the same list if you want to compare the two.
     </p>
   `;
-  state.api.os.openApp("gong", {
-    transcripts: state.transcripts,
-    activeTranscriptId: state.transcripts[0]?.id ?? "GC-01",
-  });
-  setTimeout(() => {
-    const gongBody = document.querySelector(".os-window.app--gong .os-window-body");
-    if (!gongBody) return;
-    mountTaskBanner(gongBody, {
+  state.api.os.openApp("gong", { transcripts: state.calls, activeTranscriptId: "GC-01" });
+  waitFor(() => appBody("gong")?.querySelector(".transcript .turn"), () => {
+    if (state.step !== 3) return;
+    const gong = appBody("gong");
+    mountTaskBanner(gong, {
       id: "m1-s4-watch",
-      label: "Read M.G.'s opener and find the [M1] Diagnostic chip",
-      hint: "Click the chip or Watched it below",
+      label: "Click the [M1] chip next to M.G.'s question, or press Watched it.",
       state: "active",
     });
-    if (!gongBody.querySelector("[data-m1-s4-done]")) {
-      const bar = document.createElement("div");
-      bar.style.cssText = "margin-top:14px; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-      bar.innerHTML = `
-        <span style="font-size:12.5px;color:var(--ftc-ink-2);">
-          M.G. asks one specific question about the Companies House filing, then waits.
-        </span>
-        <button type="button" data-m1-s4-done
-                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-          ✓ Watched it
-        </button>
-      `;
-      gongBody.appendChild(bar);
-      const complete = () => {
-        if (state.step !== 3) return;
-        markTaskBannerDone("m1-s4-watch");
-        state.api.eventLog?.record?.("step4_worked_example_completed");
-        state.timeline.push({
-          label: "Watched M.G.'s opener",
-          detail: "A question from the Companies House filing, then silence",
-          ts: timestamp(),
-        });
-        setTimeout(() => runStep(4), 450);
-      };
-      bar.querySelector("[data-m1-s4-done]").addEventListener("click", complete);
-      gongBody.addEventListener("click", e => {
-        if (e.target.closest?.('.m-chip[data-move="M1"]')) complete();
-      });
+    const complete = () => {
+      if (state.step !== 3) return;
+      state.workedDone = true;
+      markTaskBannerDone("m1-s4-watch");
+      state.api.eventLog?.record?.(EVENT.WORKED_EXAMPLE_COMPLETED);
+      completeStep(3);
+    };
+    bar(gong, "data-m1-s4-done", "M.G. asks a single question about the new store and stays silent for five seconds until Maria starts talking.", "✓ Watched it")
+      .querySelector("button").addEventListener("click", complete);
+    if (!gong.dataset.m1ChipBound) {
+      gong.dataset.m1ChipBound = "true";
+      gong.addEventListener("click", e => { if (e.target.closest?.('.m-chip[data-move="M1"]')) complete(); });
     }
-  }, 200);
+  });
 }
 
 // --- Step 5 -----------------------------------------------------------------
 
 function stepCompletionProblem(body) {
   keepOnly(["outreach"]);
+  const t = tom();
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Tom</strong> (Series-B SaaS · 22 FTE) is your next dial. His
-      LinkedIn shows: <em>"We just raised a €15M Series B — hiring head of ops +
-      6 engineers next quarter."</em>
+      <strong>${t.name}</strong> founded a Series-B SaaS company with ${t.fte} people and
+      is your next call. His LinkedIn says <em>"${escapeHtml(t.signals[0].content)} ${escapeHtml(t.signals[1].content)}"</em>
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Pick your diagnostic question in the panel that just opened under his row in Outreach.
+      Choose the question you would open with in the panel under his row in Outreach.
     </p>
   `;
   const options = [
     { label: "A", result: "anti",
       text: `"Hi Tom — do you have a moment to talk about your corporate spending?"`,
-      rationale: "This is P.B.'s opener. It has no signal and nothing specific, so the call ends in 6 seconds." },
-    { label: "B", result: "correct",
-      text: `"Tom — saw your Series B close. Who's approving the new hires' card spend before they ramp?"`,
-      rationale: "Yes. It names a specific signal (the Series B) and a specific operational question (who approves the new hires' spending). M.G. used the same pattern with Maria." },
-    { label: "C", result: "partial",
+      rationale: "P.B. used this opener on GC-19. It says nothing specific about Tom, and the call ends within seconds." },
+    { label: "B", result: "partial",
       text: `"Congrats on the raise! How's it going?"`,
-      rationale: "It mentions the signal but asks nothing about how the business runs. Tom answers 'good' and the call stalls." },
-    { label: "D", result: "anti",
+      rationale: "It mentions the funding round but asks nothing about how the company works. Tom says it's going well, and the call stalls." },
+    { label: "C", result: "anti",
       text: `"FinTechCard helps fast-growing SaaS like yours control spend — interested?"`,
-      rationale: "This is a pitch, not a question. It fails the same way a feature list does." },
+      rationale: "Tom hears a sales pitch before anyone has asked him anything, and he has no reason to keep talking." },
+    { label: "D", result: "correct",
+      text: `"Tom — saw your Series B close. Who's approving the new hires' card spend before they ramp?"`,
+      rationale: "It names the Series B and then asks who approves the new hires' spending. M.G. used the same pattern with Maria." },
   ];
-  setTimeout(() => mountTomDrawer(options), 160);
+  openOutreach();
+  waitFor(() => leadRow(appBody("outreach"), "Tom"), row => {
+    if (state.step !== 4) return;
+    mountTomDrawer(appBody("outreach"), row, options);
+  });
 }
 
-function mountTomDrawer(options) {
-  const outreachBody = document.querySelector(".os-window.app--outreach .os-window-body");
-  if (!outreachBody) return;
-  mountTaskBanner(outreachBody, {
+function mountTomDrawer(ob, tomRow, options) {
+  mountTaskBanner(ob, {
     id: "m1-s5-pick-diag",
-    label: "Pick Tom's diagnostic in the panel under his row",
-    hint: "A wrong pick shows why it fails and which option is right",
+    label: "Choose Tom's opening question in the panel under his row.",
     state: "active",
   });
-  const tomRow = [...outreachBody.querySelectorAll(".lead-row")].find(r => /Tom/i.test(r.textContent || ""));
-  if (!tomRow) return;
   tomRow.classList.add("is-warm-highlight");
-  outreachBody.querySelector("[data-m1-s5-drawer]")?.remove();
+  ob.querySelector("[data-m1-s5-drawer]")?.remove();
+  const t = tom();
   const drawer = document.createElement("div");
   drawer.setAttribute("data-m1-s5-drawer", "");
   drawer.className = "tom-drawer";
   drawer.innerHTML = `
     <header class="tom-drawer__head">
-      <strong>Tom · cold call · 00:00</strong>
-      <span class="tom-drawer__cue">Pick your diagnostic</span>
+      <strong>Your cold call to Tom, before you have said anything</strong>
     </header>
-    <p class="tom-drawer__stem">
-      Signal: <em>"Series B €15M · hiring 6 engineers + ops head next quarter."</em>
-    </p>
+    <p class="tom-drawer__stem">His LinkedIn says <em>"${escapeHtml(t.signals[0].content)} ${escapeHtml(t.signals[1].content)}"</em></p>
     <div class="tom-drawer__opts" role="radiogroup" aria-label="Pick the diagnostic">
       ${options.map((o, i) => `
         <button type="button" class="tom-drawer__opt" role="radio"
@@ -478,404 +468,387 @@ function mountTomDrawer(options) {
     <div class="tom-drawer__fb" id="m1-s5-fb" hidden></div>
   `;
   tomRow.insertAdjacentElement("afterend", drawer);
+  drawer.scrollIntoView({ block: "nearest" });
   const fb = drawer.querySelector("#m1-s5-fb");
   drawer.querySelectorAll(".tom-drawer__opt").forEach(btn => {
     btn.addEventListener("click", () => {
-      const idx = Number(btn.dataset.idx);
-      const opt = options[idx];
+      if (state.step !== 4 || state.tom.ok) return;
+      const opt = options[Number(btn.dataset.idx)];
+      state.tom.tries += 1;
       drawer.querySelectorAll(".tom-drawer__opt").forEach(b => {
         b.classList.remove("is-correct", "is-incorrect");
         b.setAttribute("aria-checked", "false");
       });
       btn.setAttribute("aria-checked", "true");
       btn.classList.add(opt.result === "correct" ? "is-correct" : "is-incorrect");
-      if (opt.result !== "correct") {
-        drawer.querySelector('.tom-drawer__opt[data-result="correct"]')?.classList.add("is-reveal");
-      }
+      if (opt.result !== "correct") drawer.querySelector('.tom-drawer__opt[data-result="correct"]')?.classList.add("is-reveal");
       fb.hidden = false;
       fb.textContent = opt.rationale;
-      state.completionAnswer = opt.result;
+      revealInWindow(fb);
       if (opt.result === "correct") {
+        state.tom.ok = true;
         markTaskBannerDone("m1-s5-pick-diag");
-        state.api.eventLog?.record?.("completion_problem_completed");
-        state.timeline.push({
-          label: "Picked the correct diagnostic for Tom",
-          detail: "Option B · a question built on his funding news",
-          ts: timestamp(),
-        });
-        setTimeout(() => runStep(5), 700);
+        state.api.eventLog?.record?.(EVENT.COMPLETION_PROBLEM_COMPLETED, { tries: state.tom.tries });
+        completeStep(4, 900);
       }
     });
   });
 }
 
-// --- Step 6 -----------------------------------------------------------------
+/** Scroll only the app window's own body so `el` is visible; the desktop never moves. */
+function revealInWindow(el) {
+  const sc = el.closest(".os-window-body");
+  if (!sc) return;
+  const d = el.getBoundingClientRect().bottom - sc.getBoundingClientRect().bottom;
+  if (d > 0) sc.scrollTop += d + 12;
+}
+
+// --- Step 6 · solo: write the question, dial, hold the silence -------------------
+
+/** Four checks on the learner's question. Signal words come from Emma's profile. */
+function checkDiagnostic(text) {
+  const t = text.trim();
+  const words = t.split(/\s+/).filter(Boolean);
+  const checks = {
+    signal:  /\b(18|22|headcount|turnover|accounts|filing|filed|hiring|hire|supervisor|procurement|sites?|shifts?|grown|growth|growing)\b/i.test(t),
+    question: /\?\s*$/.test(t) && /\b(who|how|what|which|where|when)\b/i.test(t),
+    short:   words.length > 0 && words.length <= 25,
+    noPitch: !/\b(fintechcard|our (card|cards|platform|product|tool|solution)|we (help|offer|can|provide)|interested|demo|cheaper|save (you|money|time)|cut (your )?costs|do you want|would you like)\b/i.test(t),
+  };
+  const score = Object.values(checks).filter(Boolean).length;
+  return { text: t, words: words.length, checks, score };
+}
+const CHECK_LABELS = {
+  signal: "names her signal",
+  question: "asks who / how / what",
+  short: "25 words or fewer",
+  noPitch: "no pitch",
+};
 
 function stepSoloProblem(body) {
-  const emma = state.prospects.find(p => /emma/i.test(p.name)) ?? state.prospects[0];
+  keepOnly(["outreach", "linkedin-ch", "phone-dialler"]);
+  const e = emma();
+  state.call = { connected: false, silence: null, awaiting: false, reply: false };
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>On your own.</strong> ${emma.name} (${emma.industry}) is a cold lead.
-      Read the signal, write your diagnostic question, then dial her and hold the silence.
+      ${e.name} runs operations at ${escapeHtml(e.company)} and has never spoken to us.
+      Read her profile, write one question based on it, then call her and stay quiet after you ask it.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">
+      The dialler times the pause, and Emma only answers once you have been silent for five seconds.
     </p>
   `;
-  state.api.os.openApp("linkedin-ch", { lookupId: "emma" });
-  setTimeout(() => decorateSoloFlow(emma), 200);
+  state.api.os.openApp("linkedin-ch", { lookupId: "L-003" });
+  waitFor(() => appBody("linkedin-ch")?.querySelector(".lch-panel .signal"), () => {
+    if (state.step !== 5) return;
+    mountSoloStage(appBody("linkedin-ch"), e);
+  });
 }
 
-function decorateSoloFlow(emma) {
-  const lchBody = document.querySelector(".os-window.app--linkedin-ch .os-window-body");
-  if (!lchBody) return;
-  mountTaskBanner(lchBody, {
+function mountSoloStage(lch, e) {
+  lch.querySelectorAll(".signal").forEach(s => s.classList.remove("is-pickable", "is-picked", "is-wrong"));
+  mountTaskBanner(lch, {
     id: "m1-s6-solo",
-    label: `Read ${emma.name}'s signal, write your question, then dial and hold the silence`,
-    hint: "Dial turns on once your question is at least 30 characters",
+    label: `Write your question under ${e.name}'s profile, then press Dial.`,
     state: "active",
   });
-  if (lchBody.querySelector("[data-m1-s6-stage]")) return;
-  const stageWrap = document.createElement("div");
-  stageWrap.setAttribute("data-m1-s6-stage", "");
-  stageWrap.style.cssText = "margin-top:14px; padding:14px; background:#fff; border:1px solid var(--ftc-border); border-radius:8px;";
-  stageWrap.innerHTML = `
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px; padding:10px 12px; background:var(--ftc-green-tint); border-left:3px solid var(--brand-green); border-radius:6px;">
-      <span style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--brand-green-deep); text-transform:uppercase; letter-spacing:0.06em;">Signal</span>
-      <span style="font-size:13px; color:var(--ftc-ink);">${escapeHtml(emma.signals?.[0]?.content ?? "Headcount up 18% YoY")}</span>
-    </div>
-    <label style="display:block; font-size:12.5px; color:var(--ftc-ink-2); margin-bottom:4px;">
-      Your diagnostic question (1 sentence):
-    </label>
-    <textarea data-m1-diag rows="2"
-      placeholder="e.g. Who's approving supplier card spend across all 3 shifts now?"
-      style="width:100%; padding:8px; border:1px solid var(--ftc-border); border-radius:4px; font-family:var(--ftc-font-sans); font-size:13px; resize:vertical;"></textarea>
-    <div style="display:flex; gap:8px; margin-top:10px; align-items:center;">
-      <button type="button" data-m1-dial
-              style="background:#ccc; color:#666; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:not-allowed;" disabled>
-        📞 Dial ${emma.name}
-      </button>
-      <span data-m1-status style="font-size:12px; color:var(--ftc-ink-2);">
-        Type at least 30 characters to enable Dial.
-      </span>
+  lch.querySelector("[data-m1-s6-stage]")?.remove();
+  const stage = document.createElement("div");
+  stage.className = "mx-stage";
+  stage.setAttribute("data-m1-s6-stage", "");
+  stage.innerHTML = `
+    <p class="mx-signal">According to Companies House, ${escapeHtml(e.company.split(" ")[0])} ${escapeHtml(e.signals[0].content.charAt(0).toLowerCase() + e.signals[0].content.slice(1))}</p>
+    <label for="m1-diag">Your opening question, in one sentence</label>
+    <textarea id="m1-diag" data-m1-diag rows="2" placeholder="Who's approving … now that …?"></textarea>
+    <ul class="mx-checks" data-m1-checks aria-live="polite">
+      ${Object.entries(CHECK_LABELS).map(([k, l]) => `<li data-check="${k}" data-ok="false">${l}</li>`).join("")}
+    </ul>
+    <div class="mx-row">
+      <button type="button" class="mx-btn" data-m1-dial disabled>📞 Dial ${escapeHtml(e.name)}</button>
+      <span class="mx-status" data-m1-status>Dial turns on after 30 characters.</span>
     </div>
   `;
-  lchBody.appendChild(stageWrap);
-
-  const ta = stageWrap.querySelector("[data-m1-diag]");
-  const dial = stageWrap.querySelector("[data-m1-dial]");
-  const status = stageWrap.querySelector("[data-m1-status]");
+  lch.appendChild(stage);
+  stage.scrollIntoView({ block: "nearest" });
+  const ta = stage.querySelector("[data-m1-diag]");
+  const dial = stage.querySelector("[data-m1-dial]");
+  const status = stage.querySelector("[data-m1-status]");
   ta.addEventListener("input", () => {
-    const ok = ta.value.trim().length >= 30;
+    const d = checkDiagnostic(ta.value);
+    stage.querySelectorAll("[data-check]").forEach(li => { li.dataset.ok = String(d.checks[li.dataset.check]); });
+    const ok = d.text.length >= 30;
     dial.disabled = !ok;
-    dial.style.background = ok ? "var(--brand-green)" : "#ccc";
-    dial.style.color = ok ? "#fff" : "#666";
-    dial.style.cursor = ok ? "pointer" : "not-allowed";
-    status.textContent = ok ? "Ready to dial." : `Type at least 30 characters (${ta.value.trim().length}).`;
+    status.textContent = ok ? `Ready to dial. Your question meets ${d.score} of the 4 checks.` : `Dial turns on at 30 characters (you have ${d.text.length}).`;
   });
   dial.addEventListener("click", () => {
-    if (dial.disabled) return;
-    state.diagnosticSent = true;
-    const prospect = { name: emma.name, company: emma.company, archetype: emma.archetype };
+    if (dial.disabled || state.step !== 5) return;
+    state.diag = checkDiagnostic(ta.value);
+    state.call = { connected: false, silence: null, awaiting: false, reply: false };
+    const prospect = { ...e };
     state.api.os.openApp("phone-dialler", { prospect });
-    // Start the call: the dialler only rings on phone:dial.
     eventBus.dispatchEvent(new CustomEvent("phone:dial", { detail: { prospect } }));
-    state.timeline.push({
-      label: `Dialled ${emma.name} with diagnostic written`,
-      detail: ta.value.trim().slice(0, 80),
-      ts: timestamp(),
-    });
-    setTimeout(() => triggerSilenceGate(emma), 600);
+    status.textContent = "The phone is ringing in the dialler window.";
+    const phone = appBody("phone-dialler");
+    if (phone) mountTaskBanner(phone, { id: "m1-s6-call", label: "Wait for Emma to pick up. Your question goes out when she answers.", state: "active" });
   });
 }
 
-function triggerSilenceGate(emma) {
-  const phoneBody = document.querySelector(".os-window.app--phone-dialler .os-window-body");
-  if (!phoneBody) return;
-  mountTaskBanner(phoneBody, {
+/** Call events from the dialler, registered once and gated by step. */
+function wireCallEvents() {
+  eventBus.addEventListener("phone:connected", ev => {
+    if (state.step !== 5 || ev.detail?.prospect?.lead_id !== "L-003" || !state.diag) return;
+    state.call.connected = true;
+    eventBus.dispatchEvent(new CustomEvent("phone:say", { detail: { who: "rep", speaker: "You", text: state.diag.text } }));
+    eventBus.dispatchEvent(new CustomEvent("phone:move", { detail: { move: "M1" } }));
+    eventBus.dispatchEvent(new CustomEvent("telemetry", { detail: { event_name: EVENT.DIAGNOSTIC_DELIVERED, specificity_score: state.diag.score } }));
+    state.call.awaiting = true;
+    eventBus.dispatchEvent(new CustomEvent("phone:silence", { detail: { start: true, thresholdMs: SILENCE_MS } }));
+    mountSilenceBar();
+  });
+  eventBus.addEventListener("phone:silence-held", () => {
+    if (state.step !== 5 || !state.call.awaiting) return;
+    state.call.awaiting = false;
+    state.call.reply = true;
+    eventBus.dispatchEvent(new CustomEvent("phone:say", { detail: { who: "buyer", speaker: "Emma", text: "Honestly? Finance tags four hundred supplier transactions a month by hand. Xero can't read the job numbers." } }));
+    eventBus.dispatchEvent(new CustomEvent("phone:silence", { detail: { start: false } }));
+  });
+  eventBus.addEventListener("phone:silence-ended", ev => {
+    if (state.step !== 5 || !state.call.connected || state.call.silence) return;
+    state.call.silence = { held: Boolean(ev.detail?.held), ms: ev.detail?.duration_ms ?? 0 };
+    state.api.eventLog?.record?.("m1_silence", { held: state.call.silence.held, ms: state.call.silence.ms });
+    const phone = appBody("phone-dialler");
+    phone?.querySelector("[data-m1-silence-bar]")?.remove();
+    if (!phone) return;
+    if (state.call.silence.held) {
+      mountTaskBanner(phone, { id: "m1-s6-hangup", label: "Emma told you the problem herself. Hang up when you're ready.", state: "active" });
+    } else {
+      mountTaskBanner(phone, { id: "m1-s6-hangup", label: "You spoke before Emma did. Hang up, then press ↻ to try again or Continue to move on.", state: "active" });
+    }
+  });
+  eventBus.addEventListener("phone:ended", ev => {
+    if (state.step !== 5 || ev.detail?.prospect?.lead_id !== "L-003") return;
+    if (!state.call.connected) {
+      const phone = appBody("phone-dialler");
+      if (phone) mountTaskBanner(phone, { id: "m1-s6-call", label: "The call ended before Emma picked up. Dial her again from her profile.", state: "active" });
+      return;
+    }
+    markTaskBannerDone("m1-s6-solo");
+    state.api.eventLog?.record?.(EVENT.SOLO_PROBLEM_COMPLETED, { held: Boolean(state.call.silence?.held) });
+    completeStep(5, 900);
+  });
+}
+
+function mountSilenceBar() {
+  const phone = appBody("phone-dialler");
+  if (!phone) return;
+  mountTaskBanner(phone, {
     id: "m1-s6-silence",
-    label: "When the call connects, hold 5 seconds of silence",
-    hint: "Click Silence held once you've waited",
+    label: "Say nothing until Emma answers. The timer under her name counts the pause.",
     state: "active",
   });
-  // Wait for the call to connect, however long the learner takes; stop if they leave the step.
-  const watch = setInterval(() => {
-    if (state.step !== 5) { clearInterval(watch); return; }
-    const dialler = document.querySelector(".os-window.app--phone-dialler .dialler");
-    if (dialler?.dataset.phase === "on-call" && !phoneBody.querySelector("[data-m1-silence]")) {
-      clearInterval(watch);
-      mountSilenceButton(phoneBody, emma);
-    }
-  }, 200);
-}
-
-function mountSilenceButton(phoneBody, emma) {
-  const bar = document.createElement("div");
-  bar.style.cssText = "margin:10px; padding:10px 14px; background:rgba(245,184,0,0.95); color:#1a1a1a; border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-  bar.innerHTML = `
-    <span style="font-size:12px; font-family:var(--ftc-font-mono);">
-      Hold the silence for 5 seconds after your question.
-    </span>
-    <button type="button" data-m1-silence
-            style="background:#0a8754; color:#fff; padding:6px 12px; border:0; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer;">
-      ✓ Silence held
-    </button>
-  `;
-  phoneBody.querySelector(".dialler")?.appendChild(bar);
-  bar.querySelector("[data-m1-silence]").addEventListener("click", () => {
-    if (state.step !== 5) return;
-    state.silenceObserved = true;
-    markTaskBannerDone("m1-s6-silence");
-    state.api.eventLog?.record?.("solo_problem_completed");
-    state.timeline.push({
-      label: `Silence held with ${emma.name}`,
-      detail: "5 seconds after your question",
-      ts: timestamp(),
-    });
-    setTimeout(() => runStep(6), 600);
+  phone.querySelector("[data-m1-silence-bar]")?.remove();
+  const el = document.createElement("div");
+  el.className = "mx-callbar";
+  el.setAttribute("data-m1-silence-bar", "");
+  el.innerHTML = `<span>If the pause feels long, that is normal on a first call.</span><button type="button" class="mx-btn mx-btn--small mx-btn--ghost">Say something</button>`;
+  const dialler = phone.querySelector(".dialler");
+  dialler?.insertBefore(el, dialler.querySelector(".dialler-controls"));
+  if (dialler) dialler.scrollTop = dialler.scrollHeight;
+  el.querySelector("button").addEventListener("click", () => {
+    if (state.step !== 5 || !state.call.awaiting) return;
+    state.call.awaiting = false;
+    eventBus.dispatchEvent(new CustomEvent("phone:say", { detail: { who: "rep", speaker: "You", text: "…So, does that make sense?" } }));
+    eventBus.dispatchEvent(new CustomEvent("phone:silence", { detail: { start: false } }));
+    eventBus.dispatchEvent(new CustomEvent("phone:say", { detail: { who: "buyer", speaker: "Emma", text: "Sure. Look, I've got a meeting in five minutes." } }));
   });
 }
 
-// --- Step 7 -----------------------------------------------------------------
+// --- Step 7 · feedback built from the run ----------------------------------------
+
+function feedbackMessages() {
+  const jt = (body, ts = "12:49") => ({ author: "J.T. (pod lead)", initials: "JT", ts, body });
+  const msgs = [jt("Here are my notes on your practice calls.", "12:48")];
+  msgs.push(jt(state.workedDone
+    ? "✅ You read M.G.'s opening on GC-01 and found the moment he asks his question."
+    : "⚠️ You skipped M.G.'s call. GC-01 is worth two minutes before your next dial."));
+  msgs.push(jt(state.signal.ok
+    ? `✅ You picked the second store as Maria's signal${state.signal.tries === 1 ? " on the first try" : ` after ${state.signal.tries} tries`}.`
+    : "⚠️ You didn't pick a signal for Maria. Next time look for the dated fact in her profile and build the question on it."));
+  msgs.push(jt(state.tom.ok
+    ? (state.tom.tries === 1 ? "✅ You chose the Series B question for Tom on the first try." : `⚠️ Tom took you ${state.tom.tries} tries. Name the signal first, then ask who controls the spending.`)
+    : "⚠️ You didn't choose an opening question for Tom."));
+  if (state.diag) {
+    const NEEDS = { signal: "name her signal", question: "ask a who, how or what question", short: "stay under 25 words", noPitch: "leave the pitch out" };
+    const misses = Object.entries(state.diag.checks).filter(([, ok]) => !ok).map(([k]) => NEEDS[k]);
+    msgs.push(jt(`${misses.length ? "⚠️" : "✅"} Your question for Emma: "${state.diag.text}"`));
+    msgs.push(jt(misses.length
+      ? `It meets ${state.diag.score} of the four checks. Next time also ${listJoin(misses)}.`
+      : "It names her signal and asks a who or how question in under 25 words, with no pitch in it."));
+  } else {
+    msgs.push(jt("⚠️ You didn't write a question for Emma yet."));
+  }
+  const s = state.call.silence;
+  if (s?.held) msgs.push(jt(`✅ You stayed quiet for ${Math.round(s.ms / 1000)} seconds, and Emma told you herself that finance tags 400 transactions a month by hand.`));
+  else if (s) msgs.push(jt(`⚠️ You spoke after ${Math.round(s.ms / 1000)} seconds, before Emma got to her problem. Next time let the timer run past five.`));
+  else msgs.push(jt("⚠️ You didn't call Emma, so there was no silence for me to review."));
+  msgs.push(jt(s?.held && state.diag?.score === 4
+    ? "You held the silence. Keep doing that on your next calls."
+    : "Redo step 6 when you have two minutes. Ask one question and let Emma fill the pause.", "12:52"));
+  msgs.push({ author: "M.G. (peer)", initials: "MG", ts: "12:54",
+    body: "Staying quiet on a first call is hard. I'd learn one opening question by heart and use it on your next ten cold calls before switching." });
+  return msgs;
+}
 
 function stepFeedback(body) {
   keepOnly(["slack"]);
   body.innerHTML = `
-    <p style="font-size:14px;">
-      <strong>J.T.</strong> sent you a DM reviewing the opener you just ran.
-    </p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Read it, then click Mark thread read.
-    </p>
+    <p style="font-size:14px;"><strong>J.T.</strong>, your pod lead, has sent you a direct message in Slack about your calls. Read it, then click Mark thread read.</p>
   `;
-  const dmMessages = [
-    { author: "J.T. (pod lead)", initials: "JT", ts: "12:48",
-      body: "Watched your opener. Solid notes 👇" },
-    ...state.timeline.map(e => ({
-      author: "J.T. (pod lead)", initials: "JT", ts: e.ts,
-      body: `✅ ${e.label}: ${e.detail}`,
-    })),
-    { author: "J.T. (pod lead)", initials: "JT", ts: "12:52",
-      body: "Bottom-quartile reps break the 5-second silence. You held it, so keep doing that." },
-    { author: "M.G. (peer)", initials: "MG", ts: "12:54",
-      body: "Staying quiet on a first call is hard. Learn one diagnostic question by heart and use it on your next 10 cold calls. Then switch to a new one." },
-  ];
   state.api.os.openApp("slack", {
     channel: {
       channel_id: "dm-jt-podlead",
       pinned_messages: [
-        { title: "3-move card", content_md: "M1 diagnostic · M2 acknowledge · M3 calendar close", related_module: "M1" },
+        { title: "The three moves of a call", content_md: "Open with one question built on the buyer's profile. Repeat any objection in the buyer's words before you answer it, and send the invite before you hang up.", related_module: "M1" },
       ],
-      messages: dmMessages,
+      messages: feedbackMessages(),
     },
   });
-  setTimeout(() => {
-    const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
-    if (!slackBody) return;
-    mountTaskBanner(slackBody, {
-      id: "m1-s7-read-dm",
-      label: "Read J.T.'s feedback DM",
-      hint: "Click Mark thread read below to continue",
-      state: "active",
-    });
-    if (!slackBody.querySelector("[data-m1-s7-done]")) {
-      const bar = document.createElement("div");
-      bar.style.cssText = "margin:14px 0 0; padding:10px 14px; background:var(--ftc-green-tint); border:1px dashed var(--brand-green); border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:12px;";
-      bar.innerHTML = `
-        <span style="font-size:12.5px;color:var(--ftc-ink-2);">J.T. will see when you've read it.</span>
-        <button type="button" data-m1-s7-done
-                style="background:var(--brand-green); color:#fff; padding:8px 14px; border:0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-          ✓ Mark thread read
-        </button>
-      `;
-      slackBody.appendChild(bar);
-      bar.querySelector("[data-m1-s7-done]").addEventListener("click", () => {
+  waitFor(() => appBody("slack")?.querySelector(".slack-feed"), feed => {
+    if (state.step !== 6) return;
+    mountTaskBanner(appBody("slack"), { id: "m1-s7-read-dm", label: "Read J.T.'s message, then click Mark thread read.", state: "active" });
+    bar(feed, "data-m1-s7-done", "J.T. will see that you have read his message.", "✓ Mark thread read")
+      .querySelector("button").addEventListener("click", () => {
+        if (state.step !== 6) return;
         markTaskBannerDone("m1-s7-read-dm");
         state.api.eventLog?.record?.("step7_feedback_read");
-        setTimeout(() => runStep(state.step + 1), 500);
+        completeStep(6, 500);
       });
-    }
-  }, 200);
+  });
 }
 
-// --- Step 8 -----------------------------------------------------------------
+// --- Step 8 · quiz ------------------------------------------------------------------
 
 function stepQuiz(body) {
   state.quizIndex = 0;
   state.quizScore = 0;
   body.innerHTML = `
-    <p style="font-size:14px;"><strong>Quick check</strong>: 3 questions from J.T. in Slack.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Two of three right is a pass.</p>
+    <p style="font-size:14px;">J.T. has posted three questions in Slack, and you pass this check if you answer two of them correctly.</p>
   `;
-  setTimeout(() => mountQuizInSlack(), 200);
-}
-
-function mountQuizInSlack() {
-  const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
-  if (!slackBody) {
-    state.api.os.openApp("slack");
-    return setTimeout(mountQuizInSlack, 250);
-  }
-  mountTaskBanner(slackBody, {
-    id: "m1-s8-quiz",
-    label: "Answer the 3 quiz questions J.T. just posted",
-    hint: "A wrong pick shows the right answer",
-    state: "active",
+  if (!isOpen("slack")) state.api.os.openApp("slack");
+  waitFor(() => appBody("slack")?.querySelector(".slack-feed"), feed => {
+    if (state.step !== 7) return;
+    mountTaskBanner(appBody("slack"), { id: "m1-s8-quiz", label: "Answer J.T.'s three questions. A wrong answer shows you the right one and why.", state: "active" });
+    feed.querySelector("[data-m1-s7-done]")?.closest(".mx-bar")?.remove();
+    feed.querySelector("[data-m1-quiz-thread]")?.remove();
+    const thread = document.createElement("div");
+    thread.className = "mx-thread";
+    thread.setAttribute("data-m1-quiz-thread", "");
+    thread.innerHTML = `<div class="mx-thread__k">J.T. posted these questions at 12:55</div><div data-quiz-host></div>`;
+    feed.appendChild(thread);
+    renderQuizItem(thread.querySelector("[data-quiz-host]"));
+    thread.scrollIntoView({ block: "start" });
   });
-  let thread = slackBody.querySelector("[data-m1-quiz-thread]");
-  thread?.remove();
-  thread = document.createElement("div");
-  thread.setAttribute("data-m1-quiz-thread", "");
-  thread.style.cssText = "margin:14px 0 0; padding:14px 16px; background:#fff8e0; border-left:3px solid var(--sun-500, #f5b800); border-radius:6px; font-family:var(--ftc-font-sans);";
-  thread.innerHTML = `
-    <div style="font-family:var(--ftc-font-mono); font-size:11px; color:var(--ftc-ink-2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
-      J.T. · 12:55 · quick check thread
-    </div>
-    <div data-quiz-host></div>
-  `;
-  const messages = slackBody.querySelector(".slack-msgs, .slack-messages, .slack-main") || slackBody;
-  messages.appendChild(thread);
-  renderQuizItemInSlack(thread.querySelector("[data-quiz-host]"));
 }
 
-function renderQuizItemInSlack(host) {
+function renderQuizItem(host) {
   const item = state.quizItems[state.quizIndex];
+  const last = state.quizIndex === state.quizItems.length - 1;
   host.innerHTML = `
-    <div style="font-size:12px; color:var(--ftc-ink-2); margin-bottom:6px;">
-      Question ${state.quizIndex + 1} of ${state.quizItems.length}
-    </div>
+    <div style="font-size:12px; color:var(--ftc-ink-2); margin-bottom:6px;">Question ${state.quizIndex + 1} of ${state.quizItems.length}</div>
     <p style="font-size:14px; margin:0 0 10px; color:var(--ftc-ink);">${item.stem}</p>
     <div role="radiogroup" aria-label="Answer choices" style="display:grid; gap:6px;">
       ${item.options.map((o, i) => `
-        <button type="button" class="tom-drawer__opt" role="radio"
-                aria-checked="false" data-idx="${i}">
+        <button type="button" class="tom-drawer__opt" role="radio" aria-checked="false" data-idx="${i}">
           <span class="tom-drawer__label">${o.label}</span>
           <span class="tom-drawer__text">${o.text}</span>
         </button>`).join("")}
     </div>
-    <div class="tom-drawer__fb" id="m1-s8-fb" hidden></div>
-    <div style="margin-top:10px; text-align:right;">
-      <button type="button" id="m1-s8-next" disabled
-              style="background:var(--brand-green); color:#fff; padding:6px 14px; border:0; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; opacity:0.5;">
-        ${state.quizIndex === state.quizItems.length - 1 ? "Finish quiz" : "Next question"}
-      </button>
-    </div>
+    <div class="tom-drawer__fb" hidden></div>
+    <div class="mx-quiz-next"><button type="button" class="mx-btn mx-btn--small" data-quiz-next disabled>${last ? "Finish quiz" : "Next question"}</button></div>
   `;
-  const fb = host.querySelector("#m1-s8-fb");
-  const nextBtn = host.querySelector("#m1-s8-next");
+  const fb = host.querySelector(".tom-drawer__fb");
+  const nextBtn = host.querySelector("[data-quiz-next]");
   host.querySelectorAll(".tom-drawer__opt").forEach(btn => {
     btn.addEventListener("click", () => {
-      const idx = Number(btn.dataset.idx);
-      const opt = item.options[idx];
-      host.querySelectorAll(".tom-drawer__opt").forEach(b => {
-        b.classList.remove("is-correct", "is-incorrect");
-        b.setAttribute("aria-checked", "false");
-        b.disabled = true;
-        b.style.cursor = "default";
-      });
+      const opt = item.options[Number(btn.dataset.idx)];
+      host.querySelectorAll(".tom-drawer__opt").forEach(b => { b.disabled = true; b.style.cursor = "default"; });
       btn.setAttribute("aria-checked", "true");
       btn.classList.add(opt.correct ? "is-correct" : "is-incorrect");
-      if (!opt.correct) {
-        host.querySelectorAll(".tom-drawer__opt").forEach((b, j) => {
-          if (item.options[j]?.correct) b.classList.add("is-reveal");
-        });
-      }
+      if (!opt.correct) host.querySelectorAll(".tom-drawer__opt").forEach((b, j) => { if (item.options[j]?.correct) b.classList.add("is-reveal"); });
       fb.hidden = false;
       fb.textContent = opt.rationale;
       if (opt.correct) state.quizScore += 1;
       nextBtn.disabled = false;
-      nextBtn.style.opacity = "1";
+      nextBtn.scrollIntoView({ block: "nearest" });
     });
   });
   nextBtn.addEventListener("click", () => {
-    if (state.quizIndex < state.quizItems.length - 1) {
-      state.quizIndex += 1;
-      renderQuizItemInSlack(host);
-    } else {
-      markTaskBannerDone("m1-s8-quiz");
-      state.api.eventLog?.record?.("step8_quiz_completed", { score: state.quizScore });
-      setTimeout(() => runStep(state.step + 1), 500);
-    }
+    if (state.step !== 7) return;
+    if (!last) { state.quizIndex += 1; renderQuizItem(host); return; }
+    markTaskBannerDone("m1-s8-quiz");
+    state.api.eventLog?.record?.("step8_quiz_completed", { score: state.quizScore });
+    completeStep(7, 500);
   });
 }
 
 // --- Step 9 -----------------------------------------------------------------
 
 function stepTakeaway(body) {
-  const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
+  const pct = quizPct();
   body.innerHTML = `
     <p style="font-size:14px;">
-      <strong>Last step.</strong> M.G. pinned the takeaway in your Slack channel.
-    </p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Quiz: <strong>${state.quizScore} / ${state.quizItems.length}</strong> (${scorePct}%).
-      Schedule the 7-day refresher in Slack to finish the module.
+      You answered <strong>${state.quizScore} of ${state.quizItems.length}</strong> questions correctly (${pct}%).
+      M.G. has pinned a short note in Slack, and the module ends when you schedule the refresher under it.
     </p>
   `;
-  setTimeout(() => {
-    const slackBody = document.querySelector(".os-window.app--slack .os-window-body");
-    if (!slackBody) {
-      state.api.os.openApp("slack");
-      return setTimeout(() => stepTakeaway(body), 250);
-    }
-    slackBody.querySelector("[data-m1-quiz-thread]")?.remove();
-    mountTaskBanner(slackBody, {
-      id: "m1-s9-takeaway",
-      label: "Read M.G.'s takeaway, then schedule the refresher",
-      hint: "The module finishes when you schedule it.",
-      state: "active",
+  if (!isOpen("slack")) state.api.os.openApp("slack");
+  waitFor(() => appBody("slack")?.querySelector(".slack-feed"), feed => {
+    if (state.step !== 8) return;
+    feed.querySelector("[data-m1-quiz-thread]")?.remove();
+    feed.querySelector("[data-m1-s7-done]")?.closest(".mx-bar")?.remove();
+    mountTaskBanner(appBody("slack"), { id: "m1-s9-takeaway", label: "Read M.G.'s note, then schedule the refresher to finish the module.", state: "active" });
+    if (feed.querySelector("[data-m1-pinned]")) return;
+    const pinned = document.createElement("div");
+    pinned.className = "mx-pinned";
+    pinned.setAttribute("data-m1-pinned", "");
+    pinned.innerHTML = `
+      <div class="mx-pinned__k">📌 M.G., a rep in the Manchester pod, pinned this note</div>
+      <p class="mx-pinned__quote">"Open with one specific question about the buyer's LinkedIn or
+        Companies House profile, then stay quiet for five seconds and wait for the answer."</p>
+      <div class="mx-pinned__foot">
+        <span>📅 In seven days you'll get three short questions about this opening.</span>
+        <button type="button" class="mx-btn" data-m1-s9-finish>Schedule refresher &rarr;</button>
+      </div>
+    `;
+    feed.appendChild(pinned);
+    pinned.scrollIntoView({ block: "nearest" });
+    pinned.querySelector("[data-m1-s9-finish]").addEventListener("click", () => {
+      markTaskBannerDone("m1-s9-takeaway");
+      state.stepTs[8] = state.stepTs[8] ?? timestamp();
+      state.api.eventLog?.record?.("step9_retrieval_drop_set");
+      finishModule();
     });
-    if (!slackBody.querySelector("[data-m1-pinned]")) {
-      const pinned = document.createElement("div");
-      pinned.setAttribute("data-m1-pinned", "");
-      pinned.style.cssText = "margin:14px 0 0; padding:16px 18px; background:linear-gradient(180deg, var(--ftc-green-tint, #ecf9e7) 0%, #ffffff 100%); border:1px solid var(--brand-green); border-left:4px solid var(--brand-green); border-radius:8px; font-family:var(--ftc-font-sans); box-shadow:0 6px 16px -8px rgba(10,26,16,0.12);";
-      pinned.innerHTML = `
-        <div style="font-family:var(--ftc-font-mono); font-size:10px; color:var(--brand-green); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
-          📌 Pinned by M.G. (peer · Manchester pod)
-        </div>
-        <p style="font-size:15px; font-style:italic; line-height:1.55; color:var(--ftc-ink); margin:0 0 10px;">
-          "Ask one specific question from their LinkedIn or Companies House
-          profile, then stay quiet for five seconds. Save the pitch for later.
-          What the buyer says in that silence is what moves the deal."
-        </p>
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--ftc-border);">
-          <span style="font-size:12.5px; color:var(--ftc-ink-2);">
-            📅 In 7 days you'll get three short questions on this opener.
-          </span>
-          <button type="button" data-m1-s9-finish
-                  style="background:var(--brand-green); color:#fff; padding:9px 16px; border:0; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">
-            Schedule refresher &rarr;
-          </button>
-        </div>
-      `;
-      const messages = slackBody.querySelector(".slack-msgs, .slack-messages, .slack-main") || slackBody;
-      messages.appendChild(pinned);
-      pinned.querySelector("[data-m1-s9-finish]").addEventListener("click", () => {
-        markTaskBannerDone("m1-s9-takeaway");
-        state.api.eventLog?.record?.("step9_retrieval_drop_set");
-        finishModule();
-      });
-    }
-  }, 200);
+  });
 }
+
+function quizPct() { return state.quizItems.length ? Math.round((state.quizScore / state.quizItems.length) * 100) : 0; }
 
 function finishModule() {
-  const scorePct = Math.round((state.quizScore / state.quizItems.length) * 100);
-  state.api.complete(scorePct);
+  if (state.finished) return;
+  state.finished = true;
+  const pct = quizPct();
+  state.api.complete(pct);
   document.getElementById("narrative-next").hidden = true;
   document.getElementById("narrative-back").hidden = true;
-  showSummaryCard(scorePct);
+  showSummaryCard(pct);
 }
 
-function showSummaryCard(scorePct) {
+function showSummaryCard(pct) {
   keepOnly([]);
   const overlay = document.getElementById("narrative-overlay");
   if (overlay) overlay.style.visibility = "hidden";
-  const totalMs = Date.now() - state.startedAt;
-  const totalMin = Math.floor(totalMs / 60000);
-  const totalSec = Math.floor((totalMs % 60000) / 1000).toString().padStart(2, "0");
-  const stepLabels = STEPS.map(s => s.title);
-  const recapEntries = stepLabels.map((label, i) => {
-    const fromLog = state.timeline.find(e => e.label?.toLowerCase().includes(label.toLowerCase().slice(0, 14)));
-    return { n: i + 1, label, ts: fromLog?.ts || "—" };
-  });
+  const passed = pct >= PASS_PCT;
+  const doneCount = Object.keys(state.stepTs).length;
   const card = document.createElement("div");
   card.className = "summary-card";
   card.setAttribute("role", "dialog");
@@ -883,41 +856,38 @@ function showSummaryCard(scorePct) {
   card.setAttribute("aria-labelledby", "summary-title");
   card.innerHTML = `
     <div class="summary-card__panel">
-      <div class="summary-card__check" aria-hidden="true">✓</div>
-      <div class="summary-card__kicker">Module complete</div>
-      <h2 class="summary-card__title" id="summary-title">Diagnostic Opener · ${scorePct >= 67 ? "passed" : "completed"}</h2>
+      <div class="summary-card__check${passed ? "" : " is-retry"}" aria-hidden="true">${passed ? "✓" : "↻"}</div>
+      <h2 class="summary-card__title" id="summary-title">Diagnostic opener, ${passed ? "passed" : "not passed yet"}</h2>
       <div class="summary-card__stats">
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Quiz</span>
           <span class="summary-card__stat-v">${state.quizScore} / ${state.quizItems.length}</span>
-          <span class="summary-card__stat-sub">${scorePct}% · ${scorePct >= 67 ? "pass" : "below the 67% pass mark"}</span>
+          <span class="summary-card__stat-sub">${pct}%, ${passed ? `above the ${PASS_PCT}% pass mark` : `below the ${PASS_PCT}% pass mark`}</span>
         </div>
         <div class="summary-card__stat">
           <span class="summary-card__stat-k">Time</span>
-          <span class="summary-card__stat-v">${totalMin}:${totalSec}</span>
-          <span class="summary-card__stat-sub">target 10:00</span>
+          <span class="summary-card__stat-v">${timestamp()}</span>
+          <span class="summary-card__stat-sub">the module is planned for ten minutes</span>
         </div>
         <div class="summary-card__stat">
-          <span class="summary-card__stat-k">Steps</span>
-          <span class="summary-card__stat-v">${STEPS.length} / ${STEPS.length}</span>
-          <span class="summary-card__stat-sub">100% complete</span>
+          <span class="summary-card__stat-k">Tasks done</span>
+          <span class="summary-card__stat-v">${doneCount} / ${STEPS.length}</span>
+          <span class="summary-card__stat-sub">${doneCount === STEPS.length ? "you did every step in the apps" : "you skipped the other steps"}</span>
         </div>
       </div>
       <details class="summary-card__recap">
-        <summary>9-step recap</summary>
+        <summary>What you did in each step</summary>
         <ol class="summary-card__list">
-          ${recapEntries.map(e => `
-            <li><span class="summary-card__list-n">${e.n}</span>
-                <span class="summary-card__list-label">${e.label}</span>
-                <span class="summary-card__list-ts">${e.ts}</span></li>
+          ${STEPS.map((s, i) => `
+            <li><span class="summary-card__list-n">${i + 1}</span>
+                <span class="summary-card__list-label">${s.title}</span>
+                <span class="summary-card__list-ts">${state.stepTs[i] ?? "skipped"}</span></li>
           `).join("")}
         </ol>
       </details>
       <div class="summary-card__actions">
         <a class="summary-card__btn summary-card__btn--ghost" href="../">&larr; Back to engagement</a>
-        <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">
-          Restart module
-        </button>
+        <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">Restart module</button>
       </div>
     </div>
   `;
@@ -934,11 +904,9 @@ function timestamp() {
 
 function renderFatal(msg) {
   const body = document.getElementById("narrative-body");
-  if (body) {
-    body.innerHTML = `<p style="color:var(--coral-700);">Could not load module data: ${escapeHtml(msg)}</p>`;
-  }
+  if (body) body.innerHTML = `<p style="color:var(--coral-700);">Could not load module data: ${escapeHtml(msg)}</p>`;
 }
 
 function escapeHtml(s) {
-  return String(s ?? "").replace(/[<>&]/g, c => ({ "<":"&lt;",">":"&gt;","&":"&amp;" }[c]));
+  return String(s ?? "").replace(/[<>&"]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
 }

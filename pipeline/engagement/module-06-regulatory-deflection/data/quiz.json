@@ -1,100 +1,89 @@
 {
-  "_doc": "Module 6 quiz · 3 scenario items mapped to LO-REG.1, LO-REG.1, LO-REG.2. Every item is OPEN-JOB-AID — learner sees the §19 panel while answering. Per Rossett & Schafer (2007), the assessment validates the rep's ability to USE the aid under live conditions, not their memory of it. Per l2-quiz-blueprint.md §4.6.",
+  "_doc": "Module 6 quiz · 3 scenario items, each a different decision from the practice steps: a row that answers a question about ownership (q1), a product question that needs no row (q2) and a GDPR follow-up that goes past its row (q3). Every item is open-job-aid: the learner sees the job aid while answering, because the assessment tests use of the aid, not recall (Rossett & Schafer, 2007).",
   "items": [
     {
       "id": "q1",
       "lo": "LO-REG.1",
       "open_job_aid": true,
-      "stem": "Lukas (DE hospitality, 4 locations) opens the call with: 'I don't trust new fintechs. What happens to my money if you go under?' Which §19 row is the right starting point?",
+      "stem": "Sven says the company belongs to three members of his family and asks how much work signup will be for them. What do you do?",
       "options": [
         {
-          "label": "Safeguarding row · how customer money is protected",
+          "label": "Read the AML row, because these checks are about financial crime",
+          "correct": false,
+          "rationale": "The AML row is about checking payments once the account is open. The checks before an account opens are on the KYC row."
+        },
+        {
+          "label": "Book the compliance team, because ownership questions go to them",
+          "correct": false,
+          "rationale": "The KYC row sends ownership thresholds and lists of documents to compliance. Sven only asked how much work signup is, and the row's line answers that."
+        },
+        {
+          "label": "Read the KYC row",
           "correct": true,
-          "rationale": "The safeguarding row answers what happens to his money if the company fails."
+          "rationale": "Checks at signup are what the KYC row covers. Its line already says that the owner needs about 10 minutes and that everyone with a large stake goes through the same check."
         },
         {
-          "label": "AML row · transaction monitoring",
+          "label": "Tell him that only the person who signs the contract has to be checked",
           "correct": false,
-          "rationale": "AML is about flagging suspicious transactions, not about what happens to deposited funds."
-        },
-        {
-          "label": "PSD2 row · open-banking framework",
-          "correct": false,
-          "rationale": "PSD2 is reference-only and doesn't speak to fund segregation."
-        },
-        {
-          "label": "No row · this is a product question, not regulatory",
-          "correct": false,
-          "rationale": "This is exactly the trust-anchored regulatory question §19 was written for."
+          "rationale": "That is a guess, and the job aid says the opposite: everyone with a large stake goes through the check."
         }
-      ],
-      "feedback_correct": "Read the safeguarding row word for word.",
-      "feedback_incorrect": "Re-read the safeguarding row: it is the line for what happens to his money."
+      ]
     },
     {
       "id": "q2",
       "lo": "LO-REG.1",
       "open_job_aid": true,
-      "stem": "Tom (Series-B SaaS founder) asks: 'How do you handle expense categories — does it auto-tag SaaS subscriptions vs travel?' Which §19 row do you use?",
+      "stem": "Tom, the founder of a SaaS company, asks \"Does it tag software subscriptions and travel as separate expense categories?\" Which row do you use?",
       "options": [
         {
-          "label": "GDPR row · because it touches data",
+          "label": "The GDPR row, because expense records hold personal data",
           "correct": false,
-          "rationale": "GDPR concerns data protection, not expense categorisation."
+          "rationale": "Expense records do hold personal data, but Tom is asking what the product does with categories, and the GDPR line says nothing about that."
         },
         {
-          "label": "AML row · because monitoring sounds similar",
+          "label": "Book the compliance team, in case it touches accounting rules",
           "correct": false,
-          "rationale": "AML monitors transactions for laundering risk, not for accounting categories."
+          "rationale": "Compliance can't tell him how the product tags spending. A regulatory answer to a product question sounds as though you are dodging it."
         },
         {
-          "label": "No row · this is a product question, not regulatory",
+          "label": "The PSD2 row, because these are card payments",
+          "correct": false,
+          "rationale": "The PSD2 line is about the licence you work under and says nothing about expense categories."
+        },
+        {
+          "label": "No row, because this is a product question",
           "correct": true,
-          "rationale": "Distractor item. Do not over-apply the deflection move — answer this with Module 5 prop framing (Prop 4 · receipt capture + accounting sync)."
-        },
-        {
-          "label": "PSD2 row · because it's EU payments",
-          "correct": false,
-          "rationale": "PSD2 doesn't touch expense categorisation; this is a workflow question."
+          "rationale": "Expense categories are a product feature. Answer it as you would any product question, or note it for the demo."
         }
-      ],
-      "feedback_correct": "Right — this is a product question. Don't deflect. Frame with Prop 4 from Module 5 (receipt capture + accounting sync).",
-      "feedback_incorrect": "This isn't a regulatory question. Over-deflecting damages your credibility. Answer with the Module 5 prop frame, not §19."
+      ]
     },
     {
       "id": "q3",
       "lo": "LO-REG.2",
       "open_job_aid": true,
-      "stem": "Buyer follows up on GDPR: 'OK and what's your DSR turnaround when a Swiss ex-employee asks for their full card-transaction history under a cross-border transfer mechanism?' What do you do?",
+      "stem": "A buyer follows up on GDPR and asks how fast you answer a data request from a Swiss former employee who wants their full card history, and which transfer mechanism covers Switzerland. What do you do?",
       "options": [
         {
-          "label": "Read the GDPR row verbatim — it covers cross-border",
-          "correct": false,
-          "rationale": "The §19 GDPR row says 'data lives in the EU' and offers the DPA. It does not answer Swiss cross-border DSR timelines."
-        },
-        {
-          "label": "Improvise — Switzerland has an adequacy decision so it's fine",
-          "correct": false,
-          "rationale": "Don't invent. Improvising regulatory specifics on a call is exactly the failure mode §19 is designed to prevent."
-        },
-        {
-          "label": "Escalate to Compliance · open the Slack scaffold + book a follow-up",
+          "label": "Message the compliance team and book a follow-up with the buyer",
           "correct": true,
-          "rationale": "This exceeds the §19 GDPR row (specific DSR turnaround on a specific cross-border mechanism). Escalating IS the trust move per the §19 honest carve-out."
+          "rationale": "Deadlines for data requests and transfers outside the UK and the EU are on the GDPR row's escalation list. Book the follow-up while you are still on the call."
         },
         {
-          "label": "Defer the question generally — 'I'll send something later'",
+          "label": "Read the GDPR row, since it covers where data goes",
           "correct": false,
-          "rationale": "The follow-up promise without a calendar booking is the M3 anti-pattern — you'll lose the deal to follow-up drift."
+          "rationale": "The GDPR line says where data is stored and who it is shared with. It gives no deadline and no rule for Switzerland."
+        },
+        {
+          "label": "Say that Switzerland has an adequacy decision, so transfers are covered",
+          "correct": false,
+          "rationale": "That is an answer on a legal point from memory. If any part of it is wrong, the buyer's lawyer will find it."
+        },
+        {
+          "label": "Say the deadline is one month, and check the transfer question after the call",
+          "correct": false,
+          "rationale": "The deadline depends on which law applies to the request, and that is the compliance team's call. Book them for both questions while you are on the call."
         }
-      ],
-      "feedback_correct": "Right. Beyond §19 → escalate with a calendar invite (don't just promise email). The carve-out is the trust move.",
-      "feedback_incorrect": "Re-read the §19 honest carve-out: when the question goes deeper than the table, escalating with a booked follow-up IS the trust move. Improvising loses the deal."
+      ]
     }
-  ],
-  "_notes": {
-    "scoring": "1 point per correct item; raw score percent passes through to cmi.core.score.raw via api.complete(score).",
-    "open_job_aid_design": "Per Rossett & Schafer (2007), the job-aid panel remains visible during every quiz item. The assessment tests USE of the aid under live conditions, not recall.",
-    "evidence_source": "l2-quiz-blueprint.md §4.6 + brief §19 honest carve-out"
-  }
+  ]
 }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arti's Prompt Workshop</title>
+<title>Prompt Workshop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap">
@@ -593,6 +593,48 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   .tips { margin: 0; padding-left: var(--s-5); display: grid; gap: var(--s-1); font-size: var(--t-sm); color: var(--color-text-muted); }
 
+  /* The teacher note: a plain information strip, not an alarm. */
+  .teacher {
+    padding: var(--s-3) var(--s-4); border-radius: var(--radius-md);
+    background: var(--color-info-soft); color: var(--color-info-fg);
+    font-size: var(--t-sm); font-weight: 600;
+  }
+
+  /* A small drawing of the Perchance page, so "the five controls" point at
+     something you can see. Labels are the ones on the real page. */
+  .mock {
+    display: grid; gap: var(--s-2); padding: var(--s-4);
+    border: 2px solid var(--ink-900); border-radius: var(--radius-md);
+    background: var(--color-surface-2); font-size: var(--t-sm); font-weight: 600;
+  }
+  .mock__row { display: flex; align-items: center; gap: var(--s-2); }
+  .mock__row--wrap { flex-wrap: wrap; }
+  .mock__box { height: 48px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-surface); }
+  .mock__pick { display: inline-flex; align-items: center; gap: var(--s-2); padding: var(--s-1) var(--s-3); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-surface); }
+  .mock__go { padding: var(--s-1) var(--s-4); border-radius: var(--radius-sm); background: var(--ink-900); color: var(--color-text-inverse); }
+  .mock__n {
+    flex: none; width: 22px; height: 22px; display: grid; place-items: center;
+    border-radius: var(--radius-pill); background: var(--sun-400); color: var(--ink-900);
+    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 700;
+  }
+  .control__n { position: relative; }
+  .control__num {
+    position: absolute; top: -6px; left: -6px; width: 18px; height: 18px;
+    display: grid; place-items: center; border-radius: var(--radius-pill);
+    background: var(--sun-400); color: var(--ink-900);
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  }
+
+  .out-style { font-size: var(--t-sm); }
+  .out-next { font-size: var(--t-sm); }
+
+  /* Small labels and style names in plain sentence case, not spaced
+     capitals or monospace. */
+  .eyebrow { font-family: var(--font-sans); font-size: var(--t-sm); font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--color-text-muted); }
+  .brush__name { font-family: var(--font-sans); text-transform: none; letter-spacing: 0; font-size: var(--t-md); }
+  .level b { font-family: var(--font-sans); font-size: var(--t-sm); font-weight: 700; color: var(--color-text); }
+  .row--between > .back { align-self: center; }
+
   [hidden] { display: none !important; }
 </style>
 <style>
@@ -609,87 +651,101 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">AI images · workshop</p>
+      <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a>
+
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Words in,</span> <em class="mark" data-t="title2">pictures out</em></h1>
-    <p class="lede" data-t="intro">Perchance draws what you describe. The better the description, the better the picture. This workshop shows what the buttons do and how to build a prompt worth typing.</p>
+    <h1><span data-t="title1">How to describe a picture</span> <em class="mark" data-t="title2">for Perchance</em></h1>
+    <p class="lede" data-t="intro">Perchance is a website that draws a picture from the words you type, and the more clearly you describe what you want, the closer the picture gets to it. This workshop explains the controls on the page and then helps you build a description.</p>
   </header>
 
-  <nav class="tabs" id="tabs" role="tablist"></nav>
+  <p class="teacher" id="teacher" data-t="teacher">Please open Perchance with a teacher, because the site is open to everyone and has a public gallery and a chat.</p>
 
-  <section class="card stack" data-panel="interface">
-    <h2 data-t="p1Title">The five controls</h2>
+  <div class="tabs" id="tabs" role="tablist"></div>
+
+  <section class="card stack" data-panel="interface" id="panel-interface" role="tabpanel">
+    <h2 data-t="p1Title">The five controls on the page</h2>
+    <p class="muted" data-t="p1Intro">This is a small drawing of the Perchance page, and its numbers match the list below.</p>
+    <div class="mock" aria-hidden="true">
+      <div class="mock__row"><span class="mock__n">1</span><span class="mock__label">📝 Description</span></div>
+      <div class="mock__box"></div>
+      <div class="mock__row mock__row--wrap">
+        <span class="mock__pick"><span class="mock__n">2</span>🎨 Art Style ▾</span>
+        <span class="mock__pick"><span class="mock__n">3</span>🖼️ Shape ▾</span>
+        <span class="mock__pick"><span class="mock__n">4</span>🔢 How many? ▾</span>
+      </div>
+      <div class="mock__row"><span class="mock__n">5</span><span class="mock__go">✨ generate</span></div>
+    </div>
     <div class="controls" id="controls"></div>
     <div class="panel stack stack--tight">
-      <p class="eyebrow" data-t="tipsTitle">Worth knowing</p>
+      <p class="eyebrow" data-t="tipsTitle">Good to know</p>
       <ul class="tips" id="tips1"></ul>
     </div>
   </section>
 
-  <section class="card stack" data-panel="styles" hidden>
-    <h2 data-t="p2Title">Five brushes</h2>
+  <section class="card stack" data-panel="styles" id="panel-styles" role="tabpanel" hidden>
+    <h2 data-t="p2Title">Five styles to start with</h2>
+    <p class="muted" data-t="p2Intro">The 🎨 Art Style menu has dozens of styles, and these five are a good place to begin.</p>
     <div class="brushes" id="brushes"></div>
   </section>
 
-  <section class="card stack" data-panel="builder" hidden>
-    <h2 data-t="p3Title">Build a prompt</h2>
+  <section class="card stack" data-panel="exclude" id="panel-exclude" role="tabpanel" hidden>
+    <h2 data-t="p4Title">Leaving things out</h2>
+    <p class="lede" data-t="excludeIntro">Writing "no blue" seldom works, because the word blue is still in your description and the picture pays attention to it. Describe the picture you do want instead.</p>
+    <div class="examples" id="excludeEx"></div>
+    <div class="panel stack stack--tight">
+      <p class="eyebrow" data-t="whenTitle">Other ways to steer the picture</p>
+      <ul class="tips" id="tips4"></ul>
+    </div>
+  </section>
+
+  <section class="card stack" data-panel="builder" id="panel-builder" role="tabpanel" hidden>
+    <h2 data-t="p3Title">Build a description</h2>
 
     <div class="panel stack stack--tight">
-      <p class="eyebrow" data-t="levelsTitle">How far to go</p>
+      <p class="eyebrow" data-t="levelsTitle">How much to describe</p>
       <div class="levels" id="levels"></div>
     </div>
 
     <div class="builder">
       <label>
         <span class="eyebrow" data-t="fWho">Who or what</span>
-        <input class="input" id="who" autocomplete="off">
+        <input class="input" id="who" autocomplete="off" data-tp="phWho">
       </label>
       <label>
         <span class="eyebrow" data-t="fWhere">Where</span>
-        <input class="input" id="where" autocomplete="off">
+        <input class="input" id="where" autocomplete="off" data-tp="phWhere">
       </label>
       <label>
         <span class="eyebrow" data-t="fWhat">Doing what</span>
-        <input class="input" id="what" autocomplete="off">
+        <input class="input" id="what" autocomplete="off" data-tp="phWhat">
       </label>
       <div class="stack stack--tight">
-        <span class="eyebrow" data-t="fStyle">Style</span>
-        <div class="pills" id="stylePills"></div>
+        <span class="eyebrow" data-t="fStyle">Art Style</span>
+        <div class="pills" id="stylePills" role="group"></div>
       </div>
-      <label>
-        <span class="eyebrow" data-t="fExclude">Leave out (Exclude)</span>
-        <input class="input" id="exclude" autocomplete="off">
-      </label>
     </div>
 
     <div class="stack stack--tight">
-      <p class="eyebrow" data-t="outLabel">Your prompt</p>
+      <div class="row row--between">
+        <p class="eyebrow" data-t="outLabel">Your description</p>
+        <span class="chip chip--reward" id="levelNow" hidden></span>
+      </div>
       <div class="out is-empty" id="out"></div>
-      <div class="out" id="outExclude" hidden></div>
+      <p class="muted out-style" id="outStyle" hidden></p>
+      <p class="muted out-next" id="outNext" aria-live="polite"></p>
     </div>
 
     <div class="row">
-      <button class="btn" id="copy" data-t="copy">Copy the prompt</button>
+      <button class="btn" id="copy" data-t="copy">Copy the description</button>
       <button class="btn btn--ghost" id="clear" data-t="clear">Clear</button>
       <a class="btn btn--ghost" href="https://perchance.org/ai-text-to-image-generator" target="_blank" rel="noopener" data-t="open">Open Perchance</a>
     </div>
-    <div id="verdict" hidden></div>
-  </section>
-
-  <section class="card stack" data-panel="exclude" hidden>
-    <h2 data-t="p4Title">The magic eraser</h2>
-    <p class="lede" data-t="excludeIntro">Sometimes the picture comes back with something you never asked for. Exclude is where you say what must stay out.</p>
-    <div class="examples" id="excludeEx"></div>
-    <div class="panel stack stack--tight">
-      <p class="eyebrow" data-t="whenTitle">When to reach for it</p>
-      <ul class="tips" id="tips4"></ul>
-    </div>
+    <div id="verdict" hidden aria-live="polite"></div>
   </section>
 
 </div>
@@ -698,126 +754,154 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 (function () {
   "use strict";
 
-  /* Same four tabs, five controls, five brushes and three prompt levels as the
-     original workshop, and the same Perchance link. The prompt builder now
-     joins its parts with commas, which is what the generator actually reads. */
+  /* Checked against the generator's own source (perchance.org/api/
+     downloadGenerator?generatorName=ai-text-to-image-generator, 27 October
+     2026). Its controls are 📝 Description, 🎨 Art Style (a menu of
+     dozens of styles), 🖼️ Shape (Square, Portrait, Landscape), 🔢 How many?
+     (2 to 32) and ✨ generate; Shape and How many? appear after the first go.
+     It is free with no login, and a batch takes seconds. The Anti-Description
+     box is commented out in that source, so the page has no box for things to
+     leave out, and the eraser tab now teaches describing what you do want.
+     The style is picked from the menu, never typed, so the builder no longer
+     writes it into the description. The tips about (brackets), {a|b|c} and
+     the info icon are Perchance's own prompt tips. */
 
-  var PANELS = ["interface", "styles", "builder", "exclude"];
-  var STYLES = ["auto", "photo", "illustration", "vector", "raw"];
+  var PANELS = ["interface", "styles", "exclude", "builder"];
+  var STYLES = ["illustration", "casualPhoto", "pixelArt", "flatIcon", "noStyle"];
 
   var T = {
     en: {
-      eyebrow: "AI images · workshop",
-      title1: "Words in,", title2: "pictures out",
-      intro: "Perchance draws what you describe. The better the description, the better the picture. This workshop shows what the buttons do and how to build a prompt worth typing.",
-      tabs: ["The screen", "Brushes", "Build a prompt", "The eraser"],
-      p1Title: "The five controls", p2Title: "Five brushes",
-      p3Title: "Build a prompt", p4Title: "The magic eraser",
-      tipsTitle: "Worth knowing",
+      allActivities: "All activities",
+      title1: "How to describe a picture", title2: "for Perchance",
+      intro: "Perchance is a website that draws a picture from the words you type, and the more clearly you describe what you want, the closer the picture gets to it. This workshop explains the controls on the page and then helps you build a description.",
+      teacher: "Please open Perchance with a teacher, because the site is open to everyone and has a public gallery and a chat.",
+      tabs: ["The page", "Styles", "Leaving things out", "Building a description"],
+      p1Title: "The five controls on the page", p1Intro: "This is a small drawing of the Perchance page, and its numbers match the list below.",
+      p2Title: "Five styles to start with", p2Intro: "The 🎨 Art Style menu has dozens of styles, and these five are a good place to begin.",
+      p3Title: "Build a description", p4Title: "Leaving things out",
+      tipsTitle: "Good to know",
       controls: [
-        ["✍️", "Prompt box", "Where the description goes. Any language works, English usually works best."],
-        ["🎨", "Draw", "The button that starts it. Then you wait a minute or two."],
-        ["🖌️", "Style", "Five brushes: Auto, Photo, Illustration, Vector, Raw."],
-        ["🖼️", "Format", "Square is free. The other shapes are for paid accounts."],
-        ["🚫", "Exclude", "The eraser. Whatever you write here stays out of the picture."]
+        ["📝", "Description", "Your description goes here. Any language works, although English usually gives the best results. Press Enter or ✨ generate when it is ready."],
+        ["🎨", "Art Style", "This menu holds ready-made styles such as Casual Photo and Pixel Art, and each one adds its own words around yours."],
+        ["🖼️", "Shape", "Here you choose Square, Portrait or Landscape. The menu only appears after your first go."],
+        ["🔢", "How many?", "It sets how many pictures come back at once, between 2 and 32. Like Shape, it appears after your first go."],
+        ["✨", "generate", "Pressing it starts the drawing, and a batch usually takes a few seconds."]
       ],
       tips1: [
-        "Nine pictures come back at once. Pick the one you like.",
-        "It takes a minute or two. That is normal.",
-        "Not what you wanted? Press Draw again; you get nine new ones.",
-        "Right-click a picture to save it."
+        "Perchance is free, and you do not need an account to use it.",
+        "If the pictures are not what you wanted, press ✨ generate again for a new batch.",
+        "When you click the info icon on a picture, you can see the description it was made from.",
+        "To save a picture, right-click it, or press and hold it on a tablet."
       ],
       brushes: {
-        auto:         ["Auto", "The clever brush. It decides how to draw. Start here.", ["Your first picture", "You cannot decide", "You want a surprise"]],
-        photo:        ["Photo", "The camera brush. Comes back looking like a photograph.", ["Real animals or places", "Portraits", "Anything that should look true"]],
-        illustration: ["Illustration", "The pencil brush. Cartoon, storybook, bright.", ["Fairy-tale characters", "Pictures for a story", "Cartoon heroes"]],
-        vector:       ["Vector", "The sharp brush. Flat shapes and clean edges, like a logo.", ["Icons", "Patterns", "Simple, tidy design"]],
-        raw:          ["Raw", "The free brush. No help, no guessing. You decide everything.", ["Mixing styles", "Odd effects", "Experiments"]]
+        illustration: ["Illustration", "Illustration looks like a page from a storybook and is a good first choice for story characters."],
+        casualPhoto:  ["Casual Photo", "Pictures in Casual Photo look like snapshots taken with a phone, which suits real animals and places."],
+        pixelArt:     ["Pixel Art", "Pixel Art builds everything out of little squares, the way pictures looked in old video games."],
+        flatIcon:     ["Flat Style Icon", "With Flat Style Icon you get flat shapes and clean edges, the way an app icon looks."],
+        noStyle:      ["No style", "No style adds nothing to your words, so you see what your description does on its own."]
       },
-      levelsTitle: "How far to go",
+      levelsTitle: "How much to describe",
       levels: [
-        ["Level 1", "who or what → a cat"],
-        ["Level 2", "who + where → a fluffy cat on a windowsill"],
-        ["Level 3", "who + where + doing what + style → a fluffy cat on a windowsill watching the rain, illustration"]
+        ["Level 1", "Say who or what is in the picture, for example a cat."],
+        ["Level 2", "Add where it is, for example a fluffy cat, on a windowsill."],
+        ["Level 3", "Add what it is doing and pick a style from the menu, for example a fluffy cat, on a windowsill, watching the rain, with 🎨 Illustration."]
       ],
-      fWho: "Who or what", fWhere: "Where", fWhat: "Doing what",
-      fStyle: "Style", fExclude: "Leave out (Exclude)",
-      outLabel: "Your prompt", empty: "Fill in a field and the prompt appears here.",
-      copy: "Copy the prompt", clear: "Clear", open: "Open Perchance",
-      copied: "Copied. Paste it into the prompt box on Perchance.",
-      nothingYet: "There is nothing to copy yet.",
-      excludeLabel: "Exclude:",
-      styleNames: { auto: "Auto", photo: "Photo", illustration: "Illustration", vector: "Vector", raw: "Raw" },
-      excludeIntro: "Sometimes the picture comes back with something you never asked for. Exclude is where you say what must stay out.",
+      fWho: "Who or what", fWhere: "Where", fWhat: "Doing what", fStyle: "Art Style",
+      phWho: "a fluffy cat", phWhere: "on a windowsill", phWhat: "watching the rain",
+      outLabel: "Your description", empty: "Your description will appear here as soon as you fill in a field.",
+      styleLine: function (name) { return "Choose " + name + " in the 🎨 Art Style menu on Perchance, since the style is picked there and not typed into the text."; },
+      levelNow: function (n) { return "Level " + n + " of 3"; },
+      nextStep: [
+        "Start by writing who or what is in the picture.",
+        "You are at level 1. Add where it is to reach level 2.",
+        "You are at level 2. Add what it is doing and pick a style to reach level 3.",
+        "You are at level 3, and Perchance has everything it needs."
+      ],
+      copy: "Copy the description", clear: "Clear", open: "Open Perchance",
+      copied: "Copied. Paste it into the 📝 Description box on Perchance.",
+      copyByHand: "This browser would not copy the text. Select it in the dark box and copy it yourself.",
+      nothingYet: "There is nothing to copy yet. Fill in at least the first field.",
+      excludeIntro: "Writing \"no blue\" seldom works, because the word blue is still in your description and the picture pays attention to it. Describe the picture you do want instead.",
       excludeEx: [
-        ["a beach at noon", "sun", "a beach with no sun in the sky"],
-        ["a dragon on a cliff", "wings", "a dragon that cannot fly"],
-        ["a forest path", "dark, fog", "a bright, friendly forest"],
-        ["a robot friend", "metal, sharp edges", "a soft, colourful robot"]
+        ["a beach with no sun", "a beach at night under the stars"],
+        ["a dragon without wings", "a dragon that walks like a giant lizard"],
+        ["a forest, not dark", "a sunny forest with bright green leaves"],
+        ["a robot, not made of metal", "a soft knitted robot toy in bright colours"]
       ],
-      whenTitle: "When to reach for it",
+      instead: "Instead of", tryThis: "write",
+      whenTitle: "Other ways to steer the picture",
       tips4: [
-        "Picture too gloomy → exclude: dark, black",
-        "You want no people in it → exclude: people, person",
-        "You want a plain background → exclude: busy background, clutter",
-        "A colour keeps turning up → exclude that colour by name"
+        "Brackets around the most important part, like (a red hat), make Perchance pay more attention to it, and double brackets ((a red hat)) make it pay even more.",
+        "When you write {red|blue|green}, each picture picks one of those colours.",
+        "For a picture without people, describe an empty place, such as an empty street at dawn.",
+        "If a colour keeps turning up, name the colour you would like instead."
       ]
     },
     es: {
-      eyebrow: "Imágenes con IA · taller",
-      title1: "Entran palabras,", title2: "salen imágenes",
-      intro: "Perchance dibuja lo que describes. Cuanto mejor la descripción, mejor la imagen: este taller enseña qué hace cada botón y cómo montar un prompt que valga la pena.",
-      tabs: ["La pantalla", "Pinceles", "Montar un prompt", "El borrador"],
-      p1Title: "Los cinco controles", p2Title: "Cinco pinceles",
-      p3Title: "Monta un prompt", p4Title: "El borrador mágico",
+      allActivities: "Todas las actividades",
+      title1: "Cómo describir una imagen", title2: "para Perchance",
+      intro: "Perchance es una web que dibuja una imagen a partir de las palabras que escribes, y cuanto más claro describes lo que quieres, más se acerca la imagen. Este taller explica los controles de la página y después te ayuda a montar una descripción.",
+      teacher: "Abre Perchance con un profe, porque la web está abierta a todo el mundo y tiene una galería pública y un chat.",
+      tabs: ["La página", "Estilos", "Dejar cosas fuera", "Montar una descripción"],
+      p1Title: "Los cinco controles de la página", p1Intro: "Este es un dibujo pequeño de la página de Perchance, y sus números coinciden con la lista de abajo.",
+      p2Title: "Cinco estilos para empezar", p2Intro: "El menú 🎨 Art Style tiene decenas de estilos, y estos cinco son un buen punto de partida.",
+      p3Title: "Monta una descripción", p4Title: "Dejar cosas fuera",
       tipsTitle: "Conviene saber",
       controls: [
-        ["✍️", "Campo del prompt", "Aquí va la descripción. Vale cualquier idioma, aunque el inglés suele funcionar mejor."],
-        ["🎨", "Draw", "El botón que lo pone en marcha. Luego esperas uno o dos minutos."],
-        ["🖌️", "Estilo", "Cinco pinceles: Auto, Photo, Illustration, Vector, Raw."],
-        ["🖼️", "Formato", "El cuadrado es gratis. Las demás formas son para cuentas de pago."],
-        ["🚫", "Exclude", "El borrador. Lo que escribas aquí se queda fuera de la imagen."]
+        ["📝", "Description", "Aquí va tu descripción. Sirve cualquier idioma, aunque el inglés suele dar mejores resultados. Pulsa Enter o ✨ generate cuando la tengas lista."],
+        ["🎨", "Art Style", "Este menú tiene estilos ya hechos, como Casual Photo y Pixel Art, y cada uno añade sus propias palabras alrededor de las tuyas."],
+        ["🖼️", "Shape", "Aquí eliges Square, Portrait o Landscape (cuadrada, vertical u horizontal). El menú solo aparece después de tu primer intento."],
+        ["🔢", "How many?", "Decide cuántas imágenes salen a la vez, entre 2 y 32. Igual que Shape, aparece después de tu primer intento."],
+        ["✨", "generate", "Al pulsarlo empieza el dibujo, y cada tanda suele tardar unos segundos."]
       ],
       tips1: [
-        "Vuelven nueve imágenes a la vez: quédate con la que más te guste.",
-        "Tarda uno o dos minutos. Es normal.",
-        "¿No es lo que querías? Pulsa Draw otra vez y salen nueve nuevas.",
-        "Clic derecho sobre una imagen para guardarla."
+        "Perchance es gratis, y no hace falta una cuenta para usarlo.",
+        "Si las imágenes no son lo que querías, pulsa ✨ generate otra vez para sacar una tanda nueva.",
+        "Cuando pulsas el icono de información de una imagen, puedes ver la descripción con la que se hizo.",
+        "Para guardar una imagen, haz clic derecho sobre ella, o mantenla pulsada en una tableta."
       ],
       brushes: {
-        auto:         ["Auto", "El pincel listo. Decide él cómo dibujar. Empieza por aquí.", ["Tu primera imagen", "No sabes cuál elegir", "Quieres una sorpresa"]],
-        photo:        ["Photo", "El pincel cámara. Sale como una fotografía.", ["Animales o lugares reales", "Retratos", "Todo lo que deba parecer de verdad"]],
-        illustration: ["Illustration", "El pincel lápiz. Dibujo animado, cuento, color.", ["Personajes de cuento", "Ilustrar una historia", "Héroes de dibujos"]],
-        vector:       ["Vector", "El pincel afilado. Formas planas y bordes limpios, como un logo.", ["Iconos", "Patrones", "Diseño sencillo y ordenado"]],
-        raw:          ["Raw", "El pincel libre. Sin ayuda: decides tú todo.", ["Mezclar estilos", "Efectos raros", "Experimentos"]]
+        illustration: ["Illustration", "Illustration parece la página de un libro de cuentos y es una buena primera elección para personajes de una historia."],
+        casualPhoto:  ["Casual Photo", "Las imágenes de Casual Photo parecen fotos hechas con el móvil, y van bien para animales y lugares reales."],
+        pixelArt:     ["Pixel Art", "Pixel Art lo construye todo con cuadraditos, como las imágenes de los videojuegos antiguos."],
+        flatIcon:     ["Flat Style Icon", "Con Flat Style Icon salen formas planas y bordes limpios, como el icono de una app."],
+        noStyle:      ["No style", "No style no añade nada a tus palabras, así que ves qué hace tu descripción por sí sola."]
       },
-      levelsTitle: "Hasta dónde llegar",
+      levelsTitle: "Cuánto describir",
       levels: [
-        ["Nivel 1", "quién o qué → un gato"],
-        ["Nivel 2", "quién + dónde → un gato peludo en la ventana"],
-        ["Nivel 3", "quién + dónde + qué hace + estilo → un gato peludo en la ventana mirando la lluvia, ilustración"]
+        ["Nivel 1", "Di quién o qué sale en la imagen, por ejemplo un gato."],
+        ["Nivel 2", "Añade dónde está, por ejemplo un gato peludo, en la ventana."],
+        ["Nivel 3", "Añade qué está haciendo y elige un estilo del menú, por ejemplo un gato peludo, en la ventana, mirando la lluvia, con 🎨 Illustration."]
       ],
-      fWho: "Quién o qué", fWhere: "Dónde", fWhat: "Qué hace",
-      fStyle: "Estilo", fExclude: "Dejar fuera (Exclude)",
-      outLabel: "Tu prompt", empty: "Rellena un campo y el prompt aparece aquí.",
-      copy: "Copiar el prompt", clear: "Limpiar", open: "Abrir Perchance",
-      copied: "Copiado. Pégalo en el campo de prompt de Perchance.",
-      nothingYet: "Todavía no hay nada que copiar.",
-      excludeLabel: "Exclude:",
-      styleNames: { auto: "Auto", photo: "Photo", illustration: "Illustration", vector: "Vector", raw: "Raw" },
-      excludeIntro: "A veces la imagen vuelve con algo que nunca pediste. En Exclude dices lo que tiene que quedarse fuera.",
+      fWho: "Quién o qué", fWhere: "Dónde", fWhat: "Qué hace", fStyle: "Art Style",
+      phWho: "un gato peludo", phWhere: "en la ventana", phWhat: "mirando la lluvia",
+      outLabel: "Tu descripción", empty: "Tu descripción aparecerá aquí en cuanto rellenes un campo.",
+      styleLine: function (name) { return "Elige " + name + " en el menú 🎨 Art Style de Perchance, ya que el estilo se escoge ahí y no se escribe en el texto."; },
+      levelNow: function (n) { return "Nivel " + n + " de 3"; },
+      nextStep: [
+        "Empieza escribiendo quién o qué sale en la imagen.",
+        "Ya estás en el nivel 1. Añade dónde está para llegar al nivel 2.",
+        "Ya estás en el nivel 2. Añade qué está haciendo y elige un estilo para llegar al nivel 3.",
+        "Ya estás en el nivel 3, y Perchance tiene todo lo que necesita."
+      ],
+      copy: "Copiar la descripción", clear: "Limpiar", open: "Abrir Perchance",
+      copied: "Copiado. Pégalo en el campo 📝 Description de Perchance.",
+      copyByHand: "Este navegador no ha podido copiar el texto. Selecciónalo en el recuadro oscuro y cópialo tú.",
+      nothingYet: "Todavía no hay nada que copiar. Rellena al menos el primer campo.",
+      excludeIntro: "Escribir \"no blue\" (sin azul) casi nunca funciona, porque la palabra azul sigue en tu descripción y la imagen le hace caso. Describe mejor la imagen que sí quieres.",
       excludeEx: [
-        ["una playa a mediodía", "sol", "una playa sin sol en el cielo"],
-        ["un dragón en un acantilado", "alas", "un dragón que no puede volar"],
-        ["un sendero del bosque", "oscuro, niebla", "un bosque claro y amable"],
-        ["un robot amigo", "metal, bordes afilados", "un robot blando y de colores"]
+        ["una playa sin sol", "una playa de noche bajo las estrellas"],
+        ["un dragón sin alas", "un dragón que camina como un lagarto gigante"],
+        ["un bosque, que no sea oscuro", "un bosque soleado de hojas verdes y brillantes"],
+        ["un robot que no sea de metal", "un robot de juguete tejido, blandito y de colores"]
       ],
-      whenTitle: "Cuándo usarlo",
+      instead: "En vez de", tryThis: "escribe",
+      whenTitle: "Otras formas de guiar la imagen",
       tips4: [
-        "Imagen demasiado sombría → exclude: dark, black",
-        "No quieres gente → exclude: people, person",
-        "Quieres un fondo liso → exclude: busy background, clutter",
-        "Un color se repite → exclúyelo por su nombre"
+        "Los paréntesis alrededor de lo más importante, como (un sombrero rojo), hacen que Perchance le preste más atención, y el doble paréntesis ((un sombrero rojo)) todavía más.",
+        "Cuando escribes {rojo|azul|verde}, cada imagen elige uno de esos colores.",
+        "Para una imagen sin gente, describe un sitio vacío, como una calle vacía al amanecer.",
+        "Si un color aparece una y otra vez, nombra el color que te gustaría en su lugar."
       ]
     }
   };
@@ -839,13 +923,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
   function clearSay() { var v = byId("verdict"); v.hidden = true; v.className = ""; }
 
+  function val(id) { return byId(id).value.trim(); }
+
+  /* The description only: who, where, doing what. The style is a menu
+     choice on Perchance, so it is shown beside the text, not inside it. */
   function buildPrompt() {
-    var d = t();
-    var parts = [byId("who").value, byId("where").value, byId("what").value]
-      .map(function (v) { return v.trim(); })
-      .filter(Boolean);
-    if (style && style !== "auto") parts.push(d.styleNames[style].toLowerCase());
-    return parts.join(", ");
+    return [val("who"), val("where"), val("what")].filter(Boolean).join(", ");
+  }
+
+  function levelOf() {
+    if (!val("who")) return 0;
+    if (!val("where")) return 1;
+    if (!val("what") || !style) return 2;
+    return 3;
   }
 
   function paintOut() {
@@ -855,19 +945,68 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     out.textContent = text || d.empty;
     out.className = "out" + (text ? "" : " is-empty");
 
-    var ex = byId("exclude").value.trim();
-    var line = byId("outExclude");
-    line.hidden = !ex;
-    line.textContent = d.excludeLabel + " " + ex;
+    var sl = byId("outStyle");
+    sl.hidden = !style;
+    if (style) sl.textContent = d.styleLine(d.brushes[style][0]);
+
+    var n = levelOf();
+    var chip = byId("levelNow");
+    chip.hidden = n === 0;
+    chip.textContent = d.levelNow(n);
+    byId("outNext").textContent = d.nextStep[n];
+  }
+
+  /* ---- tabs: built once, relabelled on a language switch --------------- */
+  function buildTabs() {
+    var tabs = byId("tabs");
+    PANELS.forEach(function (name, i) {
+      var b = el("button");
+      b.type = "button";
+      b.id = "tab-" + name;
+      b.dataset.panel = name;
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-controls", "panel-" + name);
+      b.onclick = function () { showPanel(name); };
+      b.onkeydown = function (e) {
+        var step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (e.key === "Home") step = -i;
+        if (e.key === "End") step = PANELS.length - 1 - i;
+        if (!step) return;
+        e.preventDefault();
+        var next = PANELS[(i + step + PANELS.length) % PANELS.length];
+        showPanel(next);
+        byId("tab-" + next).focus();
+      };
+      tabs.appendChild(b);
+      byId("panel-" + name).setAttribute("aria-labelledby", "tab-" + name);
+    });
   }
 
   function showPanel(name) {
     panel = name;
     document.querySelectorAll("[data-panel]").forEach(function (s) {
-      s.hidden = s.dataset.panel !== name;
+      if (s.getAttribute("role") === "tabpanel") s.hidden = s.dataset.panel !== name;
     });
     document.querySelectorAll("#tabs button").forEach(function (b) {
-      b.setAttribute("aria-selected", String(b.dataset.panel === name));
+      var on = b.dataset.panel === name;
+      b.setAttribute("aria-selected", String(on));
+      b.tabIndex = on ? 0 : -1;
+    });
+  }
+
+  function paintPills() {
+    var d = t();
+    var pills = byId("stylePills"); pills.innerHTML = "";
+    STYLES.forEach(function (key) {
+      var b = el("button", "pill", d.brushes[key][0]);
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(style === key));
+      b.onclick = function () {
+        style = style === key ? null : key;
+        clearSay(); paintPills(); paintOut();
+        pills.querySelectorAll("button")[STYLES.indexOf(key)].focus();
+      };
+      pills.appendChild(b);
     });
   }
 
@@ -878,21 +1017,18 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       var v = d[n.dataset.t];
       if (typeof v === "string") n.textContent = v;
     });
-
-    var tabs = byId("tabs"); tabs.innerHTML = "";
-    PANELS.forEach(function (name, i) {
-      var b = el("button", null, d.tabs[i]);
-      b.type = "button";
-      b.dataset.panel = name;
-      b.setAttribute("role", "tab");
-      b.onclick = function () { showPanel(name); };
-      tabs.appendChild(b);
+    document.querySelectorAll("[data-tp]").forEach(function (n) {
+      n.placeholder = d[n.dataset.tp] || "";
     });
 
+    document.querySelectorAll("#tabs button").forEach(function (b, i) { b.textContent = d.tabs[i]; });
+
     var controls = byId("controls"); controls.innerHTML = "";
-    d.controls.forEach(function (c) {
+    d.controls.forEach(function (c, i) {
       var row = el("div", "control");
-      row.appendChild(el("span", "control__n", c[0]));
+      var icon = el("span", "control__n", c[0]);
+      icon.appendChild(el("span", "control__num", String(i + 1)));
+      row.appendChild(icon);
       var body = el("div");
       body.appendChild(el("span", "control__name", c[1]));
       body.appendChild(el("span", "control__desc", c[2]));
@@ -909,9 +1045,6 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       var card = el("div", "brush panel");
       card.appendChild(el("span", "brush__name", b[0]));
       card.appendChild(el("p", "muted", b[1]));
-      var ul = el("ul");
-      b[2].forEach(function (s) { ul.appendChild(el("li", null, s)); });
-      card.appendChild(ul);
       brushes.appendChild(card);
     });
 
@@ -923,35 +1056,30 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       levels.appendChild(row);
     });
 
-    var pills = byId("stylePills"); pills.innerHTML = "";
-    STYLES.forEach(function (key) {
-      var b = el("button", "pill", d.styleNames[key]);
-      b.type = "button";
-      b.setAttribute("aria-pressed", String(style === key));
-      b.onclick = function () { style = style === key ? null : key; clearSay(); render(); };
-      pills.appendChild(b);
-    });
-
     var ex = byId("excludeEx"); ex.innerHTML = "";
     d.excludeEx.forEach(function (row) {
       var box = el("div", "example");
       var left = el("div");
+      left.appendChild(el("div", "muted", d.instead));
       left.appendChild(el("code", null, row[0]));
-      left.appendChild(el("div", "muted", d.excludeLabel + " " + row[1]));
       box.appendChild(left);
       box.appendChild(el("span", "example__arrow", "→"));
-      box.appendChild(el("span", null, row[2]));
+      var right = el("div");
+      right.appendChild(el("div", "muted", d.tryThis));
+      right.appendChild(el("code", null, row[1]));
+      box.appendChild(right);
       ex.appendChild(box);
     });
 
     var tips4 = byId("tips4"); tips4.innerHTML = "";
     d.tips4.forEach(function (s) { tips4.appendChild(el("li", null, s)); });
 
+    paintPills();
     showPanel(panel);
     paintOut();
   }
 
-  ["who", "where", "what", "exclude"].forEach(function (id) {
+  ["who", "where", "what"].forEach(function (id) {
     byId(id).addEventListener("input", function () { clearSay(); paintOut(); });
   });
 
@@ -959,21 +1087,19 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     var d = t();
     var text = buildPrompt();
     if (!text) { say("hint", d.nothingYet); return; }
-    var ex = byId("exclude").value.trim();
-    var full = ex ? text + "\n" + d.excludeLabel + " " + ex : text;
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(full).then(
+      navigator.clipboard.writeText(text).then(
         function () { say("ok", d.copied); },
-        function () { say("hint", full); }
+        function () { say("hint", d.copyByHand); }
       );
     } else {
-      say("hint", full);
+      say("hint", d.copyByHand);
     }
   };
 
   byId("clear").onclick = function () {
-    ["who", "where", "what", "exclude"].forEach(function (id) { byId(id).value = ""; });
-    style = null; clearSay(); render();
+    ["who", "where", "what"].forEach(function (id) { byId(id).value = ""; });
+    style = null; clearSay(); paintPills(); paintOut();
   };
 
   document.querySelectorAll(".langs button").forEach(function (b) {
@@ -986,6 +1112,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     };
   });
 
+  buildTabs();
   render();
 })();
 </script>

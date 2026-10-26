@@ -587,8 +587,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     box-shadow: 5px 5px 0 var(--ink-900);
     padding: var(--s-4); text-align: left; overflow: hidden;
   }
-  .face--front { background: var(--color-surface); display: grid; grid-template-rows: auto 1fr auto; gap: var(--s-2); }
-  .face--back { background: var(--sun-50); transform: rotateY(180deg); display: grid; grid-template-rows: auto 1fr auto; gap: var(--s-3); }
+  /* The middle row is minmax(0, 1fr), not 1fr: the card has a fixed shape,
+     and a plain 1fr row would refuse to shrink below the car's own height and
+     push the categories row out of the card on a phone. With minmax the car
+     gives way instead, and everything on the card stays visible. */
+  .face--front { background: var(--color-surface); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: var(--s-2); }
+  .face--back { background: var(--sun-50); transform: rotateY(180deg); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: var(--s-3); }
 
   .card__top { display: grid; grid-template-columns: 88px 1fr; gap: var(--s-4); }
   .card__photo {
@@ -622,7 +626,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   /* ---- the car ---- */
   .car { display: block; width: 100%; height: auto; overflow: visible; }
-  .car--strip { max-width: 205px; margin-left: auto; align-self: end; }
+  .car--strip { width: auto; height: 100%; max-width: 205px; min-height: 0; margin-left: auto; align-self: end; justify-self: end; }
   .car--big { max-width: 340px; margin: 0 auto; }
   .car__driver { font-size: 26px; }
   .car .wheel-hub { transform-box: fill-box; transform-origin: center; animation: roll 1400ms linear infinite; }
@@ -653,11 +657,28 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   .printer__car { position: absolute; bottom: 2px; width: 160px; animation: drive 2400ms linear infinite; }
   @keyframes drive { from { left: -170px; } to { left: 100%; } }
 
+  /* A phone: the card keeps its shape, so the photo and the padding give up
+     some room and the car takes what is left. */
+  @media (max-width: 480px) {
+    .face { padding: var(--s-3); }
+    .card__top { grid-template-columns: 64px 1fr; gap: var(--s-3); }
+    .card__photo { width: 64px; height: 64px; font-size: 32px; }
+    .card__name { font-size: var(--t-md); }
+    .skills li { font-size: var(--t-2xs); line-height: 1.4; }
+  }
+
+  .print-hint { font-size: var(--t-sm); }
+
   @media (prefers-reduced-motion: reduce) {
     .printer__paper, .printer__bar i, .printer__car, .car .wheel-hub { animation: none; }
     .printer__car { left: 40%; }
     .flip { transition: none; }
   }
+
+  /* Small labels in plain sentence case, not spaced capitals. The card keeps
+     its own small print, because it is drawn to look like a licence. */
+  .eyebrow { font-family: var(--font-sans); font-size: var(--t-sm); font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--color-text-muted); }
+  .row--between > .back { align-self: center; }
 
   [hidden] { display: none !important; }
 </style>
@@ -738,16 +759,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Browser skills · certificate</p>
+      <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a>
+
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">You can drive</span> <em class="mark" data-t="title2">a browser now</em></h1>
-    <p class="lede" data-t="intro">The training is behind you, so the licence is yours to build. Your name on the front, a face for the photo, a colour for the car, and the browsers you are cleared to drive.</p>
+    <h1><span data-t="title1">Make your</span> <em class="mark" data-t="title2">browser driving licence</em></h1>
+    <p class="lede" data-t="intro">Now that you have finished the browser training, you can make your own licence. Write your name, choose a face for the photo and a colour for the car, and tick the browsers you practised on.</p>
   </header>
 
   <section class="card stack" id="stepName">
@@ -763,15 +784,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     <div class="card stack">
       <div class="stack stack--tight">
         <p class="eyebrow" data-t="emojiLabel">Your photo</p>
-        <p class="muted" data-t="emojiHint">Pick the one that looks most like you today. It rides in the car as well.</p>
+        <p class="muted" data-t="emojiHint">Pick the face that looks most like you today, and it will ride in the car too.</p>
       </div>
       <div class="emojis" id="emojis"></div>
     </div>
 
     <div class="card stack">
       <div class="stack stack--tight">
-        <p class="eyebrow" data-t="paintLabel">Your paint</p>
-        <p class="muted" data-t="paintHint">Every licence comes with a car, and this one is yours. Choose the colour.</p>
+        <p class="eyebrow" data-t="paintLabel">Your car's colour</p>
+        <p class="muted" data-t="paintHint">Every licence comes with a car, and you choose its colour.</p>
       </div>
       <div class="paints" id="paints" role="group" aria-label="Paint"></div>
       <svg class="car car--big" id="preview" viewBox="0 0 300 156" aria-hidden="true">
@@ -782,15 +803,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     <div class="card stack">
       <div class="stack stack--tight">
-        <p class="eyebrow" data-t="classLabel">Your categories</p>
-        <p class="muted" data-t="classHint">A driving licence says which vehicles you are allowed to drive. Yours says which browsers.</p>
+        <p class="eyebrow" data-t="classLabel">Browsers on your licence</p>
+        <p class="muted" data-t="classHint">A real driving licence lists the vehicles a person is allowed to drive. Tick the browsers you practised on during the training.</p>
       </div>
       <div class="classes" id="classes" role="group" aria-label="Categories"></div>
     </div>
 
     <div class="row">
-      <button class="btn" id="print" data-t="print" disabled>Print my licence</button>
+      <button class="btn" id="print" data-t="print" disabled aria-describedby="printHint">Print my licence</button>
       <button class="btn btn--ghost" id="backName" data-t="back">Back</button>
+      <span class="muted print-hint" id="printHint" aria-live="polite"></span>
     </div>
   </section>
 
@@ -798,7 +820,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     <div class="printer">
       <div class="printer__slot"><div class="printer__paper"></div></div>
       <div class="printer__bar"><i></i></div>
-      <p class="muted" data-t="printing">Printing your licence…</p>
+      <p class="muted" data-t="printing">Your licence is being printed, which takes a few seconds.</p>
       <div class="printer__road">
         <svg class="car printer__car" viewBox="0 0 300 156" aria-hidden="true">
           <use href="#s-car"/>
@@ -809,7 +831,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   </section>
 
   <section class="stack" id="stepCard" hidden>
-    <h2 data-t="doneTitle">Signed and stamped</h2>
+    <h2 data-t="doneTitle">Here is your licence</h2>
     <div class="cardstage">
       <button class="flip" id="flip" type="button">
         <div class="face face--front">
@@ -832,7 +854,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
             <text class="car__driver" x="178" y="70" text-anchor="middle">🙂</text>
           </svg>
           <div class="card__classes">
-            <span data-t="cardClasses">Cleared to drive</span>
+            <span data-t="cardClasses">Browsers you may drive</span>
             <span id="cardMarks" class="row"></span>
           </div>
         </div>
@@ -847,7 +869,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         </div>
       </button>
     </div>
-    <p class="muted" data-t="flipHint">Tap the card to turn it over.</p>
+    <p class="muted" data-t="flipHint">Tap the card to see the back.</p>
     <div class="row">
       <button class="btn" id="save" data-t="save">Save as a picture</button>
       <button class="btn btn--ghost" id="again" data-t="again">Make another one</button>
@@ -893,60 +915,64 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
   var T = {
     en: {
-      eyebrow: "Browser skills · certificate",
-      title1: "You can drive", title2: "a browser now",
-      intro: "The training is behind you, so the licence is yours to build. Your name on the front, a face for the photo, a colour for the car, and the browsers you are cleared to drive.",
-      nameLabel: "Your name", namePlaceholder: "Type your name",
+      allActivities: "All activities",
+      title1: "Make your", title2: "browser driving licence",
+      intro: "Now that you have finished the browser training, you can make your own licence. Write your name, choose a face for the photo and a colour for the car, and tick the browsers you practised on.",
+      nameLabel: "Your name", namePlaceholder: "Type your name here",
       next: "Next", back: "Back",
-      emojiLabel: "Your photo", emojiHint: "Pick the one that looks most like you today. It rides in the car as well.",
-      paintLabel: "Your paint", paintHint: "Every licence comes with a car, and this one is yours. Choose the colour.",
-      classLabel: "Your categories", classHint: "A driving licence says which vehicles you are allowed to drive. Yours says which browsers.",
-      print: "Print my licence", printing: "Printing your licence…",
-      doneTitle: "Signed and stamped",
+      emojiLabel: "Your photo", emojiHint: "Pick the face that looks most like you today, and it will ride in the car too.",
+      paintLabel: "Your car's colour", paintHint: "Every licence comes with a car, and you choose its colour.",
+      classLabel: "Browsers on your licence", classHint: "A real driving licence lists the vehicles a person is allowed to drive. Tick the browsers you practised on during the training.",
+      needPhoto: "Choose a photo first.", needBrowser: "Tick at least one browser.",
+      paintNames: { green: "Green", clay: "Red", sun: "Yellow", lagoon: "Teal", lime: "Light green", ink: "Black" },
+      print: "Print my licence", printing: "Your licence is being printed, which takes a few seconds.",
+      doneTitle: "Here is your licence",
       cardKind: "Digital driving licence",
-      cardClasses: "Cleared to drive",
+      cardClasses: "Browsers you may drive",
       rowIssued: "Issued", rowNumber: "No.",
       skillsTitle: "What you can do", signLabel: "Signature",
       skills: [
-        "Open a new tab with Ctrl+T",
+        "Open a new tab with Ctrl+T (⌘+T on a Mac)",
         "Use back, forward and reload",
         "Move between tabs with Ctrl+Tab",
-        "Check a site for the padlock",
+        "Spot an address with one letter changed",
         "Read an address and know what a URL is"
       ],
-      flipHint: "Tap the card to turn it over.",
+      flipHint: "Tap the card to see the back.",
       save: "Save as a picture", again: "Make another one",
-      needName: "Write your name first. It goes on the licence.",
-      savedOk: "Saved. Look in your downloads folder.",
-      savedNo: "This browser would not save the picture. Take a screenshot instead."
+      needName: "Write your name first, because it goes on the front of the licence.",
+      savedOk: "The picture is in your downloads, although on some tablets it opens in a new tab where you can save it.",
+      savedNo: "This browser could not save the picture. Take a screenshot of the card instead."
     },
     es: {
-      eyebrow: "Manejo del navegador · certificado",
-      title1: "Ya sabes conducir", title2: "un navegador",
-      intro: "El entrenamiento ya está hecho, así que el carnet lo montas tú. Tu nombre delante, una cara para la foto, un color para el coche y los navegadores que puedes conducir.",
-      nameLabel: "Tu nombre", namePlaceholder: "Escribe tu nombre",
+      allActivities: "Todas las actividades",
+      title1: "Haz tu", title2: "carnet de conducir navegadores",
+      intro: "Ahora que has terminado las prácticas con el navegador, puedes hacer tu propio carnet. Escribe tu nombre, elige una cara para la foto y un color para el coche, y marca los navegadores con los que practicaste.",
+      nameLabel: "Tu nombre", namePlaceholder: "Escribe aquí tu nombre",
       next: "Siguiente", back: "Atrás",
-      emojiLabel: "Tu foto", emojiHint: "Elige la que más se parezca a ti hoy. También va montada en el coche.",
-      paintLabel: "Tu pintura", paintHint: "Todo carnet viene con coche, y este es el tuyo. Elige el color.",
-      classLabel: "Tus categorías", classHint: "Un carnet dice qué vehículos puedes conducir. El tuyo dice qué navegadores.",
-      print: "Imprimir mi carnet", printing: "Imprimiendo tu carnet…",
-      doneTitle: "Firmado y sellado",
+      emojiLabel: "Tu foto", emojiHint: "Elige la cara que más se parece a ti hoy, y también irá montada en el coche.",
+      paintLabel: "El color de tu coche", paintHint: "Cada carnet viene con un coche, y tú eliges su color.",
+      classLabel: "Navegadores de tu carnet", classHint: "Un carnet de conducir de verdad dice qué vehículos puede conducir una persona. Marca los navegadores con los que practicaste.",
+      needPhoto: "Elige primero una foto.", needBrowser: "Marca al menos un navegador.",
+      paintNames: { green: "Verde", clay: "Rojo", sun: "Amarillo", lagoon: "Turquesa", lime: "Verde claro", ink: "Negro" },
+      print: "Imprimir mi carnet", printing: "Tu carnet se está imprimiendo y tardará unos segundos.",
+      doneTitle: "Aquí tienes tu carnet",
       cardKind: "Carnet de conducir digital",
-      cardClasses: "Puedes conducir",
+      cardClasses: "Navegadores que puedes conducir",
       rowIssued: "Emitido", rowNumber: "N.º",
       skillsTitle: "Lo que sabes hacer", signLabel: "Firma",
       skills: [
-        "Abrir una pestaña nueva con Ctrl+T",
+        "Abrir una pestaña nueva con Ctrl+T (⌘+T en un Mac)",
         "Usar atrás, adelante y recargar",
         "Cambiar de pestaña con Ctrl+Tab",
-        "Mirar si un sitio tiene candado",
+        "Detectar una dirección con una letra cambiada",
         "Leer una dirección y saber qué es una URL"
       ],
-      flipHint: "Toca la tarjeta para darle la vuelta.",
+      flipHint: "Toca la tarjeta para ver el reverso.",
       save: "Guardar como imagen", again: "Hacer otro",
-      needName: "Escribe tu nombre primero: va en el carnet.",
-      savedOk: "Guardado. Míralo en tu carpeta de descargas.",
-      savedNo: "Este navegador no ha podido guardar la imagen. Haz una captura de pantalla."
+      needName: "Escribe primero tu nombre, porque va en la parte delantera del carnet.",
+      savedOk: "La imagen está en tus descargas, aunque en algunas tabletas se abre en otra pestaña desde la que puedes guardarla.",
+      savedNo: "Este navegador no ha podido guardar la imagen. Haz una captura de pantalla de la tarjeta."
     }
   };
 
@@ -998,6 +1024,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     var d = t();
     byId("cardEmoji").textContent = card.emoji;
     byId("cardName").textContent = card.name;
+    card.date = dateText(card.issued);
     byId("cardDate").textContent = card.date;
     byId("cardNumber").textContent = card.number;
     byId("cardSign").textContent = card.name;
@@ -1036,13 +1063,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       grid.appendChild(b);
     });
 
+    byId("paints").setAttribute("aria-label", d.paintLabel);
+    byId("classes").setAttribute("aria-label", d.classLabel);
     var pal = byId("paints"); pal.innerHTML = "";
     PAINT.forEach(function (p) {
       var b = document.createElement("button");
       b.type = "button";
       b.style.setProperty("--swatch", p.hex);
       b.setAttribute("aria-pressed", String(paint.id === p.id));
-      b.setAttribute("aria-label", p.id);
+      b.setAttribute("aria-label", d.paintNames[p.id]);
+      b.title = d.paintNames[p.id];
       b.onclick = function () { paint = p; render(); };
       pal.appendChild(b);
     });
@@ -1055,8 +1085,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       b.appendChild(markNode(br.sym));
       var label = document.createElement("span");
       var name = document.createElement("b"); name.textContent = br.name;
-      var cat = document.createElement("small"); cat.textContent = "CAT " + br.cat;
-      label.append(name, cat);
+      label.append(name);
       b.appendChild(label);
       b.onclick = function () {
         if (picked[br.id]) delete picked[br.id]; else picked[br.id] = true;
@@ -1070,6 +1099,25 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     /* No photo or no category means no licence: a card with an empty category
        row would look like a mistake rather than a choice. */
     byId("print").disabled = !emoji || chosen().length === 0;
+    /* A disabled button with no reason reads as broken. Say what is missing. */
+    byId("printHint").textContent = !emoji ? d.needPhoto : chosen().length === 0 ? d.needBrowser : "";
+  }
+
+  function dateText(when) {
+    return when.toLocaleDateString(lang === "es" ? "es-ES" : "en-GB");
+  }
+
+  /* The longest name the field allows is 28 characters, which at the full
+     54px would run off the right edge of the picture. Step the size down
+     until the name fits the space beside the photo. */
+  function fitText(g, text, weight, size, family, maxWidth, minSize) {
+    var s = size;
+    g.font = weight + " " + s + "px " + family;
+    while (s > minSize && g.measureText(text).width > maxWidth) {
+      s -= 2;
+      g.font = weight + " " + s + "px " + family;
+    }
+    return s;
   }
 
   /* ---- drawing the card for download ------------------------------------- */
@@ -1148,8 +1196,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     g.fillText(d.cardKind.toUpperCase(), x, pad + 60);
 
     g.fillStyle = "#0d150d";
-    g.font = "800 54px Manrope, system-ui, sans-serif";
-    g.fillText(card.name, x, pad + 130);
+    fitText(g, card.name, "800", 54, "Manrope, system-ui, sans-serif", W - pad - x, 26);
+    g.fillText(card.name, x, pad + 130, W - pad - x);
 
     g.font = "22px 'Geist Mono', ui-monospace, monospace";
     g.fillStyle = "#485444";
@@ -1194,6 +1242,11 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     }
   }
 
+  /* Enter in the name field does what Next does. */
+  byId("name").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); byId("toEmoji").click(); }
+  });
+
   byId("toEmoji").onclick = function () {
     var d = t();
     if (!byId("name").value.trim()) { say(byId("verdict"), "hint", d.needName); return; }
@@ -1209,7 +1262,8 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       paint: paint.hex,
       browsers: chosen(),
       number: licenceNumber(),
-      date: new Date().toLocaleDateString(lang === "es" ? "es-ES" : "en-GB")
+      issued: new Date(),
+      date: ""
     };
     step("stepPrint");
     paintCars();

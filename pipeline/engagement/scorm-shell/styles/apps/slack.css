@@ -19,6 +19,10 @@
   --sl-paper: #ffffff;
 }
 .app--slack .os-window-body { background: var(--sl-purple); padding: 0; }
+/* A task banner takes its own height; the Slack frame shrinks to fit instead of overflowing the window. */
+.os-window-body.app--slack { display: flex; flex-direction: column; }
+.os-window-body.app--slack > .task-banner { flex: none; }
+.os-window-body.app--slack > .brand-app { flex: 1 1 auto; min-height: 0; height: auto; }
 
 .app--slack .slack-layout {
   display: grid;
@@ -246,9 +250,10 @@
   font-size: 13px;
   background: linear-gradient(135deg, #818cf8, #4f46e5);
 }
-.app--slack .slack-msg:nth-of-type(2n) .avatar { background: linear-gradient(135deg, #fb923c, #c2410c); }
-.app--slack .slack-msg:nth-of-type(3n) .avatar { background: linear-gradient(135deg, #34d399, #047857); }
-.app--slack .slack-msg:nth-of-type(5n) .avatar { background: linear-gradient(135deg, #f472b6, #be185d); }
+/* one colour per person, so the same author always looks the same */
+.app--slack .slack-msg .avatar[data-who="JT"] { background: linear-gradient(135deg, #fb923c, #c2410c); }
+.app--slack .slack-msg .avatar[data-who="MG"] { background: linear-gradient(135deg, #34d399, #047857); }
+.app--slack .slack-msg .avatar[data-who="SM"] { background: linear-gradient(135deg, #f472b6, #be185d); }
 .app--slack .slack-msg .meta {
   display: flex;
   align-items: baseline;

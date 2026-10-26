@@ -8,72 +8,84 @@
  * Content: hear the buyer's pain, pick the one prop (of four) that answers it,
  * say it back in the buyer's words.
  *
- * Data (all in ./data):
+ * Data:
+ *   ../scorm-shell/data/sample-profiles.json  the course buyers (Tom, Emma, Maria, Lukas)
  *   prop-pain-bank.json  props_reference + 6 pain statements (correct_prop)
- *   prospects.json       { profiles: [...] }  Tom, S.K., Emma, A.B.
- *   transcripts.json     { worked, contrast }  founder + finance lead call
+ *   prospects.json       { stakeholders: [...] }  S.K. (Tom's finance lead), A.B.
+ *   transcripts.json     { worked, contrast }  L.D.'s call with Tom and S.K.
  *   quiz.json            3 scenario items (normalised by quiz-normalize.js)
  *
  * Learner-facing copy must not show internal codes (LO-, §, GC-, snake_case,
  * event names). Data strings go through clean() before they are rendered.
  */
 
-import { bootModule } from "../scorm-shell/js/shell.js";
+import { bootModule, PASS_PCT } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
+import { loadProfiles, findProfile } from "../scorm-shell/js/apps/profiles.js";
+import { resolveDates } from "../scorm-shell/js/dates.js";
+/** "a", "a and b", "a, b and c" */
+const listJoin = arr => arr.length < 3 ? arr.join(" and ") : `${arr.slice(0, -1).join(", ")} and ${arr[arr.length - 1]}`;
+
 
 const state = {
   api: null, step: 0, startedAt: 0, finished: false,
-  props: {}, pains: [], profiles: [], transcripts: null,
+  props: {}, pains: [], buyers: [], stakeholders: [], transcripts: null,
   quizItems: [], quizIndex: 0, quizScore: 0,
-  guidedTries: 0, solo: [], timeline: [],
+  guidedTries: 0, guidedSay: null, solo: [], fresh: null, timeline: [],
 };
 
 // --- Copy the owner reviews (kept together on purpose) ----------------------
 
 /** What each prop sounds like when a buyer describes it. Shown on the prop card. */
 const PROP_CUES = {
-  1: "The buyer can't see who spent what, or wants to stop a card right away.",
-  2: "The buyer hands out cards by hand, or wants a separate limit per person or site.",
-  3: "The buyer pays in another currency and loses money on the conversion.",
-  4: "Someone on the buyer's team types receipts into the accounting tool by hand.",
+  1: "fits a buyer who can't see who spent what, or who wants to stop a card at once.",
+  2: "fits a buyer who hands out cards by hand, or who wants a separate limit for each person or site.",
+  3: "fits a buyer who pays in another currency and loses money every time it is converted.",
+  4: "fits a team where someone types receipts into the accounting tool by hand.",
 };
 
 /** Step 5: Maria's pain (PP-01). One rationale per prop the learner might pick. */
 const GUIDED = {
   painId: "PP-01",
   why: {
-    1: "Yes. Maria couldn't see who made the charge for two weeks. Real-time spend control shows every charge as it happens, with the cardholder's name on it.",
-    2: "Not first. Per-card limits cap future spend, but Maria's problem is that nobody could say who made the charge. That is Prop 1.",
-    3: "No. Nothing Maria said is about currency. Leading with FX would tell her you weren't listening. The right prop is Prop 1.",
-    4: "Close, but receipts arrive after the fact. Her pain is two weeks of not knowing who spent the money. Prop 1 shows it the moment it happens.",
+    1: "Maria couldn't see who made the charge for two weeks. Real-time spend control shows every charge as it happens, with the cardholder's name on it.",
+    2: "Limits on each card would cap future spending. Maria's problem is that nobody could say who made the charge, and Prop 1 answers that.",
+    3: "Nothing Maria said was about currency. Leading with FX would tell her you weren't listening.",
+    4: "Receipts arrive after the money has gone. Maria's problem was two weeks of not knowing who spent it, and Prop 1 shows that the moment it happens.",
   },
-  sayIt: "\"So a £1,200 charge sat there for two weeks and nobody knew whose it was. With us you'd see it the minute it happened, with the name of the person who made it.\"",
+  sayIt: "\"So a £1,200 charge sat there for two weeks and nobody knew whose it was. With us you'd see it the minute it happened, with the name of whoever made it.\"",
 };
 
-/** Step 6: three pains mapped unaided. `signal` picks a line from the profile. */
+/** Step 5: words from Maria's pain the learner should say back to her. */
+const MARIA_WORDS = ["charge", "1,200", "£1,200", "weeks", "nobody", "explain", "whose", "who"];
+
+/** Step 6: three pains mapped unaided. `signal` picks a line from the buyer's (or stakeholder's) profile. */
 const SOLO = [
-  { painId: "PP-04", profileId: "EW-emma", signal: 1,
-    why: "Her bookkeeper types every supplier receipt into Xero, 3 to 4 days a month. Prop 4 captures the receipt at purchase and syncs it, so that work goes away. A.B., the bookkeeper, is the person who has to agree." },
-  { painId: "PP-03", profileId: "SK-sarah", signal: 2,
-    why: "S.K. named the leak herself: about 2.4% on €60K a month of EUR-USD spend. Prop 3 converts at the interbank rate. Lead with it and quote her numbers back to her." },
-  { painId: "PP-06", profileId: null, signal: null,
-    why: "Lukas wants a weekly cap for each site manager. Team cards with a limit per card (Prop 2) give him that without calling the bank." },
+  { painId: "PP-04", leadId: "L-003", signal: 1,
+    why: "Finance tags more than 400 supplier transactions a month by hand because Xero can't read the job numbers. Prop 4 captures the receipt at purchase and sends it to Xero with the job number. A.B., the bookkeeper, is the person who has to agree." },
+  { painId: "PP-03", stakeholderId: "SK-sarah", signal: 2,
+    why: "S.K. named the loss herself: about 2.4% on €80K a month of USD payments, roughly €1,900. Prop 3 converts at the interbank rate, so lead with it and quote her numbers back to her." },
+  { painId: "PP-06", leadId: "L-004", signal: null,
+    why: "Lukas wants a weekly cap for each site manager. Team cards with per-card limits (Prop 2) give him that without a call to the bank." },
 ];
 
 /** Quiz: learner-facing rationale and stem fixes, keyed by item id. */
 const QUIZ_COPY = {
-  "M5-Q1": { rationale: "Emma's pain is days of re-keying receipts. Receipt capture with Xero sync removes that work, so Prop 4 leads." },
-  "M5-Q2": { stem: "Tom (Series-B founder) says: 'We hired 12 engineers; per-employee cards take forever.' Which reply uses his words instead of jargon?",
-             rationale: "B answers in Tom's terms (new hires, pinging finance) and gives one number: two minutes per card. The other three are vendor jargon Tom would have to translate." },
-  "M5-Q3": { rationale: "S.K. owns the FX numbers, so ask her before you pick a prop. Tom's view of FX may be wrong. In M.G.'s call it was S.K.'s answer that surfaced the €1,800 a month." },
+  "M5-Q1": { stem: "Emma, who runs operations at a manufacturer with 78 people, says: 'Finance tags 400-plus supplier card transactions a month by hand, because Xero can't read our job numbers.' Which prop do you lead with?",
+             rationale: "Emma's finance team tags receipts by hand for hours every month. Receipt capture with Xero sync removes that work, which makes Prop 4 the one to lead with." },
+  "M5-Q2": { stem: "Tom, the founder of a Series-B SaaS company, says: 'We're hiring six engineers this quarter, and per-employee cards take forever.' Which reply uses his words instead of jargon?",
+             rationale: "The API reply talks about Tom's new hires and gives him one number, two minutes per card. The other three are vendor jargon he would have to translate." },
+  "M5-Q3": { stem: "You are 90 seconds into a call with Tom when S.K., his finance lead, joins. Tom hasn't mentioned FX, and you were about to pitch Prop 2. What do you do?",
+             rationale: "S.K. owns the FX numbers, so ask her before you choose a prop. On L.D.'s call it was her answer that brought out the €1,900 a month." },
 };
 
 // --- Data -------------------------------------------------------------------
 
-async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.json(); }
+async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return resolveDates(await r.json()); }
 async function loadAllData() {
-  const [bank, prospects, transcripts, quiz] = await Promise.all([
+  const [buyers, bank, prospects, transcripts, quiz] = await Promise.all([
+    loadProfiles(),
     loadJson("./data/prop-pain-bank.json"),
     loadJson("./data/prospects.json"),
     loadJson("./data/transcripts.json"),
@@ -81,7 +93,9 @@ async function loadAllData() {
   ]);
   state.props = bank.props_reference ?? {};
   state.pains = bank.pains ?? [];
-  state.profiles = Array.isArray(prospects) ? prospects : (prospects?.profiles ?? []);
+  state.buyers = buyers;
+  state.stakeholders = prospects?.stakeholders ?? [];
+  if (!findProfile(buyers, "L-002") || !findProfile(buyers, "L-001")) throw new Error("buyer profiles missing");
   state.transcripts = transcripts;
   state.quizItems = normalizeQuiz(quiz).map(q => {
     const fix = QUIZ_COPY[q.id] ?? {};
@@ -94,7 +108,8 @@ async function loadAllData() {
 }
 
 const pain = id => state.pains.find(p => p.id === id);
-const profile = id => state.profiles.find(p => p.id === id);
+const stakeholder = id => state.stakeholders.find(p => p.id === id);
+const buyer = id => findProfile(state.buyers, id);
 const propName = n => state.props[n] ?? state.props[String(n)] ?? `Prop ${n}`;
 
 /** Strip source references like "(§12.1)" or "brief §12.3" from data strings. */
@@ -113,7 +128,7 @@ async function start() {
   catch (err) { console.error("[M5]", err); renderFatal(err.message); return; }
   bootModule({
     moduleId: "M5",
-    title: "Module 5 · Product-Prop Mapping",
+    title: "Module 5: Matching pains to products",
     appsToLaunch: [],
     onReady(api) {
       state.api = api; state.startedAt = Date.now();
@@ -125,31 +140,44 @@ async function start() {
 start();
 
 const STEPS = [
-  { title: "A call lost to the wrong pitch",           handler: stepGainAttention },
-  { title: "What you'll be able to do",                handler: stepStateOutcome },
-  { title: "The four props on one card",               handler: stepRecallPrior },
-  { title: "Watch M.G. match S.K.'s pain to a prop",   handler: stepWorkedExample },
-  { title: "Your turn: match Maria's pain",            handler: stepGuided },
-  { title: "On your own: three buyers, three pains",   handler: stepSolo },
+  { title: "A call that was lost to the wrong pitch",  handler: stepGainAttention },
+  { title: "What you will practise in this module",    handler: stepStateOutcome },
+  { title: "The four props on J.T.'s card",            handler: stepRecallPrior },
+  { title: "How L.D. matched S.K.'s pain to a prop",   handler: stepWorkedExample },
+  { title: "Choosing a prop for Maria",                handler: stepGuided },
+  { title: "Three pains and a new stakeholder",        handler: stepSolo },
   { title: "J.T.'s review of your matches",            handler: stepFeedback },
-  { title: "Quick check: 3 questions",                 handler: stepQuiz },
-  { title: "Takeaway and a 7-day refresher",           handler: stepTakeaway },
+  { title: "Three questions from J.T.",                handler: stepQuiz },
+  { title: "M.G.'s note and a reminder in seven days", handler: stepTakeaway },
 ];
+
+/** Continue stays off until the step's task is done in the apps. A step done once stays open after Back. */
+const doneSteps = new Set();
+function setNextEnabled(on) {
+  const next = document.getElementById("narrative-next");
+  next.disabled = !on;
+  next.setAttribute("aria-disabled", String(!on));
+  next.title = on ? "" : "Finish the task in the apps to continue";
+}
+function markDone(i) { doneSteps.add(i); if (state.step === i) setNextEnabled(true); }
 
 function runStep(i) {
   state.step = i;
-  document.getElementById("gagne-step").textContent = `${i + 1} of ${STEPS.length}`;
+  // Each step mounts its own action bar; drop the previous step's one.
+  document.querySelectorAll(".m5-bar").forEach(el => el.remove());
+  document.getElementById("gagne-step").textContent = `Step ${i + 1} of ${STEPS.length}`;
   document.getElementById("narrative-title").textContent = STEPS[i].title;
   updateProgressBar(i + 1);
   const body = document.getElementById("narrative-body"); body.innerHTML = "";
   document.getElementById("narrative-back").hidden = i === 0;
   const next = document.getElementById("narrative-next");
   next.textContent = i === STEPS.length - 1 ? "Finish module" : "Continue";
-  next.disabled = false; next.setAttribute("aria-disabled", "false");
+  setNextEnabled(doneSteps.has(i));
   STEPS[i].handler(body);
 }
 /** Advance only if the learner is still on step `from` (guards double clicks). */
 function advanceFrom(from, delay = 450) {
+  markDone(from);
   setTimeout(() => { if (state.step === from) runStep(from + 1); }, delay);
 }
 
@@ -163,13 +191,12 @@ function showWelcomeCard(onStart) {
   card.innerHTML = `
     <div class="welcome-card__panel">
       <span class="welcome-card__logo" aria-hidden="true">FTC</span>
-      <div class="welcome-card__kicker">Module 5 &middot; match the pain</div>
-      <h2 class="welcome-card__title" id="welcome-title">Product-Prop Mapping</h2>
-      <div class="welcome-card__meta">10 min &middot; 9 steps &middot; in-app practice</div>
+      <h2 class="welcome-card__title" id="welcome-title">Matching pains to products</h2>
       <p class="welcome-card__lede">
-        Buyers tell you what hurts. Your job is to hear it, pick the one prop
-        that fixes it and say it back in their words. You'll practise on Tom,
-        Maria, Emma and two more buyers.
+        Over the next ten minutes you will practise hearing what hurts when a buyer
+        talks and choosing the one product that answers it. Then you say it back in the
+        buyer's own words. You start with Tom and Maria and go on to Emma, Lukas and S.K.,
+        Tom's finance lead.
       </p>
       <button type="button" class="welcome-card__start" data-action="start">
         Start module &rarr;
@@ -196,15 +223,14 @@ function updateProgressBar(c) {
 
 function wireNarrativeButtons() {
   document.getElementById("narrative-next").addEventListener("click", () => {
+    if (!doneSteps.has(state.step)) return;
     if (state.step >= STEPS.length - 1) return finishModule();
     runStep(state.step + 1);
   });
   document.getElementById("narrative-back").addEventListener("click", () => { if (state.step > 0) runStep(state.step - 1); });
   document.getElementById("narrative-redo")?.addEventListener("click", () => runStep(state.step));
-  document.getElementById("narrative-skip")?.addEventListener("click", () => {
-    if (state.step >= STEPS.length - 1) return finishModule();
-    runStep(state.step + 1);
-  });
+  // No Skip: every task can be finished (a wrong answer shows the right one), and the summary only counts finished work.
+  document.getElementById("narrative-skip")?.remove();
 }
 /** Help opens the 4-prop card in Slack (read-only), unless Slack is already up. */
 function wireHelpButton() {
@@ -254,8 +280,9 @@ function fitWindow(appId, maxW) {
   Object.assign(win.style, { left: "16px", top: "16px", width: `${w}px`, height: `${Math.max(300, area.h - 16)}px` });
   win.dataset.maximized = "false";
 }
+const DIAL_LOCK = "No calls in this module: you're matching pains to props from call notes.";
 function openOutreach() {
-  if (!findWin("outreach")) state.api.os.openApp("outreach");
+  state.api.os.openApp("outreach", { dialLocked: DIAL_LOCK });
   fitWindow("outreach", 820);
   return appBody("outreach");
 }
@@ -273,19 +300,20 @@ function stepGainAttention(body) {
   body.innerHTML = `
     <blockquote class="peer-quote">
       Rep: "${escapeHtml(repLine)}"<br>S.K.: "${escapeHtml(skLine)}"
-      <cite>Gong · Tom and S.K. · call ended at 1:02, no meeting</cite>
+      <cite>A call with Tom and S.K. that ended at 1:02 without a meeting</cite>
     </blockquote>
     <p style="font-size:13.5px;margin-top:10px">
-      The rep pitched before asking what hurt. S.K. had a real problem, but nobody asked about it.
+      The rep pitched before asking what hurt. S.K. had a real problem with the cost of
+      currency conversion, and nobody on the call found out about it.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Top reps listen for the pain, pick the one prop that answers it and say it in the buyer's words.
-      Click <strong>Tom</strong> in Outreach to see that on a real lead.
+      Click <strong>Tom</strong> in Outreach to see one pain turned into one prop and put back in
+      the buyer's words.
     </p>`;
   keepOnly(["outreach"]);
   const ob = openOutreach();
   if (!ob) return;
-  mountTaskBanner(ob, { id: "m5-s1-tom", label: "Click Tom to open his call notes", hint: "Northwind Telemetry · Series-B SaaS", state: "active" });
+  mountTaskBanner(ob, { id: "m5-s1-tom", label: "Click Tom's row to open the notes from your last call with him.", state: "active" });
   waitFor(() => leadRow(ob, "Tom"), row => {
     row.classList.add("is-warm-highlight");
     if (row.dataset.m5Bound) return;
@@ -305,18 +333,14 @@ function stepGainAttention(body) {
 function showTomCard(ob, row) {
   if (ob.querySelector("[data-m5-tom-card]")) return;
   const p = pain("PP-02");
-  const tom = profile("TM-tom");
+  const tom = buyer("L-002");
   const card = document.createElement("div");
   card.className = "tom-drawer m5-card";
   card.setAttribute("data-m5-tom-card", "");
   card.innerHTML = `
-    <header class="tom-drawer__head"><strong>${escapeHtml(tom?.short_name ?? "Tom")} · last call notes</strong><span class="tom-drawer__cue">Pain to prop</span></header>
-    <dl class="m5-map">
-      <dt>He said</dt><dd><em>"${escapeHtml(p?.statement ?? "")}"</em></dd>
-      <dt>The pain</dt><dd>Every new hire waits on him for a card.</dd>
-      <dt>One prop</dt><dd><span class="m5-prop-tag">Prop ${p?.correct_prop ?? 2}</span> ${escapeHtml(propName(p?.correct_prop ?? 2))}</dd>
-      <dt>In his words</dt><dd>"So each new engineer waits on you for a card. With us you issue it yourself in two minutes, and each card gets its own limit."</dd>
-    </dl>`;
+    <header class="tom-drawer__head"><strong>Notes from your last call with ${escapeHtml(tom?.name ?? "Tom")}</strong></header>
+    <p class="tom-drawer__stem">Tom said <em>"${escapeHtml(p?.statement ?? "")}"</em> Every new hire waits on him for a card.</p>
+    <p class="tom-drawer__stem">The prop that answers this is <span class="m5-prop-tag">Prop ${p?.correct_prop ?? 2}</span> ${escapeHtml(propName(p?.correct_prop ?? 2)).toLowerCase()}. In his words it sounds like this: "So each new engineer waits on you for a card. With us you issue it yourself in two minutes, and each card gets its own limit."</p>`;
   row.insertAdjacentElement("afterend", card);
   scrollInto(card);
 }
@@ -325,21 +349,20 @@ function showTomCard(ob, row) {
 
 function stepStateOutcome(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">By the end of these 10 minutes you can:</p>
-    <ul style="font-size:13.5px;margin:6px 0 10px 18px;">
-      <li>hear a buyer's pain and name the one prop that answers it;</li>
-      <li>say that prop in the buyer's own words, using their numbers;</li>
-      <li>ask a fresh question when a second person joins the call.</li>
-    </ul>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">You just saw the first two on Tom. Confirm in Outreach to go on.</p>`;
+    <p style="font-size:14px;">
+      In this module you will practise naming the one prop that answers a buyer's pain and
+      saying it back in the buyer's own words and numbers. You will also ask a fresh question
+      when a second person joins the call.
+    </p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">You have already seen the first two in Tom's notes. Confirm in Outreach that you have read them.</p>`;
   const ob = openOutreach();
   if (!ob) return;
   waitFor(() => leadRow(ob, "Tom"), row => {
     showTomCard(ob, row);
-    mountTaskBanner(ob, { id: "m5-s2-ok", label: "Confirm under Tom's notes that you've read them", state: "active" });
+    mountTaskBanner(ob, { id: "m5-s2-ok", label: "Click Got it under Tom's notes once you have read them.", state: "active" });
     const card = ob.querySelector("[data-m5-tom-card]");
     if (!card.querySelector("[data-m5-s2-done]")) {
-      const bar = actionBar("Tom's pain maps to Prop 2. Next you'll do this for five more buyers.", "✓ Got it", "data-m5-s2-done");
+      const bar = actionBar("Tom's pain points to Prop 2. Next you'll do the same for four more pains and then ask a second stakeholder a fresh question.", "✓ Got it", "data-m5-s2-done");
       card.appendChild(bar);
       bar.querySelector("button").addEventListener("click", () => {
         if (state.step !== 1) return;
@@ -355,18 +378,18 @@ function stepStateOutcome(body) {
 
 function stepRecallPrior(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">FinTechCard sells four props. Every pain you'll hear points at one of them.</p>
+    <p style="font-size:14px;">FinTechCard sells four props, and every pain you will hear in this module points at one of them.</p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Open the 4-prop card in Slack, then tap the prop that answers Tom's pain.
+      Open J.T.'s card with the four props in Slack and choose the one that answers Tom's pain.
       The card stays under the <strong>Help</strong> button for the rest of the module.
     </p>`;
   const ob = openOutreach();
   if (!ob) return;
-  mountTaskBanner(ob, { id: "m5-s3-open", label: "Open the 4-prop card in Slack", state: "active" });
+  mountTaskBanner(ob, { id: "m5-s3-open", label: "Open J.T.'s card with the four props in Slack.", state: "active" });
   const card = ob.querySelector("[data-m5-tom-card]");
   const host = card ?? ob.querySelector(".oa-queue") ?? ob;
   host.querySelector("[data-m5-s3-open]")?.closest(".m5-bar")?.remove();
-  const bar = actionBar("J.T. pinned the 4-prop card in the pod channel.", "Open Slack", "data-m5-s3-open");
+  const bar = actionBar("J.T. has pinned the card with the four props in the pod channel.", "Open Slack", "data-m5-s3-open");
   host.appendChild(bar);
   scrollInto(bar);
   bar.querySelector("button").addEventListener("click", () => {
@@ -384,7 +407,7 @@ function openPropCardInSlack({ interactive }) {
       channel_id: "sdr-pod-uk-manchester",
       pinned_messages: [],
       messages: [
-        { author: "J.T. (pod lead)", initials: "JT", ts: "09:12", body: "Pinned the 4-prop card again. One pain, one prop. Keep the other three for later questions." },
+        { author: "J.T. (pod lead)", initials: "JT", ts: "09:12", body: "Pinned the four props again. Pick one per pain and keep the others for later questions." },
       ],
     },
   });
@@ -396,8 +419,8 @@ function openPropCardInSlack({ interactive }) {
     card.className = "m5-propcard";
     card.setAttribute("data-m5-propcard", "");
     card.innerHTML = `
-      <div class="m5-propcard__label">Pinned by J.T. · 4-prop card</div>
-      ${interactive ? `<p class="m5-propcard__q">Which prop answers Tom's pain? <em>"${escapeHtml(tomPain?.statement ?? "")}"</em></p>` : ""}
+      <div class="m5-propcard__label">J.T. pinned this card with the four props</div>
+      ${interactive ? `<p class="m5-propcard__q">Tom said <em>"${escapeHtml(tomPain?.statement ?? "")}"</em> Which prop answers him?</p>` : ""}
       <div class="m5-propcard__rows" ${interactive ? 'role="radiogroup" aria-label="Pick the prop"' : ""}>
         ${[1, 2, 3, 4].map(n => `
           <${interactive ? 'button type="button" role="radio" aria-checked="false"' : "div"} class="m5-propcard__row" data-prop="${n}">
@@ -408,7 +431,7 @@ function openPropCardInSlack({ interactive }) {
       <div class="tom-drawer__fb" data-m5-propcard-fb hidden></div>`;
     feed.prepend(card);
     if (!interactive) return;
-    mountTaskBanner(sb, { id: "m5-s3-pick", label: "Tap the prop that answers Tom's pain", hint: "Read the four lines first", state: "active" });
+    mountTaskBanner(sb, { id: "m5-s3-pick", label: "Read the four lines on the card and click the prop that answers Tom's pain.", state: "active" });
     const fb = card.querySelector("[data-m5-propcard-fb]");
     const right = tomPain?.correct_prop ?? 2;
     card.querySelectorAll(".m5-propcard__row").forEach(btn => btn.addEventListener("click", () => {
@@ -419,11 +442,11 @@ function openPropCardInSlack({ interactive }) {
       btn.classList.add(n === right ? "is-correct" : "is-incorrect");
       fb.hidden = false;
       if (n === right) {
-        fb.textContent = "Right. Tom hands out every card himself, so team cards with their own limits answer him.";
+        fb.textContent = "Tom hands out every card himself. Team cards with their own limits take that job off him.";
         markTaskBannerDone("m5-s3-pick");
         advanceFrom(2, 1400);
       } else {
-        fb.textContent = "Not this one. Tom isn't worried about this. Re-read his words: every new hire needs a card from him.";
+        fb.textContent = "Tom didn't mention this. His words say that every new hire needs a card from him.";
       }
     }));
   });
@@ -450,22 +473,22 @@ function toGong(t, id, rep, outcome) {
 function stepWorkedExample(body) {
   body.innerHTML = `
     <p style="font-size:14px;">
-      M.G. calls Tom. At 1:38 Tom brings in <strong>S.K.</strong>, his finance lead.
-      The pains they name are marked in yellow.
+      In this call L.D. is talking to Tom when, at 1:38, Tom brings in <strong>S.K.</strong>,
+      his finance lead. The lines where either of them names a pain are marked in yellow.
     </p>
     <p style="font-size:13px;color:var(--ftc-ink-2)">
-      Click the line where M.G. answers S.K.'s pain with one prop.
-      The lost call with the same buyers is also in the list, if you want to compare.
+      Click the line where L.D. answers S.K.'s pain with one prop. The lost call with the same
+      two buyers is also in the list.
     </p>`;
   keepOnly(["gong"]);
   closeApp("gong");
-  const worked = toGong(state.transcripts?.worked, WORKED_ID, "M.G.", "Meeting booked");
+  const worked = toGong(state.transcripts?.worked, WORKED_ID, "L.D.", "Meeting booked");
   const lost = toGong(state.transcripts?.contrast, LOST_ID, "Rep", "No meeting");
   state.api.os.openApp("gong", { transcripts: [worked, lost], activeTranscriptId: WORKED_ID });
   fitWindow("gong");
   waitFor(() => appBody("gong")?.querySelector(".transcript .turn"), () => {
     const gb = appBody("gong");
-    mountTaskBanner(gb, { id: "m5-s4-find", label: "Click the line where M.G. matches S.K.'s pain to a prop", hint: "Yellow lines are the pains", state: "active" });
+    mountTaskBanner(gb, { id: "m5-s4-find", label: "Click the line where L.D. answers S.K.'s pain with a prop.", state: "active" });
     const tr = gb.querySelector("[data-region='transcript']");
     const pane = tr.parentElement;
     let fb = pane.querySelector("[data-m5-gong-fb]");
@@ -473,7 +496,7 @@ function stepWorkedExample(body) {
       fb = document.createElement("div");
       fb.className = "m5-gong-fb";
       fb.setAttribute("data-m5-gong-fb", "");
-      fb.innerHTML = `<span data-m5-gong-msg>Find the moment M.G. picks a prop for S.K.</span>`;
+      fb.innerHTML = `<span data-m5-gong-msg>Look for the moment when L.D. chooses a prop for S.K.</span>`;
       pane.appendChild(fb);
     }
     const msg = fb.querySelector("[data-m5-gong-msg]");
@@ -504,7 +527,7 @@ function stepWorkedExample(body) {
         tr.querySelectorAll(".m5-tag").forEach(t => t.remove());
         decorate();
         tr.querySelector(".turn.m5-prop")?.scrollIntoView({ block: "nearest" });
-        msg.innerHTML = `<strong>That's the one.</strong> S.K. lost 2.4% on FX, about €1,900 a month. M.G. picked Prop 3 and used her numbers: "On €80K/month you'd recover roughly €1,800." Tom's card problem gets Prop 2 after that.`;
+        msg.innerHTML = `S.K. was losing 2.4% on FX, about €1,900 a month. L.D. chose Prop 3 and used her own numbers ("On €80K/month you'd recover roughly €1,900"). Tom's card problem gets Prop 2 after that.`;
         fb.classList.add("is-done");
         if (!fb.querySelector("button")) {
           const b = document.createElement("button");
@@ -513,16 +536,16 @@ function stepWorkedExample(body) {
           fb.appendChild(b);
           b.addEventListener("click", () => { markTaskBannerDone("m5-s4-find"); advanceFrom(3, 200); });
         }
-        state.timeline.push({ label: "Found M.G.'s match", detail: "S.K.'s FX leak → Prop 3, with her numbers", ts: clock() });
+        state.timeline.push({ label: "Found L.D.'s match", detail: "S.K.'s FX leak → Prop 3, with her numbers", ts: clock() });
         state.api.eventLog?.record?.("worked_example_completed");
       } else if (ts === "2:24") {
-        msg.textContent = "Close. Here M.G. repeats S.K.'s pain back to her. The prop comes in the next line.";
+        msg.textContent = "Here L.D. repeats S.K.'s pain back to her, and the prop comes in the line after it.";
       } else if (ts === "0:46") {
-        msg.textContent = "Not yet. M.G. asks about FX here, but nobody has named that pain. Keep reading.";
+        msg.textContent = "L.D. asks about FX here before anyone has named it as a problem. Keep reading.";
       } else if (["0:14", "1:42", "2:10"].includes(ts)) {
-        msg.textContent = "That's a pain, not the answer. Look for the line where M.G. puts a number on the fix.";
+        msg.textContent = "This line names a pain. L.D. puts a number on the fix a little further on.";
       } else {
-        msg.textContent = "Not this line. Look after S.K. names her monthly leak.";
+        msg.textContent = "The answer comes after S.K. says how much she loses each month.";
       }
       scrollInto(fb);
     });
@@ -544,15 +567,14 @@ function markTurn(el, cls, label) {
 function stepGuided(body) {
   const p = pain(GUIDED.painId);
   body.innerHTML = `
-    <p style="font-size:14px;"><strong>${escapeHtml(clean(p?.archetype_label))}</strong> told you:
-      <em>"${escapeHtml(p?.statement)}"</em></p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Pick the one prop to lead with in the drawer under her row. A wrong pick shows you why.</p>`;
+    <p style="font-size:14px;"><strong>Maria</strong>, who owns two retail stores, told you <em>"${escapeHtml(p?.statement)}"</em></p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Choose the one prop you would lead with in the panel under her row.</p>`;
   keepOnly(["outreach"]);
   const ob = openOutreach();
   if (!ob) return;
   ob.querySelectorAll("[data-m5-tom-card]").forEach(n => n.remove());
   ob.querySelectorAll(".is-warm-highlight").forEach(n => n.classList.remove("is-warm-highlight"));
-  mountTaskBanner(ob, { id: "m5-s5-pick", label: "Pick the prop for Maria's pain", hint: "The drawer is open under her row", state: "active" });
+  mountTaskBanner(ob, { id: "m5-s5-pick", label: "Choose the prop for Maria's pain in the panel under her row.", state: "active" });
   waitFor(() => leadRow(ob, "Maria"), row => {
     row.classList.add("is-warm-highlight");
     ob.querySelector("[data-m5-s5-drawer]")?.remove();
@@ -560,8 +582,8 @@ function stepGuided(body) {
     drawer.className = "tom-drawer";
     drawer.setAttribute("data-m5-s5-drawer", "");
     drawer.innerHTML = `
-      <header class="tom-drawer__head"><strong>Maria · discovery call · 02:10</strong><span class="tom-drawer__cue">Pick one prop</span></header>
-      <p class="tom-drawer__stem"><em>"${escapeHtml(p?.statement)}"</em></p>
+      <header class="tom-drawer__head"><strong>Your discovery call with Maria, two minutes in</strong></header>
+      <p class="tom-drawer__stem">Maria says <em>"${escapeHtml(p?.statement)}"</em></p>
       <div class="tom-drawer__opts" role="radiogroup" aria-label="Pick the prop">
         ${[1, 2, 3, 4].map(n => `<button type="button" class="tom-drawer__opt" role="radio" aria-checked="false" data-result="${n === p?.correct_prop ? "correct" : "anti"}" data-prop="${n}"><span class="tom-drawer__label">${n}</span><span class="tom-drawer__text">${escapeHtml(propName(n))}</span></button>`).join("")}
       </div>
@@ -579,15 +601,60 @@ function stepGuided(body) {
       btn.classList.add(ok ? "is-correct" : "is-incorrect");
       if (!ok) drawer.querySelector('.tom-drawer__opt[data-result="correct"]')?.classList.add("is-reveal");
       fb.hidden = false;
-      fb.innerHTML = escapeHtml(GUIDED.why[n]) + (ok ? `<br><span class="m5-say">Say it her way: ${escapeHtml(GUIDED.sayIt)}</span>` : "");
+      fb.textContent = GUIDED.why[n];
       scrollInto(fb);
-      if (ok) {
-        markTaskBannerDone("m5-s5-pick");
-        state.timeline.push({ label: "Matched Maria's pain", detail: `Prop 1 · ${state.guidedTries === 1 ? "first try" : `${state.guidedTries} tries`}`, ts: clock() });
-        state.api.eventLog?.record?.("completion_problem_completed", { tries: state.guidedTries });
-        advanceFrom(4, 2600);
+      if (ok && !drawer.querySelector("[data-m5-say]")) {
+        drawer.querySelectorAll(".tom-drawer__opt").forEach(b => { b.disabled = true; });
+        state.timeline.push({ label: "Maria's pain", detail: `you chose Prop 1 ${state.guidedTries === 1 ? "on the first try" : `after ${state.guidedTries} tries`}`, ts: clock(), ok: state.guidedTries === 1 });
+        mountSayIt(drawer);
       }
     }));
+  });
+}
+
+/** After the right prop: the learner says it back in Maria's words, then sees the model line. */
+function mountSayIt(drawer) {
+  mountTaskBanner(appBody("outreach"), { id: "m5-s5-say", label: "Say it back to Maria with at least two of her words.", state: "active" });
+  const box = document.createElement("div");
+  box.className = "m5-sayit";
+  box.setAttribute("data-m5-say", "");
+  box.innerHTML = `
+    <label for="m5-say" class="m5-sayit__label">What you would say to Maria</label>
+    <textarea id="m5-say" rows="2" placeholder="So …"></textarea>
+    <div class="m5-sayit__row"><span data-m5-say-status>Use at least two of her words.</span><button type="button" class="m5-btn" data-m5-say-btn disabled>Say it</button></div>
+    <p class="m5-say" data-m5-say-model hidden></p>`;
+  drawer.appendChild(box);
+  scrollInto(box);
+  const ta = box.querySelector("#m5-say");
+  const btn = box.querySelector("[data-m5-say-btn]");
+  const status = box.querySelector("[data-m5-say-status]");
+  const used = () => {
+    const t = ta.value.toLowerCase();
+    const hits = new Set(MARIA_WORDS.filter(w => t.includes(w)).map(w => (w.includes("1,200") ? "1,200" : w === "whose" ? "who" : w)));
+    return [...hits];
+  };
+  ta.addEventListener("input", () => {
+    const u = used();
+    btn.disabled = ta.value.trim().length < 20;
+    status.textContent = u.length ? `So far you have used her words ${u.join(", ")}.` : "Use at least two of her words.";
+  });
+  btn.addEventListener("click", () => {
+    if (state.step !== 4 || btn.disabled) return;
+    const u = used();
+    const ok = u.length >= 2;
+    state.guidedSay = { text: ta.value.trim(), used: u, ok };
+    btn.disabled = true; ta.readOnly = true;
+    const model = box.querySelector("[data-m5-say-model]");
+    model.hidden = false;
+    model.textContent = `${ok ? "Maria hears her own problem first." : "Maria won't recognise her own problem in that yet. Reuse more of her words."} M.G. would say something like ${GUIDED.sayIt}`;
+    state.timeline.push({ label: "Saying it back to Maria", detail: ok ? `you used her words ${u.join(", ")}` : "the line wasn't in her words yet", ts: clock(), ok });
+    markTaskBannerDone("m5-s5-say");
+    state.api.eventLog?.record?.("completion_problem_completed", { tries: state.guidedTries, said_in_her_words: ok });
+    const next = document.createElement("button");
+    next.type = "button"; next.className = "m5-btn"; next.textContent = "Next: on your own →";
+    box.appendChild(next);
+    next.addEventListener("click", () => advanceFrom(4, 100));
+    scrollInto(next);
   });
 }
 
@@ -595,35 +662,49 @@ function stepGuided(body) {
 
 function stepSolo(body) {
   body.innerHTML = `
-    <p style="font-size:14px;">Three pains from this week's calls. Pick one prop for each. No hints this time.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">You'll see if you were right after each pick. When all three are done, send them to J.T.</p>
-    <p class="retention-note" data-m5-solo-status aria-live="polite">0 of 3 matched</p>`;
+    <p style="font-size:14px;">Here are three pains from this week's calls. Choose one prop for each, this time without hints.</p>
+    <p style="font-size:13px;color:var(--ftc-ink-2)">Then S.K. joins Tom's call, and you ask her a fresh question before you name any prop. When all four are done, send them to J.T.</p>
+    <p class="retention-note" data-m5-solo-status aria-live="polite">You haven't matched any of the three pains yet.</p>`;
   keepOnly(["outreach"]);
   const ob = openOutreach();
   if (!ob) return;
   ob.querySelectorAll("[data-m5-tom-card], [data-m5-s5-drawer]").forEach(n => n.remove());
   ob.querySelectorAll(".is-warm-highlight").forEach(n => n.classList.remove("is-warm-highlight"));
-  mountTaskBanner(ob, { id: "m5-s6-solo", label: "Match each pain to one prop", hint: "Three buyers · one pick each", state: "active" });
+  mountTaskBanner(ob, { id: "m5-s6-solo", label: "Choose a prop for each pain, then write your question for S.K.", state: "active" });
   const queue = ob.querySelector(".oa-queue") ?? ob;
   queue.querySelector("[data-m5-s6-stage]")?.remove();
   state.solo = [];
+  state.fresh = null;
   const stage = document.createElement("div");
   stage.className = "m5-solo";
   stage.setAttribute("data-m5-s6-stage", "");
-  const items = SOLO.map(s => ({ ...s, p: pain(s.painId), prof: s.profileId ? profile(s.profileId) : null })).filter(s => s.p);
+  const signalOf = s => {
+    if (s.signal === null) return "";
+    const src = s.leadId ? buyer(s.leadId)?.signals?.[s.signal]?.content : stakeholder(s.stakeholderId)?.signals?.[s.signal];
+    return src ?? "";
+  };
+  const items = SOLO.map(s => ({ ...s, p: pain(s.painId), sig: signalOf(s) })).filter(s => s.p);
   stage.innerHTML = `
-    <div class="m5-solo__head">Pain to prop · on your own</div>
+    <div class="m5-solo__head">Three pains from this week's calls</div>
     ${items.map((s, i) => `
       <section class="m5-solo__item" data-i="${i}">
-        <div class="m5-solo__who">${escapeHtml(clean(s.p.archetype_label))}${s.prof?.signals?.[s.signal] ? ` <span>· ${escapeHtml(clean(s.prof.signals[s.signal]).replace(/\s*\([^)]*\)$/, ""))}</span>` : ""}</div>
+        <div class="m5-solo__who">${escapeHtml(clean(s.p.archetype_label))}${s.sig ? ` <span>· ${escapeHtml(clean(s.sig).replace(/\s*\([^)]*\)$/, ""))}</span>` : ""}</div>
         <p class="m5-solo__pain">"${escapeHtml(s.p.statement)}"</p>
         <div class="m5-solo__opts" role="radiogroup" aria-label="Prop for this pain">
           ${[1, 2, 3, 4].map(n => `<button type="button" class="m5-solo__opt" role="radio" aria-checked="false" data-prop="${n}"><b>${n}</b> ${escapeHtml(propName(n))}</button>`).join("")}
         </div>
         <div class="tom-drawer__fb" hidden></div>
       </section>`).join("")}
+    <section class="m5-solo__item" data-m5-fresh>
+      <div class="m5-solo__who">S.K., Tom's finance lead, <span>joins your call with Tom at 1:38</span></div>
+      <p class="m5-solo__pain">"Hi, Tom asked me to listen in."</p>
+      <label for="m5-fresh" class="m5-sayit__label">The question you ask her before you name any prop</label>
+      <textarea id="m5-fresh" rows="2" placeholder="S.K., …?"></textarea>
+      <div class="m5-sayit__row"><span data-m5-fresh-status>Ask about her own numbers and leave the product out for now.</span><button type="button" class="m5-btn" data-m5-fresh-btn disabled>Ask</button></div>
+      <div class="tom-drawer__fb" hidden></div>
+    </section>
     <div class="m5-solo__foot">
-      <span data-m5-solo-score>Pick a prop for each pain.</span>
+      <span data-m5-solo-score>Choose a prop for each pain.</span>
       <button type="button" class="m5-btn" data-m5-s6-send disabled>Send to J.T. →</button>
     </div>`;
   queue.prepend(stage);
@@ -631,10 +712,11 @@ function stepSolo(body) {
   const send = stage.querySelector("[data-m5-s6-send]");
   const status = () => {
     const done = state.solo.length, right = state.solo.filter(r => r.ok).length;
-    const txt = `${right} of ${items.length} matched${done < items.length ? ` · ${items.length - done} to go` : ""}`;
+    const txt = `${right} of ${items.length} pains matched${done < items.length ? `, ${items.length - done} to go` : ""}. ${state.fresh ? "Question for S.K. asked." : "S.K. is waiting for your question."}`;
     const s = document.querySelector("[data-m5-solo-status]"); if (s) s.textContent = txt;
-    stage.querySelector("[data-m5-solo-score]").textContent = done < items.length ? txt : `${right} of ${items.length} right. Send them to J.T. for review.`;
-    send.disabled = done < items.length;
+    const all = done === items.length && state.fresh;
+    stage.querySelector("[data-m5-solo-score]").textContent = all ? `${right} of ${items.length} pains matched and S.K. asked. Send it all to J.T.` : txt;
+    send.disabled = !all;
   };
   stage.querySelectorAll(".m5-solo__item").forEach(sec => {
     const s = items[Number(sec.dataset.i)];
@@ -648,14 +730,38 @@ function stepSolo(body) {
       btn.classList.add(ok ? "is-correct" : "is-incorrect");
       sec.querySelectorAll(".m5-solo__opt").forEach(b => { b.disabled = true; if (!ok && Number(b.dataset.prop) === s.p.correct_prop) b.classList.add("is-reveal"); });
       fb.hidden = false;
-      fb.textContent = ok ? `Right. ${s.why}` : `Not this one. The answer is Prop ${s.p.correct_prop}, ${propName(s.p.correct_prop)}. ${s.why}`;
+      fb.textContent = ok ? s.why : `The prop that fits is Prop ${s.p.correct_prop}, ${propName(s.p.correct_prop).replace(/^[A-Z](?=[a-z])/, ch => ch.toLowerCase())}. ${s.why}`;
       const who = clean(s.p.archetype_label).split("·")[0].trim();
       state.solo.push({ ok, who, picked: n, right: s.p.correct_prop });
-      state.timeline.push({ label: `${ok ? "Matched" : "Missed"} ${who}'s pain`, detail: ok ? `Prop ${n} · ${propName(n)}` : `picked Prop ${n}, answer Prop ${s.p.correct_prop}`, ts: clock(), ok });
+      state.timeline.push({ label: `${who}'s pain`, detail: ok ? `you chose Prop ${n}, ${propName(n).replace(/^[A-Z](?=[a-z])/, ch => ch.toLowerCase())}` : `you chose Prop ${n} when the answer was Prop ${s.p.correct_prop}`, ts: clock(), ok });
       state.api.eventLog?.record?.("prop_mapped", { pain: s.p.id, picked: n, correct: ok });
       status();
       scrollInto(state.solo.length === items.length ? stage.querySelector(".m5-solo__foot") : fb);
     }));
+  });
+  const fresh = stage.querySelector("[data-m5-fresh]");
+  const fta = fresh.querySelector("#m5-fresh");
+  const fbtn = fresh.querySelector("[data-m5-fresh-btn]");
+  fta.addEventListener("input", () => { fbtn.disabled = fta.value.trim().length < 15 || Boolean(state.fresh); });
+  fbtn.addEventListener("click", () => {
+    if (state.step !== 5 || state.fresh) return;
+    const t = fta.value.trim();
+    const checks = {
+      question: /\?\s*$/.test(t),
+      hers: /\b(fx|currency|currencies|usd|eur|dollar|volume|spend|payments?|suppliers?|bills?|statements?|month|monthly|spread|exposure)\b/i.test(t),
+      noPitch: !/\b(interbank|prop|we run|our|cheaper|save|fintechcard|demo)\b/i.test(t),
+    };
+    const ok = checks.question && checks.hers && checks.noPitch;
+    state.fresh = { text: t, checks, ok };
+    fta.readOnly = true; fbtn.disabled = true;
+    const fb = fresh.querySelector(".tom-drawer__fb");
+    fb.hidden = false;
+    const miss = [!checks.question && "make it a question", !checks.hers && "ask about her numbers, such as FX, monthly volume or payments", !checks.noPitch && "leave the prop out until she has answered"].filter(Boolean);
+    fb.textContent = `${ok ? "Your question asks about her numbers before you name anything." : `Next time ${listJoin(miss)}.`} L.D. asked her "S.K., before I go anywhere, what's the monthly EUR-USD volume you're moving on supplier payments?" Her answer, about €1,900 a month lost to the spread, decided the prop.`;
+    state.timeline.push({ label: "Your question for S.K.", detail: ok ? `"${t.slice(0, 70)}"` : `next time ${listJoin(miss)}`, ts: clock(), ok });
+    state.api.eventLog?.record?.("prop_mapped", { pain: "fresh_question_sk", correct: ok });
+    status();
+    scrollInto(fb);
   });
   send.addEventListener("click", () => {
     if (send.disabled || state.step !== 5) return;
@@ -670,22 +776,21 @@ function stepSolo(body) {
 
 function stepFeedback(body) {
   const right = state.solo.filter(r => r.ok).length, total = state.solo.length || SOLO.length;
-  body.innerHTML = `<p style="font-size:14px;"><strong>J.T.</strong> reviewed your matches in Slack.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Read the thread, then mark it read to go on.</p>`;
+  body.innerHTML = `<p style="font-size:14px;"><strong>J.T.</strong>, your pod lead, has reviewed your matches in Slack. Read his messages, then click Mark thread read.</p>`;
   keepOnly([]);
   const dm = [
-    { author: "J.T. (pod lead)", initials: "JT", ts: clock(0), body: state.solo.length ? `Your mapping run: ${right} of ${total} on your own.` : "Here's your mapping run so far." },
-    ...state.timeline.map(e => ({ author: "J.T. (pod lead)", initials: "JT", ts: e.ts, body: `${e.ok === false ? "✗" : "✓"} ${e.label}: ${e.detail}` })),
-    { author: "J.T. (pod lead)", initials: "JT", ts: clock(1), body: "When two props fit, lead with the one the buyer put a number on. Bring the second one up later in the call." },
-    { author: "M.G. (peer)", initials: "MG", ts: clock(2), body: "I write the buyer's exact words in my notes and read them back before I name the prop. They hear their own problem first." },
+    { author: "J.T. (pod lead)", initials: "JT", ts: clock(0), body: state.solo.length ? `Here are my notes on your matches. On your own you got ${right} of ${total} right.` : "Here are my notes on what you've done so far." },
+    ...state.timeline.map(e => ({ author: "J.T. (pod lead)", initials: "JT", ts: e.ts, body: `${e.ok === false ? "⚠️" : "✅"} ${e.label}: ${e.detail}${/[.?!]"?$/.test(e.detail) ? "" : "."}` })),
+    { author: "J.T. (pod lead)", initials: "JT", ts: clock(1), body: "When two props fit, lead with the one the buyer put a number on and bring up the second one later in the call." },
+    { author: "M.G. (peer)", initials: "MG", ts: clock(2), body: "I write down the buyer's exact words during the call and read them back before I name the prop." },
   ];
   state.api.os.openApp("slack", { channel: { channel_id: "coaching-jt", pinned_messages: [], messages: dm } });
   fitWindow("slack", 760);
   waitFor(() => appBody("slack")?.querySelector(".slack-feed"), feed => {
     const sb = appBody("slack");
-    mountTaskBanner(sb, { id: "m5-s7-read", label: "Read J.T.'s review", state: "active" });
+    mountTaskBanner(sb, { id: "m5-s7-read", label: "Read J.T.'s review, then click Mark thread read.", state: "active" });
     if (feed.querySelector("[data-m5-s7-done]")) return;
-    const bar = actionBar("J.T. is waiting for your read receipt.", "✓ Mark thread read", "data-m5-s7-done");
+    const bar = actionBar("J.T. will see that you have read his review.", "✓ Mark thread read", "data-m5-s7-done");
     feed.appendChild(bar);
     bar.querySelector("button").addEventListener("click", () => {
       if (state.step !== 6) return;
@@ -699,18 +804,17 @@ function stepFeedback(body) {
 
 function stepQuiz(body) {
   state.quizIndex = 0; state.quizScore = 0;
-  body.innerHTML = `<p style="font-size:14px;"><strong>Quick check</strong> · 3 questions from J.T. in Slack.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Two of three right is a pass.</p>`;
+  body.innerHTML = `<p style="font-size:14px;">J.T. has posted three questions in Slack, and you pass this check if you answer two of them correctly.</p>`;
   if (!findWin("slack")) { state.api.os.openApp("slack", { channel: { channel_id: "coaching-jt", pinned_messages: [], messages: [] } }); fitWindow("slack", 760); }
   waitFor(() => appBody("slack")?.querySelector(".slack-feed"), feed => {
     const sb = appBody("slack");
-    mountTaskBanner(sb, { id: "m5-s8-quiz", label: "Answer the 3 questions J.T. posted", hint: "A wrong pick shows the right answer", state: "active" });
+    mountTaskBanner(sb, { id: "m5-s8-quiz", label: "Answer J.T.'s three questions. A wrong answer shows you the right one and why.", state: "active" });
     feed.querySelector("[data-m5-s7-done]")?.closest(".m5-bar")?.remove();
     feed.querySelector("[data-m5-quiz-thread]")?.remove();
     const thread = document.createElement("div");
     thread.setAttribute("data-m5-quiz-thread", "");
     thread.className = "m5-quiz";
-    thread.innerHTML = `<div class="m5-quiz__label">J.T. · quick check</div><div data-quiz-host></div>`;
+    thread.innerHTML = `<div class="m5-quiz__label">J.T. posted these questions</div><div data-quiz-host></div>`;
     feed.appendChild(thread);
     renderQuizItem(thread.querySelector("[data-quiz-host]"));
     scrollInto(thread);
@@ -736,7 +840,7 @@ function renderQuizItem(host) {
     btn.setAttribute("aria-checked", "true");
     btn.classList.add(opt.correct ? "is-correct" : "is-incorrect");
     if (!opt.correct) host.querySelectorAll(".tom-drawer__opt").forEach((b, j) => { if (item.options[j]?.correct) b.classList.add("is-reveal"); });
-    fb.hidden = false; fb.textContent = `${opt.correct ? "Correct." : "Not quite."} ${opt.rationale}`;
+    fb.hidden = false; fb.textContent = opt.rationale;
     if (opt.correct) state.quizScore += 1;
     next.disabled = false;
     scrollInto(next);
@@ -752,23 +856,21 @@ function renderQuizItem(host) {
 
 function stepTakeaway(body) {
   const pct = quizPct();
-  body.innerHTML = `<p style="font-size:14px;"><strong>Last step.</strong> M.G. pinned the takeaway in Slack.</p>
-    <p style="font-size:13px;color:var(--ftc-ink-2)">Quiz: <strong>${state.quizScore} of ${state.quizItems.length}</strong> (${pct}%).
-    Schedule the 7-day refresher in Slack to finish the module.</p>`;
+  body.innerHTML = `<p style="font-size:14px;">You answered <strong>${state.quizScore} of ${state.quizItems.length}</strong> questions correctly (${pct}%). M.G. has pinned a short note in Slack, and the module ends when you schedule the refresher under it.</p>`;
   if (!findWin("slack")) { state.api.os.openApp("slack", { channel: { channel_id: "coaching-jt", pinned_messages: [], messages: [] } }); fitWindow("slack", 760); }
   waitFor(() => appBody("slack")?.querySelector(".slack-feed"), feed => {
     const sb = appBody("slack");
     feed.querySelector("[data-m5-quiz-thread]")?.remove();
-    mountTaskBanner(sb, { id: "m5-s9-pin", label: "Read M.G.'s takeaway, then schedule the refresher", state: "active" });
+    mountTaskBanner(sb, { id: "m5-s9-pin", label: "Read M.G.'s note and schedule the refresher, which finishes the module.", state: "active" });
     if (feed.querySelector("[data-m5-pinned]")) return;
     const pin = document.createElement("div");
     pin.className = "m5-pinned";
     pin.setAttribute("data-m5-pinned", "");
     pin.innerHTML = `
-      <div class="m5-pinned__label">Pinned by M.G.</div>
-      <p class="m5-pinned__quote">"Before you pitch, repeat the pain in the buyer's words. Then name one prop and give one number from their own answer. The other props can wait for the next question."</p>
+      <div class="m5-pinned__label">📌 M.G., a rep in the Manchester pod, pinned this note</div>
+      <p class="m5-pinned__quote">"Before you pitch, repeat the pain in the buyer's own words. Then name one prop with one number from their answer."</p>
       <div class="m5-pinned__foot">
-        <span>In 7 days you'll get three new pains to match, about 2 minutes.</span>
+        <span>In seven days you'll get three new pains to match.</span>
         <button type="button" class="m5-btn" data-m5-fin>Schedule refresher →</button>
       </div>`;
     feed.appendChild(pin);
@@ -799,15 +901,14 @@ function showSummaryCard(pct) {
   card.setAttribute("role", "dialog"); card.setAttribute("aria-modal", "true"); card.setAttribute("aria-labelledby", "summary-title");
   card.innerHTML = `
     <div class="summary-card__panel">
-      <div class="summary-card__check" aria-hidden="true">✓</div>
-      <div class="summary-card__kicker">Module complete</div>
-      <h2 class="summary-card__title" id="summary-title">Product-Prop Mapping · ${pct >= 67 ? "passed" : "completed"}</h2>
+      <div class="summary-card__check${pct >= PASS_PCT ? "" : " is-retry"}" aria-hidden="true">${pct >= PASS_PCT ? "✓" : "↻"}</div>
+      <h2 class="summary-card__title" id="summary-title">Matching pains to products, ${pct >= PASS_PCT ? "passed" : "not passed yet"}</h2>
       <div class="summary-card__stats">
-        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}% · ${pct >= 67 ? "pass" : "below the 67% pass mark"}</span></div>
-        <div class="summary-card__stat"><span class="summary-card__stat-k">On your own</span><span class="summary-card__stat-v">${right}/${state.solo.length || SOLO.length}</span><span class="summary-card__stat-sub">pains matched</span></div>
-        <div class="summary-card__stat"><span class="summary-card__stat-k">Time</span><span class="summary-card__stat-v">${timestamp()}</span><span class="summary-card__stat-sub">target 10:00</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Quiz</span><span class="summary-card__stat-v">${state.quizScore}/${state.quizItems.length}</span><span class="summary-card__stat-sub">${pct}%, ${pct >= PASS_PCT ? `above the ${PASS_PCT}% pass mark` : `below the ${PASS_PCT}% pass mark`}</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">On your own</span><span class="summary-card__stat-v">${right}/${state.solo.length || SOLO.length}</span><span class="summary-card__stat-sub">pains matched without hints</span></div>
+        <div class="summary-card__stat"><span class="summary-card__stat-k">Time</span><span class="summary-card__stat-v">${timestamp()}</span><span class="summary-card__stat-sub">the module is planned for ten minutes</span></div>
       </div>
-      <details class="summary-card__recap"><summary>The 9 steps</summary><ol class="summary-card__list">${STEPS.map((s, i) => `<li><span class="summary-card__list-n">${i + 1}</span><span class="summary-card__list-label">${escapeHtml(s.title)}</span></li>`).join("")}</ol></details>
+      <details class="summary-card__recap"><summary>The nine steps of this module</summary><ol class="summary-card__list">${STEPS.map((s, i) => `<li><span class="summary-card__list-n">${i + 1}</span><span class="summary-card__list-label">${escapeHtml(s.title)}</span></li>`).join("")}</ol></details>
       <div class="summary-card__actions">
         <a class="summary-card__btn summary-card__btn--ghost" href="../">&larr; Back to engagement</a>
         <button type="button" class="summary-card__btn summary-card__btn--primary" data-action="restart">Restart module</button>

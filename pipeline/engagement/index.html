@@ -1,298 +1,123 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SDR onboarding: a mini-OS and six SCORM modules</title>
+<title>Six onboarding modules for sales reps, by Mario Rafael Becerra Dueñas</title>
+<meta name="description" content="Six ten-minute SCORM modules for new sales development reps at FinTechCard, a fintech that sells company cards to small businesses. Each module runs inside a copy of the rep's desktop with seven sales apps.">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../../assets/shell.css">
 <style>
-  :root {
-    --ink: #0a1a10;
-    --ink-2: #4d5a51;
-    --paper: #ffffff;
-    --bg: #FAFBF6;
-    --rule: #E6E8E4;
-    --green: #0A8754;
-    --green-deep: #07683F;
-    --tint: #ECF9E7;
-  }
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; height: 100%; }
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: "Manrope", -apple-system, system-ui, sans-serif;
-    font-size: 15px;
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--green-deep); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .wrap { max-width: 900px; margin: 0 auto; padding: 56px 32px 96px; }
-  .eyebrow {
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: 11px;
-    color: var(--ink-2);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-  h1 {
-    font-family: "Manrope", sans-serif;
-    font-size: clamp(34px, 4.5vw, 52px);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
-    margin: 0 0 14px;
-  }
-  h1 em {
-    font-style: normal;
-    background: #FFE066;
-    padding: 0 8px;
-    border-radius: 8px;
-    display: inline-block;
-    transform: rotate(-0.5deg);
-  }
-  .lead {
-    font-size: 17px;
-    color: var(--ink-2);
-    margin: 0 0 36px;
-    max-width: 64ch;
-  }
-  .lead strong { color: var(--ink); font-weight: 600; }
+  /* This landing has no floor plan, so it needs no room for it at the bottom. */
+  body { padding-bottom: 0; }
+  .entrance { padding-bottom: 0; }
+  .featured .placard .actions { align-items: center; gap: 12px 20px; }
 
-  .cta-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 36px 0 48px;
-  }
-  .cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 22px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 6px;
-    border: 1px solid var(--rule);
-    background: var(--paper);
-    color: var(--ink);
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-  }
-  .cta:hover { background: var(--tint); border-color: var(--green); color: var(--green-deep); text-decoration: none; }
-  .cta--primary {
-    background: var(--green);
-    color: #ffffff;
-    border-color: var(--green);
-  }
-  .cta--primary:hover {
-    background: var(--green-deep);
-    border-color: var(--green-deep);
-    color: #ffffff;
-  }
+  .mods { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 40px; }
+  .mods li { border-top: 6px solid var(--c); padding: 16px 0 4px; }
+  .mods h3 { font-size: clamp(20px, 1.7vw, 24px); line-height: 1.12; margin-bottom: 8px; }
+  .mods h3 a { text-decoration: none; }
+  .mods h3 a:hover { text-decoration: underline; text-decoration-color: var(--clay-600); }
+  .mods p { font-size: 16px; line-height: 1.55; color: var(--ink-700); max-width: 60ch; }
 
-  h2 {
-    font-family: "Manrope", sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    margin: 48px 0 18px;
-    letter-spacing: -0.005em;
-  }
-  h2::before {
-    content: "";
-    display: inline-block;
-    width: 24px; height: 2px;
-    background: var(--green);
-    margin-right: 12px;
-    vertical-align: middle;
-    transform: translateY(-4px);
-  }
+  .decisions { border-top: var(--line); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr); gap: 32px 56px; align-items: start; }
+  .decisions h2 { font-size: clamp(30px, 3.2vw, 46px); position: sticky; top: 88px; }
+  .decisions .text p { font-size: 17px; line-height: 1.65; max-width: 66ch; }
+  .decisions .text p + p { margin-top: 18px; }
 
-  .modules {
-    display: grid;
-    gap: 1px;
-    background: var(--rule);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .mod {
-    display: grid;
-    grid-template-columns: 64px 1fr auto;
-    gap: 18px;
-    padding: 18px 22px;
-    background: var(--paper);
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-    transition: background 0.12s;
-  }
-  .mod:hover { background: var(--tint); text-decoration: none; }
-  .mod__num {
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--green-deep);
-    letter-spacing: -0.01em;
-  }
-  .mod__body { min-width: 0; }
-  .mod__title {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1.25;
-  }
-  .mod__sub {
-    font-size: 13.5px;
-    color: var(--ink-2);
-    margin-top: 4px;
-    line-height: 1.4;
-  }
-  .mod__apps {
-    font-family: "Geist Mono", monospace;
-    font-size: 10.5px;
-    color: var(--ink-2);
-    margin-top: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .mod__arrow {
-    color: var(--green-deep);
-    font-size: 18px;
-    font-weight: 700;
-  }
-
-  .meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 28px;
-    padding: 18px 22px;
-    background: #ffffff;
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    margin-bottom: 24px;
-    font-family: "Geist Mono", monospace;
-    font-size: 11px;
-    color: var(--ink-2);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .meta-row strong {
-    color: var(--ink);
-    font-weight: 700;
-    font-family: "Manrope", sans-serif;
-    text-transform: none;
-    letter-spacing: -0.005em;
-    margin-right: 6px;
-  }
-
-  .footnote {
-    margin-top: 40px;
-    padding: 18px 22px;
-    background: #FAFAF3;
-    border-left: 3px solid var(--green);
-    border-radius: 4px;
-    font-size: 13.5px;
-    color: var(--ink-2);
-    line-height: 1.6;
-  }
-  .footnote strong { color: var(--ink); font-weight: 600; }
-  .footnote code {
-    font-family: "Geist Mono", monospace;
-    background: #ffffff;
-    padding: 1px 6px;
-    border-radius: 3px;
-    border: 1px solid var(--rule);
-    font-size: 12.5px;
+  @media (max-width: 1100px) {
+    .mods { grid-template-columns: 1fr; }
+    .decisions { grid-template-columns: 1fr; }
+    .decisions h2 { position: static; }
   }
 </style>
 </head>
 <body>
-<main class="wrap">
-  <div class="eyebrow">SDR onboarding</div>
-  <div style="margin-bottom:14px;"><a href="../../" style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--ink-2);letter-spacing:.08em;text-transform:uppercase;">← Back to portfolio</a></div>
-  <h1>A mini-OS and <em>six SCORM modules</em>.</h1>
-  <p class="lead">
-    I built a small desktop simulator that new SDRs work in throughout their onboarding cohort.
-    Seven mock apps open in their own draggable windows: <strong>Outreach</strong>,
-    <strong>Gong</strong>, <strong>Salesforce</strong>, <strong>LinkedIn / Companies House</strong>,
-    <strong>Calendar</strong>, a <strong>phone dialler</strong> and <strong>Slack</strong>.
-    Each module opens the apps it needs and takes the rep through one call scenario.
-  </p>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
 
-  <div class="cta-bar">
-    <a class="cta cta--primary" href="scorm-shell/index.html">Try the mini-OS on its own →</a>
-    <a class="cta" href="module-03-calendar-close/index.html">Try Module 3 · Calendar Close</a>
+<header class="top">
+  <a class="brand" href="../../">Mario Rafael Becerra Dueñas</a>
+  <nav class="links" aria-label="Contact"><a href="../../Mario_Becerra_CV.pdf" download>CV</a><a href="https://www.linkedin.com/in/mario-rafael-id-lxd/" target="_blank" rel="noopener">LinkedIn</a></nav>
+</header>
+
+<main id="top">
+<div class="entrance">
+  <div class="wall">
+    <h1>Six onboarding modules for new sales reps, inside a copy of their desktop</h1>
+    <div>
+      <p>I built this course for sales development reps in their first weeks at FinTechCard, a fintech that sells company cards to small businesses in the UK and the EU.</p>
+      <p>Each module takes about ten minutes and is packaged as SCORM 1.2 for any LMS. Here every module opens straight in the browser.</p>
+    </div>
   </div>
 
-  <div class="meta-row">
-    <div><strong>6</strong> modules · SCORM 1.2</div>
-    <div><strong>7</strong> simulated apps</div>
-    <div><strong>~10 min</strong> per module</div>
-  </div>
+  <article class="featured" aria-labelledby="start-h">
+    <div class="plinth plinth--green">
+      <div class="screen"><img src="m6.webp" alt="Module 6 on the sales desktop: Lukas asks whether his managers will have to approve every card payment on their phone, and the job aid is open under his question in Outreach" width="1920" height="1200"></div>
+    </div>
+    <div class="placard">
+      <h2 id="start-h">Start with module 6, Regulatory questions</h2>
+      <p>Lukas, who owns four restaurants in Munich, asks what happens to his money if FinTechCard goes under. You answer from the job aid pinned in Slack, or book the compliance team when his question goes past it.</p>
+      <p>It is the quickest way to see what every module does. You read two recorded calls in Gong, choose a reply with the job aid open, answer three questions on your own and then get a review from your manager that quotes your choices.</p>
+      <div class="actions">
+        <a class="btn btn--ink" href="module-06-regulatory-deflection/index.html">Start module 6 <svg class="ico"><use href="#i-arrow"/></svg></a>
+        <a href="scorm-shell/index.html">Open the desktop</a>
+      </div>
+    </div>
+  </article>
+</div>
 
-  <h2>Modules</h2>
-  <div class="modules">
-    <a class="mod" href="module-01-diagnostic-opener/index.html">
-      <span class="mod__num">M1</span>
-      <div class="mod__body">
-        <div class="mod__title">Diagnostic Opener</div>
-        <div class="mod__sub">Open with one sharp diagnostic question instead of a pitch, and the buyer gives you the next 90 seconds.</div>
-        <div class="mod__apps">Outreach · LinkedIn / CH · Phone-dialler · Gong · Slack</div>
-      </div>
-      <span class="mod__arrow">→</span>
-    </a>
-    <a class="mod" href="module-02-objection-acknowledge/index.html">
-      <span class="mod__num">M2</span>
-      <div class="mod__body">
-        <div class="mod__title">Objection Acknowledge</div>
-        <div class="mod__sub">Hold steady when a buyer pushes back on price, a competitor or timing: restate the objection before you reframe it.</div>
-        <div class="mod__apps">Outreach · Gong · Slack</div>
-      </div>
-      <span class="mod__arrow">→</span>
-    </a>
-    <a class="mod" href="module-03-calendar-close/index.html">
-      <span class="mod__num">M3</span>
-      <div class="mod__body">
-        <div class="mod__title">Calendar Close <span style="color: var(--green-deep); font-weight: 600; font-size: 11px; background: var(--tint); padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle;">RECOMMENDED DEMO</span></div>
-        <div class="mod__sub">Offer two time slots and send the calendar invite before you hang up.</div>
-        <div class="mod__apps">Outreach · Calendar · Phone-dialler · Salesforce · Gong</div>
-      </div>
-      <span class="mod__arrow">→</span>
-    </a>
-    <a class="mod" href="module-04-icp-buyer-fit/index.html">
-      <span class="mod__num">M4</span>
-      <div class="mod__body">
-        <div class="mod__title">ICP &amp; Buyer Fit</div>
-        <div class="mod__sub">Score a lead from 1 to 5 on five fit criteria, then decide to dial or skip.</div>
-        <div class="mod__apps">Outreach · Gong · Slack</div>
-      </div>
-      <span class="mod__arrow">→</span>
-    </a>
-    <a class="mod" href="module-05-product-prop-mapping/index.html">
-      <span class="mod__num">M5</span>
-      <div class="mod__body">
-        <div class="mod__title">Product-Prop Mapping</div>
-        <div class="mod__sub">Hear the buyer's pain, pick the one prop that answers it and say it in their words.</div>
-        <div class="mod__apps">Outreach · Gong · Slack</div>
-      </div>
-      <span class="mod__arrow">→</span>
-    </a>
-    <a class="mod" href="module-06-regulatory-deflection/index.html">
-      <span class="mod__num">M6</span>
-      <div class="mod__body">
-        <div class="mod__title">Regulatory Deflection</div>
-        <div class="mod__sub">Answer regulatory questions from the job aid, word for word, and book compliance when a question goes past it.</div>
-        <div class="mod__apps">Outreach · Gong · Slack</div>
-      </div>
-      <span class="mod__arrow">→</span>
-    </a>
+<section id="modules" aria-labelledby="mods-h">
+  <div class="sec-head">
+    <h2 id="mods-h">The six modules</h2>
+    <p>The desktop copies the seven apps a rep works in, among them Outreach, Gong, Salesforce and Slack, and each module opens only the apps its task needs.</p>
   </div>
+  <ol class="mods">
+    <li style="--c: var(--lagoon-600)">
+      <h3><a href="module-01-diagnostic-opener/index.html">Module 1: Diagnostic opener</a></h3>
+      <p>You read Emma's company filing in LinkedIn and Companies House, write one question built on it and call her, while the phone dialler times how long you stay quiet afterwards.</p>
+    </li>
+    <li style="--c: var(--green-700)">
+      <h3><a href="module-02-objection-acknowledge/index.html">Module 2: Acknowledging objections</a></h3>
+      <p>Lukas tells you on the phone that he doesn't trust new fintechs, and you repeat his objection in his own words and wait for his answer before you ask an open question.</p>
+    </li>
+    <li style="--c: var(--clay-600)">
+      <h3><a href="module-03-calendar-close/index.html">Module 3: Calendar close</a></h3>
+      <p>With Calendar open in a second window, you call Emma from Outreach, offer her two times and send the invite while she is still on the line.</p>
+    </li>
+    <li style="--c: var(--ink-900)">
+      <h3><a href="module-04-icp-buyer-fit/index.html">Module 4: ICP buyer fit</a></h3>
+      <p>You score three leads in Outreach on five criteria against a scale with an example for every score, and two of the three only look like a good fit.</p>
+    </li>
+    <li style="--c: var(--lagoon-800)">
+      <h3><a href="module-05-product-prop-mapping/index.html">Module 5: Matching pains to products</a></h3>
+      <p>You match each buyer's pain to one of FinTechCard's four products and then ask Tom's finance lead about her own numbers before you name any of them.</p>
+    </li>
+    <li style="--c: var(--sun-400)">
+      <h3><a href="module-06-regulatory-deflection/index.html">Module 6: Regulatory questions</a></h3>
+      <p>You answer buyers' questions about KYC, AML, SCA, PSD2, GDPR and safeguarding from the job aid as written, and book the compliance team when a question goes further.</p>
+    </li>
+  </ol>
+</section>
 
+<section class="decisions" id="decisions" aria-labelledby="dec-h">
+  <h2 id="dec-h">Design decisions</h2>
+  <div class="text">
+    <p>Every task in the course is done inside one of the apps. The panel on the right describes the step but never holds the exercise, and the rep practises on the same screens they will use at work.</p>
+    <p>In module 3 the Dial buttons in Outreach stay off until Calendar is open in a second window. Each press of a locked Dial button is counted, and the manager's review mentions it even when the meeting gets booked.</p>
+    <p>In module 1 the phone dialler times the silence after the rep's question, and the buyer only names her problem once five seconds have passed. In module 2 it times the pause after the repeated objection, which has to last three seconds. If the rep breaks the silence too early, Emma never names her problem, and Lukas only says “Everyone says that.”</p>
+    <p>The manager's message at the end of each module is put together from what the learner did. It says whether each choice was right on the first try. In module 1 it gives the length of the silence, and in module 2 it quotes the buyer's words the rep reused. In module 3 it checks that the invite and the Salesforce next step went out during the call.</p>
+    <p>Each module moves from watching to doing in three steps. The rep first finds the move in a recorded call in Gong, then picks the right version of it for a second buyer from a few options, and finally makes the whole move alone.</p>
+    <p>While the rep types a question or a paraphrase, a checklist under the field ticks off what it already does. In module 4 every score on the scale comes with an example, and a lead counts as scored correctly when the decision matches the pod lead's and the total is within two points of his.</p>
+    <p>All five buyers and the recorded calls live in two shared files. A company, a number or a call means the same thing in every module, and Emma tells the same story in module 1 as she does in module 3.</p>
+    <p>Each module reports the quiz score to the LMS through SCORM 1.2 and counts as passed at 80%, the mastery score set in its manifest. A quiz has three or four questions, so the rep passes only with every answer right. Progress is saved as a compact event log that stays under the 4,096 characters SCORM 1.2 allows for it.</p>
+  </div>
+</section>
 </main>
+<footer><span>© 2026 Mario Rafael Becerra Dueñas</span><a href="../../">Back to the portfolio</a></footer>
 </body>
 </html>

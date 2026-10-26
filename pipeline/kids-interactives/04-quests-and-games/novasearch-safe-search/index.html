@@ -581,42 +581,38 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--narrow stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
-    <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 9–12 · searching well</p>
+    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActs">All activities</span></a>
+    <div class="row" style="justify-content: flex-end">
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Ask the search box</span> <em class="mark" data-t="title2">a good question</em></h1>
-    <p class="lede" data-t="intro">Three questions you cannot answer by looking around the room. Type what you would really type, read what comes back, and pick the result worth believing. The top two are always ads.</p>
+    <h1><span data-t="title1">Searching for an answer</span> <em class="mark" data-t="title2">you can trust</em></h1>
+    <p class="lede" data-t="intro">Each of the three missions asks something you cannot find out by looking around the room. Type the search the way you normally would, then pick the one result that answers the question, because the others are ads, traps, guesses or pages about something else.</p>
   </header>
 
   <section class="card stack" id="game">
     <div class="missions" id="missions"></div>
 
-    <div class="stack stack--tight">
-      <p class="eyebrow" id="objective"></p>
-      <h2 id="brief">…</h2>
-    </div>
+    <h2 id="brief">…</h2>
 
     <div class="searchbar">
       <input class="input" id="q" type="search" autocomplete="off">
       <button class="btn" id="go" data-t="searchBtn">Search</button>
     </div>
 
-    <div id="verdict" hidden></div>
+    <div id="verdict" hidden aria-live="polite"></div>
     <div class="results" id="results"></div>
 
     <div class="row">
-      <button class="btn btn--ghost btn--sm" id="hint" data-t="hintBtn">Need a hint?</button>
+      <button class="btn btn--ghost btn--sm" id="hint" data-t="hintBtn">Show a hint</button>
       <button class="btn" id="next" data-t="next" hidden>Next mission</button>
     </div>
   </section>
 
   <section class="card stack" id="over" hidden aria-live="polite">
-    <h2 data-t="doneTitle">Three out of three</h2>
+    <h2 data-t="doneTitle">You finished all three missions</h2>
     <p class="muted" id="doneBody"></p>
     <div><button class="btn" id="again" data-t="again">Start over</button></div>
   </section>
@@ -627,131 +623,152 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 (function () {
   "use strict";
 
-  /* Three missions, three different reasons to open a search box. The old set
-     asked how many limbs a crab has, which you answer by looking at a crab.
-     Each of these needs a fact you cannot see from where you are sitting, and
-     each rewards a different habit: phrase the query, weigh the source, step
-     over the ads. Query matching is on keyword groups rather than one long
-     regular expression — easier to read and just as forgiving. */
+  /* Query matching works on keyword groups, compared without accents and in
+     lower case. A query has to touch every group to count as on target; one
+     that touches only some of them is on the right subject but too broad, and
+     is told to add a word rather than that it is off topic. Stems ("cod",
+     "despiert") catch the forms a child actually types.
+
+     Every wrong result carries its own `why`, so the feedback names what was
+     wrong with that page: paid for, a trap, or simply about something else.
+     The order is shuffled each time, so the answer is never in a fixed slot. */
   const M = {
     en: [
       { icon: "🐟", objective: "Mission 1",
-        brief: "Nova's grandad swears he once saw a fish walk across the mud. Is there really a fish that does that?",
-        keys: [["fish", "mudskipper"], ["walk", "land", "mud", "out of water"]],
-        hint: "You do not have to fit the whole story in the box. Four words carry it: fish that walks on land.",
-        answer: "The mudskipper. It walks on its front fins and breathes out of the water.",
+        brief: "Nova's grandad swears he once saw a fish walk across the mud. Does a fish like that exist?",
+        keys: [["fish", "mudskipper", "skipper"], ["walk", "land", "mud", "out of water", "crawl", "amphibi", "mudskipper", "skipper"]],
+        hint: "You do not need to type the whole story. Five words are enough, for example fish that walks on land.",
+        answer: "It is the mudskipper, which walks on its front fins and can breathe out of the water.",
         results: [
-          { ad: true, title: "FISH TANKS 70% OFF — today only", url: "aqua-deals.shop", snip: "Everything for your aquarium. Free delivery this week." },
-          { ad: true, title: "Weird animal videos — click here", url: "animal-clips.fake", snip: "You will not believe number four." },
-          { ok: true, title: "Mudskipper — the fish that walks", url: "wikipedia.org › Mudskipper", snip: "Mudskippers spend much of the day out of water, moving across mud flats on their pectoral fins." },
-          { title: "My fishing weekend", url: "someblog.example › diary", snip: "We caught nothing at all, but the weather was lovely." }
+          { ad: true, title: "FISH TANKS 70% OFF, today only", url: "aqua-deals.shop", snip: "Everything for your aquarium. Free delivery this week.",
+            why: "A shop paid to put this ad here, and it sells fish tanks." },
+          { ad: true, title: "Weird animal videos, click here", url: "animal-clips.fake", snip: "You will not believe number four.",
+            why: "This ad only wants your click, and nothing in it says which fish can walk." },
+          { ok: true, title: "Mudskipper, the fish that walks", url: "novapedia.example › Mudskipper", snip: "Mudskippers spend much of the day out of water, moving across mud flats on their pectoral fins." },
+          { title: "Can fish walk? Ask the forum", url: "answers-forum.example › animals", snip: "Someone says no fish can ever leave the water. Two replies, no sources.",
+            why: "This forum post is one stranger's guess with no sources, and the guess is wrong." },
+          { title: "My fishing weekend", url: "someblog.example › diary", snip: "We caught nothing at all, but the weather was lovely.",
+            why: "Someone's diary about a fishing weekend never mentions a fish that walks." }
         ] },
 
       { icon: "🌙", objective: "Mission 2",
-        brief: "One page says a person can stay awake for a whole month. Another says eleven days. Which one would you believe?",
-        keys: [["sleep", "awake", "sleeping"], ["record", "without", "long", "days", "stay"]],
-        hint: "Search for the record, then look at who is saying it before you look at the number.",
-        answer: "About eleven days. The month comes from a shop selling energy drinks, which is exactly why you should doubt it.",
+        brief: "One page says a person can stay awake for a whole month, and another says eleven days. Which one is right, and who is saying each?",
+        keys: [["sleep", "awake", "stay up", "insomnia"], ["record", "without", "long", "days", "stay", "month", "most"]],
+        hint: "Search for the record, and look at who gives a number before you believe it.",
+        answer: "Sleep scientists put the record at about eleven days. The month comes from a shop that sells energy drinks.",
         results: [
-          { ad: true, title: "STAY AWAKE 30 DAYS! Our drink works", url: "energy-boost.shop", snip: "Students swear by it. Order two cans, get one free." },
-          { ad: true, title: "Sleep tracker app — free download", url: "sleep-app.fake", snip: "Install now. No sign-up needed." },
-          { ok: true, title: "Sleep deprivation — the longest recorded case", url: "britannica.com › sleep", snip: "The longest documented time without sleep is about eleven days, recorded under medical supervision in 1964." },
-          { title: "Ten things that happen when you skip sleep", url: "clickbait-list.example", snip: "Number six will shock you." }
+          { ad: true, title: "STAY AWAKE 30 DAYS! Our drink works", url: "energy-boost.shop", snip: "Students swear by it. Order two cans, get one free.",
+            why: "An energy drink shop paid for this ad, and it promises a month awake to sell more cans." },
+          { ad: true, title: "Sleep tracker app, free download", url: "sleep-app.fake", snip: "Install now. No sign-up needed.",
+            why: "This ad for a sleep app does not answer the question." },
+          { ok: true, title: "How long can a person stay awake?", url: "nova-university.example › sleep-lab", snip: "Our sleep researchers explain the best-known record: in 1964 a student stayed awake for about eleven days while scientists watched over him." },
+          { title: "Ten things that happen when you skip sleep", url: "clickbait-list.example", snip: "Number six will shock you.",
+            why: "This list was written for clicks and never says how long the record is or who measured it." }
         ] },
 
       { icon: "🎮", objective: "Mission 3",
-        brief: "You want to build a game today, for free, without installing anything. Where do you go?",
-        keys: [["game", "code", "program", "scratch"], ["free", "online", "kid", "child", "learn", "browser", "scratch"]],
-        hint: "Add the words that narrow it down: free, in the browser, made for children.",
-        answer: "Scratch, at scratch.mit.edu. It runs in the browser and costs nothing.",
+        brief: "You want to make a game today without paying or installing anything. Where can you do that?",
+        keys: [["game", "cod", "program", "scratch"], ["free", "online", "kid", "child", "learn", "browser", "scratch", "install", "download"]],
+        hint: "Add words that narrow the search, such as free, browser or for kids.",
+        answer: "It is Scratch, at scratch.mit.edu, which runs in the browser and costs nothing.",
         results: [
-          { ad: true, title: "DOWNLOAD 1000 GAMES FOR KIDS", url: "download-games.fake › kids", snip: "Free .exe file. Install now." },
-          { ad: true, title: "Free Robux generator", url: "get-robux-free.scam", snip: "Enter your account name to start." },
-          { ok: true, title: "Scratch — imagine, program, share", url: "scratch.mit.edu", snip: "A free coding community for children. Works in your browser, nothing to install." },
-          { title: "Best gaming laptops this year", url: "techshop.example › laptops", snip: "Our picks for gaming on a budget." }
+          { ad: true, title: "DOWNLOAD 1000 GAMES FOR KIDS", url: "download-games.fake › kids", snip: "Free .exe file. Install now.",
+            why: "This ad offers an .exe file to install, and files like that can carry a virus." },
+          { ad: true, scam: true, title: "Free Robux generator", url: "get-robux-free.scam", snip: "Enter your account name to start.",
+            why: "This ad is also a trap, because a free Robux generator asks for your account in order to steal it." },
+          { ok: true, title: "Scratch - Imagine, Program, Share", url: "scratch.mit.edu", snip: "Scratch is a free programming language and online community where you can create your own interactive stories, games, and animations." },
+          { title: "Best gaming laptops this year", url: "techshop.example › laptops", snip: "Our picks for gaming on a budget.",
+            why: "This shop page sells laptops, and you were looking for a free place to make a game." }
         ] }
     ],
     es: [
       { icon: "🐟", objective: "Misión 1",
-        brief: "El abuelo de Nova jura que una vez vio un pez caminar por el barro. ¿Existe de verdad un pez que haga eso?",
-        keys: [["pez", "pescado", "saltarín", "saltarin"], ["camin", "tierra", "barro", "fuera del agua", "salta"]],
-        hint: "No hace falta meter toda la historia en la caja. Con cuatro palabras basta: pez que camina por tierra.",
-        answer: "El saltarín del fango. Camina sobre sus aletas delanteras y respira fuera del agua.",
+        brief: "El abuelo de Nova jura que una vez vio un pez caminar por el barro. ¿Existe de verdad un pez así?",
+        keys: [["pez", "peces", "pescado", "saltarin"], ["camin", "tierra", "barro", "fuera del agua", "salta", "anda", "arrastr", "anfibi"]],
+        hint: "No hace falta escribir toda la historia. Bastan cinco palabras, por ejemplo pez que camina por tierra.",
+        answer: "Es el saltarín del fango, que camina sobre sus aletas delanteras y puede respirar fuera del agua.",
         results: [
-          { ad: true, title: "ACUARIOS AL 70% — solo hoy", url: "aqua-deals.shop", snip: "Todo para tu acuario. Envío gratis esta semana." },
-          { ad: true, title: "Vídeos de animales raros — pulsa aquí", url: "animal-clips.fake", snip: "No te vas a creer el número cuatro." },
-          { ok: true, title: "Saltarín del fango — el pez que camina", url: "wikipedia.org › Periophthalmus", snip: "Pasa buena parte del día fuera del agua y se desplaza por el fango sobre sus aletas pectorales." },
-          { title: "Mi fin de semana de pesca", url: "someblog.example › diario", snip: "No pescamos nada, pero hizo muy buen tiempo." }
+          { ad: true, title: "ACUARIOS AL 70%, solo hoy", url: "aqua-deals.shop", snip: "Todo para tu acuario. Envío gratis esta semana.",
+            why: "Una tienda pagó para poner aquí este anuncio, y lo que vende son acuarios." },
+          { ad: true, title: "Vídeos de animales raros, pulsa aquí", url: "animal-clips.fake", snip: "No te vas a creer el número cuatro.",
+            why: "Este anuncio solo quiere tu clic, y en ningún sitio dice qué pez camina." },
+          { ok: true, title: "Saltarín del fango, el pez que camina", url: "novapedia.example › Saltarín del fango", snip: "Pasa buena parte del día fuera del agua y se desplaza por el fango sobre sus aletas pectorales." },
+          { title: "¿Los peces caminan? Pregunta en el foro", url: "answers-forum.example › animales", snip: "Alguien dice que ningún pez puede salir del agua. Dos respuestas, ninguna fuente.",
+            why: "Este mensaje del foro es lo que cree un desconocido sin ninguna fuente, y además se equivoca." },
+          { title: "Mi fin de semana de pesca", url: "someblog.example › diario", snip: "No pescamos nada, pero hizo muy buen tiempo.",
+            why: "El diario de alguien sobre un fin de semana de pesca no habla en ningún momento de un pez que camine." }
         ] },
 
       { icon: "🌙", objective: "Misión 2",
-        brief: "Una página dice que se puede estar un mes entero sin dormir. Otra dice once días. ¿A cuál le creerías?",
-        keys: [["dormir", "sueño", "sueno", "despierto"], ["récord", "record", "sin", "cuánto", "cuanto", "tiempo", "días", "dias", "aguant"]],
-        hint: "Busca el récord y mira quién lo dice antes de mirar el número.",
-        answer: "Unos once días. Lo del mes lo dice una tienda de bebidas energéticas, y por eso mismo hay que dudarlo.",
+        brief: "Una página dice que una persona puede pasar un mes entero sin dormir, y otra dice que once días. ¿Cuál tiene razón, y quién dice cada cosa?",
+        keys: [["dormir", "sueno", "despiert", "desvel", "insomnio"], ["record", "sin", "cuanto", "tiempo", "dias", "aguant", "mes", "mas"]],
+        hint: "Busca el récord y mira quién da cada número antes de creértelo.",
+        answer: "Los científicos del sueño sitúan el récord en unos once días. Lo del mes lo dice una tienda que vende bebidas energéticas.",
         results: [
-          { ad: true, title: "¡30 DÍAS DESPIERTO! Nuestra bebida funciona", url: "energy-boost.shop", snip: "Los estudiantes la recomiendan. Lleva dos latas y paga una." },
-          { ad: true, title: "App para medir el sueño — gratis", url: "sleep-app.fake", snip: "Instálala ya. Sin registro." },
-          { ok: true, title: "Privación de sueño — el caso más largo registrado", url: "britannica.com › sueno", snip: "El periodo documentado más largo sin dormir es de unos once días, bajo supervisión médica, en 1964." },
-          { title: "Diez cosas que pasan si no duermes", url: "clickbait-list.example", snip: "La número seis te va a sorprender." }
+          { ad: true, title: "¡30 DÍAS DESPIERTO! Nuestra bebida funciona", url: "energy-boost.shop", snip: "Los estudiantes la recomiendan. Lleva dos latas y paga una.",
+            why: "Una tienda de bebidas energéticas pagó este anuncio, y promete un mes sin dormir para vender más latas." },
+          { ad: true, title: "App para medir el sueño, gratis", url: "sleep-app.fake", snip: "Instálala ya. Sin registro.",
+            why: "Este anuncio de una app para el sueño no responde a la pregunta." },
+          { ok: true, title: "¿Cuánto tiempo puede estar despierta una persona?", url: "nova-university.example › laboratorio-del-sueno", snip: "Nuestros investigadores del sueño explican el récord más conocido: en 1964 un estudiante pasó unos once días despierto mientras unos científicos lo vigilaban." },
+          { title: "Diez cosas que pasan si no duermes", url: "clickbait-list.example", snip: "La número seis te va a sorprender.",
+            why: "Esta lista se escribió para conseguir clics y nunca dice cuánto dura el récord ni quién lo midió." }
         ] },
 
       { icon: "🎮", objective: "Misión 3",
-        brief: "Quieres hacer un juego hoy, gratis y sin instalar nada. ¿A dónde vas?",
-        keys: [["juego", "program", "código", "codigo", "scratch"], ["gratis", "online", "niño", "nino", "aprend", "navegador", "scratch"]],
-        hint: "Añade las palabras que lo estrechan: gratis, en el navegador y para niños.",
-        answer: "Scratch, en scratch.mit.edu. Funciona en el navegador y no cuesta nada.",
+        brief: "Quieres hacer un juego hoy sin pagar ni instalar nada. ¿Dónde puedes hacerlo?",
+        keys: [["juego", "program", "codigo", "scratch"], ["gratis", "online", "nino", "aprend", "navegador", "scratch", "instal", "descarg"]],
+        hint: "Añade palabras que acoten la búsqueda, como gratis, navegador o para niños.",
+        answer: "Es Scratch, en scratch.mit.edu, que funciona en el navegador y no cuesta nada.",
         results: [
-          { ad: true, title: "DESCARGA 1000 JUEGOS PARA NIÑOS", url: "download-games.fake › kids", snip: "Archivo .exe gratis. Instala ya." },
-          { ad: true, title: "Generador de Robux gratis", url: "get-robux-free.scam", snip: "Pon el nombre de tu cuenta para empezar." },
-          { ok: true, title: "Scratch — imagina, programa, comparte", url: "scratch.mit.edu", snip: "Una comunidad de programación gratuita para niños. Funciona en el navegador, no hay que instalar nada." },
-          { title: "Los mejores portátiles para jugar", url: "techshop.example › portatiles", snip: "Nuestra selección para jugar sin gastar mucho." }
+          { ad: true, title: "DESCARGA 1000 JUEGOS PARA NIÑOS", url: "download-games.fake › kids", snip: "Archivo .exe gratis. Instala ya.",
+            why: "Este anuncio ofrece un archivo .exe para instalar, y esos archivos pueden traer un virus." },
+          { ad: true, scam: true, title: "Generador de Robux gratis", url: "get-robux-free.scam", snip: "Pon el nombre de tu cuenta para empezar.",
+            why: "Este anuncio además es una trampa, porque un generador de Robux gratis te pide la cuenta para robártela." },
+          { ok: true, title: "Scratch - Imagina, Programa, Comparte", url: "scratch.mit.edu", snip: "Scratch es un lenguaje de programación gratuito y una comunidad en línea donde puedes crear tus propias historias interactivas, juegos y animaciones." },
+          { title: "Los mejores portátiles para jugar", url: "techshop.example › portatiles", snip: "Nuestra selección para jugar sin gastar mucho.",
+            why: "Esta página de una tienda vende portátiles, y tú buscabas un sitio gratis donde hacer un juego." }
         ] }
     ]
   };
 
   const T = {
     en: {
-      eyebrow: "Ages 9–12 · searching well",
-      title1: "Ask the search box", title2: "a good question",
-      intro: "Three questions you cannot answer by looking around the room. Type what you would really type, read what comes back, and pick the result worth believing. The top two are always ads.",
-      searchBtn: "Search", hintBtn: "Need a hint?", next: "Next mission",
-      again: "Start over", doneTitle: "Three out of three",
+      title1: "Searching for an answer", title2: "you can trust", allActs: "All activities",
+      intro: "Each of the three missions asks something you cannot find out by looking around the room. Type the search the way you normally would, then pick the one result that answers the question, because the others are ads, traps, guesses or pages about something else.",
+      searchBtn: "Search", hintBtn: "Show a hint", next: "Next mission",
+      again: "Start over", doneTitle: "You finished all three missions",
       adTag: "Ad", placeholder: "What do you want to find?",
-      tooVague: "That could mean anything. Add a word that says what you want to know.",
-      offTopic: "That is not what Nova is after. Read the mission again.",
-      pickOne: "Now pick the result worth trusting.",
-      okPick: function (a) { return "That is the one. " + a; },
-      adPick: "That is an ad. Ads sit at the top because someone paid for them. Scroll past.",
-      badPick: "That page is about something else. Look for a source that answers the question.",
+      tooVague: "That could mean almost anything. Add a word that says what you want to find out.",
+      tooBroad: "The subject is right, but the search is still too wide. Add a word from the mission that narrows it down.",
+      offTopic: "That search is about something else. Read the mission again and try other words.",
+      pickOne: "Read the results and their addresses, then pick the one you would trust.",
+      okPick: function (a) { return "You chose well. " + a; },
       done: function (n) {
         return n === 3
-          ? "Three missions, three good sources. You skipped the ads and read the addresses."
-          : "You finished all three. " + n + " of them without a wrong pick first.";
+          ? "In every mission you found a good source without clicking an ad or a trap first."
+          : "You picked the right result first time in " + n + " of the three missions.";
       }
     },
     es: {
-      eyebrow: "9–12 años · buscar bien",
-      title1: "Hazle al buscador", title2: "una buena pregunta",
-      intro: "Tres preguntas que no puedes responder mirando a tu alrededor. Escribe lo que escribirías de verdad, lee lo que sale y elige el resultado que merece que le creas. Los dos primeros siempre son anuncios.",
-      searchBtn: "Buscar", hintBtn: "¿Necesitas una pista?", next: "Siguiente misión",
-      again: "Empezar de nuevo", doneTitle: "Tres de tres",
+      title1: "Buscar una respuesta", title2: "en la que puedas confiar", allActs: "Todas las actividades",
+      intro: "Cada una de las tres misiones pregunta algo que no puedes averiguar mirando a tu alrededor. Escribe la búsqueda como lo harías normalmente y luego elige el único resultado que responde, porque los demás son anuncios, trampas, suposiciones o páginas que hablan de otra cosa.",
+      searchBtn: "Buscar", hintBtn: "Ver una pista", next: "Siguiente misión",
+      again: "Empezar de nuevo", doneTitle: "Has terminado las tres misiones",
       adTag: "Anuncio", placeholder: "¿Qué quieres encontrar?",
-      tooVague: "Eso puede ser cualquier cosa. Añade una palabra que diga qué quieres saber.",
-      offTopic: "Eso no es lo que busca Nova. Vuelve a leer la misión.",
-      pickOne: "Ahora elige el resultado que merece confianza.",
-      okPick: function (a) { return "Ese es. " + a; },
-      adPick: "Eso es un anuncio. Van arriba porque alguien los pagó. Pásalos de largo.",
-      badPick: "Esa página va de otra cosa. Busca una fuente que responda a la pregunta.",
+      tooVague: "Eso puede significar casi cualquier cosa. Añade una palabra que diga qué quieres averiguar.",
+      tooBroad: "El tema es el bueno, pero la búsqueda todavía es demasiado amplia. Añade una palabra de la misión que la acote.",
+      offTopic: "Esa búsqueda trata de otra cosa. Vuelve a leer la misión y prueba con otras palabras.",
+      pickOne: "Lee los resultados y sus direcciones, y luego elige el que te merezca confianza.",
+      okPick: function (a) { return "Has elegido bien. " + a; },
       done: function (n) {
         return n === 3
-          ? "Tres misiones, tres buenas fuentes. Saltaste los anuncios y leíste las direcciones."
-          : "Terminaste las tres. " + n + " sin fallar antes.";
+          ? "En cada misión encontraste una buena fuente sin pulsar antes un anuncio ni una trampa."
+          : "Elegiste el resultado bueno a la primera en " + n + " de las tres misiones.";
       }
     }
   };
 
-  var lang = "en", mi = 0, clean = 0, firstTry = true;
+  var lang = "en", mi = 0, clean = 0, firstTry = true, solved = false;
 
   const $ = function (id) { return document.getElementById(id); };
   const t = function () { return T[lang]; };
@@ -788,34 +805,55 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     });
     $("q").placeholder = d.placeholder;
     $("q").value = "";
-    $("objective").textContent = m.objective;
+    $("q").disabled = false;
+    $("go").disabled = false;
     $("brief").textContent = m.brief;
     $("results").innerHTML = "";
     $("verdict").hidden = true;
     $("next").hidden = true;
     $("hint").hidden = false;
     firstTry = true;
+    solved = false;
     paintMissions();
   }
 
-  function matches(q) {
-    const low = q.toLowerCase();
-    return mission().keys.every(function (group) {
-      return group.some(function (w) { return low.indexOf(w) >= 0; });
-    });
+  /* Lower case, accents off, so "récord" and "record" are the same word. */
+  function fold(s) {
+    return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  /* How many of the mission's keyword groups the query touches. */
+  function groupsHit(q) {
+    const low = fold(q);
+    return mission().keys.filter(function (group) {
+      return group.some(function (w) { return low.indexOf(fold(w)) >= 0; });
+    }).length;
+  }
+
+  function shuffled(arr) {
+    const a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
   }
 
   function search() {
+    if (solved) return;
     const d = t(), m = mission();
     const q = $("q").value.trim();
+    $("results").innerHTML = "";
     if (q.length < 3) { say("hint", d.tooVague); return; }
-    if (!matches(q)) { say("no", d.offTopic); firstTry = false; return; }
+    const hit = groupsHit(q);
+    if (hit === 0) { say("no", d.offTopic); return; }
+    if (hit < m.keys.length) { say("hint", d.tooBroad); return; }
 
     say("hint", d.pickOne);
 
     const box = $("results");
     box.innerHTML = "";
-    m.results.forEach(function (r) {
+    shuffled(m.results).forEach(function (r) {
       const b = document.createElement("button");
       b.type = "button"; b.className = "result";
 
@@ -837,18 +875,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
       b.append(top, ti, sn);
       b.onclick = function () {
+        if (solved) return;
         if (r.ok) {
+          solved = true;
           Array.prototype.forEach.call(box.children, function (x) { x.disabled = true; });
           b.classList.add("is-right");
           if (firstTry) clean++;
           say("ok", d.okPick(m.answer));
+          /* Solved: searching again would only deal the same page back. */
+          $("go").disabled = true;
+          $("q").disabled = true;
           $("next").hidden = false;
           $("hint").hidden = true;
+          $("next").focus();
         } else {
           b.classList.add("is-off");
           b.disabled = true;
           firstTry = false;
-          say("no", r.ad ? d.adPick : d.badPick);
+          say("no", r.why);
         }
       };
       box.appendChild(b);

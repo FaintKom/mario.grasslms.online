@@ -788,15 +788,44 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   /* One screen on open: the fixed rows keep their height and the document
      desk takes whatever is left. */
   body { padding: var(--page-top) 0 var(--page-bottom); }
-  .wrap { height: calc(100svh - var(--page-pad)); }
+  /* The message has to be readable whole, so the page grows with it rather
+     than squeezing the document into the height left under the find bar
+     (on a 1280x800 laptop that left one visible line). */
+  .wrap { height: auto; }
   h1 { font-size: clamp(var(--t-xl), 3.2vw, var(--t-2xl)); }
   .lede { font-size: var(--t-sm); max-width: 78ch; }
   .stack--loose { gap: var(--s-4); }
 
-  .gd { flex: 1 1 0; min-height: 220px; display: flex; flex-direction: column; }
-  .gd__desk { flex: 1 1 0; max-height: none; }
-  .gd__page[contenteditable]:focus { outline: 2px solid #a8c7fa; outline-offset: 4px; }
+  .gd { display: flex; flex-direction: column; }
+  .gd__desk { flex: none; max-height: none; padding-top: 0; }
+  .gd__page { padding: 28px 40px; min-height: 0; }
   .gd__page mark { border-radius: 2px; }
+
+  /* Find and replace as a bar across the top of the desk rather than a card
+     floating over the page. Floating, it covered the right half of the very
+     lines the child has to read, and its Replace all button fell below the
+     bottom of the desk. Here it stays in view while the page scrolls under it. */
+  .gd-find {
+    position: sticky; top: 0; right: auto; z-index: 5;
+    width: auto; max-width: none; margin: 0 -16px 16px;
+    display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto auto;
+    align-items: end; gap: 6px 18px;
+    padding: 10px 16px; border-radius: 0;
+    box-shadow: 0 1px 0 #e3e6e8, 0 4px 10px -6px rgba(60, 64, 67, .25);
+  }
+  .gd-find__head { margin: 0; align-self: center; font-size: 14px; }
+  .gd-find__head i { display: none; }
+  .gd-field { margin: 0; }
+  .gd-check { margin: 0 0 6px; white-space: nowrap; }
+  .gd-find__foot { margin: 0; flex-wrap: nowrap; }
+  @media (max-width: 1000px) {
+    .gd-find { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .gd-find__head { grid-column: 1 / -1; }
+    .gd-find__foot { justify-content: flex-end; }
+  }
+  @media (max-width: 720px) {
+    .gd-find { position: static; grid-template-columns: 1fr; margin: 0 -16px 16px; }
+  }
 
   /* The list of words still to fix runs across rather than down: six short
      words stacked vertically cost the document a third of its height. */
@@ -822,10 +851,12 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <style>
   /* Way back to the catalogue, same look as its own back link. */
   .back { display: inline-flex; align-items: center; gap: var(--s-2); align-self: flex-start;
-    font-family: var(--font-mono); font-size: var(--t-2xs); font-weight: 500; text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow); color: var(--color-text-subtle); text-decoration: none; }
+    font-size: var(--t-sm); font-weight: 600; color: var(--color-text-subtle); text-decoration: none; }
   .back:hover { color: var(--color-text); }
   .back svg { width: 13px; height: 13px; flex: 0 0 13px; }
+
+  /* Section labels in plain sentence case at body size, not small capitals. */
+  .tag { margin: 0; font-size: var(--t-sm); font-weight: 700; color: var(--color-text-muted); }
 </style>
 <script src="../../../_shared/desktop-only.js" data-shot="desktop-task-c1.jpg" data-back="../../index.html" data-back-label="Back to all activities" defer></script>
 </head>
@@ -834,25 +865,24 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--wide stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
     <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Spaceport · sector C · task 1</p>
+      <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActivities">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">The message came through</span> <em class="mark" data-t="title2">scrambled</em></h1>
-    <p class="lede" data-t="intro">Five words are misspelled and the launch year is wrong. Use find and replace instead of retyping: put the wrong word on the left, the right one on the right, and press Replace all.</p>
+    <h1><span data-t="title1">Fixing a message</span> <em class="mark" data-t="title2">with find and replace</em></h1>
+    <p class="lede" data-t="intro">A radio message has arrived with five misspelled words and a launch year that cannot be right. Fix it without retyping anything. Type the wrong word in Find and the right one in Replace with, and when you press Replace all, every copy changes at once.</p>
   </header>
 
   <div class="hud">
     <div class="row">
-      <span class="eyebrow" data-t="triesLabel">Checks left</span>
+      <span class="tag" data-t="triesLabel">Tries left</span>
       <span class="lives" id="lives" aria-hidden="true"></span>
     </div>
     <div class="row">
-      <span class="eyebrow" data-t="fixedLabel">Fixed</span>
+      <span class="tag" data-t="fixedLabel">Fixed so far</span>
       <span class="hud__score" id="score">0</span>
     </div>
   </div>
@@ -876,7 +906,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 
     <div class="gd__toolwrap">
       <div class="gd__tools">
-        <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-undo"/></svg></button>
+        <button class="gd-t" type="button" id="undo" disabled title="Undo" aria-label="Undo"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#gd-undo"/></svg></button>
         <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-redo"/></svg></button>
         <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-print"/></svg></button>
         <button class="gd-t" type="button" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#gd-spell"/></svg></button>
@@ -915,25 +945,25 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
           <label for="repl" data-t="replaceWith">Replace with</label>
           <input id="repl" autocomplete="off" spellcheck="false">
         </div>
-        <label class="gd-check"><input type="checkbox" disabled><span data-t="matchCase">Match case</span></label>
+        <label class="gd-check"><input type="checkbox" id="matchCase"><span data-t="matchCase">Match case</span></label>
         <div class="gd-find__foot">
           <button class="gd-flat gd-flat--ghost" type="button" disabled data-t="replaceOne">Replace</button>
           <button class="gd-flat" type="button" id="doReplace" data-t="replaceAll">Replace all</button>
         </div>
       </div>
 
-      <div class="gd__page" id="doc" contenteditable="true" spellcheck="false" role="textbox" aria-multiline="true"></div>
+      <div class="gd__page" id="doc" role="document"></div>
     </div>
 
     <div class="gd__status">
-      <span data-t="shortcut">Tip: you can also edit the text straight in the page.</span>
+      <span data-t="shortcut">Tip: pressing Enter in Find takes you to Replace with, and pressing it again there replaces every copy.</span>
       <b data-t="docPages">Page 1 of 1</b>
     </div>
   </div>
 
   <section class="card stack stack--tight" id="game">
     <div class="stack stack--tight">
-      <p class="eyebrow" data-t="todoLabel">Still to fix</p>
+      <p class="tag" data-t="todoLabel">Words still to fix</p>
       <ul class="todo" id="todo"></ul>
     </div>
 
@@ -986,14 +1016,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       mFormat: "Format", mTools: "Tools", mHelp: "Help",
       normalText: "Normal text", matchCase: "Match case",
       replaceOne: "Replace", docPages: "Page 1 of 1",
-      eyebrow: "Spaceport · sector C · task 1",
-      title1: "The message came through", title2: "scrambled",
-      intro: "Five words are misspelled and the launch year is wrong. Use find and replace instead of retyping: put the wrong word on the left, the right one on the right, and press Replace all.",
-      triesLabel: "Checks left", fixedLabel: "Fixed", findLabel: "Find and replace",
+      allActivities: "All activities", toMap: "Back to the map",
+      title1: "Fixing a message", title2: "with find and replace",
+      intro: "A radio message has arrived with five misspelled words and a launch year that cannot be right. Fix it without retyping anything. Type the wrong word in Find and the right one in Replace with, and when you press Replace all, every copy changes at once.",
+      triesLabel: "Tries left", fixedLabel: "Fixed so far", findLabel: "Find and replace",
       findWhat: "Find", replaceWith: "Replace with", replaceAll: "Replace all",
-      todoLabel: "Still to fix", check: "Send the message", reset: "Start over",
+      todoLabel: "Words still to fix", check: "Send the message", reset: "Start over",
       again: "Try again", playAgain: "Play again",
-      shortcut: "Tip: you can also edit the text straight in the box.",
+      shortcut: "Tip: pressing Enter in Find takes you to Replace with, and pressing it again there replaces every copy.",
+      undo: "Undo", undone: "The last replace has been undone.",
       text: "MISSION LOG\n\nThe rockit is fuelled and standing on pad two. Our astronowt has checked the cabin twice. The shipp will leave Earth and head for the red planit that we watch every night beside the bright starr.\n\nLaunch year: 2157",
       errors: [
         { wrong: "rockit",    right: "rocket" },
@@ -1003,14 +1034,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         { wrong: "starr",     right: "star" }
       ],
       yearLabel: "the launch year",
-      emptyFind: "Type the wrong word in the Find box first.",
-      noMatch: function (w) { return "There is no \"" + w + "\" in the message. Check what you typed."; },
-      swapped: function (n) { return n === 1 ? "One word swapped." : n + " words swapped."; },
-      stillWrong: function (n) { return n === 1 ? "One thing is still wrong. The list shows which." : n + " things are still wrong. The list shows which."; },
+      emptyFind: "Type the misspelled word in the Find box first.",
+      noMatch: function (w) { return "There is no \"" + w + "\" in the message. Compare what you typed with the list below."; },
+      swapped: function (n) { return n === 1 ? "One word was replaced." : n + " words were replaced."; },
+      stillWrong: function (n) { return n === 1 ? "One thing is still wrong, and the list below shows which one." : n + " things are still wrong, and the list below shows which ones."; },
       wonTitle: "Message sent",
-      wonBody: function (n) { return "Clean copy on check " + n + " of " + TRIES + "."; },
-      lostTitle: "The channel closed",
-      lostBody: "Every misspelled word is a letter or two away from the right one, and no rocket launches in 2157."
+      wonBody: function (n) { return "The message went out without a mistake on try " + n + " of " + TRIES + "."; },
+      lostTitle: "The radio channel has closed",
+      lostBody: "Each misspelled word is only a letter or two away from the right one. The launch year has to be one that is coming soon, because no rocket launches in 2157."
     },
     es: {
       docName: "Diario de a bordo", share: "Compartir",
@@ -1018,14 +1049,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       mFormat: "Formato", mTools: "Herramientas", mHelp: "Ayuda",
       normalText: "Texto normal", matchCase: "Coincidir mayúsculas",
       replaceOne: "Reemplazar", docPages: "Página 1 de 1",
-      eyebrow: "Puerto espacial · sector C · tarea 1",
-      title1: "El mensaje llegó", title2: "con errores",
-      intro: "Cinco palabras están mal escritas y el año de lanzamiento es imposible. Usa buscar y reemplazar en vez de escribirlo todo otra vez: la palabra mal a la izquierda, la correcta a la derecha, y pulsa Reemplazar todo.",
-      triesLabel: "Revisiones", fixedLabel: "Corregidos", findLabel: "Buscar y reemplazar",
+      allActivities: "Todas las actividades", toMap: "Volver al mapa",
+      title1: "Corregir un mensaje", title2: "con buscar y reemplazar",
+      intro: "Ha llegado un mensaje de radio con cinco palabras mal escritas y un año de lanzamiento que no puede ser cierto. Corrígelo sin volver a escribir nada. Escribe la palabra equivocada en Buscar y la correcta en Reemplazar por, y al pulsar Reemplazar todo cambiarán todas las copias a la vez.",
+      triesLabel: "Intentos que quedan", fixedLabel: "Corregidas", findLabel: "Buscar y reemplazar",
       findWhat: "Buscar", replaceWith: "Reemplazar por", replaceAll: "Reemplazar todo",
-      todoLabel: "Falta corregir", check: "Enviar el mensaje", reset: "Empezar de nuevo",
+      todoLabel: "Palabras por corregir", check: "Enviar el mensaje", reset: "Empezar de nuevo",
       again: "Intentar otra vez", playAgain: "Jugar otra vez",
-      shortcut: "Truco: también puedes escribir directamente en el cuadro.",
+      shortcut: "Truco: si pulsas Intro en Buscar pasas a Reemplazar por, y si lo pulsas otra vez allí se reemplazan todas las copias.",
+      undo: "Deshacer", undone: "Se ha deshecho el último reemplazo.",
       text: "DIARIO DE MISIÓN\n\nEl coete está cargado y espera en la plataforma dos. Nuestra astronowta ha revisado la cabina dos veces. La nabe saldrá de la Tierra hacia el planetta rojo que miramos cada noche junto a la estrela más brillante.\n\nAño de lanzamiento: 2157",
       errors: [
         { wrong: "coete",      right: "cohete" },
@@ -1035,14 +1067,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         { wrong: "estrela",    right: "estrella" }
       ],
       yearLabel: "el año de lanzamiento",
-      emptyFind: "Escribe primero la palabra equivocada en Buscar.",
-      noMatch: function (w) { return "No hay ningún \"" + w + "\" en el mensaje. Revisa lo que escribiste."; },
-      swapped: function (n) { return n === 1 ? "Una palabra cambiada." : n + " palabras cambiadas."; },
-      stillWrong: function (n) { return n === 1 ? "Queda un fallo. La lista dice cuál." : "Quedan " + n + " fallos. La lista dice cuáles."; },
+      emptyFind: "Escribe primero la palabra mal escrita en Buscar.",
+      noMatch: function (w) { return "No hay ningún \"" + w + "\" en el mensaje. Compara lo que escribiste con la lista de abajo."; },
+      swapped: function (n) { return n === 1 ? "Se ha cambiado una palabra." : "Se han cambiado " + n + " palabras."; },
+      stillWrong: function (n) { return n === 1 ? "Todavía queda un fallo, y la lista de abajo te dice cuál." : "Todavía quedan " + n + " fallos, y la lista de abajo te dice cuáles."; },
       wonTitle: "Mensaje enviado",
-      wonBody: function (n) { return "Copia limpia en la revisión " + n + " de " + TRIES + "."; },
-      lostTitle: "El canal se cerró",
-      lostBody: "Cada palabra mal escrita está a una o dos letras de la correcta, y ningún cohete despega en 2157."
+      wonBody: function (n) { return "El mensaje salió sin errores en el intento " + n + " de " + TRIES + "."; },
+      lostTitle: "El canal de radio se ha cerrado",
+      lostBody: "Cada palabra mal escrita está solo a una o dos letras de la correcta. El año de lanzamiento tiene que llegar pronto, porque ningún cohete despega en 2157."
     }
   };
 
@@ -1098,15 +1130,33 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     var repl = byId("repl").value;
     if (!needle) { say("hint", d.emptyFind); return; }
 
-    /* Plain string split/join rather than a regex, so a child typing a dot or
-       a bracket gets exactly what they expect. */
-    var parts = text().split(needle);
-    if (parts.length === 1) { say("no", d.noMatch(needle)); return; }
+    /* The needle is escaped before it becomes a regex, so a child typing a
+       dot or a bracket gets exactly what they expect. Match case off means
+       what it means in Docs: "rockit" also finds "Rockit". The replacement
+       goes in through a function, so a "$" in it stays a "$". */
+    var safe = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    var re = new RegExp(safe, byId("matchCase").checked ? "g" : "gi");
+    var before = text();
+    var hits = before.match(re);
+    if (!hits) { say("no", d.noMatch(needle)); return; }
 
-    byId("doc").innerText = parts.join(repl);
+    past.push(before);
+    byId("doc").innerText = before.replace(re, function () { return repl; });
+    byId("undo").disabled = false;
     byId("needle").value = ""; byId("repl").value = "";
     byId("needle").focus();
-    say("ok", d.swapped(parts.length - 1));
+    say("ok", d.swapped(hits.length));
+    paintTodo();
+  }
+
+  /* The page itself is read-only: the lesson is the tool, not retyping. A
+     replace that went wrong comes back with Undo rather than by hand. */
+  var past = [];
+  function undo() {
+    if (!past.length) return;
+    byId("doc").innerText = past.pop();
+    byId("undo").disabled = !past.length;
+    say("hint", t().undone);
     paintTodo();
   }
 
@@ -1151,12 +1201,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
       var v = d[el.dataset.t];
       if (typeof v === "string") el.textContent = v;
     });
+    byId("undo").title = d.undo;
+    byId("undo").setAttribute("aria-label", d.undo);
     renderLives();
     paintTodo();
   }
 
   function reset() {
     used = 0;
+    past = [];
+    byId("undo").disabled = true;
     byId("doc").innerText = t().text;
     byId("needle").value = ""; byId("repl").value = "";
     byId("game").hidden = false; byId("over").hidden = true;
@@ -1167,7 +1221,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   byId("check").onclick = check;
   byId("reset").onclick = reset;
   byId("again").onclick = reset;
-  byId("doc").addEventListener("input", paintTodo);
+  byId("undo").onclick = undo;
   byId("repl").addEventListener("keydown", function (e) { if (e.key === "Enter") replaceAll(); });
   byId("needle").addEventListener("keydown", function (e) { if (e.key === "Enter") byId("repl").focus(); });
 

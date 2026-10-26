@@ -563,11 +563,16 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     font-size: var(--t-lg);
   }
   .sample table { border-collapse: collapse; margin: 0 auto; }
+  .sample .n { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--color-text-subtle); }
   .sample td { border: 1px solid var(--color-border-strong); padding: var(--s-2) var(--s-4); font-family: var(--font-mono); font-size: var(--t-base); }
 
   .answers { display: grid; gap: var(--s-2); }
   .option.is-right { border-color: var(--color-success); background: var(--color-success-soft); }
   .option.is-off   { border-color: var(--color-danger);  background: var(--color-danger-soft); }
+
+  /* Plain labels for counters and controls: same size as the UI text,
+     no capitals and no monospace, so they read as words. */
+  .label-quiet { font-size: var(--t-sm); font-weight: 600; color: var(--color-text-muted); }
 
   [hidden] { display: none !important; }
 </style>
@@ -585,16 +590,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
 <div class="wrap wrap--narrow stack stack--loose">
 
   <header class="stack stack--tight">
-    <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All activities</a>
-    <div class="row row--between">
-      <p class="eyebrow" data-t="eyebrow">Ages 9–12 · text formatting</p>
+    <span class="row" style="gap: var(--s-4)"><a class="back" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span data-t="allActs">All activities</span></a><a class="back" href="../../10-cosmodrome/cosmodrome-map-3d.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="toMap">Back to the map</span></a></span>
+    <div class="row" style="justify-content: flex-end">
       <div class="langs" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">The server is</span> <em class="mark" data-t="title2">under attack</em></h1>
-    <p class="lede" data-t="intro">Five questions stand between the virus and the server. Every right answer hits it. Every wrong one hits you.</p>
+    <h1><span data-t="title1">Defend the server</span> <em class="mark" data-t="title2">from the virus</em></h1>
+    <p class="lede" data-t="intro">You have formatted the report, and now the virus wants to wreck it. Look at each of the five samples and say what formatting it has. A right answer damages the virus, and a wrong one costs you 20 HP.</p>
   </header>
 
   <section class="card stack" id="game">
@@ -625,14 +629,14 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     </div>
 
     <div class="row row--between">
-      <span class="eyebrow"><span data-t="qLabel">Question</span> <span id="qNum" class="mono">1</span>/<span id="qTot" class="mono">5</span></span>
+      <span class="label-quiet"><span data-t="qLabel">Question</span> <span id="qNum">1</span>/<span id="qTot">5</span></span>
       <span class="chip chip--danger"><span data-t="hit">Hit</span> 20 HP</span>
     </div>
 
     <h2 id="qText">…</h2>
     <div class="sample" id="qSample"></div>
     <div class="answers" id="answers"></div>
-    <div id="verdict" hidden></div>
+    <div id="verdict" hidden aria-live="polite"></div>
     <div><button class="btn" id="next" data-t="next" hidden>Next question</button></div>
   </section>
 
@@ -651,80 +655,147 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   /* 5 questions x 20 HP = exactly 100. Answer all five and the virus is done;
      miss all five and you are. The original numbers never added up: damage was
      10 against 100 HP over five questions, so a perfect run still left the
-     virus on half health and winning was impossible. */
+     virus on half health and winning was impossible.
+
+     This is the check that comes after "Format the report". Its warm-up
+     already asks about bold, centring, Ctrl+F and table cells, so none of
+     that is repeated here. These five ask the child to read formatting off a
+     sample: a line through a word, two styles at once, text colour against
+     highlight, size alone, and right alignment. Every option carries its own
+     `why`, so a wrong pick explains itself, and the right one says what gave
+     it away. Shortcuts are Google Docs ones and are labelled that way, in
+     both languages, because desktop Word in Spanish uses different keys. */
   const DAMAGE = 20;
 
   const Q = {
     en: [
-      { text: "Look at this text. What formatting is on it?",
-        sample: "<b>Protection system</b> activated",
-        answers: ["Bold, Ctrl+B", "Italic, Ctrl+I", "Underline, Ctrl+U", "No formatting"], right: 0 },
-      { text: "How is this line aligned?",
-        sample: '<div style="text-align:center">ANTIVIRUS 3000</div>',
-        answers: ["Left", "Centre", "Right", "Justified"], right: 1 },
-      { text: "You need every mention of VIRUS3000 in a long document. Which shortcut opens search?",
-        sample: "VIRUS3000 … VIRUS3000 … VIRUS3000",
-        answers: ["Ctrl+F", "Ctrl+H", "Ctrl+S", "Ctrl+B"], right: 0 },
-      { text: "How many cells does this table have?",
-        sample: "<table><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></table>",
-        answers: ["2", "3", "4", "6"], right: 2 },
-      { text: "And what formatting is on this one?",
-        sample: "<i>Protection system</i> working",
-        answers: ["Bold, Ctrl+B", "Italic, Ctrl+I", "Underline, Ctrl+U", "No formatting"], right: 1 }
+      { text: "Look at the word “noon”. What formatting does it have?",
+        sample: 'Launch moved from <s>noon</s> to 15:00.',
+        answers: ["Underline", "Strikethrough", "Italic", "Bold"], right: 1,
+        why: [
+          "An underline sits under the letters. Here the line goes through the middle of them.",
+          "A line through the middle of a word is strikethrough. People use it to show that something is out of date without deleting it, and in Google Docs it is Alt+Shift+5.",
+          "These letters stand up straight with a line through them. Italic letters would lean to the right.",
+          "The letters are normal weight and only crossed out. Bold letters would be thicker."
+        ] },
+      { text: "Which of these words has two kinds of formatting at the same time?",
+        sample: '<span class="n">1</span> <b>orbit</b> &nbsp; <span class="n">2</span> <i>orbit</i> &nbsp; <span class="n">3</span> <b><i>orbit</i></b> &nbsp; <span class="n">4</span> orbit',
+        answers: ["Word 1", "Word 2", "Word 3", "Word 4"], right: 2,
+        why: [
+          "Word 1 is thick but upright, so it is only bold.",
+          "Word 2 leans but stays thin, so it is only italic.",
+          "Word 3 is thick and leaning at once. That is bold and italic together, which in Google Docs means Ctrl+B and then Ctrl+I on the same word.",
+          "Word 4 has no formatting at all. It is there to compare the others with."
+        ] },
+      { text: "What has changed on the word LOW compared with the rest of the line?",
+        sample: 'Fuel level: <span style="color: var(--clay-600)">LOW</span>',
+        answers: ["Text colour", "Highlight colour", "Bold", "Font size"], right: 0,
+        why: [
+          "The letters themselves have turned red, and the background behind them is the same as before. That is text colour.",
+          "Highlight paints the background like a marker pen. Here the background has not changed, and only the letters are red.",
+          "LOW is as thin as the rest of the line. Bold would make it thicker.",
+          "LOW is the same height as the other words on the line, so the size has not changed."
+        ] },
+      { text: "The heading and the line below it use the same font. What is different between them?",
+        sample: '<span style="display:block; font-size: var(--t-2xl); line-height: 1.2">Mission report</span><span style="display:block; font-size: var(--t-sm)">Day 12, Sector C</span>',
+        answers: ["Bold", "Colour", "Alignment", "Font size"], right: 3,
+        why: [
+          "Both lines use the same thin letters. Neither of them is bold.",
+          "Both lines are the same colour.",
+          "Both lines start at the same left edge, so their alignment matches.",
+          "The heading is bigger, and size on its own is enough to make it stand out. In Google Docs, Ctrl+Shift+. makes text bigger."
+        ] },
+      { text: "How is the signature line aligned?",
+        sample: '<span style="display:block">All four sectors are clear.</span><span style="display:block; text-align: right">Mission Control</span>',
+        answers: ["Left", "Centre", "Right", "Justified"], right: 2,
+        why: [
+          "Left-aligned text would start at the same edge as the line above. This line starts much further over.",
+          "Centred text has equal gaps on both sides. This line touches the right edge.",
+          "The line ends exactly at the right edge, where signatures usually sit. In Google Docs, right alignment is Ctrl+Shift+R.",
+          "Justified text stretches a long line to touch both edges. This short line only reaches the right one."
+        ] }
     ],
     es: [
-      { text: "Mira este texto. ¿Qué formato tiene?",
-        sample: "<b>Sistema de protección</b> activado",
-        answers: ["Negrita, Ctrl+B", "Cursiva, Ctrl+I", "Subrayado, Ctrl+U", "Sin formato"], right: 0 },
-      { text: "¿Cómo está alineada esta línea?",
-        sample: '<div style="text-align:center">ANTIVIRUS 3000</div>',
-        answers: ["A la izquierda", "Centrada", "A la derecha", "Justificada"], right: 1 },
-      { text: "Necesitas cada mención de VIRUS3000 en un documento largo. ¿Qué atajo abre la búsqueda?",
-        sample: "VIRUS3000 … VIRUS3000 … VIRUS3000",
-        answers: ["Ctrl+F", "Ctrl+H", "Ctrl+S", "Ctrl+B"], right: 0 },
-      { text: "¿Cuántas celdas tiene esta tabla?",
-        sample: "<table><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></table>",
-        answers: ["2", "3", "4", "6"], right: 2 },
-      { text: "¿Y qué formato tiene este?",
-        sample: "<i>Sistema de protección</i> funcionando",
-        answers: ["Negrita, Ctrl+B", "Cursiva, Ctrl+I", "Subrayado, Ctrl+U", "Sin formato"], right: 1 }
+      { text: "Mira la palabra «mediodía». ¿Qué formato tiene?",
+        sample: 'El lanzamiento pasa del <s>mediodía</s> a las 15:00.',
+        answers: ["Subrayado", "Tachado", "Cursiva", "Negrita"], right: 1,
+        why: [
+          "El subrayado va debajo de las letras. Aquí la línea las cruza por el medio.",
+          "Una línea que cruza la palabra por el medio es el tachado. Sirve para mostrar que algo ya no vale sin borrarlo, y en Google Docs se pone con Alt+Mayús+5.",
+          "Estas letras están rectas, con una línea que las cruza. En cursiva estarían inclinadas hacia la derecha.",
+          "Las letras tienen el grosor normal y solo están tachadas. En negrita serían más gruesas."
+        ] },
+      { text: "¿Cuál de estas palabras tiene dos formatos a la vez?",
+        sample: '<span class="n">1</span> <b>órbita</b> &nbsp; <span class="n">2</span> <i>órbita</i> &nbsp; <span class="n">3</span> <b><i>órbita</i></b> &nbsp; <span class="n">4</span> órbita',
+        answers: ["Palabra 1", "Palabra 2", "Palabra 3", "Palabra 4"], right: 2,
+        why: [
+          "La palabra 1 es gruesa pero está recta, así que solo lleva negrita.",
+          "La palabra 2 está inclinada pero sigue siendo fina, así que solo lleva cursiva.",
+          "La palabra 3 es gruesa y está inclinada a la vez. Lleva negrita y cursiva juntas, y en Google Docs se consigue con Ctrl+B y luego Ctrl+I sobre la misma palabra.",
+          "La palabra 4 no tiene ningún formato. Está ahí para comparar las demás con ella."
+        ] },
+      { text: "¿Qué ha cambiado en la palabra BAJO si la comparas con el resto de la línea?",
+        sample: 'Nivel de combustible: <span style="color: var(--clay-600)">BAJO</span>',
+        answers: ["Color del texto", "Color de resaltado", "Negrita", "Tamaño de letra"], right: 0,
+        why: [
+          "Las letras se han vuelto rojas y el fondo que tienen detrás sigue igual. Eso es el color del texto.",
+          "El resaltado pinta el fondo como un rotulador. Aquí el fondo no ha cambiado y solo las letras son rojas.",
+          "BAJO es tan fina como el resto de la línea. En negrita sería más gruesa.",
+          "BAJO tiene la misma altura que las demás palabras de la línea, así que el tamaño no ha cambiado."
+        ] },
+      { text: "El título y la línea de debajo usan la misma fuente. ¿Qué cambia entre ellos?",
+        sample: '<span style="display:block; font-size: var(--t-2xl); line-height: 1.2">Informe de misión</span><span style="display:block; font-size: var(--t-sm)">Día 12, sector C</span>',
+        answers: ["Negrita", "Color", "Alineación", "Tamaño de letra"], right: 3,
+        why: [
+          "Las dos líneas tienen las mismas letras finas. Ninguna está en negrita.",
+          "Las dos líneas son del mismo color.",
+          "Las dos empiezan en el mismo borde izquierdo, así que su alineación coincide.",
+          "El título es más grande, y el tamaño por sí solo basta para que destaque. En Google Docs, Ctrl+Mayús+. agranda el texto."
+        ] },
+      { text: "¿Cómo está alineada la línea de la firma?",
+        sample: '<span style="display:block">Los cuatro sectores están libres.</span><span style="display:block; text-align: right">Control de Misión</span>',
+        answers: ["A la izquierda", "Centrada", "A la derecha", "Justificada"], right: 2,
+        why: [
+          "Alineada a la izquierda empezaría en el mismo borde que la línea de arriba. Esta empieza mucho más allá.",
+          "Un texto centrado deja el mismo hueco a cada lado. Esta línea toca el borde derecho.",
+          "La línea acaba justo en el borde derecho, donde suelen ir las firmas. En Google Docs, la alineación a la derecha es Ctrl+Mayús+R.",
+          "El texto justificado estira una línea larga hasta tocar los dos bordes. Esta línea corta solo llega al derecho."
+        ] }
     ]
   };
 
   const T = {
     en: {
-      eyebrow: "Ages 9–12 · text formatting",
-      title1: "The server is", title2: "under attack",
-      intro: "Five questions stand between the virus and the server. Every right answer hits it. Every wrong one hits you.",
-      ally: "Defender", foe: "Mega-virus",
-      qLabel: "Question", hit: "Hit", next: "Next question", again: "Play again",
-      right: "Right. The virus takes the hit.",
-      wrong: function (a) { return "Not this one. The answer was " + a + ", so the hit is yours."; },
-      winTitle: "The server holds",
-      winBody: "You answered every question and the virus is gone.",
+      title1: "Defend the server", title2: "from the virus",
+      intro: "You have formatted the report, and now the virus wants to wreck it. Look at each of the five samples and say what formatting it has. A right answer damages the virus, and a wrong one costs you 20 HP.",
+      ally: "Defender", foe: "Mega-virus", allActs: "All activities", toMap: "Back to the map",
+      qLabel: "Question", hit: "Hit", next: "Next question", seeResult: "See the result", again: "Play again",
+      right: "Right, and the virus takes the hit.",
+      wrong: function (a) { return "The answer was " + a + ", so this time the virus hits you."; },
+      winTitle: "The server is safe",
+      winBody: "You read every sample correctly, and the virus has nothing left to attack.",
       loseTitle: "The system needs a restart",
-      loseBody: function (n) { return "You got " + n + " of 5. Look at the formatting again and come back."; },
+      loseBody: function (n) { return "You got " + n + " out of 5. Go back to the report, look at each kind of formatting again and then come back."; },
       partTitle: "The virus is still standing",
-      partBody: function (n) { return "You got " + n + " of 5. Each miss cost you 20 HP."; }
+      partBody: function (n) { return "You got " + n + " out of 5, and each mistake cost you 20 HP."; }
     },
     es: {
-      eyebrow: "9–12 años · formato de texto",
-      title1: "El servidor está", title2: "bajo ataque",
-      intro: "Cinco preguntas separan al virus del servidor. Cada acierto le hace daño. Cada fallo te lo hace a ti.",
-      ally: "Defensor", foe: "Mega-virus",
-      qLabel: "Pregunta", hit: "Daño", next: "Siguiente pregunta", again: "Jugar otra vez",
-      right: "Correcto. El virus recibe el golpe.",
-      wrong: function (a) { return "Esta no. La respuesta era " + a + ", así que el golpe es para ti."; },
-      winTitle: "El servidor aguanta",
-      winBody: "Respondiste a todo y el virus ha desaparecido.",
+      title1: "Defiende el servidor", title2: "del virus",
+      intro: "Ya has dado formato al informe, y ahora el virus quiere estropearlo. Mira cada una de las cinco muestras y di qué formato tiene. Un acierto le hace daño al virus, y un fallo te cuesta 20 HP.",
+      ally: "Defensor", foe: "Megavirus", allActs: "Todas las actividades", toMap: "Volver al mapa",
+      qLabel: "Pregunta", hit: "Daño", next: "Siguiente pregunta", seeResult: "Ver el resultado", again: "Jugar otra vez",
+      right: "Correcto, y el golpe se lo lleva el virus.",
+      wrong: function (a) { return "La respuesta era " + a + ", así que esta vez el golpe te lo llevas tú."; },
+      winTitle: "El servidor está a salvo",
+      winBody: "Leíste bien todas las muestras, y al virus no le queda nada que atacar.",
       loseTitle: "El sistema necesita reiniciarse",
-      loseBody: function (n) { return "Acertaste " + n + " de 5. Repasa el formato y vuelve."; },
+      loseBody: function (n) { return "Acertaste " + n + " de 5. Vuelve al informe, repasa cada tipo de formato y luego regresa."; },
       partTitle: "El virus sigue en pie",
-      partBody: function (n) { return "Acertaste " + n + " de 5. Cada fallo te costó 20 HP."; }
+      partBody: function (n) { return "Acertaste " + n + " de 5, y cada fallo te costó 20 HP."; }
     }
   };
 
-  var lang = "en", idx = 0, ally = 100, foe = 100, right = 0, answered = false;
+  var lang = "en", idx = 0, ally = 100, foe = 100, right = 0, answered = false, ending = null;
 
   const $ = function (id) { return document.getElementById(id); };
   const t = function () { return T[lang]; };
@@ -750,11 +821,13 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   function question() {
     const q = list()[idx];
     answered = false;
+    ending = null;
     $("qNum").textContent = String(idx + 1);
     $("qText").textContent = q.text;
     $("qSample").innerHTML = q.sample;
     $("verdict").hidden = true;
     $("next").hidden = true;
+    $("next").textContent = t().next;
 
     const box = $("answers");
     box.innerHTML = "";
@@ -782,18 +855,35 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     else { ally = Math.max(0, ally - DAMAGE); }
     bars();
 
+    /* The note stays on screen until the child moves on, even after the
+       last question: the explanation is the point, not the score. */
     const v = $("verdict");
     v.hidden = false;
     v.className = "feedback feedback--" + (ok ? "ok" : "no");
-    v.textContent = ok ? d.right : d.wrong(q.answers[q.right]);
+    v.textContent = (ok ? d.right : d.wrong(q.answers[q.right])) + " " + q.why[i];
 
-    if (ally <= 0) { finish("lose"); return; }
-    if (idx >= list().length - 1) { finish(foe <= 0 ? "win" : "part"); return; }
+    if (ally <= 0) ending = "lose";
+    else if (idx >= list().length - 1) ending = foe <= 0 ? "win" : "part";
+    $("next").textContent = ending ? d.seeResult : d.next;
     $("next").hidden = false;
+    $("next").focus();
+  }
+
+  const TASK_ID = "virus-battle";
+  /* Progress. One shared key, so the spaceport map knows this one is done.
+     try/catch: a private window or blocked site data makes localStorage throw. */
+  function remember() {
+    try {
+      const key = "kids.progress.v1";
+      const seen = JSON.parse(localStorage.getItem(key) || "{}");
+      seen[TASK_ID] = true;
+      localStorage.setItem(key, JSON.stringify(seen));
+    } catch (err) {}
   }
 
   function finish(how) {
     const d = t();
+    if (how === "win") remember();
     $("game").hidden = true;
     $("over").hidden = false;
     $("overTitle").textContent = how === "win" ? d.winTitle : how === "lose" ? d.loseTitle : d.partTitle;
@@ -801,12 +891,15 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   }
 
   function reset() {
-    idx = 0; ally = 100; foe = 100; right = 0;
+    idx = 0; ally = 100; foe = 100; right = 0; ending = null;
     $("game").hidden = false; $("over").hidden = true;
     bars(); paintChrome(); question();
   }
 
-  $("next").onclick = function () { idx++; question(); };
+  $("next").onclick = function () {
+    if (ending) { finish(ending); return; }
+    idx++; question();
+  };
   $("again").onclick = reset;
 
   document.querySelectorAll(".langs button").forEach(function (b) {

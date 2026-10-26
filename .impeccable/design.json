@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-26T19:00:00Z",
+  "title": "Design System: Mario Rafael Becerra Dueñas, portfolio",
+  "extensions": {
+    "colorMeta": {
+      "sun-400": { "role": "primary", "displayName": "Sun Placard Yellow", "canonical": "#ffd84d", "tonalRamp": ["#7a5500", "#f5b800", "#ffd84d", "#ffe066", "#fff2b3", "#fffbe5"] },
+      "lagoon-600": { "role": "secondary", "displayName": "Lagoon Plinth", "canonical": "#12798f", "tonalRamp": ["#0a4652", "#12798f", "#3aa0b5", "#b9d9e0", "#e4f1f4"] },
+      "lagoon-800": { "role": "secondary", "displayName": "Deep Lagoon Plinth", "canonical": "#0a4652", "tonalRamp": ["#0a4652", "#12798f", "#3aa0b5", "#b9d9e0", "#e4f1f4"] },
+      "green-700": { "role": "secondary", "displayName": "Workshop Green Plinth", "canonical": "#07683f", "tonalRamp": ["#0a3d24", "#054d2f", "#07683f", "#0a8754", "#17915e", "#8fd770", "#d4f1c4", "#ecf9e7"] },
+      "green-500": { "role": "secondary", "displayName": "Leaf Plinth", "canonical": "#17915e", "tonalRamp": ["#0a3d24", "#054d2f", "#07683f", "#0a8754", "#17915e", "#8fd770", "#d4f1c4", "#ecf9e7"] },
+      "clay-600": { "role": "secondary", "displayName": "Clay Plinth", "canonical": "#c1401d", "tonalRamp": ["#9e300f", "#c1401d", "#e2552f", "#f6b394", "#fbd8c7", "#fdefe7"] },
+      "green-800": { "role": "tertiary", "displayName": "Contact Room Green", "canonical": "#054d2f", "tonalRamp": ["#0a3d24", "#054d2f", "#07683f", "#0a8754", "#17915e", "#8fd770", "#d4f1c4", "#ecf9e7"] },
+      "green-900": { "role": "tertiary", "displayName": "Footer Green", "canonical": "#0a3d24", "tonalRamp": ["#0a3d24", "#054d2f", "#07683f", "#0a8754", "#17915e", "#8fd770", "#d4f1c4", "#ecf9e7"] },
+      "green-300": { "role": "tertiary", "displayName": "Spring Rule Green", "canonical": "#8fd770", "tonalRamp": ["#0a3d24", "#054d2f", "#07683f", "#0a8754", "#17915e", "#8fd770", "#d4f1c4", "#ecf9e7"] },
+      "green-100": { "role": "tertiary", "displayName": "Pale Shoot Green", "canonical": "#d4f1c4", "tonalRamp": ["#0a3d24", "#054d2f", "#07683f", "#0a8754", "#17915e", "#8fd770", "#d4f1c4", "#ecf9e7"] },
+      "green-50": { "role": "tertiary", "displayName": "Mint Wash", "canonical": "#ecf9e7", "tonalRamp": ["#0a3d24", "#054d2f", "#07683f", "#0a8754", "#17915e", "#8fd770", "#d4f1c4", "#ecf9e7"] },
+      "paper": { "role": "neutral", "displayName": "Gallery Paper", "canonical": "#fbfcf7", "tonalRamp": ["#0d150d", "#232b22", "#485444", "#6a7568", "#93a08d", "#c4cdbe", "#e3e8dd", "#fbfcf7"] },
+      "ink-900": { "role": "neutral", "displayName": "Gallery Ink", "canonical": "#0d150d", "tonalRamp": ["#0d150d", "#232b22", "#485444", "#6a7568", "#93a08d", "#c4cdbe", "#e3e8dd", "#f3f5ef"] },
+      "ink-700": { "role": "neutral", "displayName": "Soft Ink", "canonical": "#232b22", "tonalRamp": ["#0d150d", "#232b22", "#485444", "#6a7568", "#93a08d", "#c4cdbe", "#e3e8dd", "#f3f5ef"] },
+      "ink-500": { "role": "neutral", "displayName": "Muted Ink", "canonical": "#485444", "tonalRamp": ["#0d150d", "#232b22", "#485444", "#6a7568", "#93a08d", "#c4cdbe", "#e3e8dd", "#f3f5ef"] },
+      "ink-200": { "role": "neutral", "displayName": "Hairline Grey-Green", "canonical": "#c4cdbe", "tonalRamp": ["#0d150d", "#232b22", "#485444", "#6a7568", "#93a08d", "#c4cdbe", "#e3e8dd", "#f3f5ef"] },
+      "ink-50": { "role": "neutral", "displayName": "Wash Grey-Green", "canonical": "#f3f5ef", "tonalRamp": ["#0d150d", "#232b22", "#485444", "#6a7568", "#93a08d", "#c4cdbe", "#e3e8dd", "#f3f5ef"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The contact heading only, sun-400 on green-800." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings and the home h1 (clamp(32px, 3.4vw, 50px))." },
+      "title": { "displayName": "Title", "purpose": "Featured placard heading; secondary placards step to clamp(20px, 1.7vw, 26px)." },
+      "title-sm": { "displayName": "Title small", "purpose": "Room cards (18px), records (20px), contact offers (22px)." },
+      "body": { "displayName": "Body", "purpose": "Running text; 16px under 760px; placards use 16px/1.55." },
+      "body-lead": { "displayName": "Lead", "purpose": "Intro and section-lead paragraphs, 48-56ch measure." },
+      "label": { "displayName": "Label", "purpose": "Buttons, top-bar and floor-plan links; Manrope 700-800, sentence case." }
+    },
+    "shadows": [
+      { "name": "exhibit-hang", "value": "0 18px 40px -24px rgba(13,21,13,.45)", "purpose": "Under featured exhibit frames; -26px spread on secondary exhibits and the play card." },
+      { "name": "screen-inset", "value": "0 10px 24px -12px rgba(0,0,0,.6)", "purpose": "Under the screen sitting on a plinth." },
+      { "name": "floor-plan-stripe", "value": "inset 0 5px 0 var(--c)", "purpose": "5px plinth-colour band atop each floor-plan item; a marker, not elevation." }
+    ],
+    "motion": [
+      { "name": "ease", "value": "cubic-bezier(.16,1,.3,1)", "purpose": "Expo-out ease for lifts and the floor-plan slide." },
+      { "name": "lift-button", "value": "transform .2s var(--ease); translateY(-2px)", "purpose": "Ink button hover." },
+      { "name": "lift-room", "value": "transform .25s var(--ease); translateY(-3px)", "purpose": "Room card hover." },
+      { "name": "plan-slide", "value": "transform .5s var(--ease), width .5s var(--ease)", "purpose": "The sun 'you are here' block sliding along the floor plan." },
+      { "name": "reduced-motion", "value": "transition: none; scroll-behavior: auto", "purpose": "Applied to everything under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "stack", "value": "1100px" },
+      { "name": "phone", "value": "760px" },
+      { "name": "narrow-brand", "value": "520px" }
+    ],
+    "boundaries": [
+      { "scope": "pipeline/kids-interactives/**/ (except the catalogue index)", "system": "GrassLMS Lively, pipeline/kids-interactives/_shared/grasslms.css", "note": "Shares the palette, not the shell form language. Not governed by this file." },
+      { "scope": "index.html .lms-live / .gx exercise carousel", "system": "GrassLMS Lively, scoped .gx tokens in index.html", "note": "Its mono captions, eyebrows, chips and hard-offset button shadow belong to the LMS look and are not shell rules." },
+      { "scope": "pipeline/** simulations", "system": "Own product UIs", "note": "Out of scope." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Ink Button",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "The one button style: ink pill with a sun label, one per placard.",
+      "html": "<a class=\"ds-btn-ink\" href=\"#\">Open the review queue <svg class=\"ds-ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></a>",
+      "css": ".ds-btn-ink{display:inline-flex;align-items:center;gap:8px;font:800 15px/1 Manrope,system-ui,sans-serif;padding:12px 18px;border-radius:999px;text-decoration:none;border:2px solid #0d150d;background:#0d150d;color:#ffd84d;transition:transform .2s cubic-bezier(.16,1,.3,1)}.ds-btn-ink:hover{transform:translateY(-2px)}.ds-btn-ink:focus-visible{outline:3px solid #12798f;outline-offset:3px}.ds-ico{width:1em;height:1em;flex:none}"
+    },
+    {
+      "name": "Top Bar",
+      "kind": "nav",
+      "refersTo": "top-bar",
+      "description": "Sticky paper bar: full name left, plain underlined links right.",
+      "html": "<header class=\"ds-top\"><a class=\"ds-brand\" href=\"#\">Mario Rafael Becerra Dueñas</a><nav class=\"ds-links\"><a href=\"#\">CV</a><a href=\"#\">LinkedIn</a></nav></header>",
+      "css": ".ds-top{background:#fbfcf7;color:#0d150d;border-bottom:3px solid #0d150d;display:flex;align-items:center;gap:24px;padding:12px 24px}.ds-brand{font-family:Archivo,system-ui,sans-serif;font-weight:850;font-stretch:112%;font-size:20px;text-decoration:none;color:inherit;line-height:1.1}.ds-links{display:flex;gap:24px;margin-left:auto;font:700 16px Manrope,system-ui,sans-serif}.ds-links a{color:inherit;text-decoration-thickness:2px;text-underline-offset:.25em}.ds-links a:hover{text-decoration-color:#c1401d}.ds-links a:focus-visible{outline:3px solid #12798f;outline-offset:3px;border-radius:4px}"
+    },
+    {
+      "name": "Floor Plan",
+      "kind": "nav",
+      "refersTo": "floor-plan",
+      "description": "Signature: fixed bottom strip; a sun block marks the room in view, each exhibit item carries its plinth colour stripe.",
+      "html": "<nav class=\"ds-plan\"><ol><li style=\"--c:#12798f\"><a href=\"#\" class=\"is-here\">Risk desk</a></li><li style=\"--c:#07683f\"><a href=\"#\">Sales desktop</a></li><li style=\"--c:#c1401d\"><a href=\"#\">Three cases</a></li><li><a href=\"#\">Contact</a></li></ol></nav>",
+      "css": ".ds-plan{background:#fbfcf7;color:#0d150d;height:48px;border-top:3px solid #0d150d}.ds-plan ol{list-style:none;margin:0;padding:0;display:flex;height:100%}.ds-plan li{flex:1 0 auto}.ds-plan a{height:100%;display:flex;align-items:center;justify-content:center;padding:0 16px;text-decoration:none;color:inherit;font:700 14px/1 Manrope,system-ui,sans-serif;white-space:nowrap;border-left:1px solid #c4cdbe;box-shadow:inset 0 5px 0 var(--c,transparent);transition:background .5s cubic-bezier(.16,1,.3,1)}.ds-plan a.is-here,.ds-plan a:hover{background:#ffd84d}.ds-plan a:focus-visible{outline:3px solid #12798f;outline-offset:-3px}"
+    },
+    {
+      "name": "Featured Exhibit",
+      "kind": "custom",
+      "refersTo": "placard-featured",
+      "description": "Plinth plus sun placard inside one 3px ink frame.",
+      "html": "<article class=\"ds-exhibit\"><div class=\"ds-plinth\"><div class=\"ds-screen\"></div></div><div class=\"ds-placard\"><h2>A payments risk desk where the model's score is sometimes wrong</h2><p>You work through a shift of flagged card payments and decide for each one what to do.</p><p>In two of the eight kinds of case the score points the wrong way.</p></div></article>",
+      "css": ".ds-exhibit{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(260px,1fr);border:3px solid #0d150d;border-radius:6px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(13,21,13,.45);color:#0d150d}.ds-plinth{background:#12798f;padding:24px;display:flex;align-items:center}.ds-screen{width:100%;aspect-ratio:16/10;background:#0d150d;border:3px solid #0d150d;border-radius:6px;box-shadow:0 10px 24px -12px rgba(0,0,0,.6)}.ds-placard{background:#ffd84d;padding:24px;display:flex;flex-direction:column;gap:14px;border-left:3px solid #0d150d;font:500 16px/1.55 Manrope,system-ui,sans-serif}.ds-placard h2{margin:0;font-family:Archivo,system-ui,sans-serif;font-weight:850;font-stretch:112%;font-size:24px;line-height:1.08;letter-spacing:-.02em}.ds-placard p{margin:0}"
+    },
+    {
+      "name": "Room Card",
+      "kind": "card",
+      "refersTo": "room-card",
+      "description": "Linked image card for children's activities and catalogue rooms.",
+      "html": "<a class=\"ds-room\" href=\"#\"><div class=\"ds-room-img\"></div><div class=\"ds-room-txt\"><h3>Learning to use a mouse</h3><p>Four small games for children aged six to nine.</p></div></a>",
+      "css": ".ds-room{display:flex;flex-direction:column;max-width:320px;background:#fbfcf7;color:#0d150d;border:2px solid #0d150d;border-radius:6px;overflow:hidden;text-decoration:none;transition:transform .25s cubic-bezier(.16,1,.3,1)}.ds-room:hover{transform:translateY(-3px)}.ds-room:focus-visible{outline:3px solid #12798f;outline-offset:3px}.ds-room-img{aspect-ratio:16/10;background:#17915e;border-bottom:2px solid #0d150d}.ds-room-txt{padding:12px 16px 14px}.ds-room h3{margin:0 0 4px;font-family:Archivo,system-ui,sans-serif;font-weight:850;font-stretch:112%;font-size:18px;line-height:1.15;letter-spacing:-.02em}.ds-room p{margin:0;font:500 15px/1.45 Manrope,system-ui,sans-serif;color:#232b22}"
+    },
+    {
+      "name": "Contact Way",
+      "kind": "button",
+      "refersTo": "contact-way",
+      "description": "Outlined pill link inside the deep-green contact room.",
+      "html": "<div class=\"ds-contact\"><a class=\"ds-way\" href=\"#\">Download my CV</a></div>",
+      "css": ".ds-contact{background:#054d2f;padding:24px}.ds-way{display:inline-flex;align-items:center;gap:8px;padding:14px 20px;border:2px solid #8fd770;border-radius:999px;color:#fbfcf7;text-decoration:none;font:700 17px Manrope,system-ui,sans-serif;transition:background .2s}.ds-way:hover{background:#07683f}.ds-way:focus-visible{outline:3px solid #12798f;outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Hands-On Exhibit Hall",
+    "overview": "The portfolio shell is a science-centre floor. Each working simulation is mounted as an exhibit: a live screen set on a saturated plinth, framed by a heavy ink rule, with a placard beside it that explains in two plain paragraphs what you do in it and why it is built that way. The visitor walks the hall top to bottom, and a floor plan pinned to the bottom of the viewport tells them which room they are standing in.\n\nThe material is printed signage on paper, not software chrome. Ground is a faintly green paper, text is near-black ink, structure is drawn with 3px ink rules and 6px frame corners. Colour comes in large confident blocks (plinths, the sun placard, the deep-green contact room) rather than as accents sprinkled through text. Headings are wide, heavy Archivo set tight; reading text is Manrope at a comfortable 17px. Facts live in sentences, so the shell carries no labels, tags or captions in small caps.\n\nThe shell is one of two visual worlds on the site. Kids activities and the GrassLMS exercise carousel embedded on the home page keep the GrassLMS Lively look of the LMS they come from (`pipeline/kids-interactives/_shared/grasslms.css`); they share the palette but not the shell's form language, and this document does not govern them. Simulations under `pipeline/` have their own product UIs and are also outside it.",
+    "keyCharacteristics": [
+      "Exhibits, not cards: a plinth plus a placard, framed by one 3px ink rule.",
+      "Colour as large flat blocks from the GrassLMS ramps only.",
+      "Wide, heavy display type (Archivo 850, width 112-115%) over a humane Manrope body.",
+      "Ink rules do the structural work; shadows are soft and secondary.",
+      "A fixed floor plan with a sliding sun-yellow \"you are here\" block."
+    ],
+    "rules": [
+      { "name": "The GrassLMS-Only Rule", "body": "Every colour on a shell surface comes from the GrassLMS ramps in `assets/shell.css`. A new hex needs a ramp step first.", "section": "colors" },
+      { "name": "The One Plinth, One Colour Rule", "body": "An exhibit's plinth colour is its identity across the page: the same token on the plinth, its floor-plan stripe and any rule that points to it.", "section": "colors" },
+      { "name": "The Facts-In-Sentences Rule", "body": "No uppercase micro-captions, mono labels or eyebrows above headings on shell surfaces. A heading names the thing plainly and the paragraph under it carries the facts.", "section": "typography" },
+      { "name": "The Two-Family Rule", "body": "Archivo for headings, Manrope for everything else. Tool names and table headers are Manrope 800, not Archivo.", "section": "typography" },
+      { "name": "The Drawn-Not-Lit Rule", "body": "If removing a shadow makes a layout ambiguous, the layout is missing a rule. Hard offset shadows belong to the GrassLMS Lively world, not the shell.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do present every playable piece as an exhibit: plinth plus placard inside one 3px ink frame with 6px corners.",
+      "Do give each exhibit one plinth colour from lagoon-600, lagoon-800, green-700, green-500, clay-600, ink-900 or sun-400, and repeat it on its floor-plan stripe.",
+      "Do keep sun-400 for the one place attention belongs: the featured placard, the \"you are here\" block, button labels, the contact heading.",
+      "Do set headings in Archivo 850 at 112% width with -0.02em tracking and body in Manrope 500.",
+      "Do use the expo-out ease (cubic-bezier(.16,1,.3,1)) for lifts and the floor-plan slide, and drop all transitions under prefers-reduced-motion."
+    ],
+    "donts": [
+      "Don't add eyebrows, kickers, mono labels, chips or uppercase micro-captions to shell surfaces.",
+      "Don't use colours outside the GrassLMS ramps.",
+      "Don't restyle kids activities or the embedded GrassLMS exercise carousel in shell form, and don't import their Lively details (hard offset shadows, mono captions, 14-24px radii) into the shell.",
+      "Don't make structure depend on shadows; use an ink rule.",
+      "Don't add a second button style; a secondary action is an underlined text link."
+    ]
+  }
+}

@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  SCORM 1.2 manifest · Module 4 · ICP Buyer Fit (variability of practice)
-  Identifier: FTC.SDR.M4.icp-buyer-fit.v1
-  Single SCO. The shell (../scorm-shell/) is referenced relatively — the
-  packaging script must copy /scorm-shell/ alongside this module before zip.
-  See design-log.md §1 for packaging notes + 3-vs-2-interleaved fallback.
--->
 <manifest identifier="FTC.SDR.M4.icp-buyer-fit.v1"
           version="1.0.0"
           xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
@@ -22,9 +15,9 @@
 
   <organizations default="FTC-SDR-ONBOARDING">
     <organization identifier="FTC-SDR-ONBOARDING">
-      <title>FinTechCard SDR Onboarding</title>
+      <title>FinTechCard SDR onboarding</title>
       <item identifier="ITEM-M4" identifierref="RES-M4" isvisible="true">
-        <title>Module 4 · ICP Buyer Fit</title>
+        <title>Module 4: ICP buyer fit</title>
         <adlcp:masteryscore>80</adlcp:masteryscore>
         <adlcp:maxtimeallowed>00:10:00</adlcp:maxtimeallowed>
         <adlcp:timelimitaction>continue,no message</adlcp:timelimitaction>
@@ -39,32 +32,46 @@
               adlcp:scormtype="sco"
               href="index.html">
       <file href="index.html"/>
-      <file href="styles.css"/>
       <file href="module.js"/>
-      <file href="data/transcripts.json"/>
+      <file href="styles.css"/>
       <file href="data/prospects.json"/>
       <file href="data/quiz.json"/>
+      <file href="data/transcripts.json"/>
       <dependency identifierref="RES-SHELL"/>
     </resource>
-
+    <!-- The mini-OS shell (apps, shared buyers and calls), shared by all six modules. -->
     <resource identifier="RES-SHELL"
               type="webcontent"
-              adlcp:scormtype="asset"
-              href="../scorm-shell/index.html">
-      <file href="../scorm-shell/js/shell.js"/>
-      <file href="../scorm-shell/js/scorm-bridge.js"/>
+              adlcp:scormtype="asset">
+      <file href="../scorm-shell/index.html"/>
+      <file href="../scorm-shell/data/sample-gong-transcripts.json"/>
+      <file href="../scorm-shell/data/sample-profiles.json"/>
+      <file href="../scorm-shell/js/brand-icons.js"/>
       <file href="../scorm-shell/js/event-log.js"/>
-      <file href="../scorm-shell/js/coach-marks.js"/>
-      <file href="../scorm-shell/js/apps/registry.js"/>
-      <file href="../scorm-shell/js/apps/outreach.js"/>
-      <file href="../scorm-shell/js/apps/gong.js"/>
-      <file href="../scorm-shell/js/apps/salesforce.js"/>
-      <file href="../scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="../scorm-shell/js/quiz-normalize.js"/>
+      <file href="../scorm-shell/js/scorm-bridge.js"/>
+      <file href="../scorm-shell/js/shell.js"/>
+      <file href="../scorm-shell/js/task-banner.js"/>
       <file href="../scorm-shell/js/apps/calendar.js"/>
+      <file href="../scorm-shell/js/apps/gong.js"/>
+      <file href="../scorm-shell/js/apps/linkedin-ch.js"/>
+      <file href="../scorm-shell/js/apps/outreach.js"/>
       <file href="../scorm-shell/js/apps/phone-dialler.js"/>
+      <file href="../scorm-shell/js/apps/profiles.js"/>
+      <file href="../scorm-shell/js/apps/registry.js"/>
+      <file href="../scorm-shell/js/apps/salesforce.js"/>
       <file href="../scorm-shell/js/apps/slack.js"/>
-      <file href="../scorm-shell/styles/shell.css"/>
       <file href="../scorm-shell/styles/apps.css"/>
+      <file href="../scorm-shell/styles/shell.css"/>
+      <file href="../scorm-shell/styles/apps/_shared.css"/>
+      <file href="../scorm-shell/styles/apps/calendar.css"/>
+      <file href="../scorm-shell/styles/apps/gong.css"/>
+      <file href="../scorm-shell/styles/apps/linkedin-ch.css"/>
+      <file href="../scorm-shell/styles/apps/outreach.css"/>
+      <file href="../scorm-shell/styles/apps/phone-dialler.css"/>
+      <file href="../scorm-shell/styles/apps/salesforce.css"/>
+      <file href="../scorm-shell/styles/apps/slack.css"/>
+      <file href="../../_shared/desktop-only.js"/>
     </resource>
   </resources>
 </manifest>
