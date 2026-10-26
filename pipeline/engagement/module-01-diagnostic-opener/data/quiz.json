@@ -3,7 +3,7 @@
     "id": "M1-Q1",
     "lo_id": "LO-M1.1",
     "bloom": "Analyse",
-    "stem": "You're about to dial Maria, who owns a two-store retail business. Companies House shows she opened the second store in January. Which opener works as an M1 diagnostic?",
+    "stem": "You're about to dial Maria, who owns a two-store retail business. Companies House shows she opened the second store in {{month:maria_store}}. Which opener works as an M1 diagnostic?",
     "choices": [
       {
         "id": "A",
@@ -25,7 +25,7 @@
       },
       {
         "id": "D",
-        "text": "I noticed you opened a second store in January — who's approving card spend across both stores now?",
+        "text": "I noticed you opened a second store in {{month:maria_store}} — who's approving card spend across both stores now?",
         "keyed": true,
         "feedback": "It names the second store and asks who controls the spending. M.G. opened GC-01 this way and booked the demo on the same call."
       }
@@ -35,7 +35,7 @@
     "id": "M1-Q2",
     "lo_id": "LO-M1.2",
     "bloom": "Create",
-    "stem": "Tom has closed a Series B, announced in April, and his company of 22 people has posted six engineering jobs. Which opening question pairs that signal with a question about who controls what, in 15 words or fewer?",
+    "stem": "Tom has closed a Series B, announced in {{month:tom_series_b}}, and his company of 22 people has posted six engineering jobs. Which opening question pairs that signal with a question about who controls what, in 15 words or fewer?",
     "choices": [
       {
         "id": "A",

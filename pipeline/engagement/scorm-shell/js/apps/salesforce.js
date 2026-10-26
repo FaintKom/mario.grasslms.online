@@ -15,6 +15,7 @@
 import { registerApp, icon } from "./registry.js";
 import { EVENT } from "../event-log.js";
 import { loadProfiles, findProfile } from "./profiles.js";
+import { resolveDates, iso, today } from "../dates.js";
 
 const STAGES = ["Prospecting", "Discovery", "Demo", "Negotiation", "Closed Won", "Closed Lost"];
 
@@ -29,24 +30,26 @@ const DEFAULT_RECORD = {
   OpportunityName: "Two Pines Apparel · Card + Spend Mgmt",
   Stage: "Discovery",
   Amount: "£42,000 ARR",
-  CloseDate: "2026-07-31",
+  CloseDate: resolveDates({ inDays: 35 }),   // Maria, as in sample-profiles.json
   Owner: "You",
-  NextStep: "Demo · Wed 10:30 · per-store cards + receipt capture",
+  NextStep: "Pricing for per-store cards + receipt capture, after the demo",
   Industry: "Retail SMB",
   AnnualRevenue: "£1.8M",
   Ramp_Time__c: "—",
-  Tenure_Cohort__c: "Q2-2026",
+  Tenure_Cohort__c: `Q${Math.floor(today().getMonth() / 3) + 1}-${today().getFullYear()}`,   // the rep is new this quarter
   Pod__c: "UK · Manchester",
   First_Paid_Quota_Date__c: "—",
   Next_Step_Booked__c: false,
   Call_Review__c: "",
 };
 
-const DEFAULT_TIMELINE = [
-  { ts: "2026-05-05", type: "meeting", text: "Demo booked during the call · Wed 10:30 · Maria + bookkeeper" },
-  { ts: "2026-05-02", type: "email",   text: "Follow-up email sent · opened twice" },
-  { ts: "2026-04-30", type: "call",    text: "Outbound call · voicemail" },
-];
+// Maria's history, the same offsets as in sample-profiles.json.
+const DEFAULT_TIMELINE = resolveDates([
+  { ts: { weeksAgo: 3, weekday: "Wed" }, type: "meeting", text: "Demo held · Maria + bookkeeper" },
+  { ts: { call: "GC-01" },               type: "meeting", text: "Demo booked during the call · Wed 10:30 · Maria + bookkeeper" },
+  { ts: { weeksAgo: 4, weekday: "Thu" }, type: "email",   text: "Follow-up email sent · opened twice" },
+  { ts: { weeksAgo: 4, weekday: "Tue" }, type: "call",    text: "Outbound call · voicemail" },
+]);
 
 const TYPE_ICON = {
   call:    "📞",
@@ -287,9 +290,8 @@ registerApp({
         return;
       }
       record.Next_Step_Booked__c = true;
-      const today = new Date().toISOString().slice(0, 10);
       timeline = [
-        { ts: today, type: "meeting", text: `Next step booked · ${record.NextStep}` },
+        { ts: iso(today()), type: "meeting", text: `Next step booked · ${record.NextStep}` },
         ...timeline,
       ];
       eventBus.dispatchEvent(new CustomEvent("telemetry", {

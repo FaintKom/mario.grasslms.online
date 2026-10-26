@@ -2,12 +2,12 @@
   {
     "id": "Q-M4-1",
     "lo": "LO-M4.1",
-    "stem": "A SaaS company with 22 people spends €18K a month on cards, you would be talking to the founder-CEO, and they announced a Series B in April. What total does the scale give, and what do you do?",
+    "stem": "A SaaS company with 22 people spends €18K a month on cards, you would be talking to the founder-CEO, and they announced a Series B in {{month:tom_series_b}}. What total does the scale give, and what do you do?",
     "options": [
       {
         "text": "23 out of 25, so you dial today",
         "correct": true,
-        "rationale": "Funded SaaS scores 5 on industry, 22 people 5, €18K a month 4, a founder 5 and a round announced in April 4. That makes 23, and Tom gets a call today."
+        "rationale": "Funded SaaS scores 5 on industry, 22 people 5, €18K a month 4, a founder 5 and a round announced in {{month:tom_series_b}} 4. That makes 23, and Tom gets a call today."
       },
       {
         "text": "21 out of 25, so you dial this week",
@@ -17,7 +17,7 @@
       {
         "text": "18 out of 25, so you dial this week",
         "correct": false,
-        "rationale": "A round announced in April is a dated event within six months and scores 4. The total is 23."
+        "rationale": "A round announced in {{month:tom_series_b}} is a dated event within six months and scores 4. The total is 23."
       },
       {
         "text": "16 out of 25, so you skip it",
@@ -32,7 +32,7 @@
     "stem": "Which of these signals scores 5 on intent?",
     "options": [
       {
-        "text": "Companies House shows a second site, filed in January",
+        "text": "Companies House shows a second site, filed in {{month:maria_store}}",
         "correct": false,
         "rationale": "A dated growth event in the last six months scores 4. It is a good reason to call, but the buyer hasn't asked for one."
       },
@@ -47,7 +47,7 @@
         "rationale": "Growth news without a date or a link to spending scores 3 at most."
       },
       {
-        "text": "The buyer replied to your sequence: \"interesting, talk Friday?\"",
+        "text": "The buyer replied to your sequence: \"interesting, talk {{today}}?\"",
         "correct": true,
         "rationale": "A reply or a request for a call in the last week scores 5. Emma's reply is why she is a lead you call today."
       }

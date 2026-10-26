@@ -16,6 +16,7 @@ import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-bann
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
 import { EVENT } from "../scorm-shell/js/event-log.js";
+import { resolveDates, fill } from "../scorm-shell/js/dates.js";
 /** "a", "a and b", "a, b and c" */
 const listJoin = arr => arr.length < 3 ? arr.join(" and ") : `${arr.slice(0, -1).join(", ")} and ${arr[arr.length - 1]}`;
 
@@ -43,7 +44,7 @@ const emma  = () => findProfile(state.profiles, "L-003");
 async function loadJson(path) {
   const res = await fetch(path);
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
-  return res.json();
+  return resolveDates(await res.json());
 }
 
 async function start() {
@@ -305,7 +306,7 @@ function stepStateOutcome(body) {
           state.signal.ok = true;
           sig.classList.add("is-picked");
           fb.dataset.tone = "ok";
-          fb.textContent = "A second store opened in January, and card spend now runs across two sites. That gives you a dated fact to mention and a question about who approves spending in both stores.";
+          fb.textContent = fill("A second store opened in {{month:maria_store}}, and card spend now runs across two sites. That gives you a dated fact to mention and a question about who approves spending in both stores.");
           markTaskBannerDone("m1-s2-signal");
           state.api.eventLog?.record?.("step2_signal_read", { tries: state.signal.tries });
           completeStep(1, 1600);

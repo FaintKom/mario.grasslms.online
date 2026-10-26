@@ -20,6 +20,7 @@ import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-bann
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
 import { EVENT } from "../scorm-shell/js/event-log.js";
+import { resolveDates, fill, slot, spokenSlot, slotWithDate } from "../scorm-shell/js/dates.js";
 
 const state = {
   api: null, step: 0, startedAt: 0, finished: false,
@@ -36,15 +37,17 @@ const maria = () => findProfile(state.profiles, "L-001");
 const tom   = () => findProfile(state.profiles, "L-002");
 const emma  = () => findProfile(state.profiles, "L-003");
 
-const MARIA_SLOTS = ["Tue 10:00", "Wed 10:30"];   // M.G.'s close on GC-01
-const EMMA_SLOTS  = ["Tue 14:00", "Thu 11:30"];   // from Emma's profile
+// The two days a rep can offer today; GC-01 and GC-06 are older calls with their own weekdays.
+const MARIA_SLOTS = [slot(0, "10:00"), slot(1, "10:30")];
+const EMMA_SLOTS  = [slot(0, "14:00"), slot(1, "11:30")];   // as in Emma's profile
+const TOM_SLOTS   = [slot(0, "11:00"), slot(1, "14:00")];
 
 // --- Data + boot ---------------------------------------------------------------
 
 async function loadJson(path) {
   const res = await fetch(path);
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
-  return res.json();
+  return resolveDates(await res.json());
 }
 
 async function start() {
@@ -386,7 +389,7 @@ function stepCompletionProblem(body) {
   `;
   const options = [
     { label: "A", result: "correct",
-      text: `"Can I show you the FX cost against Brex on last month's spend, 20 minutes on Tuesday at 11:00 or Thursday at 14:00?"`,
+      text: `"Can I show you the FX cost against Brex on last month's spend, 20 minutes on ${spokenSlot(TOM_SLOTS[0])} or ${spokenSlot(TOM_SLOTS[1])}?"`,
       rationale: "Two specific times, and the demo is framed around Tom's own problem. L.D. closed him the same way on GC-06." },
     { label: "B", result: "partial",
       text: `"I'll send a calendar invite with some times by email."`,
@@ -464,7 +467,7 @@ function stepSoloProblem(body) {
   body.innerHTML = `
     <p style="font-size:14px;">
       ${e.name} runs operations at ${escapeHtml(e.company)} and replied to your sequence with
-      <em>"interesting, talk Friday?"</em> This time you make the call and book the meeting yourself.
+      <em>"${fill("interesting, talk {{today}}?")}"</em> This time you make the call and book the meeting yourself.
     </p>
     <ol style="font-size:13px;margin:6px 0 8px 18px;color:var(--ftc-ink-2)">
       <li>Open Calendar first, and then dial Emma from her row in Outreach.</li>
@@ -566,7 +569,7 @@ function wireAppEvents() {
         say("buyer", "Emma", `${spokenSlot(slots[0])} works. I'll bring our Xero admin.`);
         // Pre-fill Next Step with the booked slot. An open record only takes
         // `record` (re-sending accountId would reload the profile over it).
-        const record = { NextStep: `Demo · ${slots[0] ?? ""} · receipt capture + Xero sync` };
+        const record = { NextStep: `Demo · ${slotWithDate(slots[0])} · receipt capture + Xero sync` };
         state.api.os.openApp("salesforce", isOpen("salesforce") ? { record } : { accountId: "L-003", record });
       }
       soloBanner();
@@ -837,13 +840,6 @@ function showSummaryCard(pct) {
 }
 
 // --- Utilities ----------------------------------------------------------------------
-
-/** "Tue 14:00" → "Tuesday at 14:00", as a buyer would say it back. */
-function spokenSlot(slot) {
-  const DAYS = { Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday" };
-  const [d, t] = String(slot ?? "").split(" ");
-  return DAYS[d] ? `${DAYS[d]} at ${t}` : String(slot ?? "That time");
-}
 
 function timestamp() {
   const ms = Date.now() - state.startedAt;

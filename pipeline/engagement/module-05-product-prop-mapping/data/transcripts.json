@@ -14,7 +14,7 @@
         "who": "rep",
         "voice": null,
         "speaker": "Rep",
-        "line": "Tom, I saw you announced your Series B in April. Who handles per-employee card issuance now that you're hiring fast?",
+        "line": "Tom, I saw you announced your Series B in {{month:tom_series_b}}. Who handles per-employee card issuance now that you're hiring fast?",
         "tags": [
           "M1"
         ]

@@ -161,15 +161,19 @@
   color: var(--gc-blue);
   font-weight: 700;
 }
-.app--calendar .cal-head--today::after {
-  content: "";
+/* Date under the weekday, in a blue circle on today */
+.app--calendar .cal-head__n {
   display: block;
   width: 28px; height: 28px;
   margin: 4px auto 0;
   border-radius: 50%;
-  background: var(--gc-blue);
-  position: relative;
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 500;
+  color: var(--gc-ink);
+  letter-spacing: 0;
 }
+.app--calendar .cal-head--today .cal-head__n { background: var(--gc-blue); color: #fff; }
 
 /* Time labels */
 .app--calendar .cal-time {
@@ -220,6 +224,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
+}
+
+/* Days of this week that are already over */
+.app--calendar .cal-slot[data-status="past"] {
+  background: repeating-linear-gradient(135deg, rgba(60,64,67,0.05) 0 6px, transparent 6px 12px);
+  cursor: not-allowed;
 }
 
 /* Busy events */

@@ -14,6 +14,7 @@
 
 import { registerApp, icon } from "./registry.js";
 import { EVENT } from "../event-log.js";
+import { bookingWeek, slot as bookingSlot, spokenSlot, today, dm } from "../dates.js";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
@@ -27,7 +28,15 @@ function generateBands() {
 }
 const BANDS = generateBands();
 
-const DEFAULT_SUGGESTED = ["Tue 11:00", "Thu 14:00"];
+// The week shown is the one with the next two working days (dates.js), so the
+// suggested slots are never in the past and never on a weekend.
+const DEFAULT_SUGGESTED = [bookingSlot(0, "11:00"), bookingSlot(1, "14:00")];
+
+/** Dates of Mon…Fri in the week the Calendar shows. */
+function weekDates() {
+  const mon = bookingWeek();
+  return DAYS.map((_, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); return d; });
+}
 
 /**
  * @param {string[]} suggested  slots like "Tue 11:00"
@@ -53,13 +62,19 @@ function defaultSlots(suggested = DEFAULT_SUGGESTED, who = "Maria") {
   };
   DAYS.forEach(d => block(d, "09:00", "Stand-up · pod"));
   DAYS.forEach(d => { block(d, "12:30", "Lunch"); block(d, "13:00", "Lunch"); });
+  // Fixed meetings stay clear of the times the modules offer (10:00, 10:30, 11:00, 11:30, 14:00).
   block("Wed", "15:00", "1:1 · J.T.");
   block("Wed", "15:30", "1:1 · J.T.");
   block("Fri", "16:00", "Pipeline review");
   block("Fri", "16:30", "Pipeline review");
-  block("Mon", "14:00", "Customer demo");
-  block("Mon", "14:30", "Customer demo");
-  block("Thu", "11:00", "Discovery call");
+  block("Mon", "15:00", "Customer demo");
+  block("Mon", "15:30", "Customer demo");
+  block("Thu", "16:00", "Discovery call");
+  // Days of this week that are already over can't be booked.
+  const t = today();
+  weekDates().forEach((d, i) => {
+    if (d < t) slots.filter(x => x.day === DAYS[i]).forEach(x => { x.status = "past"; x.label = ""; });
+  });
 
   const suggest = (day, time, label) => {
     const s = slots.find(x => x.day === day && x.time === time);
@@ -86,7 +101,8 @@ registerApp({
     let suggestedIds = new Set((options.suggestedSlots ?? DEFAULT_SUGGESTED).map(s => String(s).replace(" ", "-")));
     let slots = Array.isArray(options.slots) ? options.slots.slice() : defaultSlots(options.suggestedSlots ?? DEFAULT_SUGGESTED, suggestFor);
     let inviteeEmail = options.invitee_email ?? "";
-    const todayIdx = Math.min(Math.max(new Date().getDay() - 1, 0), 4);
+    const dates = weekDates();
+    const todayIdx = dates.findIndex(d => d.getTime() === today().getTime());
 
     container.classList.add("app--calendar");
     container.innerHTML = renderShell();
@@ -95,14 +111,7 @@ registerApp({
     eventBus.dispatchEvent(new CustomEvent("calendar:opened", { detail: { ts: Date.now() } }));
     eventBus.dispatchEvent(new CustomEvent("telemetry", { detail: { event_name: EVENT.CALENDAR_OPENED } }));
 
-    function weekRange() {
-      const now  = new Date();
-      const day  = now.getDay();
-      const mon  = new Date(now); mon.setDate(now.getDate() - ((day + 6) % 7));
-      const fri  = new Date(mon); fri.setDate(mon.getDate() + 4);
-      const fmt  = d => d.toLocaleDateString("en-GB", { month: "short", day: "numeric" });
-      return `${fmt(mon)} – ${fmt(fri)}`;
-    }
+    function weekRange() { return `${dm(dates[0])} – ${dm(dates[4])}`; }
 
     function renderShell() {
       return `
@@ -155,7 +164,7 @@ registerApp({
       cells.push(`<div class="cal-head cal-head--corner"></div>`);
       DAYS.forEach((d, i) => {
         const cls = i === todayIdx ? "cal-head cal-head--today" : "cal-head";
-        cells.push(`<div class="${cls}">${d}</div>`);
+        cells.push(`<div class="${cls}"><span>${d}</span><span class="cal-head__n">${dates[i].getDate()}</span></div>`);
       });
       BANDS.forEach(b => {
         cells.push(`<div class="cal-time">${b}</div>`);
@@ -199,8 +208,8 @@ registerApp({
     function suggestedSummary() {
       const sug = slots.filter(s => s.status === "suggested");
       return sug.length >= 2
-        ? sug.slice(0, 2).map(s => `${s.day} at ${s.time}`).join(" or ")
-        : "Tuesday 11 or Thursday 2";
+        ? sug.slice(0, 2).map(s => spokenSlot(`${s.day} ${s.time}`)).join(" or ")
+        : DEFAULT_SUGGESTED.map(spokenSlot).join(" or ");
     }
 
     function bind() {
@@ -209,7 +218,7 @@ registerApp({
         if (cell) {
           const id = cell.getAttribute("data-slot");
           const s = slots.find(x => x.slot_id === id);
-          if (!s || s.status === "busy") return;
+          if (!s || s.status === "busy" || s.status === "past") return;
           const currentlySelected = slots.filter(x => x.status === "selected").length;
           if (s.status === "selected") {
             const wasSug = suggestedIds.has(s.slot_id);

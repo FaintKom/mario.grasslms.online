@@ -11,7 +11,11 @@
  * Apps that show one buyer (LinkedIn / CH, Salesforce) accept a lookup key:
  * a lead_id ("L-003"), a first name ("emma") or an id containing the first
  * name ("L-EMMA-001").
+ *
+ * Dates in both files are offsets from today (see dates.js) and are resolved here.
  */
+
+import { resolveDates } from "../dates.js";
 
 let cache = null;
 let callCache = null;
@@ -21,6 +25,7 @@ export function loadProfiles() {
   if (!cache) {
     cache = fetch(new URL("../../data/sample-profiles.json", import.meta.url))
       .then(r => (r.ok ? r.json() : []))
+      .then(resolveDates)
       .catch(e => { console.warn("[profiles] could not load sample-profiles.json", e); return []; });
   }
   return cache;
@@ -31,6 +36,7 @@ export function loadCalls() {
   if (!callCache) {
     callCache = fetch(new URL("../../data/sample-gong-transcripts.json", import.meta.url))
       .then(r => (r.ok ? r.json() : []))
+      .then(resolveDates)
       .catch(e => { console.warn("[profiles] could not load sample-gong-transcripts.json", e); return []; });
   }
   return callCache;

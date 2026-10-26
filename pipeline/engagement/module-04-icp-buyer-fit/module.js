@@ -17,6 +17,7 @@ import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-bann
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
 import { EVENT } from "../scorm-shell/js/event-log.js";
+import { resolveDates, fill } from "../scorm-shell/js/dates.js";
 /** "a", "a and b", "a, b and c" */
 const listJoin = arr => arr.length < 3 ? arr.join(" and ") : `${arr.slice(0, -1).join(", ")} and ${arr[arr.length - 1]}`;
 
@@ -51,8 +52,8 @@ const RUBRIC = [
     2: ["No named contact yet", "an info@ inbox"],
     1: ["A buying committee or procurement team", "a CFO-led committee"] } },
   { k: "intent", label: "Intent signal (recent)", levels: {
-    5: ["Replied or asked for a call in the last week", "Emma: \"interesting, talk Friday?\""],
-    4: ["A dated growth event in the last 6 months: new site, funding round", "Maria's second store (Jan), Tom's Series B (Apr)"],
+    5: ["Replied or asked for a call in the last week", fill("Emma: \"interesting, talk {{today}}?\"")],
+    4: ["A dated growth event in the last 6 months: new site, funding round", fill("Maria's second store ({{mon:maria_store}}), Tom's Series B ({{mon:tom_series_b}})")],
     3: ["Growth news without a date, or hiring for roles that touch spend", "Sven hiring a procurement assistant"],
     2: ["Routine filings only", "annual or micro-entity accounts"],
     1: ["No signal, or one that points away", "flat accounts, \"current setup works\""] } },
@@ -63,7 +64,7 @@ const verdictFor = total => (total >= 22 ? "today" : total >= 18 ? "week" : "ski
 /** Reference score for Emma, the real buyer in the solo set. */
 const EMMA_REFERENCE = {
   industry: 5, fte: 5, spend: 5, dm: 4, intent: 5, verdict: "today",
-  why: "Manufacturing with 3 sites, 78 people, £42K a month, an ops head who reports to the MD and a reply asking to talk on Friday add up to 24. She gets a call today.",
+  why: "Manufacturing with 3 sites, 78 people, £42K a month, an ops head who reports to the MD and a reply asking to talk today add up to 24. She gets a call today.",
 };
 
 const state = {
@@ -78,7 +79,7 @@ const state = {
 
 // --- Data + boot ---------------------------------------------------------------
 
-async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.json(); }
+async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return resolveDates(await r.json()); }
 
 async function start() {
   try {
@@ -448,7 +449,7 @@ function renderSoloLead() {
     <div style="font-size:12.5px;color:var(--ftc-ink-2);margin:2px 0 8px">${escapeHtml(lead.industry)}, ${lead.fte} people and about ${money(lead)} a month on cards (${escapeHtml(String(lead.stage).replace(/ · /g, ", "))}).</div>
     <ul style="margin:0 0 8px 18px;padding:0;font-size:12.5px;color:var(--ftc-ink)">
       ${(lead.signals ?? []).map(s => `<li>${escapeHtml(s.content)}</li>`).join("")}
-      ${lead.lead_id === "L-003" ? `<li>Replied to sequence email 3 (15 May): "interesting, talk Friday?"</li>` : ""}
+      ${lead.lead_id === "L-003" ? `<li>${fill('Replied to sequence email 3 ({{dm:-1}}): "interesting, talk {{today}}?"')}</li>` : ""}
     </ul>
     ${RUBRIC.map(c => `
       <div style="display:grid;grid-template-columns:150px 1fr 26px;gap:10px;align-items:center;margin:8px 0 0">

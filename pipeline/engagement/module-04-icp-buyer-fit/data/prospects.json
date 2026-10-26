@@ -11,13 +11,15 @@
       "monthly_spend": 240000,
       "stage": "Series-C · CFO leads a buying committee",
       "registered_office": "Herengracht 110, Amsterdam 1015 BS",
-      "last_touch_at": "2026-05-04T10:00:00Z",
+      "last_touch_at": {
+        "daysAgo": 2
+      },
       "sequence_step": 1,
       "signals": [
         {
           "type": "funding",
           "source": "linkedin",
-          "content": "Announced $60M Series C (Mar 2026)."
+          "content": "Announced $60M Series C ({{monYear:helio_series_c}})."
         },
         {
           "type": "hiring",
@@ -45,7 +47,9 @@
       "monthly_spend": 6000,
       "stage": "Founder · single location · 3-yr tenure",
       "registered_office": "OakRow Lane, Bath BA1 5PH",
-      "last_touch_at": "2026-05-03T09:00:00Z",
+      "last_touch_at": {
+        "daysAgo": 3
+      },
       "sequence_step": 1,
       "signals": [
         {
@@ -56,7 +60,7 @@
         {
           "type": "filing",
           "source": "companieshouse",
-          "content": "Micro-entity accounts filed (Mar 2026)."
+          "content": "Micro-entity accounts filed ({{monYear:oakrow_accounts}})."
         }
       ],
       "reference": {
@@ -79,7 +83,9 @@
       "monthly_spend": 22000,
       "stage": "Owner-operator · single warehouse",
       "registered_office": "Pine Mills Yard, Bristol BS3 4QF",
-      "last_touch_at": "2026-05-01T11:00:00Z",
+      "last_touch_at": {
+        "daysAgo": 6
+      },
       "sequence_step": 2,
       "signals": [
         {

@@ -23,6 +23,7 @@ import { bootModule } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, findProfile } from "../scorm-shell/js/apps/profiles.js";
+import { resolveDates } from "../scorm-shell/js/dates.js";
 /** "a", "a and b", "a, b and c" */
 const listJoin = arr => arr.length < 3 ? arr.join(" and ") : `${arr.slice(0, -1).join(", ")} and ${arr[arr.length - 1]}`;
 
@@ -81,7 +82,7 @@ const QUIZ_COPY = {
 
 // --- Data -------------------------------------------------------------------
 
-async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.json(); }
+async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return resolveDates(await r.json()); }
 async function loadAllData() {
   const [buyers, bank, prospects, transcripts, quiz] = await Promise.all([
     loadProfiles(),

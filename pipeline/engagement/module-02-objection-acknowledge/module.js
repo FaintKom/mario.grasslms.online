@@ -17,6 +17,7 @@ import { mountTaskBanner, markTaskBannerDone } from "../scorm-shell/js/task-bann
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, loadCalls, findProfile, pickCalls } from "../scorm-shell/js/apps/profiles.js";
 import { EVENT } from "../scorm-shell/js/event-log.js";
+import { resolveDates } from "../scorm-shell/js/dates.js";
 
 const WAIT_MS = 3000;
 const DIAL_LOCK = "No calls until step 6. Then you call Lukas from the panel under his row.";
@@ -40,7 +41,7 @@ const ob    = id => state.bank.find(o => o.id === id);
 async function loadJson(path) {
   const res = await fetch(path);
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
-  return res.json();
+  return resolveDates(await res.json());
 }
 
 async function start() {

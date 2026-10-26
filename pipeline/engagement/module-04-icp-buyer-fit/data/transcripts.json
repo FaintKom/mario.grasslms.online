@@ -10,7 +10,7 @@
       { "timestamp_ms": 9000,  "speaker": "M.G. (scoring)", "text": "FTE band: 5. 35 staff across the two shops.", "m_move_tag": null },
       { "timestamp_ms": 18000, "speaker": "M.G. (scoring)", "text": "Monthly spend: 4. About £25K a month on cards.", "m_move_tag": null },
       { "timestamp_ms": 30000, "speaker": "M.G. (scoring)", "text": "Decision-maker access: 5. Maria owns the business and signs off spend herself.", "m_move_tag": null },
-      { "timestamp_ms": 44000, "speaker": "M.G. (scoring)", "text": "Intent signal: 4. Companies House shows the second Deansgate site, filed in January.", "m_move_tag": null },
+      { "timestamp_ms": 44000, "speaker": "M.G. (scoring)", "text": "Intent signal: 4. Companies House shows the second Deansgate site, filed in {{month:maria_store}}.", "m_move_tag": null },
       { "timestamp_ms": 58000, "speaker": "M.G. (scoring)", "text": "Total 23 out of 25. That's 22 or more, so I dial her today. The call is GC-01 in the list.", "m_move_tag": null }
     ]
   }

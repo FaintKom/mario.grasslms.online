@@ -12,6 +12,7 @@
 
 import { registerApp, icon } from "./registry.js";
 import { loadCalls } from "./profiles.js";
+import { callDate, short } from "../dates.js";
 
 const MOVE_META = {
   M1: { label: "Diagnostic",   iconName: "eye"     },
@@ -90,7 +91,7 @@ registerApp({
       el.innerHTML = transcripts.map(t => `
         <li role="option" tabindex="0" data-call-id="${escapeAttr(t.id)}" aria-current="${t.id === activeId ? "true" : "false"}">
           <strong>${escapeHtml(t.id)}</strong><br>
-          ${escapeHtml([t.rep, t.who].filter(Boolean).join(" · "))}<br>
+          ${escapeHtml([t.rep, t.who, t.date].filter(Boolean).join(" · "))}<br>
           <span class="outcome">${escapeHtml(humanize(t.outcome))}</span>
         </li>
       `).join("");
@@ -225,6 +226,7 @@ function normalizeTranscript(t) {
     id: t.id ?? t.gc_id ?? t.clip_id ?? "",
     rep,
     who: buyer ?? ARCHETYPE_LABEL[archetype] ?? archetype,
+    date: (d => (d ? short(d) : ""))(callDate(t.id ?? t.gc_id ?? t.clip_id ?? "")),   // "Mon 5 Oct", from dates.js
     outcome: t.outcome ?? "",
     lines: raw.map(ln => {
       if (typeof ln.silence === "number") return { silence: ln.silence };

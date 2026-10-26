@@ -17,7 +17,7 @@
       {
         "timestamp_ms": 5000,
         "speaker": "M.G.",
-        "text": "I noticed on Companies House you opened a second store on Deansgate in January. Who's approving card spend across both stores now?",
+        "text": "I noticed on Companies House you opened a second store on Deansgate in {{month:maria_store}}. Who's approving card spend across both stores now?",
         "m_move_tag": "M1",
         "m_move_quality": 5
       },
@@ -211,7 +211,7 @@
       {
         "timestamp_ms": 29000,
         "speaker": "L.D.",
-        "text": "Saw your Series B in April — congrats. How are you handling per-employee card issuance for the six engineers you're hiring?",
+        "text": "Saw your Series B in {{month:tom_series_b}} — congrats. How are you handling per-employee card issuance for the six engineers you're hiring?",
         "m_move_tag": "M1",
         "m_move_quality": 4
       },

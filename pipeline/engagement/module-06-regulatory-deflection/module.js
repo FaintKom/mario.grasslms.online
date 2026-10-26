@@ -19,6 +19,7 @@ import { bootModule, PASS_PCT } from "../scorm-shell/js/shell.js";
 import { mountTaskBanner, markTaskBannerDone, updateTaskBanner } from "../scorm-shell/js/task-banner.js";
 import { normalizeQuiz } from "../scorm-shell/js/quiz-normalize.js";
 import { loadProfiles, findProfile } from "../scorm-shell/js/apps/profiles.js";
+import { resolveDates, fill } from "../scorm-shell/js/dates.js";
 
 const state = {
   api: null, step: 0, startedAt: 0,
@@ -30,7 +31,7 @@ const state = {
 
 // --- Data -------------------------------------------------------------------
 
-async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.json(); }
+async function loadJson(p) { const r = await fetch(p); if (!r.ok) throw new Error(`${p}: ${r.status}`); return resolveDates(await r.json()); }
 async function loadAllData() {
   const [t, p, q, a, leads] = await Promise.all([
     loadJson("./data/transcripts.json"),
@@ -50,14 +51,14 @@ async function loadAllData() {
   state.leads = (Array.isArray(leads) ? leads : []).slice();
   if (priya) state.leads.push({
     lead_id: "M6-PRIYA", name: priya.display_name, company: "Software for regulated clients (UK)",
-    archetype: "rocket", fte: priya.fte, last_touch_at: "2026-05-06T09:00:00Z", sequence_step: 3,
+    archetype: "rocket", fte: priya.fte, last_touch_at: resolveDates({ daysAgo: 3 }), sequence_step: 3,
   });
 }
 const row = acr => state.aid.find(r => r.acronym === acr) ?? { acronym: acr, what_it_means: "", rep_response_verbatim: "", escalation_criteria: "" };
 const say = acr => row(acr).rep_response_verbatim;
 const prospect = id => state.prospects.find(p => p.id === id) ?? { display_name: id };
 
-const ESCALATE_LINE = "That needs an exact answer. I'll book you 15 minutes with our compliance lead on Thursday, and they'll confirm it in writing.";
+const ESCALATE_LINE = fill("That needs an exact answer. I'll book you 15 minutes with our compliance lead on {{day1}}, and they'll confirm it in writing.");
 
 async function start() {
   try { await loadAllData(); }
@@ -535,7 +536,7 @@ function stepWorkedExample(body) {
       logDone("s4", "You spotted the guess about PSD2", "where \"I think\" and \"pretty sure\" lost the buyer");
       note.innerHTML = `
         <p><strong>"I think"</strong> and <strong>"pretty sure"</strong> told the buyer the rep didn't know. Follow-up questions on PSD2 and on SCA delegation both go to compliance, and a better reply is below.</p>
-        <blockquote>"${escapeHtml(say("PSD2"))} For SCA delegation on your subscriptions, I'll book you 15 minutes with them on Thursday."</blockquote>
+        <blockquote>"${escapeHtml(say("PSD2"))} For SCA delegation on your subscriptions, I'll book you 15 minutes with them on ${fill("{{day1}}")}."</blockquote>
         <div class="m6-note__foot"><button type="button" class="m6-bar__btn" data-m6-s4-next>Your turn &rarr;</button></div>`;
       note.querySelector("[data-m6-s4-next]").addEventListener("click", () => advanceFrom(3, 150));
       note.scrollIntoView({ block: "nearest" });

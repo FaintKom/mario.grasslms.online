@@ -18,7 +18,7 @@
       },
       {
         "label": "C",
-        "text": "\"Two 20-minute slots next week: Tuesday 10:00 or Wednesday 10:30. Which works to walk through it with your bookkeeper?\"",
+        "text": "\"Two 20-minute slots {{week}}: {{day0}} 10:00 or {{day1}} 10:30. Which works to walk through it with your bookkeeper?\"",
         "correct": true,
         "rationale": "Two specific times in one sentence, and the invite can go out while Maria is still on the line. This is how M.G. closed her on GC-01."
       },
@@ -64,7 +64,7 @@
   {
     "id": "M3-Q3",
     "lo": "LO-M3.2",
-    "stem": "You have read out two times and the buyer says \"Tuesday works.\" What do you do next while they are still on the call?",
+    "stem": "You have read out two times and the buyer says \"{{day0}} works.\" What do you do next while they are still on the call?",
     "options": [
       {
         "label": "A",
