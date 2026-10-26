@@ -792,8 +792,21 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     $("next").hidden = false;
   }
 
+  const TASK_ID = "virus-battle";
+  /* Progress. One shared key, so the spaceport map knows this one is done.
+     try/catch: a private window or blocked site data makes localStorage throw. */
+  function remember() {
+    try {
+      const key = "kids.progress.v1";
+      const seen = JSON.parse(localStorage.getItem(key) || "{}");
+      seen[TASK_ID] = true;
+      localStorage.setItem(key, JSON.stringify(seen));
+    } catch (err) {}
+  }
+
   function finish(how) {
     const d = t();
+    if (how === "win") remember();
     $("game").hidden = true;
     $("over").hidden = false;
     $("overTitle").textContent = how === "win" ? d.winTitle : how === "lose" ? d.loseTitle : d.partTitle;

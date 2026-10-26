@@ -604,7 +604,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
       </div>
     </div>
-    <h1><span data-t="title1">Five doors between you and</span> <em class="mark" data-t="title2">Codey</em></h1>
+    <h1><span data-t="title1">Five doors between you and</span> <em class="mark" data-t="title2">Andy</em></h1>
     <p class="lede" data-t="intro">You already did the detective work. Each door asks about something you saw, and answering it opens the next one.</p>
   </header>
 
@@ -629,7 +629,7 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   </section>
 
   <section class="card stack" id="over" hidden aria-live="polite">
-    <h2 data-t="wonTitle">Codey is out</h2>
+    <h2 data-t="wonTitle">Andy is out</h2>
     <p class="muted" id="wonBody"></p>
     <div><button class="btn" id="again" data-t="again">Play again</button></div>
   </section>
@@ -645,10 +645,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
   const T = {
     en: {
       eyebrow: "Ages 8–11 · what you found out",
-      title1: "Five doors between you and", title2: "Codey",
+      title1: "Five doors between you and", title2: "Andy",
       intro: "You already did the detective work. Each door asks about something you saw, and answering it opens the next one.",
       doorLabel: "Door", check: "Check", next: "Next door", again: "Play again",
-      wonTitle: "Codey is out",
+      wonTitle: "Andy is out",
       wonBody: function (n) {
         return n === 5
           ? "Five doors, five right answers, no second guesses."
@@ -678,10 +678,10 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     },
     es: {
       eyebrow: "8–11 años · lo que descubriste",
-      title1: "Cinco puertas entre tú y", title2: "Codey",
+      title1: "Cinco puertas entre tú y", title2: "Andy",
       intro: "El trabajo de detective ya está hecho. Cada puerta pregunta por algo que viste, y responder abre la siguiente.",
       doorLabel: "Puerta", check: "Comprobar", next: "Siguiente puerta", again: "Jugar otra vez",
-      wonTitle: "Codey está libre",
+      wonTitle: "Andy está libre",
       wonBody: function (n) {
         return n === 5
           ? "Cinco puertas, cinco aciertos, sin dudar."
@@ -894,7 +894,20 @@ a { color: var(--color-info); text-decoration-thickness: 1px; text-underline-off
     }
   }
 
+  const TASK_ID = "five-doors";
+  /* Progress. One shared key, so the spaceport map knows this one is done.
+     try/catch: a private window or blocked site data makes localStorage throw. */
+  function remember() {
+    try {
+      const key = "kids.progress.v1";
+      const seen = JSON.parse(localStorage.getItem(key) || "{}");
+      seen[TASK_ID] = true;
+      localStorage.setItem(key, JSON.stringify(seen));
+    } catch (err) {}
+  }
+
   function finish() {
+    remember();
     setTimeout(function () {
       $("game").hidden = true;
       $("over").hidden = false;
