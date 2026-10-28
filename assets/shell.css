@@ -77,7 +77,7 @@ section{padding:clamp(48px,7vw,96px) var(--gutter)}
 .wing{border-top:var(--line)}
 .rooms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
 .room{background:var(--paper);border:2px solid var(--ink-900);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;transition:transform .25s var(--ease)}
-a.room:hover{transform:translateY(-3px)}
+.room:hover{transform:translateY(-3px)}
 .room img{flex:none;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-bottom:2px solid var(--ink-900)}
 .room div{padding:12px 16px 14px}
 .room h3{font-size:18px;line-height:1.15;margin-bottom:4px}
@@ -90,7 +90,6 @@ a.room:hover{transform:translateY(-3px)}
 .lms-live{min-width:0}
 .lms .actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px}
 .lms .actions a:not(.btn){font-weight:700}
-.lms-shots{margin-top:48px}
 
 .collection{border-top:var(--line)}
 .client{display:grid;grid-template-columns:minmax(180px,.3fr) minmax(0,1fr);gap:32px;padding:28px 0;border-top:2px solid var(--ink-900)}

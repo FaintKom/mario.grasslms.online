@@ -194,8 +194,8 @@
     <div>
       <h2 id="lms-h">GrassLMS, the LMS I wrote</h2>
       <p>I wrote GrassLMS so that a course, its exercises, the cohorts and the marking would sit in one place instead of being spread over a video host, a quiz tool and a spreadsheet. Next to this text are four of its exercise types: code checked by tests, an equation marked line by line, a web page and a robot programmed with blocks.</p>
-      <p>The demo opens in one click with no sign-up and puts you in a learner’s account with seven courses in languages, maths and programming. The teacher’s side is in the screenshots below.</p>
-      <div class="actions"><a class="btn btn--ink" href="https://grasslms.online/demo?role=student" target="_blank" rel="noopener">Open the demo <svg class="ico"><use href="#i-out"/></svg></a></div>
+      <p>The demo opens in one click with no sign-up and puts you in a learner’s account with seven courses in languages, maths and programming.</p>
+      <div class="actions"><a class="btn btn--ink" href="https://grasslms.online/demo?role=student" target="_blank" rel="noopener">Open the demo <svg class="ico"><use href="#i-out"/></svg></a><a href="https://grasslms.online" target="_blank" rel="noopener">Visit grasslms.online</a></div>
     </div>
     <div class="lms-live">
 <style>
@@ -376,11 +376,10 @@
   .gx-cell.is-rock { background: #d7dbd5; border-color: #c4cbc2; }
   .gx-cell.is-goal { display: grid; place-items: center; background: #fff6d6; border-color: var(--sun-500); }
   .gx-cell.is-goal svg { width: 70%; height: 70%; }
-  .gx-cell.is-trail { background: var(--green-100); border-color: var(--green-300); }
   .gx-bot {
     position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell);
     display: grid; place-items: center; pointer-events: none;
-    transition: transform calc(.26s * var(--mdur)) var(--motion-ease);
+    transition: transform calc(.3s * var(--mdur)) cubic-bezier(.4, 0, .2, 1);
   }
   .gx-bot svg { width: 100%; height: 100%; overflow: visible; }
   .gx-bot .gx-turn {
@@ -394,7 +393,16 @@
   .gx-bot .gx-m-home, .gx-bot .gx-m-crash,
   .gx-bot.is-home .gx-m-idle, .gx-bot.is-crash .gx-m-idle { display: none; }
   .gx-bot.is-home .gx-m-home, .gx-bot.is-crash .gx-m-crash { display: inline; }
-  .gx-bot.is-crash svg { animation: gx-shake calc(.4s * var(--mdur)) ease both; }
+  /* GrassLMS's bump, scaled from its 56px cell to this 40-unit one */
+  .gx-bot.is-crash svg { animation: gx-bump calc(.4s * var(--mdur)) ease-in-out both; }
+  @keyframes gx-bump {
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(calc(-3px * var(--mamp)), 0); }
+    40% { transform: translate(calc(3px * var(--mamp)), 0); }
+    60% { transform: translate(calc(-2px * var(--mamp)), 0); }
+    80% { transform: translate(calc(2px * var(--mamp)), 0); }
+  }
+  .gx-trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
   .gx-blocks { display: grid; gap: 12px; min-width: 0; }
   .gx-palette { display: flex; flex-wrap: wrap; gap: 8px; }
   .gx-block {
@@ -907,9 +915,11 @@
       var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="#f5b800" stroke="#c98700" stroke-width="1.2" stroke-linejoin="round"/></svg>';
       // The robot from GrassLMS's robot_2d renderer, drawn at a 40-unit cell.
       var BOT = '<svg viewBox="0 0 40 40" aria-hidden="true">' +
+        '<defs><filter id="gxGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.9" result="b"/>' +
+        '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
         '<ellipse cx="20" cy="32" rx="10.4" ry="2.8" fill="#000" opacity=".12"/>' +
         '<g class="gx-turn">' +
-        '<circle class="gx-b1" cx="20" cy="20" r="13.6"/><circle class="gx-b2" cx="20" cy="20" r="11.2"/>' +
+        '<circle class="gx-b1" cx="20" cy="20" r="13.6" filter="url(#gxGlow)"/><circle class="gx-b2" cx="20" cy="20" r="11.2"/>' +
         '<ellipse cx="20" cy="19.2" rx="8.8" ry="6.4" fill="#fff" opacity=".9"/>' +
         '<circle cx="16.8" cy="18" r="2.6" fill="#1e3a5f"/><circle cx="23.2" cy="18" r="2.6" fill="#1e3a5f"/>' +
         '<circle cx="17.4" cy="17.4" r="1" fill="#fff"/><circle cx="23.8" cy="17.4" r="1" fill="#fff"/>' +
@@ -930,6 +940,10 @@
         cells[k] = cell;
         field.appendChild(cell);
       }
+      var trailSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      trailSvg.setAttribute("class", "gx-trail");
+      trailSvg.setAttribute("aria-hidden", "true");
+      field.appendChild(trailSvg);
       var bot = el("div", "gx-bot");
       bot.innerHTML = BOT;
       field.appendChild(bot);
@@ -953,10 +967,24 @@
         bot.style.transform = "translate(calc((var(--cell) + 3px) * " + xy[0] + "), calc((var(--cell) + 3px) * " + xy[1] + "))";
         bot.querySelector(".gx-turn").style.transform = "rotate(" + ang + "deg)";
       }
+      /* The trail as GrassLMS draws it: a dashed amber line with a dot on each
+         square visited, turning solid green once the robot is home. */
+      var trail = [];
+      function drawTrail(home) {
+        var w = field.offsetWidth, h = field.offsetHeight, step = cells["0,0"].offsetWidth + 3, half = cells["0,0"].offsetWidth / 2;
+        var col = home ? "#34d399" : "#fbbf24";
+        var pts = trail.map(function (k) { var xy = k.split(","); return [xy[0] * step + half, xy[1] * step + half]; });
+        trailSvg.setAttribute("viewBox", "0 0 " + w + " " + h);
+        trailSvg.innerHTML = pts.length < 2 ? "" :
+          '<polyline points="' + pts.join(" ") + '" fill="none" stroke="' + col + '" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".6"' +
+          (home ? "" : ' stroke-dasharray="8 6"') + '/>' +
+          pts.slice(1).map(function (p) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="3" fill="' + col + '" opacity=".7"/>'; }).join("");
+      }
       function reset() {
         pos = "0,4"; dir = 0; ang = 0;
         bot.classList.remove("is-crash", "is-home");
-        Object.keys(cells).forEach(function (k) { cells[k].classList.remove("is-trail"); });
+        trail = [pos];
+        drawTrail(false);
         place();
       }
       function count() {
@@ -1063,7 +1091,7 @@
           if (me !== gen) return;   // the carousel has moved on
           [].forEach.call(prog.querySelectorAll(".is-now"), function (n) { n.classList.remove("is-now"); });
           if (k === steps.length) {
-            if (pos === GOAL) bot.classList.add("is-home");
+            if (pos === GOAL) { bot.classList.add("is-home"); drawTrail(true); }
             return pos === GOAL
               ? stop(true, "The robot reached the star with " + count() + " blocks. Repeat ran the same steps again and again, which is what made six blocks enough.")
               : stop(false, "The robot stopped before the star. The path climbs in identical steps: find one step and repeat it.");
@@ -1079,14 +1107,15 @@
               bot.classList.add("is-crash");
               return stop(false, "On move " + moves + " the robot would leave the grass. Check which way it faces before that move.");
             }
-            cells[pos].classList.add("is-trail");
             pos = nk;
+            trail.push(pos);
+            drawTrail(false);
           } else {
             dir = (dir + (s.t === "L" ? 1 : 3)) % 4;
             ang += s.t === "L" ? -90 : 90;
           }
           place();
-          setTimeout(next, reduce ? 60 : 340);
+          setTimeout(next, reduce ? 60 : 300);
         })();
       };
     }
@@ -1126,11 +1155,6 @@
   })();
   </script>
 </div>
-  </div>
-  <div class="rooms lms-shots">
-    <a class="room" href="https://grasslms.online/demo?role=student" target="_blank" rel="noopener"><img src="previews/lms-student-code.webp" alt="A GrassLMS lesson with a Python challenge: its test cases, the code editor and all tests passed" loading="lazy" width="1440" height="900"><div><h3>A lesson as a student sees it</h3><p>Code is run on the server and checked by tests, in Python, JavaScript, Java, C++ or Go.</p></div></a>
-    <div class="room"><img src="previews/lms-teacher-gradebook.webp" alt="The GrassLMS gradebook: every student against every exercise in Python Basics, with low scores in red" loading="lazy" width="1440" height="900"><div><h3>The gradebook</h3><p>Every learner against every exercise in a course, low scores marked, with export to CSV or Excel.</p></div></div>
-    <div class="room"><img src="previews/lms-teacher-courses.webp" alt="The teacher’s list of courses in GrassLMS: Python, HTML and CSS, maths and three languages" loading="lazy" width="1440" height="900"><div><h3>Courses as a teacher sees them</h3><p>Each course is built from modules and lessons and can be exported to JSON or PDF and imported back.</p></div></div>
   </div>
 </section>
 
