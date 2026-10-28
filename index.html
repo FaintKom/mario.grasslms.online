@@ -193,8 +193,9 @@
   <div class="lms">
     <div>
       <h2 id="lms-h">GrassLMS, the LMS I wrote</h2>
-      <p>I wrote GrassLMS so that a course, its exercises, the cohorts and the marking would sit in one place instead of being spread over a video host, a quiz tool and a spreadsheet. Next to this text you can try four of its exercise types.</p>
-      <a class="btn btn--ink" href="https://grasslms.online" target="_blank" rel="noopener">Open GrassLMS <svg class="ico"><use href="#i-out"/></svg></a>
+      <p>I wrote GrassLMS so that a course, its exercises, the cohorts and the marking would sit in one place instead of being spread over a video host, a quiz tool and a spreadsheet. Next to this text are four of its exercise types: code checked by tests, an equation marked line by line, a web page and a robot programmed with blocks.</p>
+      <p>The demo opens in one click with no sign-up and puts you in a learner’s account with seven courses in languages, maths and programming. The teacher’s side is in the screenshots below.</p>
+      <div class="actions"><a class="btn btn--ink" href="https://grasslms.online/demo?role=student" target="_blank" rel="noopener">Open the demo <svg class="ico"><use href="#i-out"/></svg></a></div>
     </div>
     <div class="lms-live">
 <style>
@@ -285,150 +286,147 @@
     60% { transform: scale(calc(1 + .18 * var(--mamp))); }
     100% { transform: scale(1); }
   }
-  @keyframes gx-halo {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--link-color) 30%, transparent); }
-    50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--link-color) 14%, transparent); }
-  }
-  @keyframes gx-ripple-g {
-    0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--green-500) 45%, transparent); }
-    100% { box-shadow: 0 0 0 16px color-mix(in oklab, var(--green-500) 0%, transparent); }
-  }
-  @keyframes gx-bucket-pop {
-    0% { transform: scale(1); }
-    40% { transform: scale(calc(1 + .03 * var(--mamp))); background: var(--green-50); }
-    100% { transform: scale(1); }
-  }
-  @keyframes gx-dash-flow { to { stroke-dashoffset: -13; } }
-  @keyframes gx-line-draw {
-    from { stroke-dasharray: 0 600; opacity: .4; }
-    to { stroke-dasharray: 600 0; opacity: .85; }
-  }
 
-  /* ---- shared tile ----
-     1 invite (hover lift) · 2 grab (pressed) · 3 guide (candidate/hot)
-     · 4 result (correct ripple / wrong shake) */
-  .gx-tile {
-    position: relative;
+  /* ---- shared pieces ---- */
+  .gx-task { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-dim); }
+  .gx-task code, .gx-list code {
+    font: 600 13.5px/1.4 ui-monospace, "Cascadia Code", Consolas, monospace;
+    background: var(--bg-3); color: var(--ink); padding: 1px 5px; border-radius: 4px;
+  }
+  .gx-code {
+    display: block; width: 100%; min-height: 150px; resize: vertical; tab-size: 4;
+    font: 14px/1.55 ui-monospace, "Cascadia Code", Consolas, monospace;
+    color: #e6f1e8; background: #10201a; caret-color: #8fd770;
+    border: 2px solid var(--edge); border-radius: 6px; padding: 12px 14px;
+    white-space: pre; overflow: auto;
+  }
+  .gx-code:focus { outline: none; box-shadow: 0 0 0 4px var(--green-100); }
+  .gx-out {
+    margin: 0; min-height: 44px; max-height: 150px; overflow: auto;
+    font: 13px/1.5 ui-monospace, "Cascadia Code", Consolas, monospace; white-space: pre-wrap;
+    background: var(--bg-3); color: var(--ink); border-radius: 6px; padding: 10px 12px;
+  }
+  .gx-out:empty { display: none; }
+  .gx-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .gx-list li {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; padding: 8px 12px;
+    border: 2px solid var(--rule); border-radius: 6px; font-size: 14px; line-height: 1.4; color: var(--ink);
+  }
+  .gx-list li::before { content: "○"; flex: 0 0 auto; width: 1em; color: var(--ink-faint); font-weight: 800; }
+  .gx-list li.is-right { border-color: var(--green-600); background: var(--green-50); color: var(--green-800); }
+  .gx-list li.is-right::before { content: "✓"; color: var(--green-600); }
+  .gx-list li.is-wrong { border-color: var(--err-border); background: var(--err-bg); color: var(--err-fg); }
+  .gx-list li.is-wrong::before { content: "✕"; color: var(--err-border); }
+  .gx-list li.is-fresh { animation: gx-pop calc(.35s * var(--mdur)) ease-out both; }
+  .gx-list li > span { flex: 1 1 0; min-width: 0; }
+  .gx-list small { flex-basis: 100%; padding-left: calc(1em + 10px); font-size: 13px; color: inherit; opacity: .85; }
+
+  /* Run sits next to Check: same pill, outlined. */
+  .gx-run {
+    padding: 12px 22px; border-radius: 999px; font: 800 15px/1 var(--body);
+    background: var(--bg-2); color: var(--ink); border: 2px solid var(--edge); cursor: pointer;
+    transition: transform .2s cubic-bezier(.16,1,.3,1);
+  }
+  .gx-run:hover:not(:disabled) { transform: translateY(-2px); }
+  .gx-run:disabled { color: var(--ink-faint); border-color: var(--edge-soft); cursor: default; }
+  .gx-run + .gx-check { margin-left: 0; }
+  .gx-verdict + .gx-run { margin-left: auto; }
+
+  /* ---- equation, step by step ---- */
+  .gx-steps { display: grid; gap: 8px; width: 100%; max-width: 440px; margin: 0 auto; }
+  .gx-step {
+    display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 6px;
+    background: var(--bg-3); font: 700 19px/1.3 var(--body); color: var(--ink);
+  }
+  .gx-step span { flex: 1; text-align: center; }
+  .gx-step i { flex: 0 0 auto; width: 1.2em; font-style: normal; font-size: 15px; color: var(--ink-faint); }
+  .gx-step.is-right { background: var(--green-50); color: var(--green-800); animation: gx-pop calc(.3s * var(--mdur)) ease-out both; }
+  .gx-step.is-right i { color: var(--green-600); }
+  .gx-step.is-done { background: var(--green-100); }
+  .gx-eqin {
+    width: 100%; padding: 10px 14px; text-align: center;
+    font: 700 19px/1.3 var(--body); color: var(--ink);
     background: var(--bg-2); border: 2px solid var(--edge-soft); border-radius: 6px;
-    color: var(--ink); font-family: var(--body);
-    font-size: 15px; font-weight: 600; cursor: pointer; user-select: none;
-    transition: transform 120ms var(--motion-ease), box-shadow 120ms var(--motion-ease),
-                border-color 120ms, background 150ms, color 150ms, opacity 200ms;
+    transition: border-color 150ms, box-shadow 150ms;
   }
-  /* 1 · invite */
-  .gx-tile:hover:not(:disabled):not(.is-right):not(.is-wrong) {
-    transform: translateY(calc(-2px * var(--mamp)));
-    border-color: var(--edge);
-    box-shadow: var(--lift);
-  }
-  /* 2 · grab */
-  .gx-tile:active:not(:disabled), .gx-tile.is-picked { transform: translateY(1px); box-shadow: none; }
-  .gx-tile.is-picked {
-    border-color: var(--green-600); background: var(--green-100); color: var(--green-800);
-    box-shadow: 0 0 0 4px var(--green-100);
-  }
-  /* 3 · guide — free tiles pulse, the tile under the pointer magnetises */
-  .gx-tile.is-candidate { animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite; }
-  .gx-tile.is-hot {
-    border-color: var(--link-color);
-    box-shadow: 0 0 0 5px color-mix(in oklab, var(--link-color) 22%, transparent);
-    transform: translateY(calc(-2px * var(--mamp))) scale(1.02);
-    animation: none;
-  }
-  /* 4 · result */
-  .gx-tile.is-right {
-    border-color: var(--green-600); background: var(--green-50); color: var(--green-800); cursor: default;
-    animation: gx-ripple-g calc(.6s * var(--mdur)) ease-out both;
-  }
-  .gx-tile.is-wrong {
+  .gx-eqin:hover { border-color: var(--edge); }
+  .gx-eqin:focus { outline: none; border-color: var(--green-500); box-shadow: 0 0 0 4px var(--green-100); }
+  .gx-eqin.is-wrong {
     border-color: var(--err-border); background: var(--err-bg); color: var(--err-fg);
     animation: gx-shake calc(.4s * var(--mdur)) ease both;
   }
-  .gx-tile:disabled { cursor: default; }
 
-  /* ---- multiple choice ---- */
-  .gx-opts { display: grid; gap: 10px; width: 100%; max-width: 460px; margin: 0 auto; }
-  .gx-opt {
-    display: flex; align-items: center; gap: 14px; padding: 16px 20px;
-    text-align: left;
+  /* ---- web page ---- */
+  .gx-web { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 12px; }
+  .gx-web .gx-code { min-height: 250px; height: 100%; font-size: 12.5px; padding: 10px 12px; }
+  .gx-preview { width: 100%; height: 100%; min-height: 250px; border: 2px solid var(--edge-soft); border-radius: 6px; background: #fff; }
+  @media (max-width: 720px) {
+    .gx-web { grid-template-columns: 1fr; }
+    .gx-web .gx-code { min-height: 220px; }
+    .gx-preview { min-height: 230px; }
   }
-  .gx-opt__dot {
-    flex: 0 0 auto; width: 20px; height: 20px; border-radius: 999px;
-    display: grid; place-items: center;
-    background: var(--bg-2); border: 2px solid var(--rule-strong);
-    font-size: 11px; line-height: 1; color: transparent;
-  }
-  .gx-opt__label { flex: 1 1 0; }
-  .gx-opt__n { flex: 0 0 auto; font-size: 13px; font-weight: 600; color: var(--ink-faint); }
-  .gx-opt__dot { transition: background 150ms, border-color 150ms, transform 150ms; }
-  .gx-tile.is-picked .gx-opt__dot,
-  .gx-tile.is-right .gx-opt__dot { background: var(--green-600); border-color: var(--green-600); color: #fff; transform: scale(1.1); }
-  .gx-tile.is-wrong .gx-opt__dot { background: var(--err-border); border-color: var(--err-border); color: #fff; }
 
-  /* ---- matching ---- */
-  .gx-match { position: relative; display: grid; grid-template-columns: 1fr 56px 1fr; gap: 10px; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; }
-  .gx-match__col { display: grid; gap: 10px; }
-  .gx-match svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 5; }
-  .gx-thread--live {
-    stroke: var(--link-color); opacity: .5;
-    stroke-dasharray: 1 12;
-    animation: gx-dash-flow .6s linear infinite;
+  /* ---- robot on blocks ---- */
+  .gx-robo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; }
+  .gx-field {
+    position: relative; display: grid; grid-template-columns: repeat(5, var(--cell)); grid-auto-rows: var(--cell);
+    gap: 3px; --cell: 40px;
   }
-  .gx-thread--done { opacity: .85; }
-  .gx-thread--done.is-fresh { animation: gx-line-draw calc(.45s * var(--mdur)) ease-out both; }
-  .gx-match .gx-tile { padding: 14px 16px; text-align: center; }
-  @media (max-width: 520px) { .gx-match { grid-template-columns: 1fr 28px 1fr; } }
-
-  /* ---- sorting ---- */
-  .gx-bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; min-height: 46px; width: 100%; max-width: 600px; margin: 0 auto; }
-  .gx-bank .gx-tile, .gx-zone .gx-tile { padding: 10px 18px; border-radius: 999px; }
-  .gx-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 600px; margin: 0 auto; }
-  .gx-zone {
-    border: 2px dashed var(--edge-soft); border-radius: 6px; padding: 12px;
-    min-height: 132px; display: flex; flex-direction: column; gap: 10px;
-    transition: border-color 150ms, background 150ms, transform 150ms;
+  .gx-cell { border-radius: 5px; background: var(--green-50); border: 2px solid var(--green-100); }
+  .gx-cell.is-rock { background: #d7dbd5; border-color: #c4cbc2; }
+  .gx-cell.is-goal { display: grid; place-items: center; background: #fff6d6; border-color: var(--sun-500); }
+  .gx-cell.is-goal svg { width: 70%; height: 70%; }
+  .gx-cell.is-trail { background: var(--green-100); border-color: var(--green-300); }
+  .gx-bot {
+    position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell);
+    display: grid; place-items: center; pointer-events: none;
+    transition: transform calc(.26s * var(--mdur)) var(--motion-ease);
   }
-  .gx-zone.is-target {
-    border-color: var(--green-300); border-style: solid;
-    animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite;
+  .gx-bot svg { width: 78%; height: 78%; transition: transform calc(.22s * var(--mdur)) var(--motion-ease); }
+  .gx-bot.is-crash svg { animation: gx-shake calc(.4s * var(--mdur)) ease both; }
+  .gx-blocks { display: grid; gap: 12px; min-width: 0; }
+  .gx-palette { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gx-block {
+    display: inline-flex; align-items: center; gap: 6px; padding: 9px 12px; border-radius: 6px;
+    font: 800 14px/1 var(--body); color: #fff; background: #3466c2; border: 0; cursor: pointer;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,.18);
+    transition: transform 120ms var(--motion-ease), opacity 150ms;
   }
-  .gx-zone.is-over {
-    border-color: var(--link-color); border-style: solid;
-    background: color-mix(in oklab, var(--link-color) 8%, var(--bg));
-    transform: scale(1.015); animation: none;
+  .gx-block:hover:not(:disabled) { transform: translateY(calc(-2px * var(--mamp))); }
+  .gx-block:disabled { opacity: .4; cursor: default; }
+  .gx-block--loop { background: #c98700; }
+  .gx-prog {
+    min-height: 150px; padding: 10px; border: 2px dashed var(--edge-soft); border-radius: 6px;
+    display: grid; gap: 6px; align-content: start; cursor: pointer;
   }
-  .gx-zone.is-catch {
-    border-color: var(--green-500); border-style: solid; animation: none;
-    animation: gx-bucket-pop calc(.4s * var(--mdur)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  .gx-prog.is-target { border-color: var(--green-500); border-style: solid; }
+  .gx-prog__empty { margin: auto; font-size: 14px; color: var(--ink-faint); text-align: center; }
+  .gx-pb {
+    display: flex; align-items: center; gap: 6px; padding: 7px 7px 7px 10px; border-radius: 6px;
+    font: 800 14px/1 var(--body); color: #fff; background: #3466c2; cursor: default; flex-wrap: wrap;
   }
-  .gx-zone:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .gx-zone__head { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--ink); }
-  .gx-zone__dot { width: 9px; height: 9px; border-radius: 50%; }
-  .gx-zone__n { margin-left: auto; font-size: 14px; font-weight: 600; color: var(--ink-faint); }
-  .gx-zone__drop { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; flex: 1; }
-
-  /* ---- fill in the blanks ---- */
-  .gx-cloze {
-    margin: 0 auto; max-width: 520px; text-align: center; font-size: 18px; line-height: 2.2; color: var(--ink);
+  .gx-pb.is-new, .gx-loop.is-new { animation: gx-pop calc(.25s * var(--mdur)) ease-out both; }
+  .gx-pb.is-now { box-shadow: 0 0 0 3px var(--sun-500); }
+  .gx-pb button {
+    margin-left: auto; width: 24px; height: 24px; border-radius: 50%; border: 0; padding: 0;
+    background: rgba(255,255,255,.22); color: #fff; font: 800 14px/1 var(--body); cursor: pointer;
   }
-  .gx-gap {
-    width: 4.5ch; margin: 0 4px; padding: 7px 4px; text-align: center;
-    font: inherit; font-size: 17px; font-weight: 700; color: var(--green-800);
-    background: var(--bg-2); border: 2px solid var(--edge-soft); border-radius: 6px;
+  .gx-pb button:focus-visible, .gx-block:focus-visible, .gx-prog:focus-visible, .gx-loop:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .gx-loop { display: grid; gap: 6px; padding: 6px 6px 8px; border-radius: 6px; background: #fdf1d4; border-left: 8px solid #c98700; cursor: pointer; }
+  .gx-loop.is-target { box-shadow: 0 0 0 3px var(--green-500); }
+  .gx-loop > .gx-pb { background: #c98700; }
+  .gx-loop__body { display: grid; gap: 6px; padding-left: 12px; min-height: 30px; }
+  .gx-loop__body:empty::before { content: "Add blocks here"; font-size: 13px; color: #8a6400; align-self: center; }
+  .gx-count { display: inline-flex; align-items: center; gap: 2px; }
+  .gx-count button { width: 20px; height: 20px; }
+  .gx-count b { min-width: 1.4em; text-align: center; }
+  .gx-pb .gx-count button { margin: 0; }
+  .gx-used { font-size: 13px; font-weight: 600; color: var(--ink-faint); }
+  @media (max-width: 640px) {
+    .gx-robo { grid-template-columns: 1fr; justify-items: center; }
+    .gx-blocks { width: 100%; }
+    .gx-field { --cell: 44px; }
   }
-  .gx-gap { transition: border-color 150ms, box-shadow 150ms, background 150ms, color 150ms; }
-  .gx-gap:hover:not(:disabled) { border-color: var(--edge); }
-  .gx-gap:focus { outline: none; border-color: var(--green-500); box-shadow: 0 0 0 4px var(--green-100); }
-  .gx-gap.is-empty { animation: gx-halo calc(1.6s * var(--mdur)) ease-in-out infinite; }
-  .gx-gap.is-right {
-    border-color: var(--green-600); background: var(--green-50); color: var(--green-800);
-    animation: gx-ripple-g calc(.6s * var(--mdur)) ease-out both;
-  }
-  .gx-gap.is-wrong {
-    border-color: var(--err-border); background: var(--err-bg); color: var(--err-fg);
-    animation: gx-shake calc(.4s * var(--mdur)) ease both;
-  }
-  .gx-gap:disabled { opacity: 1; }
 
   /* ---- rail ---- */
   .gx-rail { display: grid; justify-items: center; gap: 12px; margin-top: 20px; }
@@ -491,12 +489,13 @@
       var body = el("div", "gx-body");
       var foot = el("div", "gx-foot");
       var verdict = el("p", "gx-verdict");
+      verdict.setAttribute("aria-live", "polite");
       var btn = el("button", "gx-check", "Check");
       btn.type = "button";
       btn.disabled = true;
       foot.append(verdict, btn);
       card.append(head, body, foot);
-      return { body: body, verdict: verdict, btn: btn };
+      return { body: body, foot: foot, verdict: verdict, btn: btn };
     }
     function settle(f, ok, text) {
       f.verdict.className = "gx-verdict " + (ok ? "is-right" : "is-wrong");
@@ -506,378 +505,577 @@
       f.btn.onclick = function () { show(at); };
     }
 
-    /* ---- 1 · multiple choice -------------------------------------------- */
-    function buildMcq() {
-      var f = frame("Which of these numbers is prime?");
-      var OPTS = [
-        { n: "51", why: "51 is 3 × 17." },
-        { n: "61", why: null },
-        { n: "57", why: "57 is 3 × 19." },
-        { n: "63", why: "63 is 7 × 9." }
-      ];
-      var picked = -1, tiles = [];
-      var wrap = el("div", "gx-opts");
-      wrap.setAttribute("role", "radiogroup");
-      wrap.setAttribute("aria-label", "Which of these numbers is prime?");
-      function pick(i) {
-        picked = i;
-        tiles.forEach(function (t, j) {
-          t.classList.toggle("is-picked", j === i);
-          t.setAttribute("aria-checked", String(j === i));
-          t.tabIndex = j === i ? 0 : -1;
+    /* ---- 1 · Python, checked by tests --------------------------------------
+       Python itself (Pyodide) loads in a worker the first time someone presses
+       Run or Check, so the page stays light until then. A loop that never ends
+       is stopped after four seconds by throwing the worker away. */
+    var PY_URL = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/";
+    var PY_HARNESS = [
+      "import io, json, contextlib, traceback",
+      "job = json.loads(JOB)",
+      "res = {'out': '', 'tests': [], 'error': None}",
+      "buf = io.StringIO()",
+      "ns = {'__name__': '__main__'}",
+      "try:",
+      "    with contextlib.redirect_stdout(buf):",
+      "        exec(compile(SRC, 'solution.py', 'exec'), ns)",
+      "        fn = ns.get('pass_rate')",
+      "        if not callable(fn):",
+      "            raise NameError('there is no function called pass_rate')",
+      "        if job['mode'] == 'run':",
+      "            print(repr(fn(job['sample'])))",
+      "        else:",
+      "            for args, want in job['tests']:",
+      "                try:",
+      "                    got = fn(list(args))",
+      "                    ok = isinstance(got, (int, float)) and not isinstance(got, bool) and abs(got - want) < 1e-9",
+      "                    res['tests'].append({'ok': ok, 'got': repr(got)})",
+      "                except Exception as e:",
+      "                    res['tests'].append({'ok': False, 'got': type(e).__name__ + ': ' + str(e)})",
+      "except Exception as e:",
+      "    where = [f for f in traceback.extract_tb(e.__traceback__) if f.filename == 'solution.py']",
+      "    line = getattr(e, 'lineno', None) if isinstance(e, SyntaxError) else (where[-1].lineno if where else None)",
+      "    res['error'] = ('Line %d: ' % line if line else '') + type(e).__name__ + ': ' + str(e)",
+      "res['out'] = buf.getvalue()",
+      "json.dumps(res)"
+    ].join("\n");
+    var py = null;   // { worker, ready }
+
+    function pyStart() {
+      if (py) return py.ready;
+      var src =
+        'importScripts("' + PY_URL + 'pyodide.js");' +
+        'var ready = loadPyodide({ indexURL: "' + PY_URL + '" });' +
+        'ready.then(function () { postMessage({ ready: true }); }, function (e) { postMessage({ ready: false }); });' +
+        'onmessage = function (e) { ready.then(function (p) {' +
+        '  try { p.globals.set("SRC", e.data.src); p.globals.set("JOB", e.data.job); postMessage({ out: p.runPython(e.data.harness) }); }' +
+        '  catch (err) { postMessage({ out: JSON.stringify({ out: "", tests: [], error: String(err.message || err) }) }); }' +
+        '}); };';
+      var w = new Worker(URL.createObjectURL(new Blob([src], { type: "text/javascript" })));
+      var me = { worker: w };
+      me.ready = new Promise(function (ok, no) {
+        w.onmessage = function (e) { e.data.ready ? ok() : no(); };
+        w.onerror = function () { no(); };
+      });
+      me.ready.catch(function () { w.terminate(); if (py === me) py = null; });
+      py = me;
+      return me.ready;
+    }
+    function pyRun(code, job) {
+      return pyStart().then(function () {
+        var w = py.worker;
+        return new Promise(function (ok) {
+          var t = setTimeout(function () { w.terminate(); py = null; ok({ timeout: true }); }, 4000);
+          w.onmessage = function (e) { clearTimeout(t); ok(JSON.parse(e.data.out)); };
+          w.postMessage({ src: code, job: JSON.stringify(job), harness: PY_HARNESS });
         });
-        f.btn.disabled = false;
+      });
+    }
+
+    /* Tab indents, Enter keeps the indent and adds one after a colon,
+       Escape then Tab leaves the editor for keyboard users. */
+    function codeKeys(ta) {
+      var escaped = false;
+      ta.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") { escaped = true; return; }
+        var s = ta.selectionStart, v = ta.value;
+        if (e.key === "Tab" && !escaped && !e.shiftKey) {
+          e.preventDefault();
+          ta.setRangeText("    ", s, ta.selectionEnd, "end");
+        } else if (e.key === "Enter") {
+          var line = v.slice(v.lastIndexOf("\n", s - 1) + 1, s);
+          var pad = /^\s*/.exec(line)[0] + (/:\s*$/.test(line) ? "    " : "");
+          if (!pad) return;
+          e.preventDefault();
+          ta.setRangeText("\n" + pad, s, ta.selectionEnd, "end");
+        }
+        escaped = false;
+      });
+    }
+
+    function buildPython() {
+      var f = frame("Write pass_rate(scores)");
+      var TESTS = [
+        { args: [90, 70, 85, 80], want: 75.0 },
+        { args: [100, 79.5], want: 50.0 },
+        { args: [], want: 0.0, what: "a quiz that nobody has taken yet" },
+        { args: [55, 81, 64], want: 33.3, what: "a share that needs rounding" }
+      ];
+      f.body.append(el("p", "gx-task",
+        "Each learner’s quiz score is out of 100. Return the share of scores that are 80 or higher, as a percentage rounded to one decimal place. Run tries your code on the first example, and Check runs all four tests, two of which are hidden."));
+
+      var list = el("ul", "gx-list");
+      var rows = TESTS.map(function (t, i) {
+        var li = el("li"), lab = el("span");
+        if (i < 2) {
+          var c = el("code", null, "pass_rate(" + JSON.stringify(t.args).replace(/,/g, ", ") + ")");
+          lab.append(c, document.createTextNode(" returns " + t.want.toFixed(1)));
+        } else {
+          lab.textContent = "Hidden test " + (i + 1);
+        }
+        li.appendChild(lab);
+        list.appendChild(li);
+        return li;
+      });
+
+      var ta = el("textarea", "gx-code");
+      ta.spellcheck = false;
+      ta.setAttribute("aria-label", "Your Python code");
+      ta.rows = 7;
+      ta.value = "def pass_rate(scores):\n    # the share of scores of 80 or more, in per cent,\n    # rounded to one decimal place\n    pass\n";
+      codeKeys(ta);
+      var out = el("pre", "gx-out");
+      out.setAttribute("aria-live", "polite");
+      f.body.append(list, ta, out);
+
+      var run = el("button", "gx-run", "Run");
+      run.type = "button";
+      f.foot.insertBefore(run, f.btn);
+      f.btn.disabled = false;
+
+      function busy(on) {
+        run.disabled = f.btn.disabled = on;
+        if (on) {
+          f.verdict.className = "gx-verdict";
+          f.verdict.textContent = py ? "Running…" : "Starting Python in your browser. The first run takes a few seconds.";
+        }
+      }
+      function trouble(r) {
+        busy(false);
+        f.verdict.className = "gx-verdict is-wrong";
+        f.verdict.textContent = !r ? "Python did not load. Check the connection and press Run again."
+          : "The code ran for more than four seconds, so it was stopped. Look for a loop that never ends.";
       }
 
-      OPTS.forEach(function (o, i) {
-        var b = el("button", "gx-tile gx-opt");
-        b.type = "button";
-        b.setAttribute("role", "radio");
-        b.setAttribute("aria-checked", "false");
-        b.tabIndex = i === 0 ? 0 : -1;   // one tab stop for the group; arrows move inside it
-        b.append(el("span", "gx-opt__dot", ""), el("span", "gx-opt__label", o.n), el("span", "gx-opt__n", String(i + 1)));
-        b.onclick = function () { pick(i); };
-        b.onkeydown = function (e) {
-          var step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
-          if (!step) return;
-          e.preventDefault();
-          var j = (i + step + OPTS.length) % OPTS.length;
-          pick(j);
-          tiles[j].focus();
-        };
-        wrap.appendChild(b);
-        tiles.push(b);
-      });
-      f.body.appendChild(wrap);
+      run.onclick = function () {
+        busy(true);
+        pyRun(ta.value, { mode: "run", sample: TESTS[0].args }).then(function (r) {
+          if (r.timeout) return trouble(r);
+          busy(false);
+          f.verdict.textContent = "";
+          out.textContent = (r.out || "") + (r.error || "") || "Nothing was printed.";
+        }, function () { trouble(null); });
+      };
 
       f.btn.onclick = function () {
-        tiles.forEach(function (t) { t.disabled = true; t.classList.remove("is-picked"); });
-        tiles[1].classList.add("is-right");
-        tiles[1].querySelector(".gx-opt__dot").textContent = "✓";
-        var ok = picked === 1;
-        if (!ok) {
-          tiles[picked].classList.add("is-wrong");
-          tiles[picked].querySelector(".gx-opt__dot").textContent = "✕";
-        }
-        settle(f, ok, ok ? "61 is prime, because nothing divides it except 1 and itself." : OPTS[picked].why + " The prime one is 61.");
+        busy(true);
+        pyRun(ta.value, { mode: "check", tests: TESTS.map(function (t) { return [t.args, t.want]; }) }).then(function (r) {
+          if (r.timeout) return trouble(r);
+          busy(false);
+          out.textContent = r.error || "";
+          var passed = 0;
+          rows.forEach(function (li, i) {
+            var t = r.tests[i];
+            li.className = "is-fresh " + (t && t.ok ? "is-right" : "is-wrong");
+            var old = li.querySelector("small");
+            if (old) old.remove();
+            if (t && t.ok) { passed++; return; }
+            if (i >= 2) li.firstChild.textContent = "Hidden test " + (i + 1) + ": " + TESTS[i].what;
+            li.appendChild(el("small", null, t ? "got " + t.got : "did not run"));
+          });
+          if (passed === TESTS.length) {
+            settle(f, true, "All four tests pass, the empty quiz included, which neither example shows.");
+            run.disabled = true;
+            return;
+          }
+          f.verdict.className = "gx-verdict is-wrong";
+          f.verdict.textContent = r.error ? "The code stopped with an error before the tests could finish."
+            : passed + " of 4 tests pass. The ones in red show what your function returned.";
+        }, function () { trouble(null); });
       };
     }
 
-    /* ---- 2 · matching ---------------------------------------------------- */
-    function buildMatch() {
-      var f = frame("Match each country with its capital");
-      var LEFT = ["Peru", "Japan", "France"];
-      var RIGHT = ["Lima", "Paris", "Tokyo"];
-      var KEY = { Peru: "Lima", Japan: "Tokyo", France: "Paris" };
-
-      var wrap = el("div", "gx-match");
-      var lcol = el("div", "gx-match__col");
-      var mid = el("div");
-      var rcol = el("div", "gx-match__col");
-      var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      wrap.append(lcol, mid, rcol, svg);
-      f.body.appendChild(wrap);
-      f.body.appendChild(el("p", "gx-hint", "Join each country to its capital, then press Check. Click a joined tile to undo it."));
-
-      var links = {}, hue = {}, fresh = {}, armed = null, live = null, lt = {}, rt = {};
-
-      function centre(node, side) {
-        var a = node.getBoundingClientRect(), b = wrap.getBoundingClientRect();
-        return [side === "l" ? a.right - b.left : a.left - b.left, a.top - b.top + a.height / 2];
+    /* ---- 2 · equation, step by step ----------------------------------------
+       Each side of a line is read as a·x + b, and the line is accepted when it
+       has the same solution as the line above it. So the working is marked
+       step by step, and a slip is caught on the line where it happens. */
+    function lin(src) {
+      var s = src.replace(/[−–]/g, "-").replace(/[×·]/g, "*").replace(/÷/g, "/")
+        .replace(/,/g, ".").replace(/\s+/g, "").toLowerCase();
+      var i = 0;
+      function mul(a, b) { if (a[0] && b[0]) throw 0; return [a[0] * b[1] + b[0] * a[1], a[1] * b[1]]; }
+      function div(a, b) { if (b[0] || !b[1]) throw 0; return [a[0] / b[1], a[1] / b[1]]; }
+      function factor() {
+        var c = s[i];
+        if (c === "-") { i++; var v = factor(); return [-v[0], -v[1]]; }
+        if (c === "+") { i++; return factor(); }
+        if (c === "x") { i++; return [1, 0]; }
+        if (c === "(") { i++; var e = expr(); if (s[i] !== ")") throw 0; i++; return e; }
+        var m = /^\d+(\.\d+)?/.exec(s.slice(i));
+        if (!m) throw 0;
+        i += m[0].length;
+        return [0, parseFloat(m[0])];
       }
-      function curveD(p1, p2) {
-        var mx = (p1[0] + p2[0]) / 2;
-        return "M" + p1[0] + " " + p1[1] + " C" + mx + " " + p1[1] + " " + mx + " " + p2[1] + " " + p2[0] + " " + p2[1];
+      function term() {
+        var v = factor();
+        for (;;) {
+          var c = s[i];
+          if (c === "*" || c === "/") { i++; var w = factor(); v = c === "*" ? mul(v, w) : div(v, w); }
+          else if (c === "x" || c === "(") v = mul(v, factor());   // 3x, 3(x - 2)
+          else return v;
+        }
       }
-      function thread(d, cls, colour) {
-        var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", d);
-        path.setAttribute("class", cls);
-        path.setAttribute("fill", "none");
-        path.setAttribute("stroke-width", "3");
-        path.setAttribute("stroke-linecap", "round");
-        if (colour) path.setAttribute("stroke", colour);
-        svg.appendChild(path);
-        return path;
+      function expr() {
+        var v = term();
+        while (s[i] === "+" || s[i] === "-") {
+          var c = s[i++], w = term();
+          v = c === "+" ? [v[0] + w[0], v[1] + w[1]] : [v[0] - w[0], v[1] - w[1]];
+        }
+        return v;
+      }
+      var v = expr();
+      if (i !== s.length) throw 0;
+      return v;
+    }
+    function eqn(line) {
+      var p = line.split("=");
+      if (p.length !== 2 || !p[0].trim() || !p[1].trim()) return null;
+      try { return { l: lin(p[0]), r: lin(p[1]) }; } catch (e) { return null; }
+    }
+    function pretty(line) {
+      return line.trim().replace(/\s+/g, "").replace(/([0-9x)])([=+\-])/g, "$1 $2 ").replace(/=(\S)/g, "= $1")
+        .replace(/-/g, "−").replace(/\*/g, "·");
+    }
+
+    function buildEquation() {
+      var START = "3(x - 2) = x + 8", X = 7;
+      var f = frame("Solve 3(x − 2) = x + 8, one line at a time");
+      f.body.append(el("p", "gx-task",
+        "Type the next line of your working and press Check. Every line is checked against the one above it, so a slip shows up on the line where it happened, not only at the end."));
+      var steps = el("div", "gx-steps");
+      function addStep(text, ok) {
+        var row = el("div", "gx-step" + (ok ? " is-right" : ""));
+        row.append(el("i", null, ok ? "✓" : ""), el("span", null, pretty(text)), el("i"));
+        steps.appendChild(row);
+        return row;
+      }
+      addStep(START);
+      var input = el("input", "gx-eqin");
+      input.type = "text";
+      input.autocomplete = "off";
+      input.spellcheck = false;
+      input.placeholder = "Type the next line";
+      input.setAttribute("aria-label", "Next line of working");
+      var hint = el("p", "gx-hint", "Use x, numbers, + − * / and brackets, with one = sign.");
+      steps.appendChild(input);
+      f.body.append(steps, hint);
+
+      var prev = START, lines = 0;
+      input.oninput = function () { input.classList.remove("is-wrong"); f.btn.disabled = !input.value.trim(); };
+      input.onkeydown = function (e) { if (e.key === "Enter" && !f.btn.disabled) f.btn.click(); };
+
+      function wrong(msg) {
+        input.classList.remove("is-wrong");
+        void input.offsetWidth;   // restart the shake
+        input.classList.add("is-wrong");
+        f.verdict.className = "gx-verdict is-wrong";
+        f.verdict.textContent = msg;
+      }
+      // 3(x − 2) and 3x − 6 read the same as numbers, so a repeat is judged by the text
+      function norm(t) { return t.replace(/[−–]/g, "-").replace(/[\s*·×]/g, "").toLowerCase(); }
+
+      f.btn.onclick = function () {
+        var e = eqn(input.value);
+        if (!e) return wrong("Write one equation with a single = sign, using x, numbers, + − * / and brackets.");
+        var a = e.l[0] - e.r[0], b = e.r[1] - e.l[1];
+        if (Math.abs(a) < 1e-9) {
+          return wrong(Math.abs(b) < 1e-9
+            ? "This line is true for every x, so x has dropped out. Check what happened to the x terms."
+            : "This line has no x left and is never true. Check what happened to the x terms.");
+        }
+        var x = b / a;
+        if (Math.abs(x - X) > 1e-9) {
+          return wrong("This line gives x = " + String(+x.toFixed(2)).replace("-", "−") +
+            ", which the line above does not, so the step changed the equation. " +
+            (lines === 0
+              ? "A number in front of a bracket multiplies every term inside it, the −2 included."
+              : "A term that moves across the = sign changes its sign, and when you divide, both sides are divided by the same number."));
+        }
+        if (norm(input.value) === norm(prev)) return wrong("This is the line above written again. Make one move: open the bracket, gather the x terms on one side, or divide.");
+
+        lines++;
+        prev = input.value;
+        var row = addStep(input.value, true);
+        steps.appendChild(input);
+        var solved = (e.l[0] === 1 && e.l[1] === 0 && e.r[0] === 0) || (e.r[0] === 1 && e.r[1] === 0 && e.l[0] === 0);
+        if (solved) {
+          row.classList.add("is-done");
+          input.remove();
+          hint.remove();
+          settle(f, true, "Solved in " + lines + (lines === 1 ? " step" : " steps") + ", and each one kept the equation true. To check: 3(7 − 2) = 15 and 7 + 8 = 15.");
+          return;
+        }
+        input.value = "";
+        f.btn.disabled = true;
+        f.verdict.className = "gx-verdict is-right";
+        f.verdict.textContent = "That line follows from the one above. Keep going until x is on its own.";
+        input.focus();
+      };
+    }
+
+    /* ---- 3 · a web page in HTML and CSS -------------------------------------
+       The preview is a sandboxed frame with scripts off. Check reads the styles
+       the browser actually computed, so any CSS that gets the look passes. */
+    function buildWeb() {
+      var f = frame("Finish the course card");
+      f.body.append(el("p", "gx-task",
+        "Make Python Basics a level-two heading, then give the button a green background (#0a8754), white text and rounded corners. The preview updates as you type."));
+      var wrap = el("div", "gx-web");
+      var ta = el("textarea", "gx-code");
+      ta.spellcheck = false;
+      ta.setAttribute("aria-label", "HTML and CSS of the card");
+      ta.value = [
+        "<style>",
+        "  .card { font-family: sans-serif; max-width: 240px;",
+        "          padding: 16px; border: 1px solid #ccc;",
+        "          border-radius: 8px; }",
+        "  .card button {",
+        "    padding: 10px 16px; border: 0;",
+        "    /* your CSS here */",
+        "  }",
+        "</style>",
+        "",
+        "<div class=\"card\">",
+        "  <p>Python Basics</p>",
+        "  <p>Six lessons, each ending in a challenge.</p>",
+        "  <button>Start learning</button>",
+        "</div>"
+      ].join("\n");
+      codeKeys(ta);
+      var frameEl = el("iframe", "gx-preview");
+      frameEl.title = "Preview of the card";
+      frameEl.setAttribute("sandbox", "allow-same-origin");
+      wrap.append(ta, frameEl);
+
+      var CHECKS = ["Python Basics is an h2 heading", "The button background is #0a8754", "The button text is white", "The button has rounded corners"];
+      var list = el("ul", "gx-list");
+      var rows = CHECKS.map(function (c) { var li = el("li"); li.appendChild(el("span", null, c)); list.appendChild(li); return li; });
+      f.body.append(wrap, list);
+
+      var timer = 0;
+      function render(then) {
+        clearTimeout(timer);
+        frameEl.onload = then || null;
+        frameEl.srcdoc = "<!doctype html><meta charset=\"utf-8\"><body style=\"margin:12px\">" + ta.value;
+      }
+      ta.oninput = function () {
+        clearTimeout(timer);
+        timer = setTimeout(render, 150);
+        rows.forEach(function (li) { li.className = ""; });
+      };
+      render();
+      f.btn.disabled = false;
+
+      f.btn.onclick = function () {
+        render(function () {
+          var d = frameEl.contentDocument, h = d.querySelector("h2"), b = d.querySelector("button");
+          var cs = b ? d.defaultView.getComputedStyle(b) : null;
+          var ok = [
+            !!h && /python basics/i.test(h.textContent),
+            !!cs && cs.backgroundColor === "rgb(10, 135, 84)",
+            !!cs && cs.color === "rgb(255, 255, 255)",
+            !!cs && parseFloat(cs.borderTopLeftRadius) >= 4
+          ];
+          var n = 0;
+          rows.forEach(function (li, i) { li.className = "is-fresh " + (ok[i] ? "is-right" : "is-wrong"); if (ok[i]) n++; });
+          if (n === 4) return settle(f, true, "The card is finished. Each rule was read from the page as the browser drew it, so it passes however you wrote the CSS.");
+          f.verdict.className = "gx-verdict is-wrong";
+          f.verdict.textContent = n + " of 4 done. The rows in red are still open.";
+        });
+      };
+    }
+
+    /* ---- 4 · a robot on blocks ----------------------------------------------
+       The path is a staircase that needs sixteen moves, and the program may
+       use six blocks, so the learner has to find the repeating step. */
+    function buildRobot() {
+      var f = frame("Get the robot to the star");
+      f.body.append(el("p", "gx-task",
+        "The robot walks on grass only. Build its program from the blocks, six at most, and press Run. Six blocks are not enough to spell out every move."));
+      var PATH = ["0,4", "1,4", "1,3", "2,3", "2,2", "3,2", "3,1", "4,1", "4,0"], GOAL = "4,0", LIMIT = 6;
+      var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="#f5b800" stroke="#c98700" stroke-width="1.2" stroke-linejoin="round"/></svg>';
+      var BOT = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="9" width="25" height="22" rx="6" fill="#0d150d"/><circle cx="24" cy="16" r="3" fill="#8fd770"/><circle cx="24" cy="24" r="3" fill="#8fd770"/><path d="M32 15l6 5-6 5z" fill="#0a8754"/></svg>';
+
+      var robo = el("div", "gx-robo");
+      var field = el("div", "gx-field");
+      field.setAttribute("role", "img");
+      field.setAttribute("aria-label", "A five by five field. A path of grass climbs like a staircase from the robot at the bottom left to the star at the top right; every other square is rock.");
+      var cells = {};
+      for (var r = 0; r < 5; r++) for (var c = 0; c < 5; c++) {
+        var k = c + "," + r, cell = el("div", "gx-cell" + (PATH.indexOf(k) < 0 ? " is-rock" : "") + (k === GOAL ? " is-goal" : ""));
+        if (k === GOAL) cell.innerHTML = STAR;
+        cells[k] = cell;
+        field.appendChild(cell);
+      }
+      var bot = el("div", "gx-bot");
+      bot.innerHTML = BOT;
+      field.appendChild(bot);
+
+      var side = el("div", "gx-blocks");
+      var palette = el("div", "gx-palette");
+      var prog = el("div", "gx-prog");
+      prog.tabIndex = 0;
+      prog.setAttribute("aria-label", "Program. Select it to add blocks to the main program.");
+      var used = el("p", "gx-used");
+      side.append(palette, prog, used);
+      robo.append(field, side);
+      f.body.appendChild(robo);
+
+      var NAMES = { F: "Forward", L: "Turn left", R: "Turn right" };
+      var program = [], target = program, running = false, pos, dir, ang;
+      var me = gen;
+
+      function place() {
+        var xy = pos.split(",");
+        bot.style.transform = "translate(calc((var(--cell) + 3px) * " + xy[0] + "), calc((var(--cell) + 3px) * " + xy[1] + "))";
+        bot.firstChild.style.transform = "rotate(" + ang + "deg)";
+      }
+      function reset() {
+        pos = "0,4"; dir = 0; ang = 0;
+        bot.classList.remove("is-crash");
+        Object.keys(cells).forEach(function (k) { cells[k].classList.remove("is-trail"); });
+        place();
+      }
+      function count() {
+        return program.reduce(function (n, b) { return n + (b.body ? 1 + b.body.length : 1); }, 0);
+      }
+
+      var adders = [["F"], ["L"], ["R"], ["rep"]].map(function (a) {
+        var t = a[0], btn = el("button", "gx-block" + (t === "rep" ? " gx-block--loop" : ""), t === "rep" ? "Repeat" : NAMES[t]);
+        btn.type = "button";
+        btn.onclick = function () {
+          if (running || count() >= LIMIT) return;
+          if (t === "rep") { var lp = { n: 2, body: [], fresh: true }; program.push(lp); target = lp.body; }
+          else target.push({ t: t, fresh: true });
+          draw();
+        };
+        palette.appendChild(btn);
+        return btn;
+      });
+
+      function chip(b, list) {
+        var row = el("div", "gx-pb" + (b.fresh ? " is-new" : ""));
+        b.fresh = false;
+        row.appendChild(el("span", null, NAMES[b.t]));
+        var x = el("button", null, "×");
+        x.type = "button";
+        x.setAttribute("aria-label", "Remove " + NAMES[b.t]);
+        x.onclick = function (e) { e.stopPropagation(); if (running) return; list.splice(list.indexOf(b), 1); draw(); };
+        row.appendChild(x);
+        b.el = row;
+        return row;
       }
       function draw() {
-        svg.innerHTML = "";
-        Object.keys(links).forEach(function (k) {
-          var t = thread(curveD(centre(lt[k], "l"), centre(rt[links[k]], "r")),
-            "gx-thread--done" + (fresh[k] ? " is-fresh" : ""), hue[k] || "var(--green-500)");
-          if (fresh[k]) { delete fresh[k]; t.addEventListener("animationend", function () { t.classList.remove("is-fresh"); }); }
+        prog.innerHTML = "";
+        if (!program.length) prog.appendChild(el("p", "gx-prog__empty", "Press a block to add it here."));
+        program.forEach(function (b) {
+          if (!b.body) { prog.appendChild(chip(b, program)); return; }
+          var box = el("div", "gx-loop" + (target === b.body ? " is-target" : "") + (b.fresh ? " is-new" : ""));
+          b.fresh = false;
+          box.tabIndex = 0;
+          box.setAttribute("aria-label", "Repeat " + b.n + " times. Select it to add blocks inside.");
+          var head = el("div", "gx-pb");
+          var cnt = el("span", "gx-count");
+          var minus = el("button", null, "−"), plus = el("button", null, "+");
+          minus.type = plus.type = "button";
+          minus.setAttribute("aria-label", "Fewer repeats");
+          plus.setAttribute("aria-label", "More repeats");
+          minus.onclick = function (e) { e.stopPropagation(); if (!running && b.n > 2) { b.n--; draw(); } };
+          plus.onclick = function (e) { e.stopPropagation(); if (!running && b.n < 9) { b.n++; draw(); } };
+          cnt.append(minus, el("b", null, String(b.n)), plus);
+          var x = el("button", null, "×");
+          x.type = "button";
+          x.setAttribute("aria-label", "Remove the Repeat block");
+          x.onclick = function (e) {
+            e.stopPropagation();
+            if (running) return;
+            program.splice(program.indexOf(b), 1);
+            if (target === b.body) target = program;
+            draw();
+          };
+          head.append(el("span", null, "Repeat"), cnt, x);
+          b.el = head;
+          var inner = el("div", "gx-loop__body");
+          b.body.forEach(function (s) { inner.appendChild(chip(s, b.body)); });
+          box.append(head, inner);
+          box.onclick = function (e) { e.stopPropagation(); target = b.body; draw(); };
+          box.onkeydown = function (e) { if (e.target === box && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); box.click(); } };
+          prog.appendChild(box);
         });
-        if (live) thread(curveD(centre(lt[armed], "l"), live), "gx-thread--live");
-        f.btn.disabled = Object.keys(links).length < LEFT.length;
+        prog.classList.toggle("is-target", target === program);
+        var n = count();
+        used.textContent = "Blocks used: " + n + " of " + LIMIT + (target === program ? "" : ". New blocks go inside Repeat.");
+        adders.forEach(function (btn, i) { btn.disabled = running || n >= LIMIT || (i === 3 && target !== program); });
+        f.btn.disabled = running || !n;
       }
-      /* Free tiles pulse so it reads as "these are still open", and the one
-         under the pointer magnetises while a thread is out. */
-      function guide() {
-        LEFT.forEach(function (c) {
-          lt[c].classList.toggle("is-candidate", !armed && !links[c]);
-          lt[c].classList.toggle("is-picked", c === armed || !!links[c]);
-        });
-        RIGHT.forEach(function (c) {
-          var taken = Object.keys(links).some(function (k) { return links[k] === c; });
-          rt[c].classList.toggle("is-candidate", !!armed && !taken);
-          rt[c].classList.toggle("is-picked", taken);
-        });
-      }
-      function unhook(country) {
-        delete links[country];
-        delete hue[country];
-        guide();
+      prog.onclick = function () { target = program; draw(); };
+      prog.onkeydown = function (e) { if ((e.key === "Enter" || e.key === " ") && e.target === prog) { e.preventDefault(); prog.click(); } };
+
+      f.btn.textContent = "Run";
+      reset();
+      draw();
+
+      function stop(ok, msg) {
+        running = false;
         draw();
+        if (ok) return settle(f, true, msg);
+        f.verdict.className = "gx-verdict is-wrong";
+        f.verdict.textContent = msg;
       }
-
-      LEFT.forEach(function (c) {
-        var b = el("button", "gx-tile", c);
-        b.type = "button";
-        b.onclick = function () {
-          if (links[c]) { unhook(c); return; }
-          armed = armed === c ? null : c;
-          if (!armed) live = null;
-          guide();
-          draw();
-        };
-        lt[c] = b;
-        lcol.appendChild(b);
-      });
-
-      RIGHT.forEach(function (c) {
-        var b = el("button", "gx-tile", c);
-        b.type = "button";
-        b.onclick = function () {
-          var owner = Object.keys(links).filter(function (k) { return links[k] === c; })[0];
-          if (owner) { unhook(owner); return; }
-          if (!armed) return;
-          links[armed] = c;
-          fresh[armed] = true;
-          armed = null;
-          live = null;
-          b.classList.remove("is-hot");
-          guide();
-          draw();
-        };
-        b.onpointerenter = function () { if (armed) b.classList.add("is-hot"); };
-        b.onpointerleave = function () { b.classList.remove("is-hot"); };
-        rt[c] = b;
-        rcol.appendChild(b);
-      });
-
-      wrap.addEventListener("pointermove", function (e) {
-        if (!armed) return;
-        var box = wrap.getBoundingClientRect();
-        live = [e.clientX - box.left, e.clientY - box.top];
-        draw();
-      });
-      wrap.addEventListener("pointerleave", function () { live = null; draw(); });
-
-      guide();
-      requestAnimationFrame(draw);
-      setTimeout(draw, 60);
-      onResize = draw;   // the carousel owns the one window listener
 
       f.btn.onclick = function () {
-        var right = 0;
-        armed = null; live = null;
-        LEFT.forEach(function (c) {
-          var ok = links[c] === KEY[c];
-          if (ok) right++;
-          hue[c] = ok ? "var(--green-500)" : "var(--coral-500)";
-          lt[c].classList.remove("is-picked", "is-candidate");
-          rt[links[c]].classList.remove("is-picked", "is-candidate", "is-hot");
-          lt[c].classList.add(ok ? "is-right" : "is-wrong");
-          rt[links[c]].classList.add(ok ? "is-right" : "is-wrong");
-          lt[c].disabled = rt[links[c]].disabled = true;
+        running = true;
+        draw();   // redraws the chips, so collect the steps after it
+        var steps = [];
+        program.forEach(function (b) {
+          if (!b.body) return steps.push(b);
+          for (var i = 0; i < b.n; i++) b.body.forEach(function (s) { steps.push({ t: s.t, el: s.el, loop: b.el }); });
         });
-        draw();
-        settle(f, right === LEFT.length,
-          right === LEFT.length ? "All three pairs are right."
-            : right + " of 3 pairs are right. Peru goes with Lima, Japan with Tokyo and France with Paris.");
-      };
-    }
-
-    /* ---- 3 · sorting ------------------------------------------------------ */
-    function buildSort() {
-      var f = frame("Sort the animals into groups");
-      var CARDS = [
-        { name: "Dolphin", group: "Mammals" },
-        { name: "Bat", group: "Mammals" },
-        { name: "Penguin", group: "Birds" },
-        { name: "Owl", group: "Birds" }
-      ];
-      var GROUPS = [
-        { name: "Mammals", dot: "var(--accent)" },
-        { name: "Birds", dot: "var(--sun-500)" }
-      ];
-      var placed = {}, armed = null, tiles = {}, drops = {}, counts = {}, zoneEl = {};
-
-      var bank = el("div", "gx-bank");
-      var zones = el("div", "gx-zones");
-      f.body.append(bank, zones);
-      f.body.appendChild(el("p", "gx-hint", "Drag a card to its group, or pick the card and then the group."));
-
-      function tally() {
-        GROUPS.forEach(function (g) {
-          counts[g.name].textContent = String(CARDS.filter(function (c) { return placed[c.name] === g.name; }).length);
-        });
-        f.btn.disabled = Object.keys(placed).length < CARDS.length;
-      }
-      /* Zones pulse only while a card is in hand, so the invitation appears
-         exactly when it is actionable. */
-      function guide() {
-        var holding = !!armed;
-        GROUPS.forEach(function (g) { zoneEl[g.name].classList.toggle("is-target", holding); });
-      }
-      function put(name, group) {
-        placed[name] = group;
-        armed = null;
-        Object.keys(tiles).forEach(function (n) { tiles[n].setAttribute("aria-pressed", "false"); });
-        (group ? drops[group] : bank).appendChild(tiles[name]);
-        Object.keys(tiles).forEach(function (n) { tiles[n].classList.remove("is-picked"); });
-        if (group) {
-          var z = zoneEl[group];
-          z.classList.remove("is-catch");
-          void z.offsetWidth;
-          z.classList.add("is-catch");
-          setTimeout(function () { z.classList.remove("is-catch"); }, 460);
-        }
-        guide();
-        tally();
-      }
-
-      CARDS.forEach(function (c) {
-        var b = el("button", "gx-tile", c.name);
-        b.type = "button";
-        b.draggable = true;
-        b.setAttribute("aria-pressed", "false");
-        b.addEventListener("dragstart", function (e) {
-          e.dataTransfer.setData("text/plain", c.name);
-          e.dataTransfer.effectAllowed = "move";
-          armed = c.name;
-          guide();
-        });
-        b.onclick = function () {
-          if (placed[c.name]) { delete placed[c.name]; put(c.name, null); return; }
-          armed = armed === c.name ? null : c.name;
-          Object.keys(tiles).forEach(function (n) {
-            tiles[n].classList.toggle("is-picked", n === armed);
-            tiles[n].setAttribute("aria-pressed", String(n === armed));
-          });
-          guide();
-        };
-        b.addEventListener("dragend", function () { armed = null; guide(); });
-        tiles[c.name] = b;
-        bank.appendChild(b);
-      });
-
-      GROUPS.forEach(function (g) {
-        var z = el("div", "gx-zone");
-        z.tabIndex = 0;
-        z.setAttribute("role", "button");
-        z.setAttribute("aria-label", "Put the picked card in " + g.name);
-        var head = el("div", "gx-zone__head");
-        var dot = el("span", "gx-zone__dot");
-        dot.style.background = g.dot;
-        var n = el("span", "gx-zone__n", "0");
-        head.append(dot, el("span", null, g.name), n);
-        var drop = el("div", "gx-zone__drop");
-        z.append(head, drop);
-        z.addEventListener("dragover", function (e) { e.preventDefault(); z.classList.add("is-over"); });
-        z.addEventListener("dragleave", function () { z.classList.remove("is-over"); });
-        z.addEventListener("drop", function (e) {
-          e.preventDefault();
-          z.classList.remove("is-over");
-          var name = e.dataTransfer.getData("text/plain");
-          if (tiles[name]) put(name, g.name);   // ignore text dragged in from elsewhere on the page
-        });
-        z.addEventListener("pointerenter", function () { if (armed) z.classList.add("is-over"); });
-        z.addEventListener("pointerleave", function () { z.classList.remove("is-over"); });
-        z.addEventListener("click", function () { if (armed) { z.classList.remove("is-over"); put(armed, g.name); } });
-        z.addEventListener("keydown", function (e) {
-          if (e.target !== z || (e.key !== "Enter" && e.key !== " ")) return;
-          e.preventDefault();
-          if (armed) put(armed, g.name);
-        });
-        zoneEl[g.name] = z;
-        counts[g.name] = n;
-        drops[g.name] = drop;
-        zones.appendChild(z);
-      });
-      tally();
-
-      f.btn.onclick = function () {
-        var right = 0;
-        armed = null;
-        GROUPS.forEach(function (g) { zoneEl[g.name].classList.remove("is-target", "is-over"); });
-        CARDS.forEach(function (c) {
-          var ok = placed[c.name] === c.group;
-          if (ok) right++;
-          tiles[c.name].classList.add(ok ? "is-right" : "is-wrong");
-          tiles[c.name].disabled = true;
-          tiles[c.name].draggable = false;
-        });
-        settle(f, right === CARDS.length,
-          right === CARDS.length ? "All four are in the right group. A bat flies, but it feeds its young on milk, so it is a mammal."
-            : right + " of 4 are in the right group. A bat flies but feeds its young on milk, and a penguin swims but has feathers.");
-      };
-    }
-
-    /* ---- 4 · fill in the blanks ---------------------------------------- */
-    function buildCloze() {
-      var f = frame("Fill in the gaps");
-      var GAPS = [{ a: "0" }, { a: "100" }];
-      var parts = ["At sea level water freezes at ", " °C and boils at ", " °C."];
-      var line = el("p", "gx-cloze");
-      var inputs = [];
-
-      parts.forEach(function (chunk, i) {
-        line.appendChild(document.createTextNode(chunk));
-        if (i >= GAPS.length) return;
-        var input = el("input", "gx-gap");
-        input.type = "text";
-        input.inputMode = "numeric";
-        input.setAttribute("aria-label", "Gap " + (i + 1));
-        input.maxLength = 7;
-        input.oninput = function () {
-          inputs.forEach(function (x) { x.classList.toggle("is-empty", !x.value.trim()); });
-          f.btn.disabled = inputs.some(function (x) { return !x.value.trim(); });
-        };
-        input.onkeydown = function (e) { if (e.key === "Enter" && !f.btn.disabled) f.btn.click(); };
-        line.appendChild(input);
-        inputs.push(input);
-      });
-      f.body.appendChild(line);
-      inputs.forEach(function (x) { x.classList.add("is-empty"); });
-
-      f.btn.onclick = function () {
-        var right = 0;
-        inputs.forEach(function (input, i) {
-          input.classList.remove("is-empty");
-          // "0", "0°C", "0 °C" and "0 C" all count: the unit is already printed after the gap.
-          var ok = input.value.replace(/\s+|°|c$/gi, "") === GAPS[i].a;
-          if (ok) right++;
-          input.classList.add(ok ? "is-right" : "is-wrong");
-          input.disabled = true;
-        });
-        settle(f, right === GAPS.length,
-          right === GAPS.length
-            ? "Both are right. The sentence says at sea level because water boils at a lower temperature higher up."
-            : "Water freezes at 0 °C and boils at 100 °C. Only the boiling point changes much with altitude.");
+        reset();
+        f.verdict.className = "gx-verdict";
+        f.verdict.textContent = "Running…";
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var k = 0, moves = 0;
+        (function next() {
+          if (me !== gen) return;   // the carousel has moved on
+          [].forEach.call(prog.querySelectorAll(".is-now"), function (n) { n.classList.remove("is-now"); });
+          if (k === steps.length) {
+            return pos === GOAL
+              ? stop(true, "The robot reached the star with " + count() + " blocks. Repeat ran the same steps again and again, which is what made six blocks enough.")
+              : stop(false, "The robot stopped before the star. The path climbs in identical steps: find one step and repeat it.");
+          }
+          var s = steps[k++];
+          if (s.loop) s.loop.classList.add("is-now");
+          s.el.classList.add("is-now");
+          if (s.t === "F") {
+            moves++;
+            var xy = pos.split(",").map(Number), d = [[1, 0], [0, -1], [-1, 0], [0, 1]][dir];
+            var nk = (xy[0] + d[0]) + "," + (xy[1] + d[1]);
+            if (PATH.indexOf(nk) < 0) {
+              bot.classList.add("is-crash");
+              return stop(false, "On move " + moves + " the robot would leave the grass. Check which way it faces before that move.");
+            }
+            cells[pos].classList.add("is-trail");
+            pos = nk;
+          } else {
+            dir = (dir + (s.t === "L" ? 1 : 3)) % 4;
+            ang += s.t === "L" ? -90 : 90;
+          }
+          place();
+          setTimeout(next, reduce ? 60 : 340);
+        })();
       };
     }
 
     /* ---- carousel --------------------------------------------------------- */
     var TYPES = [
-      { name: "Multiple choice", build: buildMcq, path: '<circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.4 2.4 4.6-5"/>' },
-      { name: "Matching", build: buildMatch, path: '<circle cx="6" cy="7" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M8.6 7H14a3 3 0 0 1 0 6h-4a3 3 0 0 0 0 6h5.4"/>' },
-      { name: "Sorting", build: buildSort, path: '<rect x="3" y="4" width="7" height="7" rx="1.6"/><rect x="14" y="4" width="7" height="7" rx="1.6"/><rect x="8.5" y="14" width="7" height="7" rx="1.6"/>' },
-      { name: "Fill in the blanks", build: buildCloze, path: '<path d="M4 18h16"/><path d="M6.5 14L14 6.5l3.5 3.5L10 17.5H6.5z"/>' }
+      { name: "Python, checked by tests", build: buildPython, path: '<path d="M8.5 8l-4 4 4 4"/><path d="M15.5 8l4 4-4 4"/><path d="M13.5 5.5l-3 13"/>' },
+      { name: "An equation, step by step", build: buildEquation, path: '<path d="M5 9.5h14"/><path d="M5 14.5h14"/>' },
+      { name: "A web page in HTML and CSS", build: buildWeb, path: '<rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M3 9h18"/>' },
+      { name: "A robot on blocks", build: buildRobot, path: '<rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4.5V8"/><circle cx="9.5" cy="13.5" r="1.2"/><circle cx="14.5" cy="13.5" r="1.2"/>' }
     ];
     var at = 0;
-    var onResize = null;   // set by the exercise on screen that needs to redraw (Matching)
-    window.addEventListener("resize", function () { if (onResize) onResize(); });
+    var gen = 0;           // bumped on every slide change, so a running robot knows to stop
     var now = document.getElementById("gxNow");
     var dots = document.getElementById("gxDots");
 
@@ -891,8 +1089,8 @@
 
     function show(i) {
       at = (i + TYPES.length) % TYPES.length;
+      gen++;
       card.innerHTML = "";
-      onResize = null;
       TYPES[at].build();
       now.innerHTML = "";
       now.append(icon(TYPES[at].path), el("span", null, TYPES[at].name));
@@ -904,6 +1102,11 @@
   })();
   </script>
 </div>
+  </div>
+  <div class="rooms lms-shots">
+    <a class="room" href="https://grasslms.online/demo?role=student" target="_blank" rel="noopener"><img src="previews/lms-student-code.webp" alt="A GrassLMS lesson with a Python challenge: its test cases, the code editor and all tests passed" loading="lazy" width="1440" height="900"><div><h3>A lesson as a student sees it</h3><p>Code is run on the server and checked by tests, in Python, JavaScript, Java, C++ or Go.</p></div></a>
+    <div class="room"><img src="previews/lms-teacher-gradebook.webp" alt="The GrassLMS gradebook: every student against every exercise in Python Basics, with low scores in red" loading="lazy" width="1440" height="900"><div><h3>The gradebook</h3><p>Every learner against every exercise in a course, low scores marked, with export to CSV or Excel.</p></div></div>
+    <div class="room"><img src="previews/lms-teacher-courses.webp" alt="The teacher’s list of courses in GrassLMS: Python, HTML and CSS, maths and three languages" loading="lazy" width="1440" height="900"><div><h3>Courses as a teacher sees them</h3><p>Each course is built from modules and lessons and can be exported to JSON or PDF and imported back.</p></div></div>
   </div>
 </section>
 
