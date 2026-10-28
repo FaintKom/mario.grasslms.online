@@ -382,7 +382,18 @@
     display: grid; place-items: center; pointer-events: none;
     transition: transform calc(.26s * var(--mdur)) var(--motion-ease);
   }
-  .gx-bot svg { width: 78%; height: 78%; transition: transform calc(.22s * var(--mdur)) var(--motion-ease); }
+  .gx-bot svg { width: 100%; height: 100%; overflow: visible; }
+  .gx-bot .gx-turn {
+    transform-box: view-box; transform-origin: 20px 20px;
+    transition: transform calc(.25s * var(--mdur)) ease-out;
+  }
+  .gx-bot .gx-b1 { fill: #4c97ff; transition: fill .3s; }
+  .gx-bot .gx-b2 { fill: #6bb3ff; transition: fill .3s; }
+  .gx-bot.is-crash .gx-b1 { fill: #ef4444; }
+  .gx-bot.is-crash .gx-b2 { fill: #f87171; }
+  .gx-bot .gx-m-home, .gx-bot .gx-m-crash,
+  .gx-bot.is-home .gx-m-idle, .gx-bot.is-crash .gx-m-idle { display: none; }
+  .gx-bot.is-home .gx-m-home, .gx-bot.is-crash .gx-m-crash { display: inline; }
   .gx-bot.is-crash svg { animation: gx-shake calc(.4s * var(--mdur)) ease both; }
   .gx-blocks { display: grid; gap: 12px; min-width: 0; }
   .gx-palette { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -894,7 +905,19 @@
         "The robot walks on grass only. Build its program from the blocks, six at most, and press Run. Six blocks are not enough to spell out every move."));
       var PATH = ["0,4", "1,4", "1,3", "2,3", "2,2", "3,2", "3,1", "4,1", "4,0"], GOAL = "4,0", LIMIT = 6;
       var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="#f5b800" stroke="#c98700" stroke-width="1.2" stroke-linejoin="round"/></svg>';
-      var BOT = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="9" width="25" height="22" rx="6" fill="#0d150d"/><circle cx="24" cy="16" r="3" fill="#8fd770"/><circle cx="24" cy="24" r="3" fill="#8fd770"/><path d="M32 15l6 5-6 5z" fill="#0a8754"/></svg>';
+      // The robot from GrassLMS's robot_2d renderer, drawn at a 40-unit cell.
+      var BOT = '<svg viewBox="0 0 40 40" aria-hidden="true">' +
+        '<ellipse cx="20" cy="32" rx="10.4" ry="2.8" fill="#000" opacity=".12"/>' +
+        '<g class="gx-turn">' +
+        '<circle class="gx-b1" cx="20" cy="20" r="13.6"/><circle class="gx-b2" cx="20" cy="20" r="11.2"/>' +
+        '<ellipse cx="20" cy="19.2" rx="8.8" ry="6.4" fill="#fff" opacity=".9"/>' +
+        '<circle cx="16.8" cy="18" r="2.6" fill="#1e3a5f"/><circle cx="23.2" cy="18" r="2.6" fill="#1e3a5f"/>' +
+        '<circle cx="17.4" cy="17.4" r="1" fill="#fff"/><circle cx="23.8" cy="17.4" r="1" fill="#fff"/>' +
+        '<path class="gx-m-idle" d="M17.6 22.4Q20 24.4 22.4 22.4" fill="none" stroke="#1e3a5f" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<path class="gx-m-home" d="M16.4 22.4Q20 26.4 23.6 22.4" fill="none" stroke="#1e3a5f" stroke-width="2" stroke-linecap="round"/>' +
+        '<ellipse class="gx-m-crash" cx="20" cy="23.2" rx="1.6" ry="2" fill="#1e3a5f"/>' +
+        '<polygon points="32.8,20 29.6,17.6 29.6,22.4" fill="#fff" opacity=".8"/>' +
+        '</g></svg>';
 
       var robo = el("div", "gx-robo");
       var field = el("div", "gx-field");
@@ -928,11 +951,11 @@
       function place() {
         var xy = pos.split(",");
         bot.style.transform = "translate(calc((var(--cell) + 3px) * " + xy[0] + "), calc((var(--cell) + 3px) * " + xy[1] + "))";
-        bot.firstChild.style.transform = "rotate(" + ang + "deg)";
+        bot.querySelector(".gx-turn").style.transform = "rotate(" + ang + "deg)";
       }
       function reset() {
         pos = "0,4"; dir = 0; ang = 0;
-        bot.classList.remove("is-crash");
+        bot.classList.remove("is-crash", "is-home");
         Object.keys(cells).forEach(function (k) { cells[k].classList.remove("is-trail"); });
         place();
       }
@@ -1040,6 +1063,7 @@
           if (me !== gen) return;   // the carousel has moved on
           [].forEach.call(prog.querySelectorAll(".is-now"), function (n) { n.classList.remove("is-now"); });
           if (k === steps.length) {
+            if (pos === GOAL) bot.classList.add("is-home");
             return pos === GOAL
               ? stop(true, "The robot reached the star with " + count() + " blocks. Repeat ran the same steps again and again, which is what made six blocks enough.")
               : stop(false, "The robot stopped before the star. The path climbs in identical steps: find one step and repeat it.");
