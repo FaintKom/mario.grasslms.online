@@ -12,7 +12,7 @@ Hiring managers and recruiters at EdTech and L&D companies looking for a Learnin
 
 ## Product Purpose
 
-Static portfolio for Mario Rafael Becerra Dueñas, Learning Experience Designer with 10+ years in EdTech. It proves the whole process (analysis, design, build, evaluation) through programs he shipped and through demos a visitor can open and play in the browser. Success: a hiring manager opens a demo, sees it works and why it was designed that way, and gets in touch.
+Static portfolio for Mario Rafael Becerra Dueñas, Learning Experience Designer with 9+ years in EdTech. It proves the whole process (analysis, design, build, evaluation) through programs he shipped and through demos a visitor can open and play in the browser. Success: a hiring manager opens a demo, sees it works and why it was designed that way, and gets in touch.
 
 ## Positioning
 
@@ -39,7 +39,7 @@ A designer who also builds: playable scenario simulations, SCORM modules, a mini
 
 - Shipped programs: Yandex Practicum, TripleTen (Nebius Group), BEAM Institute, Algonova (current consulting).
 - Playable demos in `pipeline/`, CV at `Mario_Becerra_CV.pdf`, design logs in `pipeline/engagement/module-*/design-log.md`.
-- Metrics on the home page (10+ years, 50+ courses, 60% content time saved) are the owner's claims; do not add new numbers, testimonials or client logos.
+- Metrics on the home page (9+ years, 50+ courses, 60% content time saved) are the owner's claims; do not add new numbers, testimonials or client logos.
 
 ## Product Principles
 
