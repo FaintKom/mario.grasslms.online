@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SCORM 1.2 manifest. Zip the contents of this folder (not the folder itself)
+     so that imsmanifest.xml sits at the root of the package. -->
+<manifest identifier="ai-for-instructional-designers" version="1.0"
+  xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+                      http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd
+                      http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+  <organizations default="ORG-AID">
+    <organization identifier="ORG-AID">
+      <title>Working with an AI model on lesson plans, slide decks and SCORM exercises</title>
+      <item identifier="ITEM-AID" identifierref="RES-AID" isvisible="true">
+        <title>AI for instructional designers</title>
+        <adlcp:masteryscore>80</adlcp:masteryscore>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="RES-AID" type="webcontent" adlcp:scormtype="sco" href="index.html">
+      <file href="index.html"/>
+      <file href="course.css"/>
+      <file href="job-aid.html"/>
+      <file href="design-log.html"/>
+      <file href="js/course.js"/>
+      <file href="js/film.js"/>
+      <file href="js/films.js"/>
+      <file href="js/refund-desk.js"/>
+      <file href="js/workbench.js"/>
+      <file href="js/deck.js"/>
+      <file href="js/content.js"/>
+      <file href="audio/f1_01.mp3"/><file href="audio/f1_02.mp3"/><file href="audio/f1_03.mp3"/><file href="audio/f1_04.mp3"/>
+      <file href="audio/f1_05.mp3"/><file href="audio/f1_06.mp3"/><file href="audio/f1_07.mp3"/><file href="audio/f1_08.mp3"/>
+      <file href="audio/f1_09.mp3"/><file href="audio/f1_10.mp3"/><file href="audio/f1_11.mp3"/><file href="audio/f1_12.mp3"/>
+      <file href="audio/f1_13.mp3"/><file href="audio/f1_14.mp3"/><file href="audio/f1_15.mp3"/>
+      <file href="audio/f2_01.mp3"/><file href="audio/f2_02.mp3"/><file href="audio/f2_03.mp3"/><file href="audio/f2_04.mp3"/>
+      <file href="audio/f2_05.mp3"/><file href="audio/f2_06.mp3"/><file href="audio/f2_07.mp3"/><file href="audio/f2_08.mp3"/>
+      <file href="audio/f2_09.mp3"/>
+    </resource>
+  </resources>
+</manifest>

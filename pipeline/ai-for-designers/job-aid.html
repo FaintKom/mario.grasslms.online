@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job aid: briefs, checks and fix requests for three kinds of draft</title>
+<meta name="description" content="A one-page job aid from the course on working with an AI model: what to put in the brief, what to check and how to word a fix request for a lesson plan, a slide deck and a SCORM exercise.">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="course.css?v=10">
+<style>
+  .sheet { max-width: 1180px; margin: 0 auto; padding: 28px clamp(16px, 4vw, 44px) 48px; }
+  .sheet h1 { font-size: clamp(28px, 3vw, 40px); margin: 14px 0 10px; }
+  .aid { width: 100%; border-collapse: collapse; border: 2px solid var(--ink); font-size: 15px; line-height: 1.45; margin-top: 18px; background: #fff; }
+  .aid th, .aid td { border: 1px solid var(--ink-200); padding: 10px 12px; vertical-align: top; text-align: left; }
+  .aid thead th { background: var(--ink); color: var(--paper); font-weight: 800; border-color: var(--ink-700); }
+  .aid tbody th { font: 850 17px/1.2 var(--head); background: var(--sun-100); width: 13%; }
+  .aid thead th:nth-child(n+2) { width: 29%; }
+  .aid ul { margin: 0; padding-left: 18px; }
+  .aid li { margin-bottom: 4px; }
+  .always { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+  .always div { border: 2px solid var(--ink); border-radius: 6px; padding: 12px 14px; background: var(--green-50); font-size: 15px; }
+  .always b { display: block; font: 850 17px var(--head); margin-bottom: 4px; }
+  @media (max-width: 760px) { .always { grid-template-columns: 1fr; } .aid, .aid tbody, .aid tr, .aid td, .aid th { display: block; width: auto; } .aid thead { display: none; } }
+  @media print { .no-print { display: none; } body { font-size: 12px; } .sheet { padding: 0; } .aid { font-size: 11.5px; } }
+</style>
+</head>
+<body>
+<main class="sheet">
+  <p class="no-print row" style="margin:0"><a href="index.html">&larr; Back to the course</a><button class="btn btn--line btn--sm" type="button" onclick="window.print()">Print this page</button></p>
+  <h1>Job aid: briefs, checks and fix requests for three kinds of draft</h1>
+  <p class="lead">Keep this page next to the model. The columns are the three moves that stay with you, and the rows are the drafts they apply to.</p>
+
+  <table class="aid">
+    <thead><tr><th scope="col">Draft</th><th scope="col">Put in the brief</th><th scope="col">Check before a colleague sees it</th><th scope="col">Word the fix request</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Lesson plan</th>
+        <td><ul><li><strong>Learner:</strong> who they are and what they can already do</li><li><strong>Objective:</strong> what they do at the end, in words you could watch</li><li><strong>Limits:</strong> minutes, room, tools</li><li><strong>Source:</strong> the document, pasted in, with "use nothing else"</li><li><strong>Format:</strong> a table with minutes per row and the total under it</li></ul></td>
+        <td><ul><li><strong>Objective:</strong> could you watch a learner do it?</li><li><strong>Practice:</strong> does each activity make learners do what the objective names?</li><li><strong>Facts:</strong> can you point to the source line for every number?</li><li><strong>Fit:</strong> do the minutes add up, with the room and tools you have?</li></ul></td>
+        <td>"Row 5: replace the quiz with three tickets agents decide alone, 5 minutes. Row 3: the limit is €150, as in the notes. Change nothing else."</td></tr>
+      <tr><th scope="row">Slide deck</th>
+        <td><ul><li>The approved plan as the only source</li><li><strong>Pass 1:</strong> one line per slide, each with its plan row</li><li><strong>Pass 2:</strong> title, up to four points, trainer's note, with the template's limits stated</li><li><strong>Pass 3:</strong> fields into the template, no design changes</li></ul></td>
+        <td><ul><li>Each slide points to a plan row, and no row is left without a slide</li><li>Each slide fits the limits of the template</li><li>Every figure matches the plan</li><li>Nothing overflows after pass 3</li></ul></td>
+        <td>"Slides 2 and 6: cut, no plan row. Slide 3: keep the first four points and move the rest to the slide for row 4. Slide 4: the limit is €150. Add a slide for row 5."</td></tr>
+      <tr><th scope="row">SCORM exercise</th>
+        <td><ul><li><strong>Decision:</strong> what the learner decides and sees</li><li><strong>Cases:</strong> each with its answer and rule, from the source</li><li><strong>Feedback:</strong> the rule that applies, never a bare verdict</li><li><strong>States:</strong> start, each case, result, second attempt</li><li><strong>Report:</strong> score, pass mark, when it is sent</li><li><strong>Tests:</strong> what you will run yourself</li></ul></td>
+        <td><ul><li>Play it with a wrong answer on every case</li><li>Each correct answer matches the source</li><li>Feedback names the rule</li><li>The log shows Initialize, the score, the status, Commit and Finish</li><li>Every button works from the keyboard</li></ul></td>
+        <td>"Ticket 3: the correct answer is Escalate, rule 4. Feedback must name the rule, as in part 3 of the spec. On the result screen send score.raw and set the status to passed at 3 or more. Change nothing else."</td></tr>
+    </tbody>
+  </table>
+
+  <div class="always">
+    <div><b>The model drafts</b>A first version in the format you asked for, variants of an activity, the wording of the next case, the code.</div>
+    <div><b>You decide</b>What learners must be able to do, which source counts, whether each check passes, when the work is ready to send.</div>
+    <div><b>A second designer reads it</b>However clean your own check was, because the person who wrote the brief shares its blind spots.</div>
+  </div>
+</main>
+</body>
+</html>

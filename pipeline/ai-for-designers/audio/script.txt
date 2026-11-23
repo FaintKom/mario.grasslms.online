@@ -1,0 +1,27 @@
+# Film 1: One request, two drafts
+f1_01 | You have just compared two plans for the same session on refund requests, and both came from the same model on the same day.
+f1_02 | The designer who received the first plan had typed one line that asked for a lesson plan about the company's refund policy.
+f1_03 | A model that gets a request like this has to fill in everything else by itself, and it fills it in with what it has seen in most lesson plans.
+f1_04 | That is why the goal says the agents will understand the policy, although nobody in the room can see whether a person understands.
+f1_05 | For the same reason half of the time goes to presentation, and the session runs to an hour when the team lead has only forty-five minutes.
+f1_06 | The fourteen days for returning an item are also the figure the model has met most often, and this company allows thirty.
+f1_07 | The other designer began with what the model could not know and wrote it down as a brief.
+f1_08 | The brief first describes the learners, who are agents in their first week and have worked in the ticket system for two days.
+f1_09 | Then it says what an agent should be able to do when the session ends, which is to decide a refund request and tell the customer what happens next.
+f1_10 | It also gives the conditions, which are forty-five minutes, one room and no software for group work.
+f1_11 | The team lead's notes on the policy are pasted into the brief, and the model is told to use only them.
+f1_12 | At the end the designer asks for a table with the minutes for each activity, because a colleague can review a table quickly.
+f1_13 | The plan written from this brief starts with three tickets, and the agents spend most of the session deciding requests in pairs.
+f1_14 | It still came back with a quiz on the wording of the policy and with timings that add up to fifty minutes, which is why the designer checked it before sending it to a colleague.
+f1_15 | The next step shows the four questions that this check consists of.
+
+# Film 2: A deck in three passes
+f2_01 | The plan for the refund session has passed review, and the next thing the trainer needs is a set of slides.
+f2_02 | A model will write all of them in one go if you ask, but then every slide has to be compared with the plan after its wording and layout are already done.
+f2_03 | It is easier to build the deck in three passes and to look at the result of each pass before the next one starts.
+f2_04 | The first pass gives a list of slides, where every line says which row of the plan the slide is for.
+f2_05 | A list like this is quick to check, and in this one a slide about the history of the company belongs to no row of the plan and is removed before anyone writes it.
+f2_06 | In the second pass the model fills in each slide as a title, up to four short points and a note for the trainer.
+f2_07 | This is where you find a slide that carries nine points and a refund limit that differs from the plan, and both are corrected while the slide is still plain text.
+f2_08 | In the third pass the text goes into the template, which already has the fonts, the colours and the layout the company uses.
+f2_09 | By that time you have read every slide twice in a simple form, and the colleague who reviews the deck gets slides that already match the plan.

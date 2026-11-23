@@ -1,0 +1,152 @@
+{
+ "voice": "af_heart",
+ "speed": 1.0,
+ "sample_rate": 24000,
+ "pad_seconds": 0.15,
+ "cues": [
+  {
+   "id": "f1_01",
+   "file": "f1_01.mp3",
+   "text": "You have just compared two plans for the same session on refund requests, and both came from the same model on the same day.",
+   "duration": 6.77
+  },
+  {
+   "id": "f1_02",
+   "file": "f1_02.mp3",
+   "text": "The designer who received the first plan had typed one line that asked for a lesson plan about the company's refund policy.",
+   "duration": 7.69
+  },
+  {
+   "id": "f1_03",
+   "file": "f1_03.mp3",
+   "text": "A model that gets a request like this has to fill in everything else by itself, and it fills it in with what it has seen in most lesson plans.",
+   "duration": 8.25
+  },
+  {
+   "id": "f1_04",
+   "file": "f1_04.mp3",
+   "text": "That is why the goal says the agents will understand the policy, although nobody in the room can see whether a person understands.",
+   "duration": 7.33
+  },
+  {
+   "id": "f1_05",
+   "file": "f1_05.mp3",
+   "text": "For the same reason half of the time goes to presentation, and the session runs to an hour when the team lead has only forty-five minutes.",
+   "duration": 8.39
+  },
+  {
+   "id": "f1_06",
+   "file": "f1_06.mp3",
+   "text": "The fourteen days for returning an item are also the figure the model has met most often, and this company allows thirty.",
+   "duration": 7.19
+  },
+  {
+   "id": "f1_07",
+   "file": "f1_07.mp3",
+   "text": "The other designer began with what the model could not know and wrote it down as a brief.",
+   "duration": 4.7
+  },
+  {
+   "id": "f1_08",
+   "file": "f1_08.mp3",
+   "text": "The brief first describes the learners, who are agents in their first week and have worked in the ticket system for two days.",
+   "duration": 6.71
+  },
+  {
+   "id": "f1_09",
+   "file": "f1_09.mp3",
+   "text": "Then it says what an agent should be able to do when the session ends, which is to decide a refund request and tell the customer what happens next.",
+   "duration": 8.22
+  },
+  {
+   "id": "f1_10",
+   "file": "f1_10.mp3",
+   "text": "It also gives the conditions, which are forty-five minutes, one room and no software for group work.",
+   "duration": 6.05
+  },
+  {
+   "id": "f1_11",
+   "file": "f1_11.mp3",
+   "text": "The team lead's notes on the policy are pasted into the brief, and the model is told to use only them.",
+   "duration": 5.7
+  },
+  {
+   "id": "f1_12",
+   "file": "f1_12.mp3",
+   "text": "At the end the designer asks for a table with the minutes for each activity, because a colleague can review a table quickly.",
+   "duration": 6.74
+  },
+  {
+   "id": "f1_13",
+   "file": "f1_13.mp3",
+   "text": "The plan written from this brief starts with three tickets, and the agents spend most of the session deciding requests in pairs.",
+   "duration": 7.25
+  },
+  {
+   "id": "f1_14",
+   "file": "f1_14.mp3",
+   "text": "It still came back with a quiz on the wording of the policy and with timings that add up to fifty minutes, which is why the designer checked it before sending it to a colleague.",
+   "duration": 9.68
+  },
+  {
+   "id": "f1_15",
+   "file": "f1_15.mp3",
+   "text": "The next step shows the four questions that this check consists of.",
+   "duration": 3.64
+  },
+  {
+   "id": "f2_01",
+   "file": "f2_01.mp3",
+   "text": "The plan for the refund session has passed review, and the next thing the trainer needs is a set of slides.",
+   "duration": 5.9
+  },
+  {
+   "id": "f2_02",
+   "file": "f2_02.mp3",
+   "text": "A model will write all of them in one go if you ask, but then every slide has to be compared with the plan after its wording and layout are already done.",
+   "duration": 9.01
+  },
+  {
+   "id": "f2_03",
+   "file": "f2_03.mp3",
+   "text": "It is easier to build the deck in three passes and to look at the result of each pass before the next one starts.",
+   "duration": 6.38
+  },
+  {
+   "id": "f2_04",
+   "file": "f2_04.mp3",
+   "text": "The first pass gives a list of slides, where every line says which row of the plan the slide is for.",
+   "duration": 5.63
+  },
+  {
+   "id": "f2_05",
+   "file": "f2_05.mp3",
+   "text": "A list like this is quick to check, and in this one a slide about the history of the company belongs to no row of the plan and is removed before anyone writes it.",
+   "duration": 9.42
+  },
+  {
+   "id": "f2_06",
+   "file": "f2_06.mp3",
+   "text": "In the second pass the model fills in each slide as a title, up to four short points and a note for the trainer.",
+   "duration": 6.57
+  },
+  {
+   "id": "f2_07",
+   "file": "f2_07.mp3",
+   "text": "This is where you find a slide that carries nine points and a refund limit that differs from the plan, and both are corrected while the slide is still plain text.",
+   "duration": 9.33
+  },
+  {
+   "id": "f2_08",
+   "file": "f2_08.mp3",
+   "text": "In the third pass the text goes into the template, which already has the fonts, the colours and the layout the company uses.",
+   "duration": 7.13
+  },
+  {
+   "id": "f2_09",
+   "file": "f2_09.mp3",
+   "text": "By that time you have read every slide twice in a simple form, and the colleague who reviews the deck gets slides that already match the plan.",
+   "duration": 8.23
+  }
+ ]
+}
