@@ -85,7 +85,7 @@
     function result() {
       count.textContent = "Result";
       tEl.innerHTML = "<h4>" + score + " of " + TICKETS.length + " tickets decided as the policy says</h4><p>" +
-        (first ? "Well done, you have finished the practice." : score >= 3 ? "That passes, since the mark is three or more." : "The pass mark is three, and this attempt falls short of it. You can run it again.") + "</p>";
+        (first ? "Well done, you have finished the practice." : score >= 3 ? "That passes, since the mark is three or more." : "The pass mark is three, and this attempt falls short of it. You can launch the exercise again.") + "</p>";
       acts.innerHTML = "";
       fb.hidden = true;
       /* planted defect 3: the first build sends no score and always reports "completed" */
@@ -98,7 +98,9 @@
       }
       lms('LMSCommit("")');
       lms('LMSFinish("")');
-      var again = AID.h('<button type="button" class="btn btn--line btn--sm">Run it again</button>');
+      /* LMSFinish has closed the session, and SCORM 1.2 allows no call after it.
+         A second attempt is therefore a new launch from the LMS, with a new log. */
+      var again = AID.h('<button type="button" class="btn btn--line btn--sm">Launch it again</button>');
       again.addEventListener("click", start);
       acts.appendChild(again);
       if (onEvent) onEvent("result", { score: score, calls: calls });
@@ -136,13 +138,22 @@
       fb: "A rebuild throws away the two things that already worked, and nothing in this request tells the model what went wrong the first time." }
   ];
 
-  AID.testRun = function (host, done) {
-    var saved = AID.state.data.testRun || {};
-    var wrap = AID.h('<div><div class="tp"><div class="tp__build"></div><div class="tests"><h3>Tests from part 6 of the spec</h3><div class="tests__list"></div>' +
-      '<div class="tests__foot"><button type="button" class="btn btn--ink btn--sm" id="tr-check" disabled>Check my test report</button></div></div></div><div class="tp__after"></div></div>');
-    host.appendChild(wrap);
-    AID.refundDesk(AID.$(".tp__build", wrap), "first");
-    var verdicts = {}, list = AID.$(".tests__list", wrap), check = AID.$("#tr-check", wrap), after = AID.$(".tp__after", wrap);
+  /* What each test shows on the second build, where all five pass. */
+  var SECOND = {
+    t1: "Ticket 3 now takes Escalate as the correct answer, and the other three tickets are marked as they were.",
+    t2: "After every choice this build shows the decision and the rule it rests on.",
+    t3: "The log now has the two score lines, and the status is 'passed' at three or four and 'failed' below.",
+    t4: "LMSInitialize is still the first line of the log, and LMSCommit and LMSFinish are still the last two.",
+    t5: "Tab still reaches the three decisions and the Next button, and Enter presses them."
+  };
+
+  /* One test report: five tests with Pass and Fail, checked together.
+     opt = { title, key(t), why(t), saved, store(verdicts), after(right) } */
+  function report(host, opt) {
+    var el = AID.h('<div class="tests"><h3>' + opt.title + '</h3><div class="tests__list"></div>' +
+      '<div class="tests__foot"><button type="button" class="btn btn--ink btn--sm" disabled>Check my test report</button></div></div>');
+    host.appendChild(el);
+    var verdicts = {}, list = AID.$(".tests__list", el), check = AID.$(".tests__foot button", el);
 
     TESTS.forEach(function (t, i) {
       var row = AID.h('<div class="test" data-id="' + t.id + '"><p>' + (i + 1) + ". " + t.text + '</p><div class="test__v" role="group" aria-label="Verdict for test ' + (i + 1) + '">' +
@@ -161,28 +172,63 @@
     function reveal(fresh) {
       var right = 0;
       TESTS.forEach(function (t) {
-        var row = AID.$('.test[data-id="' + t.id + '"]', list), ok = verdicts[t.id] === t.key;
+        var row = AID.$('.test[data-id="' + t.id + '"]', list), key = opt.key(t), ok = verdicts[t.id] === key;
         if (ok) right++;
         row.classList.add(ok ? "is-right" : "is-wrong");
         AID.$$("button", row).forEach(function (x) { x.setAttribute("aria-pressed", x.getAttribute("data-v") === verdicts[t.id]); x.disabled = true; });
-        row.appendChild(AID.h('<p class="test__fb"><strong>' + (t.key === "fail" ? "This test fails. " : "This test passes. ") + "</strong>" + t.why + "</p>"));
+        row.appendChild(AID.h('<p class="test__fb"><strong>' + (key === "fail" ? "This test fails. " : "This test passes. ") + "</strong>" + opt.why(t) + "</p>"));
       });
       check.hidden = true;
-      if (fresh) { AID.state.data.testRun = { verdicts: verdicts }; AID.save(); }
-      after.appendChild(AID.h('<div class="note ' + (right === TESTS.length ? "note--ok" : "note--calm") + '"><p><strong>' + right + " of " + TESTS.length + " verdicts match.</strong> " +
-        (right === TESTS.length ? "Your report separates the three defects from the two things that work, which is what the fix request needs." : "The evidence for each test is next to it. Two of the five tests pass, and a report that fails everything hides that from the model.") + "</p></div>"));
-      var q = document.createElement("div");
-      after.appendChild(q);
-      AID.questions(q, [{ id: "u3-fix", stem: "Three tests failed. Which message do you send back to the model?", graded: false,
-        options: FIXES.map(function (f) { return { t: f.t, ok: f.ok, fb: f.fb }; }) }], function () {
-        var sent = FIXES[AID.state.data["q:u3-fix"]].ok;
-        var fin = AID.h('<div><h2>The second build</h2><p class="read">' + (sent ? "The model changed the three things the request named." : "Suppose you had sent the second message. The model changed the three things it names.") + ' Run the same five tests on that build before it goes to Tomás, and read the last lines of the log.</p><div class="tp__final"></div></div>');
-        after.appendChild(fin);
-        AID.refundDesk(AID.$(".tp__final", fin), "final");
-        done();
-      });
+      if (fresh) { opt.store(verdicts); AID.save(); }
+      opt.after(right);
     }
     check.addEventListener("click", function () { reveal(true); });
-    if (saved.verdicts) { verdicts = saved.verdicts; reveal(false); }
+    if (opt.saved) { verdicts = opt.saved; reveal(false); }
+  }
+
+  AID.testRun = function (host, done) {
+    var data = AID.state.data;
+    var wrap = AID.h('<div><div class="tp"><div class="tp__build"></div></div><div class="tp__after"></div></div>');
+    host.appendChild(wrap);
+    var after = AID.$(".tp__after", wrap);
+    AID.refundDesk(AID.$(".tp__build", wrap), "first");
+
+    report(AID.$(".tp", wrap), {
+      title: "Tests from part 6 of the spec",
+      key: function (t) { return t.key; },
+      why: function (t) { return t.why; },
+      saved: data.testRun && data.testRun.verdicts,
+      store: function (v) { data.testRun = { verdicts: v }; },
+      after: function (right) {
+        after.appendChild(AID.h('<div class="note ' + (right === TESTS.length ? "note--ok" : "note--calm") + '"><p><strong>' + right + " of " + TESTS.length + " verdicts match.</strong> " +
+          (right === TESTS.length ? "Your report separates the three defects from the two things that work, which is what the fix request needs." : "The evidence for each test is next to it. Two of the five tests pass, and a report that fails everything hides that from the model.") + "</p></div>"));
+        var q = document.createElement("div");
+        after.appendChild(q);
+        AID.questions(q, [{ id: "u3-fix", stem: "Three tests failed. Which message do you send back to the model?", graded: false,
+          options: FIXES.map(function (f) { return { t: f.t, ok: f.ok, fb: f.fb }; }) }], second);
+      }
+    });
+
+    /* The second build gets the same five tests, because a fix can break what worked. */
+    function second() {
+      var sent = FIXES[data["q:u3-fix"]].ok;
+      var fin = AID.h('<div><h2>The second build</h2><p class="read">' + (sent ? "The model changed the three things the request named." : "Suppose you had sent the second message. The model changed the three things it names.") +
+        ' Run the same five tests on that build before it goes to Tomás, since a fix can break something that worked in the first build.</p><div class="tp"><div class="tp__final"></div></div><div class="tp__end"></div></div>');
+      after.appendChild(fin);
+      AID.refundDesk(AID.$(".tp__final", fin), "final");
+      report(AID.$(".tp", fin), {
+        title: "The same tests on the second build",
+        key: function () { return "pass"; },
+        why: function (t) { return SECOND[t.id]; },
+        saved: data.testRun2 && data.testRun2.verdicts,
+        store: function (v) { data.testRun2 = { verdicts: v }; },
+        after: function (right) {
+          AID.$(".tp__end", fin).appendChild(AID.h('<div class="note ' + (right === TESTS.length ? "note--ok" : "note--calm") + '"><p><strong>' + right + " of " + TESTS.length + " verdicts match.</strong> " +
+            (right === TESTS.length ? "All five tests pass on the second build, which means the fix repaired the three defects and left the two working parts as they were, and the exercise can go to Tomás."
+              : "All five tests pass on this build, and the evidence for each one is next to it.") + "</p></div>"));
+          done();
+        }
+      });
+    }
   };
 })();

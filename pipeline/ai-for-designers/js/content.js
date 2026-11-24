@@ -263,7 +263,7 @@
 
   S.push({ id: "u2-fields", unit: "u2", nav: "A slide written as fields", title: "A slide written as fields", wide: true, auto: false,
     render: function (host, ctx) {
-      add('<div class="read"><p class="lead">A slide in this template holds a title of up to 60 characters and four points of up to twelve words each. Those limits are part of the brief for the second pass, and the model still breaks them, most often on the slide that covers the densest row of the plan.</p><p>This slide came back from the second pass with a long title and seven points. Edit the fields until all three limits turn green, and move whatever does not fit to the trainer\'s note or to another slide.</p></div>', host);
+      add('<div class="read"><p class="lead">A slide in this template holds a title of up to 60 characters and four points of up to twelve words each. Those limits are part of the brief for the second pass, and the model still breaks them, most often on the slide that covers the densest row of the plan.</p><p>This slide came back from the second pass with a long title and seven points. Edit the fields until all four checks turn green, and move whatever does not fit to the trainer\'s note or to another slide. The four rules have to stay on this slide, because row 2 of the plan is built on them.</p></div>', host);
       return AID.slideEditor(host, ctx.done);
     } });
 
@@ -321,7 +321,7 @@
         "<p><strong>1. Decision.</strong> One ticket per screen with the policy card beside it. Three buttons: Approve, Escalate to team lead, Decline.</p>" +
         "<p><strong>2. Cases.</strong> Four tickets from Dana's notes: €40 lamp at 12 days (approve), rug at 41 days (decline), €180 sofa covers (escalate), cracked mirror with a photo (approve).</p>" +
         "<p><strong>3. Feedback.</strong> After each choice show the correct decision and the rule it rests on. Never show only \"Correct\" or \"Incorrect\".</p>" +
-        "<p><strong>4. States.</strong> Tickets in a fixed order, then a result screen with the count and a button to run it again.</p>" +
+        "<p><strong>4. States.</strong> Tickets in a fixed order, then a result screen with the count. The session closes on that screen, so a second attempt is a new launch from the LMS.</p>" +
         "<p><strong>5. Report.</strong> SCORM 1.2. Initialize on load. On the result screen send score.raw and score.max, set lesson_status to passed at 3 or more and failed below, then commit and finish.</p>" +
         "<p style=\"margin:0\"><strong>6. Tests.</strong> Answers match the notes. Feedback names the rule. Score and status reach the LMS. The session opens and closes. Every button works from the keyboard.</p>";
       AID.refundDesk(AID.$(".tp__build", grid), "final");
@@ -330,7 +330,7 @@
 
   S.push({ id: "u3-test", unit: "u3", nav: "Simulation: test the first build", title: "Simulation: test the model's first build", wide: true, auto: false,
     render: function (host, ctx) {
-      add('<p class="lead">This is what the model returned the first time, before the version you have just played, and it looks the same. Play it as an agent would, including at least one wrong answer, read the log, and mark each of the five tests as passed or failed.</p>', host);
+      add('<p class="lead">This is what the model returned the first time, before the version you have just played, and it looks the same. Play it as an agent would and give at least one wrong answer, answer one ticket from the keyboard with Tab and Enter, then read the log and mark each of the five tests as passed or failed.</p>', host);
       AID.testRun(host, ctx.done);
     } });
 
@@ -352,7 +352,7 @@
 
   S.push({ id: "u3-final", unit: "u3", nav: "Five final questions", title: "Five final questions", auto: false,
     render: function (host, ctx) {
-      add('<p class="lead">Two of these questions are about a facilitator guide, which the course has not covered, and the brief and the checks for it are the same ones.</p>', host);
+      add('<p class="lead">Two of these questions are about a facilitator guide, which the course has not covered. A guide needs the same brief and the same checks that you used for the plan.</p>', host);
       var q = add("<div></div>", host), res = add("<div></div>", host);
       AID.questions(q, [
         { id: "f1", stem: "You need a facilitator guide for the refund session. What do you give the model as its source?", options: [

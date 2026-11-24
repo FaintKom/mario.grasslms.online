@@ -288,12 +288,18 @@
       var finalRows = afterFix(rows, found, st.fixKind);
       var left = finalRows.filter(function (r) { return r.bad; });
       var clean = left.length === 0;
+      /* The plan can come out clean although a defect was never flagged: the stated total
+         becomes right once the other rows are fixed. The learner is told so. */
+      var missed = rows.filter(function (r) { return r.bad && found.indexOf(r.id) < 0; });
+      var firstSum = sumOf(rows.filter(function (r) { return r.id !== "total"; }));
       say("You, to Tomás", "Session plan for Dana's refund slot, ready for your review.", "msg--me");
       say("Tomás Ribeiro, instructional designer", clean
         ? "I read it against Dana's notes. The figures match, the rows add up to 45 and the agents decide tickets for most of it. Passing it to Dana for a test run."
         : "Sending this back before it reaches Dana.<ol>" + left.slice(0, 4).map(function (r) { return "<li>" + r.rev + "</li>"; }).join("") + "</ol>", "msg--peer");
       pane.innerHTML = "<h3>" + (clean ? "Tomás passed the plan to testing" : "Tomás returned the plan with comments") + "</h3>" +
-        '<p class="read">' + (clean
+        '<p class="read">' + (clean && missed.length
+          ? "The total in the first draft said " + SLOT + " minutes while its rows came to " + firstSum + ", and you did not flag it. The plan passed because the rows you sent back now add up to " + SLOT + ", so the total became right although nobody checked it."
+          : clean
           ? "You found every defect and named each one in the fix request, and a second reader could confirm the plan in a few minutes."
           : st.fixKind === "specific"
             ? "The fix request repaired what you flagged. What you did not flag was still in the plan when Tomás opened it, and his comments are in the messages."

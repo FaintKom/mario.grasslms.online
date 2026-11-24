@@ -51,39 +51,48 @@
     note: "One ticket per rule. Greeting, the refund macro and the 5 working days belong to the slide on writing the reply."
   };
 
+  var RULES = [/\b30\b/, /packag/i, /photo/i, /150/];
+
   AID.slideEditor = function (host, done) {
     var saved = AID.state.data.sed || START;
     var el = AID.h('<div class="sed"><form class="sed__form" onsubmit="return false">' +
       '<label for="sed-t">Title</label><input id="sed-t" type="text" autocomplete="off">' +
       '<label for="sed-p">Points, one per line</label><textarea id="sed-p" spellcheck="false"></textarea>' +
       '<label for="sed-n">Trainer\'s note</label><textarea id="sed-n" style="min-height:70px" spellcheck="false"></textarea>' +
-      '<div class="row" style="margin-bottom:0"><button type="button" class="btn btn--line btn--sm" id="sed-show">Show one way to do it</button><button type="button" class="btn btn--line btn--sm" id="sed-reset">Start over</button></div></form>' +
+      '<div class="row" style="margin-bottom:0"><button type="button" class="btn btn--line btn--sm" id="sed-show" hidden>Show one way to do it</button><button type="button" class="btn btn--line btn--sm" id="sed-reset">Start over</button></div></form>' +
       '<div><div class="slide"><h4></h4><ul></ul><div class="slide__foot"><span>Harbour Home, support onboarding</span><span>2</span></div></div>' +
-      '<ul class="limits" aria-live="polite"><li data-k="title"><i></i><span></span></li><li data-k="count"><i></i><span></span></li><li data-k="words"><i></i><span></span></li></ul>' +
+      '<ul class="limits" aria-live="polite"><li data-k="title"><i></i><span></span></li><li data-k="count"><i></i><span></span></li><li data-k="words"><i></i><span></span></li><li data-k="rules"><i></i><span></span></li></ul>' +
       '<pre class="json" aria-label="The same slide as data"></pre></div></div>');
     host.appendChild(el);
     var t = AID.$("#sed-t", el), p = AID.$("#sed-p", el), n = AID.$("#sed-n", el), slide = AID.$(".slide", el);
+    var own = !!saved.own;
     function set(v) { t.value = v.title; p.value = v.points; n.value = v.note; paint(); }
     function paint() {
       var pts = p.value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean);
       AID.$("h4", slide).textContent = t.value;
       AID.$("ul", slide).innerHTML = pts.map(function (x) { return "<li>" + AID.esc(x) + "</li>"; }).join("");
       var long = pts.filter(function (x) { return x.split(/\s+/).length > 12; }).length;
-      var ok = { title: t.value.length > 0 && t.value.length <= 60, count: pts.length > 0 && pts.length <= 4, words: long === 0 };
+      /* Row 2 of the plan is the four rules, so cutting one of them to fit the template is not a fix. */
+      var kept = RULES.filter(function (re) { return pts.some(function (x) { return re.test(x); }); }).length;
+      var ok = { title: t.value.length > 0 && t.value.length <= 60, count: pts.length > 0 && pts.length <= 4, words: long === 0, rules: kept === RULES.length };
       var text = {
         title: "Title: " + t.value.length + " of 60 characters",
         count: "Points: " + pts.length + " of 4",
-        words: long ? long + (long === 1 ? " point is" : " points are") + " longer than 12 words" : "Every point is 12 words or fewer"
+        words: long ? long + (long === 1 ? " point is" : " points are") + " longer than 12 words" : "Every point is 12 words or fewer",
+        rules: "Rules from the plan on the slide: " + kept + " of 4"
       };
       Object.keys(ok).forEach(function (k) {
         var li = AID.$('.limits [data-k="' + k + '"]', el);
         li.classList.toggle("is-ok", ok[k]);
         AID.$("span", li).textContent = text[k];
       });
-      var fits = ok.title && ok.count && ok.words;
-      slide.classList.toggle("is-over", !fits);
+      var fits = ok.title && ok.count && ok.words && ok.rules;
+      slide.classList.toggle("is-over", !(ok.title && ok.count && ok.words));
       AID.$(".json", el).textContent = JSON.stringify({ title: t.value, points: pts, note: n.value }, null, 2);
-      AID.state.data.sed = { title: t.value, points: p.value, note: n.value };
+      /* The worked answer appears only after the learner's own slide passes, so it cannot complete the step. */
+      if (fits) own = true;
+      AID.$("#sed-show", el).hidden = !own;
+      AID.state.data.sed = { title: t.value, points: p.value, note: n.value, own: own };
       if (fits) done();
     }
     [t, p, n].forEach(function (x) { x.addEventListener("input", paint); });
