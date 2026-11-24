@@ -23,10 +23,10 @@
 
   var A_ROWS = [
     ["Goal", "Agents will understand the refund policy."],
-    ["10 min", "Welcome and icebreaker"],
-    ["10 min", "Presentation: why customer service matters"],
-    ["20 min", "Presentation: the refund policy. Returns within 14 days."],
-    ["10 min", "Questions and answers"],
+    ["5 min", "Introduction: what a refund is"],
+    ["15 min", "Presentation: the refund policy. Returns within 14 days."],
+    ["15 min", "Presentation: approved and declined requests"],
+    ["15 min", "Group discussion: difficult customers"],
     ["10 min", "Quiz: ten questions on the policy"]
   ];
   function draftA(at, style, marks, step) {
@@ -94,8 +94,8 @@
         html: draftA(0, "left:80px;top:120px;width:700px", { 2: "hl", 3: "hl" }, 0) +
           tag(0.1, 820, 290, "30 of 60 minutes are slides") + tag(0.5, 820, 390, "60 minutes in a 45-minute slot") },
       { id: "f1_06", text: "The fourteen days for returning an item are also the figure the model has met most often, and this company allows thirty.",
-        html: draftA(0, "left:80px;top:120px;width:700px", { 3: "hl" }, 0) +
-          tag(0.1, 820, 330, "14 days in the plan") + tag(0.65, 820, 430, "30 days in the notes", true) },
+        html: draftA(0, "left:80px;top:120px;width:700px", { 2: "hl" }, 0) +
+          tag(0.1, 820, 290, "14 days in the plan") + tag(0.65, 820, 390, "30 days in the notes", true) },
       { id: "f1_07", text: "The other designer began with what the model could not know and wrote it down as a brief.",
         html: fx(0, "left:100px;top:56px", '<div class="f-title" style="font-size:46px">The brief</div>') + person("B", "Designer B", "#8fd770", 0, "left:100px;top:150px") +
           [0, 1, 2, 3, 4].map(function (i) { return fx(0.3 + i * 0.12, "left:250px;top:" + (150 + i * 92) + "px;width:930px", '<div class="f-chip" style="--c:' + CHIPS[i][2] + ';opacity:.45"><b>' + CHIPS[i][0] + "</b><span></span></div>", "fx--left"); }).join("") },

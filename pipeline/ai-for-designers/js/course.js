@@ -117,25 +117,40 @@
     var left = list.length;
     list.forEach(function (q, qi) {
       var saved = state.data["q:" + q.id];
+      /* Options are shown in an order drawn once for each learner and kept with the progress,
+         so the place of the right answer says nothing. A saved answer keeps its index from the source. */
+      var order = state.data["o:" + q.id];
+      if (!order || order.length !== q.options.length) {
+        order = q.options.map(function (_, i) { return i; });
+        if (!q.fixed) {
+          for (var i = order.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1)), tmp = order[i];
+            order[i] = order[j]; order[j] = tmp;
+          }
+        }
+        state.data["o:" + q.id] = order;
+      }
+      var keyAt = order.indexOf(q.options.findIndex(function (x) { return x.ok; }));
       var box = h('<section class="q" aria-labelledby="q-' + q.id + '">' +
         '<h3 class="q__stem" id="q-' + q.id + '">' + (list.length > 1 ? '<span class="q__n">' + (qi + 1) + '</span>' : "") + q.stem + "</h3>" +
         '<div class="q__opts" role="group" aria-labelledby="q-' + q.id + '"></div>' +
         '<div class="q__fb" aria-live="polite"></div></section>');
       var opts = AID.$(".q__opts", box), fb = AID.$(".q__fb", box);
-      q.options.forEach(function (o, oi) {
-        var b = h('<button type="button" class="opt"><span class="opt__key">' + "ABCDE".charAt(oi) + "</span><span>" + o.t + "</span></button>");
+      order.forEach(function (oi, pos) {
+        var b = h('<button type="button" class="opt" data-i="' + oi + '"><span class="opt__key">' + "ABCDE".charAt(pos) + "</span><span>" + q.options[oi].t + "</span></button>");
         b.addEventListener("click", function () { choose(oi, true); });
         opts.appendChild(b);
       });
       function choose(oi, fresh) {
         var o = q.options[oi];
-        AID.$$(".opt", opts).forEach(function (b, i) {
+        AID.$$(".opt", opts).forEach(function (b) {
+          var i = +b.getAttribute("data-i");
           b.disabled = true;
           b.classList.toggle("is-picked", i === oi);
           if (q.options[i].ok) b.classList.add("is-key");
         });
         fb.className = "q__fb is-shown " + (o.ok ? "is-ok" : "is-no");
-        fb.innerHTML = '<p class="q__verdict">' + (o.ok ? "This is the one." : "Look at " + "ABCDE".charAt(q.options.findIndex(function (x) { return x.ok; })) + ".") + "</p><p>" + o.fb + "</p>";
+        fb.innerHTML = '<p class="q__verdict">' + (o.ok ? "This is the one." : "Look at " + "ABCDE".charAt(keyAt) + ".") + "</p><p>" + o.fb + "</p>";
         if (fresh) {
           state.data["q:" + q.id] = oi;
           if (q.graded !== false) AID.mark(q.id, o.ok);

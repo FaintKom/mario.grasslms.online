@@ -116,7 +116,7 @@
     return { restart: start };
   };
 
-  /* The test run: the first build beside the five tests from the spec. */
+  /* The test run: the first build beside the six tests from the spec. */
   var TESTS = [
     { id: "t1", text: "Each ticket's correct answer matches Dana's notes.", key: "fail",
       why: "Ticket 3 is a €180 refund. Rule 4 sends it to the team lead, and this build accepts Approve and marks Escalate as wrong." },
@@ -127,15 +127,17 @@
     { id: "t4", text: "The package opens the session when it starts, then saves and closes it at the end.", key: "pass",
       why: "LMSInitialize is the first line of the log, and LMSCommit and LMSFinish are the last two." },
     { id: "t5", text: "Every button can be reached and pressed from the keyboard.", key: "pass",
-      why: "Tab reaches the three decisions and the Next button, and Enter presses them." }
+      why: "Tab reaches the three decisions and the Next button, and Enter presses them." },
+    { id: "t6", text: "A second launch opens a new session, and nothing is sent after the first session has closed.", key: "pass",
+      why: "Launch it again starts a new log with LMSInitialize, and no line follows LMSFinish in the first one." }
   ];
   var FIXES = [
     { t: "It has some bugs. Please fix them and make sure everything works properly.", ok: false,
-      fb: "The model cannot see your test report, so it has to guess which bugs you mean. It will change something, and you will have to run all five tests again without knowing what it touched." },
+      fb: "The model cannot see your test report, so it has to guess which bugs you mean. It will change something, and you will have to run all six tests again without knowing what it touched." },
     { t: "Ticket 3: the correct answer is Escalate, rule 4, because €180 is above €150. Feedback after every choice must name the rule, as in part 3 of the spec. On the result screen send cmi.core.score.raw, and set lesson_status to passed at 3 or more and failed below. Change nothing else.", ok: true,
-      fb: "Each line names the place, the expected behaviour and the part of the spec it comes from. The last sentence tells the model that the two tests that passed must still pass." },
+      fb: "Each line names the place, the expected behaviour and the part of the spec it comes from. The last sentence tells the model that the three tests that passed must still pass." },
     { t: "Start again from the spec and build a better version.", ok: false,
-      fb: "A rebuild throws away the two things that already worked, and nothing in this request tells the model what went wrong the first time." }
+      fb: "A rebuild throws away the three things that already worked, and nothing in this request tells the model what went wrong the first time." }
   ];
 
   /* What each test shows on the second build, where all five pass. */
@@ -144,10 +146,11 @@
     t2: "After every choice this build shows the decision and the rule it rests on.",
     t3: "The log now has the two score lines, and the status is 'passed' at three or four and 'failed' below.",
     t4: "LMSInitialize is still the first line of the log, and LMSCommit and LMSFinish are still the last two.",
-    t5: "Tab still reaches the three decisions and the Next button, and Enter presses them."
+    t5: "Tab still reaches the three decisions and the Next button, and Enter presses them.",
+    t6: "A second launch still starts a new log with LMSInitialize, and nothing follows LMSFinish."
   };
 
-  /* One test report: five tests with Pass and Fail, checked together.
+  /* One test report: six tests with Pass and Fail, checked together.
      opt = { title, key(t), why(t), saved, store(verdicts), after(right) } */
   function report(host, opt) {
     var el = AID.h('<div class="tests"><h3>' + opt.title + '</h3><div class="tests__list"></div>' +
@@ -201,7 +204,7 @@
       store: function (v) { data.testRun = { verdicts: v }; },
       after: function (right) {
         after.appendChild(AID.h('<div class="note ' + (right === TESTS.length ? "note--ok" : "note--calm") + '"><p><strong>' + right + " of " + TESTS.length + " verdicts match.</strong> " +
-          (right === TESTS.length ? "Your report separates the three defects from the two things that work, which is what the fix request needs." : "The evidence for each test is next to it. Two of the five tests pass, and a report that fails everything hides that from the model.") + "</p></div>"));
+          (right === TESTS.length ? "Your report separates the three defects from the three things that work, which is what the fix request needs." : "The evidence for each test is next to it. Three of the six tests pass, and a report that fails everything hides that from the model.") + "</p></div>"));
         var q = document.createElement("div");
         after.appendChild(q);
         AID.questions(q, [{ id: "u3-fix", stem: "Three tests failed. Which message do you send back to the model?", graded: false,
@@ -209,11 +212,11 @@
       }
     });
 
-    /* The second build gets the same five tests, because a fix can break what worked. */
+    /* The second build gets the same six tests, because a fix can break what worked. */
     function second() {
       var sent = FIXES[data["q:u3-fix"]].ok;
-      var fin = AID.h('<div><h2>The second build</h2><p class="read">' + (sent ? "The model changed the three things the request named." : "Suppose you had sent the second message. The model changed the three things it names.") +
-        ' Run the same five tests on that build before it goes to Tomás, since a fix can break something that worked in the first build.</p><div class="tp"><div class="tp__final"></div></div><div class="tp__end"></div></div>');
+      var fin = AID.h('<div><h2>The second build</h2><p class="read">' + (sent ? "The model changed the three things the request named." : "Suppose you had sent the message that names each change. The model changed those three things.") +
+        ' Run the same six tests on that build before it goes to Tomás, since a fix can break something that worked in the first build.</p><div class="tp"><div class="tp__final"></div></div><div class="tp__end"></div></div>');
       after.appendChild(fin);
       AID.refundDesk(AID.$(".tp__final", fin), "final");
       report(AID.$(".tp", fin), {
@@ -224,8 +227,8 @@
         store: function (v) { data.testRun2 = { verdicts: v }; },
         after: function (right) {
           AID.$(".tp__end", fin).appendChild(AID.h('<div class="note ' + (right === TESTS.length ? "note--ok" : "note--calm") + '"><p><strong>' + right + " of " + TESTS.length + " verdicts match.</strong> " +
-            (right === TESTS.length ? "All five tests pass on the second build, which means the fix repaired the three defects and left the two working parts as they were, and the exercise can go to Tomás."
-              : "All five tests pass on this build, and the evidence for each one is next to it.") + "</p></div>"));
+            (right === TESTS.length ? "All six tests pass on the second build, which means the fix repaired the three defects and left the three working parts as they were, and the exercise can go to Tomás."
+              : "All six tests pass on this build, and the evidence for each one is next to it.") + "</p></div>"));
           done();
         }
       });

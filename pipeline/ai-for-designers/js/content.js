@@ -1,4 +1,4 @@
-/* Course content: the cover and the sixteen steps. All learner-facing copy lives here. */
+/* Course content: the cover and the seventeen steps. All learner-facing copy lives here. */
 (function () {
   "use strict";
   var AID = window.AID, h = AID.h;
@@ -24,7 +24,7 @@
     return '<div class="doc"><div class="doc__bar"><i></i>' + bar + '</div><div class="doc__body"><h4>' + title + '</h4><p class="doc__obj"><strong>Goal.</strong> ' + goal + '</p><table class="plan"><tbody>' +
       rows.map(function (r) { return "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>"; }).join("") + "</tbody>" + (total ? "<tfoot><tr><td>Total</td><td>" + total + "</td></tr></tfoot>" : "") + "</table></div></div>";
   }
-  var DRAFT_A = [["10 min", "Welcome and icebreaker"], ["10 min", "Presentation: why customer service matters"], ["20 min", "Presentation: the refund policy. Customers can return items within 14 days."], ["10 min", "Questions and answers"], ["10 min", "Quiz: ten questions on the policy"]];
+  var DRAFT_A = [["5 min", "Introduction: what a refund is and why shops offer one."], ["15 min", "Presentation: the refund policy step by step. Customers can return items within 14 days of purchase."], ["15 min", "Presentation: examples of approved and declined requests, with the reason for each."], ["15 min", "Group discussion: difficult customers and how to keep the conversation calm."], ["10 min", "Quiz: ten questions on the policy."]];
   var DRAFT_B = [["5 min", "Three tickets on screen. Agents vote on each before any teaching."], ["10 min", "The four rules, one ticket per rule: 30 days from delivery, unused in original packaging, a photo for damaged items, above €150 to the team lead."], ["15 min", "Pairs decide six tickets and note the rule they used."], ["10 min", "Each agent writes the reply for one ticket, and the group compares two replies."], ["5 min", "Three new tickets decided alone, answers checked together."]];
 
   /* ================= cover ================= */
@@ -36,7 +36,7 @@
   AID.cover = function (host) {
     var first = { u1: "u1-two-drafts", u2: "u2-passes", u3: "u3-spec" };
     var text = {
-      u1: "You compare two drafts of the same lesson and watch a two-minute film on why they differ. Then you learn the five parts of a brief and the four checks, and take Dana's request from brief to review yourself.",
+      u1: "You compare two drafts of the same lesson and watch a two-minute film on why they differ. Then you learn the five parts of a brief and the four checks, take Dana's request from brief to review, and write a brief of your own for a second job.",
       u2: "The approved plan becomes slides in three passes. You check an outline against the plan, slide by slide, and then edit one slide as data until it fits the template.",
       u3: "You read a spec for a practice exercise and play the exercise it produced with the LMS log open. Then you test the model's first build and send back what failed."
     };
@@ -44,7 +44,7 @@
       '<p class="lead">This is a short course for instructional designers who already ask a chatbot for drafts and are not happy with what comes back. It follows one job from the first request to a tested SCORM package, and at each stage you write the brief, check the draft and decide what goes to review.</p>' +
       '<p class="read">The job comes from Harbour Home, an online shop for home goods, where the support team lead has asked for a 45-minute session on refund requests for her new agents. The company and the people in it are invented for this course.</p></div>' +
       '<div class="cover__card"><h2>By the end you can</h2><ul><li>write a brief that gives a model the five things it cannot guess about your lesson</li><li>check a draft plan, a slide outline and a built exercise against written criteria before a colleague sees them</li><li>tell the model what to fix, row by row, and say which parts of the job stay with you</li></ul>' +
-      '<p style="margin:0;font-size:15.5px">The three units take about 35 minutes together. They hold two short films with voice-over, two simulations, five diagrams and a one-page job aid, and your progress is saved in this browser.</p></div></div>', host);
+      '<p style="margin:0;font-size:15.5px">The three units take about 40 minutes together. They hold two short films with voice-over, two simulations, five diagrams and a one-page job aid, and your progress is saved in this browser.</p></div></div>', host);
     var grid = add('<div class="units"></div>', host);
     AID.units.forEach(function (u, i) {
       var band = ["#12798f", "#07683f", "#c1401d"][i], bg = ["#e2f2f5", "#ecf9e7", "#fbe9e2"][i];
@@ -57,18 +57,34 @@
 
   S.push({ id: "u1-two-drafts", unit: "u1", nav: "Two drafts of one lesson", title: "Two drafts of the same lesson", wide: true, auto: false,
     render: function (host, ctx) {
-      add('<p class="lead">Dana Okafor leads the support team at Harbour Home. She needs a 45-minute session that teaches new agents to handle refund requests, and she has sent her notes on the policy. Two designers asked the same AI model for a plan. Read both drafts and decide which one you would pass to a colleague for review.</p>', host);
+      var data = AID.state.data;
+      add('<p class="lead">Dana Okafor leads the support team at Harbour Home. She needs a 45-minute session that teaches new agents to handle refund requests, and she has sent her notes on the policy. Two designers asked the same AI model for a plan, and you will compare what came back.</p>', host);
       add(notes(), host);
-      add('<div class="pair">' + plan("Refund policy training", "Agents will understand the refund policy.", DRAFT_A, null, "Draft A") + plan("Deciding a refund request", "Given a ticket, the agent approves, escalates or declines the refund and tells the customer the next step.", DRAFT_B, "45 minutes", "Draft B") + "</div>", host);
-      var q1 = add("<div></div>", host), q2 = add("<div hidden></div>", host);
-      AID.questions(q1, [{ id: "u1-pick", graded: false, stem: "Which draft would you pass on for review?", options: [
+      var ask = add('<div class="sed__form own"><label for="u1-req">Before you read the two drafts, type the request you would send the model for this session.</label><textarea id="u1-req" rows="4" spellcheck="false"></textarea><div class="row" style="margin-bottom:0"><button type="button" class="btn btn--ink" disabled>Show the two drafts</button><button type="button" class="btn btn--line">Skip this and show the drafts</button></div></div>', host);
+      var rest = add("<div hidden></div>", host);
+      var reqBox = AID.$("textarea", ask), reqBtns = AID.$$("button", ask);
+      function words(t) { return t.trim() ? t.trim().split(/\s+/).length : 0; }
+      function openDrafts(text, fresh) {
+        if (fresh) { data.u1req = text; AID.save(); }
+        ask.innerHTML = text ? '<p style="margin:0"><strong>Your request.</strong> ' + AID.esc(text) + '</p><p class="aside" style="margin:8px 0 0">It comes back after the simulation, next to the brief you write there.</p>' : "";
+        ask.hidden = !text;
+        rest.hidden = false;
+      }
+      reqBox.addEventListener("input", function () { reqBtns[0].disabled = words(reqBox.value) < 4; });
+      reqBtns[0].addEventListener("click", function () { openDrafts(reqBox.value.trim(), true); });
+      reqBtns[1].addEventListener("click", function () { openDrafts("", true); });
+      add('<p class="read">Read both drafts and decide which one you would pass to a colleague for review.</p>', rest);
+      add('<div class="pair">' + plan("Refund policy training", "Agents will understand the refund policy.", DRAFT_A, null, "Draft A") + plan("Deciding a refund request", "Given a ticket, the agent approves, escalates or declines the refund and tells the customer the next step.", DRAFT_B, "45 minutes", "Draft B") + "</div>", rest);
+      var q1 = add("<div></div>", rest), q2 = add("<div hidden></div>", rest);
+      if (data.u1req != null) openDrafts(data.u1req, false);
+      AID.questions(q1, [{ id: "u1-pick", graded: false, fixed: true, stem: "Which draft would you pass on for review?", options: [
         { t: "Draft A", ok: false, fb: "A reviewer would send Draft A straight back, and the next question asks what they would write in the margin." },
         { t: "Draft B", ok: true, fb: "Draft B is the one worth a colleague's time. Before moving on, look at what is wrong with Draft A." }
       ] }], function () { q2.hidden = false; });
       add('<h3>What would a reviewer send back in Draft A?</h3><p class="aside">Select every problem you can see, then check.</p>', q2);
       var items = [
         ["The goal names something nobody can observe.", true, "You cannot watch an agent understand, which leaves nothing to practise or to test."],
-        ["The agents never practise deciding a request.", true, "They listen for thirty minutes and then recall wording in a quiz."],
+        ["The agents never practise deciding a request.", true, "They listen for thirty minutes, talk about difficult customers and then recall wording in a quiz."],
         ["The plan runs to 60 minutes and the slot is 45.", true, "The five rows add up to an hour."],
         ["The 14 days are not in Dana's notes.", true, "Her notes say 30 days from delivery."],
         ["The quiz has too few questions.", false, "The quiz tests recall of wording, and adding questions would not change that."]
@@ -96,21 +112,22 @@
       if (saved) { q2.hidden = false; reveal(saved, false); }
     } });
 
-  S.push({ id: "u1-film", unit: "u1", nav: "Film: one request, two drafts (2 min)", title: "Film: one request, two drafts", wide: true,
-    render: function (host) {
+  S.push({ id: "u1-film", unit: "u1", nav: "Film: one request, two drafts (2 min)", title: "Film: one request, two drafts", wide: true, auto: false,
+    render: function (host, ctx) {
       add('<p class="lead">The film shows what the model received from each designer and what it did with the parts that were missing.</p>', host);
-      var stop = AID.film(host, AID.films.one);
-      add('<details class="script"><summary>Read the script</summary><ol>' + AID.films.one.scenes.map(function (s) { return "<li>" + s.text + "</li>"; }).join("") + "</ol></details>", host);
+      var stop = AID.film(host, AID.films.one, ctx.done);
+      var script = add('<details class="script"><summary>Read the script</summary><ol>' + AID.films.one.scenes.map(function (s) { return "<li>" + s.text + "</li>"; }).join("") + "</ol></details>", host);
+      script.addEventListener("toggle", function () { if (script.open) ctx.done(); });
       return stop;
     } });
 
   S.push({ id: "u1-gaps", unit: "u1", nav: "What a short request leaves open", title: "What the model does with a short request",
     render: function (host) {
       add('<div class="read"><p class="lead">A language model writes the most likely continuation of whatever it is given. When the request is "create a lesson plan about our refund policy", the most likely continuation is a plan that would suit any company, any learner and any length of session, because nothing in the request says otherwise.</p>' +
-        "<p>It helps to list what the model cannot know. It has never met your learners and has no idea what they did yesterday. Nothing in the request tells it whether the session should end with agents who can recite the policy or agents who can decide a ticket, and the room, the clock and the software are equally unknown to it.</p>" +
+        "<p>It helps to list what the model cannot know. It has never met your learners and has no idea what they did yesterday. Nothing in the request tells it whether the session should end with agents who can recite the policy or agents who can decide a ticket, and the room, the clock and the software are equally unknown to it. Some chat tools ask a question or two before they write and others start at once, so a brief should not depend on being asked.</p>" +
         "<p>Your policy document is not in its memory either, and the model borrows a typical one, which is how 14 days appeared in Draft A. It will also choose its own layout unless you ask for the one your reviewer expects.</p></div>", host);
       var GAPS = [
-        ["Learner", "everyone", "The request never said who the agents are, and the plan opens with an icebreaker and a talk on why service matters."],
+        ["Learner", "everyone", "The request never said who the agents are, and the plan opens by explaining what a refund is to people who were hired to handle them."],
         ["Objective", "understand", "With no word on what agents do at the end, the goal became the verb most lesson plans use."],
         ["Limits", "an hour", "The slot, the room and the tools were missing, and the model planned a typical hour."],
         ["Source", "14 days", "The policy was not attached, and these figures come from the policies the model has read most often."],
@@ -162,6 +179,9 @@
         });
         brief.appendChild(b);
       });
+      add('<div class="read"><h2>Two requests to add at the end</h2><p>The first is "Before you write, list what you still need to know from me." Some chat tools ask questions without being told to and others start writing at once, and this line makes either kind show you the gaps it would otherwise fill by itself.</p>' +
+        '<p>The second is "Put the number of the note next to every figure and rule." The draft then carries its own references, as in "within 30 days of delivery (note 1)", and you can check a fact by reading one line of the notes.</p>' +
+        "<p>Dana's notes are an internal document. Before you paste a document like that into a chatbot, check that your company allows that tool to receive it, and use the tool your company has approved if there is one.</p></div>", host);
       add('<h2>Your turn: a brief with one part missing</h2><p class="read">A colleague is preparing a 30-minute session for warehouse shift leads on the new damaged-goods form, and this is the brief so far.</p>' +
         '<div class="doc" style="max-width:66ch"><div class="doc__bar"><i></i>Brief for the damaged-goods session</div><div class="doc__body">The learners are eight shift leads who have filled in the old paper form for years. By the end each of them can log a damaged item on the new form and attach the photo. Use only the form guide pasted below. Give me a table with minutes, activity and the form field it practises.</div></div>', host);
       var q = add('<div style="max-width:66ch"></div>', host);
@@ -182,7 +202,7 @@
   S.push({ id: "u1-check", unit: "u1", nav: "Checking the draft", title: "Checking the draft before a colleague sees it", auto: false,
     render: function (host, ctx) {
       add('<div class="read"><p class="lead">Even a full brief leaves defects in the draft, because the model still prefers the common activity to the right one. The check takes about five minutes if you ask the same four questions every time.</p></div>', host);
-      add('<ol class="checks"><li><b>Objective</b>Could you watch a learner do it? "Decide a ticket" passes and "understand the policy" fails.</li><li><b>Practice</b>Does each activity make learners do what the objective names? A quiz on wording practises remembering, and this objective asks for deciding.</li><li><b>Facts</b>Can you point to the line in the source for every number and rule? Anything you cannot trace gets flagged.</li><li><b>Fit</b>Do the minutes add up to the slot, and does the plan use only the room and tools you have?</li></ol>', host);
+      add('<ol class="checks"><li><b>Objective</b>Could you watch a learner do it? "Decide a ticket" passes and "understand the policy" fails.</li><li><b>Practice</b>Does each activity make learners do what the objective names? A quiz on wording practises remembering, and this objective asks for deciding.</li><li><b>Facts</b>Can you point to the line in the source for every number and rule? Anything you cannot trace gets flagged, and the tracing is quick when the brief asked for the note number next to each figure.</li><li><b>Fit</b>Do the minutes add up to the slot, and does the plan use only the room and tools you have?</li></ol>', host);
       add('<h2>Three defects in the first draft</h2><p class="read">This is the first draft that brief returned, before the fixes that turned it into Draft B. Select each row you would send back, then check. Dana\'s notes are under the plan.</p>', host);
       var doc = add('<div class="doc"><div class="doc__bar"><i></i>Session plan, draft 1</div><div class="doc__body" style="padding:0"><p class="doc__goal"><strong>Goal.</strong> Given a refund ticket, the agent approves, escalates or declines it and tells the customer the next step.</p></div></div>', host);
       var fl = AID.flagList(AID.$(".doc__body", doc), [
@@ -216,38 +236,125 @@
 
   S.push({ id: "u1-sim", unit: "u1", nav: "Simulation: Dana's request", title: "Simulation: Dana's request", wide: true, auto: false,
     render: function (host, ctx) {
-      add('<p class="lead">Dana\'s message is waiting. Write the brief, check what comes back, send a fix request and pass the plan to Tomás, the second designer on your team. The model in this simulation is scripted, and the same brief always returns the same draft.</p>', host);
+      add('<p class="lead">Dana\'s message is waiting. Write the brief, check what comes back, send a fix request and pass the plan to Tomás, the second designer on your team. The model in this simulation is scripted, and the same brief always returns the same draft. A real model answers the same brief a little differently each time, which is why every draft gets the check, the one after a fix request included.</p>', host);
       AID.workbench(host, ctx.done);
+    } });
+
+  S.push({ id: "u1-own", unit: "u1", nav: "Your own brief for a new request", title: "Write a brief for a new request", wide: true, auto: false,
+    render: function (host, ctx) {
+      var data = AID.state.data, own = data.own || (data.own = { text: "" });
+      var SHEET = [
+        "Scan the return label, and stop if the scanner shows no open return.",
+        "Open the parcel and compare the item with the photo on the scanner.",
+        "Mark the item as resell, repair or dispose. An item with a broken seal is never marked resell.",
+        "Put the item in the bin of that colour and scan the bin."
+      ];
+      var MODEL = [
+        ["learner", "Learner", "The learners are six dock workers at the Harbour Home warehouse. They use the handheld scanner every day and have never checked a returned parcel.",
+          "The plan explains what a scanner is to people who use one all day."],
+        ["objective", "Objective", "By the end each of them can take a returned parcel through the four steps of the dock check and mark it as resell, repair or dispose.",
+          "The session turns into a talk about the new check, and nobody handles a parcel."],
+        ["limits", "Limits", "The session is 20 minutes at the dock at the start of the shift, with one scanner per person and no screen.",
+          "The model plans slides for a training room, and this session happens at the dock with no screen."],
+        ["source", "Source", "Use only the sheet pasted below, and write \"not on the sheet\" where it is silent. Before you write the plan, list anything you still need to know from me.",
+          "The steps come from what warehouses usually do, and Karim's four steps may not be among them."],
+        ["format", "Format", "Give me a table with minutes, what the workers do and the step of the sheet it practises, with the step number next to every rule.",
+          "The plan arrives as paragraphs, and matching it to the sheet takes you longer."]
+      ];
+      add('<p class="lead">In the simulation you chose each part of the brief from ready sentences. This request comes from another part of Harbour Home, and you write the whole brief yourself before you compare it with one that has all five parts.</p>', host);
+      add('<div class="doc" style="max-width:70ch"><div class="doc__bar"><i></i>Message from Karim Haddou, warehouse manager</div><div class="doc__body"><p>From next month every returned parcel is checked at the dock before it goes back on a shelf. Six of my dock workers need to learn the check. I can give you 20 minutes at the start of the Monday shift, at the dock itself, where each of them has a handheld scanner and there is no screen. The four steps are on the sheet below.</p><ol style="margin:0">' +
+        SHEET.map(function (x) { return "<li>" + x + "</li>"; }).join("") + "</ol></div></div>", host);
+      var form = add('<div class="sed__form own"><label for="own-brief">Your brief to the model</label><textarea id="own-brief" rows="9" spellcheck="false"></textarea><div class="row" style="margin-bottom:0"><button type="button" class="btn btn--ink" disabled>Compare with a model brief</button><span class="aside"></span></div></div>', host);
+      var after = add("<div></div>", host);
+      var box = AID.$("textarea", form), go = AID.$("button", form), count = AID.$(".aside", form);
+      function words(t) { return t.trim() ? t.trim().split(/\s+/).length : 0; }
+      function tally() {
+        var n = words(box.value);
+        count.textContent = n + (n === 1 ? " word" : " words") + (n < 30 ? ", and the comparison opens at 30" : "");
+        go.disabled = n < 30;
+      }
+      box.value = own.text || "";
+      box.addEventListener("input", function () { own.text = box.value; tally(); });
+      tally();
+
+      function compare(fresh) {
+        if (fresh) { own.compared = 1; AID.save(); }
+        box.readOnly = true;
+        go.hidden = true;
+        count.textContent = words(box.value) + " words";
+        after.innerHTML = "";
+        add('<div class="read"><h2>A brief with all five parts</h2><p>Read the model brief against your own text and tick each part you can point to in what you wrote.</p></div>', after);
+        add('<div class="doc" style="max-width:70ch"><div class="doc__bar"><i></i>A model brief for Karim\'s request<span>sent with his sheet</span></div><div class="brief">' +
+          MODEL.map(function (p) { return '<div class="part part--' + p[0] + ' part--still"><b>' + p[1] + "</b>" + p[2] + "</div>"; }).join("") + "</div></div>", after);
+        var ticks = add('<div class="ticks" style="max-width:70ch"></div>', after);
+        MODEL.forEach(function (p, i) { ticks.appendChild(h('<label class="tick"><input type="checkbox" value="' + i + '"><span>My brief has the ' + p[1].toLowerCase() + " part.</span></label>")); });
+        var bar = add('<div class="row"><button type="button" class="btn btn--ink">Check my brief</button></div>', after);
+        var end = add("<div></div>", after);
+        function reveal(vals, fresh2) {
+          AID.$$(".tick", ticks).forEach(function (l, i) {
+            var on = vals.indexOf(i) >= 0;
+            AID.$("input", l).checked = on; AID.$("input", l).disabled = true;
+            if (!on) AID.$("span", l).insertAdjacentHTML("beforeend", "<small><strong>Without it.</strong> " + MODEL[i][3] + "</small>");
+          });
+          bar.hidden = true;
+          if (fresh2) { own.ticks = vals; AID.save(); }
+          var n = vals.length;
+          add('<div class="note ' + (n === 5 ? "note--ok" : "note--calm") + '"><p><strong>' + (n === 5 ? "You can point to all five parts in your brief." : "You ticked " + n + " of 5 parts, and the line under each of the others says what a model does with that gap.") + "</strong> The model brief also asks the model to list what it still needs before it writes and to put the step number next to every rule, which are the two requests you met with the five parts.</p></div>", end);
+          if (data.u1req) add('<details class="notes" style="max-width:70ch"><summary>The request you typed before the first step</summary><p style="margin:10px 16px 14px">' + AID.esc(data.u1req) + "</p></details>", end);
+          var tools = add('<div class="row"><button type="button" class="btn btn--line">Copy my brief with the sheet</button><button type="button" class="btn btn--line">Clear my brief and write it again</button></div>', end);
+          add('<p class="aside" style="max-width:70ch">Karim\'s request and his sheet are invented for this course, so the brief can go into any chatbot you use. Before you paste a real internal document into a chatbot, check that your company allows that tool to receive it.</p>', end);
+          var b = AID.$$("button", tools);
+          b[0].addEventListener("click", function () {
+            var text = box.value.trim() + "\n\nThe sheet:\n" + SHEET.map(function (x, i) { return (i + 1) + ". " + x; }).join("\n");
+            var done = function () { b[0].textContent = "Copied"; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () { b[0].textContent = "Copying is blocked in this browser"; });
+            else b[0].textContent = "Copying is blocked in this browser";
+          });
+          b[1].addEventListener("click", function () {
+            data.own = own = { text: "" }; AID.save();
+            box.value = ""; box.readOnly = false; go.hidden = false; after.innerHTML = ""; tally(); box.focus();
+          });
+        }
+        AID.$("button", bar).addEventListener("click", function () {
+          reveal(AID.$$("input:checked", ticks).map(function (x) { return +x.value; }), true);
+        });
+        if (own.ticks) reveal(own.ticks, false);
+        ctx.done();
+      }
+      go.addEventListener("click", function () { compare(true); });
+      if (own.compared) compare(false);
+      return function () { AID.save(); };
     } });
 
   S.push({ id: "u1-quiz", unit: "u1", nav: "Three scored questions", title: "Three scored questions on briefs and checks", auto: false,
     render: function (host, ctx) {
       add('<p class="lead">Each question is scored on your first answer and counts towards the result at the end of the course.</p>', host);
       AID.questions(host, [
-        { id: "u1q1", stem: "A colleague's brief says only that the learners are \"new team members\". What will the draft most likely do?", options: [
-          { t: "Start with general background that these learners already have", ok: true, fb: "A model writes for the widest audience the words allow, and a first-week agent gets the same opening as a first-day intern." },
-          { t: "Stop and ask who the learners are", ok: false, fb: "A model rarely asks. It writes for the widest audience the words allow and hands you a plan that looks finished." },
-          { t: "Refuse to write a plan without more detail", ok: false, fb: "It will write the plan, and the plan will suit anyone, which is why it opens with background your learners already have." }
+        { id: "u1q1", stem: "A brief describes the learners only as \"new team members\". They are experienced agents who have moved over from the phone team. What is the draft most likely to get wrong?", options: [
+          { t: "It opens with basics of customer service that these agents already know", ok: true, fb: "A model writes for the widest audience the words allow, and \"new team members\" covers a first-day intern as well as an agent with five years on the phones." },
+          { t: "It plans an hour of activities for a slot that is only thirty minutes long", ok: false, fb: "A session that overruns comes from the limits part of the brief. The learner line decides where the session starts, and with this one it starts too early for these agents." },
+          { t: "It quotes refund figures that come from the policies of other shops", ok: false, fb: "Borrowed figures come from a missing source. A vague learner line leaves the facts alone and changes the level the session is pitched at." }
         ] },
         { id: "u1q2", stem: "A draft says damaged items must be reported within 7 days. Dana's notes give no deadline for damaged items. What do you do?", options: [
-          { t: "Keep it, since 7 days sounds reasonable", ok: false, fb: "A figure that sounds reasonable is how borrowed facts get through, and this one has no source because the notes give no deadline." },
-          { t: "Flag it and ask Dana", ok: true, fb: "The notes are silent on this, which leaves 7 days and every other figure without a source. A fact you cannot trace goes to the person who owns the policy." },
-          { t: "Change it to 30 days to match rule 1", ok: false, fb: "Rule 1 is about returns in general, and applying it to damaged items would put your guess in place of the model's." }
+          { t: "Keep it, because seven days is a common deadline for damage claims", ok: false, fb: "A figure that sounds reasonable is how borrowed facts get through, and this one has no source because the notes give no deadline for damaged items." },
+          { t: "Flag it and ask Dana, because the notes give no deadline for damage", ok: true, fb: "The notes are silent on this, which leaves the 7 days without a source. A fact you cannot trace goes to the person who owns the policy." },
+          { t: "Change it to 30 days, because rule 1 gives that window for returns", ok: false, fb: "Rule 1 is about returns in general, and applying it to damaged items would put your guess in place of the model's." }
         ] },
-        { id: "u1q3", stem: "Which fix request leaves you the least to check again?", options: [
-          { t: "\"Make the practice more realistic.\"", ok: false, fb: "The model decides what realistic means and may rewrite any row, which sends the whole plan back through all four checks." },
-          { t: "\"Rewrite the plan with better activities.\"", ok: false, fb: "This asks for a new plan, and a new plan needs all four checks from the start." },
-          { t: "\"Row 5: replace the quiz with three tickets agents decide alone, 5 minutes. Change nothing else.\"", ok: true, fb: "It names the row, the change and what stays, and only row 5 and the total need a second look." }
+        { id: "u1q3", stem: "A draft for a session on password resets has a 15-minute lecture in row 2, and the brief asked for practice on real tickets. Which fix request leaves you the least to check again?", options: [
+          { t: "\"Rows 2 to 4 feel too passive, so please make them more practical and keep the rest of the plan as it is.\"", ok: false, fb: "It names rows and leaves the change to the model, which may rewrite all three, and then three rows come back for a full check." },
+          { t: "\"Row 2: replace the lecture with four reset tickets that pairs solve, 15 minutes. Change nothing else.\"", ok: true, fb: "It names the row, the change and what stays, and only row 2 needs a second look." },
+          { t: "\"Rewrite the plan around practice on real tickets, and keep the same time, format and number of rows.\"", ok: false, fb: "This asks for a new plan inside the old limits, and every row of a new plan goes through the four checks again." }
         ] }
       ], ctx.done);
     } });
 
   /* ================= Unit 2 ================= */
-  S.push({ id: "u2-passes", unit: "u2", nav: "Film: a deck in three passes (1 min)", title: "A deck is built in three passes", wide: true,
-    render: function (host) {
+  S.push({ id: "u2-passes", unit: "u2", nav: "Film: a deck in three passes (1 min)", title: "A deck is built in three passes", wide: true, auto: false,
+    render: function (host, ctx) {
       add('<div class="read"><p class="lead">The plan Tomás passed is now the source for the slides. Asking a model for "slides for this lesson" in one go produces a deck that looks done and drifts from the plan in ways that are slow to find, because content, wording and layout were all decided at once.</p></div>', host);
-      var stop = AID.film(host, AID.films.two);
-      add('<details class="script"><summary>Read the script</summary><ol>' + AID.films.two.scenes.map(function (s) { return "<li>" + s.text + "</li>"; }).join("") + "</ol></details>", host);
+      var stop = AID.film(host, AID.films.two, ctx.done);
+      var script = add('<details class="script"><summary>Read the script</summary><ol>' + AID.films.two.scenes.map(function (s) { return "<li>" + s.text + "</li>"; }).join("") + "</ol></details>", host);
+      script.addEventListener("toggle", function () { if (script.open) ctx.done(); });
       add('<div class="read"><h2>What each pass returns</h2><p>Splitting the job puts a check after each pass, while a mistake is still cheap to fix. Select a pass to see what the model returns from it for the refund session.</p></div>', host);
       var fig = add('<figure class="fig fig--sun"><div class="fig__art"></div><figcaption>A slide cut at the outline costs one line, while the same slide cut after the third pass has already been written, laid out and read.</figcaption></figure>', host);
       AID.passes(AID.$(".fig__art", fig));
@@ -272,14 +379,14 @@
       add('<p class="lead">Both questions are scored on your first answer.</p>', host);
       AID.questions(host, [
         { id: "u2q1", stem: "In the third pass, what decides the fonts, colours and layout of a slide?", options: [
-          { t: "The model, slide by slide", ok: false, fb: "A model that designs each slide gives you twenty slightly different layouts to check, and in this process it supplies only the fields." },
-          { t: "The template, which already holds those decisions", ok: true, fb: "With layout fixed in the template every deck comes out consistent, and the check in the third pass shrinks to overflow and typos." },
-          { t: "The reviewer, after the deck is built", ok: false, fb: "A reviewer who has to fix layout has little attention left for content, which is why the template settles layout before anyone reviews." }
+          { t: "The model, which picks a layout to suit the content of each slide", ok: false, fb: "A model that designs each slide gives you twenty slightly different layouts to check, and in this process it supplies only the fields." },
+          { t: "The template, which holds those decisions before any slide is filled", ok: true, fb: "With layout fixed in the template every deck comes out consistent, and the check in the third pass shrinks to overflow and typos." },
+          { t: "The reviewer, who adjusts the layout once the whole deck is built", ok: false, fb: "A reviewer who has to fix layout has little attention left for content, which is why the template settles layout before anyone reviews." }
         ] },
         { id: "u2q2", stem: "The outline has a slide that matches no row of the plan, and it is a good slide. What do you do?", options: [
-          { t: "Keep it, because it improves the deck", ok: false, fb: "The plan was reviewed and this slide was not, and keeping it puts unreviewed content in front of learners." },
-          { t: "Move it to the end as an extra", ok: false, fb: "An extra slide still takes minutes the plan has already spent, and nobody has reviewed it." },
-          { t: "Cut it, or change the plan first and have that change reviewed", ok: true, fb: "If the content matters it enters through the plan, where Tomás and Dana will see it." }
+          { t: "Keep it in the deck, because a good slide makes the session better", ok: false, fb: "The plan was reviewed and this slide was not, and keeping it puts unreviewed content in front of learners." },
+          { t: "Move it to the end as an optional extra that the trainer can skip", ok: false, fb: "An extra slide still takes minutes the plan has already spent, and nobody has reviewed it." },
+          { t: "Cut it, or add it to the plan first and have that change reviewed", ok: true, fb: "If the content matters it enters through the plan, where Tomás and Dana will see it." }
         ] }
       ], ctx.done);
     } });
@@ -323,21 +430,22 @@
         "<p><strong>3. Feedback.</strong> After each choice show the correct decision and the rule it rests on. Never show only \"Correct\" or \"Incorrect\".</p>" +
         "<p><strong>4. States.</strong> Tickets in a fixed order, then a result screen with the count. The session closes on that screen, so a second attempt is a new launch from the LMS.</p>" +
         "<p><strong>5. Report.</strong> SCORM 1.2. Initialize on load. On the result screen send score.raw and score.max, set lesson_status to passed at 3 or more and failed below, then commit and finish.</p>" +
-        "<p style=\"margin:0\"><strong>6. Tests.</strong> Answers match the notes. Feedback names the rule. Score and status reach the LMS. The session opens and closes. Every button works from the keyboard.</p>";
+        "<p style=\"margin:0\"><strong>6. Tests.</strong> Answers match the notes. Feedback names the rule. Score and status reach the LMS. The session opens and closes. Every button works from the keyboard. A second launch opens a new session.</p>";
       AID.refundDesk(AID.$(".tp__build", grid), "final");
       add('<div class="read"><p>Very little of the spec is about code. Five of its six parts describe what a learner or a team lead will see, and those are the parts a designer is best placed to write.</p></div>', host);
     } });
 
   S.push({ id: "u3-test", unit: "u3", nav: "Simulation: test the first build", title: "Simulation: test the model's first build", wide: true, auto: false,
     render: function (host, ctx) {
-      add('<p class="lead">This is what the model returned the first time, before the version you have just played, and it looks the same. Play it as an agent would and give at least one wrong answer, answer one ticket from the keyboard with Tab and Enter, then read the log and mark each of the five tests as passed or failed.</p>', host);
+      add('<p class="lead">This is what the model returned the first time, before the version you have just played, and it looks the same. Play it as an agent would and give at least one wrong answer, answer one ticket from the keyboard with Tab and Enter and launch it a second time, then read the log and mark each of the six tests as passed or failed.</p>', host);
       AID.testRun(host, ctx.done);
     } });
 
   S.push({ id: "u3-yours", unit: "u3", nav: "What stays with you", title: "What stays with you", wide: true,
     render: function (host) {
       add('<div class="read"><p class="lead">Across the three units the model wrote most of the words and all of the code, which is the part of the job it does well. It produced a first draft in the format you asked for, changed the rows you named and rebuilt the exercise from a short fix request.</p>' +
-        "<p>The decisions stayed with you, since you chose what the agents must be able to do, traced every figure to Dana's notes, ran the tests and decided when the work was ready for Tomás. They stay with the designer for a practical reason, which is that nobody can ask the model afterwards why the limit said €250.</p></div>", host);
+        "<p>The decisions stayed with you, since you chose what the agents must be able to do, traced every figure to Dana's notes, ran the tests and decided when the work was ready for Tomás. They stay with the designer for a practical reason, which is that nobody can ask the model afterwards why the limit said €250.</p>" +
+        "<p>A brief that worked is worth keeping. Save it as a template or as the standing instruction of a project in your chat tool, and for the next lesson change the learner, the objective, the limits and the source.</p></div>", host);
       var cols = ["Brief", "Draft", "Check", "Fix", "Review"];
       var lanes = [
         ["Model", "on-model", ["", "Writes the plan, the slide fields, the code", "", "Changes what the request names", ""]],
@@ -352,33 +460,33 @@
 
   S.push({ id: "u3-final", unit: "u3", nav: "Five final questions", title: "Five final questions", auto: false,
     render: function (host, ctx) {
-      add('<p class="lead">Two of these questions are about a facilitator guide, which the course has not covered. A guide needs the same brief and the same checks that you used for the plan.</p>', host);
+      add('<p class="lead">These five questions use the second job in the course. Karim Haddou needs a 20-minute session on the dock check for returned parcels, and once the plan is approved he also wants a one-page guide for the shift lead and a practice exercise in the LMS.</p>', host);
       var q = add("<div></div>", host), res = add("<div></div>", host);
       AID.questions(q, [
-        { id: "f1", stem: "You need a facilitator guide for the refund session. What do you give the model as its source?", options: [
-          { t: "The first draft of the plan, since the model wrote it", ok: false, fb: "The first draft still had the quiz and the wrong total, and the guide would inherit both." },
-          { t: "The approved plan and Dana's notes", ok: true, fb: "The approved plan is the reviewed version, and the model works only from what is in front of it." },
-          { t: "Nothing, because it already knows the session", ok: false, fb: "The model works from what is in the request, and without the plan it will write a guide for a session it has to imagine." }
+        { id: "f1", stem: "The plan for Karim's dock session is approved, and the shift lead needs a one-page guide for running it. What do you give the model as its source?", options: [
+          { t: "Your brief for the plan, since it already describes the whole session", ok: false, fb: "The brief describes the session you asked for, while the approved plan is the session that was reviewed, and the two differ in every row a fix request changed." },
+          { t: "The approved plan and Karim's sheet with the four steps of the check", ok: true, fb: "The approved plan is the reviewed version and the sheet holds the facts, and the model works only from what is in front of it." },
+          { t: "The first draft of the plan, which has the most detail on each activity", ok: false, fb: "The first draft is the version before your fix requests, and a guide built on it would inherit every defect you sent back." }
         ] },
-        { id: "f2", stem: "The guide comes back with debrief questions for an activity that is not in the plan. Which check catches that?", options: [
-          { t: "Every part of the guide maps to a row of the plan", ok: true, fb: "It is the check you ran on the slide outline, where each item points to a row and no row is left without an item." },
-          { t: "The minutes add up to 45", ok: false, fb: "The minutes can add up while the content still drifts, and the check that catches an extra activity compares each part of the guide with the rows of the plan." },
-          { t: "The objective can be observed", ok: false, fb: "The objective comes from the plan and has not changed. What changed is that the guide contains something the plan does not." }
+        { id: "f2", stem: "The guide comes back with a safety briefing on lifting that is in neither the plan nor the sheet. Which check catches it?", options: [
+          { t: "Every part of the guide points to a row of the approved plan", ok: true, fb: "It is the check you ran on the slide outline, where each item points to a row and no row is left without an item." },
+          { t: "The minutes in the guide add up to the twenty-minute slot", ok: false, fb: "The minutes can add up while the content still drifts, and an extra briefing is found by comparing each part of the guide with the rows of the plan." },
+          { t: "Each instruction describes something you could watch a worker do", ok: false, fb: "This check belongs to the objective, which came from the plan and has not changed. The guide now contains something the plan does not." }
         ] },
-        { id: "f3", stem: "The LMS shows \"passed\" for an agent who decided one ticket of four correctly. Where do you look first?", options: [
-          { t: "The wording of the feedback", ok: false, fb: "Feedback wording affects what the agent learns, while the status in the LMS comes from one line of the log." },
-          { t: "The lines of the log that set the score and the status", ok: true, fb: "If the log says \"passed\" or \"completed\" whatever the score, the build ignored part 5 of the spec." },
-          { t: "The colours of the template", ok: false, fb: "The status in the LMS comes from one line of the log and has nothing to do with the template." }
+        { id: "f3", stem: "A practice exercise built for the dock check shows \"passed\" in the LMS for a worker who got one parcel of four right. Where do you look first?", options: [
+          { t: "The feedback texts, in case one of them calls a wrong answer right", ok: false, fb: "Feedback texts change what the worker learns from each parcel, while the status in the LMS comes from one line of the log." },
+          { t: "The lines of the log that send the score and set the status", ok: true, fb: "If the log sets \"passed\" or \"completed\" whatever the score, the build ignored the report part of the spec." },
+          { t: "The four cases in the spec, in case one of them has the wrong key", ok: false, fb: "A wrong key moves the score by one parcel, and one parcel of four would still fail. The status comes from the line of the log that sets it." }
         ] },
-        { id: "f4", stem: "Which of these stays with the designer?", options: [
-          { t: "Writing a fifth practice ticket in the style of the first four", ok: false, fb: "A fifth ticket in the style of four you approved is good work for the model, as long as you check it against the notes." },
-          { t: "Laying out the plan as a table", ok: false, fb: "Layout is the format part of the brief, and the model does it well when asked." },
-          { t: "Deciding what the agents must be able to do at the end", ok: true, fb: "The objective comes from the job and from Dana, and every later check depends on it." }
+        { id: "f4", stem: "Which of these stays with you on the dock-check job?", options: [
+          { t: "Writing a fifth practice parcel in the style of the four you approved", ok: false, fb: "A fifth parcel in the style of four you approved is good work for the model, as long as you check it against Karim's sheet." },
+          { t: "Turning the approved plan into a table the shift lead can print", ok: false, fb: "Layout is the format part of the brief, and the model does it well when asked." },
+          { t: "Deciding what a dock worker must be able to do when the session ends", ok: true, fb: "The objective comes from the job and from Karim, and every later check depends on it." }
         ] },
-        { id: "f5", stem: "Your own check finds nothing wrong with a plan. Does it still go to a second designer?", options: [
-          { t: "Yes, because the person who wrote the brief shares its blind spots", ok: true, fb: "If your brief forgot damaged items, your check will not look for them either, while a second reader starts from the source." },
-          { t: "No, a clean check is enough", ok: false, fb: "Your check uses the same assumptions as your brief, and whatever you left out of one you will not look for in the other." },
-          { t: "Only when the model is new to the team", ok: false, fb: "The second read is there for the designer's blind spots, and those do not depend on which model wrote the draft." }
+        { id: "f5", stem: "Your own check finds nothing wrong with the dock plan. Does it still go to a second designer?", options: [
+          { t: "Yes, because your check rests on the same assumptions as your brief", ok: true, fb: "If your brief forgot parcels with a broken seal, your check will not look for them either, while a second reader starts from the sheet." },
+          { t: "No, because a plan that passes all four questions has been checked", ok: false, fb: "The four questions are asked by the person who wrote the brief, and whatever you left out of the brief you will not look for in the plan." },
+          { t: "Only if the plan differs a lot from the first draft the model wrote", ok: false, fb: "The second read is there for the designer's blind spots, and those stay the same however much the model changed between drafts." }
         ] }
       ], function () {
         var sc = AID.score();
